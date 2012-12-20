@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic.ideal.simplify;
 
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -115,6 +115,8 @@ public class IdealSimplifier extends Simplifier {
 	/** Cached simplifications. */
 	private Map<TreeExpressionIF, Simplification> treeSimplifyMap = new HashMap<TreeExpressionIF, Simplification>();
 
+	private PrintStream debugOut = null;
+
 	// TODO: also would like to map symbolic constants that can be solved
 	// for in terms of earlier ones to expressions...
 
@@ -149,11 +151,11 @@ public class IdealSimplifier extends Simplifier {
 	}
 
 	private boolean verbose() {
-		return configuration().debugOut() != null;
+		return debugOut != null;
 	}
 
-	private PrintWriter out() {
-		return configuration().debugOut();
+	private PrintStream out() {
+		return debugOut;
 	}
 
 	public IdealUniverse universe() {
@@ -1728,7 +1730,7 @@ public class IdealSimplifier extends Simplifier {
 		return satisfiable;
 	}
 
-	public void printBoundMap(PrintWriter out) {
+	public void printBoundMap(PrintStream out) {
 		out.println("Bounds map:");
 		for (BoundsObject boundObject : boundMap.values()) {
 			out.println(boundObject);
@@ -1737,7 +1739,7 @@ public class IdealSimplifier extends Simplifier {
 		out.flush();
 	}
 
-	public void printConstantMap(PrintWriter out) {
+	public void printConstantMap(PrintStream out) {
 		out.println("Constant map:");
 		for (Entry<FactoredPolynomial, NumberIF> entry : constantMap.entrySet()) {
 			out.print(entry.getKey() + " = ");
@@ -1747,7 +1749,7 @@ public class IdealSimplifier extends Simplifier {
 		out.flush();
 	}
 
-	public void printBooleanMap(PrintWriter out) {
+	public void printBooleanMap(PrintStream out) {
 		out.println("Boolean map:");
 		for (Entry<BooleanPrimitive, Boolean> entry : booleanMap.entrySet()) {
 			out.print(entry.getKey() + " = ");

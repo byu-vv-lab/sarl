@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.symbolic.IF;
 
 import java.util.Collection;
 
-import edu.udel.cis.vsl.tass.config.RunConfiguration;
 import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
@@ -38,9 +37,6 @@ import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstant;
 public interface SymbolicUniverseIF {
 
 	/* Information */
-
-	/** The run configuration associated to this run of TASS. */
-	RunConfiguration configuration();
 
 	/** Returns the number of symbolic expressions controlled by this universe. */
 	int numExpression();

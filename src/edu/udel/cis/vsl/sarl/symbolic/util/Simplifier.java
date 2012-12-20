@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.symbolic.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.tass.config.RunConfiguration;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SimplifierIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
@@ -40,10 +39,6 @@ public abstract class Simplifier implements SimplifierIF {
 	@Override
 	public SymbolicUniverseIF universe() {
 		return universe;
-	}
-
-	public RunConfiguration configuration() {
-		return universe.configuration();
 	}
 
 	public SymbolicTypeIF simplifyType(SymbolicTypeIF type) {

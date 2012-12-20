@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.tass.config.RunConfiguration;
 import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
@@ -48,12 +47,9 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 	private SymbolicTypeIF booleanType, integerType, realType;
 
-	private RunConfiguration configuration;
-
-	public StandardUniverse(RunConfiguration configuration,
-			NumberFactoryIF numberFactory, SymbolicTypeFactory typeFactory) {
+	public StandardUniverse(NumberFactoryIF numberFactory,
+			SymbolicTypeFactory typeFactory) {
 		this.numberFactory = numberFactory;
-		this.configuration = configuration;
 		this.typeFactory = typeFactory;
 		concreteFactory = new ConcreteFactory(typeFactory, numberFactory);
 		constantFactory = new SymbolicConstantFactory();
@@ -62,13 +58,8 @@ public class StandardUniverse extends SymbolicUniverse implements
 		realType = typeFactory.realType();
 	}
 
-	public StandardUniverse(RunConfiguration configuration,
-			NumberFactoryIF numberFactory) {
-		this(configuration, numberFactory, new SymbolicTypeFactory());
-	}
-
-	public RunConfiguration configuration() {
-		return configuration;
+	public StandardUniverse(NumberFactoryIF numberFactory) {
+		this(numberFactory, new SymbolicTypeFactory());
 	}
 
 	public NumberFactoryIF numberFactory() {

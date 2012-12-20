@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.tass.config.RunConfiguration;
+import edu.udel.cis.vsl.sarl.err.SARLInternalException;
 import edu.udel.cis.vsl.sarl.number.IF.Exponentiator;
 import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.number.IF.Multiplier;
@@ -74,7 +74,6 @@ import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleRead;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleWrite;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.symbolic.util.Substituter;
-import edu.udel.cis.vsl.tass.util.TASSInternalException;
 
 // Every ideal expression wraps a TreeExpressionIF.
 // The ideal expression is determined by this TreeExpressionIF.
@@ -102,8 +101,6 @@ public class IdealUniverse extends SymbolicUniverse implements
 	private ConcreteFactory concreteFactory;
 
 	private ConditionalExpressionFactory conditionalFactory;
-
-	private RunConfiguration configuration;
 
 	private EvaluatedFunctionFactory evaluatedFunctionFactory;
 
@@ -145,9 +142,7 @@ public class IdealUniverse extends SymbolicUniverse implements
 
 	private CnfBooleanExpression trueCnf, falseCnf;
 
-	public IdealUniverse(RunConfiguration configuration,
-			NumberFactoryIF numberFactory) {
-		this.configuration = configuration;
+	public IdealUniverse(NumberFactoryIF numberFactory) {
 		this.numberFactory = numberFactory;
 		powerExpressionFactory = new PowerExpressionFactory();
 		symbolicConstantFactory = new SymbolicConstantFactory();
@@ -195,11 +190,6 @@ public class IdealUniverse extends SymbolicUniverse implements
 
 	public MonomialFactory monomialFactory() {
 		return monomialFactory;
-	}
-
-	@Override
-	public RunConfiguration configuration() {
-		return configuration;
 	}
 
 	/**
@@ -289,7 +279,7 @@ public class IdealUniverse extends SymbolicUniverse implements
 					|| tree instanceof ArrayLambdaExpression) {
 				return otherIdeal(tree);
 			} else {
-				throw new TASSInternalException("Unknown type of expression: "
+				throw new SARLInternalException("Unknown type of expression: "
 						+ tree.getClass().getName() + ":\n" + tree);
 			}
 		}
@@ -850,7 +840,7 @@ public class IdealUniverse extends SymbolicUniverse implements
 					|| expression instanceof ArrayLambdaExpression) {
 				ideal = new OtherIdealExpression(expression);
 			} else {
-				throw new TASSInternalException("Unknown kind of expression:\n"
+				throw new SARLInternalException("Unknown kind of expression:\n"
 						+ expression);
 			}
 			ideal.setId(expressionVector.size());

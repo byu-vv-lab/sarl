@@ -1,6 +1,5 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.tass.config.RunConfiguration;
 import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.symbolic.ideal.IdealUniverse;
@@ -9,13 +8,13 @@ import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
 
 public class Symbolics {
 	public static SymbolicUniverseIF newRealUniverse(
-			RunConfiguration configuration, NumberFactoryIF numberFactory) {
-		return new IdealUniverse(configuration, numberFactory);
+			NumberFactoryIF numberFactory) {
+		return new IdealUniverse(numberFactory);
 	}
 
 	public static SymbolicUniverseIF newStandardUniverse(
-			RunConfiguration configuration, NumberFactoryIF numberFactory) {
-		return new StandardUniverse(configuration, numberFactory);
+			NumberFactoryIF numberFactory) {
+		return new StandardUniverse(numberFactory);
 	}
 
 	/**
@@ -23,8 +22,7 @@ public class Symbolics {
 	 * given universe.
 	 */
 	public static SymbolicUniverseIF newStandardUniverse(
-			RunConfiguration configuration, NumberFactoryIF numberFactory,
-			SymbolicUniverseIF universe) {
+			NumberFactoryIF numberFactory, SymbolicUniverseIF universe) {
 		SymbolicTypeFactory typeFactory;
 
 		if (universe instanceof IdealUniverse) {
@@ -35,7 +33,7 @@ public class Symbolics {
 			throw new RuntimeException("Unknown kind of universe: "
 					+ universe.getClass());
 		}
-		return new StandardUniverse(configuration, numberFactory, typeFactory);
+		return new StandardUniverse(numberFactory, typeFactory);
 	}
 
 }
