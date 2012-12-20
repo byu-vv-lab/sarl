@@ -1,0 +1,43 @@
+Symbolic Module.
+
+Plan
+
+Let f be a factored polynomial.
+
+f is a pseudo-primitive polynomial:
+  1. f is a polynomial with no constant term
+  2. the leading coefficient of f is positive
+  3. if f is real: leading coefficient is 1
+  4. if f is int: gcd of abs. value of coefficients is 1
+  
+  
+An AffineExpression is an expression of the form aX+b, where X is a 
+pseudo-primitive factored polynomial, a and b concrete.
+
+Any factored polynomial P can be expressed uniquely as aX+b,
+where X is pseudo.
+
+A BoundsObject gives upper and/or lower bounds on pseudos.
+
+write method to create AffineExpression from factored polynomial.
+
+write method to take RelationalExpression or !RelationalExpression and generate Bound
+generalized to pseudos.
+
+Bounds are on factored polynomials (which happen to be pseudo-primitive).
+Numeric Constant values are for factored polynomials (ditto).
+Boolean constant values are for BooleanPrimitives?
+
+Substitution: works on factored polys.  Need to get terms and factors as factored polys.
+need to walk as factored polys
+Substitution into rational expression: try num, denom.
+
+sub(P) {
+  write P=aX+b, X pseudo-primitive factored poly
+  if map.contains(X) return a*map(X)+b;
+  if P has more than one term:
+    loop over terms of P and call sub.  if any simplify, return sum of result.
+  if P has more than one factor:
+    loop over factors of P and call sub.  if any simplify, return product of result.
+  return P
+}
