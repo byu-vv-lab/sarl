@@ -1,0 +1,226 @@
+<!--
+    build.xml : Ant build file for SARL
+    Author: Stephen F. Siegel, University of Delaware
+    Last modified:
+    
+    The following can be defined on command line with -Dprop=val:
+    revision.  This is for the use of our SVN commit hook, which 
+    runs the test suite and performs other tasks every time a commit
+    is made.  The SVN revision number is just used here to insert
+    into reports.
+-->
+
+<project name="SARL" basedir="." default="jar">
+
+	<!-- Directories -->
+
+	<property file="build.properties" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="javadoc.dir" value="${basedir}/doc/javadoc" />
+	<property name="jar-name" value="sarl.jar" />
+	<property name="jar-path" value="${basedir}/${jar-name}" />
+<!--
+	<property name="main-class" value="edu.udel.cis.vsl.sarl.SARL" />
+ -->
+
+	<!-- Junit: automated unit tester Properties  -->
+
+	<property name="test.src.dir" location="${basedir}/test" />
+	<property name="test.bin.dir" location="${basedir}/bin-test" />
+	<property name="junit.dir" location="${basedir}/junit" />
+	<property name="junit.data.dir" location="${junit.dir}/data" />
+	<property name="junit.reports.dir" location="${junit.dir}/reports" />
+
+	<!-- Cobertura: test coverage analyzer Properties -->
+
+	<property name="cob.log.file" value="${basedir}/cobertura.log" />
+	<property name="cob.ser.file" value="${basedir}/cobertura.ser" />
+	<property name="cobertura.dir" value="${basedir}/cobertura" />
+	<property name="cob.instrumented.dir" value="${cobertura.dir}/instrumented" />
+	<property name="cob.reports.dir" value="${cobertura.dir}/reports" />
+	<property name="cob.reports.xml.dir" value="${cob.reports.dir}/junit-xml" />
+	<property name="cob.reports.html.dir" value="${cob.reports.dir}/junit-html" />
+	<property name="cob.coverage.xml.dir" value="${cob.reports.dir}/cobertura-xml" />
+	<property name="cob.coverage.html.dir" value="${cob.reports.dir}/cobertura-html" />
+
+	<!-- Tell Ant about Cobertura tasks -->
+
+	<path id="cobertura.classpath">
+		<fileset dir="${cobertura.lib.dir}">
+			<include name="cobertura.jar" />
+			<include name="lib/**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+	<!-- Source compilation and JAR construction -->
+
+	<path id="src.compile.classpath">
+		<pathelement location="${src.dir}" />
+		<pathelement location="${antlr.jar}" />
+	</path>
+
+	<target name="compile" description="Compile all java source files.">
+		<mkdir dir="${bin.dir}" />
+		<javac debug="true" srcdir="${src.dir}" destdir="${bin.dir}" includes="edu/udel/cis/vsl/sarl/**" classpathref="src.compile.classpath" includeantruntime="false">
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="Jar up all class files.">
+		<jar destfile="${jar-path}">
+			<fileset dir="${bin.dir}" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Plain JUnit tests -->
+
+	<path id="test.compile.classpath">
+		<pathelement location="${test.src.dir}" />
+		<pathelement location="${bin.dir}" />
+		<pathelement location="${junit.jar}" />
+	</path>
+
+	<path id="test.execute.classpath">
+		<pathelement location="${test.bin.dir}" />
+		<pathelement location="${bin.dir}" />
+		<pathelement location="${antlr.jar}" />
+		<pathelement location="${junit.jar}" />
+	</path>
+
+	<target name="test-init">
+		<delete dir="${junit.dir}" quiet="true" />
+		<delete dir="${test.bin.dir}" quiet="true" />
+		<mkdir dir="${junit.dir}" />
+		<mkdir dir="${junit.data.dir}" />
+		<mkdir dir="${junit.reports.dir}" />
+		<mkdir dir="${test.bin.dir}" />
+	</target>
+
+	<target name="test-compile" depends="compile,test-init">
+		<javac destdir="${test.bin.dir}" debug="true" failonerror="false" classpathref="test.compile.classpath" includeantruntime="true">
+			<src path="${test.src.dir}" />
+		</javac>
+	</target>
+
+	<target name="test" depends="test-compile">
+		<junit printsummary="false" errorProperty="test.failed" failureProperty="test.failed" fork="true" timeout="300000">
+			<jvmarg value="-ea" />
+			<classpath refid="test.execute.classpath" />
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+			<batchtest todir="${junit.data.dir}">
+				<fileset dir="${test.bin.dir}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+		<junitreport todir="${junit.data.dir}">
+			<fileset dir="${junit.data.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.reports.dir}">
+				<param name="TITLE" expression="JUnit Report for SARL Project, Revision ${revision}" />
+			</report>
+		</junitreport>
+		<fail message="Tests failed. Check log and/or reports." if="test.failed" />
+	</target>
+
+	<!-- Cobertura Tasks -->
+
+	<target name="cobertura-init" depends="test-compile">
+		<delete dir="${cobertura.dir}" quiet="true" />
+		<delete file="${cob.ser.file}" quiet="true" />
+		<delete file="${cob.log.file}" quiet="true" />
+		<mkdir dir="${cobertura.dir}" />
+		<mkdir dir="${cob.instrumented.dir}" />
+		<mkdir dir="${cob.reports.xml.dir}" />
+		<mkdir dir="${cob.reports.html.dir}" />
+		<mkdir dir="${cob.coverage.xml.dir}" />
+		<mkdir dir="${cob.coverage.html.dir}" />
+	</target>
+
+	<target name="cobertura-instrument" depends="cobertura-init">
+		<cobertura-instrument todir="${cob.instrumented.dir}">
+			<ignore regex="org.apache.log4j.*" />
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</cobertura-instrument>
+	</target>
+
+	<path id="instrumented.classpath">
+		<pathelement location="${cob.instrumented.dir}" />
+		<pathelement location="${test.bin.dir}" />
+		<pathelement location="${junit.jar}" />
+		<pathelement location="${bin.dir}" />
+	</path>
+
+	<target name="cobertura-test" depends="cobertura-instrument">
+		<junit fork="yes" dir="${basedir}" failureProperty="test.failed">
+			<jvmarg value="-ea" />
+			<classpath refid="instrumented.classpath" />
+			<classpath refid="cobertura.classpath" />
+			<formatter type="xml" />
+			<batchtest todir="${cob.reports.xml.dir}">
+				<fileset dir="${test.bin.dir}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+		<junitreport todir="${cob.reports.xml.dir}">
+			<fileset dir="${cob.reports.xml.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${cob.reports.html.dir}">
+				<param name="TITLE" expression="JUnit Report for SARL Project, Revision ${revision}" />
+			</report>
+		</junitreport>
+	</target>
+
+	<target name="cobertura-html-coverage-report" depends="cobertura-test">
+		<cobertura-report destdir="${cob.coverage.html.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</cobertura-report>
+	</target>
+
+	<target name="cobertura" depends="cobertura-html-coverage-report" />
+
+	<!-- Javadoc Tasks -->
+
+	<path id="javadoc.classpath">
+		<pathelement location="${src.dir}" />
+		<pathelement location="${junit.jar}" />
+	</path>
+
+	<target name="javadoc">
+		<delete dir="${javadoc.dir}" quiet="true" />
+		<mkdir dir="${javadoc.dir}" />
+		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpathref="javadoc.classpath" failonerror="false">
+			<fileset dir="${src.dir}" defaultexcludes="yes">
+				<include name="**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<!-- Clean -->
+
+	<target name="clean" description="Delete all generated files.">
+		<delete dir="${bin.dir}" />
+		<delete dir="${test.bin.dir}" />
+		<delete dir="${junit.dir}" />
+		<delete dir="${javadoc.dir}" />
+		<delete file="${jar-path}" />
+		<delete dir="${cobertura.dir}" />
+		<delete file="${cob.ser.file}" />
+		<delete file="${cob.log.file}" />
+		<delete file="${manifest-file}" />
+	</target>
+
+	<!-- Do everything -->
+
+	<target name="all" depends="jar,test,cobertura,javadoc" />
+
+</project>
