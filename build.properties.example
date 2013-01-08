@@ -1,0 +1,13 @@
+# All dependencies for the SARL project are defined here.
+
+# Cobertura is a test coverage analysis tool for Java.
+# Donwload from here: http://cobertura.sourceforge.net/download.html
+# Unpack, place the directory somewhere, and set the directory path here: 
+cobertura.lib.dir=/tools/cobertura-1.9.3
+
+# JUnit is a well-known automated unit testing framework
+# for Java.  Download the JUnit jar file from
+# https://github.com/KentBeck/junit/downloads
+# All you need is the basic jar, e.g., "junit-4.10.jar".
+# Set the path to it here:
+junit.jar=/tools/junit-4.4.jar
