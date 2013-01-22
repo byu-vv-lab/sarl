@@ -1,72 +1,61 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import java.util.Arrays;
-
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 
 public class SymbolicFunctionType extends SymbolicType implements
 		SymbolicFunctionTypeIF {
 
-	SymbolicTypeIF[] inputTypes;
+	private SymbolicTypeSequence inputTypes;
 
-	SymbolicTypeIF outputType;
+	private SymbolicTypeIF outputType;
 
-	SymbolicFunctionType(SymbolicTypeIF[] inputTypes, SymbolicTypeIF outputType) {
+	SymbolicFunctionType(SymbolicTypeSequence inputTypes,
+			SymbolicTypeIF outputType) {
 		super(SymbolicTypeKind.FUNCTION);
 		assert inputTypes != null;
 		assert outputType != null;
-
-		int numInputs = inputTypes.length;
-
-		this.inputTypes = new SymbolicTypeIF[numInputs];
-		for (int i = 0; i < numInputs; i++) {
-			assert inputTypes[i] != null;
-			this.inputTypes[i] = inputTypes[i];
-		}
+		this.inputTypes = inputTypes;
 		this.outputType = outputType;
 	}
 
 	@Override
-	boolean intrinsicEquals(SymbolicType thatType) {
-		if (thatType instanceof SymbolicFunctionType) {
-			SymbolicFunctionType that = (SymbolicFunctionType) thatType;
+	protected boolean intrinsicEquals(SymbolicType thatType) {
+		SymbolicFunctionType that = (SymbolicFunctionType) thatType;
 
-			return that.outputType.equals(outputType)
-					&& Arrays.equals(inputTypes, that.inputTypes);
-		}
-		return false;
+		return that.outputType.equals(outputType)
+				&& that.inputTypes.equals(inputTypes);
 	}
 
 	@Override
-	int intrinsicHashCode() {
-		return SymbolicFunctionType.class.hashCode() + outputType.hashCode()
-				+ Arrays.hashCode(inputTypes);
+	protected int computeHashCode() {
+		return kind().hashCode() + inputTypes.hashCode()
+				+ outputType.hashCode();
 	}
 
-	public SymbolicTypeIF inputType(int index) {
-		return inputTypes[index];
-	}
-
-	public int numInputs() {
-		return inputTypes.length;
-	}
-
+	@Override
 	public SymbolicTypeIF outputType() {
 		return outputType;
 	}
 
+	@Override
 	public String toString() {
-		String result = "(";
-		int numInputs = numInputs();
+		return inputTypes + "->" + outputType;
+	}
 
-		for (int i = 0; i < numInputs; i++) {
-			if (i > 0)
-				result += ",";
-			result += inputType(i);
-		}
-		result += ")->" + outputType;
-		return result;
+	@Override
+	public SymbolicTypeSequence inputTypes() {
+		return inputTypes;
+	}
+
+	@Override
+	protected int intrinsicCompare(SymbolicType thatType) {
+		SymbolicFunctionType that = (SymbolicFunctionType) thatType;
+		int result = inputTypes.compareTo(that.inputTypes);
+
+		if (result != 0)
+			return result;
+		return outputType.compareTo(that.outputType);
 	}
 
 }

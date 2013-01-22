@@ -3,11 +3,11 @@ package edu.udel.cis.vsl.sarl.symbolic.array;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 
 public class ArrayFactory {
 
@@ -28,18 +28,18 @@ public class ArrayFactory {
 	}
 
 	public ArrayRead arrayRead(TreeExpressionIF array, TreeExpressionIF index) {
-		return SymbolicExpression.flyweight(arrayReadMap, new ArrayRead(array,
+		return CommonSymbolicExpression.flyweight(arrayReadMap, new ArrayRead(array,
 				index));
 	}
 
 	public ArrayLength arrayLength(TreeExpressionIF array) {
-		return SymbolicExpression.flyweight(arrayLengthMap, new ArrayLength(
+		return CommonSymbolicExpression.flyweight(arrayLengthMap, new ArrayLength(
 				array, concreteFactory.typeFactory().integerType()));
 	}
 
 	public ArrayWrite arrayWrite(TreeExpressionIF array,
 			TreeExpressionIF index, TreeExpressionIF value) {
-		return SymbolicExpression.flyweight(arrayWriteMap, new ArrayWrite(
+		return CommonSymbolicExpression.flyweight(arrayWriteMap, new ArrayWrite(
 				array, index, value));
 	}
 
@@ -54,13 +54,13 @@ public class ArrayFactory {
 
 	public ArrayExpression arrayExpression(TreeExpressionIF origin,
 			TreeExpressionIF[] elements) {
-		return SymbolicExpression.flyweight(arrayExpressionMap,
+		return CommonSymbolicExpression.flyweight(arrayExpressionMap,
 				new ArrayExpression(origin, elements, this));
 	}
 
 	public ArrayLambdaExpression arrayLambdaExpression(
 			SymbolicCompleteArrayTypeIF arrayType, TreeExpressionIF function) {
-		return SymbolicExpression.flyweight(arrayLambdaExpressionMap,
+		return CommonSymbolicExpression.flyweight(arrayLambdaExpressionMap,
 				new ArrayLambdaExpression(arrayType, function));
 	}
 

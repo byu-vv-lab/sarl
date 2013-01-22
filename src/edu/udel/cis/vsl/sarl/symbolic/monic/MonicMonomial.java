@@ -2,14 +2,14 @@ package edu.udel.cis.vsl.sarl.symbolic.monic;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
 
 /**
@@ -37,7 +37,7 @@ import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
  * Note that a MonicMonomial cannot be 0. (On the other hand, a monomial can be
  * 0: it can be the product of the constant 0 and the MonicMonomial 1.)
  */
-public class MonicMonomial extends SymbolicExpression implements
+public class MonicMonomial extends CommonSymbolicExpression implements
 		TreeExpressionIF, Comparable<MonicMonomial> {
 
 	private static NumberFactoryIF numberFactory = Numbers.REAL_FACTORY;
@@ -83,7 +83,7 @@ public class MonicMonomial extends SymbolicExpression implements
 				+ Arrays.hashCode(factorPowers);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof MonicMonomial) {
 			MonicMonomial that = (MonicMonomial) expression;
 
@@ -138,9 +138,9 @@ public class MonicMonomial extends SymbolicExpression implements
 						"TASS Internal Error on monomial ordering\n" + this
 								+ "\n" + that);
 			}
-			compare = SymbolicExpression.compare(
-					(SymbolicExpression) factorPowers[i].base(),
-					(SymbolicExpression) that.factorPowers[i].base());
+			compare = CommonSymbolicExpression.compare(
+					(CommonSymbolicExpression) factorPowers[i].base(),
+					(CommonSymbolicExpression) that.factorPowers[i].base());
 			if (compare != 0)
 				return compare;
 			compare = numberFactory.compare(that.factorPowers[i].exponent()
@@ -169,8 +169,8 @@ public class MonicMonomial extends SymbolicExpression implements
 		return factorPowers[index];
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.MULTIPLY;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.MULTIPLY;
 	}
 
 	public int numArguments() {

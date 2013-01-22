@@ -3,14 +3,14 @@ package edu.udel.cis.vsl.sarl.symbolic.rational;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.factor.Factorization;
 import edu.udel.cis.vsl.sarl.symbolic.factor.FactorizationFactory;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
@@ -73,7 +73,7 @@ public class RationalFactory {
 		FactoredPolynomial newDenominator = fpFactory
 				.factoredPolynomial(denominatorFactorization);
 
-		return SymbolicExpression.flyweight(map, new RationalExpression(
+		return CommonSymbolicExpression.flyweight(map, new RationalExpression(
 				newNumerator, newDenominator));
 	}
 

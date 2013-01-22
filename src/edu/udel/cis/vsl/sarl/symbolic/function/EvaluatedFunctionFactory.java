@@ -3,11 +3,11 @@ package edu.udel.cis.vsl.sarl.symbolic.function;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 
 public class EvaluatedFunctionFactory {
 
@@ -21,7 +21,7 @@ public class EvaluatedFunctionFactory {
 	 */
 	public EvaluatedFunctionExpression evaluatedFunction(
 			TreeExpressionIF function, TreeExpressionIF[] arguments) {
-		return SymbolicExpression.flyweight(evaluatedFunctionMap,
+		return CommonSymbolicExpression.flyweight(evaluatedFunctionMap,
 				new EvaluatedFunctionExpression(function, arguments));
 	}
 
@@ -31,7 +31,7 @@ public class EvaluatedFunctionFactory {
 	 */
 	public LambdaExpression lambda(SymbolicFunctionTypeIF functionType,
 			SymbolicConstantExpression variable, TreeExpressionIF expression) {
-		return SymbolicExpression.flyweight(lambdaMap, new LambdaExpression(
+		return CommonSymbolicExpression.flyweight(lambdaMap, new LambdaExpression(
 				functionType, variable, expression));
 	}
 

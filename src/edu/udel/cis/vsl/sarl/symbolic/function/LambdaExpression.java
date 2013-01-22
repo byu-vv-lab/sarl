@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.function;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * A lambda expression is a lambda expression in the sense of the lambda
@@ -14,7 +14,7 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * expression if function from S to T, where S is the type of x, and T is the
  * type of f(x).
  */
-public class LambdaExpression extends SymbolicExpression implements
+public class LambdaExpression extends CommonSymbolicExpression implements
 		NumericPrimitive, BooleanPrimitive {
 
 	private static int classHashCode = LambdaExpression.class.hashCode();
@@ -40,7 +40,7 @@ public class LambdaExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof LambdaExpression
 				&& variable.equals(((LambdaExpression) that).variable)
 				&& expression.equals(((LambdaExpression) that).expression);
@@ -75,8 +75,8 @@ public class LambdaExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
-		return SymbolicKind.LAMBDA;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.LAMBDA;
 	}
 
 	@Override

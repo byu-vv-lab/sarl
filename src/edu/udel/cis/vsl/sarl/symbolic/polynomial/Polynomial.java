@@ -2,15 +2,15 @@ package edu.udel.cis.vsl.sarl.symbolic.polynomial;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.Monomial;
 
@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.symbolic.monomial.Monomial;
  * 
  * Two polynomials are considered equal iff their term sets are equal.
  */
-public class Polynomial extends SymbolicExpression implements TreeExpressionIF {
+public class Polynomial extends CommonSymbolicExpression implements TreeExpressionIF {
 
 	private static NumberFactoryIF numberFactory = Numbers.REAL_FACTORY;
 
@@ -82,7 +82,7 @@ public class Polynomial extends SymbolicExpression implements TreeExpressionIF {
 		return type().hashCode() + Arrays.hashCode(terms);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		return expression instanceof Polynomial
 				&& type().equals(expression.type())
 				&& Arrays.equals(terms, ((Polynomial) expression).terms);
@@ -128,8 +128,8 @@ public class Polynomial extends SymbolicExpression implements TreeExpressionIF {
 		return terms[index];
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.ADD;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.ADD;
 	}
 
 	public int numArguments() {

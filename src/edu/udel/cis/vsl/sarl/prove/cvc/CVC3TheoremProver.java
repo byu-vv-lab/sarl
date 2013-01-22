@@ -13,29 +13,29 @@ import cvc3.QueryResult;
 import cvc3.Rational;
 import cvc3.Type;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.BooleanConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.CVC3TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.prove.IF.CVC3TheoremProverIF;
-import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverException;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.BooleanConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.SymbolicConstantExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.util.Pair;
 import edu.udel.cis.vsl.sarl.util.SARLInternalException;
-import edu.udel.cis.vsl.sarl.util.TernaryResult.ResultType;
 
 /**
  * An implementation of TheoremProverIF using the automated theorem prover CVC3.
@@ -163,11 +163,11 @@ public class CVC3TheoremProver implements CVC3TheoremProverIF {
 	private Expr translate(TreeExpressionIF symbolicExpression)
 			throws Cvc3Exception {
 		Expr result = expressionMap.get(symbolicExpression);
-		SymbolicKind kind;
+		SymbolicOperator kind;
 
 		if (result != null)
 			return result;
-		kind = symbolicExpression.kind();
+		kind = symbolicExpression.operator();
 		switch (kind) {
 		case SYMBOLIC_CONSTANT:
 			result = translateSymbolicConstant(
@@ -610,12 +610,12 @@ public class CVC3TheoremProver implements CVC3TheoremProverIF {
 				(SymbolicConstantExpressionIF) (expr.argument(0)), true);
 		List<Expr> vars = new LinkedList<Expr>();
 		Expr predicate = translate(expr.argument(1));
-		SymbolicKind kind = expr.kind();
+		SymbolicOperator kind = expr.operator();
 
 		vars.add(variable);
-		if (kind == SymbolicKind.FORALL) {
+		if (kind == SymbolicOperator.FORALL) {
 			return vc.forallExpr(vars, predicate);
-		} else if (kind == SymbolicKind.EXISTS) {
+		} else if (kind == SymbolicOperator.EXISTS) {
 			return vc.existsExpr(vars, predicate);
 		} else {
 			throw new SARLInternalException(
@@ -826,7 +826,7 @@ public class CVC3TheoremProver implements CVC3TheoremProverIF {
 	}
 
 	private boolean isOne(TreeExpressionIF symbolicExpression) {
-		return symbolicExpression.kind() == SymbolicKind.CONCRETE_NUMBER
+		return symbolicExpression.operator() == SymbolicOperator.CONCRETE_NUMBER
 				&& ((NumericConcreteExpressionIF) symbolicExpression).isOne();
 	}
 

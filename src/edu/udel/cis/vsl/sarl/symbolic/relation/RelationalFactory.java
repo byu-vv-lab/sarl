@@ -3,10 +3,10 @@ package edu.udel.cis.vsl.sarl.symbolic.relation;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;
 import edu.udel.cis.vsl.sarl.symbolic.rational.RationalExpression;
@@ -40,7 +40,7 @@ public class RelationalFactory {
 	public RelationalExpression relational(RelationKind kind,
 			TreeExpressionIF expression) {
 
-		return SymbolicExpression.flyweight(map, new RelationalExpression(
+		return CommonSymbolicExpression.flyweight(map, new RelationalExpression(
 				booleanType, kind, expression,
 				(expression.type().isInteger() ? zeroInt : zeroReal)));
 	}

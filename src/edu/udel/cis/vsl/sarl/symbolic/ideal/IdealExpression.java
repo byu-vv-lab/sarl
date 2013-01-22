@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.ideal;
 
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * Root of the class hierarchy for symbolic expressions in the Ideal Symbolic
@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * 
  * @author siegel
  */
-public class IdealExpression extends SymbolicExpression {
+public class IdealExpression extends CommonSymbolicExpression {
 
 	protected TreeExpressionIF expression;
 
@@ -25,7 +25,7 @@ public class IdealExpression extends SymbolicExpression {
 		return expression;
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return expression.equals(that);
 	}
 

@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.symbolic.ideal.IdealUniverse;
 import edu.udel.cis.vsl.sarl.symbolic.standard.StandardUniverse;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;

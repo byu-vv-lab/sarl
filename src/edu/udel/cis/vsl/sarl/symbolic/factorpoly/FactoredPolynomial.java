@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.symbolic.factorpoly;
 
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.factor.Factorization;
 import edu.udel.cis.vsl.sarl.symbolic.polynomial.Polynomial;
 
@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.symbolic.polynomial.Polynomial;
  * The factorization is not part of the state. It is not taken into
  * consideration in the hashCode or equals method. It is also mutable.
  */
-public class FactoredPolynomial extends SymbolicExpression implements
+public class FactoredPolynomial extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private Polynomial polynomial;
@@ -44,7 +44,7 @@ public class FactoredPolynomial extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof FactoredPolynomial
 				&& polynomial.equals(((FactoredPolynomial) that).polynomial);
 	}
@@ -82,8 +82,8 @@ public class FactoredPolynomial extends SymbolicExpression implements
 		return factorization.argument(index);
 	}
 
-	public SymbolicKind kind() {
-		return factorization.kind();
+	public SymbolicOperator operator() {
+		return factorization.operator();
 	}
 
 	public int numArguments() {

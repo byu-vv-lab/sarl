@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.ideal;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 
 /**
  * The class used to represents all symbolic expressions in the ideal universe

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * Factory for producing both symbolic constants and symbolic constant
@@ -86,7 +86,7 @@ public class SymbolicConstantFactory {
 	 * expressions instead of symbolic constants.
 	 */
 	public SymbolicConstantExpression expression(SymbolicConstantIF constant) {
-		return SymbolicExpression.flyweight(expressionMap,
+		return CommonSymbolicExpression.flyweight(expressionMap,
 				new SymbolicConstantExpression(constant));
 	}
 }

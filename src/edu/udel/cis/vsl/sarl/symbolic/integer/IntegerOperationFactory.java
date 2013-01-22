@@ -3,9 +3,9 @@ package edu.udel.cis.vsl.sarl.symbolic.integer;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 
 public class IntegerOperationFactory {
 
@@ -15,13 +15,13 @@ public class IntegerOperationFactory {
 
 	public IntegerDivisionExpression integerDivision(
 			TreeExpressionIF numerator, TreeExpressionIF denominator) {
-		return SymbolicExpression.flyweight(integerDivisionMap,
+		return CommonSymbolicExpression.flyweight(integerDivisionMap,
 				new IntegerDivisionExpression(numerator, denominator));
 	}
 
 	public IntegerModulusExpression integerModulus(
 			TreeExpressionIF numerator, TreeExpressionIF denominator) {
-		return SymbolicExpression.flyweight(integerModulusMap,
+		return CommonSymbolicExpression.flyweight(integerModulusMap,
 				new IntegerModulusExpression(numerator, denominator));
 	}
 

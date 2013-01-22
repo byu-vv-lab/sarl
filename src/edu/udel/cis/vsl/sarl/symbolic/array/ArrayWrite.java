@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class ArrayWrite extends SymbolicExpression implements TreeExpressionIF {
+public class ArrayWrite extends CommonSymbolicExpression implements TreeExpressionIF {
 
 	private TreeExpressionIF array;
 
@@ -31,7 +31,7 @@ public class ArrayWrite extends SymbolicExpression implements TreeExpressionIF {
 		return value;
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof ArrayWrite) {
 			ArrayWrite that = (ArrayWrite) expression;
 
@@ -70,8 +70,8 @@ public class ArrayWrite extends SymbolicExpression implements TreeExpressionIF {
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.ARRAY_WRITE;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.ARRAY_WRITE;
 	}
 
 	public int numArguments() {

@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class QuantifierExpression extends SymbolicExpression implements
+public class QuantifierExpression extends CommonSymbolicExpression implements
 		BasicExpression {
 
 	public enum Quantifier {
@@ -38,7 +38,7 @@ public class QuantifierExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof QuantifierExpression
 				&& variable.equals(((QuantifierExpression) that).variable)
 				&& predicate.equals(((QuantifierExpression) that).predicate);
@@ -70,11 +70,11 @@ public class QuantifierExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		if (quantifier == Quantifier.EXISTS)
-			return SymbolicKind.EXISTS;
+			return SymbolicOperator.EXISTS;
 		else
-			return SymbolicKind.FORALL;
+			return SymbolicOperator.FORALL;
 	}
 
 	public int numArguments() {

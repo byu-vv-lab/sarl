@@ -3,10 +3,10 @@ package edu.udel.cis.vsl.sarl.symbolic.monomial;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicFactory;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpressionFactory;
@@ -78,7 +78,7 @@ public class MonomialFactory {
 
 	private Monomial theMonomial(NumericConcreteExpressionIF coefficient,
 			MonicMonomial monic) {
-		return SymbolicExpression.flyweight(map, new Monomial(coefficient,
+		return CommonSymbolicExpression.flyweight(map, new Monomial(coefficient,
 				monic));
 	}
 

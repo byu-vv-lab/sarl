@@ -2,19 +2,19 @@ package edu.udel.cis.vsl.sarl.symbolic.function;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * An object of this class represents an expression of the form
  * f(x_{0},...,x_{n-1}), i.e., the application of a function f to a list of n
  * arguments.
  */
-public class EvaluatedFunctionExpression extends SymbolicExpression implements
+public class EvaluatedFunctionExpression extends CommonSymbolicExpression implements
 		NumericPrimitive, BooleanPrimitive {
 
 	/** The function f */
@@ -96,7 +96,7 @@ public class EvaluatedFunctionExpression extends SymbolicExpression implements
 		return function.hashCode() + Arrays.hashCode(arguments);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression thatExpression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression thatExpression) {
 		if (thatExpression instanceof EvaluatedFunctionExpression) {
 			EvaluatedFunctionExpression that = (EvaluatedFunctionExpression) thatExpression;
 
@@ -122,8 +122,8 @@ public class EvaluatedFunctionExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.APPLY;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.APPLY;
 	}
 
 	public int numArguments() {

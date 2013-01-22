@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.rational;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 
 /**
@@ -11,7 +11,7 @@ import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
  * monic by dividing numerator and denominator by the leading coefficient of the
  * denominator.
  */
-public class RationalExpression extends SymbolicExpression implements
+public class RationalExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private FactoredPolynomial numerator;
@@ -40,7 +40,7 @@ public class RationalExpression extends SymbolicExpression implements
 				+ denominator.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof RationalExpression) {
 			RationalExpression that = (RationalExpression) expression;
 
@@ -91,8 +91,8 @@ public class RationalExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.DIVIDE;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.DIVIDE;
 	}
 
 	public int numArguments() {

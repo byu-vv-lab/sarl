@@ -3,14 +3,14 @@ package edu.udel.cis.vsl.sarl.symbolic.concrete;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
 
 public class ConcreteFactory {
@@ -52,17 +52,17 @@ public class ConcreteFactory {
 	}
 
 	public NumericConcreteExpression concrete(IntegerNumberIF value) {
-		return SymbolicExpression.flyweight(map, new NumericConcreteExpression(
+		return CommonSymbolicExpression.flyweight(map, new NumericConcreteExpression(
 				integerType, value));
 	}
 
 	public NumericConcreteExpression concrete(RationalNumberIF value) {
-		return SymbolicExpression.flyweight(map, new NumericConcreteExpression(
+		return CommonSymbolicExpression.flyweight(map, new NumericConcreteExpression(
 				realType, value));
 	}
 
 	public NumericConcreteExpression concrete(NumberIF value) {
-		return SymbolicExpression.flyweight(map, new NumericConcreteExpression(
+		return CommonSymbolicExpression.flyweight(map, new NumericConcreteExpression(
 				(value instanceof IntegerNumberIF ? integerType : realType),
 				value));
 	}

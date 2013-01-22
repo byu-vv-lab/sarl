@@ -5,12 +5,12 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.number.IF.Exponentiator;
-import edu.udel.cis.vsl.sarl.number.IF.Multiplier;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Exponentiator;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
 
 public class RealNumberFactory implements NumberFactoryIF {
 

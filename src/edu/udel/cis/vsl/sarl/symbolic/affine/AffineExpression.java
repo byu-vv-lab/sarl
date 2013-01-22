@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.affine;
 
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 
 /**
@@ -21,7 +21,7 @@ import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
  * 
  * If aX=0, then X is null and coefficient is 0.
  */
-public class AffineExpression extends SymbolicExpression {
+public class AffineExpression extends CommonSymbolicExpression {
 
 	private FactoredPolynomial pseudo; /* maybe null */
 
@@ -72,7 +72,7 @@ public class AffineExpression extends SymbolicExpression {
 
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof AffineExpression) {
 			AffineExpression that = (AffineExpression) expression;
 

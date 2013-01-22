@@ -5,32 +5,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.symbolic.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SimplifierIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.BooleanConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.SymbolicConstantExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.BooleanConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicUniverse;
+import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
 
-public class StandardUniverse extends SymbolicUniverse implements
+public class StandardUniverse extends CommonSymbolicUniverse implements
 		SymbolicUniverseIF {
 
 	private Vector<SymbolicExpressionIF> expressionVector = new Vector<SymbolicExpressionIF>();
@@ -79,7 +80,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	}
 
 	private TreeExpressionIF flyweight(StandardSymbolicExpression expression) {
-		StandardSymbolicExpression result = SymbolicExpression.flyweight(map,
+		StandardSymbolicExpression result = CommonSymbolicExpression.flyweight(map,
 				expression);
 
 		if (result.id() < 0) {
@@ -89,19 +90,19 @@ public class StandardUniverse extends SymbolicUniverse implements
 		return result;
 	}
 
-	private TreeExpressionIF unary(SymbolicKind kind, SymbolicTypeIF type,
+	private TreeExpressionIF unary(SymbolicOperator kind, SymbolicTypeIF type,
 			SymbolicExpressionIF arg0) {
 		return flyweight(new StandardSymbolicExpression(kind, type,
 				new SymbolicExpressionIF[] { arg0 }));
 	}
 
-	private TreeExpressionIF binary(SymbolicKind kind, SymbolicTypeIF type,
+	private TreeExpressionIF binary(SymbolicOperator kind, SymbolicTypeIF type,
 			SymbolicExpressionIF arg0, SymbolicExpressionIF arg1) {
 		return flyweight(new StandardSymbolicExpression(kind, type,
 				new SymbolicExpressionIF[] { arg0, arg1 }));
 	}
 
-	private TreeExpressionIF expression(SymbolicKind kind, SymbolicTypeIF type,
+	private TreeExpressionIF expression(SymbolicOperator kind, SymbolicTypeIF type,
 			SymbolicExpressionIF[] args) {
 		return flyweight(new StandardSymbolicExpression(kind, type, args));
 	}
@@ -113,12 +114,12 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 		assert type.equals(arg1.type());
 		assert type.isNumeric();
-		return binary(SymbolicKind.ADD, type, arg0, arg1);
+		return binary(SymbolicOperator.ADD, type, arg0, arg1);
 	}
 
 	@Override
 	public TreeExpressionIF and(SymbolicExpressionIF[] args) {
-		return expression(SymbolicKind.AND, booleanType, args);
+		return expression(SymbolicOperator.AND, booleanType, args);
 	}
 
 	@Override
@@ -135,14 +136,14 @@ public class StandardUniverse extends SymbolicUniverse implements
 		args[0] = function;
 		for (int i = 0; i < arguments.length; i++)
 			args[i + 1] = arguments[i];
-		return expression(SymbolicKind.APPLY,
+		return expression(SymbolicOperator.APPLY,
 				((SymbolicFunctionTypeIF) function.type()).outputType(), args);
 	}
 
 	@Override
 	public TreeExpressionIF arrayRead(SymbolicExpressionIF array,
 			SymbolicExpressionIF index) {
-		return binary(SymbolicKind.ARRAY_READ,
+		return binary(SymbolicOperator.ARRAY_READ,
 				((SymbolicArrayTypeIF) array.type()).elementType(), array,
 				index);
 	}
@@ -156,7 +157,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF arrayWrite(SymbolicExpressionIF array,
 			SymbolicExpressionIF index, SymbolicExpressionIF value) {
-		return expression(SymbolicKind.ARRAY_WRITE, array.type(),
+		return expression(SymbolicOperator.ARRAY_WRITE, array.type(),
 				new SymbolicExpressionIF[] { array, index, value });
 	}
 
@@ -177,7 +178,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 	@Override
 	public TreeExpressionIF castToReal(SymbolicExpressionIF numericExpression) {
-		return unary(SymbolicKind.CAST, realType, numericExpression);
+		return unary(SymbolicOperator.CAST, realType, numericExpression);
 	}
 
 	@Override
@@ -198,7 +199,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF cond(SymbolicExpressionIF predicate,
 			SymbolicExpressionIF trueValue, SymbolicExpressionIF falseValue) {
-		return expression(SymbolicKind.COND, trueValue.type(),
+		return expression(SymbolicOperator.COND, trueValue.type(),
 				new SymbolicExpressionIF[] { predicate, trueValue, falseValue });
 	}
 
@@ -208,29 +209,29 @@ public class StandardUniverse extends SymbolicUniverse implements
 		SymbolicTypeIF type = arg0.type();
 
 		if (type.isInteger()) {
-			return binary(SymbolicKind.INT_DIVIDE, integerType, arg0, arg1);
+			return binary(SymbolicOperator.INT_DIVIDE, integerType, arg0, arg1);
 		} else {
-			return binary(SymbolicKind.DIVIDE, realType, arg0, arg1);
+			return binary(SymbolicOperator.DIVIDE, realType, arg0, arg1);
 		}
 	}
 
 	@Override
 	public TreeExpressionIF equals(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		return binary(SymbolicKind.EQUALS, booleanType, arg0, arg1);
+		return binary(SymbolicOperator.EQUALS, booleanType, arg0, arg1);
 	}
 
 	@Override
 	public TreeExpressionIF exists(SymbolicConstantIF boundVariable,
 			SymbolicExpressionIF predicate) {
-		return binary(SymbolicKind.EXISTS, booleanType,
+		return binary(SymbolicOperator.EXISTS, booleanType,
 				symbolicConstantExpression(boundVariable), predicate);
 	}
 
 	@Override
 	public Boolean extractBoolean(SymbolicExpressionIF expression) {
-		if (((TreeExpressionIF) expression).kind().equals(
-				SymbolicKind.CONCRETE_BOOLEAN)) {
+		if (((TreeExpressionIF) expression).operator().equals(
+				SymbolicOperator.CONCRETE_BOOLEAN)) {
 			return ((BooleanConcreteExpressionIF) expression).value();
 		}
 		return null;
@@ -238,8 +239,8 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 	@Override
 	public NumberIF extractNumber(SymbolicExpressionIF expression) {
-		if (((TreeExpressionIF) expression).kind().equals(
-				SymbolicKind.CONCRETE_NUMBER)) {
+		if (((TreeExpressionIF) expression).operator().equals(
+				SymbolicOperator.CONCRETE_NUMBER)) {
 			return ((NumericConcreteExpressionIF) expression).value();
 		}
 		return null;
@@ -248,8 +249,8 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public SymbolicConstantIF extractSymbolicConstant(
 			SymbolicExpressionIF expression) {
-		if (((TreeExpressionIF) expression).kind().equals(
-				SymbolicKind.SYMBOLIC_CONSTANT)) {
+		if (((TreeExpressionIF) expression).operator().equals(
+				SymbolicOperator.SYMBOLIC_CONSTANT)) {
 			return ((SymbolicConstantExpressionIF) expression)
 					.symbolicConstant();
 		}
@@ -259,7 +260,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF forall(SymbolicConstantIF boundVariable,
 			SymbolicExpressionIF predicate) {
-		return binary(SymbolicKind.FORALL, booleanType,
+		return binary(SymbolicOperator.FORALL, booleanType,
 				symbolicConstantExpression(boundVariable), predicate);
 	}
 
@@ -289,18 +290,18 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF lessThan(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		return binary(SymbolicKind.LESS_THAN, booleanType, arg0, arg1);
+		return binary(SymbolicOperator.LESS_THAN, booleanType, arg0, arg1);
 	}
 
 	@Override
 	public TreeExpressionIF lessThanEquals(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		return binary(SymbolicKind.LESS_THAN_EQUALS, booleanType, arg0, arg1);
+		return binary(SymbolicOperator.LESS_THAN_EQUALS, booleanType, arg0, arg1);
 	}
 
 	@Override
 	public TreeExpressionIF minus(SymbolicExpressionIF arg) {
-		return unary(SymbolicKind.NEGATIVE, arg.type(), arg);
+		return unary(SymbolicOperator.NEGATIVE, arg.type(), arg);
 	}
 
 	@Override
@@ -314,7 +315,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 							+ arg1.type());
 		// assert type.equals(arg1.type());
 		assert type.isNumeric();
-		return binary(SymbolicKind.MULTIPLY, type, arg0, arg1);
+		return binary(SymbolicOperator.MULTIPLY, type, arg0, arg1);
 	}
 
 	@Override
@@ -324,7 +325,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 		assert type.equals(arg1.type());
 		assert type.isNumeric();
-		return binary(SymbolicKind.NEQ, type, arg0, arg1);
+		return binary(SymbolicOperator.NEQ, type, arg0, arg1);
 	}
 
 	@Override
@@ -336,7 +337,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF not(SymbolicExpressionIF arg) {
 		assert arg.type().isBoolean();
-		return unary(SymbolicKind.NOT, booleanType, arg);
+		return unary(SymbolicOperator.NOT, booleanType, arg);
 	}
 
 	@Override
@@ -351,7 +352,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 	@Override
 	public TreeExpressionIF or(SymbolicExpressionIF[] args) {
-		return expression(SymbolicKind.OR, booleanType, args);
+		return expression(SymbolicOperator.OR, booleanType, args);
 	}
 
 	@Override
@@ -377,7 +378,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 
 		assert type.equals(arg1.type());
 		assert type.isNumeric();
-		return binary(SymbolicKind.SUBTRACT, type, arg0, arg1);
+		return binary(SymbolicOperator.SUBTRACT, type, arg0, arg1);
 	}
 
 	@Override
@@ -395,7 +396,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public TreeExpressionIF tupleExpression(SymbolicTupleTypeIF type,
 			SymbolicExpressionIF[] components) {
-		return expression(SymbolicKind.CONCRETE_TUPLE, type, components);
+		return expression(SymbolicOperator.CONCRETE_TUPLE, type, components);
 	}
 
 	@Override
@@ -403,7 +404,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 			SymbolicExpressionIF index) {
 		int indexInt = ((IntegerNumberIF) extractNumber(index)).intValue();
 
-		return binary(SymbolicKind.TUPLE_READ,
+		return binary(SymbolicOperator.TUPLE_READ,
 				((SymbolicTupleTypeIF) tuple.type()).fieldType(indexInt),
 				tuple, index);
 	}
@@ -420,7 +421,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 		int indexInt = ((IntegerNumberIF) extractNumber(index)).intValue();
 
 		assert indexInt >= 0;
-		return expression(SymbolicKind.TUPLE_WRITE, tuple.type(),
+		return expression(SymbolicOperator.TUPLE_WRITE, tuple.type(),
 				new SymbolicExpressionIF[] { tuple, index, value });
 	}
 
@@ -454,13 +455,13 @@ public class StandardUniverse extends SymbolicUniverse implements
 			SymbolicExpressionIF arg1) {
 		assert arg0.type().isInteger();
 		assert arg1.type().isInteger();
-		return binary(SymbolicKind.MODULO, integerType, arg0, arg1);
+		return binary(SymbolicOperator.MODULO, integerType, arg0, arg1);
 	}
 
 	@Override
 	public TreeExpressionIF power(SymbolicExpressionIF base,
 			SymbolicExpressionIF exponent) {
-		return binary(SymbolicKind.POWER, base.type(), base, exponent);
+		return binary(SymbolicOperator.POWER, base.type(), base, exponent);
 	}
 
 	@Override
@@ -475,7 +476,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	}
 
 	@Override
-	public TreeExpressionIF make(SymbolicKind operator, SymbolicTypeIF type,
+	public TreeExpressionIF make(SymbolicOperator operator, SymbolicTypeIF type,
 			SymbolicExpressionIF[] arguments) {
 		return (TreeExpressionIF) super.make(operator, type, arguments);
 	}
@@ -519,7 +520,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 	@Override
 	public SymbolicExpressionIF arrayLambda(
 			SymbolicCompleteArrayTypeIF arrayType, SymbolicExpressionIF function) {
-		return unary(SymbolicKind.ARRAY_LAMBDA, arrayType, function);
+		return unary(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
 	}
 
 	@Override
@@ -530,7 +531,7 @@ public class StandardUniverse extends SymbolicUniverse implements
 				new SymbolicTypeIF[] { boundVariable.type() },
 				expression.type());
 
-		return binary(SymbolicKind.LAMBDA, type, symbolicConstantExpression,
+		return binary(SymbolicOperator.LAMBDA, type, symbolicConstantExpression,
 				expression);
 	}
 
@@ -542,18 +543,45 @@ public class StandardUniverse extends SymbolicUniverse implements
 			return ((SymbolicCompleteArrayTypeIF) arrayType).extent();
 		} else {
 			StandardSymbolicExpression standardArray = (StandardSymbolicExpression) array;
-			SymbolicKind kind = standardArray.kind();
+			SymbolicOperator kind = standardArray.operator();
 
-			if (kind == SymbolicKind.ARRAY_WRITE) {
+			if (kind == SymbolicOperator.ARRAY_WRITE) {
 				return length(standardArray.argument(0));
 			}
-			return unary(SymbolicKind.LENGTH, integerType, standardArray);
+			return unary(SymbolicOperator.LENGTH, integerType, standardArray);
 		}
 	}
 
 	@Override
 	public SymbolicArrayTypeIF arrayType(SymbolicTypeIF elementType) {
 		return typeFactory.arrayType(elementType);
+	}
+
+	@Override
+	public SymbolicUnionTypeIF unionType(String name,
+			SymbolicTypeIF[] memberTypes) {
+		return typeFactory.unionType(name, memberTypes);
+	}
+
+	@Override
+	public SymbolicExpressionIF unionInject(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpressionIF unionTest(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpressionIF unionExtract(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

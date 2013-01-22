@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 
 /**
  * A primitive expression is an expression not formed by numerical or logical
@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
  * 
  * This is a marker interface.
  */
-public interface BooleanPrimitive extends TreeExpressionIF {
+public interface BooleanPrimitive extends SymbolicExpressionIF {
 
 	public enum BooleanPrimitiveKind {
 		APPLY, ARRAY_READ, LAMBDA, SYMBOLIC_CONSTANT, TUPLE_READ

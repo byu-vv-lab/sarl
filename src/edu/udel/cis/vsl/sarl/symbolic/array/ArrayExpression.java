@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.symbolic.array;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class ArrayExpression extends SymbolicExpression implements
+public class ArrayExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private TreeExpressionIF origin;
@@ -36,7 +36,7 @@ public class ArrayExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof ArrayExpression) {
 			ArrayExpression that = (ArrayExpression) expression;
 
@@ -72,9 +72,9 @@ public class ArrayExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		computeTreeExpression();
-		return treeExpression.kind();
+		return treeExpression.operator();
 	}
 
 	@Override

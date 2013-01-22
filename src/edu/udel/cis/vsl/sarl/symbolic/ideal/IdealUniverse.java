@@ -5,30 +5,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.sarl.err.SARLInternalException;
-import edu.udel.cis.vsl.sarl.number.IF.Exponentiator;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.Multiplier;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Exponentiator;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SimplifierIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.SymbolicConstantExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicUniverse;
+import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.affine.AffineFactory;
 import edu.udel.cis.vsl.sarl.symbolic.array.ArrayExpression;
 import edu.udel.cis.vsl.sarl.symbolic.array.ArrayFactory;
@@ -73,6 +74,7 @@ import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleFactory;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleRead;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleWrite;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.symbolic.union.UnionFactory;
 import edu.udel.cis.vsl.sarl.symbolic.util.Substituter;
 
 // Every ideal expression wraps a TreeExpressionIF.
@@ -87,7 +89,7 @@ import edu.udel.cis.vsl.sarl.symbolic.util.Substituter;
 
 // the method "expression" in IdealExpression returns the TreeExpressionIF wrapped
 
-public class IdealUniverse extends SymbolicUniverse implements
+public class IdealUniverse extends CommonSymbolicUniverse implements
 		SymbolicUniverseIF, Multiplier<SymbolicExpressionIF> {
 
 	private AffineFactory affineFactory;
@@ -142,6 +144,8 @@ public class IdealUniverse extends SymbolicUniverse implements
 
 	private CnfBooleanExpression trueCnf, falseCnf;
 
+	private UnionFactory unionFactory;
+
 	public IdealUniverse(NumberFactoryIF numberFactory) {
 		this.numberFactory = numberFactory;
 		powerExpressionFactory = new PowerExpressionFactory();
@@ -178,6 +182,7 @@ public class IdealUniverse extends SymbolicUniverse implements
 		falseCnf = cnfFactory.booleanExpression(false);
 		trueIdeal = booleanIdeal(cnfFactory.booleanExpression(true));
 		falseIdeal = booleanIdeal(cnfFactory.booleanExpression(false));
+		unionFactory = new UnionFactory();
 	}
 
 	public SymbolicTypeFactory typeFactory() {
@@ -1408,7 +1413,7 @@ public class IdealUniverse extends SymbolicUniverse implements
 		return zeroReal;
 	}
 
-	public IdealExpression make(SymbolicKind operator, SymbolicTypeIF type,
+	public IdealExpression make(SymbolicOperator operator, SymbolicTypeIF type,
 			SymbolicExpressionIF[] arguments) {
 		return (IdealExpression) super.make(operator, type, arguments);
 	}
@@ -1455,5 +1460,34 @@ public class IdealUniverse extends SymbolicUniverse implements
 	@Override
 	public SymbolicArrayTypeIF arrayType(SymbolicTypeIF elementType) {
 		return typeFactory.arrayType(elementType);
+	}
+
+	@Override
+	public SymbolicUnionTypeIF unionType(String name,
+			SymbolicTypeIF[] memberTypes) {
+		return typeFactory.unionType(name, memberTypes);
+	}
+
+	@Override
+	public SymbolicExpressionIF unionInject(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		// does the argument have to be an Ideal expression?
+		return unionFactory.unionInjectExpression(unionType, memberIndex,
+				object);
+	}
+
+	@Override
+	public SymbolicExpressionIF unionTest(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpressionIF unionExtract(SymbolicUnionTypeIF unionType,
+			int memberIndex, TreeExpressionIF object) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

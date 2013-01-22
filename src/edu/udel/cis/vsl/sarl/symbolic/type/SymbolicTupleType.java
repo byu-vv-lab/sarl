@@ -1,72 +1,59 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import java.util.Arrays;
-
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.StringObject;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
 
 public class SymbolicTupleType extends SymbolicType implements
 		SymbolicTupleTypeIF {
 
-	private SymbolicTypeIF[] fieldTypes;
+	private SymbolicTypeSequenceIF sequence;
 
-	private String name;
+	private StringObject name;
 
-	SymbolicTupleType(String name, SymbolicTypeIF[] fieldTypes) {
+	SymbolicTupleType(StringObject name, SymbolicTypeSequenceIF sequence) {
 		super(SymbolicTypeKind.TUPLE);
 		assert name != null;
-		assert fieldTypes != null;
-
-		int numFields = fieldTypes.length;
-
+		assert sequence != null;
 		this.name = name;
-		this.fieldTypes = new SymbolicTypeIF[numFields];
-		for (int i = 0; i < numFields; i++) {
-			assert fieldTypes[i] != null;
-			this.fieldTypes[i] = fieldTypes[i];
-		}
+		this.sequence = sequence;
 	}
 
 	@Override
-	boolean intrinsicEquals(SymbolicType that) {
-		if (that instanceof SymbolicTupleType) {
-			SymbolicTupleType thatType = (SymbolicTupleType) that;
+	protected boolean intrinsicEquals(SymbolicType thatType) {
+		SymbolicTupleType that = (SymbolicTupleType) thatType;
 
-			return name.equals(thatType.name)
-					&& Arrays.equals(fieldTypes, thatType.fieldTypes);
-		}
-		return false;
+		return name.equals(that.name) && sequence.equals(that.sequence);
 	}
 
 	@Override
-	int intrinsicHashCode() {
-		return SymbolicTupleType.class.hashCode() + name.hashCode()
-				+ Arrays.hashCode(fieldTypes);
+	protected int computeHashCode() {
+		return kind().hashCode() ^ name.hashCode() ^ sequence.hashCode();
 	}
 
-	public SymbolicTypeIF fieldType(int index) {
-		return fieldTypes[index];
-	}
-
-	public int numFields() {
-		return fieldTypes.length;
-	}
-
+	@Override
 	public String toString() {
-		String result = name + "<";
-		int numFields = numFields();
-
-		for (int i = 0; i < numFields; i++) {
-			if (i > 0)
-				result += ",";
-			result += fieldType(i);
-		}
-		result += ">";
-		return result;
+		return name.toString() + sequence;
 	}
 
-	public String name() {
+	@Override
+	public StringObject name() {
 		return name;
+	}
+
+	@Override
+	public SymbolicTypeSequenceIF sequence() {
+		return sequence;
+	}
+
+	@Override
+	protected int intrinsicCompare(SymbolicType thatType) {
+		SymbolicTupleType that = (SymbolicTupleType) thatType;
+		int result = name.compareTo(that.name);
+
+		if (result != 0)
+			return result;
+		return sequence.compareTo(that.sequence);
 	}
 
 }

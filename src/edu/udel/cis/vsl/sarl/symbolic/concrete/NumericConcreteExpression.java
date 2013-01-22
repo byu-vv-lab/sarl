@@ -1,14 +1,14 @@
 package edu.udel.cis.vsl.sarl.symbolic.concrete;
 
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class NumericConcreteExpression extends SymbolicExpression implements
+public class NumericConcreteExpression extends CommonSymbolicExpression implements
 		NumericConcreteExpressionIF {
 
 	private NumberIF value;
@@ -30,7 +30,7 @@ public class NumericConcreteExpression extends SymbolicExpression implements
 		return classHashCode + value.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof NumericConcreteExpression
 				&& ((NumericConcreteExpression) that).value.equals(value);
 	}
@@ -67,8 +67,8 @@ public class NumericConcreteExpression extends SymbolicExpression implements
 		throw new IllegalArgumentException("0 arguments");
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.CONCRETE_NUMBER;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.CONCRETE_NUMBER;
 	}
 
 	public int numArguments() {

@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class OrExpression extends SymbolicExpression implements
+public class OrExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private BasicExpression[] clauses;
@@ -21,7 +21,7 @@ public class OrExpression extends SymbolicExpression implements
 		return OrExpression.class.hashCode() + Arrays.hashCode(clauses);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		return expression instanceof OrExpression
 				&& Arrays.equals(clauses, ((OrExpression) expression).clauses);
 	}
@@ -77,8 +77,8 @@ public class OrExpression extends SymbolicExpression implements
 		return clauses[index];
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.OR;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.OR;
 	}
 
 	public int numArguments() {

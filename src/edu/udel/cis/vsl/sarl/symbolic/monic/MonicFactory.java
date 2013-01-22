@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.cast.CastFactory;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpressionFactory;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
@@ -66,7 +66,7 @@ public class MonicFactory {
 
 	public MonicMonomial monic(SymbolicTypeIF numericType,
 			PowerExpression[] factorPowers) {
-		return SymbolicExpression.flyweight(map, new MonicMonomial(numericType,
+		return CommonSymbolicExpression.flyweight(map, new MonicMonomial(numericType,
 				factorPowers));
 	}
 
@@ -107,9 +107,9 @@ public class MonicFactory {
 		while (index0 < numFactors0 && index1 < numFactors1) {
 			PowerExpression factorPower0 = factors0[index0];
 			PowerExpression factorPower1 = factors1[index1];
-			int compare = SymbolicExpression.compare(
-					(SymbolicExpression) factorPower0.base(),
-					(SymbolicExpression) factorPower1.base());
+			int compare = CommonSymbolicExpression.compare(
+					(CommonSymbolicExpression) factorPower0.base(),
+					(CommonSymbolicExpression) factorPower1.base());
 
 			if (compare == 0) {
 				factorList.add(powerExpressionFactory.powerExpression(

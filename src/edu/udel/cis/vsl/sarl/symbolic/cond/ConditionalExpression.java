@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.symbolic.cond;
 
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class ConditionalExpression extends SymbolicExpression implements
+public class ConditionalExpression extends CommonSymbolicExpression implements
 		NumericPrimitive {
 
 	private TreeExpressionIF predicate;
@@ -36,7 +36,7 @@ public class ConditionalExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof ConditionalExpression) {
 			ConditionalExpression that = (ConditionalExpression) expression;
 
@@ -78,8 +78,8 @@ public class ConditionalExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.COND;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.COND;
 	}
 
 	public int numArguments() {

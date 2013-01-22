@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * A literal boolean expression is an expression of the form p or an expression
@@ -11,7 +11,7 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * 
  * @author siegel
  */
-public class LiteralExpression extends SymbolicExpression implements
+public class LiteralExpression extends CommonSymbolicExpression implements
 		BasicExpression {
 
 	private boolean not;
@@ -40,7 +40,7 @@ public class LiteralExpression extends SymbolicExpression implements
 				+ (not ? -primitive.hashCode() : primitive.hashCode());
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof LiteralExpression) {
 			LiteralExpression that = (LiteralExpression) expression;
 
@@ -79,11 +79,11 @@ public class LiteralExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		if (not) {
-			return SymbolicKind.NOT;
+			return SymbolicOperator.NOT;
 		} else {
-			return primitive.kind();
+			return primitive.operator();
 		}
 	}
 

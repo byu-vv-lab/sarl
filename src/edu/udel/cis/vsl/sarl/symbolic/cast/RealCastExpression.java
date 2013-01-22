@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.cast;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class RealCastExpression extends SymbolicExpression implements
+public class RealCastExpression extends CommonSymbolicExpression implements
 		NumericPrimitive {
 
 	private NumericPrimitive integerExpression;
@@ -21,7 +21,7 @@ public class RealCastExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof RealCastExpression
 				&& integerExpression
 						.equals(((RealCastExpression) that).integerExpression);
@@ -54,8 +54,8 @@ public class RealCastExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.CAST;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.CAST;
 	}
 
 	public int numArguments() {

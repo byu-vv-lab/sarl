@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.concrete;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.BooleanConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.BooleanConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class BooleanConcreteExpression extends SymbolicExpression implements
+public class BooleanConcreteExpression extends CommonSymbolicExpression implements
 		BooleanConcreteExpressionIF {
 
 	private Boolean value;
@@ -24,7 +24,7 @@ public class BooleanConcreteExpression extends SymbolicExpression implements
 		return BooleanConcreteExpression.class.hashCode() + (value ? 1 : 0);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof BooleanConcreteExpression
 				&& ((BooleanConcreteExpression) that).value.equals(value);
 	}
@@ -41,8 +41,8 @@ public class BooleanConcreteExpression extends SymbolicExpression implements
 		throw new IllegalArgumentException("0 arguments");
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.CONCRETE_BOOLEAN;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.CONCRETE_BOOLEAN;
 	}
 
 	public int numArguments() {

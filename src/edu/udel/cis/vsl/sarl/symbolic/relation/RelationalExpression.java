@@ -1,14 +1,14 @@
 package edu.udel.cis.vsl.sarl.symbolic.relation;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.cnf.BasicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 // there is a need to store 0 to implement the SymbolicExpression interface GT
 // add to interface GT0?
 
-public class RelationalExpression extends SymbolicExpression implements
+public class RelationalExpression extends CommonSymbolicExpression implements
 		BasicExpression {
 
 	public enum RelationKind {
@@ -46,7 +46,7 @@ public class RelationalExpression extends SymbolicExpression implements
 				+ relationKind.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression other) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression other) {
 		if (other instanceof RelationalExpression) {
 			RelationalExpression that = (RelationalExpression) other;
 
@@ -100,16 +100,16 @@ public class RelationalExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		switch (relationKind) {
 		case EQ0:
-			return SymbolicKind.EQUALS;
+			return SymbolicOperator.EQUALS;
 		case NEQ0:
-			return SymbolicKind.NEQ;
+			return SymbolicOperator.NEQ;
 		case GT0:
-			return SymbolicKind.LESS_THAN;
+			return SymbolicOperator.LESS_THAN;
 		case GTE0:
-			return SymbolicKind.LESS_THAN_EQUALS;
+			return SymbolicOperator.LESS_THAN_EQUALS;
 		default:
 			throw new IllegalArgumentException("Unknown relation kind: "
 					+ relationKind);

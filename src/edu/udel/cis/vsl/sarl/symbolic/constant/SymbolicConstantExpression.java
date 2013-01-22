@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.constant;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.SymbolicConstantExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * Represents an expression consisting of just a symbolic constant. Essentially
@@ -20,7 +20,7 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * kind() and argument(index). There are 0 arguments, and the kind is
  * SYMBOLIC_CONSTANT.
  */
-public class SymbolicConstantExpression extends SymbolicExpression implements
+public class SymbolicConstantExpression extends CommonSymbolicExpression implements
 		SymbolicConstantExpressionIF, NumericPrimitive, BooleanPrimitive {
 
 	private SymbolicConstantIF symbolicConstant;
@@ -31,7 +31,7 @@ public class SymbolicConstantExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof SymbolicConstantExpression
 				&& symbolicConstant
 						.equals(((SymbolicConstantExpression) that).symbolicConstant);
@@ -70,8 +70,8 @@ public class SymbolicConstantExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
-		return SymbolicKind.SYMBOLIC_CONSTANT;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.SYMBOLIC_CONSTANT;
 	}
 
 	@Override

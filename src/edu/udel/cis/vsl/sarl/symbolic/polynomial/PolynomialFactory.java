@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.sarl.number.IF.Exponentiator;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.Exponentiator;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicFactory;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.Monomial;
@@ -64,7 +64,7 @@ public class PolynomialFactory implements Multiplier<Polynomial> {
 	}
 
 	public Polynomial polynomial(SymbolicTypeIF type, Monomial[] terms) {
-		return SymbolicExpression.flyweight(map, new Polynomial(type, terms));
+		return CommonSymbolicExpression.flyweight(map, new Polynomial(type, terms));
 	}
 
 	public ConcreteFactory concreteFactory() {

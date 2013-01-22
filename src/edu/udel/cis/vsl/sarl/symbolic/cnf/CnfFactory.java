@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.cnf.QuantifierExpression.Quantifier;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.relation.RelationalExpression;
 import edu.udel.cis.vsl.sarl.symbolic.relation.RelationalFactory;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
@@ -86,7 +86,7 @@ public class CnfFactory {
 	/* Production of Basic Expression (literals, quantifier) */
 
 	private LiteralExpression literal(boolean not, BooleanPrimitive primitive) {
-		return SymbolicExpression.flyweight(literalMap, new LiteralExpression(
+		return CommonSymbolicExpression.flyweight(literalMap, new LiteralExpression(
 				booleanType, not, primitive));
 	}
 
@@ -96,14 +96,14 @@ public class CnfFactory {
 
 	private QuantifierExpression forallExpression(
 			SymbolicConstantExpression variable, CnfBooleanExpression predicate) {
-		return SymbolicExpression
+		return CommonSymbolicExpression
 				.flyweight(quantifierMap, new QuantifierExpression(
 						Quantifier.FORALL, variable, predicate));
 	}
 
 	private QuantifierExpression existsExpression(
 			SymbolicConstantExpression variable, CnfBooleanExpression predicate) {
-		return SymbolicExpression
+		return CommonSymbolicExpression
 				.flyweight(quantifierMap, new QuantifierExpression(
 						Quantifier.EXISTS, variable, predicate));
 	}
@@ -124,7 +124,7 @@ public class CnfFactory {
 				clauseSet.add(clause);
 			}
 		}
-		return SymbolicExpression.flyweight(orMap, new OrExpression(
+		return CommonSymbolicExpression.flyweight(orMap, new OrExpression(
 				booleanType, clauses));
 	}
 
@@ -147,7 +147,7 @@ public class CnfFactory {
 				clauseSet.add(clause);
 			}
 		}
-		return SymbolicExpression.flyweight(andMap, new CnfBooleanExpression(
+		return CommonSymbolicExpression.flyweight(andMap, new CnfBooleanExpression(
 				booleanType, clauses));
 	}
 
@@ -216,7 +216,7 @@ public class CnfFactory {
 			if (or0.numClauses() == 0 || or1.numClauses() == 0)
 				return falseCanonical;
 
-			int compare = SymbolicExpression.compare(or0, or1);
+			int compare = CommonSymbolicExpression.compare(or0, or1);
 
 			if (compare == 0) {
 				union.add(or0);
@@ -264,8 +264,8 @@ public class CnfFactory {
 		while (index0 < numClauses0 && index1 < numClauses1) {
 			BasicExpression basic0 = arg0.clause(index0);
 			BasicExpression basic1 = arg1.clause(index1);
-			int compare = SymbolicExpression.compare(
-					(SymbolicExpression) basic0, (SymbolicExpression) basic1);
+			int compare = CommonSymbolicExpression.compare(
+					(CommonSymbolicExpression) basic0, (CommonSymbolicExpression) basic1);
 
 			if (compare == 0) {
 				union.add(basic0);

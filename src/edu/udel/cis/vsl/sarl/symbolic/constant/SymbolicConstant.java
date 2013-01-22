@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.constant;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 
 /**
  * Represents a symbolic constant.

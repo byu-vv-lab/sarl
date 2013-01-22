@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class ArrayLength extends SymbolicExpression implements
+public class ArrayLength extends CommonSymbolicExpression implements
 		NumericPrimitive, TreeExpressionIF {
 
 	private TreeExpressionIF array;
@@ -25,8 +25,8 @@ public class ArrayLength extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
-		return SymbolicKind.LENGTH;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.LENGTH;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class ArrayLength extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		if (that instanceof ArrayLength) {
 			return array.equals(((ArrayLength) that).array);
 		}

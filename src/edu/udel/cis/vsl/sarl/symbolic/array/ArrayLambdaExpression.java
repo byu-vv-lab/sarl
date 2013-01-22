@@ -1,16 +1,16 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * An array lambda expression wraps a lambda expression with integer domain to
  * represent an array. The type must be a complete array type, T[N]. The lambda
  * expression must have type "function from int to T".
  */
-public class ArrayLambdaExpression extends SymbolicExpression implements
+public class ArrayLambdaExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private static int classHashCode = ArrayLambdaExpression.class.hashCode();
@@ -46,8 +46,8 @@ public class ArrayLambdaExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
-		return SymbolicKind.ARRAY_LAMBDA;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.ARRAY_LAMBDA;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class ArrayLambdaExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression that) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression that) {
 		return that instanceof ArrayLambdaExpression
 				&& function.equals(((ArrayLambdaExpression) that).function);
 	}

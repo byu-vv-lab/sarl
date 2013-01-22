@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.symbolic.power;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class PowerExpression extends SymbolicExpression implements
+public class PowerExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private TreeExpressionIF base;
@@ -23,7 +23,7 @@ public class PowerExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof PowerExpression) {
 			PowerExpression that = (PowerExpression) expression;
 
@@ -59,8 +59,8 @@ public class PowerExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.POWER;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.POWER;
 	}
 
 	public int numArguments() {

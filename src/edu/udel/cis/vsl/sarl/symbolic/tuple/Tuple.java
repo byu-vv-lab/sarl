@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.symbolic.tuple;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class Tuple extends SymbolicExpression implements TreeExpressionIF {
+public class Tuple extends CommonSymbolicExpression implements TreeExpressionIF {
 
 	private TreeExpressionIF[] components;
 
@@ -20,7 +20,7 @@ public class Tuple extends SymbolicExpression implements TreeExpressionIF {
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof Tuple) {
 			Tuple that = (Tuple) expression;
 
@@ -61,8 +61,8 @@ public class Tuple extends SymbolicExpression implements TreeExpressionIF {
 		return components[index];
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.CONCRETE_TUPLE;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.CONCRETE_TUPLE;
 	}
 
 	public int numArguments() {

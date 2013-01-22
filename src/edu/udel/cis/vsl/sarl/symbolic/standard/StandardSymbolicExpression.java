@@ -2,10 +2,10 @@ package edu.udel.cis.vsl.sarl.symbolic.standard;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * A standard symbolic expression is the most simple representation of a
@@ -15,14 +15,14 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * @author siegel
  * 
  */
-public class StandardSymbolicExpression extends SymbolicExpression implements
+public class StandardSymbolicExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private SymbolicExpressionIF[] arguments;
 
-	private SymbolicKind kind;
+	private SymbolicOperator kind;
 
-	public StandardSymbolicExpression(SymbolicKind kind, SymbolicTypeIF type,
+	public StandardSymbolicExpression(SymbolicOperator kind, SymbolicTypeIF type,
 			SymbolicExpressionIF[] arguments) {
 		super(type);
 		this.kind = kind;
@@ -35,7 +35,7 @@ public class StandardSymbolicExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		return kind;
 	}
 
@@ -65,7 +65,7 @@ public class StandardSymbolicExpression extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof StandardSymbolicExpression) {
 			StandardSymbolicExpression that = (StandardSymbolicExpression) expression;
 

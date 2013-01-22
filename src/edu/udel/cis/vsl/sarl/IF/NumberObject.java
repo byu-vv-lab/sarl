@@ -1,0 +1,35 @@
+package edu.udel.cis.vsl.sarl.IF;
+
+public interface NumberObject extends SymbolicObject {
+
+	NumberIF getNumber();
+
+	/**
+	 * Returns either -1, 0, or +1, depending on whether the value of this
+	 * expression is <0, 0, or >0 (respectively).
+	 */
+	int signum();
+
+	/**
+	 * Convenience method to determine whether this concrete expression is 0.
+	 * Works for integer or real types.
+	 */
+	boolean isZero();
+
+	/**
+	 * Convenience method to determine whether this concrete expression is 1.
+	 * Works for integer or real types.
+	 */
+	boolean isOne();
+
+	/**
+	 * Tells whether the type of this expression is integer.
+	 */
+	boolean isInteger();
+
+	/**
+	 * Tells whether the type of this expression is real.
+	 */
+	boolean isReal();
+
+}

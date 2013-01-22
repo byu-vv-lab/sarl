@@ -2,14 +2,14 @@ package edu.udel.cis.vsl.sarl.symbolic.util;
 
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.number.IF.IntervalIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.SymbolicConstantExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.IntervalIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
 
 /**
  * Substitutes symbolic expressions for symbolic constants.
@@ -35,11 +35,11 @@ public class Substituter extends Simplifier {
 	 */
 	private SymbolicExpressionIF substituteTree(TreeExpressionIF tree) {
 		int numArgs = tree.numArguments();
-		SymbolicKind kind = tree.kind();
+		SymbolicOperator kind = tree.operator();
 		SymbolicExpressionIF result;
 
 		if (numArgs == 0) {
-			if (kind == SymbolicKind.SYMBOLIC_CONSTANT) {
+			if (kind == SymbolicOperator.SYMBOLIC_CONSTANT) {
 				SymbolicConstantIF oldSymbolicConstant = ((SymbolicConstantExpressionIF) tree)
 						.symbolicConstant();
 

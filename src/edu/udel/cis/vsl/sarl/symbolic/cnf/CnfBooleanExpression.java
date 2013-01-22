@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
 /**
  * A CnfBooleanExpression is the root of the canonical form for boolean
@@ -14,7 +14,7 @@ import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
  * @author siegel
  * 
  */
-public class CnfBooleanExpression extends SymbolicExpression implements
+public class CnfBooleanExpression extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	private static int classCode = CnfBooleanExpression.class.hashCode();
@@ -31,7 +31,7 @@ public class CnfBooleanExpression extends SymbolicExpression implements
 		return classCode + Arrays.hashCode(clauses);
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		return expression instanceof CnfBooleanExpression
 				&& Arrays.equals(clauses,
 						((CnfBooleanExpression) expression).clauses);
@@ -88,8 +88,8 @@ public class CnfBooleanExpression extends SymbolicExpression implements
 		return clauses[index];
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.AND;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.AND;
 	}
 
 	public int numArguments() {

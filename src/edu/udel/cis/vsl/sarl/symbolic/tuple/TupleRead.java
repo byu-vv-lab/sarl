@@ -2,13 +2,13 @@ package edu.udel.cis.vsl.sarl.symbolic.tuple;
 
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
 
-public class TupleRead extends SymbolicExpression implements NumericPrimitive,
+public class TupleRead extends CommonSymbolicExpression implements NumericPrimitive,
 		BooleanPrimitive {
 
 	private TreeExpressionIF tupleExpression;
@@ -45,7 +45,7 @@ public class TupleRead extends SymbolicExpression implements NumericPrimitive,
 				+ indexExpression.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof TupleRead) {
 			return tupleExpression
 					.equals(((TupleRead) expression).tupleExpression)
@@ -75,8 +75,8 @@ public class TupleRead extends SymbolicExpression implements NumericPrimitive,
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.TUPLE_READ;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.TUPLE_READ;
 	}
 
 	public int numArguments() {

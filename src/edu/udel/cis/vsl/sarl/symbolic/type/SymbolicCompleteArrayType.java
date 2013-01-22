@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 
 public class SymbolicCompleteArrayType extends SymbolicArrayType implements
 		SymbolicCompleteArrayTypeIF {
@@ -17,17 +17,7 @@ public class SymbolicCompleteArrayType extends SymbolicArrayType implements
 	}
 
 	@Override
-	boolean intrinsicEquals(SymbolicType that) {
-		if (that instanceof SymbolicCompleteArrayType) {
-			SymbolicCompleteArrayType arrayType = (SymbolicCompleteArrayType) that;
-
-			return super.equals(arrayType) && extent.equals(arrayType.extent);
-		}
-		return false;
-	}
-
-	@Override
-	int intrinsicHashCode() {
+	protected int computeHashCode() {
 		return super.hashCode() + extent.hashCode();
 	}
 

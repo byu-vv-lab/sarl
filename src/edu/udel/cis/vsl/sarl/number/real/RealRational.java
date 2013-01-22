@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.number.real;
 
 import java.math.BigInteger;
 
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
 
 /**
  * An infinite precision representation of the mathematical rational numbers. A
@@ -18,7 +18,7 @@ import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
  * @author siegel
  * 
  */
-public class RealRational implements RationalNumberIF {
+public class RealRational extends RealNumber implements RationalNumberIF {
 
 	private BigInteger numerator;
 
@@ -32,6 +32,7 @@ public class RealRational implements RationalNumberIF {
 		this.denominator = denominator;
 	}
 
+	@Override
 	public int signum() {
 		return numerator.signum();
 	}
@@ -44,6 +45,7 @@ public class RealRational implements RationalNumberIF {
 		return denominator;
 	}
 
+	@Override
 	public String toString() {
 		if (denominator.equals(BigInteger.ONE)) {
 			return numerator.toString();
@@ -52,15 +54,19 @@ public class RealRational implements RationalNumberIF {
 		}
 	}
 
+	@Override
 	public String atomString() {
 		return "(" + toString() + ")";
 	}
 
+	@Override
 	public boolean isZero() {
 		return numerator == BigInteger.ZERO;
 	}
 
+	@Override
 	public boolean isOne() {
 		return numerator.equals(denominator);
 	}
+
 }

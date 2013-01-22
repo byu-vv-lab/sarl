@@ -3,13 +3,13 @@ package edu.udel.cis.vsl.sarl.prove.ideal;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverException;
-import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.util.TernaryResult.ResultType;
 
 /**
  * A hybrid prover for symbolic expressions in the ideal canonical form. It

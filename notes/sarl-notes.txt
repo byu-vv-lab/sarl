@@ -1,0 +1,99 @@
+most symbolic expressions can just be SymbolicExpression objects.
+
+ideal universe can put them in the right form
+
+could create another kind of symbolic expression:
+
+CHOICE <sequence>
+
+meaning all of the elements of the sequence are equivalent--choose one?
+
+special class for factored polynomials
+
+FactoredPolynomial 
+  SymbolicExpressionIF polynomial;
+  SymbolicExpressionIF factorization;
+
+the form of the factorization:
+  factorization ::= MULTIPLY sequence<polynomial-power>
+  polynomial-power ::= POWER polynomial Integer
+
+the form of the polynomial
+  polynomial ::= ADD sequence<monomial> | monomial
+  monomial ::= MULTIPLY number monic | Number | monic
+  monic ::= MULTIPLY sequence<primitive-power> | primitive-power
+  primitive-power ::= POWER primitive Integer | primitive
+  primitive ::= SymbolicExpressionIF
+
+given a polynomial, how to tell which kind it is:
+ADD: it's a         polynomial      = ADD sequence<monomial>
+MULTIPLY (2 args):  monomial        = MULTIPLY number monic
+MULTIPLY (1 arg):   monic           = MULTIPLY sequence<primitive-power>
+POWER:              primitive-power = POWER primitive INTEGER
+Number:             monomial        = number
+else:               primitive       = SymbolicExpressionIF
+
+
+factored-polynomial ::= FactoredPolynomial | polynomial
+
+rational-expression ::= DIVIDE factored-polynomial factored-polynomial
+                     |  factored-polynomial
+
+given a rational-expression, what kind is it?
+
+DIVIDE: must be DIVIDE factored-polynomial factored-polynomial
+else: factored-polynomial
+
+given a factored-polynomial, what kind is it?
+
+FactoredPolynomial: self-explanatory
+else: polynomial
+use CHOICE?
+
+Operations:
+
+add, multiply, et : all combinations
+
+rational-expression: DIVIDE
+factored-polynomial: CHOICE
+polynomial : ADD
+monomial : MULTIPLY number monic
+monic: MULTIPLY sequence<primitive-power>
+primitive-power : POWER
+primitive: PRIMITIVE
+number : NUMBER
+
+number + number = number
+number + primitive = polynomial.  sequence must be ordered using comparator
+  sequence could be TreeSet.  I.e. argument to ADD could be SET not SEQUENCE.
+  TreeMap
+
+given polynomial want to find a matching monomial
+
+
+OPERATION SET
+MAP: keys->values
+translation apply operator.  kind of sequence or set.
+
+Transformation map
+BinaryOperationIF:
+  SymbolicExpressionIF apply(SymbolicExpressionIF, SymbolicExpressionIF)
+apply may return null, meaning, get rid of that entry
+
+SymbolicMapIF combine(BinaryOperationIF, SymbolicMapIF map1, SymbolicMapIF map2) 
+  iterates over the union of the key sets of the two maps
+  if only 1 entry, returns it.  if 2 entries, executes apply to get new value.
+  if new value is non-null, it becomes the value for that key in new map.
+
+examples: adding polynomials:
+  apply takes two monomials with same monic.  adds coefficients.
+  if coefficient is 0, returns null, else returns monomial with new coefficient
+  and same monic
+
+multiplying monics
+  apply takes two primitive powers with same primitive base.   adds their
+  exponents.  not possible to get null.
+
+multiplying factorizations: like above
+
+See https://github.com/gid79/PersistentCollections

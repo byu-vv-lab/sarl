@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.number.IF.Exponentiator;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.Multiplier;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.number.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Exponentiator;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpressionKey;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.Monomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.MonomialFactory;
@@ -77,7 +77,7 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 	 */
 	Factorization factorization(NumericConcreteExpressionIF constant,
 			PowerExpression[] factorPowers) {
-		return SymbolicExpression.flyweight(map, new Factorization(constant,
+		return CommonSymbolicExpression.flyweight(map, new Factorization(constant,
 				factorPowers));
 	}
 
@@ -132,7 +132,7 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 			PowerExpression fp2 = f2.factorPower(index2);
 			Polynomial p1 = (Polynomial) fp1.base();
 			Polynomial p2 = (Polynomial) fp2.base();
-			int compare = SymbolicExpression.compare(p1, p2);
+			int compare = CommonSymbolicExpression.compare(p1, p2);
 
 			if (compare == 0) {
 				newFactorPowers.add(powerExpressionFactory.powerExpression(p1,
@@ -322,7 +322,7 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 			PowerExpression fp2 = fact2.factorPower(index2);
 			Polynomial factor1 = (Polynomial) fp1.base();
 			Polynomial factor2 = (Polynomial) fp2.base();
-			int compare = SymbolicExpression.compare(factor1, factor2);
+			int compare = CommonSymbolicExpression.compare(factor1, factor2);
 
 			if (compare == 0) {
 				NumericConcreteExpressionIF exponent1 = fp1.exponent();

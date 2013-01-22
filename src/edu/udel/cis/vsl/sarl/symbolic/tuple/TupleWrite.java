@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.symbolic.tuple;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class TupleWrite extends SymbolicExpression implements TreeExpressionIF {
+public class TupleWrite extends CommonSymbolicExpression implements TreeExpressionIF {
 
 	private TreeExpressionIF tuple;
 
@@ -48,7 +48,7 @@ public class TupleWrite extends SymbolicExpression implements TreeExpressionIF {
 				+ value.hashCode() + index.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof TupleWrite) {
 			TupleWrite that = (TupleWrite) expression;
 
@@ -71,8 +71,8 @@ public class TupleWrite extends SymbolicExpression implements TreeExpressionIF {
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.TUPLE_WRITE;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.TUPLE_WRITE;
 	}
 
 	public int numArguments() {

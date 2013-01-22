@@ -1,18 +1,18 @@
 package edu.udel.cis.vsl.sarl.symbolic.monomial;
 
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.number.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 
 /**
  * A monomial is the product of a constant (i.e., a numeric concrete value) and
  * a monic monomial.
  */
-public class Monomial extends SymbolicExpression implements TreeExpressionIF {
+public class Monomial extends CommonSymbolicExpression implements TreeExpressionIF {
 
 	private static NumberFactoryIF numberFactory = Numbers.REAL_FACTORY;
 
@@ -43,7 +43,7 @@ public class Monomial extends SymbolicExpression implements TreeExpressionIF {
 				+ monic.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof Monomial) {
 			Monomial that = (Monomial) expression;
 
@@ -114,13 +114,13 @@ public class Monomial extends SymbolicExpression implements TreeExpressionIF {
 		}
 	}
 
-	public SymbolicKind kind() {
+	public SymbolicOperator operator() {
 		if (coefficient.isOne()) {
 			// this is the monic
-			return monic.kind();
+			return monic.operator();
 		} else {
 			// general case...
-			return SymbolicKind.MULTIPLY;
+			return SymbolicOperator.MULTIPLY;
 		}
 	}
 

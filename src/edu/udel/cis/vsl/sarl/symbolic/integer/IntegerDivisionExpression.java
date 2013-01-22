@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.symbolic.integer;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class IntegerDivisionExpression extends SymbolicExpression implements
+public class IntegerDivisionExpression extends CommonSymbolicExpression implements
 		NumericPrimitive {
 
 	// option-? gives Ö in Eclipse. What unicode is this?
@@ -19,7 +19,7 @@ public class IntegerDivisionExpression extends SymbolicExpression implements
 			TreeExpressionIF denominator) {
 		super(numerator.type());
 		assert denominator != null;
-		assert numerator.type().kind() == SymbolicTypeKind.INTEGER;
+		assert numerator.type().operator() == SymbolicTypeKind.INTEGER;
 		assert numerator.type().equals(denominator.type());
 		this.numerator = numerator;
 		this.denominator = denominator;
@@ -38,7 +38,7 @@ public class IntegerDivisionExpression extends SymbolicExpression implements
 				+ numerator.hashCode() + denominator.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof IntegerDivisionExpression) {
 			IntegerDivisionExpression that = (IntegerDivisionExpression) expression;
 
@@ -71,8 +71,8 @@ public class IntegerDivisionExpression extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.INT_DIVIDE;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.INT_DIVIDE;
 	}
 
 	public int numArguments() {

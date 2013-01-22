@@ -1,13 +1,13 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 
-public class ArrayRead extends SymbolicExpression implements NumericPrimitive,
+public class ArrayRead extends CommonSymbolicExpression implements NumericPrimitive,
 		BooleanPrimitive, TreeExpressionIF {
 
 	private TreeExpressionIF array;
@@ -18,7 +18,7 @@ public class ArrayRead extends SymbolicExpression implements NumericPrimitive,
 		super(((SymbolicArrayTypeIF) array.type()).elementType());
 		this.array = array;
 		assert index != null;
-		assert index.type().kind() == SymbolicTypeKind.INTEGER;
+		assert index.type().operator() == SymbolicTypeKind.INTEGER;
 		this.index = index;
 	}
 
@@ -34,7 +34,7 @@ public class ArrayRead extends SymbolicExpression implements NumericPrimitive,
 		return ArrayRead.class.hashCode() + array.hashCode() + index.hashCode();
 	}
 
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof ArrayRead) {
 			return array.equals(((ArrayRead) expression).array)
 					&& index.equals(((ArrayRead) expression).index);
@@ -69,8 +69,8 @@ public class ArrayRead extends SymbolicExpression implements NumericPrimitive,
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.ARRAY_READ;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.ARRAY_READ;
 	}
 
 	public int numArguments() {

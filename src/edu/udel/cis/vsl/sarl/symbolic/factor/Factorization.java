@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.symbolic.factor;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
-import edu.udel.cis.vsl.sarl.symbolic.expression.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.polynomial.Polynomial;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
 
@@ -26,7 +26,7 @@ import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
  * 
  * The factors are guaranteed to be indexed in order of increasing id.
  */
-public class Factorization extends SymbolicExpression implements
+public class Factorization extends CommonSymbolicExpression implements
 		TreeExpressionIF {
 
 	/**
@@ -113,7 +113,7 @@ public class Factorization extends SymbolicExpression implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicExpression expression) {
+	protected boolean intrinsicEquals(CommonSymbolicExpression expression) {
 		if (expression instanceof Factorization) {
 			Factorization that = (Factorization) expression;
 
@@ -142,8 +142,8 @@ public class Factorization extends SymbolicExpression implements
 		}
 	}
 
-	public SymbolicKind kind() {
-		return SymbolicKind.MULTIPLY;
+	public SymbolicOperator operator() {
+		return SymbolicOperator.MULTIPLY;
 	}
 
 	public int numArguments() {
