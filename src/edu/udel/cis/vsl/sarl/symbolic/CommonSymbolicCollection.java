@@ -3,8 +3,8 @@ package edu.udel.cis.vsl.sarl.symbolic;
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
 
-public abstract class CommonSymbolicCollection extends CommonSymbolicObject implements
-		SymbolicCollection {
+public abstract class CommonSymbolicCollection extends CommonSymbolicObject
+		implements SymbolicCollection {
 
 	private SymbolicCollectionKind collectionKind;
 
@@ -18,6 +18,17 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject impl
 		return collectionKind;
 	}
 
+	/**
+	 * Compares this to a collection of the same kind. Each implementing class
+	 * should define this method. That class may assume that the given
+	 * collection o has the same collection kind as this, i.e.,
+	 * o.collectionKind() == this.collectionKind().
+	 * 
+	 * @param o
+	 *            a symbolic collection of the same kind as this
+	 * @return a negative int if this precedes o in the total order, 0 if the
+	 *         collections are equals, a positive int if o comes first
+	 */
 	protected abstract int compareCollection(SymbolicCollection o);
 
 	@Override
@@ -33,6 +44,13 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject impl
 		return compareCollection((SymbolicCollection) o);
 	}
 
+	/**
+	 * Tells whether the two collections (o and this) are equal, assuming o and
+	 * this have the same kind.
+	 * 
+	 * @param o
+	 * @return
+	 */
 	protected abstract boolean collectionEquals(SymbolicCollection o);
 
 	@Override

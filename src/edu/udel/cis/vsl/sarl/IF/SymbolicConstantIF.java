@@ -1,6 +1,5 @@
 package edu.udel.cis.vsl.sarl.IF;
 
-import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 
 /**
@@ -17,7 +16,7 @@ import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
  * @author siegel
  * 
  */
-public interface SymbolicConstantIF extends BooleanPrimitive, NumericPrimitive {
+public interface SymbolicConstantIF extends NumericPrimitive {
 
 	/** Returns the name of this symbolic constant */
 	String name();

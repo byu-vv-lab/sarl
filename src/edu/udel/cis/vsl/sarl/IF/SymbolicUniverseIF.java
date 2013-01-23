@@ -66,6 +66,15 @@ public interface SymbolicUniverseIF {
 	SymbolicTypeSequenceIF typeSequence(Iterable<SymbolicTypeIF> types);
 
 	/**
+	 * Returns the singleton sequence consisting of the given type.
+	 * 
+	 * @param type
+	 *            any symbolic type
+	 * @return singleton sequence (type)
+	 */
+	SymbolicTypeSequenceIF singletonSequence(SymbolicTypeIF type);
+
+	/**
 	 * The tuple type defined by the given sequence of component types. The
 	 * tuple type consists of all tuples of values (x_0,...,x_{n-1}), where
 	 * x_{i} has type fieldsTypes[i]. A tuple type also has a name, and two
@@ -835,6 +844,21 @@ public interface SymbolicUniverseIF {
 	 *         of elements
 	 */
 	SymbolicSequence sequence(SymbolicExpressionIF[] elements);
+
+	/**
+	 * Returns the sequence of length 1 consisting of the given element.
+	 * 
+	 * @param element
+	 * @return the sequence consisting of just the one element
+	 */
+	SymbolicSequence singletonSequence(SymbolicExpressionIF element);
+
+	/**
+	 * Returns the empty sequence.
+	 * 
+	 * @return the empty sequence
+	 */
+	SymbolicSequence emptySequence();
 
 	/**
 	 * Appends an element to the end of a sequence.

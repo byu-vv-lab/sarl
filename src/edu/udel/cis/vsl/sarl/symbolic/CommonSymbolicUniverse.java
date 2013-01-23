@@ -677,72 +677,209 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return result;
 	}
 
+	/**
+	 * <pre>
+	 * expr       : AND set<or> | or
+	 * or         : OR set<basic> | basic
+	 * basic      : literal | quantifier | relational
+	 * literal    : booleanPrimitive | ! booleanPrimitive
+	 * quantifier : q[symbolicConstant].expr
+	 * q          : forall | exists
+	 * relational : 0<e | 0=e | 0<=e | 0!=e
+	 * </pre>
+	 * 
+	 * Note: a booleanPrimitive is any boolean expression that doesn't fall into
+	 * one of the other categories above.
+	 * 
+	 * <pre>
+	 * not(AND set) => or(s in set) not(s)
+	 * not(or set) => and(s in set) not(s)
+	 * not(!e) => e
+	 * not(forall x.e) => exists x.not(e)
+	 * not(exists x.e) => forall x.not(e)
+	 * not(0<e) => 0<=-e
+	 * not(0=e) => 0!=e
+	 * not(0!=e) => 0=e
+	 * not(0<=e) => 0<-e
+	 * not(booleanPrimitive) = !booleanPrimitive
+	 * </pre>
+	 */
 	@Override
 	public SymbolicExpressionIF not(SymbolicExpressionIF arg) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicOperator operator = arg.operator();
+
+		switch (operator) {
+		case AND: {
+			SymbolicExpressionIF result = falseExpr;
+
+			for (SymbolicExpressionIF clause : (SymbolicSet) arg.argument(0))
+				result = or(result, not(clause));
+			return result;
+		}
+		case OR: {
+			SymbolicExpressionIF result = trueExpr;
+
+			for (SymbolicExpressionIF clause : (SymbolicSet) arg.argument(0))
+				result = and(result, not(clause));
+			return result;
+		}
+		case NOT:
+			return (SymbolicExpressionIF) arg.argument(0);
+		case FORALL:
+			return expression(SymbolicOperator.EXISTS, booleanType,
+					(SymbolicConstantIF) arg.argument(0),
+					not((SymbolicExpressionIF) arg.argument(1)));
+		case EXISTS:
+			return expression(SymbolicOperator.FORALL, booleanType,
+					(SymbolicConstantIF) arg.argument(0),
+					not((SymbolicExpressionIF) arg.argument(1)));
+		case LESS_THAN:
+			return expression(SymbolicOperator.LESS_THAN_EQUALS, booleanType,
+					(SymbolicExpressionIF) arg.argument(0),
+					minus((SymbolicExpressionIF) arg.argument(1)));
+		case EQUALS:
+			return expression(SymbolicOperator.NEQ, booleanType,
+					(SymbolicExpressionIF) arg.argument(0),
+					(SymbolicExpressionIF) arg.argument(1));
+		case LESS_THAN_EQUALS:
+			return expression(SymbolicOperator.LESS_THAN, booleanType,
+					(SymbolicExpressionIF) arg.argument(0),
+					minus((SymbolicExpressionIF) arg.argument(1)));
+		case NEQ:
+			return expression(SymbolicOperator.EQUALS, booleanType,
+					(SymbolicExpressionIF) arg.argument(0),
+					(SymbolicExpressionIF) arg.argument(1));
+		default:
+			return expression(SymbolicOperator.NOT, booleanType, arg);
+		}
 	}
 
+	/**
+	 * a<b => 0<b-a.
+	 */
 	@Override
 	public SymbolicExpressionIF lessThan(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF difference = subtract(arg1, arg0);
+		NumberIF number = extractNumber(difference);
+
+		if (number == null)
+			return expression(SymbolicOperator.LESS_THAN, booleanType,
+					zero(arg0.type()), difference);
+		else
+			return number.signum() > 0 ? trueExpr : falseExpr;
 	}
 
+	/**
+	 * a<=b => 0<=b-a.
+	 */
 	@Override
 	public SymbolicExpressionIF lessThanEquals(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF difference = subtract(arg1, arg0);
+		NumberIF number = extractNumber(difference);
+
+		if (number == null)
+			return expression(SymbolicOperator.LESS_THAN_EQUALS, booleanType,
+					zero(arg0.type()), difference);
+		else
+			return number.signum() >= 0 ? trueExpr : falseExpr;
 	}
 
 	@Override
 	public SymbolicExpressionIF equals(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF difference = subtract(arg1, arg0);
+		NumberIF number = extractNumber(difference);
+
+		if (number == null)
+			return expression(SymbolicOperator.EQUALS, booleanType,
+					zero(arg0.type()), difference);
+		else
+			return number.isZero() ? trueExpr : falseExpr;
 	}
 
 	@Override
 	public SymbolicExpressionIF neq(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF difference = subtract(arg1, arg0);
+		NumberIF number = extractNumber(difference);
+
+		if (number == null)
+			return expression(SymbolicOperator.NEQ, booleanType,
+					zero(arg0.type()), difference);
+		else
+			return number.isZero() ? falseExpr : trueExpr;
 	}
 
+	/**
+	 * forall x.true => true forall x.false => false forall x.(p && q) =>
+	 * (forall x.p) && (forall x.q) TODO: forall i.(0<i-a && 0<b-i -> e) =>
+	 * and...
+	 */
 	@Override
 	public SymbolicExpressionIF forall(SymbolicConstantIF boundVariable,
 			SymbolicExpressionIF predicate) {
-		// TODO Auto-generated method stub
-		return null;
+		if (predicate == trueExpr)
+			return trueExpr;
+		if (predicate == falseExpr)
+			return falseExpr;
+		if (predicate.operator() == SymbolicOperator.AND) {
+			SymbolicExpressionIF result = trueExpr;
+
+			for (SymbolicExpressionIF clause : (SymbolicSet) predicate
+					.argument(0))
+				result = and(result, forall(boundVariable, clause));
+			return result;
+		}
+		return expression(SymbolicOperator.FORALL, booleanType, boundVariable,
+				predicate);
 	}
 
 	@Override
 	public SymbolicExpressionIF exists(SymbolicConstantIF boundVariable,
 			SymbolicExpressionIF predicate) {
-		// TODO Auto-generated method stub
-		return null;
+		if (predicate == trueExpr)
+			return trueExpr;
+		if (predicate == falseExpr)
+			return falseExpr;
+		if (predicate.operator() == SymbolicOperator.OR) {
+			SymbolicExpressionIF result = falseExpr;
+
+			for (SymbolicExpressionIF clause : (SymbolicSet) predicate
+					.argument(0))
+				result = or(result, exists(boundVariable, clause));
+			return result;
+		}
+		return expression(SymbolicOperator.EXISTS, booleanType, boundVariable,
+				predicate);
 	}
 
 	@Override
 	public Boolean extractBoolean(SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
+		if (expression == trueExpr)
+			return true;
+		if (expression == falseExpr)
+			return false;
 		return null;
 	}
 
 	@Override
 	public SymbolicExpressionIF lambda(SymbolicConstantIF boundVariable,
 			SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
-		return null;
+		return expression(
+				SymbolicOperator.LAMBDA,
+				functionType(singletonSequence(boundVariable.type()),
+						expression.type()), boundVariable, expression);
 	}
 
 	@Override
 	public SymbolicExpressionIF apply(SymbolicExpressionIF function,
 			SymbolicSequence argumentSequence) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO: check types!
+		return expression(SymbolicOperator.APPLY,
+				((SymbolicFunctionTypeIF) function.type()).outputType(),
+				function, argumentSequence);
 	}
 
 	@Override
@@ -855,6 +992,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	}
 
 	@Override
+	public SymbolicSequence singletonSequence(SymbolicExpressionIF element) {
+		// TODO
+		return null;
+
+	}
+
+	@Override
 	public SymbolicSequence add(SymbolicSequence sequence,
 			SymbolicExpressionIF element) {
 		// TODO Auto-generated method stub
@@ -945,6 +1089,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public SymbolicSet removeAll(SymbolicSet set1, SymbolicSet set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicTypeSequenceIF singletonSequence(SymbolicTypeIF type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSequence emptySequence() {
 		// TODO Auto-generated method stub
 		return null;
 	}

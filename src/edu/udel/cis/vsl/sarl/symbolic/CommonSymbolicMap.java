@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -9,7 +10,8 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
 
-public class CommonSymbolicMap extends CommonSymbolicCollection implements SymbolicMap {
+public class CommonSymbolicMap extends CommonSymbolicCollection implements
+		SymbolicMap {
 
 	private PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
 
@@ -39,12 +41,14 @@ public class CommonSymbolicMap extends CommonSymbolicCollection implements Symbo
 	}
 
 	@Override
-	public Iterable<SymbolicExpressionIF> elements() {
-		return pmap.values();
+	public Iterator<SymbolicExpressionIF> iterator() {
+		return pmap.values().iterator();
 	}
 
 	/**
-	 * Know that o is a MAP collection of same size as this one.
+	 * Know that o is a MAP collection of same size as this one. TODO: THIS
+	 * ASSUMES entries are ordered. I want ordered sets.
+	 * 
 	 */
 	@Override
 	protected int compareCollection(SymbolicCollection o) {
@@ -87,6 +91,11 @@ public class CommonSymbolicMap extends CommonSymbolicCollection implements Symbo
 		CommonSymbolicMap that = (CommonSymbolicMap) o;
 
 		return pmap.equals(that.pmap);
+	}
+
+	@Override
+	public String toString() {
+		return pmap.toString();
 	}
 
 }
