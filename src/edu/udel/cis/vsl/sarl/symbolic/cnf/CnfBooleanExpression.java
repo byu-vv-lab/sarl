@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
 import java.util.Arrays;
 
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 
 /**
  * A CnfBooleanExpression is the root of the canonical form for boolean
@@ -15,7 +15,7 @@ import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
  * 
  */
 public class CnfBooleanExpression extends CommonSymbolicExpression implements
-		TreeExpressionIF {
+		SymbolicExpressionIF {
 
 	private static int classCode = CnfBooleanExpression.class.hashCode();
 

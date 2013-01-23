@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
@@ -46,13 +47,26 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private SymbolicTypeFactory typeFactory;
 
+	private SymbolicTypeIF booleanType, integerType, realType;
+
+	private SymbolicExpressionIF trueExpr, falseExpr;
+
+	private SymbolicExpressionIF zeroInt, zeroReal, oneInt, oneReal;
+
 	public CommonSymbolicUniverse(SymbolicTypeFactory typeFactory) {
 		this.typeFactory = typeFactory;
+		this.booleanType = typeFactory.booleanType();
+		this.integerType = typeFactory.integerType();
+		this.realType = typeFactory.realType();
+		this.trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
+				booleanObject(true));
+		this.falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
+				booleanObject(false));
 	}
 
 	// Helpers...
 
-	private SymbolicObject canonic(SymbolicObject object) {
+	protected SymbolicObject canonic(SymbolicObject object) {
 		SymbolicObject result = objectMap.get(object);
 
 		if (result == null) {
@@ -64,13 +78,44 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return result;
 	}
 
-	private SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
+	protected SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
 		return (SymbolicExpressionIF) canonic((SymbolicObject) expression);
 	}
 
-	private SymbolicExpressionIF concrete(SymbolicTypeIF type,
-			SymbolicObject object) {
-		return canonic(new ConcreteSymbolicExpression(type, object));
+	protected SymbolicExpressionIF expression(SymbolicOperator operator,
+			SymbolicTypeIF type, SymbolicObject[] arguments) {
+		return canonic(new CommonSymbolicExpression(operator, type, arguments));
+	}
+
+	protected SymbolicExpressionIF expression(SymbolicOperator operator,
+			SymbolicTypeIF type, SymbolicObject arg0) {
+		return canonic(new CommonSymbolicExpression(operator, type, arg0));
+	}
+
+	protected SymbolicExpressionIF expression(SymbolicOperator operator,
+			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1) {
+		return canonic(new CommonSymbolicExpression(operator, type, arg0, arg1));
+	}
+
+	protected SymbolicExpressionIF expression(SymbolicOperator operator,
+			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1,
+			SymbolicObject arg2) {
+		return canonic(new CommonSymbolicExpression(operator, type, arg0, arg1,
+				arg2));
+	}
+
+	protected SymbolicExpressionIF zero(SymbolicTypeIF type) {
+		if (type.isInteger())
+			return zeroInt();
+		else if (type.isReal())
+			return zeroReal();
+		else
+			throw new SARLInternalException("Expected type int or real, not "
+					+ type);
+	}
+
+	protected SymbolicSet set(SymbolicExpressionIF x, SymbolicExpressionIF y) {
+		return add(singleton(x), y);
 	}
 
 	// Exported methods...
@@ -115,7 +160,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		case CAST:
 			return castToReal((SymbolicExpressionIF) args[0]);
 		case CONCRETE:
-			return concrete(type, args[0]);
+			return expression(SymbolicOperator.CONCRETE, type, args[0]);
 		case COND:
 			return cond((SymbolicExpressionIF) args[0],
 					(SymbolicExpressionIF) args[1],
@@ -217,6 +262,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		}
 	}
 
+	@Override
 	public SymbolicExpressionIF add(SymbolicCollection args) {
 		int size = args.size();
 		SymbolicExpressionIF result = null;
@@ -224,7 +270,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		if (size == 0)
 			throw new IllegalArgumentException(
 					"Collection must contain at least one element");
-		for (SymbolicExpressionIF arg : args.elements()) {
+		for (SymbolicExpressionIF arg : args) {
 			if (result == null)
 				result = arg;
 			else
@@ -233,59 +279,81 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return result;
 	}
 
-	// Helper
-
-	protected SymbolicExpressionIF zero(SymbolicTypeIF type) {
-		if (type.isInteger())
-			return zeroInt();
-		else if (type.isReal())
-			return zeroReal();
-		else
-			throw new SARLInternalException("Expected type int or real, not "
-					+ type);
-	}
-
+	/**
+	 * Cannot assume anything about the collection of arguments. Therefore just
+	 * apply the binary and operator to them in order.
+	 */
 	@Override
 	public SymbolicExpressionIF and(SymbolicCollection args) {
-		int size = args.size();
-		SymbolicExpressionIF result = null;
+		SymbolicExpressionIF result = trueExpr;
 
-		if (size == 0)
-			throw new IllegalArgumentException(
-					"Collection must contain at least one element");
-		for (SymbolicExpressionIF arg : args.elements()) {
-			if (result == null)
-				result = arg;
-			else
-				result = and(result, arg);
-		}
+		for (SymbolicExpressionIF arg : args)
+			result = and(result, arg);
 		return result;
 	}
 
+	/**
+	 * Assumes the given arguments are in CNF form and produces the conjunction
+	 * of the two.
+	 * 
+	 * CNF form: true | false | AND set | e
+	 * 
+	 * where set is a set of boolean expressions which are not true, false, or
+	 * AND expressions and set has cardinality at least 2. e is any boolean
+	 * expression not a true, false, or AND expression. Strategy: eliminate the
+	 * true and false cases in the obvious way. Then
+	 * 
+	 * <pre>
+	 * AND s1, AND s2 -> AND union(s1,s2)
+	 * AND s1, e -> AND add(s1, e)
+	 * AND e1, e2-> if e1.equals(e2) then e1 else AND {e1,e2}
+	 * </pre>
+	 */
 	@Override
 	public SymbolicExpressionIF and(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		// TODO CNF
-		return null;
+		if (arg0 == trueExpr)
+			return arg1;
+		if (arg1 == trueExpr)
+			return arg0;
+		if (arg0 == falseExpr || arg1 == falseExpr)
+			return falseExpr;
+		if (arg0.equals(arg1))
+			return arg0;
+		else {
+			boolean isAnd0 = arg0.operator() == SymbolicOperator.AND;
+			boolean isAnd1 = arg1.operator() == SymbolicOperator.AND;
+
+			if (isAnd0 && isAnd1)
+				return expression(
+						SymbolicOperator.AND,
+						booleanType,
+						union((SymbolicSet) arg0.argument(0),
+								(SymbolicSet) arg1.argument(0)));
+			if (isAnd0 && !isAnd1)
+				return expression(SymbolicOperator.AND, booleanType,
+						add((SymbolicSet) arg0.argument(0), arg1));
+			if (!isAnd0 && isAnd1)
+				return expression(SymbolicOperator.AND, booleanType,
+						add((SymbolicSet) arg1.argument(0), arg0));
+			return expression(SymbolicOperator.AND, booleanType,
+					set(arg0, arg1));
+		}
 	}
 
 	@Override
 	public SymbolicTypeIF booleanType() {
-		// TODO Auto-generated method stub
-		return null;
+		return booleanType;
 	}
 
 	@Override
 	public SymbolicTypeIF integerType() {
-		// TODO Auto-generated method stub
-		return null;
+		return integerType;
 	}
 
 	@Override
 	public SymbolicTypeIF realType() {
-		// TODO Auto-generated method stub
-		return null;
+		return realType;
 	}
 
 	@Override
@@ -531,17 +599,82 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return null;
 	}
 
+	/**
+	 * Assume both args are in CNF normal form:
+	 * 
+	 * arg: true | false | AND set1 | OR set2 | e
+	 * 
+	 * Strategy: get rid of true false cases as usual. Then:
+	 * 
+	 * <pre>
+	 * or(AND set, X) = and(s in set) or(s,X)
+	 * or(X, AND set) = and(s in set) or(X,s)
+	 * or(OR set0, OR set1) = OR(union(set0, set1))
+	 * or(OR set, e) = OR(add(set, e))
+	 * or(e, OR set) = OR(add(set, e))
+	 * or(e1, e2) = OR(set(e1,e2))
+	 * </pre>
+	 * 
+	 * where X is an AND, OR or e expression; set0 and set1 are sets of e
+	 * expressions.
+	 */
 	@Override
 	public SymbolicExpressionIF or(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arg0 == trueExpr || arg1 == trueExpr)
+			return trueExpr;
+		if (arg0 == falseExpr)
+			return arg1;
+		if (arg1 == falseExpr)
+			return arg0;
+		if (arg0.equals(arg1))
+			return arg0;
+		else {
+			SymbolicOperator op0 = arg0.operator();
+			SymbolicOperator op1 = arg1.operator();
+
+			if (op0 == SymbolicOperator.AND) {
+				SymbolicExpressionIF result = falseExpr;
+
+				for (SymbolicExpressionIF clause : (SymbolicSet) arg0
+						.argument(0))
+					result = or(result, and(clause, arg1));
+				return result;
+			}
+			if (op1 == SymbolicOperator.AND) {
+				SymbolicExpressionIF result = falseExpr;
+
+				for (SymbolicExpressionIF clause : (SymbolicSet) arg1
+						.argument(0))
+					result = or(result, and(arg0, clause));
+				return result;
+			}
+			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR)
+				return expression(
+						op0,
+						booleanType,
+						union((SymbolicSet) arg0.argument(0),
+								(SymbolicSet) arg1.argument(0)));
+			if (op0 == SymbolicOperator.OR)
+				return expression(op0, booleanType,
+						add((SymbolicSet) arg0.argument(0), arg1));
+			if (op1 == SymbolicOperator.OR)
+				return expression(op1, booleanType,
+						add((SymbolicSet) arg1.argument(0), arg0));
+			return expression(SymbolicOperator.OR, booleanType, set(arg0, arg1));
+		}
 	}
 
+	/**
+	 * Assume nothing about the list of args.
+	 */
 	@Override
 	public SymbolicExpressionIF or(SymbolicCollection args) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF result = falseExpr;
+
+		for (SymbolicExpressionIF arg : args)
+			result = or(result, arg);
+		return result;
 	}
 
 	@Override
@@ -770,6 +903,48 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map1,
 			SymbolicMap map2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet emptySet() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet add(SymbolicSet set, SymbolicExpressionIF element) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet union(SymbolicSet set0, SymbolicSet set1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet singleton(SymbolicExpressionIF element) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet remove(SymbolicSet set, SymbolicExpressionIF element) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet intersection(SymbolicSet set1, SymbolicSet set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicSet removeAll(SymbolicSet set1, SymbolicSet set2) {
 		// TODO Auto-generated method stub
 		return null;
 	}

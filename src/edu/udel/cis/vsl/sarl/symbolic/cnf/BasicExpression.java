@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic.cnf;
 
-import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 
 /**
  * Marks a class as representing a "basic" boolean expression. This is a
@@ -19,6 +19,6 @@ import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
  * @author siegel
  * 
  */
-public interface BasicExpression extends TreeExpressionIF {
+public interface BasicExpression extends SymbolicExpressionIF {
 
 }

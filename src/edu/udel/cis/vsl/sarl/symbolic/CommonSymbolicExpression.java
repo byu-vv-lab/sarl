@@ -15,8 +15,8 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
  * is no need to override the equals or hashCode methods of Object.
  * 
  */
-public abstract class CommonSymbolicExpression extends CommonSymbolicObject
-		implements SymbolicExpressionIF {
+public class CommonSymbolicExpression extends CommonSymbolicObject implements
+		SymbolicExpressionIF {
 
 	private SymbolicOperator operator;
 
@@ -125,5 +125,15 @@ public abstract class CommonSymbolicExpression extends CommonSymbolicObject
 	@Override
 	public int numArguments() {
 		return arguments.length;
+	}
+
+	@Override
+	public String toString() {
+		return operator.toString() + "[" + type + "; " + arguments + "]";
+	}
+
+	@Override
+	public String atomString() {
+		return toString();
 	}
 }
