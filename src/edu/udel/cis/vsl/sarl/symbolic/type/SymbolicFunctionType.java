@@ -2,15 +2,16 @@ package edu.udel.cis.vsl.sarl.symbolic.type;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
 
 public class SymbolicFunctionType extends SymbolicType implements
 		SymbolicFunctionTypeIF {
 
-	private SymbolicTypeSequence inputTypes;
+	private SymbolicTypeSequenceIF inputTypes;
 
 	private SymbolicTypeIF outputType;
 
-	SymbolicFunctionType(SymbolicTypeSequence inputTypes,
+	SymbolicFunctionType(SymbolicTypeSequenceIF inputTypes,
 			SymbolicTypeIF outputType) {
 		super(SymbolicTypeKind.FUNCTION);
 		assert inputTypes != null;
@@ -44,7 +45,7 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	public SymbolicTypeSequence inputTypes() {
+	public SymbolicTypeSequenceIF inputTypes() {
 		return inputTypes;
 	}
 

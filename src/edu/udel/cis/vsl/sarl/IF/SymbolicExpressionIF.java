@@ -68,6 +68,13 @@ package edu.udel.cis.vsl.sarl.IF;
  * one type to another. 1 argument: the value being cast. The type() method in
  * this expression yields the new type to which the element is being cast.</li>
  * 
+ * <li>CHOICE: an expression which has multiple representations. To use this
+ * expression, any one of the arguments may be chosen. Example: a polynomial may
+ * be expressed in two different ways, e.g., x^2+2x+1 and (x+1)^2. This can be
+ * represented using a CHOICE operators with those two arguments. Number of
+ * arguments: any. Either: (1) all of the arguments are symbolic expressions, or
+ * (2) there is 1 argument and it is a SymbolicCollection.</li>
+ * 
  * <li>CONCRETE: a concrete value acting as a symbolic expression. One argument,
  * which is the concrete value. Argument may be BooleanObject, NumberObject, or
  * SymbolicCollection. The latter serves as concrete values for arrays, tuples.</li>
@@ -195,6 +202,7 @@ public interface SymbolicExpressionIF extends SymbolicObject {
 		ARRAY_READ,
 		ARRAY_WRITE,
 		CAST,
+		CHOICE,
 		CONCRETE,
 		COND,
 		DENSE_ARRAY_WRITE,

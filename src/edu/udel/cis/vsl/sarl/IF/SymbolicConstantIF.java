@@ -1,7 +1,5 @@
 package edu.udel.cis.vsl.sarl.IF;
 
-import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-
 /**
  * A "symbolic constant" is a symbol used in symbolic execution to represent an
  * input value. It is "constant" in the sense that its value does not change in
@@ -16,11 +14,12 @@ import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
  * @author siegel
  * 
  */
-public interface SymbolicConstantIF extends NumericPrimitive {
+public interface SymbolicConstantIF extends SymbolicExpressionIF {
 
 	/** Returns the name of this symbolic constant */
-	String name();
+	StringObject name();
 
 	/** Returns the type of this symbolic constant */
 	SymbolicTypeIF type();
+
 }

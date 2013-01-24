@@ -611,11 +611,14 @@ public interface SymbolicUniverseIF {
 	/**
 	 * Returns the concrete array consisting of given sequence of elements.
 	 * 
+	 * @param elementType
+	 *            the type of each element of the array
 	 * @param elements
 	 *            sequence of symbolic expressions
 	 * @return array consisting of those elements
 	 */
-	SymbolicExpressionIF array(SymbolicSequence elements);
+	SymbolicExpressionIF array(SymbolicTypeIF elementType,
+			SymbolicSequence elements);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a

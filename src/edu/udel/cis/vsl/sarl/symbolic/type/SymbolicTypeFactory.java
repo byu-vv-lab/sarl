@@ -114,8 +114,8 @@ public class SymbolicTypeFactory {
 				memberTypes));
 	}
 
-	public SymbolicFunctionTypeIF functionType(SymbolicTypeSequence inputTypes,
-			SymbolicTypeIF outputType) {
+	public SymbolicFunctionTypeIF functionType(
+			SymbolicTypeSequenceIF inputTypes, SymbolicTypeIF outputType) {
 		return (SymbolicFunctionTypeIF) canonicalize(new SymbolicFunctionType(
 				inputTypes, outputType));
 	}

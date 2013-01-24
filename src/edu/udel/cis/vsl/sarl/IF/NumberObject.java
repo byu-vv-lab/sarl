@@ -22,14 +22,4 @@ public interface NumberObject extends SymbolicObject {
 	 */
 	boolean isOne();
 
-	/**
-	 * Tells whether the type of this expression is integer.
-	 */
-	boolean isInteger();
-
-	/**
-	 * Tells whether the type of this expression is real.
-	 */
-	boolean isReal();
-
 }

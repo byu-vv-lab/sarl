@@ -8,6 +8,8 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.IntObject;
+import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -22,6 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
@@ -45,28 +48,47 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private ArrayList<SymbolicObject> objectList = new ArrayList<SymbolicObject>();
 
+	private ArrayList<SymbolicConstantIF> symbolicConstantList = new ArrayList<SymbolicConstantIF>();
+
 	private SymbolicTypeFactory typeFactory;
+
+	private NumberFactoryIF numberFactory;
 
 	private SymbolicTypeIF booleanType, integerType, realType;
 
+	private BooleanObject trueObj, falseObj;
+
 	private SymbolicExpressionIF trueExpr, falseExpr;
+
+	private NumberObject zeroIntObj, zeroRealObj, oneIntObj, oneRealObj;
 
 	private SymbolicExpressionIF zeroInt, zeroReal, oneInt, oneReal;
 
-	public CommonSymbolicUniverse(SymbolicTypeFactory typeFactory) {
+	public CommonSymbolicUniverse(SymbolicTypeFactory typeFactory,
+			NumberFactoryIF numberFactory) {
 		this.typeFactory = typeFactory;
 		this.booleanType = typeFactory.booleanType();
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
+		this.trueObj = booleanObject(true);
+		this.falseObj = booleanObject(false);
 		this.trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				booleanObject(true));
+				trueObj);
 		this.falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				booleanObject(false));
+				falseObj);
+		this.zeroIntObj = numberObject(numberFactory.zeroInteger());
+		this.zeroRealObj = numberObject(numberFactory.zeroRational());
+		this.oneIntObj = numberObject(numberFactory.oneInteger());
+		this.oneRealObj = numberObject(numberFactory.oneRational());
+		zeroInt = expression(SymbolicOperator.CONCRETE, integerType, zeroIntObj);
+		zeroReal = expression(SymbolicOperator.CONCRETE, realType, zeroRealObj);
+		oneInt = expression(SymbolicOperator.CONCRETE, integerType, oneIntObj);
+		oneReal = expression(SymbolicOperator.CONCRETE, realType, oneRealObj);
 	}
 
 	// Helpers...
 
-	protected SymbolicObject canonic(SymbolicObject object) {
+	public SymbolicObject canonic(SymbolicObject object) {
 		SymbolicObject result = objectMap.get(object);
 
 		if (result == null) {
@@ -359,65 +381,55 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicCompleteArrayTypeIF arrayType(SymbolicTypeIF elementType,
 			SymbolicExpressionIF extent) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.arrayType(elementType, extent);
 	}
 
 	@Override
 	public SymbolicArrayTypeIF arrayType(SymbolicTypeIF elementType) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.arrayType(elementType);
 	}
 
 	@Override
 	public SymbolicTypeSequenceIF typeSequence(SymbolicTypeIF[] types) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.sequence(types);
 	}
 
 	@Override
 	public SymbolicTypeSequenceIF typeSequence(Iterable<SymbolicTypeIF> types) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.sequence(types);
 	}
 
 	@Override
 	public SymbolicTupleTypeIF tupleType(StringObject name,
 			SymbolicTypeSequenceIF fieldTypes) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.tupleType(name, fieldTypes);
 	}
 
 	@Override
 	public SymbolicFunctionTypeIF functionType(
 			SymbolicTypeSequenceIF inputTypes, SymbolicTypeIF outputType) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.functionType(inputTypes, outputType);
 	}
 
 	@Override
 	public SymbolicUnionTypeIF unionType(StringObject name,
 			SymbolicTypeSequenceIF memberTypes) {
-		// TODO Auto-generated method stub
-		return null;
+		return typeFactory.unionType(name, memberTypes);
 	}
 
 	@Override
 	public int numObjects() {
-		// TODO Auto-generated method stub
-		return 0;
+		return objectList.size();
 	}
 
 	@Override
 	public SymbolicObject objectWithId(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return objectList.get(index);
 	}
 
 	@Override
 	public Collection<SymbolicObject> objects() {
-		// TODO Auto-generated method stub
-		return null;
+		return objectList;
 	}
 
 	@Override
@@ -428,45 +440,47 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public BooleanObject booleanObject(boolean value) {
-		// TODO Auto-generated method stub
-		return null;
+		return value ? trueObj : falseObj;
 	}
 
 	@Override
 	public IntObject intObject(int value) {
-		// TODO Auto-generated method stub
-		return null;
+		return (IntObject) canonic(new CommonIntObject(value));
 	}
 
 	@Override
 	public NumberObject numberObject(NumberIF value) {
-		// TODO Auto-generated method stub
-		return null;
+		return (NumberObject) canonic(new CommonNumberObject(value));
 	}
 
 	@Override
 	public StringObject stringObject(String string) {
-		// TODO Auto-generated method stub
-		return null;
+		return (StringObject) canonic(new CommonStringObject(string));
 	}
 
 	@Override
 	public SymbolicConstantIF symbolicConstant(StringObject name,
 			SymbolicTypeIF type) {
-		// TODO Auto-generated method stub
-		return null;
+		int numObjects = numObjects();
+		SymbolicConstantIF result = (SymbolicConstantIF) canonic(new CommonSymbolicConstant(
+				name, type));
+
+		if (result.id() >= numObjects) {
+			symbolicConstantList.add(result);
+		}
+		return result;
 	}
 
 	@Override
 	public Collection<SymbolicConstantIF> symbolicConstants() {
-		// TODO Auto-generated method stub
-		return null;
+		return symbolicConstantList;
 	}
 
 	@Override
 	public SymbolicConstantIF extractSymbolicConstant(
 			SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
+		if (expression instanceof SymbolicConstantIF)
+			return (SymbolicConstantIF) expression;
 		return null;
 	}
 
@@ -479,38 +493,36 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public SymbolicExpressionIF symbolic(NumberObject numberObject) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicTypeIF type = numberObject.getNumber() instanceof IntegerNumberIF ? integerType
+				: realType;
+
+		return expression(SymbolicOperator.CONCRETE, type, numberObject);
 	}
 
 	@Override
 	public SymbolicExpressionIF symbolic(int value) {
-		// TODO Auto-generated method stub
-		return null;
+		return expression(SymbolicOperator.CONCRETE, integerType,
+				intObject(value));
 	}
 
 	@Override
 	public SymbolicExpressionIF zeroInt() {
-		// TODO Auto-generated method stub
-		return null;
+		return zeroInt;
 	}
 
 	@Override
 	public SymbolicExpressionIF zeroReal() {
-		// TODO Auto-generated method stub
-		return null;
+		return zeroReal;
 	}
 
 	@Override
 	public SymbolicExpressionIF oneInt() {
-		// TODO Auto-generated method stub
-		return null;
+		return oneInt;
 	}
 
 	@Override
 	public SymbolicExpressionIF oneReal() {
-		// TODO Auto-generated method stub
-		return null;
+		return oneReal;
 	}
 
 	@Override
@@ -583,20 +595,23 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public NumberIF extractNumber(SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
+		if (expression.operator() == SymbolicOperator.CONCRETE) {
+			SymbolicObject object = expression.argument(0);
+
+			if (object.symbolicObjectKind() == SymbolicObjectKind.NUMBER)
+				return ((NumberObject) object).getNumber();
+		}
 		return null;
 	}
 
 	@Override
 	public SymbolicExpressionIF symbolic(BooleanObject object) {
-		// TODO Auto-generated method stub
-		return null;
+		return expression(SymbolicOperator.CONCRETE, booleanType, object);
 	}
 
 	@Override
 	public SymbolicExpressionIF symbolic(boolean value) {
-		// TODO Auto-generated method stub
-		return null;
+		return symbolic(booleanObject(value));
 	}
 
 	/**
@@ -813,9 +828,15 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	}
 
 	/**
-	 * forall x.true => true forall x.false => false forall x.(p && q) =>
-	 * (forall x.p) && (forall x.q) TODO: forall i.(0<i-a && 0<b-i -> e) =>
-	 * and...
+	 * We are assuming that each type has a nonempty domain.
+	 * 
+	 * <pre>
+	 * forall x.true => true
+	 * forall x.false => false
+	 * forall x.(p && q) => (forall x.p) && (forall x.q)
+	 * </pre>
+	 * 
+	 * TODO: forall i.(0<i-a && 0<b-i -> e) => and...
 	 */
 	@Override
 	public SymbolicExpressionIF forall(SymbolicConstantIF boundVariable,
@@ -903,22 +924,32 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return null;
 	}
 
+	/**
+	 * Need to know type of elements in case empty. We do not check element
+	 * types, but maybe we should.
+	 */
 	@Override
-	public SymbolicExpressionIF array(SymbolicSequence elements) {
-		// TODO Auto-generated method stub
-		return null;
+	public SymbolicExpressionIF array(SymbolicTypeIF elementType,
+			SymbolicSequence elements) {
+		return expression(SymbolicOperator.CONCRETE,
+				arrayType(elementType, symbolic(elements.size())), elements);
 	}
 
 	@Override
 	public SymbolicExpressionIF length(SymbolicExpressionIF array) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicArrayTypeIF type = (SymbolicArrayTypeIF) array.type();
+
+		if (type.isComplete())
+			return ((SymbolicCompleteArrayTypeIF) type).extent();
+		else
+			return expression(SymbolicOperator.LENGTH, integerType, array);
 	}
 
 	@Override
 	public SymbolicExpressionIF arrayRead(SymbolicExpressionIF array,
 			SymbolicExpressionIF index) {
 		// TODO Auto-generated method stub
+		// do the fancy stuff to try to read????
 		return null;
 	}
 
