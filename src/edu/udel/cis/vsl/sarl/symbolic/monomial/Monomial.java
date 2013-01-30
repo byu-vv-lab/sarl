@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.monomial;
 
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;

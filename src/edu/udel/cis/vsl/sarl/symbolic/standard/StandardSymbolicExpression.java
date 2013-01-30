@@ -2,8 +2,8 @@ package edu.udel.cis.vsl.sarl.symbolic.standard;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 

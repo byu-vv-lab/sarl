@@ -1,6 +1,10 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.collections;
 
 import java.util.Map.Entry;
+
+import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 /**
  * Map is interpreted as a collection of values. The keys are used for other

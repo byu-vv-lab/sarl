@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 
 public class CommonNumberObject extends CommonSymbolicObject implements
 		NumberObject {

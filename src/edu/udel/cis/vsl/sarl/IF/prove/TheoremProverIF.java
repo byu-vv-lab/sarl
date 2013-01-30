@@ -1,8 +1,11 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.prove;
 
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.TernaryResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 
 public interface TheoremProverIF {
 	/**

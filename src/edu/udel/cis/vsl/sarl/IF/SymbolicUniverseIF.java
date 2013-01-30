@@ -3,7 +3,23 @@ package edu.udel.cis.vsl.sarl.IF;
 import java.util.Collection;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
 
 /**
  * A symbolic universe is used for the creation and manipulation of symbolic

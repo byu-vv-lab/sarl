@@ -1,4 +1,5 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.type;
+
 
 /**
  * An array type T[]. The elements of this type are arrays of T. A subtype is

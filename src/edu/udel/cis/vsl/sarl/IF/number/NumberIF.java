@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.number;
 
 /**
  * A number is some kind of representation of a real number.

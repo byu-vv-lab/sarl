@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 /**
  * Implementation of symbolic types using Flyweight Pattern. Note that the enum

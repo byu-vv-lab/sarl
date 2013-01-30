@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 public class SymbolicArrayType extends SymbolicType implements
 		SymbolicArrayTypeIF {

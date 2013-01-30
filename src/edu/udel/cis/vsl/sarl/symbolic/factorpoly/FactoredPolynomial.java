@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.factorpoly;
 
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.factor.Factorization;

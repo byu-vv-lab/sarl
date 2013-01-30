@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;

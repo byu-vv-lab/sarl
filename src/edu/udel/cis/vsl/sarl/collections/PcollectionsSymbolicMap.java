@@ -8,10 +8,10 @@ import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 		SymbolicMap {

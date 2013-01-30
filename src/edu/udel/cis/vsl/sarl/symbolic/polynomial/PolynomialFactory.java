@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import edu.udel.cis.vsl.sarl.IF.Exponentiator;
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.Multiplier;
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.number.Exponentiator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

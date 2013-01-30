@@ -3,8 +3,8 @@ package edu.udel.cis.vsl.sarl.symbolic.type;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 
 public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
 

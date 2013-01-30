@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 
 /**

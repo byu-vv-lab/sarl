@@ -2,8 +2,8 @@ package edu.udel.cis.vsl.sarl.symbolic.function;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

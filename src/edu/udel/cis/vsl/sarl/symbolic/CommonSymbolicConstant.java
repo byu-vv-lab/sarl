@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
 import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 public class CommonSymbolicConstant extends CommonSymbolicExpression implements
 		SymbolicConstantIF {

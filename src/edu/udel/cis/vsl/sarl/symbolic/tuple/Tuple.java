@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.symbolic.tuple;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 

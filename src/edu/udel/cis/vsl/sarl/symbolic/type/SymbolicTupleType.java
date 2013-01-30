@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
 import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 
 public class SymbolicTupleType extends SymbolicType implements
 		SymbolicTupleTypeIF {

@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

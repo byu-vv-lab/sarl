@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicObject;
 
 public abstract class CommonSymbolicCollection extends CommonSymbolicObject

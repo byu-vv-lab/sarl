@@ -6,12 +6,12 @@ import java.util.Map.Entry;
 import com.trifork.clj_ds.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicPrimitiveType;

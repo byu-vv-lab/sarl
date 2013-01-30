@@ -1,4 +1,6 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.collections;
+
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 /**
  * A symbolic set represents a set of symbolic expressions. The elements do not

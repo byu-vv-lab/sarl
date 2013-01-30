@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 
 public class SymbolicFunctionType extends SymbolicType implements
 		SymbolicFunctionTypeIF {

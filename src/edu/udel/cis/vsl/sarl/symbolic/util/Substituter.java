@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.symbolic.util;
 
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.IntervalIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntervalIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;

@@ -5,15 +5,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 
 public class SymbolicTypeFactory {
 

@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 
 /**
  * A MonicFactorizations is a factorization of a polynomial with no constant

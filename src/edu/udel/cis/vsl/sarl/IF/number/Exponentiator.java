@@ -1,5 +1,6 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.number;
 
+import edu.udel.cis.vsl.sarl.IF.Multiplier;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 /**

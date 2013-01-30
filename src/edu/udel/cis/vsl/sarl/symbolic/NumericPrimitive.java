@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 /**
  * A primitive expression is an expression not formed by numerical or logical

@@ -1,4 +1,7 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.expr;
+
+import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 /**
  * An instance of this type represents a symbolic expression. This is the root

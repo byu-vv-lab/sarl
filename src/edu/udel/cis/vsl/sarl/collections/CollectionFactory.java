@@ -3,11 +3,11 @@ package edu.udel.cis.vsl.sarl.collections;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 public interface CollectionFactory {
 

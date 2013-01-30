@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.number.real;
 
 import java.math.BigInteger;
 
-import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
 
 /**
  * An infinite precision representation of the mathematical rational numbers. A

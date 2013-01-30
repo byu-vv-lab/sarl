@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 public class SymbolicCompleteArrayType extends SymbolicArrayType implements
 		SymbolicCompleteArrayTypeIF {

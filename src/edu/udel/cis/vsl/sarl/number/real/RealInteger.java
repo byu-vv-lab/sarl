@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.number.real;
 
 import java.math.BigInteger;
 
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 
 /**
  * An infinite precision representation of integer numbers, based on Java's

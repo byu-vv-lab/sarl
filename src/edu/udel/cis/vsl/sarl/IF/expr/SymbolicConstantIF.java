@@ -1,4 +1,7 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.expr;
+
+import edu.udel.cis.vsl.sarl.IF.StringObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 /**
  * A "symbolic constant" is a symbol used in symbolic execution to represent an

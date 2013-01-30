@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.type;
 
 /**
  * A symbolic type represents the type of a symbolic expression.

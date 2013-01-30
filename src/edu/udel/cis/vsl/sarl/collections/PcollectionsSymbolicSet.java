@@ -5,9 +5,9 @@ import java.util.Iterator;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		SymbolicSet {

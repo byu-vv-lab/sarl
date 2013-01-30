@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.number.real;
 
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 
 public abstract class RealNumber implements NumberIF {
 

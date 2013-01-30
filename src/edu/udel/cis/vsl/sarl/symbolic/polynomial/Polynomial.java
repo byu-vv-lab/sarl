@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.symbolic.polynomial;
 
 import java.util.Arrays;
 
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

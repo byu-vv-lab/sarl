@@ -3,7 +3,7 @@ package edu.udel.cis.vsl.sarl.symbolic.cast;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

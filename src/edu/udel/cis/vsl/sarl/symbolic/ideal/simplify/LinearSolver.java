@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import edu.udel.cis.vsl.sarl.IF.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
-import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;

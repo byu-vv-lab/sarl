@@ -3,7 +3,7 @@ package edu.udel.cis.vsl.sarl.symbolic.array;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicCompleteArrayTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;

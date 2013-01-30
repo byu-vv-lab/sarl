@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.type;
 
 import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeSequenceIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
 
 public class SymbolicUnionType extends SymbolicType implements
 		SymbolicUnionTypeIF {

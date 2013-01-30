@@ -3,7 +3,7 @@ package edu.udel.cis.vsl.sarl.prove;
 import java.io.PrintWriter;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.ideal.IdealCVC3HybridProver;
 

@@ -3,13 +3,13 @@ package edu.udel.cis.vsl.sarl.prove.ideal;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SimplifierIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.TheoremProverIF;
-import edu.udel.cis.vsl.sarl.IF.TernaryResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 
 /**
  * A very simple prover. It works by just simplifying the predicate based on the

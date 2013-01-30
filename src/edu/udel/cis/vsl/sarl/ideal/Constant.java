@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.NumberObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**

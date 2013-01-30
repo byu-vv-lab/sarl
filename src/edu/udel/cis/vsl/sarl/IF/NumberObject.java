@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF;
 
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+
 public interface NumberObject extends SymbolicObject {
 
 	NumberIF getNumber();

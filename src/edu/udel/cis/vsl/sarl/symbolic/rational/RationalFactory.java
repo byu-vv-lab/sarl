@@ -3,10 +3,10 @@ package edu.udel.cis.vsl.sarl.symbolic.rational;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;

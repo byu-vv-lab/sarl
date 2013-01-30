@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 /**
  * The root of the symbolic expression hierarchy. Every symbolic expression

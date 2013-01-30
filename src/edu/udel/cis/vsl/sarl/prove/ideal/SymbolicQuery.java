@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 
 
 /**

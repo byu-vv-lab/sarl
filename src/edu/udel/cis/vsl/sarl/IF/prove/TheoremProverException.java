@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.prove;
 
 public class TheoremProverException extends Exception {
 
