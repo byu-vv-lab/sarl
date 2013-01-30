@@ -188,7 +188,7 @@ public class LinearSolver {
 							numberFactory.numerator(a), numberFactory.divide(
 									lcm, numberFactory.denominator(a)));
 
-					fp = fpFactory.add(fp, fpFactory
+					fp = fpFactory.addRational(fp, fpFactory
 							.factoredPolynomial(monomialFactory.monomial(
 									concreteFactory.concrete(coefficient),
 									intMonics[j])));
@@ -217,7 +217,7 @@ public class LinearSolver {
 				RationalNumberIF a = realMatrix[i][j];
 
 				if (a.signum() != 0) {
-					fp = fpFactory.add(fp,
+					fp = fpFactory.addRational(fp,
 							fpFactory.factoredPolynomial(monomialFactory
 									.monomial(concreteFactory.concrete(a),
 											realMonics[j])));

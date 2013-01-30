@@ -1,7 +1,15 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
+/**
+ * A quotient of a two factored polynomials.
+ * 
+ * @author siegel
+ * 
+ */
+public interface RationalExpression extends NumericExpression {
 
-public interface RationalExpression extends SymbolicExpressionIF {
+	FactoredPolynomial numerator(IdealFactory factory);
+
+	FactoredPolynomial denominator(IdealFactory factory);
 
 }

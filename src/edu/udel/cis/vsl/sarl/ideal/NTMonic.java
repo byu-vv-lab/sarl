@@ -16,12 +16,90 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  */
 public class NTMonic extends CommonSymbolicExpression implements Monic {
 
+	private Constant monomialConstant = null;
+
+	private SymbolicMap polynomialMap = null;
+
+	private Constant denominator = null;
+
+	private Constant factorizationConstant = null;
+
 	protected NTMonic(SymbolicTypeIF type, SymbolicMap factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
 	}
 
-	public SymbolicMap factorMap() {
+	@Override
+	public Constant monomialConstant(IdealFactory factory) {
+		if (monomialConstant == null)
+			monomialConstant = factory.one(type());
+		return monomialConstant;
+	}
+
+	@Override
+	public Monic monic(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public SymbolicMap polynomialMap(IdealFactory factory) {
+		if (polynomialMap == null)
+			polynomialMap = factory.singletonMap(this, this);
+		return polynomialMap;
+	}
+
+	@Override
+	public SymbolicMap monicFactors(IdealFactory factory) {
 		return (SymbolicMap) argument(0);
+	}
+
+	@Override
+	public Polynomial polynomial(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public Factorization factorization(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public FactoredPolynomial numerator(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public FactoredPolynomial denominator(IdealFactory factory) {
+		if (denominator == null)
+			denominator = factory.one(type());
+		return denominator;
+	}
+
+	@Override
+	public SymbolicMap monicFactorizationMap(IdealFactory factory) {
+		return (SymbolicMap) argument(0);
+	}
+
+	@Override
+	public Constant factorizationConstant(IdealFactory factory) {
+		if (factorizationConstant == null)
+			factorizationConstant = factory.one(type());
+		return factorizationConstant;
+	}
+
+	@Override
+	public MonicFactorization monicFactorization(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public Monomial leadingTerm() {
+		return this;
+	}
+
+	@Override
+	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

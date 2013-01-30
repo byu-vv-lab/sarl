@@ -108,12 +108,12 @@ public class MonicFactory {
 			PowerExpression factorPower0 = factors0[index0];
 			PowerExpression factorPower1 = factors1[index1];
 			int compare = CommonSymbolicExpression.compare(
-					(CommonSymbolicExpression) factorPower0.base(),
-					(CommonSymbolicExpression) factorPower1.base());
+					(CommonSymbolicExpression) factorPower0.polynomialPowerBase(),
+					(CommonSymbolicExpression) factorPower1.polynomialPowerBase());
 
 			if (compare == 0) {
 				factorList.add(powerExpressionFactory.powerExpression(
-						factorPower0.base(), concreteFactory.add(factorPower0
+						factorPower0.polynomialPowerBase(), concreteFactory.addRational(factorPower0
 								.exponent(), factorPower1.exponent())));
 				index0++;
 				index1++;
@@ -144,7 +144,7 @@ public class MonicFactory {
 
 		for (int i = 0; i < numFactors; i++)
 			result = multiply(result, monicMonomial(castFactory
-					.realCast((NumericPrimitive) factorPowers[i].base()),
+					.realCast((NumericPrimitive) factorPowers[i].polynomialPowerBase()),
 					factorPowers[i].exponent()));
 		return result;
 	}

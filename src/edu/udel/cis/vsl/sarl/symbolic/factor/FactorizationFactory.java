@@ -102,7 +102,7 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 
 		for (int i = 0; i < numFactorPowers; i++) {
 			PowerExpression monicPower = monicPowers[i];
-			NumericPrimitive primitive = (NumericPrimitive) monicPower.base();
+			NumericPrimitive primitive = (NumericPrimitive) monicPower.polynomialPowerBase();
 			Polynomial polynomialFactor = polynomialFactory
 					.polynomial(primitive);
 			PowerExpression polynomialPower = powerExpressionFactory
@@ -130,13 +130,13 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 		while (index1 < numFactors1 && index2 < numFactors2) {
 			PowerExpression fp1 = f1.factorPower(index1);
 			PowerExpression fp2 = f2.factorPower(index2);
-			Polynomial p1 = (Polynomial) fp1.base();
-			Polynomial p2 = (Polynomial) fp2.base();
+			Polynomial p1 = (Polynomial) fp1.polynomialPowerBase();
+			Polynomial p2 = (Polynomial) fp2.polynomialPowerBase();
 			int compare = CommonSymbolicExpression.compare(p1, p2);
 
 			if (compare == 0) {
 				newFactorPowers.add(powerExpressionFactory.powerExpression(p1,
-						concreteFactory.add(fp1.exponent(), fp2.exponent())));
+						concreteFactory.addRational(fp1.exponent(), fp2.exponent())));
 				index1++;
 				index2++;
 			} else if (compare > 0) {
@@ -320,8 +320,8 @@ public class FactorizationFactory implements Multiplier<Factorization> {
 		while (index1 < n1 && index2 < n2) {
 			PowerExpression fp1 = fact1.factorPower(index1);
 			PowerExpression fp2 = fact2.factorPower(index2);
-			Polynomial factor1 = (Polynomial) fp1.base();
-			Polynomial factor2 = (Polynomial) fp2.base();
+			Polynomial factor1 = (Polynomial) fp1.polynomialPowerBase();
+			Polynomial factor2 = (Polynomial) fp2.polynomialPowerBase();
 			int compare = CommonSymbolicExpression.compare(factor1, factor2);
 
 			if (compare == 0) {

@@ -1,21 +1,30 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.collections;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 
-public class CommonSymbolicMap extends CommonSymbolicCollection implements
+public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 		SymbolicMap {
 
 	private PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
 
-	CommonSymbolicMap(PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
+	PcollectionsSymbolicMap() {
+		super(SymbolicCollectionKind.MAP);
+		this.pmap = HashTreePMap.empty();
+	}
+
+	PcollectionsSymbolicMap(
+			PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
 		super(SymbolicCollectionKind.MAP);
 		this.pmap = pmap;
 	}
@@ -52,7 +61,7 @@ public class CommonSymbolicMap extends CommonSymbolicCollection implements
 	 */
 	@Override
 	protected int compareCollection(SymbolicCollection o) {
-		CommonSymbolicMap that = (CommonSymbolicMap) o;
+		PcollectionsSymbolicMap that = (PcollectionsSymbolicMap) o;
 		Set<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> entrySet = pmap
 				.entrySet();
 		int result;
@@ -88,7 +97,7 @@ public class CommonSymbolicMap extends CommonSymbolicCollection implements
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection o) {
-		CommonSymbolicMap that = (CommonSymbolicMap) o;
+		PcollectionsSymbolicMap that = (PcollectionsSymbolicMap) o;
 
 		return pmap.equals(that.pmap);
 	}
@@ -96,6 +105,48 @@ public class CommonSymbolicMap extends CommonSymbolicCollection implements
 	@Override
 	public String toString() {
 		return pmap.toString();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return pmap.isEmpty();
+	}
+
+	@Override
+	public boolean isSorted() {
+		return false;
+	}
+
+	@Override
+	public SymbolicMap put(SymbolicExpressionIF key, SymbolicExpressionIF value) {
+		return new PcollectionsSymbolicMap(pmap.plus(key, value));
+	}
+
+	@Override
+	public SymbolicMap remove(SymbolicExpressionIF key) {
+		return new PcollectionsSymbolicMap(pmap.minus(key));
+	}
+
+	@Override
+	public SymbolicMap apply(UnaryOperatorIF operator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Runs a few simple tests.
+	 * 
+	 * @param args
+	 *            ignored
+	 */
+	public static void main(String[] args) {
+		// TODO
 	}
 
 }

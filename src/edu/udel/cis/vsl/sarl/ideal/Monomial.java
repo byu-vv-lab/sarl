@@ -1,5 +1,15 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-public interface Monomial extends Polynomial {
+/**
+ * A Monomial is the product of a constant and a Monic.
+ * 
+ * @author siegel
+ * 
+ */
+public interface Monomial extends Polynomial, FactoredPolynomial {
+
+	Constant monomialConstant(IdealFactory factory);
+
+	Monic monic(IdealFactory factory);
 
 }

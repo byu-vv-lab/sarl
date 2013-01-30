@@ -1118,7 +1118,7 @@ public class IdealSimplifier extends Simplifier {
 
 					for (int i = 0; i < numFactors; i++) {
 						Polynomial oldPolynomial = (Polynomial) oldFactors[i]
-								.base();
+								.polynomialPowerBase();
 						FactoredPolynomial oldFactoredPolynomial = fpFactory()
 								.factoredPolynomial(oldPolynomial);
 						Simplification factorSimplification = simplifyFactoredPolynomial(oldFactoredPolynomial);
@@ -1162,7 +1162,7 @@ public class IdealSimplifier extends Simplifier {
 
 		for (int i = 0; i < numFactorPowers; i++) {
 			PowerExpression factorPower = factorPowers[i];
-			NumericPrimitive factor = (NumericPrimitive) factorPower.base();
+			NumericPrimitive factor = (NumericPrimitive) factorPower.polynomialPowerBase();
 			Simplification factorSimplification = simplifyNumericPrimitive(factor);
 
 			change = change || factorSimplification.success();

@@ -52,8 +52,8 @@ public class Factorization extends CommonSymbolicExpression implements
 
 		for (PowerExpression factorPower : factorPowers) {
 			assert factorPower.type().equals(type());
-			assert factorPower.base() instanceof Polynomial;
-			assert ((Polynomial) factorPower.base()).degree().signum() > 0;
+			assert factorPower.polynomialPowerBase() instanceof Polynomial;
+			assert ((Polynomial) factorPower.polynomialPowerBase()).degree().signum() > 0;
 		}
 		this.constant = constant;
 		this.factorPowers = factorPowers;
@@ -72,7 +72,7 @@ public class Factorization extends CommonSymbolicExpression implements
 	}
 
 	public Polynomial factor(int index) {
-		return (Polynomial) factorPowers[index].base();
+		return (Polynomial) factorPowers[index].polynomialPowerBase();
 	}
 
 	public NumericConcreteExpressionIF exponent(int index) {

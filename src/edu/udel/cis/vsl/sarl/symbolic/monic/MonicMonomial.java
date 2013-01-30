@@ -56,7 +56,7 @@ public class MonicMonomial extends CommonSymbolicExpression implements
 		for (PowerExpression factorPower : factorPowers) {
 			assert numericType.equals(factorPower.type());
 			assert factorPower.exponent().value().signum() > 0;
-			assert factorPower.base() instanceof NumericPrimitive;
+			assert factorPower.polynomialPowerBase() instanceof NumericPrimitive;
 
 		}
 		this.factorPowers = factorPowers;
@@ -71,7 +71,7 @@ public class MonicMonomial extends CommonSymbolicExpression implements
 	}
 
 	public NumericPrimitive factor(int index) {
-		return (NumericPrimitive) factorPowers[index].base();
+		return (NumericPrimitive) factorPowers[index].polynomialPowerBase();
 	}
 
 	public NumericConcreteExpressionIF exponent(int index) {
@@ -139,8 +139,8 @@ public class MonicMonomial extends CommonSymbolicExpression implements
 								+ "\n" + that);
 			}
 			compare = CommonSymbolicExpression.compare(
-					(CommonSymbolicExpression) factorPowers[i].base(),
-					(CommonSymbolicExpression) that.factorPowers[i].base());
+					(CommonSymbolicExpression) factorPowers[i].polynomialPowerBase(),
+					(CommonSymbolicExpression) that.factorPowers[i].polynomialPowerBase());
 			if (compare != 0)
 				return compare;
 			compare = numberFactory.compare(that.factorPowers[i].exponent()

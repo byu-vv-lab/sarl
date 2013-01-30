@@ -154,7 +154,7 @@ public class PolynomialFactory implements Multiplier<Polynomial> {
 			int compare = monic0.compareTo(monic1);
 
 			if (compare == 0) {
-				NumericConcreteExpressionIF coefficient = concreteFactory.add(
+				NumericConcreteExpressionIF coefficient = concreteFactory.addRational(
 						term0.coefficient(), term1.coefficient());
 
 				if (!coefficient.isZero())

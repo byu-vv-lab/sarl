@@ -12,7 +12,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	private long id = -1;
 
-	CommonSymbolicObject(SymbolicObjectKind kind) {
+	protected CommonSymbolicObject(SymbolicObjectKind kind) {
 		this.kind = kind;
 	}
 
