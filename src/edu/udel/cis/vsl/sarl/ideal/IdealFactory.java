@@ -6,6 +6,8 @@ import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.IntObject;
 import edu.udel.cis.vsl.sarl.IF.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.StringObject;
+import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
@@ -15,8 +17,6 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicUniverse;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
 
@@ -281,14 +281,18 @@ public class IdealFactory implements NumericExpressionFactory {
 		return (Polynomial) canonic(new NTPolynomial(type, termMap));
 	}
 
-	private SymbolicObject canonic(SymbolicObject object) {
-		return universe.canonic(object);
+	public ReducedPolynomialPower polynomialPower(Polynomial polynomial,
+			IntObject exponent) {
+		// what if exponent 0? what if exponent 1?
+		if (exponent.isZero())
+			// TODO: Constant not PolynomialPower. EmptyMonic is.
+			return null;
+		return (ReducedPolynomialPower) canonic(new NTReducedPolynomialPower(
+				polynomial, exponent));
 	}
 
-	private NTFactoredPolynomial ntFactoredPolynomial(Polynomial polynomial,
-			Factorization factorization) {
-		return (NTFactoredPolynomial) canonic(new NTFactoredPolynomial(
-				polynomial, factorization));
+	private SymbolicObject canonic(SymbolicObject object) {
+		return universe.canonic(object);
 	}
 
 	private NTFactorization ntFactorization(Constant constant,
@@ -297,71 +301,44 @@ public class IdealFactory implements NumericExpressionFactory {
 				monicFactorization));
 	}
 
-	private IntObject exponent(PolynomialPower ppower) {
+	private IntObject exponent(ReducedPolynomialPower ppower) {
 		// if (ppower instanceof PolynomialPower)
 		return null;
 	}
 
 	// Extract Commonality...
 
-	protected class PolynomialPowerMultiplier implements BinaryOperatorIF {
-
-		@Override
-		public SymbolicExpressionIF apply(SymbolicExpressionIF arg0,
-				SymbolicExpressionIF arg1) {
-
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-	}
-
-	private MonicFactorization[] extractCommonality(NTMonicFactorization fact1,
-			NTMonicFactorization fact2) {
-		// TODO combine the two maps using Binary Operator that add exponents
-		SymbolicMap map1 = null;
-		SymbolicMap map2 = null;
+	private MonicFactorization[] extractCommonality(MonicFactorization fact1,
+			MonicFactorization fact2) {
+		// maps from Polynomial to PolynomialPower
+		SymbolicMap map1 = fact1.monicFactorizationMap(this);
+		SymbolicMap map2 = fact2.monicFactorizationMap(this);
 		SymbolicMap commonMap = universe.emptySortedMap();
 		SymbolicMap newMap1 = map1, newMap2 = map2;
 
 		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : map1
 				.entries()) {
 			Polynomial polynomial = (Polynomial) entry.getKey();
-			PolynomialPower ppower1 = (PolynomialPower) entry.getValue();
-			PolynomialPower ppower2 = (PolynomialPower) map2.get(polynomial);
+			ReducedPolynomialPower ppower1 = (ReducedPolynomialPower) entry
+					.getValue();
+			ReducedPolynomialPower ppower2 = (ReducedPolynomialPower) map2
+					.get(polynomial);
 
 			if (ppower2 == null)
 				newMap1 = newMap1.put(polynomial, ppower1);
 			else {
-				// have two PolynomialPowers with same base, need
-				// minimum exponent
-				// how is a primitive poweer interpreted as a polynomial
-				// power?
-				IntObject exponent1;
+				IntObject exponent1 = ppower1.polynomialPowerExponent(this);
+				IntObject exponent2 = ppower2.polynomialPowerExponent(this);
+				IntObject minExponent = exponent1.minWith(exponent2);
+				IntObject newExponent1 = exponent1.minus(minExponent);
+				IntObject newExponent2 = exponent2.minus(minExponent);
+
+				commonMap = commonMap.put(polynomial,
+						polynomialPower(polynomial, minExponent));
 			}
 
 		}
 
-		return null;
-	}
-
-	private MonicFactorization[] extractCommonality(NTMonicFactorization fact1,
-			MonicFactorization fact2) {
-		if (fact2 instanceof NTMonicFactorization)
-			return extractCommonality(fact1, (NTMonicFactorization) fact2);
-		else {
-			// TODO
-		}
-		return null;
-	}
-
-	private MonicFactorization[] extractCommonality(MonicFactorization fact1,
-			MonicFactorization fact2) {
-		if (fact1 instanceof NTMonicFactorization)
-			return extractCommonality((NTMonicFactorization) fact1, fact2);
-		else {
-			// TODO
-		}
 		return null;
 	}
 

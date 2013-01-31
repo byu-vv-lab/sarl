@@ -48,22 +48,17 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Polynomial polynomial(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
 	public Factorization factorization(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial numerator(IdealFactory factory) {
+	public Polynomial numerator(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial denominator(IdealFactory factory) {
+	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
 	}
 
@@ -73,7 +68,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Polynomial polynomialPowerBase(IdealFactory factory) {
+	public ReducedPolynomial polynomialPowerBase(IdealFactory factory) {
 		return primitive();
 	}
 
@@ -105,7 +100,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 		} else if (expr instanceof NumericPrimitive) { // X^i+Y or X^i+X
 
 		} else if (expr instanceof PrimitivePower) { // X^i+Y^j or X^i+X^j
-			
+
 		}
 		return expr.add(factory, this);
 	}

@@ -9,10 +9,10 @@ import edu.udel.cis.vsl.sarl.IF.IntObject;
  * @author siegel
  * 
  */
-public interface PolynomialPower extends MonicFactorization {
+public interface ReducedPolynomialPower extends MonicFactorization {
 
 	IntObject polynomialPowerExponent(IdealFactory factory);
 
-	Polynomial polynomialPowerBase(IdealFactory factory);
+	ReducedPolynomial polynomialPowerBase(IdealFactory factory);
 
 }

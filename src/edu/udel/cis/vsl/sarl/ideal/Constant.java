@@ -17,13 +17,9 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  */
 public class Constant extends CommonSymbolicExpression implements Monomial {
 
-	private Monic emptyMonic = null;
-
 	private SymbolicMap polynomialMap = null;
 
 	private Factorization factorization = null;
-
-	private Constant denominator = null;
 
 	protected Constant(SymbolicTypeIF type, NumberObject value) {
 		super(SymbolicOperator.CONCRETE, type, value);
@@ -56,14 +52,7 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 
 	@Override
 	public Monic monic(IdealFactory factory) {
-		if (emptyMonic == null)
-			emptyMonic = factory.emptyMonic(type());
-		return emptyMonic;
-	}
-
-	@Override
-	public Polynomial polynomial(IdealFactory factory) {
-		return this;
+		return factory.emptyMonic(type());
 	}
 
 	@Override
@@ -75,15 +64,13 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 	}
 
 	@Override
-	public FactoredPolynomial numerator(IdealFactory factory) {
+	public Polynomial numerator(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial denominator(IdealFactory factory) {
-		if (denominator == null)
-			denominator = factory.one(type());
-		return denominator;
+	public Polynomial denominator(IdealFactory factory) {
+		return factory.one(type());
 	}
 
 	@Override
@@ -105,5 +92,15 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 		} else {
 			return expr.add(factory, this);
 		}
+	}
+
+	@Override
+	public Constant factorizationConstant(IdealFactory factory) {
+		return this;
+	}
+
+	@Override
+	public MonicFactorization monicFactorization(IdealFactory factory) {
+		return factory.emptyMonicFactorization(type());
 	}
 }

@@ -16,13 +16,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  */
 public class NTMonic extends CommonSymbolicExpression implements Monic {
 
-	private Constant monomialConstant = null;
-
 	private SymbolicMap polynomialMap = null;
-
-	private Constant denominator = null;
-
-	private Constant factorizationConstant = null;
 
 	protected NTMonic(SymbolicTypeIF type, SymbolicMap factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
@@ -30,9 +24,7 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Constant monomialConstant(IdealFactory factory) {
-		if (monomialConstant == null)
-			monomialConstant = factory.one(type());
-		return monomialConstant;
+		return factory.one(type());
 	}
 
 	@Override
@@ -53,25 +45,18 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	}
 
 	@Override
-	public Polynomial polynomial(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
 	public Factorization factorization(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial numerator(IdealFactory factory) {
+	public Polynomial numerator(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial denominator(IdealFactory factory) {
-		if (denominator == null)
-			denominator = factory.one(type());
-		return denominator;
+	public Polynomial denominator(IdealFactory factory) {
+		return factory.one(type());
 	}
 
 	@Override
@@ -81,9 +66,7 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Constant factorizationConstant(IdealFactory factory) {
-		if (factorizationConstant == null)
-			factorizationConstant = factory.one(type());
-		return factorizationConstant;
+		return factory.one(type());
 	}
 
 	@Override

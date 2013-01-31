@@ -18,7 +18,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * 
  */
 public class NumericPrimitive extends CommonSymbolicExpression implements
-		PrimitivePower {
+		PrimitivePower, ReducedPolynomial {
 
 	/**
 	 * Singleton map from this to this.
@@ -78,22 +78,17 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Polynomial polynomial(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
 	public Factorization factorization(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial numerator(IdealFactory factory) {
+	public Polynomial numerator(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial denominator(IdealFactory factory) {
+	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
 	}
 
@@ -118,7 +113,7 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Polynomial polynomialPowerBase(IdealFactory factory) {
+	public ReducedPolynomial polynomialPowerBase(IdealFactory factory) {
 		return this;
 	}
 

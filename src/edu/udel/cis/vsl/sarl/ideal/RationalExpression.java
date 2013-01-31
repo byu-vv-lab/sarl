@@ -8,8 +8,8 @@ package edu.udel.cis.vsl.sarl.ideal;
  */
 public interface RationalExpression extends NumericExpression {
 
-	FactoredPolynomial numerator(IdealFactory factory);
+	Polynomial numerator(IdealFactory factory);
 
-	FactoredPolynomial denominator(IdealFactory factory);
+	Polynomial denominator(IdealFactory factory);
 
 }

@@ -12,17 +12,16 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 public class NTRationalExpression extends CommonSymbolicExpression implements
 		RationalExpression {
 
-	protected NTRationalExpression(FactoredPolynomial numerator,
-			FactoredPolynomial denominator) {
+	protected NTRationalExpression(Polynomial numerator, Polynomial denominator) {
 		super(SymbolicOperator.DIVIDE, numerator.type(), numerator, denominator);
 	}
 
-	public FactoredPolynomial numerator(IdealFactory factory) {
-		return (FactoredPolynomial) argument(0);
+	public Polynomial numerator(IdealFactory factory) {
+		return (Polynomial) argument(0);
 	}
 
-	public FactoredPolynomial denominator(IdealFactory factory) {
-		return (FactoredPolynomial) argument(1);
+	public Polynomial denominator(IdealFactory factory) {
+		return (Polynomial) argument(1);
 	}
 
 	@Override
@@ -30,7 +29,5 @@ public class NTRationalExpression extends CommonSymbolicExpression implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 }

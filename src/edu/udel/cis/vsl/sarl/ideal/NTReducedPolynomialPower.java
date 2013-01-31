@@ -11,20 +11,20 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NTPolynomialPower extends CommonSymbolicExpression implements
-		PolynomialPower {
+public class NTReducedPolynomialPower extends CommonSymbolicExpression
+		implements ReducedPolynomialPower {
 
 	private SymbolicMap monicFactorizationMap = null;
 
 	private Constant factorizationConstant = null;
 
-	protected NTPolynomialPower(Polynomial base, IntObject exponent) {
+	protected NTReducedPolynomialPower(Polynomial base, IntObject exponent) {
 		super(SymbolicOperator.POWER, base.type(), base, exponent);
 	}
 
 	@Override
-	public Polynomial polynomialPowerBase(IdealFactory factory) {
-		return (Polynomial) argument(0);
+	public ReducedPolynomial polynomialPowerBase(IdealFactory factory) {
+		return (ReducedPolynomial) argument(0);
 	}
 
 	@Override

@@ -43,23 +43,18 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Polynomial polynomial(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
 	public Factorization factorization(IdealFactory factory) {
 		return factory.monicFactorization(type(),
 				factory.singletonMap(this, this));
 	}
 
 	@Override
-	public FactoredPolynomial numerator(IdealFactory factory) {
+	public Polynomial numerator(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public FactoredPolynomial denominator(IdealFactory factory) {
+	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
 	}
 
@@ -77,9 +72,9 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 			if (newMap.size() == 1) // return the monomial
 				return (Monomial) newMap.iterator().next();
 			else
-				return (Polynomial) factory.canonic(new NTPolynomial(type(),
-						newMap));
+				return factory.polynomial(type(), newMap);
 		}
 		return expr.add(factory, this);
 	}
+
 }

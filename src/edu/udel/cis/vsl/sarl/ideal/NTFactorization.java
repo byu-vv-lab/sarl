@@ -27,4 +27,28 @@ public class NTFactorization extends CommonSymbolicExpression implements
 		return (Constant) argument(0);
 	}
 
+	/**
+	 * Let f1 be this factorization. Given another factorizations f2, this
+	 * returns an array of length 3 containing 3 factorizations a, g1, g2 (in
+	 * that order), satisfying f1=a*g1, f2=a*g2, g1 and g2 have no factors in
+	 * common, a is a monic factorization.
+	 */
+	public Factorization[] extractCommonality(IdealFactory factory,
+			Factorization that) {
+		// TODO
+		// just need a way to extract commonality from a 
+		// monic factorization map, which is a SymbolicMap
+		// in which keys are Polynomial and values PolynomialPower
+		MonicFactorization[] monicTriple = null;
+				//monicFactorization(factory)
+				//.extractCommonality(factory, that.monicFactorization(factory));
+
+		return new Factorization[] {
+				monicTriple[0],
+				factory.factorization(factorizationConstant(factory),
+						monicTriple[1]),
+				factory.factorization(that.factorizationConstant(factory),
+						monicTriple[2]) };
+	}
+
 }

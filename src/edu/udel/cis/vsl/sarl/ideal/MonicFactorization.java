@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 public interface MonicFactorization extends Factorization {
 
 	/**
-	 * Map from Polynomial to PolynomialPower.
+	 * Map from ReducedPolynomial to ReducedPolynomialPower.
 	 * 
 	 * @return
 	 */
