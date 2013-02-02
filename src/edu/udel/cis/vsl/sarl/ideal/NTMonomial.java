@@ -4,7 +4,8 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
- * A non-trivial monomial. It is the product of a constant and a monic.
+ * A non-trivial monomial is the product of a constant and a monic. The constant
+ * must not be 1 and the monic must not be empty.
  * 
  * @author siegel
  * 

@@ -82,4 +82,9 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value < 0;
 	}
 
+	@Override
+	public boolean isOne() {
+		return value == 1;
+	}
+
 }

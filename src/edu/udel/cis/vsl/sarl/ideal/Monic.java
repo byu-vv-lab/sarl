@@ -19,4 +19,12 @@ public interface Monic extends Monomial, MonicFactorization {
 	 */
 	SymbolicMap monicFactors(IdealFactory factory);
 
+	/**
+	 * Is this the trivial monic, i.e., the monic consisting of 0 factors (and
+	 * therefore equivalent to 1)?
+	 * 
+	 * @return true iff this monic is trivial
+	 */
+	boolean isTrivialMonic();
+
 }

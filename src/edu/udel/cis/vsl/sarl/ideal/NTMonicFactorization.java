@@ -5,16 +5,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
- * A non-trivial monic factorization. It is a product of polynomial powers. The
- * number of factors in this product is at least 2.
+ * A non-trivial monic factorization is a product of at least 2 polynomial
+ * powers.
  * 
  * @author siegel
  * 
  */
 public class NTMonicFactorization extends CommonSymbolicExpression implements
 		MonicFactorization {
-
-	private Constant factorizationConstant = null;
 
 	/**
 	 * In the factors map, a key is a polynomial and the value associated to
@@ -31,13 +29,12 @@ public class NTMonicFactorization extends CommonSymbolicExpression implements
 	 */
 	protected NTMonicFactorization(SymbolicTypeIF type, SymbolicMap factors) {
 		super(SymbolicOperator.MULTIPLY, type, factors);
+		assert factors.size() >= 2;
 	}
 
 	@Override
 	public Constant factorizationConstant(IdealFactory factory) {
-		if (factorizationConstant == null)
-			factorizationConstant = factory.one(type());
-		return factorizationConstant;
+		return factory.one(type());
 	}
 
 	@Override

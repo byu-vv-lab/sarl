@@ -5,7 +5,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
- * A non-trivial primitive power. It represents a Primitive expression raised to
+ * A non-trivial primitive power represents a Primitive expression raised to
  * some concrete integer exponent; the exponent is at least 2.
  * 
  * @author siegel
@@ -16,6 +16,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 
 	protected NTPrimitivePower(NumericPrimitive primitive, IntObject exponent) {
 		super(SymbolicOperator.POWER, primitive.type(), primitive, exponent);
+		assert exponent.getInt() >= 2;
 	}
 
 	public NumericPrimitive primitive() {
@@ -108,6 +109,11 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	@Override
 	public NumericPrimitive primitive(IdealFactory factory) {
 		return (NumericPrimitive) argument(0);
+	}
+
+	@Override
+	public boolean isTrivialMonic() {
+		return false;
 	}
 
 }

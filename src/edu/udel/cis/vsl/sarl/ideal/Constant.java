@@ -59,7 +59,7 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 	public Factorization factorization(IdealFactory factory) {
 		if (factorization == null)
 			factorization = factory.factorization(this,
-					factory.emptyMonicFactorization(type()));
+					factory.emptyMonic(type()));
 		return factorization;
 	}
 
@@ -101,6 +101,6 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 
 	@Override
 	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return factory.emptyMonicFactorization(type());
+		return factory.emptyMonic(type());
 	}
 }

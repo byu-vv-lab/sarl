@@ -15,6 +15,8 @@ public interface IntObject extends SymbolicObject {
 	int signum();
 
 	boolean isZero();
+	
+	boolean isOne();
 
 	boolean isPositive();
 

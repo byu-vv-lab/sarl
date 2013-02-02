@@ -5,8 +5,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
- * A non-trivial monic is the product of primitive powers. The set of primitive
- * powers comprising this product is represented as a map.
+ * A non-trivial monic is the product of at least two primitive powers. The set
+ * of primitive powers comprising this product is represented as a map.
  * 
  * A key in the map is primitive. The value associated to that key is a
  * PrimitivePower.
@@ -20,6 +20,7 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 
 	protected NTMonic(SymbolicTypeIF type, SymbolicMap factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
+		assert factorMap.size() >= 2;
 	}
 
 	@Override
@@ -83,6 +84,11 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isTrivialMonic() {
+		return false;
 	}
 
 }

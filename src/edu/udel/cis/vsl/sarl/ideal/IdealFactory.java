@@ -20,26 +20,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicUniverse;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
 
-/*
- * the following services are required:
- * 
- * Constant 1 or int or real type
- * lightweight singleton SymbolicMap with entry (x,y) [cache these!]
- * a constant empty SymbolicMap (just one of them)
- * a constant Monic wrapping empty map
- * a factorization with given fields
- * etc.
- * 
- * Need "leading coefficient".  Need order on monics.
- * Need order on primitives.
- * 
- * Create a Comparator<Monic>.
- * 
- * Every polynomial must store its leadingTerm.  or at least leading
- * monic.
- * 
- */
-
 /**
  * <pre>
  * rat       : DIVIDE factpoly factpoly | factpoly
@@ -117,9 +97,6 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private Monic emptyIntMonic, emptyRealMonic;
 
-	private MonicFactorization emptyIntMonicFactorization,
-			emptyRealMonicFactorization;
-
 	private IntObject oneIntObject;
 
 	private Constant zeroInt, zeroReal, oneInt, oneReal, twoInt, twoReal,
@@ -132,14 +109,10 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.realType = universe.realType();
 		this.oneIntObject = universe.intObject(1);
 		this.emptyMap = universe.emptySortedMap();
-		this.emptyIntMonic = (Monic) universe.canonic(new NTMonic(integerType,
-				emptyMap));
-		this.emptyRealMonic = (Monic) universe.canonic(new NTMonic(realType,
-				emptyMap));
-		this.emptyIntMonicFactorization = monicFactorization(integerType,
-				emptyMap);
-		this.emptyRealMonicFactorization = monicFactorization(realType,
-				emptyMap);
+		this.emptyIntMonic = (Monic) universe.canonic(new TrivialMonic(
+				integerType, emptyMap));
+		this.emptyRealMonic = (Monic) universe.canonic(new TrivialMonic(
+				realType, emptyMap));
 		this.zeroInt = intConstant(0);
 		this.zeroReal = realConstant(0);
 		this.oneInt = intConstant(1);
@@ -149,8 +122,6 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.negOneInt = intConstant(-1);
 		this.negOneReal = realConstant(-1);
 	}
-
-	// Exported
 
 	public SymbolicUniverseIF universe() {
 		return universe;
@@ -164,14 +135,18 @@ public class IdealFactory implements NumericExpressionFactory {
 		return (SymbolicExpressionIF) universe.canonic(expression);
 	}
 
+	// Basic symbolic objects...
+
+	public IntObject oneIntObject() {
+		return oneIntObject;
+	}
+
 	public SymbolicMap singletonMap(SymbolicExpressionIF key,
 			SymbolicExpressionIF value) {
 		return universe.singletonSortedMap(key, value);
 	}
 
-	public IntObject oneIntObject() {
-		return oneIntObject;
-	}
+	// Constants...
 
 	public Constant intConstant(int value) {
 		return (Constant) universe.canonic(new Constant(integerType, universe
@@ -182,43 +157,6 @@ public class IdealFactory implements NumericExpressionFactory {
 		return (Constant) universe.canonic(new Constant(realType, universe
 				.numberObject(numberFactory.integerToRational(numberFactory
 						.integer(value)))));
-	}
-
-	public Monic emptyIntMonic() {
-		return emptyIntMonic;
-	}
-
-	public Monic emptyRealMonic() {
-		return emptyRealMonic;
-	}
-
-	public Monic emptyMonic(SymbolicTypeIF type) {
-		return type.isInteger() ? emptyIntMonic : emptyRealMonic;
-	}
-
-	public Factorization factorization(Constant constant,
-			MonicFactorization monicFactorization) {
-		return (Factorization) universe.canonic(new NTFactorization(constant,
-				monicFactorization));
-	}
-
-	public MonicFactorization monicFactorization(SymbolicTypeIF type,
-			SymbolicMap monicFactorizationMap) {
-		return (MonicFactorization) universe.canonic(new NTMonicFactorization(
-				type, monicFactorizationMap));
-	}
-
-	public MonicFactorization emptyIntMonicFactorization() {
-		return emptyIntMonicFactorization;
-	}
-
-	public MonicFactorization emptyRealMonicFactorization() {
-		return emptyRealMonicFactorization;
-	}
-
-	public MonicFactorization emptyMonicFactorization(SymbolicTypeIF type) {
-		return type.isInteger() ? emptyIntMonicFactorization
-				: emptyRealMonicFactorization;
 	}
 
 	public Constant zeroInt() {
@@ -269,31 +207,104 @@ public class IdealFactory implements NumericExpressionFactory {
 		return type.isInteger() ? negOneInt : negOneReal;
 	}
 
+	// PrimitivePowers...
+
+	// Monics...
+
+	public Monic emptyIntMonic() {
+		return emptyIntMonic;
+	}
+
+	public Monic emptyRealMonic() {
+		return emptyRealMonic;
+	}
+
+	public Monic emptyMonic(SymbolicTypeIF type) {
+		return type.isInteger() ? emptyIntMonic : emptyRealMonic;
+	}
+
+	// Monomials...
+
 	public MonomialAdder newMonomialAdder() {
 		return new MonomialAdder(this);
 	}
 
+	private NTMonomial ntMonomial(Constant constant, Monic monic) {
+		return (NTMonomial) canonic(new NTMonomial(constant, monic));
+	}
+
 	public Monomial monomial(Constant constant, Monic monic) {
-		return (Monomial) canonic(new NTMonomial(constant, monic));
+		if (constant.isZero())
+			return constant;
+		if (constant.isOne())
+			return monic;
+		if (monic.isTrivialMonic())
+			return constant;
+		return ntMonomial(constant, monic);
 	}
 
-	public Polynomial polynomial(SymbolicTypeIF type, SymbolicMap termMap) {
-		return (Polynomial) canonic(new NTPolynomial(type, termMap));
+	// ReducedPolynomials and Polynomials...
+
+	public ReducedPolynomial reducedPolynomial(SymbolicTypeIF type,
+			SymbolicMap termMap) {
+		return (ReducedPolynomial) canonic(new NTReducedPolynomial(type,
+				termMap));
 	}
 
-	public ReducedPolynomialPower polynomialPower(Polynomial polynomial,
-			IntObject exponent) {
-		// what if exponent 0? what if exponent 1?
-		if (exponent.isZero())
-			// TODO: Constant not PolynomialPower. EmptyMonic is.
-			return null;
-		return (ReducedPolynomialPower) canonic(new NTReducedPolynomialPower(
+	// ReducedPolynomialPowers...
+
+	private NTReducedPolynomialPower ntReducedPolynomialPower(
+			ReducedPolynomial polynomial, IntObject exponent) {
+		return (NTReducedPolynomialPower) canonic(new NTReducedPolynomialPower(
 				polynomial, exponent));
 	}
 
-	private SymbolicObject canonic(SymbolicObject object) {
-		return universe.canonic(object);
+	/**
+	 * Returns ReducedPolynomialPower from given polynomial and positive
+	 * exponent.
+	 * 
+	 * @param polynomial
+	 *            an instance of ReducedPolynomial
+	 * @param exponent
+	 *            positive int exponent
+	 * @return ReducedPolynomialPower
+	 */
+	public ReducedPolynomialPower reducedPolynomialPower(
+			ReducedPolynomial polynomial, IntObject exponent) {
+		if (exponent.isZero())
+			throw new IllegalArgumentException(
+					"Only applies to positive exponents");
+		if (exponent.isOne())
+			return polynomial;
+		return ntReducedPolynomialPower(polynomial, exponent);
 	}
+
+	// MonicFactorizations...
+
+	private MonicFactorization ntMonicFactorization(SymbolicTypeIF type,
+			SymbolicMap monicFactorizationMap) {
+		return (MonicFactorization) universe.canonic(new NTMonicFactorization(
+				type, monicFactorizationMap));
+	}
+
+	/**
+	 * The map must have form ReducedPolynomial->ReducedPolynomialPower.
+	 * 
+	 * @param type
+	 * @param monicFactorizationMap
+	 * @return
+	 */
+	public MonicFactorization monicFactorization(SymbolicTypeIF type,
+			SymbolicMap monicFactorizationMap) {
+		// if the map has form Primitive->PrimitivePower, return
+		// a Monic.  I.e., if all keys are instances of Primitive.
+		if (monicFactorizationMap.size() == 1)
+			return (ReducedPolynomialPower) monicFactorizationMap.entries()
+					.iterator().next().getValue();
+		return ntMonicFactorization(type, monicFactorizationMap);
+	}
+
+	// Factorizations...
 
 	private NTFactorization ntFactorization(Constant constant,
 			MonicFactorization monicFactorization) {
@@ -301,16 +312,23 @@ public class IdealFactory implements NumericExpressionFactory {
 				monicFactorization));
 	}
 
-	private IntObject exponent(ReducedPolynomialPower ppower) {
-		// if (ppower instanceof PolynomialPower)
-		return null;
+	public Factorization factorization(Constant constant,
+			MonicFactorization monicFactorization) {
+		// if all keys in monicFactorization map are Primitive,
+		// return a monomial
+		if (constant.isZero())
+			return constant;
+		if (constant.isOne())
+			return monicFactorization;
+		return ntFactorization(constant, monicFactorization);
 	}
 
 	// Extract Commonality...
 
 	private MonicFactorization[] extractCommonality(MonicFactorization fact1,
 			MonicFactorization fact2) {
-		// maps from Polynomial to PolynomialPower
+		SymbolicTypeIF type = fact1.type();
+		// maps from ReducedPolynomial to ReducedPolynomialPower...
 		SymbolicMap map1 = fact1.monicFactorizationMap(this);
 		SymbolicMap map2 = fact2.monicFactorizationMap(this);
 		SymbolicMap commonMap = universe.emptySortedMap();
@@ -318,15 +336,13 @@ public class IdealFactory implements NumericExpressionFactory {
 
 		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : map1
 				.entries()) {
-			Polynomial polynomial = (Polynomial) entry.getKey();
+			ReducedPolynomial polynomial = (ReducedPolynomial) entry.getKey();
 			ReducedPolynomialPower ppower1 = (ReducedPolynomialPower) entry
 					.getValue();
 			ReducedPolynomialPower ppower2 = (ReducedPolynomialPower) map2
 					.get(polynomial);
 
-			if (ppower2 == null)
-				newMap1 = newMap1.put(polynomial, ppower1);
-			else {
+			if (ppower2 != null) {
 				IntObject exponent1 = ppower1.polynomialPowerExponent(this);
 				IntObject exponent2 = ppower2.polynomialPowerExponent(this);
 				IntObject minExponent = exponent1.minWith(exponent2);
@@ -334,12 +350,22 @@ public class IdealFactory implements NumericExpressionFactory {
 				IntObject newExponent2 = exponent2.minus(minExponent);
 
 				commonMap = commonMap.put(polynomial,
-						polynomialPower(polynomial, minExponent));
+						reducedPolynomialPower(polynomial, minExponent));
+				if (newExponent1.isPositive())
+					newMap1 = newMap1.put(polynomial,
+							reducedPolynomialPower(polynomial, newExponent1));
+				else
+					newMap1 = newMap1.remove(polynomial);
+				if (newExponent2.isPositive())
+					newMap2 = newMap2.put(polynomial,
+							reducedPolynomialPower(polynomial, newExponent2));
+				else
+					newMap2 = newMap2.remove(polynomial);
 			}
-
 		}
-
-		return null;
+		return new MonicFactorization[] { monicFactorization(type, commonMap),
+				monicFactorization(type, newMap1),
+				monicFactorization(type, newMap2) };
 	}
 
 	/**
@@ -348,37 +374,15 @@ public class IdealFactory implements NumericExpressionFactory {
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
 	 */
-	private Factorization[] extractCommonality(NTFactorization fact1,
-			NTFactorization fact2) {
+	public Factorization[] extractCommonality(Factorization fact1,
+			Factorization fact2) {
 		MonicFactorization[] monicTriple = extractCommonality(
 				fact1.monicFactorization(this), fact2.monicFactorization(this));
 
 		return new Factorization[] {
 				monicTriple[0],
-				ntFactorization(fact1.factorizationConstant(this),
-						monicTriple[1]),
-				ntFactorization(fact2.factorizationConstant(this),
-						monicTriple[2]) };
-	}
-
-	private Factorization[] extractCommonality(NTFactorization fact1,
-			Factorization fact2) {
-		if (fact2 instanceof NTFactorization)
-			return extractCommonality(fact1, (NTFactorization) fact2);
-		else {
-			// TODO
-		}
-		return null;
-	}
-
-	private Factorization[] extractCommonality(Factorization fact1,
-			Factorization fact2) {
-		if (fact1 instanceof NTFactorization)
-			return extractCommonality((NTFactorization) fact1, fact2);
-		else {
-			// TODO
-		}
-		return null;
+				factorization(fact1.factorizationConstant(this), monicTriple[1]),
+				factorization(fact2.factorizationConstant(this), monicTriple[2]) };
 	}
 
 	/**
@@ -403,7 +407,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return null;
 	}
 
-	// primitives, constants
+	// Methods specified in interface NumericExpressionFactory...
 
 	@Override
 	public SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,

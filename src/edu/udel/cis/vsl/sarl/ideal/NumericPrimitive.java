@@ -130,10 +130,8 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 			if (that.isZero())
 				return this;
 			else
-				return factory.polynomial(
-						type(),
-						polynomialMap(factory).put(factory.emptyIntMonic(),
-								that));
+				return factory.reducedPolynomial(type(), polynomialMap(factory)
+						.put(factory.emptyIntMonic(), that));
 		} else if (expr instanceof NumericPrimitive) {
 			NumericPrimitive that = (NumericPrimitive) expr;
 
@@ -141,11 +139,16 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 				return factory.monomial(factory.two(type()), this);
 			else
 				// X+Y
-				return factory.polynomial(type(),
-						polynomialMap(factory).put(that, that));
+				return factory.reducedPolynomial(type(), polynomialMap(factory)
+						.put(that, that));
 		} else {
 			return expr.add(factory, this);
 		}
+	}
+
+	@Override
+	public boolean isTrivialMonic() {
+		return false;
 	}
 
 }

@@ -5,7 +5,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
- * A non-trivial polynomial. It is the sum of monomials.
+ * A non-trivial polynomial is the sum of at least 2 monomials with different
+ * underlying monics, e.g., 1+x^2, x+y, or x+xy.
  * 
  * The set of monomials is represented as a map. A key in this map is a Monic.
  * The value associated to the Monic is a Monomial.
@@ -24,8 +25,10 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	 * @param monomialMap
 	 * @param leadingTerm
 	 */
-	protected NTPolynomial(SymbolicTypeIF type, SymbolicMap monomialMap) {
-		super(SymbolicOperator.ADD, type, monomialMap);
+	protected NTPolynomial(SymbolicTypeIF type, SymbolicMap monomialMap,
+			Factorization factorization) {
+		super(SymbolicOperator.ADD, type, monomialMap, factorization);
+		assert monomialMap.size() >= 2;
 	}
 
 	@Override
@@ -44,8 +47,7 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 
 	@Override
 	public Factorization factorization(IdealFactory factory) {
-		return factory.monicFactorization(type(),
-				factory.singletonMap(this, this));
+		return (Factorization) argument(1);
 	}
 
 	@Override
@@ -60,21 +62,8 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 
 	@Override
 	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
-		if (expr instanceof Polynomial) {
-			Polynomial that = (Polynomial) expr;
-			SymbolicMap thatMap = that.polynomialMap(factory);
-			SymbolicMap thisMap = this.polynomialMap(factory);
-			MonomialAdder monomialAdder = factory.newMonomialAdder();
-			SymbolicMap newMap = thisMap.combine(monomialAdder, thatMap);
-
-			if (newMap.isEmpty())
-				return factory.zero(type());
-			if (newMap.size() == 1) // return the monomial
-				return (Monomial) newMap.iterator().next();
-			else
-				return factory.polynomial(type(), newMap);
-		}
-		return expr.add(factory, this);
+		// TODO: deal with factorization here.
+		return null;
 	}
 
 }
