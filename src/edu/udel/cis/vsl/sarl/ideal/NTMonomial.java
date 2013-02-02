@@ -35,7 +35,7 @@ public class NTMonomial extends CommonSymbolicExpression implements Monomial {
 	}
 
 	@Override
-	public Factorization factorization(IdealFactory factory) {
+	public Monomial factorization(IdealFactory factory) {
 		return this;
 	}
 
@@ -58,16 +58,6 @@ public class NTMonomial extends CommonSymbolicExpression implements Monomial {
 	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public Constant factorizationConstant(IdealFactory factory) {
-		return monomialConstant(factory);
-	}
-
-	@Override
-	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return monic(factory);
 	}
 
 }

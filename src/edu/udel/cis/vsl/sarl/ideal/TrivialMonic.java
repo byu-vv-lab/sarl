@@ -19,21 +19,6 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 	}
 
 	@Override
-	public Constant factorizationConstant(IdealFactory factory) {
-		return factory.one(type());
-	}
-
-	@Override
-	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
-	public SymbolicMap monicFactorizationMap(IdealFactory factory) {
-		return (SymbolicMap) argument(0);
-	}
-
-	@Override
 	public Constant monomialConstant(IdealFactory factory) {
 		return factory.one(type());
 	}
@@ -50,11 +35,6 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Monomial leadingTerm() {
-		return this;
-	}
-
-	@Override
-	public Factorization factorization(IdealFactory factory) {
 		return this;
 	}
 
@@ -82,6 +62,12 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 	@Override
 	public boolean isTrivialMonic() {
 		return true;
+	}
+
+	@Override
+	public Monomial factorization(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

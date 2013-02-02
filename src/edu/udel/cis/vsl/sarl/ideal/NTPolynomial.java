@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
@@ -25,20 +25,23 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	 * @param monomialMap
 	 * @param leadingTerm
 	 */
-	protected NTPolynomial(SymbolicTypeIF type, SymbolicMap monomialMap,
-			Factorization factorization) {
-		super(SymbolicOperator.ADD, type, monomialMap, factorization);
-		assert monomialMap.size() >= 2;
+	protected NTPolynomial(MonomialSum monomialSum, Monomial factorization) {
+		super(SymbolicOperator.CHOICE, monomialSum.type(), monomialSum,
+				factorization);
 	}
 
 	@Override
 	public SymbolicMap polynomialMap(IdealFactory factory) {
-		return (SymbolicMap) argument(0);
+		return polynomialMap();
+	}
+
+	public SymbolicMap polynomialMap() {
+		return (SymbolicMap) ((SymbolicExpressionIF) argument(0)).argument(0);
 	}
 
 	@Override
 	public Monomial leadingTerm() {
-		SymbolicMap map = (SymbolicMap) argument(0);
+		SymbolicMap map = polynomialMap();
 
 		if (map.isEmpty())
 			return null;
@@ -46,8 +49,8 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Factorization factorization(IdealFactory factory) {
-		return (Factorization) argument(1);
+	public Monomial factorization(IdealFactory factory) {
+		return (Monomial) argument(1);
 	}
 
 	@Override
@@ -65,5 +68,24 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 		// TODO: deal with factorization here.
 		return null;
 	}
+
+	// public NumericExpression add(IdealFactory factory, NumericExpression
+	// expr) {
+	// if (expr instanceof Polynomial) {
+	// Polynomial that = (Polynomial) expr;
+	// SymbolicMap thatMap = that.polynomialMap(factory);
+	// SymbolicMap thisMap = this.polynomialMap(factory);
+	// MonomialAdder monomialAdder = factory.newMonomialAdder();
+	// SymbolicMap newMap = thisMap.combine(monomialAdder, thatMap);
+	//
+	// if (newMap.isEmpty())
+	// return factory.zero(type());
+	// if (newMap.size() == 1) // return the monomial
+	// return (Monomial) newMap.iterator().next();
+	// else
+	// return factory.reducedPolynomial(type(), newMap);
+	// }
+	// return expr.add(factory, this);
+	// }
 
 }

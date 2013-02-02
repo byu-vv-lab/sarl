@@ -25,6 +25,6 @@ public interface Polynomial extends RationalExpression {
 	 */
 	Monomial leadingTerm();
 
-	Factorization factorization(IdealFactory factory);
+	Monomial factorization(IdealFactory factory);
 
 }

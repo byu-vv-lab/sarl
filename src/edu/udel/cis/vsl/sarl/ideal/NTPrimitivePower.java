@@ -49,7 +49,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public Factorization factorization(IdealFactory factory) {
+	public Monomial factorization(IdealFactory factory) {
 		return this;
 	}
 
@@ -61,31 +61,6 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	@Override
 	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
-	}
-
-	@Override
-	public IntObject polynomialPowerExponent(IdealFactory factory) {
-		return primitivePowerExponent(factory);
-	}
-
-	@Override
-	public ReducedPolynomial polynomialPowerBase(IdealFactory factory) {
-		return primitive();
-	}
-
-	@Override
-	public SymbolicMap monicFactorizationMap(IdealFactory factory) {
-		return factory.singletonMap(primitive(), this);
-	}
-
-	@Override
-	public Constant factorizationConstant(IdealFactory factory) {
-		return factory.one(type());
-	}
-
-	@Override
-	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return this;
 	}
 
 	@Override

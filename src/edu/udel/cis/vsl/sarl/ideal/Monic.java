@@ -10,7 +10,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
  * @author siegel
  * 
  */
-public interface Monic extends Monomial, MonicFactorization {
+public interface Monic extends Monomial {
 
 	/**
 	 * Map from Primitive to PrimitivePower.

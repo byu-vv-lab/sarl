@@ -9,7 +9,7 @@ import edu.udel.cis.vsl.sarl.IF.IntObject;
  * @author siegel
  * 
  */
-public interface PrimitivePower extends Monic, ReducedPolynomialPower {
+public interface PrimitivePower extends Monic {
 
 	NumericPrimitive primitive(IdealFactory factory);
 

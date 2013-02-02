@@ -209,7 +209,36 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// PrimitivePowers...
 
+	private NTPrimitivePower ntPrimitivePower(NumericPrimitive primitive,
+			IntObject exponent) {
+		return (NTPrimitivePower) canonic(new NTPrimitivePower(primitive,
+				exponent));
+	}
+
+	public PrimitivePower primitivePower(NumericPrimitive primitive,
+			IntObject exponent) {
+		if (exponent.isZero())
+			throw new IllegalArgumentException(
+					"Exponent to primitive power must be positive: "
+							+ primitive);
+		if (exponent.isOne())
+			return primitive;
+		return ntPrimitivePower(primitive, exponent);
+	}
+
 	// Monics...
+
+	private NTMonic ntMonic(SymbolicTypeIF type, SymbolicMap monicMap) {
+		return (NTMonic) canonic(new NTMonic(type, monicMap));
+	}
+
+	public Monic monic(SymbolicTypeIF type, SymbolicMap monicMap) {
+		if (monicMap.isEmpty())
+			return emptyMonic(type);
+		if (monicMap.size() == 1)
+			return (PrimitivePower) monicMap.iterator().next();
+		return ntMonic(type, monicMap);
+	}
 
 	public Monic emptyIntMonic() {
 		return emptyIntMonic;
@@ -245,127 +274,80 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// ReducedPolynomials and Polynomials...
 
-	public ReducedPolynomial reducedPolynomial(SymbolicTypeIF type,
-			SymbolicMap termMap) {
-		return (ReducedPolynomial) canonic(new NTReducedPolynomial(type,
-				termMap));
-	}
-
-	// ReducedPolynomialPowers...
-
-	private NTReducedPolynomialPower ntReducedPolynomialPower(
-			ReducedPolynomial polynomial, IntObject exponent) {
-		return (NTReducedPolynomialPower) canonic(new NTReducedPolynomialPower(
-				polynomial, exponent));
-	}
-
 	/**
-	 * Returns ReducedPolynomialPower from given polynomial and positive
-	 * exponent.
-	 * 
-	 * @param polynomial
-	 *            an instance of ReducedPolynomial
-	 * @param exponent
-	 *            positive int exponent
-	 * @return ReducedPolynomialPower
-	 */
-	public ReducedPolynomialPower reducedPolynomialPower(
-			ReducedPolynomial polynomial, IntObject exponent) {
-		if (exponent.isZero())
-			throw new IllegalArgumentException(
-					"Only applies to positive exponents");
-		if (exponent.isOne())
-			return polynomial;
-		return ntReducedPolynomialPower(polynomial, exponent);
-	}
-
-	// MonicFactorizations...
-
-	private MonicFactorization ntMonicFactorization(SymbolicTypeIF type,
-			SymbolicMap monicFactorizationMap) {
-		return (MonicFactorization) universe.canonic(new NTMonicFactorization(
-				type, monicFactorizationMap));
-	}
-
-	/**
-	 * The map must have form ReducedPolynomial->ReducedPolynomialPower.
+	 * The pre-requisite is that the polynomial specified by the sum of the
+	 * monomials of the term map is reduced. This will not be checked.
 	 * 
 	 * @param type
-	 * @param monicFactorizationMap
+	 * @param termMap
 	 * @return
 	 */
-	public MonicFactorization monicFactorization(SymbolicTypeIF type,
-			SymbolicMap monicFactorizationMap) {
-		// if the map has form Primitive->PrimitivePower, return
-		// a Monic.  I.e., if all keys are instances of Primitive.
-		if (monicFactorizationMap.size() == 1)
-			return (ReducedPolynomialPower) monicFactorizationMap.entries()
-					.iterator().next().getValue();
-		return ntMonicFactorization(type, monicFactorizationMap);
+	public ReducedPolynomial reducedPolynomial(SymbolicTypeIF type,
+			SymbolicMap termMap) {
+		return (ReducedPolynomial) canonic(new ReducedPolynomial(type, termMap));
 	}
 
-	// Factorizations...
-
-	private NTFactorization ntFactorization(Constant constant,
-			MonicFactorization monicFactorization) {
-		return (NTFactorization) canonic(new NTFactorization(constant,
-				monicFactorization));
+	private MonomialSum monomialSum(SymbolicTypeIF type, SymbolicMap termMap) {
+		return (MonomialSum) canonic(new MonomialSum(type, termMap));
 	}
 
-	public Factorization factorization(Constant constant,
-			MonicFactorization monicFactorization) {
-		// if all keys in monicFactorization map are Primitive,
-		// return a monomial
-		if (constant.isZero())
-			return constant;
-		if (constant.isOne())
-			return monicFactorization;
-		return ntFactorization(constant, monicFactorization);
+	private NTPolynomial ntPolynomial(SymbolicMap polynomialMap,
+			Monomial factorization) {
+		MonomialSum monomialSum = monomialSum(factorization.type(),
+				polynomialMap);
+
+		return (NTPolynomial) canonic(new NTPolynomial(monomialSum,
+				factorization));
+	}
+
+	public Polynomial polynomial(SymbolicMap polynomialMap,
+			Monomial factorization) {
+		if (polynomialMap.size() == 0)
+			return zero(factorization.type());
+		if (polynomialMap.size() == 1)
+			return (Monomial) polynomialMap.iterator().next();
+		return ntPolynomial(polynomialMap, factorization);
 	}
 
 	// Extract Commonality...
 
-	private MonicFactorization[] extractCommonality(MonicFactorization fact1,
-			MonicFactorization fact2) {
+	private Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicTypeIF type = fact1.type();
 		// maps from ReducedPolynomial to ReducedPolynomialPower...
-		SymbolicMap map1 = fact1.monicFactorizationMap(this);
-		SymbolicMap map2 = fact2.monicFactorizationMap(this);
+		SymbolicMap map1 = fact1.monicFactors(this);
+		SymbolicMap map2 = fact2.monicFactors(this);
 		SymbolicMap commonMap = universe.emptySortedMap();
 		SymbolicMap newMap1 = map1, newMap2 = map2;
 
 		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : map1
 				.entries()) {
-			ReducedPolynomial polynomial = (ReducedPolynomial) entry.getKey();
-			ReducedPolynomialPower ppower1 = (ReducedPolynomialPower) entry
-					.getValue();
-			ReducedPolynomialPower ppower2 = (ReducedPolynomialPower) map2
-					.get(polynomial);
+			NumericPrimitive base = (NumericPrimitive) entry.getKey();
+			PrimitivePower ppower1 = (PrimitivePower) entry.getValue();
+			PrimitivePower ppower2 = (PrimitivePower) map2.get(base);
 
 			if (ppower2 != null) {
-				IntObject exponent1 = ppower1.polynomialPowerExponent(this);
-				IntObject exponent2 = ppower2.polynomialPowerExponent(this);
+				IntObject exponent1 = ppower1.primitivePowerExponent(this);
+				IntObject exponent2 = ppower2.primitivePowerExponent(this);
 				IntObject minExponent = exponent1.minWith(exponent2);
 				IntObject newExponent1 = exponent1.minus(minExponent);
 				IntObject newExponent2 = exponent2.minus(minExponent);
 
-				commonMap = commonMap.put(polynomial,
-						reducedPolynomialPower(polynomial, minExponent));
+				commonMap = commonMap.put(base,
+						primitivePower(base, minExponent));
 				if (newExponent1.isPositive())
-					newMap1 = newMap1.put(polynomial,
-							reducedPolynomialPower(polynomial, newExponent1));
+					newMap1 = newMap1.put(base,
+							primitivePower(base, newExponent1));
 				else
-					newMap1 = newMap1.remove(polynomial);
+					newMap1 = newMap1.remove(base);
 				if (newExponent2.isPositive())
-					newMap2 = newMap2.put(polynomial,
-							reducedPolynomialPower(polynomial, newExponent2));
+					newMap2 = newMap2.put(base,
+							primitivePower(base, newExponent2));
 				else
-					newMap2 = newMap2.remove(polynomial);
+					newMap2 = newMap2.remove(base);
 			}
 		}
-		return new MonicFactorization[] { monicFactorization(type, commonMap),
-				monicFactorization(type, newMap1),
-				monicFactorization(type, newMap2) };
+		return new Monic[] { monic(type, commonMap), monic(type, newMap1),
+				monic(type, newMap2) };
 	}
 
 	/**
@@ -374,15 +356,13 @@ public class IdealFactory implements NumericExpressionFactory {
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
 	 */
-	public Factorization[] extractCommonality(Factorization fact1,
-			Factorization fact2) {
-		MonicFactorization[] monicTriple = extractCommonality(
-				fact1.monicFactorization(this), fact2.monicFactorization(this));
+	public Monomial[] extractCommonality(Monomial fact1, Monomial fact2) {
+		Monic[] monicTriple = extractCommonality(fact1.monic(this),
+				fact2.monic(this));
 
-		return new Factorization[] {
-				monicTriple[0],
-				factorization(fact1.factorizationConstant(this), monicTriple[1]),
-				factorization(fact2.factorizationConstant(this), monicTriple[2]) };
+		return new Monomial[] { monicTriple[0],
+				monomial(fact1.monomialConstant(this), monicTriple[1]),
+				monomial(fact2.monomialConstant(this), monicTriple[2]) };
 	}
 
 	/**

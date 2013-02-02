@@ -19,8 +19,6 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 
 	private SymbolicMap polynomialMap = null;
 
-	private Factorization factorization = null;
-
 	protected Constant(SymbolicTypeIF type, NumberObject value) {
 		super(SymbolicOperator.CONCRETE, type, value);
 	}
@@ -56,11 +54,8 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 	}
 
 	@Override
-	public Factorization factorization(IdealFactory factory) {
-		if (factorization == null)
-			factorization = factory.factorization(this,
-					factory.emptyMonic(type()));
-		return factorization;
+	public Monomial factorization(IdealFactory factory) {
+		return this;
 	}
 
 	@Override
@@ -94,13 +89,4 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 		}
 	}
 
-	@Override
-	public Constant factorizationConstant(IdealFactory factory) {
-		return this;
-	}
-
-	@Override
-	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return factory.emptyMonic(type());
-	}
 }

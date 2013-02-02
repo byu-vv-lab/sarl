@@ -46,7 +46,7 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	}
 
 	@Override
-	public Factorization factorization(IdealFactory factory) {
+	public Monomial factorization(IdealFactory factory) {
 		return this;
 	}
 
@@ -58,21 +58,6 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	@Override
 	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
-	}
-
-	@Override
-	public SymbolicMap monicFactorizationMap(IdealFactory factory) {
-		return (SymbolicMap) argument(0);
-	}
-
-	@Override
-	public Constant factorizationConstant(IdealFactory factory) {
-		return factory.one(type());
-	}
-
-	@Override
-	public MonicFactorization monicFactorization(IdealFactory factory) {
-		return this;
 	}
 
 	@Override
