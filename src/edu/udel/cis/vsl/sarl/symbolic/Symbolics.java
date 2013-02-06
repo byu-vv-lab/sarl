@@ -4,7 +4,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.symbolic.ideal.IdealUniverse;
 import edu.udel.cis.vsl.sarl.symbolic.standard.StandardUniverse;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class Symbolics {
 	public static SymbolicUniverseIF newRealUniverse(

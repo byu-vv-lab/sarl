@@ -10,7 +10,7 @@ import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicFactory;
 import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpressionFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class MonomialFactory {
 

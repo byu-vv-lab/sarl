@@ -1,20 +1,17 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import edu.udel.cis.vsl.sarl.IF.IntObject;
-import edu.udel.cis.vsl.sarl.IF.NumberObject;
-import edu.udel.cis.vsl.sarl.IF.StringObject;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 
 public interface NumericExpressionFactory {
-
-	SymbolicUniverseIF universe();
 
 	SymbolicExpressionIF newConcreteNumericExpression(NumberObject numberObject);
 

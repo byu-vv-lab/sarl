@@ -73,9 +73,9 @@ import edu.udel.cis.vsl.sarl.symbolic.tuple.Tuple;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleFactory;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleRead;
 import edu.udel.cis.vsl.sarl.symbolic.tuple.TupleWrite;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.symbolic.union.UnionFactory;
 import edu.udel.cis.vsl.sarl.symbolic.util.Substituter;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 // Every ideal expression wraps a TreeExpressionIF.
 // The ideal expression is determined by this TreeExpressionIF.
@@ -1250,7 +1250,7 @@ public class IdealUniverse extends CommonSymbolicUniverse implements
 		SymbolicConstantExpression primitive = symbolicConstantFactory
 				.expression(symbolicConstant);
 		SymbolicTypeIF type = symbolicConstant.type();
-		SymbolicTypeKind kind = type.kind();
+		SymbolicTypeKind kind = type.typeKind();
 		TreeExpressionIF expression;
 
 		switch (kind) {

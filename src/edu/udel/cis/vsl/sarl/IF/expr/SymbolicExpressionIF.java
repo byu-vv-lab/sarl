@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.expr;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 
 /**

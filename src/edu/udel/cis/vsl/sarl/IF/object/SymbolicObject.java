@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.IF.object;
 
 /**
  * Any kind of symbolic object.
@@ -28,10 +28,21 @@ package edu.udel.cis.vsl.sarl.IF;
 public interface SymbolicObject extends Comparable<SymbolicObject> {
 
 	public enum SymbolicObjectKind {
-		SYMBOLIC_EXPRESSION, COLLECTION, NUMBER, INTEGER, BOOLEAN, STRING
+		BOOLEAN,
+		EXPRESSION,
+		EXPRESSION_COLLECTION,
+		INTEGER,
+		NUMBER,
+		STRING,
+		TYPE,
+		TYPE_SEQUENCE
 	}
 
-	SymbolicObjectKind symbolicObjectKind();
+	@Override
+	boolean equals(Object o);
+
+	@Override
+	int hashCode();
 
 	/**
 	 * Every symbolic object has a unique ID number, returned by this method.
@@ -40,11 +51,9 @@ public interface SymbolicObject extends Comparable<SymbolicObject> {
 	 */
 	long id();
 
-	@Override
-	boolean equals(Object o);
+	boolean isCanonic();
 
-	@Override
-	int hashCode();
+	SymbolicObjectKind symbolicObjectKind();
 
 	@Override
 	String toString();

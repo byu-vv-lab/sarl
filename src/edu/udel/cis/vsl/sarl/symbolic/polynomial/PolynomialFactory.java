@@ -18,7 +18,7 @@ import edu.udel.cis.vsl.sarl.symbolic.monic.MonicMonomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.Monomial;
 import edu.udel.cis.vsl.sarl.symbolic.monomial.MonomialFactory;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpressionFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class PolynomialFactory implements Multiplier<Polynomial> {
 

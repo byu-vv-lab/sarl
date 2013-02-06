@@ -1,7 +1,7 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.IF.IntObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
@@ -85,6 +85,10 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 	@Override
 	public boolean isOne() {
 		return value == 1;
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
 	}
 
 }

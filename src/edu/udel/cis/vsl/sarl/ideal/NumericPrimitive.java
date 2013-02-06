@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.IntObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
@@ -63,7 +63,7 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicMap polynomialMap(IdealFactory factory) {
+	public SymbolicMap termMap(IdealFactory factory) {
 		return monicFactors(factory);
 	}
 
@@ -98,15 +98,15 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
+	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
 		if (expr instanceof Constant) { // X+C: polynomial
 			Constant that = (Constant) expr;
 
 			if (that.isZero())
 				return this;
 			else
-				return factory.reducedPolynomial(type(), polynomialMap(factory)
-						.put(factory.emptyIntMonic(), that));
+				return factory.reducedPolynomial(type(),
+						termMap(factory).put(factory.emptyIntMonic(), that));
 		} else if (expr instanceof NumericPrimitive) {
 			NumericPrimitive that = (NumericPrimitive) expr;
 
@@ -114,15 +114,61 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 				return factory.monomial(factory.two(type()), this);
 			else
 				// X+Y
-				return factory.reducedPolynomial(type(), polynomialMap(factory)
-						.put(that, that));
+				return factory.reducedPolynomial(type(),
+						termMap(factory).put(that, that));
 		} else {
-			return expr.add(factory, this);
+			return expr.plus(factory, this);
 		}
 	}
 
 	@Override
 	public boolean isTrivialMonic() {
+		return false;
+	}
+
+	@Override
+	public Polynomial expand(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression negate(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression invert(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isZero() {
+		return false;
+	}
+
+	@Override
+	public boolean isOne() {
 		return false;
 	}
 

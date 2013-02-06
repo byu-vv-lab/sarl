@@ -1,7 +1,7 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.IF.BooleanObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonBooleanObject extends CommonSymbolicObject implements
 		BooleanObject {
@@ -42,6 +42,10 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	@Override
 	public String toString() {
 		return new Boolean(value).toString();
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
 	}
 
 }

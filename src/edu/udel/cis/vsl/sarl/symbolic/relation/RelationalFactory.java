@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;
 import edu.udel.cis.vsl.sarl.symbolic.rational.RationalExpression;
 import edu.udel.cis.vsl.sarl.symbolic.rational.RationalFactory;
 import edu.udel.cis.vsl.sarl.symbolic.relation.RelationalExpression.RelationKind;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class RelationalFactory {
 

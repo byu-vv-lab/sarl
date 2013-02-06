@@ -6,16 +6,11 @@ import java.util.Map.Entry;
 import com.trifork.clj_ds.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicPrimitiveType;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 		SymbolicMap {
@@ -112,14 +107,21 @@ public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 		return null;
 	}
 
-	public static void main(String[] args) {
-		CljSortedSymbolicMap map = new CljSortedSymbolicMap();
-		SymbolicTypeFactory typeFactory = new SymbolicTypeFactory();
-		SymbolicTypeIF t1 = typeFactory.integerType();
-		
-		// SymbolicExpressionIF e1 = new
-		// CommonSymbolicExpression(SymbolicOperator.ADD, t1);
-		// System.out.println("Empty map: "+map);
-		// map = map.put(key, value)
+	// public static void main(String[] args) {
+	// CljSortedSymbolicMap map = new CljSortedSymbolicMap();
+	// SymbolicTypeFactory typeFactory = new SymbolicTypeFactory();
+	// SymbolicTypeIF t1 = typeFactory.integerType();
+	//
+	// // SymbolicExpressionIF e1 = new
+	// // CommonSymbolicExpression(SymbolicOperator.ADD, t1);
+	// // System.out.println("Empty map: "+map);
+	// // map = map.put(key, value)
+	// }
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		// TODO Auto-generated method stub
+		// need to construct whole new map replacing keys and values
+		// with canonic representative if not already
 	}
 }

@@ -21,7 +21,7 @@ public class RationalExpression extends CommonSymbolicExpression implements
 	RationalExpression(FactoredPolynomial numerator,
 			FactoredPolynomial denominator) {
 		super(numerator.type());
-		assert numerator.type().kind() == SymbolicTypeKind.REAL;
+		assert numerator.type().typeKind() == SymbolicTypeKind.REAL;
 		assert numerator.type().equals(denominator.type());
 		this.numerator = numerator;
 		this.denominator = denominator;

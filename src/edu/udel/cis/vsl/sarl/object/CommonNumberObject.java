@@ -1,8 +1,10 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.IF.NumberObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonNumberObject extends CommonSymbolicObject implements
 		NumberObject {
@@ -52,5 +54,19 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 	@Override
 	public boolean isOne() {
 		return value.isOne();
+	}
+
+	@Override
+	public boolean isInteger() {
+		return value instanceof IntegerNumberIF;
+	}
+
+	@Override
+	public boolean isReal() {
+		return value instanceof RationalNumberIF;
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
 	}
 }

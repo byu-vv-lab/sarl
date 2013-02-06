@@ -1,17 +1,10 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.BooleanObject;
-import edu.udel.cis.vsl.sarl.IF.IntObject;
-import edu.udel.cis.vsl.sarl.IF.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject.SymbolicObjectKind;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
@@ -21,6 +14,12 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
@@ -29,9 +28,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 /**
  * This class provides partial implementation of the SymbolicUniverseIF
@@ -42,6 +41,8 @@ import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
  */
 public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
+	private ObjectFactory symbolicFactory;
+
 	private SymbolicTypeFactory typeFactory;
 
 	private NumberFactoryIF numberFactory;
@@ -50,43 +51,31 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private NumericExpressionFactory numericExpressionFactory;
 
-	private Map<SymbolicObject, SymbolicObject> objectMap = new HashMap<SymbolicObject, SymbolicObject>();
-
-	private ArrayList<SymbolicObject> objectList = new ArrayList<SymbolicObject>();
-
-	private ArrayList<SymbolicConstantIF> symbolicConstantList = new ArrayList<SymbolicConstantIF>();
-
 	private SymbolicTypeIF booleanType, integerType, realType;
-
-	private BooleanObject trueObj, falseObj;
 
 	private SymbolicExpressionIF trueExpr, falseExpr;
 
-	private NumberObject zeroIntObj, zeroRealObj, oneIntObj, oneRealObj;
-
 	private SymbolicExpressionIF zeroInt, zeroReal, oneInt, oneReal;
 
-	public CommonSymbolicUniverse(SymbolicTypeFactory typeFactory,
-			NumberFactoryIF numberFactory) {
+	public CommonSymbolicUniverse(ObjectFactory symbolicFactory,
+			SymbolicTypeFactory typeFactory) {
+		this.symbolicFactory = symbolicFactory;
 		this.typeFactory = typeFactory;
 		this.booleanType = typeFactory.booleanType();
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
-		this.trueObj = booleanObject(true);
-		this.falseObj = booleanObject(false);
 		this.trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				trueObj);
+				symbolicFactory.trueObj());
 		this.falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				falseObj);
-		this.zeroIntObj = numberObject(numberFactory.zeroInteger());
-		this.zeroRealObj = numberObject(numberFactory.zeroRational());
-		this.oneIntObj = numberObject(numberFactory.oneInteger());
-		this.oneRealObj = numberObject(numberFactory.oneRational());
-		// get all this from numeric factory
-		zeroInt = expression(SymbolicOperator.CONCRETE, integerType, zeroIntObj);
-		zeroReal = expression(SymbolicOperator.CONCRETE, realType, zeroRealObj);
-		oneInt = expression(SymbolicOperator.CONCRETE, integerType, oneIntObj);
-		oneReal = expression(SymbolicOperator.CONCRETE, realType, oneRealObj);
+				symbolicFactory.falseObj());
+		zeroInt = expression(SymbolicOperator.CONCRETE, integerType,
+				symbolicFactory.zeroIntObj());
+		zeroReal = expression(SymbolicOperator.CONCRETE, realType,
+				symbolicFactory.zeroRealObj());
+		oneInt = expression(SymbolicOperator.CONCRETE, integerType,
+				symbolicFactory.oneIntObj());
+		oneReal = expression(SymbolicOperator.CONCRETE, realType,
+				symbolicFactory.oneRealObj());
 	}
 
 	public void setNumericExpressionFactory(
@@ -98,22 +87,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return numericExpressionFactory;
 	}
 
-	// Helpers...
-
+	@Override
 	public SymbolicObject canonic(SymbolicObject object) {
-		SymbolicObject result = objectMap.get(object);
-
-		if (result == null) {
-			((CommonSymbolicObject) object).setId(objectList.size());
-			objectMap.put(object, object);
-			objectList.add(object);
-			return object;
-		}
-		return result;
+		return symbolicFactory.canonic(object);
 	}
 
 	protected SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
-		return (SymbolicExpressionIF) canonic((SymbolicObject) expression);
+		return (SymbolicExpressionIF) symbolicFactory.canonic(expression);
 	}
 
 	protected SymbolicExpressionIF expression(SymbolicOperator operator,
@@ -433,17 +413,17 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public int numObjects() {
-		return objectList.size();
+		return symbolicFactory.numObjects();
 	}
 
 	@Override
 	public SymbolicObject objectWithId(int index) {
-		return objectList.get(index);
+		return symbolicFactory.objectWithId(index);
 	}
 
 	@Override
 	public Collection<SymbolicObject> objects() {
-		return objectList;
+		return symbolicFactory.objects();
 	}
 
 	@Override
@@ -454,28 +434,27 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public BooleanObject booleanObject(boolean value) {
-		return value ? trueObj : falseObj;
+		return symbolicFactory.booleanObject(value);
 	}
 
 	@Override
 	public IntObject intObject(int value) {
-		return (IntObject) canonic(new CommonIntObject(value));
+		return symbolicFactory.intObject(value);
 	}
 
 	@Override
 	public NumberObject numberObject(NumberIF value) {
-		return (NumberObject) canonic(new CommonNumberObject(value));
+		return symbolicFactory.numberObject(value);
 	}
 
 	@Override
 	public StringObject stringObject(String string) {
-		return (StringObject) canonic(new CommonStringObject(string));
+		return symbolicFactory.stringObject(string);
 	}
 
 	@Override
 	public SymbolicConstantIF symbolicConstant(StringObject name,
 			SymbolicTypeIF type) {
-		int numObjects = numObjects();
 		SymbolicConstantIF result;
 
 		if (type.isNumeric())
@@ -483,15 +462,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 					type);
 		else
 			result = new CommonSymbolicConstant(name, type);
-		result = (SymbolicConstantIF) canonic(result);
-		if (result.id() >= numObjects)
-			symbolicConstantList.add(result);
 		return result;
-	}
-
-	@Override
-	public Collection<SymbolicConstantIF> symbolicConstants() {
-		return symbolicConstantList;
 	}
 
 	@Override
@@ -511,8 +482,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public SymbolicExpressionIF symbolic(NumberObject numberObject) {
-		return canonic(numericExpressionFactory
-				.newConcreteNumericExpression(numberObject));
+		return numericExpressionFactory
+				.newConcreteNumericExpression(numberObject);
 	}
 
 	@Override

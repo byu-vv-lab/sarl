@@ -1,7 +1,7 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.IF.StringObject;
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonStringObject extends CommonSymbolicObject implements
 		StringObject {
@@ -36,5 +36,9 @@ public class CommonStringObject extends CommonSymbolicObject implements
 	@Override
 	public String toString() {
 		return value.toString();
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
 	}
 }

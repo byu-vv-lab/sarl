@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.symbolic.cast.CastFactory;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpression;
 import edu.udel.cis.vsl.sarl.symbolic.power.PowerExpressionFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class MonicFactory {
 

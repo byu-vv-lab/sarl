@@ -12,6 +12,7 @@ import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 		SymbolicMap {
@@ -147,6 +148,12 @@ public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 	 */
 	public static void main(String[] args) {
 		// TODO
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

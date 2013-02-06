@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.type;
 
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+
 /**
  * A symbolic type represents the type of a symbolic expression.
  * 
@@ -17,7 +19,7 @@ package edu.udel.cis.vsl.sarl.IF.type;
  * @author siegel
  * 
  */
-public interface SymbolicTypeIF extends Comparable<SymbolicTypeIF> {
+public interface SymbolicTypeIF extends SymbolicObject {
 
 	/**
 	 * The different kinds of types.
@@ -25,13 +27,6 @@ public interface SymbolicTypeIF extends Comparable<SymbolicTypeIF> {
 	public enum SymbolicTypeKind {
 		ARRAY, BOOLEAN, FUNCTION, INTEGER, REAL, TUPLE, UNION
 	};
-
-	/**
-	 * Unique ID number of this type.
-	 * 
-	 * @return id number of this type
-	 */
-	int id();
 
 	/**
 	 * Tells whether the type is the boolean type.
@@ -64,6 +59,6 @@ public interface SymbolicTypeIF extends Comparable<SymbolicTypeIF> {
 	/**
 	 * Returns the kind of the type.
 	 */
-	SymbolicTypeKind kind();
+	SymbolicTypeKind typeKind();
 
 }

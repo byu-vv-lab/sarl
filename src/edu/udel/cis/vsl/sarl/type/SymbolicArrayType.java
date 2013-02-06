@@ -1,12 +1,11 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class SymbolicArrayType extends SymbolicType implements
 		SymbolicArrayTypeIF {
-
-	public static final int classHashCode = SymbolicArrayType.class.hashCode();
 
 	private SymbolicTypeIF elementType;
 
@@ -27,7 +26,7 @@ public class SymbolicArrayType extends SymbolicType implements
 	 * be complete.
 	 */
 	@Override
-	protected boolean intrinsicEquals(SymbolicType that) {
+	protected boolean typeEquals(SymbolicType that) {
 		if (!elementType.equals(((SymbolicArrayType) that).elementType))
 			return false;
 		if (isComplete()) {
@@ -43,7 +42,7 @@ public class SymbolicArrayType extends SymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return kind().hashCode() + elementType.hashCode();
+		return SymbolicTypeKind.ARRAY.hashCode() ^ elementType.hashCode();
 	}
 
 	@Override
@@ -111,6 +110,12 @@ public class SymbolicArrayType extends SymbolicType implements
 	@Override
 	public boolean isComplete() {
 		return false;
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		if (!elementType.isCanonic())
+			elementType = factory.canonic(elementType);
 	}
 
 }

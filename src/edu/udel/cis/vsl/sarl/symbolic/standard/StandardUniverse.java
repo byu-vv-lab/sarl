@@ -29,7 +29,7 @@ import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class StandardUniverse extends CommonSymbolicUniverse implements
 		SymbolicUniverseIF {

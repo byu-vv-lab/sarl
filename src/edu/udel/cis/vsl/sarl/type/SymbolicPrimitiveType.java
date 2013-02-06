@@ -1,4 +1,6 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
+
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class SymbolicPrimitiveType extends SymbolicType {
 
@@ -8,12 +10,12 @@ public class SymbolicPrimitiveType extends SymbolicType {
 
 	@Override
 	public String toString() {
-		return kind().toString();
+		return typeKind().toString();
 	}
 
 	@Override
 	protected int computeHashCode() {
-		return kind().hashCode();
+		return typeKind().hashCode();
 	}
 
 	/**
@@ -21,7 +23,7 @@ public class SymbolicPrimitiveType extends SymbolicType {
 	 * there is only one primitive type of this kind.
 	 */
 	@Override
-	protected boolean intrinsicEquals(SymbolicType that) {
+	protected boolean typeEquals(SymbolicType that) {
 		return true;
 	}
 
@@ -32,6 +34,10 @@ public class SymbolicPrimitiveType extends SymbolicType {
 	@Override
 	protected int intrinsicCompare(SymbolicType that) {
 		return 0;
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
 	}
 
 }

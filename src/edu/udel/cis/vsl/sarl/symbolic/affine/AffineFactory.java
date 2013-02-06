@@ -14,7 +14,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;
-import edu.udel.cis.vsl.sarl.symbolic.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class AffineFactory {
 

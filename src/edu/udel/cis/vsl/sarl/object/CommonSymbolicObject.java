@@ -1,6 +1,6 @@
-package edu.udel.cis.vsl.sarl.symbolic;
+package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public abstract class CommonSymbolicObject implements SymbolicObject {
 
@@ -16,6 +16,10 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		this.kind = kind;
 	}
 
+	public boolean isCanonic() {
+		return id >= 0;
+	}
+
 	/**
 	 * Sets the id.
 	 * 
@@ -29,6 +33,13 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return id;
 	}
 
+	/**
+	 * Compares this object with a given one of the same SymbolicObjectKind.
+	 * 
+	 * @param o
+	 *            a SymbolicObject of the same SymbolicObjectKind as this
+	 * @return a negative number, 0, or positive number as
+	 */
 	protected abstract int compareLocal(SymbolicObject o);
 
 	@Override
@@ -56,6 +67,15 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return hashCode;
 	}
 
+	/**
+	 * Is the given symbolic object equal to this one---assuming the given
+	 * symbolic object is of the same kind as this one? Must be defined in any
+	 * concrete subclass.
+	 * 
+	 * @param that
+	 *            a symbolic object of the same kind as this one
+	 * @return true iff they define the same type
+	 */
 	protected abstract boolean intrinsicEquals(SymbolicObject o);
 
 	@Override
@@ -76,4 +96,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		}
 		return false;
 	}
+
+	public abstract void canonizeChildren(ObjectFactory factory);
+
 }

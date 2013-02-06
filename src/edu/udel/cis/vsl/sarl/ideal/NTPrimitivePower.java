@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.IntObject;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
@@ -39,7 +39,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public SymbolicMap polynomialMap(IdealFactory factory) {
+	public SymbolicMap termMap(IdealFactory factory) {
 		return factory.singletonMap(this, this);
 	}
 
@@ -69,7 +69,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public NumericExpression add(IdealFactory factory, NumericExpression expr) {
+	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
 		// TODO Auto-generated method stub
 		if (expr instanceof Constant) { // X^i + C
 
@@ -78,7 +78,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 		} else if (expr instanceof PrimitivePower) { // X^i+Y^j or X^i+X^j
 
 		}
-		return expr.add(factory, this);
+		return expr.plus(factory, this);
 	}
 
 	@Override
@@ -88,6 +88,52 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 
 	@Override
 	public boolean isTrivialMonic() {
+		return false;
+	}
+
+	@Override
+	public Polynomial expand(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression negate(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression invert(IdealFactory factory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isZero() {
+		return false;
+	}
+
+	@Override
+	public boolean isOne() {
 		return false;
 	}
 

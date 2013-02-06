@@ -1,16 +1,21 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.object.CommonSymbolicObject;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
-public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
+public class SymbolicTypeSequence extends CommonSymbolicObject implements
+		SymbolicTypeSequenceIF {
 
 	private ArrayList<SymbolicTypeIF> elements;
 
 	SymbolicTypeSequence(Iterable<SymbolicTypeIF> types) {
+		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicTypeIF>();
 		for (SymbolicTypeIF type : types) {
 			elements.add(type);
@@ -18,6 +23,7 @@ public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
 	}
 
 	SymbolicTypeSequence(SymbolicTypeIF[] types) {
+		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicTypeIF>(types.length);
 		for (SymbolicTypeIF type : types) {
 			elements.add(type);
@@ -40,7 +46,7 @@ public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
 	}
 
 	@Override
-	public boolean equals(Object object) {
+	protected boolean intrinsicEquals(SymbolicObject object) {
 		if (object instanceof SymbolicTypeSequence) {
 			return elements.equals(((SymbolicTypeSequence) object).elements);
 		}
@@ -48,19 +54,15 @@ public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
 	}
 
 	@Override
-	public int hashCode() {
-		return elements.hashCode();
-	}
-
-	@Override
-	public int compareTo(SymbolicTypeSequenceIF o) {
+	public int compareLocal(SymbolicObject o) {
+		SymbolicTypeSequence that = (SymbolicTypeSequence) o;
 		int size = elements.size();
-		int result = size - o.numTypes();
+		int result = size - that.numTypes();
 
 		if (result != 0)
 			return result;
 		for (int i = 0; i < size; i++) {
-			result = getType(i).compareTo(o.getType(i));
+			result = getType(i).compareTo(that.getType(i));
 			if (result != 0)
 				return result;
 		}
@@ -79,6 +81,24 @@ public class SymbolicTypeSequence implements SymbolicTypeSequenceIF {
 		}
 		result += ">";
 		return result;
+	}
+
+	@Override
+	protected int computeHashCode() {
+		return SymbolicObjectKind.TYPE_SEQUENCE.hashCode()
+				^ elements.hashCode();
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		int numElements = elements.size();
+
+		for (int i = 0; i < numElements; i++) {
+			SymbolicTypeIF type = elements.get(i);
+
+			if (!type.isCanonic())
+				elements.set(i, factory.canonic(type));
+		}
 	}
 
 }

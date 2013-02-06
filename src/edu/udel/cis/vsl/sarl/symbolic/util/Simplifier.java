@@ -45,7 +45,7 @@ public abstract class Simplifier implements SimplifierIF {
 		SymbolicTypeIF result = typeMap.get(type);
 		if (result != null)
 			return result;
-		SymbolicTypeKind kind = type.kind();
+		SymbolicTypeKind kind = type.typeKind();
 
 		switch (kind) {
 		case BOOLEAN:

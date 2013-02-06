@@ -1,48 +1,26 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
 
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.object.CommonSymbolicObject;
 
 /**
  * Implementation of symbolic types using Flyweight Pattern. Note that the enum
  * SymbolicTypeKind is defined in
  * edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.
  */
-public abstract class SymbolicType implements SymbolicTypeIF {
+public abstract class SymbolicType extends CommonSymbolicObject implements
+		SymbolicTypeIF {
 
 	private SymbolicTypeKind kind;
-
-	private int id = -1;
-
-	private boolean hashed = false;
-
-	private int hashCode;
 
 	/**
 	 * Constructs new SymbolicType object with given kind and ID number -1.
 	 */
 	SymbolicType(SymbolicTypeKind kind) {
+		super(SymbolicObjectKind.TYPE);
 		assert kind != null;
 		this.kind = kind;
-	}
-
-	protected abstract int computeHashCode();
-
-	@Override
-	public int id() {
-		return id;
-	}
-
-	void setId(int id) {
-		this.id = id;
-	}
-
-	@Override
-	public int hashCode() {
-		if (!hashed) {
-			hashCode = computeHashCode();
-			hashed = true;
-		}
-		return hashCode;
 	}
 
 	/**
@@ -54,28 +32,24 @@ public abstract class SymbolicType implements SymbolicTypeIF {
 	 *            a symbolic type of the same kind as this one
 	 * @return true iff they define the same type
 	 */
-	protected abstract boolean intrinsicEquals(SymbolicType that);
+	protected abstract boolean typeEquals(SymbolicType that);
 
 	@Override
-	public boolean equals(Object object) {
+	public boolean intrinsicEquals(SymbolicObject object) {
 		if (this == object)
 			return true;
 		if (object instanceof SymbolicType) {
 			SymbolicType that = (SymbolicType) object;
 
-			if (id > 0 && that.id > 0)
-				return id == that.id;
-			if (hashed && that.hashed && hashCode != that.hashCode)
-				return false;
 			if (kind != that.kind)
 				return false;
-			return intrinsicEquals(that);
+			return typeEquals(that);
 		}
 		return false;
 	}
 
 	@Override
-	public SymbolicTypeKind kind() {
+	public SymbolicTypeKind typeKind() {
 		return kind;
 	}
 
@@ -112,7 +86,7 @@ public abstract class SymbolicType implements SymbolicTypeIF {
 	protected abstract int intrinsicCompare(SymbolicType that);
 
 	@Override
-	public int compareTo(SymbolicTypeIF type) {
+	public int compareLocal(SymbolicObject type) {
 		SymbolicType that = (SymbolicType) type;
 		int result = kind.compareTo(that.kind);
 

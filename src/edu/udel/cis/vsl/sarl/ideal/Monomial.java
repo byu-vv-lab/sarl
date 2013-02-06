@@ -12,4 +12,15 @@ public interface Monomial extends Polynomial {
 
 	Monic monic(IdealFactory factory);
 
+	/**
+	 * If the monomial contains any primitives which are ReducedPolynomials,
+	 * they are multiplied out (expanded) into polynomials involving only
+	 * ordinary primitives.
+	 * 
+	 * @param factory
+	 * @return equivalent polynomial with no ReducedPolynomial primitives in
+	 *         terms
+	 */
+	Polynomial expand(IdealFactory factory);
+
 }

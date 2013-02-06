@@ -625,7 +625,7 @@ public class CVC3TheoremProver implements CVC3TheoremProverIF {
 
 	private Expr processEquality(SymbolicTypeIF type1, SymbolicTypeIF type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
-		SymbolicTypeKind kind = type1.kind();
+		SymbolicTypeKind kind = type1.typeKind();
 
 		if (kind == SymbolicTypeKind.ARRAY) {
 			// length are equal and forall i (0<=i<length).a[i]=b[i].

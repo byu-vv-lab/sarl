@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.collections;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.object.CommonSymbolicObject;
 
 public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 		implements SymbolicCollection {
@@ -10,7 +10,7 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 	private SymbolicCollectionKind collectionKind;
 
 	CommonSymbolicCollection(SymbolicCollectionKind kind) {
-		super(SymbolicObjectKind.COLLECTION);
+		super(SymbolicObjectKind.EXPRESSION_COLLECTION);
 		this.collectionKind = kind;
 	}
 

@@ -15,7 +15,7 @@ public class OtherIdealExpression extends IdealExpression {
 
 	protected OtherIdealExpression(TreeExpressionIF expression) {
 		super(expression);
-		SymbolicTypeKind kind = type().kind();
+		SymbolicTypeKind kind = type().typeKind();
 
 		assert kind == SymbolicTypeKind.ARRAY || kind == SymbolicTypeKind.TUPLE
 				|| kind == SymbolicTypeKind.FUNCTION;

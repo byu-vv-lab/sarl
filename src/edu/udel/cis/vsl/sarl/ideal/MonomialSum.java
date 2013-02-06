@@ -10,4 +10,12 @@ public class MonomialSum extends CommonSymbolicExpression {
 		super(SymbolicOperator.ADD, type, termMap);
 	}
 
+	public SymbolicMap termMap() {
+		return (SymbolicMap) argument(0);
+	}
+
+	public int numTerms() {
+		return ((SymbolicMap) argument(0)).size();
+	}
+
 }

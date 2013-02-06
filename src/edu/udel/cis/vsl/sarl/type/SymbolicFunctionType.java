@@ -1,8 +1,9 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class SymbolicFunctionType extends SymbolicType implements
 		SymbolicFunctionTypeIF {
@@ -21,7 +22,7 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicType thatType) {
+	protected boolean typeEquals(SymbolicType thatType) {
 		SymbolicFunctionType that = (SymbolicFunctionType) thatType;
 
 		return that.outputType.equals(outputType)
@@ -30,7 +31,7 @@ public class SymbolicFunctionType extends SymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return kind().hashCode() + inputTypes.hashCode()
+		return typeKind().hashCode() + inputTypes.hashCode()
 				+ outputType.hashCode();
 	}
 
@@ -57,6 +58,14 @@ public class SymbolicFunctionType extends SymbolicType implements
 		if (result != 0)
 			return result;
 		return outputType.compareTo(that.outputType);
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		if (!inputTypes.isCanonic())
+			inputTypes = (SymbolicTypeSequenceIF) factory.canonic(inputTypes);
+		if (!outputType.isCanonic())
+			outputType = factory.canonic(outputType);
 	}
 
 }

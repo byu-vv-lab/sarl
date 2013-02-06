@@ -8,6 +8,7 @@ import org.pcollections.PSet;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		SymbolicSet {
@@ -89,6 +90,12 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	@Override
 	public SymbolicSet keepOnly(SymbolicSet set) {
 		throw new UnsupportedOperationException("not yet implemented");
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

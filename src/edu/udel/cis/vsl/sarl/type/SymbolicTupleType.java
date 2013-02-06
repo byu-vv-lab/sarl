@@ -1,8 +1,9 @@
-package edu.udel.cis.vsl.sarl.symbolic.type;
+package edu.udel.cis.vsl.sarl.type;
 
-import edu.udel.cis.vsl.sarl.IF.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 public class SymbolicTupleType extends SymbolicType implements
 		SymbolicTupleTypeIF {
@@ -20,7 +21,7 @@ public class SymbolicTupleType extends SymbolicType implements
 	}
 
 	@Override
-	protected boolean intrinsicEquals(SymbolicType thatType) {
+	protected boolean typeEquals(SymbolicType thatType) {
 		SymbolicTupleType that = (SymbolicTupleType) thatType;
 
 		return name.equals(that.name) && sequence.equals(that.sequence);
@@ -28,7 +29,8 @@ public class SymbolicTupleType extends SymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return kind().hashCode() ^ name.hashCode() ^ sequence.hashCode();
+		return SymbolicTypeKind.TUPLE.hashCode() ^ name.hashCode()
+				^ sequence.hashCode();
 	}
 
 	@Override
@@ -54,6 +56,14 @@ public class SymbolicTupleType extends SymbolicType implements
 		if (result != 0)
 			return result;
 		return sequence.compareTo(that.sequence);
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		if (!sequence.isCanonic())
+			sequence = (SymbolicTypeSequenceIF) factory.canonic(sequence);
+		if (!name.isCanonic())
+			name = (StringObject) factory.canonic(name);
 	}
 
 }

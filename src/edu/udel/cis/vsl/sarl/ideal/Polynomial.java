@@ -12,11 +12,11 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 public interface Polynomial extends RationalExpression {
 
 	/**
-	 * Map from Monic to Monomial. Polynomial is sum of the monomials.
+	 * Map from Monic to Monomial. The polynomial is sum of the monomials.
 	 * 
 	 * @return
 	 */
-	SymbolicMap polynomialMap(IdealFactory factory);
+	SymbolicMap termMap(IdealFactory factory);
 
 	/**
 	 * The leading term of this polynomial, or null if the polynomial is 0.
@@ -25,6 +25,15 @@ public interface Polynomial extends RationalExpression {
 	 */
 	Monomial leadingTerm();
 
+	/**
+	 * Returns a factorization of this polynomial expressed as a Monomial in
+	 * which the "variables" are ReducedPolynomials as well as other standard
+	 * NumericPrimitives, such as symbolic constants, etc.
+	 */
 	Monomial factorization(IdealFactory factory);
+
+	Polynomial intDivide(IdealFactory factory, Polynomial expr);
+
+	Polynomial modulo(IdealFactory factory, Polynomial expr);
 
 }

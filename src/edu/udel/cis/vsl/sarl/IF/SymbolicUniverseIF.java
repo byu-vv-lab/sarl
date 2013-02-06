@@ -12,6 +12,11 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
@@ -126,6 +131,17 @@ public interface SymbolicUniverseIF {
 
 	// General...
 
+	/**
+	 * Returns the unique representative instance from the given object's
+	 * equivalence class, where the equivalence relation is determined by
+	 * "equals".
+	 * 
+	 * @param object
+	 *            a symbolic object
+	 * @return canonical representative equal to object
+	 */
+	SymbolicObject canonic(SymbolicObject object);
+
 	/** Returns the number of symbolic objects controlled by this universe. */
 	int numObjects();
 
@@ -135,7 +151,10 @@ public interface SymbolicUniverseIF {
 	 */
 	SymbolicObject objectWithId(int index);
 
-	/** Returns the set of all symbolic objects controlled by this universe. */
+	/**
+	 * Returns the set of all canonic symbolic objects controlled by this
+	 * universe.
+	 */
 	Collection<SymbolicObject> objects();
 
 	/**
@@ -185,14 +204,6 @@ public interface SymbolicUniverseIF {
 	 * details are unimportant because symbolic constants are immutable.
 	 */
 	SymbolicConstantIF symbolicConstant(StringObject name, SymbolicTypeIF type);
-
-	/**
-	 * Returns the set of symbolic constants that have been instantiated in this
-	 * universe.
-	 * 
-	 * @return a set of symbolic constants
-	 */
-	Collection<SymbolicConstantIF> symbolicConstants();
 
 	/**
 	 * Attempts to interpret the given symbolic expression as a symbolic

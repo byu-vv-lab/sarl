@@ -3,9 +3,11 @@ package edu.udel.cis.vsl.sarl.symbolic;
 import java.util.Arrays;
 import java.util.Collection;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.object.CommonSymbolicObject;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
 /**
  * The root of the symbolic expression hierarchy. Every symbolic expression
@@ -28,7 +30,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicTypeIF type, SymbolicObject[] arguments) {
-		super(SymbolicObjectKind.SYMBOLIC_EXPRESSION);
+		super(SymbolicObjectKind.EXPRESSION);
 		assert operator != null;
 		assert type != null;
 		assert arguments != null;
@@ -135,5 +137,19 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	@Override
 	public String atomString() {
 		return toString();
+	}
+
+	@Override
+	public void canonizeChildren(ObjectFactory factory) {
+		int numArgs = arguments.length;
+
+		if (!type.isCanonic())
+			type = factory.canonic(type);
+		for (int i = 0; i < numArgs; i++) {
+			SymbolicObject arg = arguments[i];
+
+			if (!arg.isCanonic())
+				arguments[i] = factory.canonic(arg);
+		}
 	}
 }
