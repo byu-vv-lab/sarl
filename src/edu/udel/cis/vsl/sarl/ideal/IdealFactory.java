@@ -111,6 +111,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private MonomialAdder monomialAdder;
 
+	private MonomialNegater monomialNegater;
+
 	private PrimitivePowerMultiplier primitivePowerMultipler;
 
 	public IdealFactory(NumberFactoryIF numberFactory,
@@ -137,6 +139,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.negOneInt = canonicIntConstant(-1);
 		this.negOneReal = canonicRealConstant(-1);
 		this.monomialAdder = new MonomialAdder(this);
+		this.monomialNegater = new MonomialNegater(this);
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
 	}
 
@@ -437,6 +440,15 @@ public class IdealFactory implements NumericExpressionFactory {
 		return termMap1.combine(monomialAdder, termMap2);
 	}
 
+	/**
+	 * Add to polynomials that have no common factors.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * @return sum p1+p2
+	 */
 	private Polynomial addNoCommon(Polynomial p1, Polynomial p2) {
 		SymbolicTypeIF type = p1.type();
 		SymbolicMap newMap = add(p1.termMap(this), p2.termMap(this));
@@ -458,6 +470,16 @@ public class IdealFactory implements NumericExpressionFactory {
 		}
 	}
 
+	/**
+	 * Adds two polynomials, forming the factorization by factoring out common
+	 * factors from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * @return the sum p1+p2
+	 */
 	private Polynomial add(Polynomial p1, Polynomial p2) {
 		Monomial fact1 = p1.factorization(this);
 		Monomial fact2 = p2.factorization(this);
@@ -563,6 +585,14 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	private Polynomial multiply(Polynomial poly1, Polynomial poly2) {
+		if (poly1.isZero())
+			return poly1;
+		if (poly2.isZero())
+			return poly2;
+		if (poly1.isOne())
+			return poly2;
+		if (poly2.isOne())
+			return poly1;
 		return polynomial(multiply(poly1.termMap(this), poly2.termMap(this)),
 				multiply(poly1.factorization(this), poly2.factorization(this)));
 	}
@@ -570,18 +600,24 @@ public class IdealFactory implements NumericExpressionFactory {
 	private RationalExpression multiply(RationalExpression r1,
 			RationalExpression r2) {
 		// (n1/d1)*(n2/d2)
+		if (r1.isZero())
+			return r1;
+		if (r2.isZero())
+			return r2;
+		if (r1.isOne())
+			return r2;
+		if (r2.isOne())
+			return r1;
 		return divide(multiply(r1.numerator(this), r2.numerator(this)),
 				multiply(r1.denominator(this), r2.denominator(this)));
 	}
 
 	/*************************** DIVIDE *******************************/
 
-	// TODO questions: use MonomialSum as arguments instead of SymbolicMap.
-	// isolate from universe just those methods used here and put them
-	// in their own class for greater modularity so we can test this
-	// without everything in universe.
-
-	// TODO: make canonic optional (recursive needed)
+	private Constant divide(Constant c1, Constant c2) {
+		return constant(objectFactory.numberObject(numberFactory.divide(
+				c1.number(), c2.number())));
+	}
 
 	private SymbolicMap divide(SymbolicMap termMap, Constant constant) {
 		MonomialDivider divider = new MonomialDivider(this, constant.number());
@@ -589,47 +625,148 @@ public class IdealFactory implements NumericExpressionFactory {
 		return termMap.apply(divider);
 	}
 
+	private Monomial divide(Monomial monomial, Constant constant) {
+		return monomial(divide(monomial.monomialConstant(this), constant),
+				monomial.monic(this));
+	}
+
+	private Polynomial divide(Polynomial polynomial, Constant constant) {
+		return polynomial(divide(polynomial.termMap(this), constant),
+				divide(polynomial.factorization(this), constant));
+	}
+
 	public RationalExpression divide(Polynomial numerator,
 			Polynomial denominator) {
-
-		// cancel common factors...
-		Monomial[] triple = extractCommonality(numerator.factorization(this),
-				denominator.factorization(this));
-		if (!triple[0].isOne()) {
-			numerator = triple[1].expand(this);
-			denominator = triple[2].expand(this);
-		}
-		// TODO
-		Constant denomConstant = null; // = getConstantFactor(denominator);
-
-		if (denomConstant.isOne()) {
-			// divide every term in denominator polynomial
-			// multiply every term in numerator polynomial
-		}
-		if (denominator.isOne())
-			return numerator;
 		if (numerator.isZero())
 			return numerator;
-		return ntRationalExpression(numerator, denominator);
+		if (denominator.isOne())
+			return numerator;
+		else { // cancel common factors...
+			Monomial[] triple = extractCommonality(
+					numerator.factorization(this),
+					denominator.factorization(this));
+			Constant denomConstant;
 
+			if (!triple[0].isOne()) {
+				numerator = triple[1].expand(this);
+				denominator = triple[2].expand(this);
+			}
+			denomConstant = denominator.factorization(this).monomialConstant(
+					this);
+			if (!denomConstant.isOne()) {
+				denominator = divide(denominator, denomConstant);
+				numerator = divide(numerator, denomConstant);
+			}
+			if (denominator.isOne())
+				return numerator;
+			return ntRationalExpression(numerator, denominator);
+		}
 	}
+
+	// Integer division D: assume all terms positive
+	// (ad)D(bd) = aDb
+	// (ad)%(bd) = (a%b)d
 
 	private Constant intDivideConstants(Constant c1, Constant c2) {
 		return constant(numberFactory.divide((IntegerNumberIF) c1.number(),
 				(IntegerNumberIF) c2.number()));
 	}
 
-	// (a+b) DIV c
-	// (ab) DIV c
-	// etc.
+	private Polynomial intDividePolynomials(Polynomial numerator,
+			Polynomial denominator) {
+		if (numerator.isZero())
+			return numerator;
+		if (denominator.isOne())
+			return numerator;
+		else { // cancel common factors...
+			Monomial[] triple = extractCommonality(
+					numerator.factorization(this),
+					denominator.factorization(this));
+			Constant denomConstant;
 
-	private Polynomial intDividePolynomials(Polynomial poly1, Polynomial poly2) {
-		// TODO
-		return null;
+			if (!triple[0].isOne()) {
+				numerator = triple[1].expand(this);
+				denominator = triple[2].expand(this);
+			}
+			denomConstant = denominator.factorization(this).monomialConstant(
+					this);
+			if (!denomConstant.isOne()) {
+				denominator = divide(denominator, denomConstant);
+				numerator = divide(numerator, denomConstant);
+			}
+			if (denominator.isOne())
+				return numerator;
+			return new NumericPrimitive(SymbolicOperator.INT_DIVIDE,
+					integerType, numerator, denominator);
+		}
+	}
 
+	/**
+	 * Integer modulus. Assume numerator is nonnegative and denominator is
+	 * positive.
+	 * 
+	 * @param numerator
+	 * @param denominator
+	 * @return
+	 */
+	private Polynomial intModulusPolynomials(Polynomial numerator,
+			Polynomial denominator) {
+		if (numerator.isZero())
+			return numerator;
+		if (denominator.isOne())
+			return zeroInt;
+		else { // cancel common factors...
+			Monomial[] triple = extractCommonality(
+					numerator.factorization(this),
+					denominator.factorization(this));
+			boolean isOne = triple[0].isOne();
+
+			if (!isOne) {
+				numerator = triple[1].expand(this);
+				denominator = triple[2].expand(this);
+			}
+			if (denominator.isOne())
+				return zeroInt;
+			else {
+				Polynomial result = new NumericPrimitive(
+						SymbolicOperator.MODULO, integerType, numerator,
+						denominator);
+
+				if (!isOne)
+					result = multiply(triple[0].expand(this), result);
+				return result;
+			}
+		}
 	}
 
 	/*************************** NEGATE *******************************/
+
+	private Constant negate(Constant constant) {
+		return constant(objectFactory.numberObject(numberFactory
+				.negate(constant.number())));
+	}
+
+	Monomial negate(Monomial monomial) {
+		return monomial(negate(monomial.monomialConstant(this)),
+				monomial.monic(this));
+	}
+
+	private SymbolicMap negate(SymbolicMap termMap) {
+		return termMap.apply(monomialNegater);
+
+	}
+
+	private Polynomial negate(Polynomial polynomial) {
+		return polynomial(negate(polynomial.termMap(this)),
+				negate(polynomial.factorization(this)));
+	}
+
+	private RationalExpression negate(RationalExpression rational) {
+		// here NO NEED TO go through all division checks, factorizations,
+		// etc. just need to negate numerator. Need divideNoCommon...
+		return divide(negate(rational.numerator(this)),
+				rational.denominator(this));
+	}
 
 	/*************************** EXPORTED *****************************/
 
@@ -663,13 +800,16 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public SymbolicExpressionIF add(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arg0.type().isInteger())
+			return add((Polynomial) arg0, (Polynomial) arg1);
+		else
+			return add((RationalExpression) arg0, (RationalExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF add(SymbolicCollection args) {
 		// TODO Auto-generated method stub
+		// iterate and add.  do this in common universe???
 		return null;
 	}
 
@@ -861,5 +1001,18 @@ class MonomialMultiplier implements UnaryOperatorIF {
 				oldMonomial.monic(factory));
 
 		return newMonomial;
+	}
+}
+
+class MonomialNegater implements UnaryOperatorIF {
+	private IdealFactory factory;
+
+	public MonomialNegater(IdealFactory factory) {
+		this.factory = factory;
+	}
+
+	@Override
+	public SymbolicExpressionIF apply(SymbolicExpressionIF arg) {
+		return factory.negate((Monomial) arg);
 	}
 }
