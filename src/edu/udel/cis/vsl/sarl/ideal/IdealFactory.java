@@ -809,7 +809,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public SymbolicExpressionIF add(SymbolicCollection args) {
 		// TODO Auto-generated method stub
-		// iterate and add.  do this in common universe???
+		// iterate and add. do this in common universe???
 		return null;
 	}
 
@@ -836,21 +836,23 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public SymbolicExpressionIF divide(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arg0.type().isInteger())
+			return divide((Polynomial) arg0, (Polynomial) arg1);
+		return divide((RationalExpression) arg0, (RationalExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF modulo(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return intModulusPolynomials((Polynomial) arg0, (Polynomial) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF minus(SymbolicExpressionIF arg) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arg instanceof Polynomial)
+			return negate((Polynomial) arg);
+		else
+			return negate((RationalExpression) arg);
 	}
 
 	@Override
@@ -876,7 +878,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumberIF extractNumber(SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
+		if (expression instanceof Constant)
+			return ((Constant) expression).number();
 		return null;
 	}
 
