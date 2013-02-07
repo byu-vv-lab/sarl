@@ -898,6 +898,16 @@ public class IdealFactory implements NumericExpressionFactory {
 		return new NumericSymbolicConstant(name, type);
 	}
 
+	@Override
+	public SymbolicTypeFactory typeFactory() {
+		return typeFactory;
+	}
+
+	@Override
+	public CollectionFactory collectionFactory() {
+		return collectionFactory;
+	}
+
 }
 
 /**

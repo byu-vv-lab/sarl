@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.trifork.clj_ds.PersistentTreeMap;
@@ -26,6 +27,14 @@ public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 			PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
 		super(SymbolicCollectionKind.MAP);
 		this.pmap = pmap;
+	}
+
+	CljSortedSymbolicMap(Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+		super(SymbolicCollectionKind.MAP);
+		pmap = new PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF>();
+		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : javaMap
+				.entrySet())
+			pmap = pmap.assoc(entry.getKey(), entry.getValue());
 	}
 
 	@Override
@@ -106,17 +115,6 @@ public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	// public static void main(String[] args) {
-	// CljSortedSymbolicMap map = new CljSortedSymbolicMap();
-	// SymbolicTypeFactory typeFactory = new SymbolicTypeFactory();
-	// SymbolicTypeIF t1 = typeFactory.integerType();
-	//
-	// // SymbolicExpressionIF e1 = new
-	// // CommonSymbolicExpression(SymbolicOperator.ADD, t1);
-	// // System.out.println("Empty map: "+map);
-	// // map = map.put(key, value)
-	// }
 
 	@Override
 	public void canonizeChildren(ObjectFactory factory) {

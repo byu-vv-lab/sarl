@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.pcollections.HashTreePSet;
@@ -15,14 +16,18 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 
 	private PSet<SymbolicExpressionIF> pset;
 
+	PcollectionsSymbolicSet(PSet<SymbolicExpressionIF> pset) {
+		super(SymbolicCollectionKind.SET);
+		this.pset = pset;
+	}
+
 	PcollectionsSymbolicSet() {
 		super(SymbolicCollectionKind.SET);
 		this.pset = HashTreePSet.empty();
 	}
 
-	PcollectionsSymbolicSet(PSet<SymbolicExpressionIF> pset) {
-		super(SymbolicCollectionKind.SET);
-		this.pset = pset;
+	PcollectionsSymbolicSet(Collection<SymbolicExpressionIF> elements) {
+		this(HashTreePSet.from(elements));
 	}
 
 	@Override
@@ -95,7 +100,7 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

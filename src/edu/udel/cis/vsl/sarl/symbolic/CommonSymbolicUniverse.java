@@ -41,7 +41,7 @@ import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
  */
 public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
-	private ObjectFactory symbolicFactory;
+	private ObjectFactory objectFactory;
 
 	private SymbolicTypeFactory typeFactory;
 
@@ -57,25 +57,28 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private SymbolicExpressionIF zeroInt, zeroReal, oneInt, oneReal;
 
-	public CommonSymbolicUniverse(ObjectFactory symbolicFactory,
-			SymbolicTypeFactory typeFactory) {
-		this.symbolicFactory = symbolicFactory;
-		this.typeFactory = typeFactory;
+	public CommonSymbolicUniverse(
+			NumericExpressionFactory numericExpressionFactory) {
+		this.numericExpressionFactory = numericExpressionFactory;
+		this.objectFactory = numericExpressionFactory.objectFactory();
+		this.typeFactory = numericExpressionFactory.typeFactory();
+		this.collectionFactory = numericExpressionFactory.collectionFactory();
+		this.numberFactory = numericExpressionFactory.numberFactory();
 		this.booleanType = typeFactory.booleanType();
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				symbolicFactory.trueObj());
+				objectFactory.trueObj());
 		this.falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
-				symbolicFactory.falseObj());
+				objectFactory.falseObj());
 		zeroInt = expression(SymbolicOperator.CONCRETE, integerType,
-				symbolicFactory.zeroIntObj());
+				objectFactory.zeroIntObj());
 		zeroReal = expression(SymbolicOperator.CONCRETE, realType,
-				symbolicFactory.zeroRealObj());
+				objectFactory.zeroRealObj());
 		oneInt = expression(SymbolicOperator.CONCRETE, integerType,
-				symbolicFactory.oneIntObj());
+				objectFactory.oneIntObj());
 		oneReal = expression(SymbolicOperator.CONCRETE, realType,
-				symbolicFactory.oneRealObj());
+				objectFactory.oneRealObj());
 	}
 
 	public void setNumericExpressionFactory(
@@ -89,11 +92,11 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public SymbolicObject canonic(SymbolicObject object) {
-		return symbolicFactory.canonic(object);
+		return objectFactory.canonic(object);
 	}
 
 	protected SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
-		return (SymbolicExpressionIF) symbolicFactory.canonic(expression);
+		return (SymbolicExpressionIF) objectFactory.canonic(expression);
 	}
 
 	protected SymbolicExpressionIF expression(SymbolicOperator operator,
@@ -413,17 +416,17 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public int numObjects() {
-		return symbolicFactory.numObjects();
+		return objectFactory.numObjects();
 	}
 
 	@Override
 	public SymbolicObject objectWithId(int index) {
-		return symbolicFactory.objectWithId(index);
+		return objectFactory.objectWithId(index);
 	}
 
 	@Override
 	public Collection<SymbolicObject> objects() {
-		return symbolicFactory.objects();
+		return objectFactory.objects();
 	}
 
 	@Override
@@ -434,22 +437,22 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public BooleanObject booleanObject(boolean value) {
-		return symbolicFactory.booleanObject(value);
+		return objectFactory.booleanObject(value);
 	}
 
 	@Override
 	public IntObject intObject(int value) {
-		return symbolicFactory.intObject(value);
+		return objectFactory.intObject(value);
 	}
 
 	@Override
 	public NumberObject numberObject(NumberIF value) {
-		return symbolicFactory.numberObject(value);
+		return objectFactory.numberObject(value);
 	}
 
 	@Override
 	public StringObject stringObject(String string) {
-		return symbolicFactory.stringObject(string);
+		return objectFactory.stringObject(string);
 	}
 
 	@Override

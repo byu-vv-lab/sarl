@@ -4,14 +4,26 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
+import edu.udel.cis.vsl.sarl.object.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public interface NumericExpressionFactory {
+	
+	NumberFactoryIF numberFactory();
+	
+	ObjectFactory objectFactory();
+	
+	SymbolicTypeFactory typeFactory();
+	
+	CollectionFactory collectionFactory();
 
 	SymbolicExpressionIF newConcreteNumericExpression(NumberObject numberObject);
 

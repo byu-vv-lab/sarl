@@ -1,0 +1,10 @@
+
+Set up test infrastructure.
+
+Making flyweighting of numbers optional.
+
+Make some kind of SARLConfiguration class encapsulating options such as:
+  flwyeightNumbers, flyweightExpressions, flyweightTypes, flyweightObjects,
+  etc.   These can be fed to universe.
+
+Finish implementing universe methods. 

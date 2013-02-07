@@ -68,11 +68,11 @@ public class ObjectFactory {
 	}
 
 	public SymbolicTypeIF canonic(SymbolicTypeIF type) {
-		return (SymbolicTypeIF) canonic(type);
+		return (SymbolicTypeIF) canonic((SymbolicObject) type);
 	}
 
 	public SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
-		return (SymbolicExpressionIF) canonic(expression);
+		return (SymbolicExpressionIF) canonic((SymbolicObject) expression);
 	}
 
 	public BooleanObject trueObj() {

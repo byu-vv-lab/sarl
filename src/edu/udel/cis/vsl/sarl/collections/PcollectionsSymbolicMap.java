@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -19,15 +20,20 @@ public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 
 	private PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
 
+	PcollectionsSymbolicMap(
+			PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
+		super(SymbolicCollectionKind.MAP);
+		this.pmap = pmap;
+	}
+
 	PcollectionsSymbolicMap() {
 		super(SymbolicCollectionKind.MAP);
 		this.pmap = HashTreePMap.empty();
 	}
 
 	PcollectionsSymbolicMap(
-			PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
-		super(SymbolicCollectionKind.MAP);
-		this.pmap = pmap;
+			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+		this(HashTreePMap.from(javaMap));
 	}
 
 	@Override
@@ -153,7 +159,7 @@ public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
