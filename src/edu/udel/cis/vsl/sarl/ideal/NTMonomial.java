@@ -85,4 +85,9 @@ public class NTMonomial extends CommonSymbolicExpression implements Monomial {
 	public boolean isOne() {
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return monomialConstant().toString() + monic().toString();
+	}
 }

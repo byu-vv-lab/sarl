@@ -18,6 +18,11 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 		Polynomial {
 
 	/**
+	 * The factorization is extrinsic data: not used in hashCode or equals.
+	 */
+	private Monomial factorization;
+
+	/**
 	 * The leading term should be the term corresponding to the maximal monic in
 	 * the fixed total order on monics. Or null if the monomialMap is empty.
 	 * 
@@ -25,28 +30,24 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	 * @param monomialMap
 	 * @param leadingTerm
 	 */
-	protected NTPolynomial(MonomialSum monomialSum, Monomial factorization) {
-		super(SymbolicOperator.CHOICE, monomialSum.type(), monomialSum,
-				factorization);
-		assert monomialSum.numTerms() >= 2;
-	}
-
-	public MonomialSum monomialSum() {
-		return (MonomialSum) argument(0);
+	protected NTPolynomial(SymbolicMap termMap, Monomial factorization) {
+		super(SymbolicOperator.ADD, factorization.type(), termMap);
+		assert termMap.size() >= 2;
+		this.factorization = factorization;
 	}
 
 	@Override
 	public SymbolicMap termMap(IdealFactory factory) {
-		return polynomialMap();
+		return termMap();
 	}
 
-	public SymbolicMap polynomialMap() {
-		return (SymbolicMap) ((SymbolicExpressionIF) argument(0)).argument(0);
+	public SymbolicMap termMap() {
+		return (SymbolicMap) argument(0);
 	}
 
 	@Override
 	public Monomial leadingTerm() {
-		SymbolicMap map = polynomialMap();
+		SymbolicMap map = termMap();
 
 		if (map.isEmpty())
 			return null;
@@ -55,7 +56,7 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 
 	@Override
 	public Monomial factorization(IdealFactory factory) {
-		return (Monomial) argument(1);
+		return factorization;
 	}
 
 	@Override
@@ -78,9 +79,23 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 		return false;
 	}
 
+	public StringBuffer toStringBuffer() {
+		StringBuffer buffer = new StringBuffer();
+		boolean first = true;
+
+		for (SymbolicExpressionIF expr : termMap()) {
+			if (first)
+				first = false;
+			else
+				buffer.append("+");
+			buffer.append(expr.toString());
+		}
+		return buffer;
+	}
+
 	@Override
 	public String toString() {
-		return monomialSum().toString();
+		return toStringBuffer().toString();
 	}
 
 }

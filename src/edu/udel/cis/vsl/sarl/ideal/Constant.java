@@ -43,8 +43,7 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 	@Override
 	public SymbolicMap termMap(IdealFactory factory) {
 		if (polynomialMap == null)
-			polynomialMap = factory.singletonMap(factory.emptyMonic(type()),
-					this);
+			polynomialMap = factory.singletonMap(factory.one(type()), this);
 		return polynomialMap;
 	}
 
@@ -55,7 +54,7 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 
 	@Override
 	public Monic monic(IdealFactory factory) {
-		return factory.emptyMonic(type());
+		return factory.one(type());
 	}
 
 	@Override

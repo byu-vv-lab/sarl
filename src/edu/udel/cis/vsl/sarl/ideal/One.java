@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * Empty monic: equivalent to 1.
@@ -10,17 +10,16 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class TrivialMonic extends CommonSymbolicExpression implements Monic {
+public class One extends Constant implements Monic {
 
-	protected TrivialMonic(SymbolicTypeIF type, SymbolicMap emptyMap) {
-		super(SymbolicOperator.MULTIPLY, type, emptyMap);
-		assert emptyMap.isEmpty();
-		assert emptyMap.isSorted();
+	protected One(SymbolicTypeIF type, NumberObject oneObj) {
+		super(type, oneObj);
+		assert oneObj.isOne();
 	}
 
 	@Override
 	public Constant monomialConstant(IdealFactory factory) {
-		return factory.one(type());
+		return this;
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public SymbolicMap termMap(IdealFactory factory) {
-		return factory.singletonMap(this, factory.one(type()));
+		return factory.singletonMap(this, this);
 	}
 
 	@Override
@@ -45,12 +44,12 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Polynomial denominator(IdealFactory factory) {
-		return factory.one(type());
+		return this;
 	}
 
 	@Override
 	public SymbolicMap monicFactors(IdealFactory factory) {
-		return (SymbolicMap) argument(0);
+		return factory.emptyMap();
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Polynomial expand(IdealFactory factory) {
-		return factory.one(type());
+		return this;
 	}
 
 	@Override
@@ -78,4 +77,8 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "1";
+	}
 }

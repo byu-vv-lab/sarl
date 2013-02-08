@@ -102,4 +102,9 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return primitive().atomString() + "^" + exponent();
+	}
+
 }

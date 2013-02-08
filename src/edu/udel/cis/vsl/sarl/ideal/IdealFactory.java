@@ -102,12 +102,11 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private SymbolicTypeIF integerType, realType;
 
-	private Monic emptyIntMonic, emptyRealMonic;
+	private One oneInt, oneReal;
 
 	private IntObject oneIntObject;
 
-	private Constant zeroInt, zeroReal, oneInt, oneReal, twoInt, twoReal,
-			negOneInt, negOneReal;
+	private Constant zeroInt, zeroReal, twoInt, twoReal, negOneInt, negOneReal;
 
 	private MonomialAdder monomialAdder;
 
@@ -126,14 +125,12 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
 		this.emptyMap = collectionFactory.emptySortedMap();
-		this.emptyIntMonic = (Monic) objectFactory.canonic(new TrivialMonic(
-				integerType, emptyMap));
-		this.emptyRealMonic = (Monic) objectFactory.canonic(new TrivialMonic(
-				realType, emptyMap));
+		this.oneInt = (One) objectFactory.canonic(new One(integerType,
+				objectFactory.numberObject(numberFactory.oneInteger())));
+		this.oneReal = (One) objectFactory.canonic(new One(realType,
+				objectFactory.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
 		this.zeroReal = canonicIntConstant(0);
-		this.oneInt = canonicIntConstant(1);
-		this.oneReal = canonicRealConstant(1);
 		this.twoInt = canonicIntConstant(2);
 		this.twoReal = canonicRealConstant(2);
 		this.negOneInt = canonicIntConstant(-1);
@@ -161,6 +158,10 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Basic symbolic objects...
 
+	public SymbolicMap emptyMap() {
+		return emptyMap;
+	}
+
 	public IntObject oneIntObject() {
 		return oneIntObject;
 	}
@@ -173,6 +174,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	// Constants...
 
 	public Constant intConstant(int value) {
+		if (value == 1)
+			return oneInt;
 		return new Constant(integerType,
 				objectFactory.numberObject(numberFactory.integer(value)));
 	}
@@ -182,6 +185,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	public Constant realConstant(int value) {
+		if (value == 1)
+			return oneReal;
 		return new Constant(realType, objectFactory.numberObject(numberFactory
 				.integerToRational(numberFactory.integer(value))));
 	}
@@ -191,8 +196,9 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	public Constant constant(NumberObject object) {
-		return (new Constant(object.isInteger() ? integerType : realType,
-				object));
+		if (object.isOne())
+			return object.isInteger() ? oneInt : oneReal;
+		return new Constant(object.isInteger() ? integerType : realType, object);
 	}
 
 	public Constant constant(NumberIF number) {
@@ -211,15 +217,15 @@ public class IdealFactory implements NumericExpressionFactory {
 		return type.isInteger() ? zeroInt : zeroReal;
 	}
 
-	public Constant oneInt() {
+	public One oneInt() {
 		return oneInt;
 	}
 
-	public Constant oneReal() {
+	public One oneReal() {
 		return oneReal;
 	}
 
-	public Constant one(SymbolicTypeIF type) {
+	public One one(SymbolicTypeIF type) {
 		return type.isInteger() ? oneInt : oneReal;
 	}
 
@@ -266,10 +272,6 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	// Monics...
-	
-	// TODO: Need a new type "One" which is both
-	// a Monic and a Constant.  The Constant class
-	// could be for non-trivial constants.
 
 	private NTMonic ntMonic(SymbolicTypeIF type, SymbolicMap monicMap) {
 		return new NTMonic(type, monicMap);
@@ -277,22 +279,10 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	public Monic monic(SymbolicTypeIF type, SymbolicMap monicMap) {
 		if (monicMap.isEmpty())
-			return emptyMonic(type);
+			return one(type);
 		if (monicMap.size() == 1)
 			return (PrimitivePower) monicMap.iterator().next();
 		return ntMonic(type, monicMap);
-	}
-
-	public Monic emptyIntMonic() {
-		return emptyIntMonic;
-	}
-
-	public Monic emptyRealMonic() {
-		return emptyRealMonic;
-	}
-
-	public Monic emptyMonic(SymbolicTypeIF type) {
-		return type.isInteger() ? emptyIntMonic : emptyRealMonic;
 	}
 
 	// Monomials...
@@ -330,15 +320,9 @@ public class IdealFactory implements NumericExpressionFactory {
 		return new ReducedPolynomial(type, termMap);
 	}
 
-	private MonomialSum monomialSum(SymbolicTypeIF type, SymbolicMap termMap) {
-		return new MonomialSum(type, termMap);
-	}
-
 	private NTPolynomial ntPolynomial(SymbolicMap termMap,
 			Monomial factorization) {
-		MonomialSum monomialSum = monomialSum(factorization.type(), termMap);
-
-		return new NTPolynomial(monomialSum, factorization);
+		return new NTPolynomial(termMap, factorization);
 	}
 
 	public Polynomial polynomial(SymbolicMap termMap, Monomial factorization) {
@@ -442,10 +426,6 @@ public class IdealFactory implements NumericExpressionFactory {
 			}
 			return constant(gcd);
 		}
-	}
-
-	private Constant getConstantFactor(MonomialSum sum) {
-		return getConstantFactor(sum.type(), sum.termMap());
 	}
 
 	private SymbolicMap add(SymbolicMap termMap1, SymbolicMap termMap2) {

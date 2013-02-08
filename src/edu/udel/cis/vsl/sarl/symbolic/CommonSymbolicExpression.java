@@ -13,8 +13,6 @@ import edu.udel.cis.vsl.sarl.object.ObjectFactory;
  * The root of the symbolic expression hierarchy. Every symbolic expression
  * extends this class.
  * 
- * This class is implemented using the Flyweight Pattern. Because of this, there
- * is no need to override the equals or hashCode methods of Object.
  * 
  */
 public class CommonSymbolicExpression extends CommonSymbolicObject implements
@@ -70,6 +68,9 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	/**
 	 * Know that o has argumentKind SYMBOLIC_EXPRESSION and is not == to this.
 	 */
+	
+	// TODO: special handling needed for CHOICE expression.???
+	
 	@Override
 	protected boolean intrinsicEquals(SymbolicObject o) {
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;

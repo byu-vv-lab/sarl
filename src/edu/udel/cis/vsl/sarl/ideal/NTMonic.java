@@ -97,4 +97,17 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 		return false;
 	}
 
+	public StringBuffer toStringBuffer() {
+		StringBuffer buffer = new StringBuffer();
+
+		for (SymbolicExpressionIF expr : monicFactors())
+			buffer.append(expr.atomString());
+		return buffer;
+	}
+
+	@Override
+	public String toString() {
+		return toStringBuffer().toString();
+	}
+
 }

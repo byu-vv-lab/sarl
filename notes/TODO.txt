@@ -1,5 +1,4 @@
 
-Set up test infrastructure.
 
 Making flyweighting of numbers optional.
 
@@ -8,3 +7,30 @@ Make some kind of SARLConfiguration class encapsulating options such as:
   etc.   These can be fed to universe.
 
 Finish implementing universe methods. 
+
+Think about how to do quick dispatch to right routine for
+numeric operation.
+
+Need proper comparison methods
+  Primitives (used as keys to factorMap)
+  Monics (used as keys to termMap)
+  others?
+
+comparisons on SymbolicObject: decomposed by kind
+SymbolicExpression
+NumericExpression : can have own order
+...
+
+want to order Monics by degree.
+
+total order on numeric expressions
+
+1. NTRationalExpression  (/)
+2. NTPolynomialExpression  (+) : order
+3. NTMonomial (*) : order by monic, then constant
+4. NTMonic  (*) : order by degree, then dictionary
+5. NTPrimitivePower (POWER)
+   ReducedPolynomial (+) (extends NumericPrimitive)
+6. NumericPrimitive (anything)
+7. Constants (CONCRETE) (including ONE)
+
