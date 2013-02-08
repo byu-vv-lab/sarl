@@ -8,26 +8,24 @@ import java.util.Set;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
-public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
+public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 		SymbolicMap {
 
 	private PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
 
 	PcollectionsSymbolicMap(
 			PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
-		super(SymbolicCollectionKind.MAP);
+		super();
 		this.pmap = pmap;
 	}
 
 	PcollectionsSymbolicMap() {
-		super(SymbolicCollectionKind.MAP);
+		super();
 		this.pmap = HashTreePMap.empty();
 	}
 
@@ -132,18 +130,6 @@ public class PcollectionsSymbolicMap extends CommonSymbolicCollection implements
 	@Override
 	public SymbolicMap remove(SymbolicExpressionIF key) {
 		return new PcollectionsSymbolicMap(pmap.minus(key));
-	}
-
-	@Override
-	public SymbolicMap apply(UnaryOperatorIF operator) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**

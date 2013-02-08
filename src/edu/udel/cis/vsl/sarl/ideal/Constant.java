@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
@@ -80,66 +79,13 @@ public class Constant extends CommonSymbolicExpression implements Monomial {
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		if (expr instanceof Constant) {
-			Constant that = (Constant) expr;
-			SymbolicTypeIF type = type();
-
-			assert that.type().equals(type);
-			return factory.constant(factory.objectFactory().numberObject(
-					factory.numberFactory().add(value().getNumber(),
-							that.value().getNumber())));
-		} else {
-			return expr.plus(factory, this);
-		}
-	}
-
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		if (expr instanceof Constant)
-			return factory
-					.constant(factory.numberFactory().multiply(
-							value().getNumber(),
-							((Constant) expr).value().getNumber()));
-		else
-			return expr.plus(factory, this);
-	}
-
-	@Override
 	public Polynomial expand(IdealFactory factory) {
 		return this;
 	}
 
 	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		return factory.constant(factory.numberFactory().negate(
-				value().getNumber()));
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		return factory.constant(factory.numberFactory().divide(
-				factory.numberFactory().oneRational(), value().getNumber()));
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		if (expr instanceof Constant)
-			return factory.constant(factory.numberFactory().divide(
-					(IntegerNumberIF) value().getNumber(),
-					(IntegerNumberIF) ((Constant) expr).value().getNumber()));
-		else
-			return expr.intDivide(factory, this);
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		if (expr instanceof Constant)
-			return factory.constant(factory.numberFactory().mod(
-					(IntegerNumberIF) value().getNumber(),
-					(IntegerNumberIF) ((Constant) expr).value().getNumber()));
-		else
-			return expr.modulo(factory, this);
+	public String toString() {
+		return number().toString();
 	}
 
 }

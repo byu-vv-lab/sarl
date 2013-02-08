@@ -31,6 +31,10 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 		assert monomialSum.numTerms() >= 2;
 	}
 
+	public MonomialSum monomialSum() {
+		return (MonomialSum) argument(0);
+	}
+
 	@Override
 	public SymbolicMap termMap(IdealFactory factory) {
 		return polynomialMap();
@@ -65,42 +69,6 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		// TODO: deal with factorization here.
-		return null;
-	}
-
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isZero() {
 		return false;
 	}
@@ -110,23 +78,9 @@ public class NTPolynomial extends CommonSymbolicExpression implements
 		return false;
 	}
 
-	// public NumericExpression add(IdealFactory factory, NumericExpression
-	// expr) {
-	// if (expr instanceof Polynomial) {
-	// Polynomial that = (Polynomial) expr;
-	// SymbolicMap thatMap = that.polynomialMap(factory);
-	// SymbolicMap thisMap = this.polynomialMap(factory);
-	// MonomialAdder monomialAdder = factory.newMonomialAdder();
-	// SymbolicMap newMap = thisMap.combine(monomialAdder, thatMap);
-	//
-	// if (newMap.isEmpty())
-	// return factory.zero(type());
-	// if (newMap.size() == 1) // return the monomial
-	// return (Monomial) newMap.iterator().next();
-	// else
-	// return factory.reducedPolynomial(type(), newMap);
-	// }
-	// return expr.add(factory, this);
-	// }
+	@Override
+	public String toString() {
+		return monomialSum().toString();
+	}
 
 }

@@ -151,6 +151,14 @@ public class IdealFactory implements NumericExpressionFactory {
 		return objectFactory;
 	}
 
+	public SymbolicTypeIF integerType() {
+		return integerType;
+	}
+
+	public SymbolicTypeIF realType() {
+		return realType;
+	}
+
 	// Basic symbolic objects...
 
 	public IntObject oneIntObject() {
@@ -258,6 +266,10 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	// Monics...
+	
+	// TODO: Need a new type "One" which is both
+	// a Monic and a Constant.  The Constant class
+	// could be for non-trivial constants.
 
 	private NTMonic ntMonic(SymbolicTypeIF type, SymbolicMap monicMap) {
 		return new NTMonic(type, monicMap);
@@ -348,7 +360,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Extract Commonality...
 
-	private Monic[] extractCommonality(Monic fact1, Monic fact2) {
+	public Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicTypeIF type = fact1.type();
 		// maps from ReducedPolynomial to ReducedPolynomialPower...
 		SymbolicMap map1 = fact1.monicFactors(this);
@@ -404,7 +416,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	/***************************** ADD ********************************/
 
-	private Constant add(Constant c1, Constant c2) {
+	public Constant add(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.add(
 				c1.number(), c2.number())));
 	}
@@ -480,7 +492,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	 *            a Polynomial
 	 * @return the sum p1+p2
 	 */
-	private Polynomial add(Polynomial p1, Polynomial p2) {
+	public Polynomial add(Polynomial p1, Polynomial p2) {
 		Monomial fact1 = p1.factorization(this);
 		Monomial fact2 = p2.factorization(this);
 		Monomial[] triple = extractCommonality(fact1, fact2);
@@ -513,7 +525,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	/************************** MULTIPLY ******************************/
 
-	private Constant multiply(Constant c1, Constant c2) {
+	public Constant multiply(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.multiply(
 				c1.number(), c2.number())));
 	}
@@ -525,7 +537,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return termMap.apply(multiplier);
 	}
 
-	private Polynomial multiply(Constant constant, Polynomial polynomial) {
+	public Polynomial multiply(Constant constant, Polynomial polynomial) {
 		if (constant.isZero())
 			return constant;
 		if (constant.isOne())
@@ -542,14 +554,14 @@ public class IdealFactory implements NumericExpressionFactory {
 		}
 	}
 
-	private Monic multiply(Monic monic1, Monic monic2) {
+	public Monic multiply(Monic monic1, Monic monic2) {
 		return monic(
 				monic1.type(),
-				monic1.termMap(this).combine(primitivePowerMultipler,
-						monic2.termMap(this)));
+				monic1.monicFactors(this).combine(primitivePowerMultipler,
+						monic2.monicFactors(this)));
 	}
 
-	private Monomial multiply(Monomial m1, Monomial m2) {
+	public Monomial multiply(Monomial m1, Monomial m2) {
 		return monomial(
 				multiply(m1.monomialConstant(this), m2.monomialConstant(this)),
 				multiply(m1.monic(this), m2.monic(this)));
@@ -567,7 +579,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return result;
 	}
 
-	private Polynomial multiply(Monomial monomial, Polynomial polynomial) {
+	public Polynomial multiply(Monomial monomial, Polynomial polynomial) {
 		return polynomial(multiply(monomial, polynomial.termMap(this)),
 				multiply(monomial, polynomial.factorization(this)));
 	}
@@ -584,7 +596,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return result;
 	}
 
-	private Polynomial multiply(Polynomial poly1, Polynomial poly2) {
+	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
 		if (poly1.isZero())
 			return poly1;
 		if (poly2.isZero())
@@ -597,7 +609,7 @@ public class IdealFactory implements NumericExpressionFactory {
 				multiply(poly1.factorization(this), poly2.factorization(this)));
 	}
 
-	private RationalExpression multiply(RationalExpression r1,
+	public RationalExpression multiply(RationalExpression r1,
 			RationalExpression r2) {
 		// (n1/d1)*(n2/d2)
 		if (r1.isZero())
@@ -614,7 +626,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	/*************************** DIVIDE *******************************/
 
-	private Constant divide(Constant c1, Constant c2) {
+	public Constant divide(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.divide(
 				c1.number(), c2.number())));
 	}
@@ -625,12 +637,12 @@ public class IdealFactory implements NumericExpressionFactory {
 		return termMap.apply(divider);
 	}
 
-	private Monomial divide(Monomial monomial, Constant constant) {
+	public Monomial divide(Monomial monomial, Constant constant) {
 		return monomial(divide(monomial.monomialConstant(this), constant),
 				monomial.monic(this));
 	}
 
-	private Polynomial divide(Polynomial polynomial, Constant constant) {
+	public Polynomial divide(Polynomial polynomial, Constant constant) {
 		return polynomial(divide(polynomial.termMap(this), constant),
 				divide(polynomial.factorization(this), constant));
 	}
@@ -667,12 +679,12 @@ public class IdealFactory implements NumericExpressionFactory {
 	// (ad)D(bd) = aDb
 	// (ad)%(bd) = (a%b)d
 
-	private Constant intDivideConstants(Constant c1, Constant c2) {
+	public Constant intDivideConstants(Constant c1, Constant c2) {
 		return constant(numberFactory.divide((IntegerNumberIF) c1.number(),
 				(IntegerNumberIF) c2.number()));
 	}
 
-	private Polynomial intDividePolynomials(Polynomial numerator,
+	public Polynomial intDividePolynomials(Polynomial numerator,
 			Polynomial denominator) {
 		if (numerator.isZero())
 			return numerator;
@@ -709,7 +721,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	 * @param denominator
 	 * @return
 	 */
-	private Polynomial intModulusPolynomials(Polynomial numerator,
+	public Polynomial intModulusPolynomials(Polynomial numerator,
 			Polynomial denominator) {
 		if (numerator.isZero())
 			return numerator;
@@ -741,12 +753,12 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	/*************************** NEGATE *******************************/
 
-	private Constant negate(Constant constant) {
+	public Constant negate(Constant constant) {
 		return constant(objectFactory.numberObject(numberFactory
 				.negate(constant.number())));
 	}
 
-	Monomial negate(Monomial monomial) {
+	public Monomial negate(Monomial monomial) {
 		return monomial(negate(monomial.monomialConstant(this)),
 				monomial.monic(this));
 	}
@@ -756,12 +768,12 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	}
 
-	private Polynomial negate(Polynomial polynomial) {
+	public Polynomial negate(Polynomial polynomial) {
 		return polynomial(negate(polynomial.termMap(this)),
 				negate(polynomial.factorization(this)));
 	}
 
-	private RationalExpression negate(RationalExpression rational) {
+	public RationalExpression negate(RationalExpression rational) {
 		// here NO NEED TO go through all division checks, factorizations,
 		// etc. just need to negate numerator. Need divideNoCommon...
 		return divide(negate(rational.numerator(this)),
@@ -823,8 +835,11 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public SymbolicExpressionIF multiply(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arg0.type().isInteger())
+			return multiply((Polynomial) arg0, (Polynomial) arg1);
+		else
+			return multiply((RationalExpression) arg0,
+					(RationalExpression) arg1);
 	}
 
 	@Override
@@ -855,11 +870,36 @@ public class IdealFactory implements NumericExpressionFactory {
 			return negate((RationalExpression) arg);
 	}
 
+	public Polynomial power(Polynomial base, IntObject exponent) {
+		Polynomial result = one(base.type());
+		int n = exponent.getInt();
+
+		while (n > 0) {
+			if (n % 2 != 0) {
+				result = multiply(result, base);
+				n -= 1;
+			}
+			base = multiply(base, base);
+			n /= 2;
+		}
+		return result;
+	}
+
 	@Override
 	public SymbolicExpressionIF power(SymbolicExpressionIF base,
 			IntObject exponent) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicExpressionIF result = one(base.type());
+		int n = exponent.getInt();
+
+		while (n > 0) {
+			if (n % 2 != 0) {
+				result = multiply(result, base);
+				n -= 1;
+			}
+			base = multiply(base, base);
+			n /= 2;
+		}
+		return result;
 	}
 
 	@Override
@@ -929,7 +969,7 @@ class MonomialAdder implements BinaryOperatorIF {
 			SymbolicExpressionIF arg1) {
 		Constant c0 = ((Monomial) arg0).monomialConstant(factory);
 		Constant c1 = ((Monomial) arg1).monomialConstant(factory);
-		Constant c2 = (Constant) c0.plus(factory, c1);
+		Constant c2 = factory.add(c0, c1);
 		Monomial monomial;
 
 		if (c2.isZero())

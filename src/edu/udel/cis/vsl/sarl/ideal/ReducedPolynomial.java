@@ -23,4 +23,13 @@ public class ReducedPolynomial extends NumericPrimitive {
 		super(SymbolicOperator.ADD, type, termMap);
 	}
 
+	public SymbolicMap termMap() {
+		return (SymbolicMap) argument(0);
+	}
+
+	@Override
+	public Polynomial expand(IdealFactory factory) {
+		return factory.polynomial(termMap(), this);
+	}
+
 }

@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
@@ -42,6 +43,10 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public SymbolicMap monicFactors(IdealFactory factory) {
+		return monicFactors();
+	}
+
+	public SymbolicMap monicFactors() {
 		return (SymbolicMap) argument(0);
 	}
 
@@ -66,50 +71,20 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean isTrivialMonic() {
 		return false;
 	}
 
 	@Override
 	public Polynomial expand(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		Polynomial result = factory.one(type());
 
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		for (SymbolicExpressionIF expr : monicFactors()) {
+			PrimitivePower ppower = (PrimitivePower) expr;
 
-	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
+			result = factory.multiply(result, ppower.expand(factory));
+		}
+		return result;
 	}
 
 	@Override

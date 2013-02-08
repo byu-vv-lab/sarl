@@ -129,9 +129,34 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return arguments.length;
 	}
 
+	private StringBuffer toStringBuffer(SymbolicObject[] objects) {
+		StringBuffer buffer = new StringBuffer("{");
+		boolean first = true;
+
+		for (SymbolicObject object : objects) {
+			if (first)
+				first = false;
+			else
+				buffer.append(",");
+			if (object == null)
+				buffer.append("null");
+			else
+				buffer.append(object.toString());
+		}
+		buffer.append("}");
+		return buffer;
+	}
+
 	@Override
 	public String toString() {
-		return operator.toString() + "[" + type + "; " + arguments + "]";
+		StringBuffer buffer = new StringBuffer(operator.toString());
+
+		buffer.append("[");
+		buffer.append(type.toString());
+		buffer.append("; ");
+		buffer.append(toStringBuffer(arguments));
+		buffer.append("]");
+		return buffer.toString();
 	}
 
 	@Override

@@ -6,31 +6,29 @@ import java.util.Map.Entry;
 
 import com.trifork.clj_ds.PersistentTreeMap;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 
-public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
+public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 		SymbolicMap {
 
 	private PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
 
 	CljSortedSymbolicMap() {
-		super(SymbolicCollectionKind.MAP);
+		super();
 		this.pmap = new PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF>();
 	}
 
 	CljSortedSymbolicMap(
 			PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
-		super(SymbolicCollectionKind.MAP);
+		super();
 		this.pmap = pmap;
 	}
 
 	CljSortedSymbolicMap(Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
-		super(SymbolicCollectionKind.MAP);
+		super();
 		pmap = new PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF>();
 		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : javaMap
 				.entrySet())
@@ -80,7 +78,8 @@ public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection o) {
-		// TODO Auto-generated method stub
+		if (o instanceof CljSortedSymbolicMap)
+			return pmap.equals(((CljSortedSymbolicMap) o).pmap);
 		return false;
 	}
 
@@ -102,18 +101,6 @@ public class CljSortedSymbolicMap extends CommonSymbolicCollection implements
 	@Override
 	public SymbolicMap remove(SymbolicExpressionIF key) {
 		return new CljSortedSymbolicMap(pmap.without(key));
-	}
-
-	@Override
-	public SymbolicMap apply(UnaryOperatorIF operator) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

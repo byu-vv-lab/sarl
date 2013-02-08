@@ -25,7 +25,7 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 
 	@Override
 	public SymbolicMap monicFactors(IdealFactory factory) {
-		return factory.singletonMap(this, this);
+		return factory.singletonMap(primitive(), this);
 	}
 
 	@Override
@@ -45,6 +45,10 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 
 	@Override
 	public IntObject primitivePowerExponent(IdealFactory factory) {
+		return exponent();
+	}
+
+	public IntObject exponent() {
 		return (IntObject) argument(1);
 	}
 
@@ -69,19 +73,6 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		if (expr instanceof Constant) { // X^i + C
-
-		} else if (expr instanceof NumericPrimitive) { // X^i+Y or X^i+X
-
-		} else if (expr instanceof PrimitivePower) { // X^i+Y^j or X^i+X^j
-
-		}
-		return expr.plus(factory, this);
-	}
-
-	@Override
 	public NumericPrimitive primitive(IdealFactory factory) {
 		return (NumericPrimitive) argument(0);
 	}
@@ -93,38 +84,12 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 
 	@Override
 	public Polynomial expand(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		NumericPrimitive primitive = primitive();
+		Polynomial expandedPrimitive = primitive.expand(factory);
 
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
+		if (primitive.equals(expandedPrimitive))
+			return this;
+		return (Polynomial) factory.power(expandedPrimitive, exponent());
 	}
 
 	@Override

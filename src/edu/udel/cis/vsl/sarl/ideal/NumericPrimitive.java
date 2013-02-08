@@ -98,68 +98,17 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		if (expr instanceof Constant) { // X+C: polynomial
-			Constant that = (Constant) expr;
-
-			if (that.isZero())
-				return this;
-			else
-				return factory.reducedPolynomial(type(),
-						termMap(factory).put(factory.emptyIntMonic(), that));
-		} else if (expr instanceof NumericPrimitive) {
-			NumericPrimitive that = (NumericPrimitive) expr;
-
-			if (this.equals(that)) // 2X
-				return factory.monomial(factory.two(type()), this);
-			else
-				// X+Y
-				return factory.reducedPolynomial(type(),
-						termMap(factory).put(that, that));
-		} else {
-			return expr.plus(factory, this);
-		}
-	}
-
-	@Override
 	public boolean isTrivialMonic() {
 		return false;
 	}
 
+	/**
+	 * Note this might need to be overridden for certain kinds of numeric
+	 * primitives, e.g., ReducedPolynomials.
+	 */
 	@Override
 	public Polynomial expand(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override

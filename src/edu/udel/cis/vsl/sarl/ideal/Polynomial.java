@@ -32,8 +32,4 @@ public interface Polynomial extends RationalExpression {
 	 */
 	Monomial factorization(IdealFactory factory);
 
-	Polynomial intDivide(IdealFactory factory, Polynomial expr);
-
-	Polynomial modulo(IdealFactory factory, Polynomial expr);
-
 }

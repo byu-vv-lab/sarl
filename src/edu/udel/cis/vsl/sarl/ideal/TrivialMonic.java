@@ -30,7 +30,7 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public SymbolicMap termMap(IdealFactory factory) {
-		return factory.singletonMap(this, this);
+		return factory.singletonMap(this, factory.one(type()));
 	}
 
 	@Override
@@ -49,12 +49,6 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 	}
 
 	@Override
-	public NumericExpression plus(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public SymbolicMap monicFactors(IdealFactory factory) {
 		return (SymbolicMap) argument(0);
 	}
@@ -66,44 +60,12 @@ public class TrivialMonic extends CommonSymbolicExpression implements Monic {
 
 	@Override
 	public Monomial factorization(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
 	public Polynomial expand(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression times(IdealFactory factory, NumericExpression expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression negate(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial intDivide(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Polynomial modulo(IdealFactory factory, Polynomial expr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumericExpression invert(IdealFactory factory) {
-		// TODO Auto-generated method stub
-		return null;
+		return factory.one(type());
 	}
 
 	@Override
