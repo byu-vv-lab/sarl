@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * A non-trivial primitive power represents a Primitive expression raised to
@@ -11,8 +10,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NTPrimitivePower extends CommonSymbolicExpression implements
-		PrimitivePower {
+public class NTPrimitivePower extends IdealExpression implements PrimitivePower {
 
 	protected NTPrimitivePower(NumericPrimitive primitive, IntObject exponent) {
 		super(SymbolicOperator.POWER, primitive.type(), primitive, exponent);
@@ -105,6 +103,27 @@ public class NTPrimitivePower extends CommonSymbolicExpression implements
 	@Override
 	public String toString() {
 		return primitive().atomString() + "^" + exponent();
+	}
+
+	@Override
+	public int degree() {
+		return exponent().getInt();
+	}
+
+	@Override
+	public IdealKind idealKind() {
+		return IdealKind.NTPrimitivePower;
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		NTPrimitivePower thatPPower = (NTPrimitivePower) that;
+		int result = thatPPower.degree() - degree();
+
+		if (result != 0)
+			return result;
+		result = primitive().compareTo(thatPPower.primitive());
+		return result;
 	}
 
 }

@@ -92,31 +92,42 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	/**
 	 * Compare to another symbolic expression.
 	 * 
-	 * Numerics first (?).  Then others???
+	 * Numerics first, then everthing else.
 	 */
 	@Override
 	protected int compareLocal(SymbolicObject o) {
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;
-		int result = operator.compareTo(that.operator);
 
-		if (result != 0)
-			return result;
-		// need types to implement comparable.
-		result = type.compareTo(that.type);
-		if (result != 0)
-			return result;
-		{
-			int numArgs0 = numArguments();
+		if (type.isNumeric()) {
+			if (that.type.isNumeric())
+				return ((NumericExpression) this)
+						.compareNumeric((NumericExpression) that);
+			else
+				return -1;
+		} else if (that.type.isNumeric())
+			return 1;
+		else { // neither is numeric
+			int result = type.compareTo(that.type);
 
-			result = numArgs0 - that.numArguments();
 			if (result != 0)
 				return result;
-			for (int i = 0; i < numArgs0; i++) {
-				result = arguments[i].compareTo(that.arguments[i]);
+			// need types to implement comparable.
+			result = operator.compareTo(that.operator);
+			if (result != 0)
+				return result;
+			else {
+				int numArgs0 = numArguments();
+
+				result = numArgs0 - that.numArguments();
 				if (result != 0)
 					return result;
+				for (int i = 0; i < numArgs0; i++) {
+					result = arguments[i].compareTo(that.arguments[i]);
+					if (result != 0)
+						return result;
+				}
+				return 0;
 			}
-			return 0;
 		}
 	}
 

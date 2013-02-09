@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * A non-trivial monomial is the product of a constant and a monic. The constant
@@ -10,7 +9,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NTMonomial extends CommonSymbolicExpression implements Monomial {
+public class NTMonomial extends IdealExpression implements Monomial {
 
 	private SymbolicMap termMap = null;
 
@@ -89,5 +88,25 @@ public class NTMonomial extends CommonSymbolicExpression implements Monomial {
 	@Override
 	public String toString() {
 		return monomialConstant().toString() + monic().toString();
+	}
+
+	@Override
+	public int degree() {
+		return monic().degree();
+	}
+
+	@Override
+	public IdealKind idealKind() {
+		return IdealKind.NTMonomial;
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		int result = monic().compareTo(((NTMonomial) that).monic());
+
+		if (result != 0)
+			return result;
+		return monomialConstant().compareTo(
+				((NTMonomial) that).monomialConstant());
 	}
 }

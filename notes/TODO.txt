@@ -26,11 +26,11 @@ want to order Monics by degree.
 total order on numeric expressions
 
 1. NTRationalExpression  (/)
-2. NTPolynomialExpression  (+) : order
+2. NTPolynomial  (+) : order
 3. NTMonomial (*) : order by monic, then constant
 4. NTMonic  (*) : order by degree, then dictionary
 5. NTPrimitivePower (POWER)
    ReducedPolynomial (+) (extends NumericPrimitive)
 6. NumericPrimitive (anything)
-7. Constants (CONCRETE) (including ONE)
+7. NTConstant, including One
 

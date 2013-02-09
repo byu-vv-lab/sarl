@@ -7,5 +7,7 @@ public interface NumericExpression extends SymbolicExpressionIF {
 	boolean isZero();
 
 	boolean isOne();
+	
+	int compareNumeric(NumericExpression that);
 
 }

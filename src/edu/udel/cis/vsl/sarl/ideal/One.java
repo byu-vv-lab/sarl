@@ -4,7 +4,6 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * Empty monic: equivalent to 1.
@@ -12,7 +11,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class One extends CommonSymbolicExpression implements Constant, Monic {
+public class One extends IdealExpression implements Constant, Monic {
 
 	protected One(SymbolicTypeIF type, NumberObject oneObj) {
 		super(SymbolicOperator.CONCRETE, type, oneObj);
@@ -86,11 +85,26 @@ public class One extends CommonSymbolicExpression implements Constant, Monic {
 
 	@Override
 	public NumberObject value() {
-		return (NumberObject) argument(1);
+		return (NumberObject) argument(0);
 	}
 
 	@Override
 	public NumberIF number() {
 		return value().getNumber();
+	}
+
+	@Override
+	public int degree() {
+		return 0;
+	}
+
+	@Override
+	public IdealKind idealKind() {
+		return IdealKind.Constant;
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		return -((Constant) that).value().signum();
 	}
 }

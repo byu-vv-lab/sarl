@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
@@ -27,7 +26,7 @@ public interface NumericExpressionFactory {
 
 	SymbolicExpressionIF newConcreteNumericExpression(NumberObject numberObject);
 
-	SymbolicConstantIF newNumericSymbolicConstant(StringObject name,
+	NumericSymbolicConstant newNumericSymbolicConstant(StringObject name,
 			SymbolicTypeIF type);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,

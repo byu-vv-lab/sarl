@@ -32,4 +32,6 @@ public interface Polynomial extends RationalExpression {
 	 */
 	Monomial factorization(IdealFactory factory);
 
+	int degree();
+
 }

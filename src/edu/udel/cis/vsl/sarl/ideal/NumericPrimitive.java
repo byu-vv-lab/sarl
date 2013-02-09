@@ -4,7 +4,6 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * A numeric primitive expression. Other class may want to extend this.
@@ -17,8 +16,7 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NumericPrimitive extends CommonSymbolicExpression implements
-		PrimitivePower {
+public class NumericPrimitive extends IdealExpression implements PrimitivePower {
 
 	/**
 	 * Singleton map from this to this.
@@ -119,6 +117,37 @@ public class NumericPrimitive extends CommonSymbolicExpression implements
 	@Override
 	public boolean isOne() {
 		return false;
+	}
+
+	@Override
+	public int degree() {
+		return 1;
+	}
+
+	@Override
+	public IdealKind idealKind() {
+		return IdealKind.NumericPrimitive;
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		int result = operator().compareTo(that.operator());
+
+		if (result != 0)
+			return result;
+		else {
+			int numArgs0 = numArguments();
+
+			result = numArgs0 - that.numArguments();
+			if (result != 0)
+				return result;
+			for (int i = 0; i < numArgs0; i++) {
+				result = argument(i).compareTo(that.argument(i));
+				if (result != 0)
+					return result;
+			}
+			return 0;
+		}
 	}
 
 }

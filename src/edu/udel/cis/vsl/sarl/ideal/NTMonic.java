@@ -1,9 +1,10 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
+import java.util.Iterator;
+
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * A non-trivial monic is the product of at least two primitive powers. The set
@@ -15,9 +16,11 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NTMonic extends CommonSymbolicExpression implements Monic {
+public class NTMonic extends IdealExpression implements Monic {
 
 	private SymbolicMap polynomialMap = null;
+
+	private int degree = -1;
 
 	protected NTMonic(SymbolicTypeIF type, SymbolicMap factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
@@ -108,6 +111,44 @@ public class NTMonic extends CommonSymbolicExpression implements Monic {
 	@Override
 	public String toString() {
 		return toStringBuffer().toString();
+	}
+
+	@Override
+	public IdealKind idealKind() {
+		return IdealKind.NTMonic;
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		NTMonic thatMonic = (NTMonic) that;
+		int result = thatMonic.degree() - this.degree();
+
+		if (result != 0)
+			return result;
+	
+		Iterator<SymbolicExpressionIF> ppIter1 = monicFactors().iterator();
+		Iterator<SymbolicExpressionIF> ppIter2 = thatMonic.monicFactors()
+				.iterator();
+
+		while (ppIter1.hasNext()) {
+			PrimitivePower ppower1 = (PrimitivePower) ppIter1.next();
+			PrimitivePower ppower2 = (PrimitivePower) ppIter2.next();
+
+			result = ppower1.compareTo(ppower2);
+			if (result != 0)
+				return result;
+		}
+		return 0;
+	}
+
+	@Override
+	public int degree() {
+		if (degree < 0) {
+			degree = 0;
+			for (SymbolicExpressionIF expr : monicFactors())
+				degree += ((PrimitivePower) expr).degree();
+		}
+		return degree;
 	}
 
 }

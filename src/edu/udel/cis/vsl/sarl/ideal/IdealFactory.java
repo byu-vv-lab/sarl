@@ -7,7 +7,6 @@ import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
@@ -22,6 +21,7 @@ import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.symbolic.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 /**
@@ -909,9 +909,9 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public SymbolicConstantIF newNumericSymbolicConstant(StringObject name,
-			SymbolicTypeIF type) {
-		return new NumericSymbolicConstant(name, type);
+	public NumericSymbolicConstant newNumericSymbolicConstant(
+			StringObject name, SymbolicTypeIF type) {
+		return new IdealSymbolicConstant(name, type);
 	}
 
 	@Override

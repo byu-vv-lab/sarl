@@ -19,6 +19,8 @@ import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.CommonCollectionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
+import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
+import edu.udel.cis.vsl.sarl.symbolic.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public class IdealTest {
@@ -37,8 +39,8 @@ public class IdealTest {
 	private Constant c2; // real constant -1/4
 	private Constant c10; // int constant 10
 	StringObject Xobj; // "X"
-	SymbolicConstantIF x; // int symbolic constant "X"
-	SymbolicConstantIF y; // int symbolic constant "Y"
+	NumericSymbolicConstant x; // int symbolic constant "X"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
 
 	@Before
 	public void setUp() throws Exception {
@@ -127,8 +129,8 @@ public class IdealTest {
 
 	@Test
 	public void xplus1squared() {
-		SymbolicExpressionIF xp1 = idealFactory.add(x,
-				idealFactory.intConstant(1));
+		NumericExpression xp1 = idealFactory
+				.add(x, idealFactory.intConstant(1));
 		SymbolicExpressionIF xp1squared = idealFactory.multiply(xp1, xp1);
 		SymbolicExpressionIF x2p2xp1 = idealFactory.add(idealFactory.multiply(
 				x, x), idealFactory.add(

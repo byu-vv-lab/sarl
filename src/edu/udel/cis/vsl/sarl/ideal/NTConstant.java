@@ -4,7 +4,6 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * A constant which is not 1.
@@ -12,11 +11,15 @@ import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
  * @author siegel
  * 
  */
-public class NTConstant extends CommonSymbolicExpression implements Constant {
+public class NTConstant extends IdealExpression implements Constant {
 
 	protected NTConstant(SymbolicTypeIF type, NumberObject value) {
 		super(SymbolicOperator.CONCRETE, type, value);
 		assert !value.isOne();
+	}
+
+	public IdealKind idealKind() {
+		return IdealKind.Constant;
 	}
 
 	public NumberObject value() {
@@ -78,6 +81,16 @@ public class NTConstant extends CommonSymbolicExpression implements Constant {
 	@Override
 	public String toString() {
 		return number().toString();
+	}
+
+	@Override
+	protected int compareIdeal(IdealExpression that) {
+		return number().compareTo(((Constant) that).number());
+	}
+
+	@Override
+	public int degree() {
+		return isZero() ? -1 : 0;
 	}
 
 }

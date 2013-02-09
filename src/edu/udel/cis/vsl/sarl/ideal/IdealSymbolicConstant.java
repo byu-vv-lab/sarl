@@ -1,13 +1,13 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.NumericSymbolicConstant;
 
-public class NumericSymbolicConstant extends NumericPrimitive implements
-		SymbolicConstantIF {
+public class IdealSymbolicConstant extends NumericPrimitive implements
+		NumericSymbolicConstant {
 
-	NumericSymbolicConstant(StringObject name, SymbolicTypeIF type) {
+	IdealSymbolicConstant(StringObject name, SymbolicTypeIF type) {
 		super(SymbolicOperator.SYMBOLIC_CONSTANT, type, name);
 	}
 
