@@ -20,6 +20,7 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
+import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
@@ -176,7 +177,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	public Constant intConstant(int value) {
 		if (value == 1)
 			return oneInt;
-		return new Constant(integerType,
+		return new NTConstant(integerType,
 				objectFactory.numberObject(numberFactory.integer(value)));
 	}
 
@@ -187,8 +188,9 @@ public class IdealFactory implements NumericExpressionFactory {
 	public Constant realConstant(int value) {
 		if (value == 1)
 			return oneReal;
-		return new Constant(realType, objectFactory.numberObject(numberFactory
-				.integerToRational(numberFactory.integer(value))));
+		return new NTConstant(realType,
+				objectFactory.numberObject(numberFactory
+						.integerToRational(numberFactory.integer(value))));
 	}
 
 	private Constant canonicRealConstant(int value) {
@@ -198,7 +200,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	public Constant constant(NumberObject object) {
 		if (object.isOne())
 			return object.isInteger() ? oneInt : oneReal;
-		return new Constant(object.isInteger() ? integerType : realType, object);
+		return new NTConstant(object.isInteger() ? integerType : realType,
+				object);
 	}
 
 	public Constant constant(NumberIF number) {
@@ -765,33 +768,32 @@ public class IdealFactory implements NumericExpressionFactory {
 	// Methods specified in interface NumericExpressionFactory...
 
 	@Override
-	public SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	public NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject[] arguments) {
 		return new NumericPrimitive(operator, numericType, arguments);
 	}
 
 	@Override
-	public SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	public NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0) {
 		return new NumericPrimitive(operator, numericType, arg0);
 	}
 
 	@Override
-	public SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	public NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0, SymbolicObject arg1) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1);
 	}
 
 	@Override
-	public SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	public NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0,
 			SymbolicObject arg1, SymbolicObject arg2) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
 	}
 
 	@Override
-	public SymbolicExpressionIF add(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1) {
+	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
 		if (arg0.type().isInteger())
 			return add((Polynomial) arg0, (Polynomial) arg1);
 		else
@@ -799,22 +801,21 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpressionIF add(SymbolicCollection args) {
+	public NumericExpression add(SymbolicCollection args) {
 		// TODO Auto-generated method stub
 		// iterate and add. do this in common universe???
 		return null;
 	}
 
 	@Override
-	public SymbolicExpressionIF subtract(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public NumericExpression subtract(NumericExpression arg0,
+			NumericExpression arg1) {
+		return add(arg0, minus(arg1));
 	}
 
 	@Override
-	public SymbolicExpressionIF multiply(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1) {
+	public NumericExpression multiply(NumericExpression arg0,
+			NumericExpression arg1) {
 		if (arg0.type().isInteger())
 			return multiply((Polynomial) arg0, (Polynomial) arg1);
 		else
@@ -823,27 +824,27 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpressionIF multiply(SymbolicCollection args) {
+	public NumericExpression multiply(SymbolicCollection args) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SymbolicExpressionIF divide(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1) {
+	public NumericExpression divide(NumericExpression arg0,
+			NumericExpression arg1) {
 		if (arg0.type().isInteger())
 			return divide((Polynomial) arg0, (Polynomial) arg1);
 		return divide((RationalExpression) arg0, (RationalExpression) arg1);
 	}
 
 	@Override
-	public SymbolicExpressionIF modulo(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1) {
+	public NumericExpression modulo(NumericExpression arg0,
+			NumericExpression arg1) {
 		return intModulusPolynomials((Polynomial) arg0, (Polynomial) arg1);
 	}
 
 	@Override
-	public SymbolicExpressionIF minus(SymbolicExpressionIF arg) {
+	public NumericExpression minus(NumericExpression arg) {
 		if (arg instanceof Polynomial)
 			return negate((Polynomial) arg);
 		else
@@ -866,9 +867,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpressionIF power(SymbolicExpressionIF base,
-			IntObject exponent) {
-		SymbolicExpressionIF result = one(base.type());
+	public NumericExpression power(NumericExpression base, IntObject exponent) {
+		NumericExpression result = one(base.type());
 		int n = exponent.getInt();
 
 		while (n > 0) {
@@ -883,33 +883,29 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpressionIF power(SymbolicExpressionIF base,
-			SymbolicExpressionIF exponent) {
+	public NumericExpression power(NumericExpression base,
+			NumericExpression exponent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SymbolicExpressionIF castToReal(
-			SymbolicExpressionIF numericExpression) {
+	public NumericExpression castToReal(NumericExpression numericExpression) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public NumberIF extractNumber(SymbolicExpressionIF expression) {
+	public NumberIF extractNumber(NumericExpression expression) {
 		if (expression instanceof Constant)
 			return ((Constant) expression).number();
 		return null;
 	}
 
 	@Override
-	public SymbolicExpressionIF newConcreteNumericExpression(
+	public NumericExpression newConcreteNumericExpression(
 			NumberObject numberObject) {
-		return new Constant(
-				numberObject.getNumber() instanceof IntegerNumberIF ? integerType
-						: realType, numberObject);
-
+		return constant(numberObject);
 	}
 
 	@Override

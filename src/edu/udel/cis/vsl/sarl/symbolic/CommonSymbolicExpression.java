@@ -68,9 +68,9 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	/**
 	 * Know that o has argumentKind SYMBOLIC_EXPRESSION and is not == to this.
 	 */
-	
+
 	// TODO: special handling needed for CHOICE expression.???
-	
+
 	@Override
 	protected boolean intrinsicEquals(SymbolicObject o) {
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;
@@ -89,6 +89,11 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return result;
 	}
 
+	/**
+	 * Compare to another symbolic expression.
+	 * 
+	 * Numerics first (?).  Then others???
+	 */
 	@Override
 	protected int compareLocal(SymbolicObject o) {
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;

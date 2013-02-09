@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
+import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
+
 /**
  * A quotient of a two polynomials. The second polynomial (the denominator) must
  * be monic-like: if real, the leading coefficient is 1; if integer, the leading

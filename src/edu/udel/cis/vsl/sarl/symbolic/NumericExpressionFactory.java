@@ -16,13 +16,13 @@ import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
 public interface NumericExpressionFactory {
-	
+
 	NumberFactoryIF numberFactory();
-	
+
 	ObjectFactory objectFactory();
-	
+
 	SymbolicTypeFactory typeFactory();
-	
+
 	CollectionFactory collectionFactory();
 
 	SymbolicExpressionIF newConcreteNumericExpression(NumberObject numberObject);
@@ -30,21 +30,20 @@ public interface NumericExpressionFactory {
 	SymbolicConstantIF newNumericSymbolicConstant(StringObject name,
 			SymbolicTypeIF type);
 
-	SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject[] arguments);
 
-	SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0);
 
-	SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0, SymbolicObject arg1);
 
-	SymbolicExpressionIF newNumericExpression(SymbolicOperator operator,
+	NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0,
 			SymbolicObject arg1, SymbolicObject arg2);
 
-	SymbolicExpressionIF add(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1);
+	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression representing the sum of the given argument
@@ -55,7 +54,7 @@ public interface NumericExpressionFactory {
 	 *            all have the same type.
 	 * @return expression representing the sum
 	 */
-	SymbolicExpressionIF add(SymbolicCollection args);
+	NumericExpression add(SymbolicCollection args);
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
@@ -68,8 +67,7 @@ public interface NumericExpressionFactory {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0-arg1
 	 */
-	SymbolicExpressionIF subtract(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1);
+	NumericExpression subtract(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the result of multiplying the two
@@ -82,8 +80,7 @@ public interface NumericExpressionFactory {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 * arg1, the product of arg0 and arg1.
 	 */
-	SymbolicExpressionIF multiply(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1);
+	NumericExpression multiply(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns symbolic expression representing the product of the given
@@ -94,7 +91,7 @@ public interface NumericExpressionFactory {
 	 *            numeric type
 	 * @return a symbolic expression representing the product
 	 */
-	SymbolicExpressionIF multiply(SymbolicCollection args);
+	NumericExpression multiply(SymbolicCollection args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by
@@ -108,8 +105,7 @@ public interface NumericExpressionFactory {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 / arg1
 	 */
-	SymbolicExpressionIF divide(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1);
+	NumericExpression divide(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents arg0 modulo arg1. The two
@@ -122,8 +118,7 @@ public interface NumericExpressionFactory {
 	 *            a symbolic expression of integer type
 	 * @return arg0 % arg1
 	 */
-	SymbolicExpressionIF modulo(SymbolicExpressionIF arg0,
-			SymbolicExpressionIF arg1);
+	NumericExpression modulo(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the negative of the given
@@ -134,7 +129,7 @@ public interface NumericExpressionFactory {
 	 *            a symbolic expression of integer or real type
 	 * @return -arg
 	 */
-	SymbolicExpressionIF minus(SymbolicExpressionIF arg);
+	NumericExpression minus(NumericExpression arg);
 
 	/**
 	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
@@ -146,7 +141,7 @@ public interface NumericExpressionFactory {
 	 * @param exponent
 	 *            a non-negative concrete integer exponent
 	 */
-	SymbolicExpressionIF power(SymbolicExpressionIF base, IntObject exponent);
+	NumericExpression power(NumericExpression base, IntObject exponent);
 
 	/**
 	 * General power operator: e^b. Both e and b are numeric expressions.
@@ -156,16 +151,15 @@ public interface NumericExpressionFactory {
 	 * @param exponent
 	 *            the exponent in the power expression
 	 */
-	SymbolicExpressionIF power(SymbolicExpressionIF base,
-			SymbolicExpressionIF exponent);
+	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
 	/** Casts a real or integer type expression to an expression of real type. */
-	SymbolicExpressionIF castToReal(SymbolicExpressionIF numericExpression);
+	NumericExpression castToReal(NumericExpression numericExpression);
 
 	/**
 	 * Attempts to interpret the given symbolic expression as a concrete number.
 	 * If this is not possible, returns null.
 	 */
-	NumberIF extractNumber(SymbolicExpressionIF expression);
+	NumberIF extractNumber(NumericExpression expression);
 
 }

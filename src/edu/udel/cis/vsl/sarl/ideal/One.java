@@ -1,8 +1,10 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 
 /**
  * Empty monic: equivalent to 1.
@@ -10,10 +12,10 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  * @author siegel
  * 
  */
-public class One extends Constant implements Monic {
+public class One extends CommonSymbolicExpression implements Constant, Monic {
 
 	protected One(SymbolicTypeIF type, NumberObject oneObj) {
-		super(type, oneObj);
+		super(SymbolicOperator.CONCRETE, type, oneObj);
 		assert oneObj.isOne();
 	}
 
@@ -80,5 +82,15 @@ public class One extends Constant implements Monic {
 	@Override
 	public String toString() {
 		return "1";
+	}
+
+	@Override
+	public NumberObject value() {
+		return (NumberObject) argument(1);
+	}
+
+	@Override
+	public NumberIF number() {
+		return value().getNumber();
 	}
 }
