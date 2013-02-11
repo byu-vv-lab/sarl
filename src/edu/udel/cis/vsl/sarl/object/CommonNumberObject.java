@@ -22,11 +22,6 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected int compareLocal(SymbolicObject o) {
-		return value.compareTo(((NumberObject) o).getNumber());
-	}
-
-	@Override
 	public boolean intrinsicEquals(SymbolicObject o) {
 		return value.equals(((NumberObject) o).getNumber());
 	}

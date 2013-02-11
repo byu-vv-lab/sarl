@@ -54,22 +54,6 @@ public class SymbolicTypeSequence extends CommonSymbolicObject implements
 	}
 
 	@Override
-	public int compareLocal(SymbolicObject o) {
-		SymbolicTypeSequence that = (SymbolicTypeSequence) o;
-		int size = elements.size();
-		int result = size - that.numTypes();
-
-		if (result != 0)
-			return result;
-		for (int i = 0; i < size; i++) {
-			result = getType(i).compareTo(that.getType(i));
-			if (result != 0)
-				return result;
-		}
-		return 0;
-	}
-
-	@Override
 	public String toString() {
 		String result = "<";
 		int n = numTypes();

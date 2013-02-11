@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
@@ -57,37 +56,6 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 	@Override
 	public Iterator<SymbolicExpressionIF> iterator() {
 		return pmap.values().iterator();
-	}
-
-	/**
-	 * Know that o is a MAP collection of same size as this one. TODO: THIS
-	 * ASSUMES entries are ordered. I want ordered sets.
-	 * 
-	 */
-	@Override
-	protected int compareCollection(SymbolicCollection o) {
-		PcollectionsSymbolicMap that = (PcollectionsSymbolicMap) o;
-		Set<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> entrySet = pmap
-				.entrySet();
-		int result;
-
-		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : entrySet) {
-			SymbolicExpressionIF key = entry.getKey();
-			SymbolicExpressionIF thisValue = entry.getValue();
-			SymbolicExpressionIF thatValue = that.get(key);
-
-			if (thisValue == null) {
-				if (thatValue != null)
-					return -1;
-			} else {
-				if (thatValue == null)
-					return 1;
-				result = thisValue.compareTo(thatValue);
-				if (result != 0)
-					return result;
-			}
-		}
-		return 0;
 	}
 
 	@Override

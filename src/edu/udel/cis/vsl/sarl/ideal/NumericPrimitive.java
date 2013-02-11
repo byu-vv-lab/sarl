@@ -129,25 +129,4 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 		return IdealKind.NumericPrimitive;
 	}
 
-	@Override
-	protected int compareIdeal(IdealExpression that) {
-		int result = operator().compareTo(that.operator());
-
-		if (result != 0)
-			return result;
-		else {
-			int numArgs0 = numArguments();
-
-			result = numArgs0 - that.numArguments();
-			if (result != 0)
-				return result;
-			for (int i = 0; i < numArgs0; i++) {
-				result = argument(i).compareTo(that.argument(i));
-				if (result != 0)
-					return result;
-			}
-			return 0;
-		}
-	}
-
 }

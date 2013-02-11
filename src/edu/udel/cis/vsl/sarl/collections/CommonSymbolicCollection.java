@@ -20,32 +20,6 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 	}
 
 	/**
-	 * Compares this to a collection of the same kind. Each implementing class
-	 * should define this method. That class may assume that the given
-	 * collection o has the same collection kind as this, i.e.,
-	 * o.collectionKind() == this.collectionKind().
-	 * 
-	 * @param o
-	 *            a symbolic collection of the same kind as this
-	 * @return a negative int if this precedes o in the total order, 0 if the
-	 *         collections are equals, a positive int if o comes first
-	 */
-	protected abstract int compareCollection(SymbolicCollection o);
-
-	@Override
-	protected int compareLocal(SymbolicObject o) {
-		SymbolicCollection that = (SymbolicCollection) o;
-		int result = collectionKind.compareTo(that.collectionKind());
-
-		if (result != 0)
-			return result;
-		result = size() - that.size();
-		if (result != 0)
-			return result;
-		return compareCollection((SymbolicCollection) o);
-	}
-
-	/**
 	 * Tells whether the two collections (o and this) are equal, assuming o and
 	 * this have the same kind.
 	 * 

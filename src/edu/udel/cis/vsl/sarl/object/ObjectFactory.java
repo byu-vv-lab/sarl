@@ -14,6 +14,14 @@ import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.collections.CollectionComparator;
+import edu.udel.cis.vsl.sarl.collections.CommonCollectionFactory;
+import edu.udel.cis.vsl.sarl.symbolic.ExpressionComparator;
+import edu.udel.cis.vsl.sarl.symbolic.NumericComparator;
+import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.TypeComparator;
+import edu.udel.cis.vsl.sarl.type.TypeSequenceComparator;
 
 public class ObjectFactory {
 
@@ -28,6 +36,8 @@ public class ObjectFactory {
 	private NumberObject zeroIntegerObj, zeroRealObj, oneIntegerObj,
 			oneRealObj;
 
+	private ObjectComparator comparator = null;
+
 	public ObjectFactory(NumberFactoryIF numberFactory) {
 		this.trueObj = (BooleanObject) canonic(new CommonBooleanObject(true));
 		this.falseObj = (BooleanObject) canonic(new CommonBooleanObject(false));
@@ -41,7 +51,36 @@ public class ObjectFactory {
 				.oneInteger()));
 		this.oneRealObj = (NumberObject) canonic(numberObject(numberFactory
 				.oneRational()));
+	}
 
+	/**
+	 * Creates comparators for the different components of symbolic objects and
+	 * joins them together in a united ObjectComparator.
+	 * 
+	 * @param numericFactory
+	 * @return
+	 */
+	public ObjectComparator formComparators(
+			NumericExpressionFactory numericFactory) {
+		SymbolicTypeFactory typeFactory = numericFactory.typeFactory();
+		TypeComparator typeComparator = typeFactory.newTypeComparator();
+		TypeSequenceComparator typeSequenceComparator = typeFactory
+				.newTypeSequenceComparator();
+		NumericComparator numericComparator = numericFactory
+				.numericComparator();
+		ExpressionComparator expressionComparator = new ExpressionComparator(
+				numericComparator);
+		CollectionComparator collectionComparator = numericFactory
+				.collectionFactory().newCollectionComparator();
+
+		this.comparator = new ObjectComparator(expressionComparator,
+				collectionComparator, typeComparator, typeSequenceComparator);
+		((CommonCollectionFactory) numericFactory.collectionFactory()).init();
+		return this.comparator;
+	}
+
+	public ObjectComparator comparator() {
+		return comparator;
 	}
 
 	/**

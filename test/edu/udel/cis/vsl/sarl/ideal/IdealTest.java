@@ -141,4 +141,19 @@ public class IdealTest {
 		assertEquals(xp1squared, x2p2xp1);
 	}
 
+	@Test
+	public void xplusye20() {
+		NumericExpression xpy = idealFactory.add(x, y);
+		NumericExpression xpye20 = idealFactory.power(xpy,
+				objectFactory.intObject(20));
+		NumericExpression xpye19 = idealFactory.power(xpy,
+				objectFactory.intObject(19));
+		NumericExpression quotient = idealFactory.divide(xpye20, xpye19);
+
+		out.println("xplusye20: (X+Y)^20 = " + xpye20);
+		out.println("xplusye20: (X+Y)^19 = " + xpye19);
+		out.println("xplusye20: quotient : " + quotient);
+		assertEquals(xpy, quotient);
+	}
+
 }

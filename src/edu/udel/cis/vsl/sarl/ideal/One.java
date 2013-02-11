@@ -103,8 +103,4 @@ public class One extends IdealExpression implements Constant, Monic {
 		return IdealKind.Constant;
 	}
 
-	@Override
-	protected int compareIdeal(IdealExpression that) {
-		return -((Constant) that).value().signum();
-	}
 }

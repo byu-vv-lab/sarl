@@ -52,6 +52,10 @@ public class SymbolicTypeFactory {
 		return new SymbolicTypeSequence(elements);
 	}
 
+	public SymbolicTypeSequenceIF singletonSequence(SymbolicTypeIF type) {
+		return new SymbolicTypeSequence(new SymbolicTypeIF[] { type });
+	}
+
 	public SymbolicArrayTypeIF arrayType(SymbolicTypeIF elementType) {
 		return new SymbolicArrayType(elementType);
 	}
@@ -74,6 +78,14 @@ public class SymbolicTypeFactory {
 	public SymbolicFunctionTypeIF functionType(
 			SymbolicTypeSequenceIF inputTypes, SymbolicTypeIF outputType) {
 		return new SymbolicFunctionType(inputTypes, outputType);
+	}
+
+	public TypeComparator newTypeComparator() {
+		return new TypeComparator();
+	}
+
+	public TypeSequenceComparator newTypeSequenceComparator() {
+		return new TypeSequenceComparator();
 	}
 
 }

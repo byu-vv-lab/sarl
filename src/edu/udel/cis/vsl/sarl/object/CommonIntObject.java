@@ -8,18 +8,13 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 	private int value;
 
 	CommonIntObject(int value) {
-		super(SymbolicObjectKind.INTEGER);
+		super(SymbolicObjectKind.INT);
 		this.value = value;
 	}
 
 	@Override
 	public int getInt() {
 		return value;
-	}
-
-	@Override
-	protected int compareLocal(SymbolicObject o) {
-		return new Integer(value).compareTo(((IntObject) o).getInt());
 	}
 
 	@Override

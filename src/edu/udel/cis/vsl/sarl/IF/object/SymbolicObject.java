@@ -17,7 +17,7 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * <li>SYMBOLIC_EXPRESSION: SymbolicExpressionIF</li>
  * <li>COLLECTION: SymbolicCollection</li>
  * <li>NUMBER: NumberObject</li>
- * <li>INTEGER: IntObject</li>
+ * <li>INT: IntObject</li>
  * <li>BOOLEAN: BooleanObject</li>
  * <li>STRING: StringObject</li>
  * </ul>
@@ -25,13 +25,13 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * @author siegel
  * 
  */
-public interface SymbolicObject extends Comparable<SymbolicObject> {
+public interface SymbolicObject {
 
 	public enum SymbolicObjectKind {
 		BOOLEAN,
 		EXPRESSION,
 		EXPRESSION_COLLECTION,
-		INTEGER,
+		INT,
 		NUMBER,
 		STRING,
 		TYPE,

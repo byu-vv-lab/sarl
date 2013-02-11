@@ -161,4 +161,6 @@ public interface NumericExpressionFactory {
 	 */
 	NumberIF extractNumber(NumericExpression expression);
 
+	NumericComparator numericComparator();
+
 }

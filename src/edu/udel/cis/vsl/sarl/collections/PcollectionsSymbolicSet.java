@@ -46,12 +46,6 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	}
 
 	@Override
-	protected int compareCollection(SymbolicCollection o) {
-		throw new UnsupportedOperationException("Can't do this until"
-				+ "we find a persistent sorted set class.");
-	}
-
-	@Override
 	protected boolean collectionEquals(SymbolicCollection o) {
 		return pset.equals(((PcollectionsSymbolicSet) o).pset);
 	}

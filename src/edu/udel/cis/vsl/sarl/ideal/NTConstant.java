@@ -84,11 +84,6 @@ public class NTConstant extends IdealExpression implements Constant {
 	}
 
 	@Override
-	protected int compareIdeal(IdealExpression that) {
-		return number().compareTo(((Constant) that).number());
-	}
-
-	@Override
 	public int degree() {
 		return isZero() ? -1 : 0;
 	}

@@ -19,14 +19,6 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Assume o has kind BOOLEAN.
-	 */
-	@Override
-	protected int compareLocal(SymbolicObject o) {
-		return new Boolean(value).compareTo(((BooleanObject) o).getBoolean());
-	}
-
-	/**
 	 * Know that o has kind BOOLEAN and is not == to this.
 	 */
 	@Override

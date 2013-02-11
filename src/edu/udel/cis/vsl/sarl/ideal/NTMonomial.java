@@ -100,13 +100,4 @@ public class NTMonomial extends IdealExpression implements Monomial {
 		return IdealKind.NTMonomial;
 	}
 
-	@Override
-	protected int compareIdeal(IdealExpression that) {
-		int result = monic().compareTo(((NTMonomial) that).monic());
-
-		if (result != 0)
-			return result;
-		return monomialConstant().compareTo(
-				((NTMonomial) that).monomialConstant());
-	}
 }

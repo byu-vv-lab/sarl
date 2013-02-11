@@ -49,16 +49,6 @@ public class SymbolicUnionType extends SymbolicType implements
 	}
 
 	@Override
-	protected int intrinsicCompare(SymbolicType thatType) {
-		SymbolicUnionType that = (SymbolicUnionType) thatType;
-		int result = name.compareTo(that.name);
-
-		if (result != 0)
-			return result;
-		return sequence.compareTo(that.sequence);
-	}
-
-	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 		if (!sequence.isCanonic())
 			sequence = (SymbolicTypeSequence) factory.canonic(sequence);

@@ -6,7 +6,6 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
@@ -29,6 +28,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
 import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
+import edu.udel.cis.vsl.sarl.object.ObjectComparator;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
 
@@ -51,6 +51,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private NumericExpressionFactory numericExpressionFactory;
 
+	private ObjectComparator objectComparator;
+
 	private SymbolicTypeIF booleanType, integerType, realType;
 
 	private SymbolicExpressionIF trueExpr, falseExpr;
@@ -64,6 +66,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		this.typeFactory = numericExpressionFactory.typeFactory();
 		this.collectionFactory = numericExpressionFactory.collectionFactory();
 		this.numberFactory = numericExpressionFactory.numberFactory();
+		this.objectComparator = objectFactory
+				.formComparators(numericExpressionFactory);
 		this.booleanType = typeFactory.booleanType();
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
@@ -132,7 +136,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	}
 
 	protected SymbolicSet set(SymbolicExpressionIF x, SymbolicExpressionIF y) {
-		return singletonHashSet(x).add(y);
+		return collectionFactory.singletonHashSet(x).add(y);
 	}
 
 	// Exported methods...
@@ -281,6 +285,11 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 			throw new IllegalArgumentException("Unknown expression kind: "
 					+ operator);
 		}
+	}
+
+	@Override
+	public NumberFactoryIF numberFactory() {
+		return numberFactory;
 	}
 
 	@Override
@@ -877,7 +886,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 			SymbolicExpressionIF expression) {
 		return expression(
 				SymbolicOperator.LAMBDA,
-				functionType(singletonSequence(boundVariable.type()),
+				functionType(
+						typeFactory.singletonSequence(boundVariable.type()),
 						expression.type()), boundVariable, expression);
 	}
 
@@ -997,100 +1007,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	}
 
 	@Override
-	public SymbolicSequence sequence(
-			Iterable<? extends SymbolicExpressionIF> elements) {
-		return collectionFactory.sequence(elements);
-	}
-
-	@Override
-	public SymbolicSequence sequence(SymbolicExpressionIF[] elements) {
-		return collectionFactory.sequence(elements);
-	}
-
-	@Override
-	public SymbolicSequence singletonSequence(SymbolicExpressionIF element) {
-		return collectionFactory.singletonSequence(element);
-	}
-
-	@Override
-	public SymbolicTypeSequenceIF singletonSequence(SymbolicTypeIF type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicSequence emptySequence() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NumberFactoryIF numberFactory() {
-		return numberFactory;
-	}
-
-	@Override
-	public SymbolicMap emptySortedMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap emptyHashMap() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap singletonSortedMap(SymbolicExpressionIF key,
-			SymbolicExpressionIF value) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap singletonHashMap(SymbolicExpressionIF key,
-			SymbolicExpressionIF value) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap sortedMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicMap hashMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicSet emptySortedSet() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicSet emptyHashSet() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicSet singletonSortedSet(SymbolicExpressionIF element) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SymbolicSet singletonHashSet(SymbolicExpressionIF element) {
-		// TODO Auto-generated method stub
-		return null;
+	public ObjectComparator comparator() {
+		return objectComparator;
 	}
 
 }

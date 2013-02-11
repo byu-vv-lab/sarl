@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections;
 
+import java.util.Comparator;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
@@ -26,11 +27,21 @@ public interface CollectionFactory {
 	SymbolicSet emptyHashSet();
 
 	/**
-	 * Returns the empty sorted set.
+	 * Returns the empty sorted set using default comparator.
 	 * 
 	 * @return the empty sorted set
 	 */
 	SymbolicSet emptySortedSet();
+
+	/**
+	 * Returns the empty sorted set.
+	 * 
+	 * @param comparator
+	 *            Comparator used for sorting
+	 * 
+	 * @return the empty sorted set
+	 */
+	SymbolicSet emptySortedSet(Comparator<SymbolicExpressionIF> comparator);
 
 	/**
 	 * Returns the singleton hash set containing the one element.
@@ -49,6 +60,18 @@ public interface CollectionFactory {
 	 * @return the sorted set consisting of the one element
 	 */
 	SymbolicSet singletonSortedSet(SymbolicExpressionIF element);
+
+	/**
+	 * Returns the singleton sorted set containing the one element.
+	 * 
+	 * @param element
+	 *            a symbolic expression
+	 * @param comparator
+	 *            used for sorting
+	 * @return the set consisting of that one element
+	 */
+	SymbolicSet singletonSortedSet(SymbolicExpressionIF element,
+			Comparator<SymbolicExpressionIF> comparator);
 
 	/**
 	 * Returns a SymbolicExpressionSequenceIF comprising the given sequence of
@@ -88,11 +111,18 @@ public interface CollectionFactory {
 	SymbolicSequence emptySequence();
 
 	/**
-	 * Returns an empty sorted symbolic map.
+	 * Returns an empty sorted symbolic map using default comparator on keys.
 	 * 
 	 * @return an empty sorted symbolic map
 	 */
 	SymbolicMap emptySortedMap();
+
+	/**
+	 * Returns an empty sorted symbolic map using given comparator on keys.
+	 * 
+	 * @return an empty sorted symbolic map
+	 */
+	SymbolicMap emptySortedMap(Comparator<SymbolicExpressionIF> comparator);
 
 	/**
 	 * Returns an empty hash symbolic map.
@@ -112,6 +142,19 @@ public interface CollectionFactory {
 	 */
 	SymbolicMap singletonSortedMap(SymbolicExpressionIF key,
 			SymbolicExpressionIF value);
+
+	/**
+	 * Returns the sorted map with one entry (key,value) and using the given
+	 * comparator on keys.
+	 * 
+	 * @param key
+	 *            the key for the entry
+	 * @param value
+	 *            the value for the entry
+	 * @return the map with the one entry
+	 */
+	SymbolicMap singletonSortedMap(Comparator<SymbolicExpressionIF> comparator,
+			SymbolicExpressionIF key, SymbolicExpressionIF value);
 
 	/**
 	 * Returns the hash map with one entry (key,value).
@@ -136,6 +179,16 @@ public interface CollectionFactory {
 			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap);
 
 	/**
+	 * Returns a sorted symbolic map based on the given Java Map. The Java map
+	 * should not be modified after this method is invoked.
+	 * 
+	 * @param javaMap
+	 * @return a symbolic map based on the given Java map
+	 */
+	SymbolicMap sortedMap(Comparator<SymbolicExpressionIF> comparator,
+			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap);
+
+	/**
 	 * Returns an (unsorted) hash symbolic map based on the given Java Map.
 	 * 
 	 * @param javaMap
@@ -143,4 +196,5 @@ public interface CollectionFactory {
 	 */
 	SymbolicMap hashMap(Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap);
 
+	CollectionComparator newCollectionComparator();
 }

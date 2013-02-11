@@ -75,38 +75,6 @@ public class SymbolicArrayType extends SymbolicType implements
 		return type + result;
 	}
 
-	/**
-	 * Can assume that has kind ARRAY. Order: first compare element types. Among
-	 * those with same element type, all completes come first, then incompletes.
-	 * Among completes with same element type, order by extent.
-	 */
-	@Override
-	protected int intrinsicCompare(SymbolicType that) {
-		int result = elementType
-				.compareTo(((SymbolicArrayType) that).elementType);
-
-		if (result != 0)
-			return result;
-		else {
-			boolean thisComplete = isComplete();
-			boolean thatComplete = ((SymbolicArrayType) that).isComplete();
-
-			if (thisComplete) {
-				if (thatComplete) {
-					return ((SymbolicCompleteArrayType) this)
-							.extent()
-							.compareTo(
-									((SymbolicCompleteArrayType) that).extent());
-				}
-				return -1; // this complete; that not
-			} else {
-				if (thatComplete)
-					return 1; // this not complete, that is
-				return 0; // both incomplete
-			}
-		}
-	}
-
 	@Override
 	public boolean isComplete() {
 		return false;

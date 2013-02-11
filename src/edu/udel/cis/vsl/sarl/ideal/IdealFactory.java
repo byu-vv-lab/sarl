@@ -1,9 +1,11 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
@@ -16,9 +18,11 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
 import edu.udel.cis.vsl.sarl.object.ObjectFactory;
+import edu.udel.cis.vsl.sarl.symbolic.NumericComparator;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
 import edu.udel.cis.vsl.sarl.symbolic.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.symbolic.NumericSymbolicConstant;
@@ -99,6 +103,10 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private CollectionFactory collectionFactory;
 
+	private IdealComparator comparator;
+
+	private Comparator<SymbolicExpressionIF> wrappedComparator;
+
 	private SymbolicMap emptyMap;
 
 	private SymbolicTypeIF integerType, realType;
@@ -122,10 +130,20 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.objectFactory = objectFactory;
 		this.typeFactory = typeFactory;
 		this.collectionFactory = collectionFactory;
+		this.comparator = new IdealComparator(this);
+		this.wrappedComparator = new Comparator<SymbolicExpressionIF>() {
+			@Override
+			public int compare(SymbolicExpressionIF o1, SymbolicExpressionIF o2) {
+				return comparator.compare((IdealExpression) o1,
+						(IdealExpression) o2);
+			}
+		};
+		// forms and joins all the comparators...
+		objectFactory.formComparators(this);
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
-		this.emptyMap = collectionFactory.emptySortedMap();
+		this.emptyMap = collectionFactory.emptySortedMap(wrappedComparator);
 		this.oneInt = (One) objectFactory.canonic(new One(integerType,
 				objectFactory.numberObject(numberFactory.oneInteger())));
 		this.oneReal = (One) objectFactory.canonic(new One(realType,
@@ -169,7 +187,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	public SymbolicMap singletonMap(SymbolicExpressionIF key,
 			SymbolicExpressionIF value) {
-		return collectionFactory.singletonSortedMap(key, value);
+		return collectionFactory.singletonSortedMap(wrappedComparator, key,
+				value);
 	}
 
 	// Constants...
@@ -691,7 +710,7 @@ public class IdealFactory implements NumericExpressionFactory {
 			}
 			if (denominator.isOne())
 				return numerator;
-			return new NumericPrimitive(SymbolicOperator.INT_DIVIDE,
+			return newNumericExpression(SymbolicOperator.INT_DIVIDE,
 					integerType, numerator, denominator);
 		}
 	}
@@ -723,7 +742,7 @@ public class IdealFactory implements NumericExpressionFactory {
 			if (denominator.isOne())
 				return zeroInt;
 			else {
-				Polynomial result = new NumericPrimitive(
+				Polynomial result = newNumericExpression(
 						SymbolicOperator.MODULO, integerType, numerator,
 						denominator);
 
@@ -768,25 +787,25 @@ public class IdealFactory implements NumericExpressionFactory {
 	// Methods specified in interface NumericExpressionFactory...
 
 	@Override
-	public NumericExpression newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject[] arguments) {
 		return new NumericPrimitive(operator, numericType, arguments);
 	}
 
 	@Override
-	public NumericExpression newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0) {
 		return new NumericPrimitive(operator, numericType, arg0);
 	}
 
 	@Override
-	public NumericExpression newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0, SymbolicObject arg1) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
 			SymbolicTypeIF numericType, SymbolicObject arg0,
 			SymbolicObject arg1, SymbolicObject arg2) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
@@ -802,9 +821,35 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumericExpression add(SymbolicCollection args) {
-		// TODO Auto-generated method stub
-		// iterate and add. do this in common universe???
-		return null;
+		int size = args.size();
+		NumericExpression result = null;
+
+		if (size == 0)
+			throw new IllegalArgumentException(
+					"Collection must contain at least one element");
+		for (SymbolicExpressionIF arg : args) {
+			if (result == null)
+				result = (NumericExpression) arg;
+			else
+				result = add(result, (NumericExpression) arg);
+		}
+		return result;
+	}
+
+	private NumericExpression addWithCast(SymbolicCollection args) {
+		int size = args.size();
+		NumericExpression result = null;
+
+		if (size == 0)
+			throw new IllegalArgumentException(
+					"Collection must contain at least one element");
+		for (SymbolicExpressionIF arg : args) {
+			if (result == null)
+				result = castToReal((NumericExpression) arg);
+			else
+				result = add(result, castToReal((NumericExpression) arg));
+		}
+		return result;
 	}
 
 	@Override
@@ -825,8 +870,35 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumericExpression multiply(SymbolicCollection args) {
-		// TODO Auto-generated method stub
-		return null;
+		int size = args.size();
+		NumericExpression result = null;
+
+		if (size == 0)
+			throw new IllegalArgumentException(
+					"Collection must contain at least one element");
+		for (SymbolicExpressionIF arg : args) {
+			if (result == null)
+				result = (NumericExpression) arg;
+			else
+				result = multiply(result, (NumericExpression) arg);
+		}
+		return result;
+	}
+
+	private NumericExpression multiplyWithCast(SymbolicCollection args) {
+		int size = args.size();
+		NumericExpression result = null;
+
+		if (size == 0)
+			throw new IllegalArgumentException(
+					"Collection must contain at least one element");
+		for (SymbolicExpressionIF arg : args) {
+			if (result == null)
+				result = castToReal((NumericExpression) arg);
+			else
+				result = multiply(result, castToReal((NumericExpression) arg));
+		}
+		return result;
 	}
 
 	@Override
@@ -882,17 +954,86 @@ public class IdealFactory implements NumericExpressionFactory {
 		return result;
 	}
 
+	/**
+	 * TODO: (a^b)^c=a^(bc). (a^b)(a^c)=a^(b+c)
+	 * 
+	 */
 	@Override
 	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
-		// TODO Auto-generated method stub
-		return null;
+		return newNumericExpression(SymbolicOperator.POWER, base.type(), base,
+				exponent);
 	}
 
+	/**
+	 * For ideal arithmetic, this respects almost every operation. cast(a O p) =
+	 * cast(a) O cast(p), for O=+,-,*, Not division. Nod modulus. Primities get
+	 * a CAST operator in front of them. Constants get cast by number factory.
+	 */
 	@Override
 	public NumericExpression castToReal(NumericExpression numericExpression) {
-		// TODO Auto-generated method stub
-		return null;
+		if (numericExpression.type().isReal())
+			return numericExpression;
+
+		SymbolicOperator operator = numericExpression.operator();
+		SymbolicObject arg0 = numericExpression.argument(0);
+		SymbolicObjectKind kind0 = arg0.symbolicObjectKind();
+
+		switch (operator) {
+		case ADD:
+			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION)
+				return addWithCast((SymbolicCollection) arg0);
+			else
+				return add(castToReal((NumericExpression) arg0),
+						castToReal((NumericExpression) numericExpression
+								.argument(1)));
+		case CONCRETE:
+			return constant(numberFactory.rational(((NumberObject) arg0)
+					.getNumber()));
+		case COND:
+			return newNumericExpression(
+					operator,
+					realType,
+					arg0,
+					castToReal((NumericPrimitive) numericExpression.argument(1)),
+					castToReal((NumericPrimitive) numericExpression.argument(2)));
+		case MULTIPLY:
+			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION)
+				return multiplyWithCast((SymbolicCollection) arg0);
+			else
+				return multiply(castToReal((NumericExpression) arg0),
+						castToReal((NumericExpression) numericExpression
+								.argument(1)));
+		case NEGATIVE:
+			return minus(castToReal((NumericExpression) arg0));
+		case POWER: {
+			NumericExpression realBase = castToReal((NumericExpression) arg0);
+			SymbolicObject arg1 = numericExpression.argument(1);
+
+			if (arg1.symbolicObjectKind() == SymbolicObjectKind.INT)
+				return power(realBase, (IntObject) arg1);
+			else
+				return power(realBase, castToReal((NumericExpression) arg1));
+		}
+		case SUBTRACT:
+			return subtract(castToReal((NumericExpression) arg0),
+					castToReal((NumericExpression) numericExpression
+							.argument(1)));
+			// Primitives...
+		case APPLY:
+		case ARRAY_READ:
+		case CAST:
+		case INT_DIVIDE:
+		case LENGTH:
+		case MODULO:
+		case SYMBOLIC_CONSTANT:
+		case TUPLE_READ:
+		case UNION_EXTRACT:
+			return newNumericExpression(SymbolicOperator.CAST, realType,
+					numericExpression);
+		default:
+			throw new SARLInternalException("Should be unreachable");
+		}
 	}
 
 	@Override
@@ -922,6 +1063,11 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public CollectionFactory collectionFactory() {
 		return collectionFactory;
+	}
+
+	@Override
+	public NumericComparator numericComparator() {
+		return comparator;
 	}
 
 }

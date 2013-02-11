@@ -19,11 +19,6 @@ public class CommonStringObject extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected int compareLocal(SymbolicObject o) {
-		return value.compareTo(((StringObject) o).getString());
-	}
-
-	@Override
 	public boolean intrinsicEquals(SymbolicObject o) {
 		return value.equals(((StringObject) o).getString());
 	}

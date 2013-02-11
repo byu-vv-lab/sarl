@@ -33,24 +33,6 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return id;
 	}
 
-	/**
-	 * Compares this object with a given one of the same SymbolicObjectKind.
-	 * 
-	 * @param o
-	 *            a SymbolicObject of the same SymbolicObjectKind as this
-	 * @return a negative number, 0, or positive number as
-	 */
-	protected abstract int compareLocal(SymbolicObject o);
-
-	@Override
-	public int compareTo(SymbolicObject o) {
-		int result = kind.compareTo(o.symbolicObjectKind());
-
-		if (result != 0)
-			return result;
-		return compareLocal(o);
-	}
-
 	@Override
 	public SymbolicObjectKind symbolicObjectKind() {
 		return kind;

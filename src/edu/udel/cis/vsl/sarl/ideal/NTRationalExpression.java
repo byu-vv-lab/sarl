@@ -49,14 +49,4 @@ public class NTRationalExpression extends IdealExpression implements
 		return IdealKind.NTRationalExpression;
 	}
 
-	@Override
-	protected int compareIdeal(IdealExpression that) {
-		NTRationalExpression thatRational = (NTRationalExpression) that;
-		int result = numerator().compareTo(thatRational.numerator());
-
-		if (result != 0)
-			return result;
-		result = denominator().compareTo(thatRational.denominator());
-		return result;
-	}
 }

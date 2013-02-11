@@ -49,16 +49,6 @@ public class SymbolicTupleType extends SymbolicType implements
 	}
 
 	@Override
-	protected int intrinsicCompare(SymbolicType thatType) {
-		SymbolicTupleType that = (SymbolicTupleType) thatType;
-		int result = name.compareTo(that.name);
-
-		if (result != 0)
-			return result;
-		return sequence.compareTo(that.sequence);
-	}
-
-	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 		if (!sequence.isCanonic())
 			sequence = (SymbolicTypeSequenceIF) factory.canonic(sequence);

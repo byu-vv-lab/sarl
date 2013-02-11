@@ -27,15 +27,6 @@ public class SymbolicPrimitiveType extends SymbolicType {
 		return true;
 	}
 
-	/**
-	 * Returns 0 since we are assuming that has the same kind as this, and there
-	 * is only one primitive type of this kind.
-	 */
-	@Override
-	protected int intrinsicCompare(SymbolicType that) {
-		return 0;
-	}
-
 	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 	}

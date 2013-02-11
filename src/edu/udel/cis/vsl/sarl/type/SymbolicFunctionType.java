@@ -51,16 +51,6 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	protected int intrinsicCompare(SymbolicType thatType) {
-		SymbolicFunctionType that = (SymbolicFunctionType) thatType;
-		int result = inputTypes.compareTo(that.inputTypes);
-
-		if (result != 0)
-			return result;
-		return outputType.compareTo(that.outputType);
-	}
-
-	@Override
 	public void canonizeChildren(ObjectFactory factory) {
 		if (!inputTypes.isCanonic())
 			inputTypes = (SymbolicTypeSequenceIF) factory.canonic(inputTypes);

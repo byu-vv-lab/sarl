@@ -115,15 +115,4 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 		return IdealKind.NTPrimitivePower;
 	}
 
-	@Override
-	protected int compareIdeal(IdealExpression that) {
-		NTPrimitivePower thatPPower = (NTPrimitivePower) that;
-		int result = thatPPower.degree() - degree();
-
-		if (result != 0)
-			return result;
-		result = primitive().compareTo(thatPPower.primitive());
-		return result;
-	}
-
 }
