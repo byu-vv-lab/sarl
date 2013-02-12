@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.IF.object;
 
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 
-public interface NumberObject extends SymbolicObject {
+public interface NumberObject extends SymbolicObject, Comparable<NumberObject> {
 
 	NumberIF getNumber();
 
@@ -23,9 +23,9 @@ public interface NumberObject extends SymbolicObject {
 	 * Works for integer or real types.
 	 */
 	boolean isOne();
-	
+
 	boolean isInteger();
-	
+
 	boolean isReal();
 
 }

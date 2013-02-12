@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.symbolic.array;
 
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 
 public class ArrayWrite extends CommonSymbolicExpression implements TreeExpressionIF {

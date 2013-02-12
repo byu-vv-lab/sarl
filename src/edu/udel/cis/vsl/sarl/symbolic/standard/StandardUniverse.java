@@ -20,16 +20,15 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicUniverse;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.SymbolicConstantExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF.SymbolicKind;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.symbolic.constant.SymbolicConstantFactory;
-import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.universe.common.CommonSymbolicUniverse;
 
 public class StandardUniverse extends CommonSymbolicUniverse implements
 		SymbolicUniverseIF {
@@ -40,7 +39,7 @@ public class StandardUniverse extends CommonSymbolicUniverse implements
 
 	private NumberFactoryIF numberFactory;
 
-	private SymbolicTypeFactory typeFactory;
+	private CommonSymbolicTypeFactory typeFactory;
 
 	private ConcreteFactory concreteFactory;
 
@@ -49,7 +48,7 @@ public class StandardUniverse extends CommonSymbolicUniverse implements
 	private SymbolicTypeIF booleanType, integerType, realType;
 
 	public StandardUniverse(NumberFactoryIF numberFactory,
-			SymbolicTypeFactory typeFactory) {
+			CommonSymbolicTypeFactory typeFactory) {
 		this.numberFactory = numberFactory;
 		this.typeFactory = typeFactory;
 		concreteFactory = new ConcreteFactory(typeFactory, numberFactory);
@@ -60,14 +59,14 @@ public class StandardUniverse extends CommonSymbolicUniverse implements
 	}
 
 	public StandardUniverse(NumberFactoryIF numberFactory) {
-		this(numberFactory, new SymbolicTypeFactory());
+		this(numberFactory, new CommonSymbolicTypeFactory());
 	}
 
 	public NumberFactoryIF numberFactory() {
 		return numberFactory;
 	}
 
-	public SymbolicTypeFactory typeFactory() {
+	public CommonSymbolicTypeFactory typeFactory() {
 		return typeFactory;
 	}
 

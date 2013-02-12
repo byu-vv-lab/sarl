@@ -5,8 +5,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 
 public class UnionFactory {

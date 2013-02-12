@@ -9,12 +9,11 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.concrete.ConcreteFactory;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;
-import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 
 public class AffineFactory {
 
@@ -26,7 +25,7 @@ public class AffineFactory {
 
 	private ConcreteFactory concreteFactory;
 
-	private SymbolicTypeFactory typeFactory;
+	private CommonSymbolicTypeFactory typeFactory;
 
 	private IntegerNumberIF ZERO_INT, ONE_INT;
 

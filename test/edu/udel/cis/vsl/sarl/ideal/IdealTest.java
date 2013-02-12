@@ -15,13 +15,15 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.CommonCollectionFactory;
-import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.object.ObjectFactory;
-import edu.udel.cis.vsl.sarl.symbolic.NumericExpression;
-import edu.udel.cis.vsl.sarl.symbolic.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.expr.ideal.Constant;
+import edu.udel.cis.vsl.sarl.expr.ideal.IdealFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.universe.Universes;
+import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 
 public class IdealTest {
 
@@ -44,12 +46,13 @@ public class IdealTest {
 
 	@Before
 	public void setUp() throws Exception {
-		numberFactory = Numbers.REAL_FACTORY;
-		objectFactory = new ObjectFactory(numberFactory);
-		typeFactory = new SymbolicTypeFactory(objectFactory);
-		collectionFactory = new CommonCollectionFactory(objectFactory);
-		idealFactory = new IdealFactory(numberFactory, objectFactory,
-				typeFactory, collectionFactory);
+		FactorySystem system = Universes.newIdealFactorySystem();
+
+		objectFactory = system.objectFactory();
+		numberFactory = system.numberFactory();
+		typeFactory = system.typeFactory();
+		collectionFactory = system.collectionFactory();
+		idealFactory = (IdealFactory) system.numericFactory();
 		n1 = numberFactory.rational("1.5");
 		n2 = numberFactory.rational("-.25");
 		n3 = numberFactory.rational("1.25");

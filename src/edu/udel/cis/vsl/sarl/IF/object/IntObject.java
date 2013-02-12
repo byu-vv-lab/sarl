@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.object;
 
-
-public interface IntObject extends SymbolicObject {
+public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 
 	int getInt();
 
@@ -16,7 +15,7 @@ public interface IntObject extends SymbolicObject {
 	int signum();
 
 	boolean isZero();
-	
+
 	boolean isOne();
 
 	boolean isPositive();

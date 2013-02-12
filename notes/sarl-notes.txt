@@ -1,3 +1,82 @@
+organization and initialization of factories:
+
+ObjectFactory
+NumericExpressionFactory
+CollectionFactory
+SymbolicTypeFactory
+
+This about the components and clear module boundaries:
+
+  1. instantiate factories.
+  2. instantiate and link comparators.
+  3. initialize factories.
+
+number : infinite precision integers/rationals
+  exports: NumberFactoryIF, NumberIF
+  uses: none
+  
+factory:
+  exports:
+    FactorySystem()
+      new: instantiates factories
+      public void join() : joins comparators, etc.
+      public void init() : inits them
+    Factories
+      static void join(...list factories...);
+      static void FactorySystem initializedFactorySystem();
+        instantiates factories, joins them, inits them
+  
+object : base class for symbolic objects, canonicalization,
+  primitive objects
+  exports:
+    CommonSymbolicObject
+    ObjectFactory (interface)
+      SymbolicComparator<SymbolicObject> objectComparator();
+      init();
+  uses:
+
+type : symbolic types.
+  exports:
+    SymbolicTypeFactory (interface)
+      SymbolicComparator<SymbolicTypeIF> typeComparator(); // only one
+      void init(); // call after comparators have been joined
+  uses object, IF.expr
+
+collections : collections of symbolic expressions, maps
+  exports:
+    CollectionFactory (interface)
+      SymbolicComparator<SymbolicCollection> collectionComparator();
+      init();
+  uses:
+  
+ideal : implementations of numeric.
+  exports: Ideal (static to produce implmentation of NumericFactory)
+  ideal numeric arithmetic on symbolic expressions
+  uses: numeric, object, number, collections, type,
+        ?comparator?
+  
+numeric: interfaces for numeric expressions, factories
+  exports: NumericExpression, NumericFactory, NumericComparator
+  
+expr : all symbolic expressions other than numeric
+  uses: numeric, object, number, collections, type, ideal, IF.expr
+  
+prove :
+
+simplify:
+
+universe : uses everything else
+
+each factory can have an init() method.  Must be called after creation
+  but before can be used.
+  
+FactoryRegistry
+  setObjectFactory(...)
+  ...
+  init(); // forms comparators, etc.
+  getObjectFactory(...)
+
+
 most symbolic expressions can just be SymbolicExpression objects.
 
 ideal universe can put them in the right form

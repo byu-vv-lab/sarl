@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomial;
 import edu.udel.cis.vsl.sarl.symbolic.factorpoly.FactoredPolynomialFactory;
 import edu.udel.cis.vsl.sarl.symbolic.rational.RationalExpression;
 import edu.udel.cis.vsl.sarl.symbolic.rational.RationalFactory;
 import edu.udel.cis.vsl.sarl.symbolic.relation.RelationalExpression.RelationKind;
-import edu.udel.cis.vsl.sarl.type.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 
 public class RelationalFactory {
 
@@ -26,7 +25,7 @@ public class RelationalFactory {
 
 	private FactoredPolynomialFactory fpFactory;
 
-	public RelationalFactory(SymbolicTypeFactory typeFactory,
+	public RelationalFactory(CommonSymbolicTypeFactory typeFactory,
 			FactoredPolynomialFactory fpFactory,
 			RationalFactory rationalFactory, TreeExpressionIF zeroInt,
 			TreeExpressionIF zeroReal) {

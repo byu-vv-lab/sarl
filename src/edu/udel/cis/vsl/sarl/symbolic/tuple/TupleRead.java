@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.symbolic.tuple;
 
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.BooleanPrimitive;
 import edu.udel.cis.vsl.sarl.symbolic.NumericPrimitive;
-import edu.udel.cis.vsl.sarl.symbolic.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.symbolic.IF.tree.TreeExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.NumericConcreteExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
