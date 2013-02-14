@@ -14,4 +14,6 @@ public interface SymbolicCollection extends SymbolicObject,
 
 	SymbolicCollectionKind collectionKind();
 
+	SymbolicExpressionIF getFirst();
+
 }

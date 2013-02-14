@@ -171,7 +171,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  * the union type. This is a boolean-valued expression whose value is true iff
  * arg1 belongs to the specified member type of the union type.</li>
  * 
- * <li>UNION_EXTRACT: 2 aguments: arg0 is an IntObject giving the index of a
+ * <li>UNION_EXTRACT: 2 arguments: arg0 is an IntObject giving the index of a
  * member type of a union type; arg1 is a symbolic expression whose type is the
  * union type. The resulting expression has type the specified member type. This
  * essentially pulls the expression out of the union and casts it to the member

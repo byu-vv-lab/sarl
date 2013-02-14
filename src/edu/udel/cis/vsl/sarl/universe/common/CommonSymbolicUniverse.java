@@ -3,6 +3,8 @@ package edu.udel.cis.vsl.sarl.universe.common;
 import java.util.Collection;
 import java.util.Map;
 
+import cvc3.OpMut;
+
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
@@ -34,6 +36,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
 /**
  * This class provides partial implementation of the SymbolicUniverseIF
@@ -896,9 +899,20 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	public SymbolicExpressionIF apply(SymbolicExpressionIF function,
 			SymbolicSequence argumentSequence) {
 		// TODO: check types!
-		return expression(SymbolicOperator.APPLY,
-				((SymbolicFunctionTypeIF) function.type()).outputType(),
-				function, argumentSequence);
+		SymbolicOperator op0 = function.operator();
+		SymbolicExpressionIF result;
+
+		if (op0 == SymbolicOperator.LAMBDA) {
+			assert argumentSequence.size() == 1;
+			result = substitute((SymbolicExpressionIF) function.argument(1),
+					new SingletonMap<SymbolicConstantIF, SymbolicExpressionIF>(
+							(SymbolicConstantIF) function.argument(0),
+							argumentSequence.getFirst()));
+		} else
+			result = expression(SymbolicOperator.APPLY,
+					((SymbolicFunctionTypeIF) function.type()).outputType(),
+					function, argumentSequence);
+		return result;
 	}
 
 	@Override

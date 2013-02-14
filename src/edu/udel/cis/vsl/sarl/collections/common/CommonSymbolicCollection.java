@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
@@ -37,6 +38,11 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 		if (size() != that.size())
 			return false;
 		return collectionEquals(that);
+	}
+
+	@Override
+	public SymbolicExpressionIF getFirst() {
+		return iterator().next();
 	}
 
 }
