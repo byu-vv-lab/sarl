@@ -75,15 +75,15 @@ public class NTMonomial extends IdealExpression implements Monomial {
 		return factory.multiply(monomialConstant(), expandedMonic);
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	@Override
 	public String toString() {

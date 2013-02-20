@@ -35,4 +35,5 @@ public interface NumberIF extends Comparable<NumberIF> {
 	 * as the toString() method.
 	 */
 	String atomString();
+
 }

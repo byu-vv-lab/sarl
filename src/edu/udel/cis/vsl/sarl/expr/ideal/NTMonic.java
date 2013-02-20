@@ -88,15 +88,15 @@ public class NTMonic extends IdealExpression implements Monic {
 		return result;
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer();

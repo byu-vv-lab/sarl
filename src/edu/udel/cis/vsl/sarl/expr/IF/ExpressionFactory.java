@@ -42,4 +42,6 @@ public interface ExpressionFactory {
 			SymbolicTypeIF type, Collection<SymbolicObject> args);
 
 	SymbolicConstantIF symbolicConstant(StringObject name, SymbolicTypeIF type);
+
+	SymbolicExpressionIF nullExpression();
 }

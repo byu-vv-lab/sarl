@@ -1,6 +1,10 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
@@ -12,10 +16,31 @@ public class SymbolicUnionType extends SymbolicType implements
 
 	private StringObject name;
 
+	private Map<SymbolicTypeIF, Integer> indexMap = new LinkedHashMap<SymbolicTypeIF, Integer>();
+
+	/**
+	 * The elements of the sequence must be unique, i.e., no repetitions.
+	 * 
+	 * @param name
+	 * @param sequence
+	 */
 	SymbolicUnionType(StringObject name, SymbolicTypeSequenceIF sequence) {
 		super(SymbolicTypeKind.TUPLE);
-		assert name != null;
 		assert sequence != null;
+
+		int n = sequence.numTypes();
+
+		for (int i = 0; i < n; i++) {
+			SymbolicTypeIF type1 = sequence.getType(i);
+			Integer index = indexMap.get(type1);
+
+			if (index != null)
+				throw new IllegalArgumentException("Component of union type "
+						+ name + " occurred twice, at positions " + index
+						+ " and " + i + ": " + type1);
+			indexMap.put(type1, i);
+		}
+		assert name != null;
 		this.name = name;
 		this.sequence = sequence;
 	}
@@ -54,5 +79,10 @@ public class SymbolicUnionType extends SymbolicType implements
 			sequence = (SymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
+	}
+
+	@Override
+	public Integer indexOfType(SymbolicTypeIF type) {
+		return indexMap.get(type);
 	}
 }

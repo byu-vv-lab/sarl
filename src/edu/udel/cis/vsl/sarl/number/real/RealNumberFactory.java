@@ -50,6 +50,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		multiplier = new IntMultiplier(this);
 	}
 
+	@Override
 	public NumberIF abs(NumberIF number) {
 		if (number.signum() < 0) {
 			return negate(number);
@@ -107,15 +108,18 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return arg0.denominator().equals(BigInteger.ONE);
 	}
 
+	@Override
 	public RationalNumberIF add(RationalNumberIF arg0, RationalNumberIF arg1) {
 		RealRational x = (RealRational) arg0;
 		RealRational y = (RealRational) arg1;
 
-		return rational(x.numerator().multiply(y.denominator()).add(
-				x.denominator().multiply(y.numerator())), x.denominator()
-				.multiply(y.denominator()));
+		return rational(
+				x.numerator().multiply(y.denominator())
+						.add(x.denominator().multiply(y.numerator())), x
+						.denominator().multiply(y.denominator()));
 	}
 
+	@Override
 	public IntegerNumberIF add(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		RealInteger x = (RealInteger) arg0;
 		RealInteger y = (RealInteger) arg1;
@@ -123,6 +127,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.value().add(y.value()));
 	}
 
+	@Override
 	public IntegerNumberIF ceil(RationalNumberIF arg0) {
 		RealRational x = (RealRational) arg0;
 		BigInteger numerator = x.numerator();
@@ -142,14 +147,17 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public int compare(RationalNumberIF arg0, RationalNumberIF arg1) {
 		return subtract(arg0, arg1).signum();
 	}
 
+	@Override
 	public int compare(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		return subtract(arg0, arg1).signum();
 	}
 
+	@Override
 	public int compare(NumberIF arg0, NumberIF arg1) {
 		if (arg0 instanceof IntegerNumberIF && arg1 instanceof IntegerNumberIF) {
 			return compare((IntegerNumberIF) arg0, (IntegerNumberIF) arg1);
@@ -161,10 +169,12 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public IntegerNumberIF denominator(RationalNumberIF arg0) {
 		return integer(((RealRational) arg0).denominator());
 	}
 
+	@Override
 	public RationalNumberIF divide(RationalNumberIF arg0, RationalNumberIF arg1) {
 		RealRational x = (RealRational) arg0;
 		RealRational y = (RealRational) arg1;
@@ -173,6 +183,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 				.denominator().multiply(y.numerator()));
 	}
 
+	@Override
 	public IntegerNumberIF divide(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		RealInteger x = (RealInteger) arg0;
 		RealInteger y = (RealInteger) arg1;
@@ -180,6 +191,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.value().divide(y.value()));
 	}
 
+	@Override
 	public IntegerNumberIF mod(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		RealInteger x = (RealInteger) arg0;
 		RealInteger y = (RealInteger) arg1;
@@ -189,6 +201,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.value().mod(y.value()));
 	}
 
+	@Override
 	public IntegerNumberIF floor(RationalNumberIF arg0) {
 		RealRational x = (RealRational) arg0;
 		BigInteger numerator = x.numerator();
@@ -208,6 +221,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public RealRational fraction(IntegerNumberIF numerator,
 			IntegerNumberIF denominator) {
 		RealInteger x = (RealInteger) numerator;
@@ -216,16 +230,19 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return rational(x.value(), y.value());
 	}
 
+	@Override
 	public IntegerNumberIF integer(String string) {
 		return integer(new BigInteger(string));
 	}
 
+	@Override
 	public RationalNumberIF integerToRational(IntegerNumberIF integer) {
 		RealInteger x = (RealInteger) integer;
 
 		return rational(x.value(), BigInteger.ONE);
 	}
 
+	@Override
 	public IntegerNumberIF integerValue(RationalNumberIF arg0) {
 		RealRational x = (RealRational) arg0;
 
@@ -235,6 +252,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.numerator());
 	}
 
+	@Override
 	public RationalNumberIF multiply(RationalNumberIF arg0,
 			RationalNumberIF arg1) {
 		RealRational x = (RealRational) arg0;
@@ -244,6 +262,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 				.multiply(y.denominator()));
 	}
 
+	@Override
 	public IntegerNumberIF multiply(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		RealInteger x = (RealInteger) arg0;
 		RealInteger y = (RealInteger) arg1;
@@ -251,18 +270,21 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.value().multiply(y.value()));
 	}
 
+	@Override
 	public RationalNumberIF negate(RationalNumberIF arg0) {
 		RealRational x = (RealRational) arg0;
 
 		return rational(x.numerator().negate(), x.denominator());
 	}
 
+	@Override
 	public IntegerNumberIF negate(IntegerNumberIF arg0) {
 		RealInteger x = (RealInteger) arg0;
 
 		return integer(x.value().negate());
 	}
 
+	@Override
 	public NumberIF number(String string) {
 		int decimalPosition = string.indexOf('.');
 
@@ -273,18 +295,22 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public IntegerNumberIF numerator(RationalNumberIF arg0) {
 		return integer(((RealRational) arg0).numerator());
 	}
 
+	@Override
 	public IntegerNumberIF oneInteger() {
 		return oneInteger;
 	}
 
+	@Override
 	public RationalNumberIF oneRational() {
 		return oneRational;
 	}
 
+	@Override
 	public RationalNumberIF rational(String string) {
 		int ePosition = string.indexOf('e');
 
@@ -348,6 +374,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 				new BigInteger(powerOfTen));
 	}
 
+	@Override
 	public RationalNumberIF rational(NumberIF number) {
 		if (number instanceof RationalNumberIF) {
 			return (RationalNumberIF) number;
@@ -357,11 +384,13 @@ public class RealNumberFactory implements NumberFactoryIF {
 		throw new IllegalArgumentException("Unknown type of number: " + number);
 	}
 
+	@Override
 	public RationalNumberIF subtract(RationalNumberIF arg0,
 			RationalNumberIF arg1) {
 		return add(arg0, negate(arg1));
 	}
 
+	@Override
 	public IntegerNumberIF subtract(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		RealInteger x = (RealInteger) arg0;
 		RealInteger y = (RealInteger) arg1;
@@ -369,24 +398,29 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(x.value().subtract(y.value()));
 	}
 
+	@Override
 	public IntegerNumberIF zeroInteger() {
 		return zeroInteger;
 	}
 
+	@Override
 	public RationalNumberIF zeroRational() {
 		return zeroRational;
 	}
 
+	@Override
 	public boolean isIntegral(RationalNumberIF arg0) {
 		RealRational x = (RealRational) arg0;
 
 		return x.denominator().equals(BigInteger.ONE);
 	}
 
+	@Override
 	public IntegerNumberIF integer(int value) {
 		return integer("" + value);
 	}
 
+	@Override
 	public NumberIF negate(NumberIF arg0) {
 		if (arg0 instanceof IntegerNumberIF)
 			return negate((IntegerNumberIF) arg0);
@@ -394,6 +428,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 			return negate((RationalNumberIF) arg0);
 	}
 
+	@Override
 	public NumberIF add(NumberIF arg0, NumberIF arg1) {
 		if (arg0 instanceof IntegerNumberIF) {
 			if (!(arg1 instanceof IntegerNumberIF))
@@ -413,6 +448,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public NumberIF divide(NumberIF arg0, NumberIF arg1) {
 		if (arg0 instanceof IntegerNumberIF) {
 			if (!(arg1 instanceof IntegerNumberIF))
@@ -432,6 +468,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public NumberIF multiply(NumberIF arg0, NumberIF arg1) {
 		if (arg0 instanceof IntegerNumberIF) {
 			if (!(arg1 instanceof IntegerNumberIF))
@@ -451,6 +488,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
 	public NumberIF subtract(NumberIF arg0, NumberIF arg1) {
 		if (arg0 instanceof IntegerNumberIF) {
 			if (!(arg1 instanceof IntegerNumberIF))
@@ -470,6 +508,41 @@ public class RealNumberFactory implements NumberFactoryIF {
 		}
 	}
 
+	@Override
+	public RationalNumberIF increment(RationalNumberIF arg) {
+		return add(arg, oneRational);
+	}
+
+	@Override
+	public IntegerNumberIF increment(IntegerNumberIF arg) {
+		return add(arg, oneInteger);
+	}
+
+	@Override
+	public NumberIF increment(NumberIF arg) {
+		if (arg instanceof IntegerNumberIF)
+			return add((IntegerNumberIF) arg, oneInteger);
+		return add((RationalNumberIF) arg, oneRational);
+	}
+
+	@Override
+	public RationalNumberIF decrement(RationalNumberIF arg) {
+		return subtract(arg, oneRational);
+	}
+
+	@Override
+	public IntegerNumberIF decrement(IntegerNumberIF arg) {
+		return subtract(arg, oneInteger);
+	}
+
+	@Override
+	public NumberIF decrement(NumberIF arg) {
+		if (arg instanceof IntegerNumberIF)
+			return subtract((IntegerNumberIF) arg, oneInteger);
+		return subtract((RationalNumberIF) arg, oneRational);
+	}
+
+	@Override
 	public IntegerNumberIF gcd(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		BigInteger value0 = ((RealInteger) arg0).value();
 		BigInteger value1 = ((RealInteger) arg1).value();
@@ -477,6 +550,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		return integer(value0.gcd(value1));
 	}
 
+	@Override
 	public IntegerNumberIF lcm(IntegerNumberIF arg0, IntegerNumberIF arg1) {
 		return divide(multiply(arg0, arg1), gcd(arg0, arg1));
 	}
@@ -496,6 +570,7 @@ public class RealNumberFactory implements NumberFactoryIF {
 		out.flush();
 	}
 
+	@Override
 	public void gaussianElimination(RationalNumberIF[][] matrix) {
 		int numRows = matrix.length;
 		int numCols;
@@ -605,8 +680,8 @@ public class RealNumberFactory implements NumberFactoryIF {
 				if (i != top) {
 					RationalNumberIF tmp = matrix[i][col];
 					for (j = col; j < numCols; j++) {
-						matrix[i][j] = subtract(matrix[i][j], multiply(tmp,
-								matrix[top][j]));
+						matrix[i][j] = subtract(matrix[i][j],
+								multiply(tmp, matrix[top][j]));
 					}
 				}
 			}

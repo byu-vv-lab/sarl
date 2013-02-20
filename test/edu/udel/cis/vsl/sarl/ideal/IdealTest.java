@@ -14,8 +14,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.ideal.Constant;
@@ -31,7 +31,7 @@ public class IdealTest {
 	private NumberFactoryIF numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
+	// private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 
 	private RationalNumberIF n1; // 3/2
@@ -51,7 +51,7 @@ public class IdealTest {
 		objectFactory = system.objectFactory();
 		numberFactory = system.numberFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
+		// collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		n1 = numberFactory.rational("1.5");
 		n2 = numberFactory.rational("-.25");
@@ -145,16 +145,18 @@ public class IdealTest {
 	}
 
 	@Test
-	public void xplusye20() {
+	public void bigPower() {
+		// TODO: performance !
+		int exponent = 100;
+		IntObject n = objectFactory.intObject(exponent);
+		IntObject m = objectFactory.intObject(exponent - 1);
 		NumericExpression xpy = idealFactory.add(x, y);
-		NumericExpression xpye20 = idealFactory.power(xpy,
-				objectFactory.intObject(20));
-		NumericExpression xpye19 = idealFactory.power(xpy,
-				objectFactory.intObject(19));
-		NumericExpression quotient = idealFactory.divide(xpye20, xpye19);
+		NumericExpression xpyen = idealFactory.power(xpy, n);
+		NumericExpression xpyem = idealFactory.power(xpy, m);
+		NumericExpression quotient = idealFactory.divide(xpyen, xpyem);
 
-		out.println("xplusye20: (X+Y)^20 = " + xpye20);
-		out.println("xplusye20: (X+Y)^19 = " + xpye19);
+		out.println("xplusye20: (X+Y)^" + n + " = " + xpyen);
+		out.println("xplusye20: (X+Y)^" + m + " = " + xpyem);
 		out.println("xplusye20: quotient : " + quotient);
 		assertEquals(xpy, quotient);
 	}

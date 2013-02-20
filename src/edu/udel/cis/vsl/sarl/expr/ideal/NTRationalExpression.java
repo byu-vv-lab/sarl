@@ -34,15 +34,15 @@ public class NTRationalExpression extends IdealExpression implements
 		return (Polynomial) argument(1);
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	@Override
 	public IdealKind idealKind() {

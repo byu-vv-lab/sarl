@@ -22,6 +22,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private NumericExpressionFactory numericFactory;
 
+	private SymbolicExpressionIF nullExpression;
+
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		Comparator<NumericExpression> numericComparator = numericFactory
 				.numericComparator();
@@ -29,6 +31,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		this.objectFactory = numericFactory.objectFactory();
 		this.numericFactory = numericFactory;
 		expressionComparator = new ExpressionComparator(numericComparator);
+		nullExpression = canonic(expression(SymbolicOperator.NULL, null,
+				new SymbolicObject[] {}));
 	}
 
 	@Override
@@ -102,6 +106,11 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	public SymbolicConstantIF symbolicConstant(StringObject name,
 			SymbolicTypeIF type) {
 		return new CommonSymbolicConstant(name, type);
+	}
+
+	@Override
+	public SymbolicExpressionIF nullExpression() {
+		return nullExpression;
 	}
 
 }

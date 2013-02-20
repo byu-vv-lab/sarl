@@ -21,13 +21,13 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private SymbolicSequence emptySequence;
 
-	private CollectionComparator collectionComparator;
+	private CollectionComparator comparator;
 
 	private Comparator<SymbolicExpressionIF> expressionComparator;
 
 	public CommonCollectionFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
-		this.collectionComparator = new CollectionComparator();
+		this.comparator = new CollectionComparator();
 		emptyHashSet = (SymbolicSet) objectFactory
 				.canonic(new PcollectionsSymbolicSet());
 		emptyHashMap = (SymbolicMap) objectFactory
@@ -36,7 +36,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	@Override
 	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
-		collectionComparator.setExpressionComparator(c);
+		comparator.setExpressionComparator(c);
 		this.expressionComparator = c;
 	}
 
@@ -45,12 +45,13 @@ public class CommonCollectionFactory implements CollectionFactory {
 		assert expressionComparator != null;
 		emptySortedMap = (SymbolicMap) objectFactory
 				.canonic(new CljSortedSymbolicMap(expressionComparator));
+		emptySequence = new PcollectionsSymbolicSequence();
 		// etc.
 	}
 
 	@Override
 	public Comparator<SymbolicCollection> comparator() {
-		return collectionComparator;
+		return comparator;
 	}
 
 	@Override
@@ -76,20 +77,17 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public SymbolicSequence sequence(
 			Iterable<? extends SymbolicExpressionIF> elements) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PcollectionsSymbolicSequence(elements);
 	}
 
 	@Override
 	public SymbolicSequence sequence(SymbolicExpressionIF[] elements) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PcollectionsSymbolicSequence(elements);
 	}
 
 	@Override
 	public SymbolicSequence singletonSequence(SymbolicExpressionIF element) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PcollectionsSymbolicSequence(element);
 	}
 
 	@Override
@@ -165,11 +163,6 @@ public class CommonCollectionFactory implements CollectionFactory {
 	public SymbolicMap sortedMap(Comparator<SymbolicExpressionIF> comparator,
 			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
 		return new CljSortedSymbolicMap(javaMap, comparator);
-	}
-
-	@Override
-	public CollectionComparator newCollectionComparator() {
-		return new CollectionComparator();
 	}
 
 }

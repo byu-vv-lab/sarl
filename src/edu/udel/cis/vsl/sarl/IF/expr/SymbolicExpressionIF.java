@@ -138,6 +138,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  * 
  * <li>NOT: logical negation, !arg0. 1 argument. Boolean type.</li>
  * 
+ * <li>NULL: used to represent no symbolic expression in case where Java's null
+ * is not acceptable</li>
+ * 
  * <li>OR: boolean disjunction. Like AND, takes 1 or 2 arguments. If 1 argument,
  * the argument is a collection with at least one element. If 2 arguments, both
  * have boolean type.</li>
@@ -215,6 +218,7 @@ public interface SymbolicExpressionIF extends SymbolicObject {
 		NEGATIVE,
 		NEQ,
 		NOT,
+		NULL,
 		OR,
 		POWER,
 		SUBTRACT,
@@ -266,5 +270,18 @@ public interface SymbolicExpressionIF extends SymbolicObject {
 
 	/** Returns the type of this symbolic expression. */
 	SymbolicTypeIF type();
+
+	/** Is this the "NULL" symbolic expression? */
+	boolean isNull();
+	
+	boolean isFalse();
+	
+	boolean isTrue();
+	
+	boolean isZero();
+	
+	boolean isOne();
+	
+	boolean isNumeric();
 
 }

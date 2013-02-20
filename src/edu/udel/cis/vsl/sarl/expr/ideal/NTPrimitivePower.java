@@ -90,15 +90,15 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 		return (Polynomial) factory.power(expandedPrimitive, exponent());
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	@Override
 	public String toString() {

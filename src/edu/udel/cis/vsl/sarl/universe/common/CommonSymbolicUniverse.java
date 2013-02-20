@@ -3,8 +3,6 @@ package edu.udel.cis.vsl.sarl.universe.common;
 import java.util.Collection;
 import java.util.Map;
 
-import cvc3.OpMut;
-
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
@@ -13,6 +11,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
 import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -22,15 +21,18 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
@@ -47,7 +49,22 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  */
 public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
-	private FactorySystem system;
+	/**
+	 * A sequence of array writes in which the index never exceeds this bound
+	 * will be represented in a dense format, i.e., like a regular Java array.
+	 */
+	public final static int DENSE_ARRAY_MAX_SIZE = 100000;
+
+	/**
+	 * A forall or exists expression over an integer range will be expanded to a
+	 * conjunction or disjunction as long as the the size of the range
+	 * (high-low) does not exceed this bound.
+	 */
+	public final static int QUANTIFIER_EXPAND_BOUND = 1000;
+
+	private IntegerNumberIF denseArrayMaxSize, quantifierExpandBound;
+
+	// private FactorySystem system;
 
 	private ObjectFactory objectFactory;
 
@@ -65,12 +82,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private SymbolicTypeIF booleanType, integerType, realType;
 
+	private SymbolicExpressionIF nullExpression;
+
 	private SymbolicExpressionIF trueExpr, falseExpr;
 
 	private SymbolicExpressionIF zeroInt, zeroReal, oneInt, oneReal;
 
 	public CommonSymbolicUniverse(FactorySystem system) {
-		this.system = system;
+		// this.system = system;
 		this.objectFactory = system.objectFactory();
 		this.typeFactory = system.typeFactory();
 		this.expressionFactory = system.expressionFactory();
@@ -93,6 +112,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 				objectFactory.oneIntObj());
 		oneReal = expression(SymbolicOperator.CONCRETE, realType,
 				objectFactory.oneRealObj());
+		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
+		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
+		nullExpression = expressionFactory.nullExpression();
 	}
 
 	public NumericExpressionFactory numericExpressionFactory() {
@@ -266,10 +288,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 					(IntObject) args[1], (SymbolicExpressionIF) args[2]);
 		case UNION_EXTRACT: {
 			SymbolicExpressionIF expression = (SymbolicExpressionIF) args[1];
-			SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) expression
-					.type();
 
-			return unionExtract(unionType, (IntObject) args[0], expression);
+			return unionExtract((IntObject) args[0], expression);
 		}
 		case UNION_INJECT: {
 			SymbolicExpressionIF expression = (SymbolicExpressionIF) args[1];
@@ -280,10 +300,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		}
 		case UNION_TEST: {
 			SymbolicExpressionIF expression = (SymbolicExpressionIF) args[1];
-			SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) expression
-					.type();
 
-			return unionTest(unionType, (IntObject) args[0], expression);
+			return unionTest((IntObject) args[0], expression);
 		}
 		default:
 			throw new IllegalArgumentException("Unknown expression kind: "
@@ -449,6 +467,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	}
 
 	@Override
+	public TheoremProverIF prover() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public BooleanObject booleanObject(boolean value) {
 		return objectFactory.booleanObject(value);
 	}
@@ -487,6 +511,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		if (expression instanceof SymbolicConstantIF)
 			return (SymbolicConstantIF) expression;
 		return null;
+	}
+
+	public SymbolicExpressionIF substitute(SymbolicExpressionIF expression,
+			SymbolicConstantIF variable, SymbolicExpressionIF value) {
+		return substitute(expression,
+				new SingletonMap<SymbolicConstantIF, SymbolicExpressionIF>(
+						variable, value));
 	}
 
 	@Override
@@ -530,69 +561,79 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicExpressionIF add(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.add((NumericExpression) arg0,
+				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF subtract(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.subtract((NumericExpression) arg0,
+				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF multiply(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.multiply((NumericExpression) arg0,
+				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF multiply(SymbolicCollection args) {
-		// TODO Auto-generated method stub
-		return null;
+		int size = args.size();
+		SymbolicExpressionIF result = null;
+
+		if (size == 0)
+			throw new IllegalArgumentException(
+					"Collection must contain at least one element");
+		for (SymbolicExpressionIF arg : args) {
+			if (result == null)
+				result = arg;
+			else
+				result = multiply(result, arg);
+		}
+		return result;
 	}
 
 	@Override
 	public SymbolicExpressionIF divide(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.divide((NumericExpression) arg0,
+				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF modulo(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.modulo((NumericExpression) arg0,
+				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpressionIF minus(SymbolicExpressionIF arg) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.minus((NumericExpression) arg);
 	}
 
 	@Override
 	public SymbolicExpressionIF power(SymbolicExpressionIF base,
 			IntObject exponent) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.power((NumericExpression) base,
+				exponent);
 	}
 
 	@Override
 	public SymbolicExpressionIF power(SymbolicExpressionIF base,
 			SymbolicExpressionIF exponent) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory.power((NumericExpression) base,
+				(NumericExpression) exponent);
 	}
 
 	@Override
 	public SymbolicExpressionIF castToReal(
 			SymbolicExpressionIF numericExpression) {
-		// TODO Auto-generated method stub
-		return null;
+		return numericExpressionFactory
+				.castToReal((NumericExpression) numericExpression);
 	}
 
 	@Override
@@ -769,6 +810,92 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		}
 	}
 
+	public SymbolicExpressionIF implies(SymbolicExpressionIF arg0,
+			SymbolicExpressionIF arg1) {
+		return or(not(arg0), arg1);
+	}
+
+	public SymbolicExpressionIF equiv(SymbolicExpressionIF arg0,
+			SymbolicExpressionIF arg1) {
+		return and(implies(arg0, arg1), implies(arg1, arg0));
+	}
+
+	public SymbolicExpressionIF forallIntConcrete(SymbolicConstantIF index,
+			IntegerNumberIF low, IntegerNumberIF high,
+			SymbolicExpressionIF predicate) {
+		SymbolicExpressionIF result = trueExpr;
+
+		for (IntegerNumberIF i = low; i.compareTo(high) < 0; i = numberFactory
+				.increment(i)) {
+			SymbolicExpressionIF iExpression = symbolic(numberObject(i));
+			SymbolicExpressionIF substitutedPredicate = substitute(predicate,
+					index, iExpression);
+
+			result = and(result, substitutedPredicate);
+		}
+		return result;
+	}
+
+	@Override
+	public SymbolicExpressionIF forallInt(SymbolicConstantIF index,
+			SymbolicExpressionIF low, SymbolicExpressionIF high,
+			SymbolicExpressionIF predicate) {
+		IntegerNumberIF lowNumber = (IntegerNumberIF) extractNumber(low);
+
+		if (lowNumber != null) {
+			IntegerNumberIF highNumber = (IntegerNumberIF) extractNumber(high);
+
+			if (highNumber != null
+					&& numberFactory.subtract(highNumber, lowNumber).compareTo(
+							quantifierExpandBound) <= 0) {
+				return forallIntConcrete(index, lowNumber, highNumber,
+						predicate);
+			}
+		}
+		return forall(
+				index,
+				implies(and(lessThanEquals(low, index), lessThan(index, high)),
+						predicate));
+	}
+
+	public SymbolicExpressionIF existsIntConcrete(SymbolicConstantIF index,
+			IntegerNumberIF low, IntegerNumberIF high,
+			SymbolicExpressionIF predicate) {
+		SymbolicExpressionIF result = falseExpr;
+
+		for (IntegerNumberIF i = low; i.compareTo(high) < 0; i = numberFactory
+				.increment(i)) {
+			SymbolicExpressionIF iExpression = symbolic(numberObject(i));
+			SymbolicExpressionIF substitutedPredicate = substitute(predicate,
+					index, iExpression);
+
+			result = or(result, substitutedPredicate);
+		}
+		return result;
+	}
+
+	@Override
+	public SymbolicExpressionIF existsInt(SymbolicConstantIF index,
+			SymbolicExpressionIF low, SymbolicExpressionIF high,
+			SymbolicExpressionIF predicate) {
+		IntegerNumberIF lowNumber = (IntegerNumberIF) extractNumber(low);
+
+		if (lowNumber != null) {
+			IntegerNumberIF highNumber = (IntegerNumberIF) extractNumber(high);
+
+			if (highNumber != null
+					&& numberFactory.subtract(highNumber, lowNumber).compareTo(
+							quantifierExpandBound) <= 0) {
+				return existsIntConcrete(index, lowNumber, highNumber,
+						predicate);
+			}
+		}
+		return exists(
+				index,
+				implies(and(lessThanEquals(low, index), lessThan(index, high)),
+						predicate));
+	}
+
 	/**
 	 * a<b => 0<b-a.
 	 */
@@ -801,30 +928,280 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 			return number.signum() >= 0 ? trueExpr : falseExpr;
 	}
 
+	// private SymbolicExpressionIF equals(SymbolicTypeSequenceIF seq0,
+	// SymbolicTypeSequenceIF seq1) {
+	// return equals(seq0, seq1, 0);
+	// }
+
+	private SymbolicExpressionIF equals(SymbolicTypeSequenceIF seq0,
+			SymbolicTypeSequenceIF seq1, int nestingDepth) {
+		int size = seq0.numTypes();
+
+		if (size != seq1.numTypes())
+			return falseExpr;
+		if (size == 0)
+			return trueExpr;
+		else {
+			SymbolicExpressionIF result = equals(seq0.getType(0),
+					seq1.getType(1), nestingDepth);
+
+			if (size > 1)
+				for (int i = 1; i < size; i++)
+					result = and(
+							result,
+							equals(seq0.getType(i), seq1.getType(i),
+									nestingDepth));
+			return result;
+		}
+	}
+
+	/**
+	 * Returns a boolean expression which holds iff the two types are equal.
+	 * 
+	 * @param type0
+	 * @param type1
+	 * @return
+	 */
+	public SymbolicExpressionIF equals(SymbolicTypeIF type0,
+			SymbolicTypeIF type1) {
+		return equals(type0, type1, 0);
+	}
+
+	/**
+	 * Returns a boolean expression which holds iff the two types are equal.
+	 * 
+	 * @param type0
+	 * @param type1
+	 * @return
+	 */
+	private SymbolicExpressionIF equals(SymbolicTypeIF type0,
+			SymbolicTypeIF type1, int nestingDepth) {
+		if (type0.equals(type1))
+			return trueExpr;
+
+		SymbolicTypeKind kind = type0.typeKind();
+
+		if (kind != type1.typeKind())
+			return falseExpr;
+		switch (kind) {
+		case BOOLEAN:
+		case INTEGER:
+		case REAL:
+			return trueExpr;
+		case ARRAY: {
+			SymbolicArrayTypeIF a0 = (SymbolicArrayTypeIF) type0;
+			SymbolicArrayTypeIF a1 = (SymbolicArrayTypeIF) type1;
+
+			if (a0.isComplete() != a1.isComplete())
+				return falseExpr;
+			else {
+				SymbolicExpressionIF result = equals(a0.elementType(),
+						a1.elementType(), nestingDepth);
+
+				if (a0.isComplete())
+					result = and(
+							result,
+							equals(((SymbolicCompleteArrayTypeIF) a0).extent(),
+									((SymbolicCompleteArrayTypeIF) a1).extent(),
+									nestingDepth));
+				return result;
+			}
+		}
+		case FUNCTION:
+			return and(
+					equals(((SymbolicFunctionTypeIF) type0).inputTypes(),
+							((SymbolicFunctionTypeIF) type1).inputTypes(),
+							nestingDepth),
+					equals(((SymbolicFunctionTypeIF) type0).outputType(),
+							((SymbolicFunctionTypeIF) type1).outputType(),
+							nestingDepth));
+		case TUPLE: {
+			SymbolicTupleTypeIF t0 = (SymbolicTupleTypeIF) type0;
+			SymbolicTupleTypeIF t1 = (SymbolicTupleTypeIF) type1;
+
+			if (!t0.name().equals(t1.name()))
+				return falseExpr;
+			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+		}
+		case UNION: {
+			SymbolicUnionTypeIF t0 = (SymbolicUnionTypeIF) type0;
+			SymbolicUnionTypeIF t1 = (SymbolicUnionTypeIF) type1;
+
+			if (!t0.name().equals(t1.name()))
+				return falseExpr;
+			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+		}
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+
+	}
+
 	@Override
 	public SymbolicExpressionIF equals(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		SymbolicExpressionIF difference = subtract(arg1, arg0);
-		NumberIF number = extractNumber(difference);
+		return equals(arg0, arg1, 0);
+	}
 
-		if (number == null)
-			return expression(SymbolicOperator.EQUALS, booleanType,
-					zero(arg0.type()), difference);
-		else
-			return number.isZero() ? trueExpr : falseExpr;
+	private SymbolicConstantIF boundVar(int index, SymbolicTypeIF type) {
+		return symbolicConstant(stringObject("x" + index), type);
+	}
+
+	private SymbolicConstantIF intBoundVar(int index) {
+		return symbolicConstant(stringObject("i" + index), integerType);
+	}
+
+	private SymbolicExpressionIF equals(SymbolicExpressionIF arg0,
+			SymbolicExpressionIF arg1, int quantifierDepth) {
+		if (arg0.equals(arg1))
+			return trueExpr;
+
+		SymbolicTypeIF type = arg0.type();
+		SymbolicExpressionIF result = equals(type, arg1.type(), quantifierDepth);
+
+		if (result.equals(falseExpr))
+			return result;
+		switch (type.typeKind()) {
+		case BOOLEAN:
+			return equiv(arg0, arg1);
+		case INTEGER:
+		case REAL: {
+			SymbolicExpressionIF difference = subtract(arg1, arg0);
+			NumberIF number = extractNumber(difference);
+
+			if (number == null)
+				return expression(SymbolicOperator.EQUALS, booleanType,
+						zero(arg0.type()), difference);
+			else
+				return number.isZero() ? trueExpr : falseExpr;
+		}
+		case ARRAY: {
+			SymbolicExpressionIF length = length(arg0);
+
+			if (!((SymbolicArrayTypeIF) type).isComplete())
+				result = and(result,
+						equals(length, length(arg1), quantifierDepth));
+			if (result.isFalse())
+				return result;
+			else {
+				SymbolicConstantIF index = intBoundVar(quantifierDepth);
+
+				result = and(
+						result,
+						forallInt(
+								index,
+								zeroInt,
+								length,
+								equals(arrayRead(arg0, index),
+										arrayRead(arg1, index),
+										quantifierDepth + 1)));
+				return result;
+			}
+		}
+		case FUNCTION: {
+			SymbolicTypeSequenceIF inputTypes = ((SymbolicFunctionTypeIF) type)
+					.inputTypes();
+			int numInputs = inputTypes.numTypes();
+
+			if (numInputs == 0) {
+				result = and(
+						result,
+						expression(SymbolicOperator.EQUALS, booleanType, arg0,
+								arg1));
+			} else {
+				SymbolicConstantIF[] boundVariables = new SymbolicConstantIF[numInputs];
+				SymbolicSequence sequence;
+				SymbolicExpressionIF expr;
+
+				for (int i = 0; i < numInputs; i++)
+					boundVariables[i] = boundVar(quantifierDepth + i,
+							inputTypes.getType(i));
+				sequence = collectionFactory.sequence(boundVariables);
+				expr = equals(apply(arg0, sequence), apply(arg1, sequence),
+						quantifierDepth + numInputs);
+				for (int i = numInputs - 1; i >= 0; i--)
+					expr = forall(boundVariables[i], expr);
+				result = and(result, expr);
+				return result;
+			}
+		}
+		case TUPLE: {
+			int numComponents = ((SymbolicTupleTypeIF) type).sequence()
+					.numTypes();
+
+			for (int i = 0; i < numComponents; i++) {
+				IntObject index = intObject(i);
+
+				result = and(
+						result,
+						equals(tupleRead(arg0, index), tupleRead(arg1, index),
+								quantifierDepth));
+			}
+			return result;
+		}
+		case UNION: {
+			SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) type;
+
+			if (arg0.operator() == SymbolicOperator.UNION_INJECT) {
+				IntObject index = (IntObject) arg0.argument(0);
+				SymbolicExpressionIF value0 = (SymbolicExpressionIF) arg0
+						.argument(1);
+
+				if (arg1.operator() == SymbolicOperator.UNION_INJECT)
+					return index.equals(arg1.argument(0)) ? and(
+							result,
+							equals(value0,
+									(SymbolicExpressionIF) arg1.argument(1),
+									quantifierDepth)) : falseExpr;
+				else
+					return and(
+							result,
+							and(unionTest(index, arg1),
+									equals(value0, unionExtract(index, arg1),
+											quantifierDepth)));
+			} else if (arg1.operator() == SymbolicOperator.UNION_INJECT) {
+				IntObject index = (IntObject) arg1.argument(0);
+
+				return and(
+						result,
+						and(unionTest(index, arg0),
+								equals((SymbolicExpressionIF) arg1.argument(1),
+										unionExtract(index, arg0),
+										quantifierDepth)));
+			} else {
+				int numTypes = unionType.sequence().numTypes();
+				SymbolicExpressionIF expr = falseExpr;
+
+				for (int i = 0; i < numTypes; i++) {
+					IntObject index = intObject(i);
+					SymbolicExpressionIF clause = result;
+
+					clause = and(clause, unionTest(index, arg0));
+					if (clause.isFalse())
+						continue;
+					clause = and(clause, unionTest(index, arg1));
+					if (clause.isFalse())
+						continue;
+					clause = and(
+							clause,
+							equals(unionExtract(index, arg0),
+									unionExtract(index, arg1), quantifierDepth));
+					if (clause.isFalse())
+						continue;
+					expr = or(expr, clause);
+				}
+				return expr;
+			}
+		}
+		default:
+			throw new SARLInternalException("Unknown type: " + type);
+		}
 	}
 
 	@Override
 	public SymbolicExpressionIF neq(SymbolicExpressionIF arg0,
 			SymbolicExpressionIF arg1) {
-		SymbolicExpressionIF difference = subtract(arg1, arg0);
-		NumberIF number = extractNumber(difference);
-
-		if (number == null)
-			return expression(SymbolicOperator.NEQ, booleanType,
-					zero(arg0.type()), difference);
-		else
-			return number.isZero() ? falseExpr : trueExpr;
+		return not(equals(arg0, arg1));
 	}
 
 	/**
@@ -835,8 +1212,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	 * forall x.false => false
 	 * forall x.(p && q) => (forall x.p) && (forall x.q)
 	 * </pre>
-	 * 
-	 * TODO: forall i.(0<i-a && 0<b-i -> e) => and...
 	 */
 	@Override
 	public SymbolicExpressionIF forall(SymbolicConstantIF boundVariable,
@@ -898,7 +1273,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicExpressionIF apply(SymbolicExpressionIF function,
 			SymbolicSequence argumentSequence) {
-		// TODO: check types!
 		SymbolicOperator op0 = function.operator();
 		SymbolicExpressionIF result;
 
@@ -918,22 +1292,42 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicExpressionIF unionInject(SymbolicUnionTypeIF unionType,
 			IntObject memberIndex, SymbolicExpressionIF object) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicTypeIF objectType = object.type();
+		int indexInt = memberIndex.getInt();
+		SymbolicTypeIF memberType = unionType.sequence().getType(indexInt);
+
+		if (!memberType.equals(objectType))
+			throw new IllegalArgumentException("Expected type " + memberType
+					+ " but object has type " + objectType + ": " + object);
+		// inject_i(extract_i(x))=x...
+		if (object.operator() == SymbolicOperator.UNION_EXTRACT
+				&& unionType.equals(((SymbolicExpressionIF) object.argument(1))
+						.type()) && memberIndex.equals(object.argument(0)))
+			return (SymbolicExpressionIF) object.argument(1);
+		return expression(SymbolicOperator.UNION_INJECT, unionType,
+				memberIndex, object);
 	}
 
 	@Override
-	public SymbolicExpressionIF unionTest(SymbolicUnionTypeIF unionType,
-			IntObject memberIndex, SymbolicExpressionIF object) {
-		// TODO Auto-generated method stub
-		return null;
+	public SymbolicExpressionIF unionTest(IntObject memberIndex,
+			SymbolicExpressionIF object) {
+		if (object.operator() == SymbolicOperator.UNION_INJECT)
+			return object.argument(0).equals(memberIndex) ? trueExpr
+					: falseExpr;
+		return expression(SymbolicOperator.UNION_TEST, booleanType,
+				memberIndex, object);
 	}
 
 	@Override
-	public SymbolicExpressionIF unionExtract(SymbolicUnionTypeIF unionType,
-			IntObject memberIndex, SymbolicExpressionIF object) {
-		// TODO Auto-generated method stub
-		return null;
+	public SymbolicExpressionIF unionExtract(IntObject memberIndex,
+			SymbolicExpressionIF object) {
+		if (object.operator() == SymbolicOperator.UNION_INJECT
+				&& memberIndex.equals(object.argument(0)))
+			return (SymbolicExpressionIF) object.argument(1);
+		return expression(
+				SymbolicOperator.UNION_EXTRACT,
+				((SymbolicUnionTypeIF) object).sequence().getType(
+						memberIndex.getInt()), memberIndex, object);
 	}
 
 	/**
@@ -960,23 +1354,69 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 	@Override
 	public SymbolicExpressionIF arrayRead(SymbolicExpressionIF array,
 			SymbolicExpressionIF index) {
-		// TODO Auto-generated method stub
-		// do the fancy stuff to try to read????
-		return null;
+		SymbolicOperator op = array.operator();
+
+		if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+			IntegerNumberIF indexNumber = (IntegerNumberIF) extractNumber(index);
+
+			if (indexNumber != null) {
+				SymbolicExpressionIF origin = (SymbolicExpressionIF) array
+						.argument(0);
+
+				if (indexNumber.compareTo(denseArrayMaxSize) < 0) {
+					int indexInt = indexNumber.intValue();
+
+					SymbolicSequence values = (SymbolicSequence) array
+							.argument(1);
+					int size = values.size();
+
+					if (indexInt < size) {
+						SymbolicExpressionIF value = values.get(indexInt);
+
+						if (!value.isNull())
+							return value;
+					}
+				}
+				// either indexNumber too big or entry is null
+				return arrayRead(origin, index);
+			}
+		}
+		return expression(SymbolicOperator.ARRAY_READ,
+				((SymbolicArrayTypeIF) array.type()).elementType(), array,
+				index);
 	}
 
 	@Override
 	public SymbolicExpressionIF arrayWrite(SymbolicExpressionIF array,
 			SymbolicExpressionIF index, SymbolicExpressionIF value) {
-		// TODO Auto-generated method stub
-		return null;
+		IntegerNumberIF indexNumber = (IntegerNumberIF) extractNumber(index);
+
+		if (indexNumber != null && indexNumber.compareTo(denseArrayMaxSize) < 0) {
+			SymbolicOperator op = array.operator();
+			int indexInt = indexNumber.intValue();
+			SymbolicSequence sequence;
+			SymbolicExpressionIF origin;
+
+			if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+				origin = (SymbolicExpressionIF) array.argument(0);
+				sequence = ((SymbolicSequence) array.argument(1));
+			} else {
+				origin = array;
+				sequence = collectionFactory.emptySequence();
+			}
+			sequence = sequence.setExtend(indexInt, value, nullExpression);
+			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
+					origin, sequence);
+		}
+		return expression(SymbolicOperator.ARRAY_WRITE, array.type(), array,
+				index, value);
 	}
 
 	@Override
 	public SymbolicExpressionIF denseArrayWrite(SymbolicExpressionIF array,
 			SymbolicSequence values) {
-		// TODO Auto-generated method stub
-		return null;
+		return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
+				array, values);
 	}
 
 	@Override
@@ -986,39 +1426,105 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		return null;
 	}
 
+	public SymbolicExpressionIF tupleUnsafe(SymbolicTupleTypeIF type,
+			SymbolicSequence components) {
+		return expression(SymbolicOperator.CONCRETE, type, components);
+	}
+
 	@Override
 	public SymbolicExpressionIF tuple(SymbolicTupleTypeIF type,
 			SymbolicSequence components) {
-		// TODO Auto-generated method stub
-		return null;
+		int n = components.size();
+		SymbolicTypeSequenceIF fieldTypes = type.sequence();
+		int m = fieldTypes.numTypes();
+
+		if (n != m)
+			throw new IllegalArgumentException("Tuple type has exactly" + m
+					+ " components but sequence has length " + n);
+		for (int i = 0; i < n; i++) {
+			SymbolicTypeIF fieldType = fieldTypes.getType(i);
+			SymbolicTypeIF componentType = components.get(i).type();
+
+			if (!fieldType.equals(componentType))
+				throw new IllegalArgumentException(
+						"Expected expression of type " + fieldType
+								+ " but saw type " + componentType
+								+ " at position " + i);
+		}
+		return expression(SymbolicOperator.CONCRETE, type, components);
 	}
 
 	@Override
 	public SymbolicExpressionIF tupleRead(SymbolicExpressionIF tuple,
 			IntObject index) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicOperator op = tuple.operator();
+		int indexInt = index.getInt();
+
+		if (op == SymbolicOperator.CONCRETE)
+			return ((SymbolicSequence) tuple.argument(0)).get(indexInt);
+		return expression(
+				SymbolicOperator.TUPLE_READ,
+				((SymbolicTupleTypeIF) tuple.type()).sequence().getType(
+						indexInt), tuple, index);
 	}
 
 	@Override
 	public SymbolicExpressionIF tupleWrite(SymbolicExpressionIF tuple,
 			IntObject index, SymbolicExpressionIF value) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicOperator op = tuple.operator();
+		int indexInt = index.getInt();
+		SymbolicTupleTypeIF tupleType = (SymbolicTupleTypeIF) tuple.type();
+		SymbolicTypeIF fieldType = tupleType.sequence().getType(indexInt);
+		SymbolicTypeIF valueType = value.type();
+
+		if (!fieldType.equals(valueType))
+			throw new IllegalArgumentException("Expected expresion of type "
+					+ fieldType + " but saw type " + valueType + ": " + value);
+		if (op == SymbolicOperator.CONCRETE)
+			return expression(op, tupleType,
+					((SymbolicSequence) tuple.argument(0)).set(indexInt, value));
+		return expression(SymbolicOperator.TUPLE_WRITE, tupleType, tuple, value);
 	}
 
 	@Override
 	public SymbolicExpressionIF cast(SymbolicTypeIF newType,
 			SymbolicExpressionIF expression) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicTypeIF oldType = expression.type();
+
+		if (oldType.equals(newType))
+			return expression;
+		if (oldType.isInteger() && newType.isReal()) {
+			return numericExpressionFactory
+					.castToReal((NumericExpression) expression);
+		}
+		if (oldType.typeKind() == SymbolicTypeKind.UNION) {
+			Integer index = ((SymbolicUnionTypeIF) oldType)
+					.indexOfType(newType);
+
+			if (index != null)
+				return unionExtract(intObject(index), expression);
+		}
+		if (newType.typeKind() == SymbolicTypeKind.UNION) {
+			Integer index = ((SymbolicUnionTypeIF) newType)
+					.indexOfType(oldType);
+
+			if (index != null)
+				return unionInject((SymbolicUnionTypeIF) newType,
+						intObject(index), expression);
+		}
+		throw new IllegalArgumentException("Cannot cast from type " + oldType
+				+ " to type " + newType + ": " + expression);
 	}
 
 	@Override
 	public SymbolicExpressionIF cond(SymbolicExpressionIF predicate,
 			SymbolicExpressionIF trueValue, SymbolicExpressionIF falseValue) {
-		// TODO Auto-generated method stub
-		return null;
+		if (predicate.isTrue())
+			return trueValue;
+		if (predicate.isFalse())
+			return falseValue;
+		return expression(SymbolicOperator.COND, trueValue.type(), predicate,
+				trueValue, falseValue);
 	}
 
 	@Override

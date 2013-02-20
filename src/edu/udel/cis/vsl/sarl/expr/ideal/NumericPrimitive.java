@@ -109,15 +109,15 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 		return this;
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	@Override
 	public int degree() {

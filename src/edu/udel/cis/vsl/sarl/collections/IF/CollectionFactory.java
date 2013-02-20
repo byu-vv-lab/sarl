@@ -8,7 +8,6 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.collections.common.CollectionComparator;
 
 /**
  * A factory for producing persistent collections. A set is either "hash" or
@@ -204,5 +203,4 @@ public interface CollectionFactory {
 	 */
 	SymbolicMap hashMap(Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap);
 
-	CollectionComparator newCollectionComparator();
 }

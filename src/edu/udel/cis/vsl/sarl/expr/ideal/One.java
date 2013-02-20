@@ -68,10 +68,10 @@ public class One extends IdealExpression implements Constant, Monic {
 		return this;
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
 
 	@Override
 	public boolean isOne() {

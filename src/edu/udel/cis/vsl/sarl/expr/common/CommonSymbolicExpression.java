@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
  * The root of the symbolic expression hierarchy. Every symbolic expression
@@ -78,7 +80,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	@Override
 	protected int computeHashCode() {
-		int result = type.hashCode() ^ operator().hashCode();
+		int result = type == null ? operator.hashCode() : type.hashCode()
+				^ operator().hashCode();
 		int numArgs = this.numArguments();
 
 		for (int i = 0; i < numArgs; i++)
@@ -148,5 +151,45 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			if (!arg.isCanonic())
 				arguments[i] = factory.canonic(arg);
 		}
+	}
+
+	@Override
+	public boolean isNull() {
+		return operator == SymbolicOperator.NULL;
+	}
+
+	@Override
+	public boolean isFalse() {
+		return operator == SymbolicOperator.CONCRETE
+				&& arguments[0] instanceof BooleanObject
+				&& !((BooleanObject) arguments[0]).getBoolean();
+	}
+
+	@Override
+	public boolean isTrue() {
+		return operator == SymbolicOperator.CONCRETE
+				&& arguments[0] instanceof BooleanObject
+				&& ((BooleanObject) arguments[0]).getBoolean();
+	}
+
+	/**
+	 * Returns false, since this will be overridden in NumericExpression.
+	 */
+	@Override
+	public boolean isZero() {
+		return false;
+	}
+
+	/**
+	 * Returns false, since this will be overridden in NumericExpression.
+	 */
+	@Override
+	public boolean isOne() {
+		return false;
+	}
+
+	@Override
+	public boolean isNumeric() {
+		return this instanceof NumericExpression;
 	}
 }

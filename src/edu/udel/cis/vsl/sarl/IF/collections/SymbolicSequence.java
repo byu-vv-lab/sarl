@@ -45,4 +45,22 @@ public interface SymbolicSequence extends SymbolicCollection {
 	 */
 	SymbolicSequence remove(int index);
 
+	/**
+	 * If index is less than the original size s, same as set. Otherwise returns
+	 * a sequence of length index+1, with the elements in positions s, s+1, ...,
+	 * index-1 set to filler, and the element in position index set to value,
+	 * and all other elements as in the original.
+	 * 
+	 * @param index
+	 *            position to set
+	 * @param value
+	 *            new value for element at position
+	 * @param filler
+	 *            element to be inserted in newly created empty slots
+	 * @return a new sequence, possibly extended with filler, in which element
+	 *         at position index is value
+	 */
+	SymbolicSequence setExtend(int index, SymbolicExpressionIF value,
+			SymbolicExpressionIF filler);
+
 }

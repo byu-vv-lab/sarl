@@ -69,15 +69,15 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 		return factory.one(type());
 	}
 
-	@Override
-	public boolean isZero() {
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		return false;
-	}
+	// @Override
+	// public boolean isZero() {
+	// return false;
+	// }
+	//
+	// @Override
+	// public boolean isOne() {
+	// return false;
+	// }
 
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer();

@@ -17,6 +17,7 @@ import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
@@ -174,6 +175,13 @@ public interface SymbolicUniverseIF {
 	 * assumption is any boolean-valued symbolic expression in this universe.
 	 */
 	SimplifierIF simplifier(SymbolicExpressionIF assumption);
+
+	/**
+	 * Returns the theorem prover associated to this universe.
+	 * 
+	 * @return the theorem prover
+	 */
+	TheoremProverIF prover();
 
 	// Symbolic primitive objects: ints, boolean, reals, strings
 	// Note: these are not symbolic expressions, just symbolic objects!
@@ -532,6 +540,26 @@ public interface SymbolicUniverseIF {
 			SymbolicExpressionIF predicate);
 
 	/**
+	 * A special case of "forall" that is very common: forall integers i such
+	 * that low<=i<high, p(i).
+	 * 
+	 * @param index
+	 *            i, a symbolic constant of integer type
+	 * @param low
+	 *            a symbolic expression of integer type, lower bound of i
+	 *            (inclusive)
+	 * @param high
+	 *            a symbolic expression of integer type, upper bound of i
+	 *            (exclusive)
+	 * @param predicate
+	 *            some boolean symbolic expression, usually involving i
+	 * @return an expression equivalent to "forall int i. low<=i<high -> p(i)".
+	 */
+	SymbolicExpressionIF forallInt(SymbolicConstantIF index,
+			SymbolicExpressionIF low, SymbolicExpressionIF high,
+			SymbolicExpressionIF predicate);
+
+	/**
 	 * Returns the existenially quantified expression exists(x).e.
 	 * 
 	 * @param boundVariable
@@ -541,6 +569,26 @@ public interface SymbolicUniverseIF {
 	 * @return the expression exists(x).e
 	 */
 	SymbolicExpressionIF exists(SymbolicConstantIF boundVariable,
+			SymbolicExpressionIF predicate);
+
+	/**
+	 * A special case of "exists" that is very common: exists integer i such
+	 * that low<=i<high and p(i).
+	 * 
+	 * @param index
+	 *            i, a symbolic constant of integer type
+	 * @param low
+	 *            a symbolic expression of integer type, lower bound of i
+	 *            (inclusive)
+	 * @param high
+	 *            a symbolic expression of integer type, upper bound of i
+	 *            (exclusive)
+	 * @param predicate
+	 *            some boolean symbolic expression, usually involving i
+	 * @return an expression equivalent to "exists int i. low<=i<high && p(i)".
+	 */
+	SymbolicExpressionIF existsInt(SymbolicConstantIF index,
+			SymbolicExpressionIF low, SymbolicExpressionIF high,
 			SymbolicExpressionIF predicate);
 
 	/**
@@ -594,11 +642,9 @@ public interface SymbolicUniverseIF {
 			IntObject memberIndex, SymbolicExpressionIF object);
 
 	/**
-	 * Tests whether an object of a union type belongs to the member type of the
-	 * given index.
+	 * Tests whether an object of a union type is in the image of injection from
+	 * the member type of the given index.
 	 * 
-	 * @param unionType
-	 *            the union type
 	 * @param memberIndex
 	 *            an integer in range [0,n-1], where n is the number of member
 	 *            types of the union type
@@ -607,16 +653,14 @@ public interface SymbolicUniverseIF {
 	 * @return a boolean expression telling whether the object belongs to the
 	 *         specified member type
 	 */
-	SymbolicExpressionIF unionTest(SymbolicUnionTypeIF unionType,
-			IntObject memberIndex, SymbolicExpressionIF object);
+	SymbolicExpressionIF unionTest(IntObject memberIndex,
+			SymbolicExpressionIF object);
 
 	/**
 	 * Casts an object whose type is a union type to a representation whose type
 	 * is the appropriate member type of the union type. The behavior is
 	 * undefined if the object does not belong to the specified member type.
 	 * 
-	 * @param unionType
-	 *            a union type
 	 * @param memberIndex
 	 *            an integer in range [0,n-1], where n is the number of member
 	 *            types of the union types
@@ -625,8 +669,8 @@ public interface SymbolicUniverseIF {
 	 *            unionTest(unionType, memberIndex, object) holds.
 	 * @return a representation of the object with type the member type
 	 */
-	SymbolicExpressionIF unionExtract(SymbolicUnionTypeIF unionType,
-			IntObject memberIndex, SymbolicExpressionIF object);
+	SymbolicExpressionIF unionExtract(IntObject memberIndex,
+			SymbolicExpressionIF object);
 
 	// Arrays...
 

@@ -45,7 +45,10 @@ public class RealInteger extends RealNumber implements IntegerNumberIF {
 		return value == BigInteger.ONE;
 	}
 
+	// TODO: check that the int is in range. If not, throw an
+	// exception.
 	public int intValue() {
 		return value.intValue();
 	}
+
 }

@@ -1,7 +1,5 @@
 package edu.udel.cis.vsl.sarl.IF.number;
 
-
-
 /**
  * A number factory is used to produce concrete rational and integer numbers.
  * The rational and integer numbers live in two separate worlds. Different
@@ -134,6 +132,24 @@ public interface NumberFactoryIF {
 
 	/** Returns the negation of the given integer number, i.e., -x. */
 	IntegerNumberIF negate(IntegerNumberIF arg0);
+
+	/** add(arg, 1.0) */
+	RationalNumberIF increment(RationalNumberIF arg);
+
+	/** add(arg, 1) */
+	IntegerNumberIF increment(IntegerNumberIF arg);
+
+	/** adds 1 of proper type */
+	NumberIF increment(NumberIF arg);
+
+	/** arg-1.0 */
+	RationalNumberIF decrement(RationalNumberIF arg);
+
+	/** arg - 1 */
+	IntegerNumberIF decrement(IntegerNumberIF arg);
+
+	/** subtracts 1 of proper type */
+	NumberIF decrement(NumberIF arg);
 
 	/**
 	 * Returns the greatest common divisor of two integers. The two integers
