@@ -3,10 +3,10 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Arrays;
 import java.util.Collection;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
@@ -18,18 +18,18 @@ import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
  * 
  */
 public class CommonSymbolicExpression extends CommonSymbolicObject implements
-		SymbolicExpressionIF {
+		SymbolicExpression {
 
 	private SymbolicOperator operator;
 
-	private SymbolicTypeIF type;
+	private SymbolicType type;
 
 	private SymbolicObject[] arguments;
 
 	// Constructors...
 
 	protected CommonSymbolicExpression(SymbolicOperator operator,
-			SymbolicTypeIF type, SymbolicObject[] arguments) {
+			SymbolicType type, SymbolicObject[] arguments) {
 		super(SymbolicObjectKind.EXPRESSION);
 		assert operator != null;
 		assert type != null;
@@ -40,30 +40,30 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	protected CommonSymbolicExpression(SymbolicOperator kind,
-			SymbolicTypeIF type, SymbolicObject arg0) {
+			SymbolicType type, SymbolicObject arg0) {
 		this(kind, type, new SymbolicObject[] { arg0 });
 	}
 
 	protected CommonSymbolicExpression(SymbolicOperator kind,
-			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1) {
+			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
 		this(kind, type, new SymbolicObject[] { arg0, arg1 });
 	}
 
 	protected CommonSymbolicExpression(SymbolicOperator kind,
-			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1,
+			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
 		this(kind, type, new SymbolicObject[] { arg0, arg1, arg2 });
 	}
 
 	protected CommonSymbolicExpression(SymbolicOperator kind,
-			SymbolicTypeIF type, Collection<SymbolicObject> args) {
+			SymbolicType type, Collection<SymbolicObject> args) {
 		this(kind, type, args.toArray(new SymbolicObject[args.size()]));
 	}
 
 	/**
 	 * Returns the type of this symbolic expression.
 	 */
-	public SymbolicTypeIF type() {
+	public SymbolicType type() {
 		return type;
 	}
 

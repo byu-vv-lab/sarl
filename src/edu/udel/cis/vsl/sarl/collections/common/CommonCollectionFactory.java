@@ -7,7 +7,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
@@ -23,7 +23,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private CollectionComparator comparator;
 
-	private Comparator<SymbolicExpressionIF> expressionComparator;
+	private Comparator<SymbolicExpression> expressionComparator;
 
 	public CommonCollectionFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
@@ -35,7 +35,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 	}
 
 	@Override
-	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
+	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		comparator.setExpressionComparator(c);
 		this.expressionComparator = c;
 	}
@@ -65,28 +65,28 @@ public class CommonCollectionFactory implements CollectionFactory {
 	}
 
 	@Override
-	public SymbolicSet singletonHashSet(SymbolicExpressionIF element) {
+	public SymbolicSet singletonHashSet(SymbolicExpression element) {
 		return emptyHashSet.add(element);
 	}
 
 	@Override
-	public SymbolicSet singletonSortedSet(SymbolicExpressionIF element) {
+	public SymbolicSet singletonSortedSet(SymbolicExpression element) {
 		return emptySortedSet.add(element);
 	}
 
 	@Override
 	public SymbolicSequence sequence(
-			Iterable<? extends SymbolicExpressionIF> elements) {
+			Iterable<? extends SymbolicExpression> elements) {
 		return new PcollectionsSymbolicSequence(elements);
 	}
 
 	@Override
-	public SymbolicSequence sequence(SymbolicExpressionIF[] elements) {
+	public SymbolicSequence sequence(SymbolicExpression[] elements) {
 		return new PcollectionsSymbolicSequence(elements);
 	}
 
 	@Override
-	public SymbolicSequence singletonSequence(SymbolicExpressionIF element) {
+	public SymbolicSequence singletonSequence(SymbolicExpression element) {
 		return new PcollectionsSymbolicSequence(element);
 	}
 
@@ -106,53 +106,53 @@ public class CommonCollectionFactory implements CollectionFactory {
 	}
 
 	@Override
-	public SymbolicMap singletonSortedMap(SymbolicExpressionIF key,
-			SymbolicExpressionIF value) {
+	public SymbolicMap singletonSortedMap(SymbolicExpression key,
+			SymbolicExpression value) {
 		return emptySortedMap.put(key, value);
 	}
 
 	@Override
-	public SymbolicMap singletonHashMap(SymbolicExpressionIF key,
-			SymbolicExpressionIF value) {
+	public SymbolicMap singletonHashMap(SymbolicExpression key,
+			SymbolicExpression value) {
 		return emptyHashMap.put(key, value);
 	}
 
 	@Override
 	public SymbolicMap sortedMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+			Map<SymbolicExpression, SymbolicExpression> javaMap) {
 		return new CljSortedSymbolicMap(javaMap, expressionComparator);
 	}
 
 	@Override
 	public SymbolicMap hashMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+			Map<SymbolicExpression, SymbolicExpression> javaMap) {
 		return new PcollectionsSymbolicMap(javaMap);
 	}
 
 	@Override
 	public SymbolicSet emptySortedSet(
-			Comparator<SymbolicExpressionIF> comparator) {
+			Comparator<SymbolicExpression> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SymbolicSet singletonSortedSet(SymbolicExpressionIF element,
-			Comparator<SymbolicExpressionIF> comparator) {
+	public SymbolicSet singletonSortedSet(SymbolicExpression element,
+			Comparator<SymbolicExpression> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public SymbolicMap emptySortedMap(
-			Comparator<SymbolicExpressionIF> comparator) {
+			Comparator<SymbolicExpression> comparator) {
 		return new CljSortedSymbolicMap(comparator);
 	}
 
 	@Override
 	public SymbolicMap singletonSortedMap(
-			Comparator<SymbolicExpressionIF> comparator,
-			SymbolicExpressionIF key, SymbolicExpressionIF value) {
+			Comparator<SymbolicExpression> comparator,
+			SymbolicExpression key, SymbolicExpression value) {
 		SymbolicMap result = new CljSortedSymbolicMap(comparator);
 
 		result = result.put(key, value);
@@ -160,8 +160,8 @@ public class CommonCollectionFactory implements CollectionFactory {
 	}
 
 	@Override
-	public SymbolicMap sortedMap(Comparator<SymbolicExpressionIF> comparator,
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+	public SymbolicMap sortedMap(Comparator<SymbolicExpression> comparator,
+			Map<SymbolicExpression, SymbolicExpression> javaMap) {
 		return new CljSortedSymbolicMap(javaMap, comparator);
 	}
 

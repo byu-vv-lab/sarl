@@ -1,40 +1,40 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.IntervalIF;
-import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.IF.prove.Simplifier;
 
-public class IdentitySimplifier implements SimplifierIF {
+public class IdentitySimplifier implements Simplifier {
 
-	private SymbolicUniverseIF universe;
+	private SymbolicUniverse universe;
 
-	private SymbolicExpressionIF assumption;
+	private SymbolicExpression assumption;
 
-	public IdentitySimplifier(SymbolicUniverseIF universe,
-			SymbolicExpressionIF assumption) {
+	public IdentitySimplifier(SymbolicUniverse universe,
+			SymbolicExpression assumption) {
 		this.universe = universe;
 		this.assumption = assumption;
 	}
 
 	@Override
-	public SymbolicUniverseIF universe() {
+	public SymbolicUniverse universe() {
 		return universe;
 	}
 
 	@Override
-	public SymbolicExpressionIF newAssumption() {
+	public SymbolicExpression newAssumption() {
 		return assumption;
 	}
 
 	@Override
-	public SymbolicExpressionIF simplify(SymbolicExpressionIF expression) {
+	public SymbolicExpression simplify(SymbolicExpression expression) {
 		return expression;
 	}
 
 	@Override
-	public IntervalIF assumptionAsInterval(SymbolicConstantIF symbolicConstant) {
+	public Interval assumptionAsInterval(SymbolicConstant symbolicConstant) {
 		return null;
 	}
 

@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
  * A symbolic set represents a set of symbolic expressions. The elements do not
@@ -18,7 +18,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a symbolic expression
 	 * @return true iff this set contains the element
 	 */
-	boolean contains(SymbolicExpressionIF element);
+	boolean contains(SymbolicExpression element);
 
 	/**
 	 * Is this a sorted map?
@@ -38,7 +38,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            any symbolic expression
 	 * @return collection obtained by adding element
 	 */
-	SymbolicSet add(SymbolicExpressionIF element);
+	SymbolicSet add(SymbolicExpression element);
 
 	/**
 	 * Returns the union of the two sets.
@@ -62,7 +62,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a symbolic expressions
 	 * @return set-{element}
 	 */
-	SymbolicSet remove(SymbolicExpressionIF element);
+	SymbolicSet remove(SymbolicExpression element);
 
 	/**
 	 * Returns the set set1-set2, i.e., the set consisting of all x in set1 such

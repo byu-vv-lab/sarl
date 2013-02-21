@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.expr;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * An instance of this type represents a symbolic expression. This is the root
@@ -188,7 +188,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  * 
  * @author siegel
  */
-public interface SymbolicExpressionIF extends SymbolicObject {
+public interface SymbolicExpression extends SymbolicObject {
 
 	/**
 	 * An enumerated type for the different kinds of symbolic expressions.
@@ -269,7 +269,7 @@ public interface SymbolicExpressionIF extends SymbolicObject {
 	String toString();
 
 	/** Returns the type of this symbolic expression. */
-	SymbolicTypeIF type();
+	SymbolicType type();
 
 	/** Is this the "NULL" symbolic expression? */
 	boolean isNull();

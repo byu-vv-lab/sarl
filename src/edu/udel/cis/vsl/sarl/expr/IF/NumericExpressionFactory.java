@@ -3,15 +3,15 @@ package edu.udel.cis.vsl.sarl.expr.IF;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -22,7 +22,7 @@ public interface NumericExpressionFactory {
 	
 	void init();
 
-	NumberFactoryIF numberFactory();
+	NumberFactory numberFactory();
 
 	ObjectFactory objectFactory();
 
@@ -32,22 +32,22 @@ public interface NumericExpressionFactory {
 
 	Comparator<NumericExpression> numericComparator();
 
-	SymbolicExpressionIF newConcreteNumericExpression(NumberObject numberObject);
+	SymbolicExpression newConcreteNumericExpression(NumberObject numberObject);
 
 	NumericSymbolicConstant newNumericSymbolicConstant(StringObject name,
-			SymbolicTypeIF type);
+			SymbolicType type);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
-			SymbolicTypeIF numericType, SymbolicObject[] arguments);
+			SymbolicType numericType, SymbolicObject[] arguments);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
-			SymbolicTypeIF numericType, SymbolicObject arg0);
+			SymbolicType numericType, SymbolicObject arg0);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
-			SymbolicTypeIF numericType, SymbolicObject arg0, SymbolicObject arg1);
+			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
-			SymbolicTypeIF numericType, SymbolicObject arg0,
+			SymbolicType numericType, SymbolicObject arg0,
 			SymbolicObject arg1, SymbolicObject arg2);
 
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
@@ -167,6 +167,6 @@ public interface NumericExpressionFactory {
 	 * Attempts to interpret the given symbolic expression as a concrete number.
 	 * If this is not possible, returns null.
 	 */
-	NumberIF extractNumber(NumericExpression expression);
+	Number extractNumber(NumericExpression expression);
 
 }

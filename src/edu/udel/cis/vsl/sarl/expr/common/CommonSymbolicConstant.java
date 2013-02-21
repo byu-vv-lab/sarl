@@ -1,13 +1,13 @@
 package edu.udel.cis.vsl.sarl.expr.common;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 public class CommonSymbolicConstant extends CommonSymbolicExpression implements
-		SymbolicConstantIF {
+		SymbolicConstant {
 
-	CommonSymbolicConstant(StringObject name, SymbolicTypeIF type) {
+	CommonSymbolicConstant(StringObject name, SymbolicType type) {
 		super(SymbolicOperator.SYMBOLIC_CONSTANT, type, name);
 	}
 

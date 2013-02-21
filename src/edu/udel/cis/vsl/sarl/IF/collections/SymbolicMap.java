@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.IF.collections;
 
 import java.util.Map.Entry;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
  * Map is interpreted as a collection of values. The keys are used for other
@@ -37,28 +37,28 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            the key
 	 * @return value associated to key
 	 */
-	SymbolicExpressionIF get(SymbolicExpressionIF key);
+	SymbolicExpression get(SymbolicExpression key);
 
 	/**
 	 * Returns the keys of the map.
 	 * 
 	 * @return the keys
 	 */
-	Iterable<SymbolicExpressionIF> keys();
+	Iterable<SymbolicExpression> keys();
 
 	/**
 	 * Same as elements().
 	 * 
 	 * @return the values of the map
 	 */
-	Iterable<SymbolicExpressionIF> values();
+	Iterable<SymbolicExpression> values();
 
 	/**
 	 * Returns the key-value paris ("entries") of the map.
 	 * 
 	 * @return the entries
 	 */
-	Iterable<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> entries();
+	Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries();
 
 	/**
 	 * Is this map empty?
@@ -86,7 +86,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 * @return a map based on the original map but with the given value
 	 *         associated to the given key
 	 */
-	SymbolicMap put(SymbolicExpressionIF key, SymbolicExpressionIF value);
+	SymbolicMap put(SymbolicExpression key, SymbolicExpression value);
 
 	/**
 	 * Remove entry with given key (noop if key is not present in map).
@@ -96,7 +96,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 * @return a map obtained by removing entry with given key or the original
 	 *         map if such an entry is not present
 	 */
-	SymbolicMap remove(SymbolicExpressionIF key);
+	SymbolicMap remove(SymbolicExpression key);
 
 	/**
 	 * Returns a map obtained by applying the given unary operator to the values
@@ -107,7 +107,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            a unary operator on values
 	 * @return a map obtained from the given one by applying operator to values
 	 */
-	SymbolicMap apply(UnaryOperatorIF operator);
+	SymbolicMap apply(UnaryOperator operator);
 
 	/**
 	 * Combines that map with this one using the given binary operator. Iterates
@@ -139,5 +139,5 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            a symbolic map
 	 * @return a map obtained by combining this map and the given map
 	 */
-	SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map);
+	SymbolicMap combine(BinaryOperator operator, SymbolicMap map);
 }

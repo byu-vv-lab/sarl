@@ -1,23 +1,23 @@
 package edu.udel.cis.vsl.sarl.object.common;
 
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
-import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonNumberObject extends CommonSymbolicObject implements
 		NumberObject {
 
-	private NumberIF value;
+	private Number value;
 
-	CommonNumberObject(NumberIF value) {
+	CommonNumberObject(Number value) {
 		super(SymbolicObjectKind.NUMBER);
 		this.value = value;
 	}
 
 	@Override
-	public NumberIF getNumber() {
+	public Number getNumber() {
 		return value;
 	}
 
@@ -53,12 +53,12 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 
 	@Override
 	public boolean isInteger() {
-		return value instanceof IntegerNumberIF;
+		return value instanceof IntegerNumber;
 	}
 
 	@Override
 	public boolean isReal() {
-		return value instanceof RationalNumberIF;
+		return value instanceof RationalNumber;
 	}
 
 	@Override

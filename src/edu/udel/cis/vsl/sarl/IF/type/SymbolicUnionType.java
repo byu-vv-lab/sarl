@@ -9,7 +9,7 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
  * @author siegel
  * 
  */
-public interface SymbolicUnionTypeIF extends SymbolicTypeIF {
+public interface SymbolicUnionType extends SymbolicType {
 
 	/**
 	 * The sequence of types comprising this union. This sequence must not
@@ -17,7 +17,7 @@ public interface SymbolicUnionTypeIF extends SymbolicTypeIF {
 	 * 
 	 * @return the sequence of types comprising the union
 	 */
-	SymbolicTypeSequenceIF sequence();
+	SymbolicTypeSequence sequence();
 
 	/**
 	 * The name of this union type.
@@ -35,6 +35,6 @@ public interface SymbolicUnionTypeIF extends SymbolicTypeIF {
 	 *            a symbolic type
 	 * @return index of this type in the type sequence or null
 	 */
-	Integer indexOfType(SymbolicTypeIF type);
+	Integer indexOfType(SymbolicType type);
 
 }

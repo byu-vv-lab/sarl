@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicPrimitiveType extends SymbolicType {
+public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 
-	SymbolicPrimitiveType(SymbolicTypeKind kind) {
+	CommonSymbolicPrimitiveType(SymbolicTypeKind kind) {
 		super(kind);
 	}
 
@@ -23,7 +23,7 @@ public class SymbolicPrimitiveType extends SymbolicType {
 	 * there is only one primitive type of this kind.
 	 */
 	@Override
-	protected boolean typeEquals(SymbolicType that) {
+	protected boolean typeEquals(CommonSymbolicType that) {
 		return true;
 	}
 

@@ -2,24 +2,24 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
 public class TypeSequenceComparator implements
-		Comparator<SymbolicTypeSequenceIF> {
+		Comparator<SymbolicTypeSequence> {
 
-	private Comparator<SymbolicTypeIF> typeComparator;
+	private Comparator<SymbolicType> typeComparator;
 
 	public TypeSequenceComparator() {
 
 	}
 
-	public void setTypeComparator(Comparator<SymbolicTypeIF> c) {
+	public void setTypeComparator(Comparator<SymbolicType> c) {
 		typeComparator = c;
 	}
 
 	@Override
-	public int compare(SymbolicTypeSequenceIF o1, SymbolicTypeSequenceIF o2) {
+	public int compare(SymbolicTypeSequence o1, SymbolicTypeSequence o2) {
 		int size = o1.numTypes();
 		int result = size = o2.numTypes();
 

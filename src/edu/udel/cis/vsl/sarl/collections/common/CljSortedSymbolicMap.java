@@ -9,17 +9,17 @@ import com.trifork.clj_ds.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 		SymbolicMap {
 
-	private PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
+	private PersistentTreeMap<SymbolicExpression, SymbolicExpression> pmap;
 
-	CljSortedSymbolicMap(Comparator<SymbolicExpressionIF> comparator) {
+	CljSortedSymbolicMap(Comparator<SymbolicExpression> comparator) {
 		super();
-		this.pmap = new PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF>(
+		this.pmap = new PersistentTreeMap<SymbolicExpression, SymbolicExpression>(
 				null, comparator);
 	}
 
@@ -36,12 +36,12 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	// }
 
 	CljSortedSymbolicMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap,
-			Comparator<SymbolicExpressionIF> comparator) {
+			Map<SymbolicExpression, SymbolicExpression> javaMap,
+			Comparator<SymbolicExpression> comparator) {
 		super();
-		pmap = new PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF>(
+		pmap = new PersistentTreeMap<SymbolicExpression, SymbolicExpression>(
 				null, comparator);
-		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : javaMap
+		for (Entry<SymbolicExpression, SymbolicExpression> entry : javaMap
 				.entrySet())
 			pmap = pmap.assoc(entry.getKey(), entry.getValue());
 	}
@@ -62,27 +62,27 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public Iterator<SymbolicExpressionIF> iterator() {
+	public Iterator<SymbolicExpression> iterator() {
 		return pmap.vals();
 	}
 
 	@Override
-	public SymbolicExpressionIF get(SymbolicExpressionIF key) {
+	public SymbolicExpression get(SymbolicExpression key) {
 		return pmap.get(key);
 	}
 
 	@Override
-	public Iterable<SymbolicExpressionIF> keys() {
+	public Iterable<SymbolicExpression> keys() {
 		return pmap.keySet();
 	}
 
 	@Override
-	public Iterable<SymbolicExpressionIF> values() {
+	public Iterable<SymbolicExpression> values() {
 		return pmap.values();
 	}
 
 	@Override
-	public Iterable<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> entries() {
+	public Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries() {
 		return pmap.entrySet();
 	}
 
@@ -109,13 +109,13 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public SymbolicMap put(SymbolicExpressionIF key, SymbolicExpressionIF value) {
+	public SymbolicMap put(SymbolicExpression key, SymbolicExpression value) {
 		return new CljSortedSymbolicMap(pmap.assoc(key, value),
 				pmap.comparator());
 	}
 
 	@Override
-	public SymbolicMap remove(SymbolicExpressionIF key) {
+	public SymbolicMap remove(SymbolicExpression key) {
 		return new CljSortedSymbolicMap(pmap.without(key), pmap.comparator());
 	}
 

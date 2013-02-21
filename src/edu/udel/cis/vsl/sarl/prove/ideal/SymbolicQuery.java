@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.ideal;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 
 /**
@@ -10,14 +10,14 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
  */
 public class SymbolicQuery {
 
-	private SymbolicExpressionIF assumption;
+	private SymbolicExpression assumption;
 
-	private SymbolicExpressionIF predicate;
+	private SymbolicExpression predicate;
 
 	/**
 	 * Creates new query. Query is immutable.
 	 */
-	SymbolicQuery(SymbolicExpressionIF assumption, SymbolicExpressionIF predicate) {
+	SymbolicQuery(SymbolicExpression assumption, SymbolicExpression predicate) {
 		if (assumption == null)
 			throw new NullPointerException("null assumption");
 		if (predicate == null)
@@ -26,11 +26,11 @@ public class SymbolicQuery {
 		this.predicate = predicate;
 	}
 
-	public SymbolicExpressionIF assumption() {
+	public SymbolicExpression assumption() {
 		return assumption;
 	}
 
-	public SymbolicExpressionIF predicate() {
+	public SymbolicExpression predicate() {
 		return predicate;
 	}
 

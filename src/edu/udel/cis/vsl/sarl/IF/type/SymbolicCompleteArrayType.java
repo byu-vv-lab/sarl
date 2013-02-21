@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.type;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 
 /**
@@ -10,12 +10,12 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
  * @author siegel
  * 
  */
-public interface SymbolicCompleteArrayTypeIF extends SymbolicArrayTypeIF {
+public interface SymbolicCompleteArrayType extends SymbolicArrayType {
 
 	/**
 	 * The extent of arrays in this type. Non-null integer-valued symbolic
 	 * expressions.
 	 */
-	SymbolicExpressionIF extent();
+	SymbolicExpression extent();
 
 }

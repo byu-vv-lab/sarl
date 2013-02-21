@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
@@ -9,15 +9,15 @@ import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
  * SymbolicTypeKind is defined in
  * edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.
  */
-public abstract class SymbolicType extends CommonSymbolicObject implements
-		SymbolicTypeIF {
+public abstract class CommonSymbolicType extends CommonSymbolicObject implements
+		SymbolicType {
 
 	private SymbolicTypeKind kind;
 
 	/**
 	 * Constructs new SymbolicType object with given kind and ID number -1.
 	 */
-	SymbolicType(SymbolicTypeKind kind) {
+	CommonSymbolicType(SymbolicTypeKind kind) {
 		super(SymbolicObjectKind.TYPE);
 		assert kind != null;
 		this.kind = kind;
@@ -32,14 +32,14 @@ public abstract class SymbolicType extends CommonSymbolicObject implements
 	 *            a symbolic type of the same kind as this one
 	 * @return true iff they define the same type
 	 */
-	protected abstract boolean typeEquals(SymbolicType that);
+	protected abstract boolean typeEquals(CommonSymbolicType that);
 
 	@Override
 	public boolean intrinsicEquals(SymbolicObject object) {
 		if (this == object)
 			return true;
-		if (object instanceof SymbolicType) {
-			SymbolicType that = (SymbolicType) object;
+		if (object instanceof CommonSymbolicType) {
+			CommonSymbolicType that = (CommonSymbolicType) object;
 
 			if (kind != that.kind)
 				return false;

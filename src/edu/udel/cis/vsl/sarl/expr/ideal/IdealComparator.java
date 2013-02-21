@@ -3,9 +3,9 @@ package edu.udel.cis.vsl.sarl.expr.ideal;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 
 public class IdealComparator implements Comparator<NumericExpression> {
@@ -42,8 +42,8 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	public int compare(NumericExpression o1, NumericExpression o2) {
 		IdealExpression e1 = (IdealExpression) o1;
 		IdealExpression e2 = (IdealExpression) o2;
-		SymbolicTypeIF t1 = e1.type();
-		SymbolicTypeIF t2 = e2.type();
+		SymbolicType t1 = e1.type();
+		SymbolicType t2 = e2.type();
 
 		if (t1.isInteger()) {
 			if (t2.isInteger()) {
@@ -67,9 +67,9 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		if (result != 0)
 			return result;
 
-		Iterator<SymbolicExpressionIF> monomialIter1 = p1.termMap(idealFactory)
+		Iterator<SymbolicExpression> monomialIter1 = p1.termMap(idealFactory)
 				.iterator();
-		Iterator<SymbolicExpressionIF> monomialIter2 = p2.termMap(idealFactory)
+		Iterator<SymbolicExpression> monomialIter2 = p2.termMap(idealFactory)
 				.iterator();
 
 		while (monomialIter1.hasNext()) {
@@ -114,9 +114,9 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		if (result != 0)
 			return result;
 
-		Iterator<SymbolicExpressionIF> ppIter1 = m1.monicFactors(idealFactory)
+		Iterator<SymbolicExpression> ppIter1 = m1.monicFactors(idealFactory)
 				.iterator();
-		Iterator<SymbolicExpressionIF> ppIter2 = m2.monicFactors(idealFactory)
+		Iterator<SymbolicExpression> ppIter2 = m2.monicFactors(idealFactory)
 				.iterator();
 
 		while (ppIter1.hasNext()) {

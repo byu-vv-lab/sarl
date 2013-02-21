@@ -14,28 +14,28 @@ import cvc3.Rational;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
@@ -43,13 +43,13 @@ import edu.udel.cis.vsl.sarl.util.Pair;
  * Transforms a theorem proving query into the language of CVC3, invokes CVC3
  * through its JNI interface, and interprets the output.
  */
-public class CVC3TheoremProver implements TheoremProverIF {
+public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * The symbolic universe used for managing symbolic expressions. Initialized
 	 * by constructor and never changes.
 	 */
-	private SymbolicUniverseIF universe;
+	private SymbolicUniverse universe;
 
 	/** The number of calls to the valid method for this object. */
 	private int numValidCalls = 0;
@@ -87,13 +87,13 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * Mapping of SARL symbolic type to corresponding CVC3 type. Set in method
 	 * reset().
 	 */
-	private Map<SymbolicTypeIF, Type> typeMap;
+	private Map<SymbolicType, Type> typeMap;
 
 	/**
 	 * Mapping of SARL symbolic expression to corresponding CVC3 expresssion.
 	 * Set in method reset().
 	 */
-	private Map<SymbolicExpressionIF, Expr> expressionMap;
+	private Map<SymbolicExpression, Expr> expressionMap;
 
 	/**
 	 * Map from SARL expressions of funcional type to corresponding CVC3
@@ -102,7 +102,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
 	 * separate map is needed. Set in method reset().
 	 */
-	private Map<SymbolicExpressionIF, Op> functionMap;
+	private Map<SymbolicExpression, Op> functionMap;
 
 	/**
 	 * Mapping of integer division expressions. Since integer division and
@@ -122,7 +122,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * corresponding to the quotient, the second the CVC3 expression
 	 * corresponding to the modulus.
 	 */
-	private Map<Pair<SymbolicExpressionIF, SymbolicExpressionIF>, Pair<Expr, Expr>> integerDivisionMap;
+	private Map<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>> integerDivisionMap;
 
 	/**
 	 * Constructs new CVC3 theorem prover with given symbolic universe.
@@ -134,7 +134,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @param showProverQueries
 	 *            print the queries?
 	 */
-	CVC3TheoremProver(SymbolicUniverseIF universe) {
+	CVC3TheoremProver(SymbolicUniverse universe) {
 		if (universe == null) {
 			throw new RuntimeException("Null symbolic universe.");
 		} else {
@@ -195,12 +195,12 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 *            any symbolic type
 	 * @return true iff the type is an incomplete array type
 	 */
-	private boolean isBigArrayType(SymbolicTypeIF type) {
-		return type instanceof SymbolicArrayTypeIF
-				&& !((SymbolicArrayTypeIF) type).isComplete();
+	private boolean isBigArrayType(SymbolicType type) {
+		return type instanceof SymbolicArrayType
+				&& !((SymbolicArrayType) type).isComplete();
 	}
 
-	private boolean isBigArray(SymbolicExpressionIF expr) {
+	private boolean isBigArray(SymbolicExpression expr) {
 		return isBigArrayType(expr.type());
 	}
 
@@ -220,26 +220,26 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return vc.tupleSelectExpr(bigArray, 1);
 	}
 
-	private String selector(SymbolicUnionTypeIF unionType, int index) {
+	private String selector(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_extract_" + index;
 	}
 
-	private String constructor(SymbolicUnionTypeIF unionType, int index) {
+	private String constructor(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_inject_" + index;
 	}
 
 	private List<Expr> translateCollection(SymbolicCollection collection) {
 		List<Expr> result = new LinkedList<Expr>();
 
-		for (SymbolicExpressionIF expr : collection)
+		for (SymbolicExpression expr : collection)
 			result.add(expr == null ? null : translate(expr));
 		return result;
 	}
 
-	private List<Type> translateTypeSequence(SymbolicTypeSequenceIF sequence) {
+	private List<Type> translateTypeSequence(SymbolicTypeSequence sequence) {
 		List<Type> result = new LinkedList<Type>();
 
-		for (SymbolicTypeIF t : sequence)
+		for (SymbolicType t : sequence)
 			result.add(t == null ? null : translateType(t));
 		return result;
 	}
@@ -248,7 +248,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * Translates a symbolic expression of functional type. In CVC3, functions
 	 * have type Op; expressions have type Expr.
 	 */
-	private Op translateFunction(SymbolicExpressionIF expr) {
+	private Op translateFunction(SymbolicExpression expr) {
 		Op result = functionMap.get(expr);
 
 		if (result != null)
@@ -256,14 +256,14 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		switch (expr.operator()) {
 		case SYMBOLIC_CONSTANT:
 			result = vc.createOp(
-					((SymbolicConstantIF) expr).name().getString(),
+					((SymbolicConstant) expr).name().getString(),
 					this.translateType(expr.type()));
 			break;
 		case LAMBDA:
 			result = vc.lambdaExpr(
 					newSingletonList(translateSymbolicConstant(
-							(SymbolicConstantIF) expr.argument(0), true)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+							(SymbolicConstant) expr.argument(0), true)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		default:
 			throw new SARLInternalException(
@@ -273,17 +273,17 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return result;
 	}
 
-	private Expr translateConcrete(SymbolicExpressionIF expr) {
-		SymbolicTypeIF type = expr.type();
+	private Expr translateConcrete(SymbolicExpression expr) {
+		SymbolicType type = expr.type();
 		SymbolicTypeKind kind = type.typeKind();
 		SymbolicObject object = expr.argument(0);
 		Expr result;
 
 		switch (kind) {
 		case ARRAY: {
-			SymbolicExpressionIF extentExpression = ((SymbolicCompleteArrayTypeIF) type)
+			SymbolicExpression extentExpression = ((SymbolicCompleteArrayType) type)
 					.extent();
-			IntegerNumberIF extentNumber = (IntegerNumberIF) universe
+			IntegerNumber extentNumber = (IntegerNumber) universe
 					.extractNumber(extentExpression);
 			SymbolicSequence sequence = (SymbolicSequence) object;
 			int size = sequence.size();
@@ -319,7 +319,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * required if the symbolic constant is used as a bound variable in a
 	 * quantified (forall, exists) expression.
 	 */
-	private Expr translateSymbolicConstant(SymbolicConstantIF symbolicConstant,
+	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
 			boolean isBoundVariable) throws Cvc3Exception {
 		Type type = translateType(symbolicConstant.type());
 		String name = symbolicConstant.name().getString();
@@ -329,26 +329,26 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return result;
 	}
 
-	private Expr translateMultiply(SymbolicExpressionIF expr) {
+	private Expr translateMultiply(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
 		Expr result;
 
 		if (numArgs == 1) {
 			result = vc.ratExpr(1);
-			for (SymbolicExpressionIF operand : (SymbolicCollection) expr
+			for (SymbolicExpression operand : (SymbolicCollection) expr
 					.argument(0))
 				result = vc.multExpr(result, translate(operand));
 		} else if (numArgs == 2)
 			result = vc.multExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 		else
 			throw new SARLInternalException(
 					"Wrong number of arguments to multiply: " + expr);
 		return result;
 	}
 
-	private Expr translateOr(SymbolicExpressionIF expr) {
+	private Expr translateOr(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
 		Expr result;
 
@@ -357,8 +357,8 @@ public class CVC3TheoremProver implements TheoremProverIF {
 					.argument(0)));
 		else if (numArgs == 2)
 			result = vc.orExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 		else
 			throw new SARLInternalException("Wrong number of arguments to or: "
 					+ expr);
@@ -373,9 +373,9 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * FOR NOW, we assume all quantities are non-negative.
 	 **/
 	private Pair<Expr, Expr> getQuotientRemainderPair(
-			SymbolicExpressionIF numeratorExpression,
-			SymbolicExpressionIF denominatorExpression) throws Cvc3Exception {
-		Pair<SymbolicExpressionIF, SymbolicExpressionIF> key = new Pair<SymbolicExpressionIF, SymbolicExpressionIF>(
+			SymbolicExpression numeratorExpression,
+			SymbolicExpression denominatorExpression) throws Cvc3Exception {
+		Pair<SymbolicExpression, SymbolicExpression> key = new Pair<SymbolicExpression, SymbolicExpression>(
 				numeratorExpression, denominatorExpression);
 		Pair<Expr, Expr> value = integerDivisionMap.get(key);
 
@@ -428,11 +428,11 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @throws Cvc3Exception
 	 *             by CVC3
 	 */
-	private Expr translateIntegerModulo(SymbolicExpressionIF modExpression)
+	private Expr translateIntegerModulo(SymbolicExpression modExpression)
 			throws Cvc3Exception {
 		Pair<Expr, Expr> value = getQuotientRemainderPair(
-				(SymbolicExpressionIF) modExpression.argument(0),
-				(SymbolicExpressionIF) modExpression.argument(1));
+				(SymbolicExpression) modExpression.argument(0),
+				(SymbolicExpression) modExpression.argument(1));
 
 		return value.right;
 	}
@@ -449,10 +449,10 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 *             by CVC3
 	 */
 	private Expr translateIntegerDivision(
-			SymbolicExpressionIF quotientExpression) throws Cvc3Exception {
+			SymbolicExpression quotientExpression) throws Cvc3Exception {
 		Pair<Expr, Expr> value = getQuotientRemainderPair(
-				(SymbolicExpressionIF) quotientExpression.argument(0),
-				(SymbolicExpressionIF) quotientExpression.argument(1));
+				(SymbolicExpression) quotientExpression.argument(0),
+				(SymbolicExpression) quotientExpression.argument(1));
 
 		return value.left;
 	}
@@ -466,12 +466,12 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @throws Cvc3Exception
 	 *             by CVC3
 	 */
-	private Expr translateArrayRead(SymbolicExpressionIF expr)
+	private Expr translateArrayRead(SymbolicExpression expr)
 			throws Cvc3Exception {
-		SymbolicExpressionIF arrayExpression = (SymbolicExpressionIF) expr
+		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		Expr array = translate(arrayExpression);
-		Expr index = translate((SymbolicExpressionIF) expr.argument(1));
+		Expr index = translate((SymbolicExpression) expr.argument(1));
 		Expr result;
 
 		if (isBigArray(arrayExpression))
@@ -490,13 +490,13 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @throws Cvc3Exception
 	 *             by CVC3
 	 */
-	private Expr translateArrayWrite(SymbolicExpressionIF expr)
+	private Expr translateArrayWrite(SymbolicExpression expr)
 			throws Cvc3Exception {
-		SymbolicExpressionIF arrayExpression = (SymbolicExpressionIF) expr
+		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		Expr array = translate(arrayExpression);
-		Expr index = translate((SymbolicExpressionIF) expr.argument(1));
-		Expr value = translate((SymbolicExpressionIF) expr.argument(2));
+		Expr index = translate((SymbolicExpression) expr.argument(1));
+		Expr value = translate((SymbolicExpression) expr.argument(2));
 		Expr result = isBigArray(arrayExpression) ? bigArray(
 				bigArrayLength(array),
 				vc.writeExpr(bigArrayValue(array), index, value)) : vc
@@ -505,9 +505,9 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return result;
 	}
 
-	private Expr translateDenseArrayWrite(SymbolicExpressionIF expr)
+	private Expr translateDenseArrayWrite(SymbolicExpression expr)
 			throws Cvc3Exception {
-		SymbolicExpressionIF arrayExpression = (SymbolicExpressionIF) expr
+		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		boolean isBig = isBigArray(arrayExpression);
 		Expr origin = translate(arrayExpression);
@@ -526,12 +526,12 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return result;
 	}
 
-	private Expr translateQuantifier(SymbolicExpressionIF expr)
+	private Expr translateQuantifier(SymbolicExpression expr)
 			throws Cvc3Exception {
 		Expr variable = this.translateSymbolicConstant(
-				(SymbolicConstantIF) (expr.argument(0)), true);
+				(SymbolicConstant) (expr.argument(0)), true);
 		List<Expr> vars = new LinkedList<Expr>();
-		Expr predicate = translate((SymbolicExpressionIF) expr.argument(1));
+		Expr predicate = translate((SymbolicExpression) expr.argument(1));
 		SymbolicOperator kind = expr.operator();
 
 		vars.add(variable);
@@ -545,25 +545,25 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		}
 	}
 
-	private Expr processEquality(SymbolicTypeIF type1, SymbolicTypeIF type2,
+	private Expr processEquality(SymbolicType type1, SymbolicType type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
 		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
 			// length are equal and forall i (0<=i<length).a[i]=b[i].
-			SymbolicArrayTypeIF arrayType1 = (SymbolicArrayTypeIF) type1;
-			SymbolicArrayTypeIF arrayType2 = (SymbolicArrayTypeIF) type2;
+			SymbolicArrayType arrayType1 = (SymbolicArrayType) type1;
+			SymbolicArrayType arrayType2 = (SymbolicArrayType) type2;
 			Expr extent1, extent2, array1, array2, readExpr1, readExpr2;
 			Expr result, index, indexRangeExpr, elementEqualsExpr, forallExpr;
 
-			if (arrayType1 instanceof SymbolicCompleteArrayTypeIF) {
-				extent1 = translate(((SymbolicCompleteArrayTypeIF) arrayType1)
+			if (arrayType1 instanceof SymbolicCompleteArrayType) {
+				extent1 = translate(((SymbolicCompleteArrayType) arrayType1)
 						.extent());
 				array1 = cvcExpression1;
 			} else {
 				extent1 = bigArrayLength(cvcExpression1);
 				array1 = bigArrayValue(cvcExpression1);
 			}
-			if (arrayType2 instanceof SymbolicCompleteArrayTypeIF) {
-				extent2 = translate(((SymbolicCompleteArrayTypeIF) arrayType2)
+			if (arrayType2 instanceof SymbolicCompleteArrayType) {
+				extent2 = translate(((SymbolicCompleteArrayType) arrayType2)
 						.extent());
 				array2 = cvcExpression2;
 			} else {
@@ -587,14 +587,14 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		}
 	}
 
-	private Expr translateEquality(SymbolicExpressionIF expr)
+	private Expr translateEquality(SymbolicExpression expr)
 			throws Cvc3Exception {
-		SymbolicExpressionIF leftExpression = (SymbolicExpressionIF) expr
+		SymbolicExpression leftExpression = (SymbolicExpression) expr
 				.argument(0);
-		SymbolicExpressionIF rightExpression = (SymbolicExpressionIF) expr
+		SymbolicExpression rightExpression = (SymbolicExpression) expr
 				.argument(1);
-		SymbolicTypeIF type1 = leftExpression.type();
-		SymbolicTypeIF type2 = rightExpression.type();
+		SymbolicType type1 = leftExpression.type();
+		SymbolicType type2 = rightExpression.type();
 		Expr cvcExpression1 = translate(leftExpression);
 		Expr cvcExpression2 = translate(rightExpression);
 		Expr result = processEquality(type1, type2, cvcExpression1,
@@ -622,9 +622,9 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @param expr
 	 * @return
 	 */
-	private Expr translateUnionExtract(SymbolicExpressionIF expr) {
-		SymbolicExpressionIF arg = (SymbolicExpressionIF) expr.argument(1);
-		SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) arg.type();
+	private Expr translateUnionExtract(SymbolicExpression expr) {
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
 		int index = ((IntObject) expr.argument(0)).getInt();
 		String selector = selector(unionType, index);
 		Expr result = vc.datatypeSelExpr(selector, translate(arg));
@@ -642,10 +642,10 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @param expr
 	 * @return
 	 */
-	private Expr translateUnionInject(SymbolicExpressionIF expr) {
+	private Expr translateUnionInject(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
-		SymbolicExpressionIF arg = (SymbolicExpressionIF) expr.argument(1);
-		SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) expr.type();
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) expr.type();
 		String constructor = constructor(unionType, index);
 		List<Expr> argumentList = new LinkedList<Expr>();
 		Expr result;
@@ -664,10 +664,10 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @param expr
 	 * @return
 	 */
-	private Expr translateUnionTest(SymbolicExpressionIF expr) {
+	private Expr translateUnionTest(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
-		SymbolicExpressionIF arg = (SymbolicExpressionIF) expr.argument(1);
-		SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) arg.type();
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
 		String constructor = constructor(unionType, index);
 		Expr result = vc.datatypeTestExpr(constructor, translate(arg));
 
@@ -683,7 +683,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @throws Cvc3Exception
 	 *             by CVC3
 	 */
-	private Type translateType(SymbolicTypeIF type) throws Cvc3Exception {
+	private Type translateType(SymbolicType type) throws Cvc3Exception {
 		Type result = typeMap.get(type);
 
 		if (result != null)
@@ -704,33 +704,33 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			break;
 		case ARRAY:
 			result = vc.arrayType(vc.intType(),
-					translateType(((SymbolicArrayTypeIF) type).elementType()));
-			if (!(type instanceof SymbolicCompleteArrayTypeIF))
+					translateType(((SymbolicArrayType) type).elementType()));
+			if (!(type instanceof SymbolicCompleteArrayType))
 				// tuple:<extent,array>
 				result = vc.tupleType(vc.intType(), result);
 			break;
 		case TUPLE:
 			result = vc
-					.tupleType(translateTypeSequence(((SymbolicTupleTypeIF) type)
+					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
 							.sequence()));
 			break;
 		case FUNCTION:
 			result = vc
 					.funType(
-							translateTypeSequence(((SymbolicFunctionTypeIF) type)
+							translateTypeSequence(((SymbolicFunctionType) type)
 									.inputTypes()),
-							translateType(((SymbolicFunctionTypeIF) type)
+							translateType(((SymbolicFunctionType) type)
 									.outputType()));
 			break;
 		case UNION: {
-			SymbolicUnionTypeIF unionType = (SymbolicUnionTypeIF) type;
+			SymbolicUnionType unionType = (SymbolicUnionType) type;
 			List<String> constructors = new LinkedList<String>();
 			List<String> selectors = new LinkedList<String>();
 			List<Type> types = new LinkedList<Type>();
-			SymbolicTypeSequenceIF sequence = unionType.sequence();
+			SymbolicTypeSequence sequence = unionType.sequence();
 			int index = 0;
 
-			for (SymbolicTypeIF t : sequence) {
+			for (SymbolicType t : sequence) {
 				constructors.add(constructor(unionType, index));
 				selectors.add(selector(unionType, index));
 				types.add(translateType(t));
@@ -747,7 +747,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		return result;
 	}
 
-	private Expr translate(SymbolicExpressionIF expr) {
+	private Expr translate(SymbolicExpression expr) {
 		Expr result = expressionMap.get(expr);
 		int numArgs;
 
@@ -758,8 +758,8 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		case ADD:
 			if (numArgs == 2)
 				result = vc.plusExpr(
-						translate((SymbolicExpressionIF) expr.argument(0)),
-						translate((SymbolicExpressionIF) expr.argument(1)));
+						translate((SymbolicExpression) expr.argument(0)),
+						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
 						.plusExpr(translateCollection((SymbolicCollection) expr
@@ -771,8 +771,8 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		case AND:
 			if (numArgs == 2)
 				result = vc.andExpr(
-						translate((SymbolicExpressionIF) expr.argument(0)),
-						translate((SymbolicExpressionIF) expr.argument(1)));
+						translate((SymbolicExpression) expr.argument(0)),
+						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
 						.andExpr(translateCollection((SymbolicCollection) expr
@@ -783,18 +783,18 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			break;
 		case APPLY:
 			result = vc.funExpr(
-					translateFunction((SymbolicExpressionIF) expr.argument(0)),
+					translateFunction((SymbolicExpression) expr.argument(0)),
 					translateCollection((SymbolicCollection) expr.argument(1)));
 			break;
 		case ARRAY_LAMBDA: {
-			SymbolicExpressionIF function = (SymbolicExpressionIF) expr
+			SymbolicExpression function = (SymbolicExpression) expr
 					.argument(0);
 			SymbolicOperator op0 = function.operator();
 			Expr var, body;
 
 			if (op0 == SymbolicOperator.LAMBDA) {
-				var = translate((SymbolicConstantIF) function.argument(0));
-				body = translate((SymbolicExpressionIF) function.argument(1));
+				var = translate((SymbolicConstant) function.argument(0));
+				body = translate((SymbolicExpression) function.argument(1));
 			} else {
 				// create new SymbolicConstantIF _SARL_i
 				// create new APPLY expression apply(f,i)
@@ -812,24 +812,24 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			result = translateArrayWrite(expr);
 			break;
 		case CAST:
-			result = this.translate((SymbolicExpressionIF) expr.argument(0));
+			result = this.translate((SymbolicExpression) expr.argument(0));
 			break;
 		case CONCRETE:
 			result = translateConcrete(expr);
 			break;
 		case COND:
 			result = vc.iteExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)),
-					translate((SymbolicExpressionIF) expr.argument(2)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)),
+					translate((SymbolicExpression) expr.argument(2)));
 			break;
 		case DENSE_ARRAY_WRITE:
 			result = translateDenseArrayWrite(expr);
 			break;
 		case DIVIDE: // real division
 			result = vc.divideExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		case EQUALS:
 			result = translateEquality(expr);
@@ -844,18 +844,18 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			result = translateIntegerDivision(expr);
 			break;
 		case LENGTH:
-			result = bigArrayLength(translate((SymbolicExpressionIF) expr
+			result = bigArrayLength(translate((SymbolicExpression) expr
 					.argument(0)));
 			break;
 		case LESS_THAN:
 			result = vc.ltExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		case LESS_THAN_EQUALS:
 			result = vc.leExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		case MODULO:
 			result = translateIntegerModulo(expr);
@@ -864,14 +864,14 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			result = translateMultiply(expr);
 			break;
 		case NEGATIVE:
-			result = vc.uminusExpr(translate((SymbolicExpressionIF) expr
+			result = vc.uminusExpr(translate((SymbolicExpression) expr
 					.argument(0)));
 			break;
 		case NEQ:
 			result = vc.notExpr(translateEquality(expr));
 			break;
 		case NOT:
-			result = vc.notExpr(translate((SymbolicExpressionIF) expr
+			result = vc.notExpr(translate((SymbolicExpression) expr
 					.argument(0)));
 			break;
 		case OR:
@@ -879,27 +879,27 @@ public class CVC3TheoremProver implements TheoremProverIF {
 			break;
 		case POWER:
 			result = vc.powExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		case SUBTRACT:
 			result = vc.minusExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
-					translate((SymbolicExpressionIF) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		case SYMBOLIC_CONSTANT:
-			result = translateSymbolicConstant((SymbolicConstantIF) expr, false);
+			result = translateSymbolicConstant((SymbolicConstant) expr, false);
 			break;
 		case TUPLE_READ:
 			result = vc.tupleSelectExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(0)),
 					((IntObject) expr.argument(1)).getInt());
 			break;
 		case TUPLE_WRITE:
 			result = vc.tupleUpdateExpr(
-					translate((SymbolicExpressionIF) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(0)),
 					((IntObject) expr.argument(1)).getInt(),
-					translate((SymbolicExpressionIF) expr.argument(2)));
+					translate((SymbolicExpression) expr.argument(2)));
 			break;
 		case UNION_EXTRACT:
 			result = translateUnionExtract(expr);
@@ -937,15 +937,15 @@ public class CVC3TheoremProver implements TheoremProverIF {
 		}
 		boundVariableCounter = 0;
 		auxVariableCounter = 0;
-		typeMap = new LinkedHashMap<SymbolicTypeIF, Type>();
-		expressionMap = new LinkedHashMap<SymbolicExpressionIF, Expr>();
-		functionMap = new LinkedHashMap<SymbolicExpressionIF, Op>();
-		integerDivisionMap = new LinkedHashMap<Pair<SymbolicExpressionIF, SymbolicExpressionIF>, Pair<Expr, Expr>>();
+		typeMap = new LinkedHashMap<SymbolicType, Type>();
+		expressionMap = new LinkedHashMap<SymbolicExpression, Expr>();
+		functionMap = new LinkedHashMap<SymbolicExpression, Op>();
+		integerDivisionMap = new LinkedHashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
 	}
 
 	@Override
-	public ResultType valid(SymbolicExpressionIF symbolicAssumption,
-			SymbolicExpressionIF symbolicPredicate) {
+	public ResultType valid(SymbolicExpression symbolicAssumption,
+			SymbolicExpression symbolicPredicate) {
 		QueryResult result = null;
 
 		numValidCalls++;
@@ -1011,7 +1011,7 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	}
 
 	@Override
-	public SymbolicUniverseIF universe() {
+	public SymbolicUniverse universe() {
 		return universe;
 	}
 
@@ -1042,8 +1042,8 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	}
 
 	@Override
-	public Map<SymbolicConstantIF, SymbolicExpressionIF> findModel(
-			SymbolicExpressionIF context) throws TheoremProverException {
+	public Map<SymbolicConstant, SymbolicExpression> findModel(
+			SymbolicExpression context) throws TheoremProverException {
 		throw new TheoremProverException("Unimplemented");
 	}
 

@@ -3,7 +3,7 @@ package edu.udel.cis.vsl.sarl.expr.ideal;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A numeric primitive expression. Other class may want to extend this.
@@ -23,22 +23,22 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	 */
 	private SymbolicMap monicFactors = null;
 
-	public NumericPrimitive(SymbolicOperator operator, SymbolicTypeIF type,
+	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments) {
 		super(operator, type, arguments);
 	}
 
-	public NumericPrimitive(SymbolicOperator operator, SymbolicTypeIF type,
+	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0) {
 		super(operator, type, arg0);
 	}
 
-	public NumericPrimitive(SymbolicOperator operator, SymbolicTypeIF type,
+	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1) {
 		super(operator, type, arg0, arg1);
 	}
 
-	public NumericPrimitive(SymbolicOperator operator, SymbolicTypeIF type,
+	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
 		super(operator, type, arg0, arg1, arg2);
 	}

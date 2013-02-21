@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.IF.prove;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.IntervalIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
 
 
 /**
@@ -26,19 +26,19 @@ import edu.udel.cis.vsl.sarl.IF.number.IntervalIF;
  * 
  * Etc.
  */
-public interface SimplifierIF {
+public interface Simplifier {
 
 	/** Returns the symbolic universe associated to this simplifier */
-	SymbolicUniverseIF universe();
+	SymbolicUniverse universe();
 
 	/** Returns the simplified assumption */
-	SymbolicExpressionIF newAssumption();
+	SymbolicExpression newAssumption();
 
 	/**
 	 * Returns the simplified version of the given expression (under the
 	 * assumption).
 	 */
-	SymbolicExpressionIF simplify(SymbolicExpressionIF expression);
+	SymbolicExpression simplify(SymbolicExpression expression);
 
 	/**
 	 * If the assumption can be represented as a simple interval constraint,
@@ -47,5 +47,5 @@ public interface SimplifierIF {
 	 * case, this returns the interval [A,B] (or (A,B], or, ...). Else returns
 	 * null.
 	 */
-	IntervalIF assumptionAsInterval(SymbolicConstantIF symbolicConstant);
+	Interval assumptionAsInterval(SymbolicConstant symbolicConstant);
 }

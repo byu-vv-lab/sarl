@@ -7,21 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonObjectFactory implements ObjectFactory {
 
-	private NumberFactoryIF numberFactory;
+	private NumberFactory numberFactory;
 
 	private Map<SymbolicObject, SymbolicObject> objectMap = new HashMap<SymbolicObject, SymbolicObject>();
 
@@ -36,7 +36,7 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	private ObjectComparator comparator;
 
-	public CommonObjectFactory(NumberFactoryIF numberFactory) {
+	public CommonObjectFactory(NumberFactory numberFactory) {
 		this.numberFactory = numberFactory;
 		this.comparator = new ObjectComparator();
 		this.trueObj = (BooleanObject) canonic(new CommonBooleanObject(true));
@@ -54,11 +54,11 @@ public class CommonObjectFactory implements ObjectFactory {
 	}
 
 	@Override
-	public NumberFactoryIF numberFactory() {
+	public NumberFactory numberFactory() {
 		return numberFactory;
 	}
 
-	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
+	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		comparator.setExpressionComparator(c);
 	}
 
@@ -66,11 +66,11 @@ public class CommonObjectFactory implements ObjectFactory {
 		comparator.setCollectionComparator(c);
 	}
 
-	public void setTypeComparator(Comparator<SymbolicTypeIF> c) {
+	public void setTypeComparator(Comparator<SymbolicType> c) {
 		comparator.setTypeComparator(c);
 	}
 
-	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequenceIF> c) {
+	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		comparator.setTypeSequenceComparator(c);
 	}
 
@@ -108,12 +108,12 @@ public class CommonObjectFactory implements ObjectFactory {
 		}
 	}
 
-	public SymbolicTypeIF canonic(SymbolicTypeIF type) {
-		return (SymbolicTypeIF) canonic((SymbolicObject) type);
+	public SymbolicType canonic(SymbolicType type) {
+		return (SymbolicType) canonic((SymbolicObject) type);
 	}
 
-	public SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
-		return (SymbolicExpressionIF) canonic((SymbolicObject) expression);
+	public SymbolicExpression canonic(SymbolicExpression expression) {
+		return (SymbolicExpression) canonic((SymbolicObject) expression);
 	}
 
 	public BooleanObject trueObj() {
@@ -148,7 +148,7 @@ public class CommonObjectFactory implements ObjectFactory {
 		return oneRealObj;
 	}
 
-	public NumberObject numberObject(NumberIF value) {
+	public NumberObject numberObject(Number value) {
 		return new CommonNumberObject(value);
 	}
 

@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 public interface SymbolicSequence extends SymbolicCollection {
 
@@ -9,7 +9,7 @@ public interface SymbolicSequence extends SymbolicCollection {
 	/**
 	 * The arguments of a sequence expression are always symbolic expressions.
 	 */
-	SymbolicExpressionIF get(int index);
+	SymbolicExpression get(int index);
 
 	/**
 	 * Appends an element to the end of a sequence.
@@ -19,7 +19,7 @@ public interface SymbolicSequence extends SymbolicCollection {
 	 * @return a sequence identical to the given one except with the given
 	 *         element added to the end
 	 */
-	SymbolicSequence add(SymbolicExpressionIF element);
+	SymbolicSequence add(SymbolicExpression element);
 
 	/**
 	 * Sets the element at specified position. Sequence must have length at
@@ -32,7 +32,7 @@ public interface SymbolicSequence extends SymbolicCollection {
 	 * @return a sequence identical to old except that element in position index
 	 *         now has value element
 	 */
-	SymbolicSequence set(int index, SymbolicExpressionIF element);
+	SymbolicSequence set(int index, SymbolicExpression element);
 
 	/**
 	 * Removes the element at position index, shifting all subsequent elements
@@ -60,7 +60,7 @@ public interface SymbolicSequence extends SymbolicCollection {
 	 * @return a new sequence, possibly extended with filler, in which element
 	 *         at position index is value
 	 */
-	SymbolicSequence setExtend(int index, SymbolicExpressionIF value,
-			SymbolicExpressionIF filler);
+	SymbolicSequence setExtend(int index, SymbolicExpression value,
+			SymbolicExpression filler);
 
 }

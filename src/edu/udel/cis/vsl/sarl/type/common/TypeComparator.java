@@ -3,35 +3,35 @@ package edu.udel.cis.vsl.sarl.type.common;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
-public class TypeComparator implements Comparator<SymbolicTypeIF> {
+public class TypeComparator implements Comparator<SymbolicType> {
 
-	private Comparator<SymbolicTypeSequenceIF> typeSequenceComparator;
+	private Comparator<SymbolicTypeSequence> typeSequenceComparator;
 
-	private Comparator<SymbolicExpressionIF> expressionComparator;
+	private Comparator<SymbolicExpression> expressionComparator;
 
 	public TypeComparator() {
 
 	}
 
-	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequenceIF> c) {
+	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		typeSequenceComparator = c;
 	}
 
-	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
+	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		expressionComparator = c;
 	}
 
-	public Comparator<SymbolicExpressionIF> expressionComparator() {
+	public Comparator<SymbolicExpression> expressionComparator() {
 		return expressionComparator;
 	}
 
 	@Override
-	public int compare(SymbolicTypeIF o1, SymbolicTypeIF o2) {
+	public int compare(SymbolicType o1, SymbolicType o2) {
 		SymbolicTypeKind kind = o1.typeKind();
 		int result = kind.compareTo(o2.typeKind());
 
@@ -43,8 +43,8 @@ public class TypeComparator implements Comparator<SymbolicTypeIF> {
 		case REAL:
 			return 0;
 		case ARRAY: {
-			SymbolicArrayType t1 = (SymbolicArrayType) o1;
-			SymbolicArrayType t2 = (SymbolicArrayType) o2;
+			CommonSymbolicArrayType t1 = (CommonSymbolicArrayType) o1;
+			CommonSymbolicArrayType t2 = (CommonSymbolicArrayType) o2;
 
 			result = compare(t1.elementType(), t2.elementType());
 			if (result != 0)
@@ -52,15 +52,15 @@ public class TypeComparator implements Comparator<SymbolicTypeIF> {
 			else {
 				if (t1.isComplete())
 					return t2.isComplete() ? expressionComparator.compare(
-							((SymbolicCompleteArrayType) t1).extent(),
-							((SymbolicCompleteArrayType) t2).extent()) : -1;
+							((CommonSymbolicCompleteArrayType) t1).extent(),
+							((CommonSymbolicCompleteArrayType) t2).extent()) : -1;
 				else
 					return t2.isComplete() ? 1 : 0;
 			}
 		}
 		case FUNCTION: {
-			SymbolicFunctionType t1 = (SymbolicFunctionType) o1;
-			SymbolicFunctionType t2 = (SymbolicFunctionType) o2;
+			CommonSymbolicFunctionType t1 = (CommonSymbolicFunctionType) o1;
+			CommonSymbolicFunctionType t2 = (CommonSymbolicFunctionType) o2;
 
 			result = typeSequenceComparator.compare(t1.inputTypes(),
 					t2.inputTypes());
@@ -69,8 +69,8 @@ public class TypeComparator implements Comparator<SymbolicTypeIF> {
 			return compare(t1.outputType(), t2.outputType());
 		}
 		case TUPLE: {
-			SymbolicTupleType t1 = (SymbolicTupleType) o1;
-			SymbolicTupleType t2 = (SymbolicTupleType) o2;
+			CommonSymbolicTupleType t1 = (CommonSymbolicTupleType) o1;
+			CommonSymbolicTupleType t2 = (CommonSymbolicTupleType) o2;
 
 			result = t1.name().compareTo(t2.name());
 			if (result != 0)
@@ -78,8 +78,8 @@ public class TypeComparator implements Comparator<SymbolicTypeIF> {
 			return typeSequenceComparator.compare(t1.sequence(), t2.sequence());
 		}
 		case UNION: {
-			SymbolicUnionType t1 = (SymbolicUnionType) o1;
-			SymbolicUnionType t2 = (SymbolicUnionType) o2;
+			CommonSymbolicUnionType t1 = (CommonSymbolicUnionType) o1;
+			CommonSymbolicUnionType t2 = (CommonSymbolicUnionType) o2;
 
 			result = t1.name().compareTo(t2.name());
 			if (result != 0)

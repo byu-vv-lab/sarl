@@ -4,19 +4,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicUnionType extends SymbolicType implements
-		SymbolicUnionTypeIF {
+public class CommonSymbolicUnionType extends CommonSymbolicType implements
+		SymbolicUnionType {
 
-	private SymbolicTypeSequenceIF sequence;
+	private SymbolicTypeSequence sequence;
 
 	private StringObject name;
 
-	private Map<SymbolicTypeIF, Integer> indexMap = new LinkedHashMap<SymbolicTypeIF, Integer>();
+	private Map<SymbolicType, Integer> indexMap = new LinkedHashMap<SymbolicType, Integer>();
 
 	/**
 	 * The elements of the sequence must be unique, i.e., no repetitions.
@@ -24,14 +24,14 @@ public class SymbolicUnionType extends SymbolicType implements
 	 * @param name
 	 * @param sequence
 	 */
-	SymbolicUnionType(StringObject name, SymbolicTypeSequenceIF sequence) {
+	CommonSymbolicUnionType(StringObject name, SymbolicTypeSequence sequence) {
 		super(SymbolicTypeKind.TUPLE);
 		assert sequence != null;
 
 		int n = sequence.numTypes();
 
 		for (int i = 0; i < n; i++) {
-			SymbolicTypeIF type1 = sequence.getType(i);
+			SymbolicType type1 = sequence.getType(i);
 			Integer index = indexMap.get(type1);
 
 			if (index != null)
@@ -46,8 +46,8 @@ public class SymbolicUnionType extends SymbolicType implements
 	}
 
 	@Override
-	protected boolean typeEquals(SymbolicType thatType) {
-		SymbolicUnionType that = (SymbolicUnionType) thatType;
+	protected boolean typeEquals(CommonSymbolicType thatType) {
+		CommonSymbolicUnionType that = (CommonSymbolicUnionType) thatType;
 
 		return name.equals(that.name) && sequence.equals(that.sequence);
 	}
@@ -69,20 +69,20 @@ public class SymbolicUnionType extends SymbolicType implements
 	}
 
 	@Override
-	public SymbolicTypeSequenceIF sequence() {
+	public SymbolicTypeSequence sequence() {
 		return sequence;
 	}
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 		if (!sequence.isCanonic())
-			sequence = (SymbolicTypeSequence) factory.canonic(sequence);
+			sequence = (CommonSymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
 	}
 
 	@Override
-	public Integer indexOfType(SymbolicTypeIF type) {
+	public Integer indexOfType(SymbolicType type) {
 		return indexMap.get(type);
 	}
 }

@@ -1,17 +1,17 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicCompleteArrayType extends SymbolicArrayType implements
-		SymbolicCompleteArrayTypeIF {
+public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType implements
+		SymbolicCompleteArrayType {
 
-	private SymbolicExpressionIF extent;
+	private SymbolicExpression extent;
 
-	SymbolicCompleteArrayType(SymbolicTypeIF elementType,
-			SymbolicExpressionIF extent) {
+	CommonSymbolicCompleteArrayType(SymbolicType elementType,
+			SymbolicExpression extent) {
 		super(elementType);
 		assert extent != null;
 		this.extent = extent;
@@ -28,7 +28,7 @@ public class SymbolicCompleteArrayType extends SymbolicArrayType implements
 	}
 
 	@Override
-	public SymbolicExpressionIF extent() {
+	public SymbolicExpression extent() {
 		return extent;
 	}
 

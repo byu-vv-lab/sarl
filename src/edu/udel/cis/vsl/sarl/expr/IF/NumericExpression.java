@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.expr.IF;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
  * Marker interface for an expression of numeric type (integer or real type).
@@ -11,6 +11,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
  * @author siegel
  * 
  */
-public interface NumericExpression extends SymbolicExpressionIF {
+public interface NumericExpression extends SymbolicExpression {
 
 }

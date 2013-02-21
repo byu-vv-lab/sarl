@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.expr.IF;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 
-public interface NumericSymbolicConstant extends SymbolicConstantIF,
+public interface NumericSymbolicConstant extends SymbolicConstant,
 		NumericExpression {
 
 }

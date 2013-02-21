@@ -1,11 +1,11 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 
 public class CVC3TheoremProverFactory {
-	public static TheoremProverIF newCVC3TheoremProver(
-			SymbolicUniverseIF universe) {
+	public static TheoremProver newCVC3TheoremProver(
+			SymbolicUniverse universe) {
 		return new CVC3TheoremProver(universe);
 	}
 }

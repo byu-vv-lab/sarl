@@ -4,34 +4,34 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicTypeSequence extends CommonSymbolicObject implements
-		SymbolicTypeSequenceIF {
+public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
+		SymbolicTypeSequence {
 
-	private ArrayList<SymbolicTypeIF> elements;
+	private ArrayList<SymbolicType> elements;
 
-	SymbolicTypeSequence(Iterable<SymbolicTypeIF> types) {
+	CommonSymbolicTypeSequence(Iterable<SymbolicType> types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
-		elements = new ArrayList<SymbolicTypeIF>();
-		for (SymbolicTypeIF type : types) {
+		elements = new ArrayList<SymbolicType>();
+		for (SymbolicType type : types) {
 			elements.add(type);
 		}
 	}
 
-	SymbolicTypeSequence(SymbolicTypeIF[] types) {
+	CommonSymbolicTypeSequence(SymbolicType[] types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
-		elements = new ArrayList<SymbolicTypeIF>(types.length);
-		for (SymbolicTypeIF type : types) {
+		elements = new ArrayList<SymbolicType>(types.length);
+		for (SymbolicType type : types) {
 			elements.add(type);
 		}
 	}
 
 	@Override
-	public Iterator<SymbolicTypeIF> iterator() {
+	public Iterator<SymbolicType> iterator() {
 		return elements.iterator();
 	}
 
@@ -41,14 +41,14 @@ public class SymbolicTypeSequence extends CommonSymbolicObject implements
 	}
 
 	@Override
-	public SymbolicTypeIF getType(int index) {
+	public SymbolicType getType(int index) {
 		return elements.get(index);
 	}
 
 	@Override
 	protected boolean intrinsicEquals(SymbolicObject object) {
-		if (object instanceof SymbolicTypeSequence) {
-			return elements.equals(((SymbolicTypeSequence) object).elements);
+		if (object instanceof CommonSymbolicTypeSequence) {
+			return elements.equals(((CommonSymbolicTypeSequence) object).elements);
 		}
 		return false;
 	}
@@ -78,7 +78,7 @@ public class SymbolicTypeSequence extends CommonSymbolicObject implements
 		int numElements = elements.size();
 
 		for (int i = 0; i < numElements; i++) {
-			SymbolicTypeIF type = elements.get(i);
+			SymbolicType type = elements.get(i);
 
 			if (!type.isCanonic())
 				elements.set(i, factory.canonic(type));

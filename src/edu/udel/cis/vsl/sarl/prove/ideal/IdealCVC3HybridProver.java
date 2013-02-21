@@ -3,12 +3,12 @@ package edu.udel.cis.vsl.sarl.prove.ideal;
 import java.io.PrintStream;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 
 /**
@@ -17,13 +17,13 @@ import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
  * not yield a conclusive result, it then attempts the CVC3 prover (which is
  * much more expensive).
  */
-public class IdealCVC3HybridProver implements TheoremProverIF {
+public class IdealCVC3HybridProver implements TheoremProver {
 
-	private SymbolicUniverseIF universe;
+	private SymbolicUniverse universe;
 
-	private TheoremProverIF simpleProver, cvc3Prover;
+	private TheoremProver simpleProver, cvc3Prover;
 
-	public IdealCVC3HybridProver(SymbolicUniverseIF universe) {
+	public IdealCVC3HybridProver(SymbolicUniverse universe) {
 		simpleProver = new SimpleIdealProver(universe);
 		cvc3Prover = CVC3TheoremProverFactory.newCVC3TheoremProver(universe);
 		this.universe = universe;
@@ -39,12 +39,12 @@ public class IdealCVC3HybridProver implements TheoremProverIF {
 		cvc3Prover.reset();
 	}
 
-	public SymbolicUniverseIF universe() {
+	public SymbolicUniverse universe() {
 		return universe;
 	}
 
-	public ResultType valid(SymbolicExpressionIF assumption,
-			SymbolicExpressionIF expr) {
+	public ResultType valid(SymbolicExpression assumption,
+			SymbolicExpression expr) {
 		ResultType result = simpleProver.valid(assumption, expr);
 
 		if (result == ResultType.MAYBE) {
@@ -53,8 +53,8 @@ public class IdealCVC3HybridProver implements TheoremProverIF {
 		return result;
 	}
 
-	public Map<SymbolicConstantIF, SymbolicExpressionIF> findModel(
-			SymbolicExpressionIF context) throws TheoremProverException {
+	public Map<SymbolicConstant, SymbolicExpression> findModel(
+			SymbolicExpression context) throws TheoremProverException {
 		return cvc3Prover.findModel(context);
 	}
 

@@ -1,19 +1,19 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicFunctionType extends SymbolicType implements
-		SymbolicFunctionTypeIF {
+public class CommonSymbolicFunctionType extends CommonSymbolicType implements
+		SymbolicFunctionType {
 
-	private SymbolicTypeSequenceIF inputTypes;
+	private SymbolicTypeSequence inputTypes;
 
-	private SymbolicTypeIF outputType;
+	private SymbolicType outputType;
 
-	SymbolicFunctionType(SymbolicTypeSequenceIF inputTypes,
-			SymbolicTypeIF outputType) {
+	CommonSymbolicFunctionType(SymbolicTypeSequence inputTypes,
+			SymbolicType outputType) {
 		super(SymbolicTypeKind.FUNCTION);
 		assert inputTypes != null;
 		assert outputType != null;
@@ -22,8 +22,8 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	protected boolean typeEquals(SymbolicType thatType) {
-		SymbolicFunctionType that = (SymbolicFunctionType) thatType;
+	protected boolean typeEquals(CommonSymbolicType thatType) {
+		CommonSymbolicFunctionType that = (CommonSymbolicFunctionType) thatType;
 
 		return that.outputType.equals(outputType)
 				&& that.inputTypes.equals(inputTypes);
@@ -36,7 +36,7 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	public SymbolicTypeIF outputType() {
+	public SymbolicType outputType() {
 		return outputType;
 	}
 
@@ -46,14 +46,14 @@ public class SymbolicFunctionType extends SymbolicType implements
 	}
 
 	@Override
-	public SymbolicTypeSequenceIF inputTypes() {
+	public SymbolicTypeSequence inputTypes() {
 		return inputTypes;
 	}
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 		if (!inputTypes.isCanonic())
-			inputTypes = (SymbolicTypeSequenceIF) factory.canonic(inputTypes);
+			inputTypes = (SymbolicTypeSequence) factory.canonic(inputTypes);
 		if (!outputType.isCanonic())
 			outputType = factory.canonic(outputType);
 	}

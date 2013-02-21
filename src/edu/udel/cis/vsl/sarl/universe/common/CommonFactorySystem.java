@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
@@ -63,7 +63,7 @@ public class CommonFactorySystem implements FactorySystem {
 	}
 
 	@Override
-	public NumberFactoryIF numberFactory() {
+	public NumberFactory numberFactory() {
 		return objectFactory.numberFactory();
 	}
 

@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
  * A non-trivial polynomial is the sum of at least 2 monomials with different
@@ -83,7 +83,7 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 		StringBuffer buffer = new StringBuffer();
 		boolean first = true;
 
-		for (SymbolicExpressionIF expr : termMap()) {
+		for (SymbolicExpression expr : termMap()) {
 			if (first)
 				first = false;
 			else
@@ -102,7 +102,7 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	public int degree() {
 		if (degree < 0) {
 			degree = 0;
-			for (SymbolicExpressionIF expr : termMap().keys()) {
+			for (SymbolicExpression expr : termMap().keys()) {
 				int termDegree = ((Monic) expr).degree();
 
 				if (termDegree > degree)

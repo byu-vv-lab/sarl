@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.expr.common;
 
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 
 /**
@@ -17,11 +17,11 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
  * @author siegel
  * 
  */
-public class ExpressionComparator implements Comparator<SymbolicExpressionIF> {
+public class ExpressionComparator implements Comparator<SymbolicExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;
 
-	private Comparator<SymbolicTypeIF> typeComparator;
+	private Comparator<SymbolicType> typeComparator;
 
 	private Comparator<NumericExpression> numericComparator;
 
@@ -33,7 +33,7 @@ public class ExpressionComparator implements Comparator<SymbolicExpressionIF> {
 		objectComparator = c;
 	}
 
-	public void setTypeComparator(Comparator<SymbolicTypeIF> c) {
+	public void setTypeComparator(Comparator<SymbolicType> c) {
 		typeComparator = c;
 	}
 
@@ -41,7 +41,7 @@ public class ExpressionComparator implements Comparator<SymbolicExpressionIF> {
 		return objectComparator;
 	}
 
-	public Comparator<SymbolicTypeIF> typeComparator() {
+	public Comparator<SymbolicType> typeComparator() {
 		return typeComparator;
 	}
 
@@ -55,9 +55,9 @@ public class ExpressionComparator implements Comparator<SymbolicExpressionIF> {
 	 * 
 	 */
 	@Override
-	public int compare(SymbolicExpressionIF o1, SymbolicExpressionIF o2) {
-		SymbolicTypeIF t1 = o1.type();
-		SymbolicTypeIF t2 = o2.type();
+	public int compare(SymbolicExpression o1, SymbolicExpression o2) {
+		SymbolicType t1 = o1.type();
+		SymbolicType t2 = o2.type();
 
 		if (t1.isNumeric()) {
 			if (t2.isNumeric())

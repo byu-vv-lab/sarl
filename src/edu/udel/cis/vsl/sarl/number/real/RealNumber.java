@@ -1,15 +1,15 @@
 package edu.udel.cis.vsl.sarl.number.real;
 
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 
-public abstract class RealNumber implements NumberIF {
+public abstract class RealNumber implements Number {
 
 	/**
 	 * Order is: all real integers, followed by all real rationals, followed by
 	 * everything else.
 	 */
 	@Override
-	public int compareTo(NumberIF o) {
+	public int compareTo(Number o) {
 		if (this instanceof RealInteger) {
 			if (o instanceof RealInteger) {
 				return ((RealInteger) this).value().compareTo(

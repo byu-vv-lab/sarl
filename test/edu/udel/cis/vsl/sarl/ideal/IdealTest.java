@@ -9,11 +9,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumberIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.number.RationalNumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
@@ -28,15 +28,15 @@ import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 public class IdealTest {
 
 	private static PrintStream out = System.out;
-	private NumberFactoryIF numberFactory;
+	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
 	// private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 
-	private RationalNumberIF n1; // 3/2
-	private RationalNumberIF n2; // -1/4
-	private RationalNumberIF n3; // 5/4
+	private RationalNumber n1; // 3/2
+	private RationalNumber n2; // -1/4
+	private RationalNumber n3; // 5/4
 	private Constant c1; // real constant 3/2
 	private Constant c2; // real constant -1/4
 	private Constant c10; // int constant 10
@@ -73,7 +73,7 @@ public class IdealTest {
 	@Test
 	public void constantCreation() {
 		out.println("constantCreation: " + c10);
-		assertEquals(10, ((IntegerNumberIF) c10.number()).intValue());
+		assertEquals(10, ((IntegerNumber) c10.number()).intValue());
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class IdealTest {
 	@Test
 	public void constantMultiply() {
 		Constant result = (Constant) idealFactory.multiply(c1, c2);
-		RationalNumberIF expected = numberFactory.rational("-.375");
+		RationalNumber expected = numberFactory.rational("-.375");
 
 		out.println("constantMultiply: " + c1 + " * " + c2 + " = " + result);
 		assertEquals(expected, result.number());
@@ -102,7 +102,7 @@ public class IdealTest {
 
 	@Test
 	public void symbolicConstantEquality() {
-		SymbolicConstantIF x2 = idealFactory.newNumericSymbolicConstant(
+		SymbolicConstant x2 = idealFactory.newNumericSymbolicConstant(
 				objectFactory.stringObject("X"), typeFactory.integerType());
 
 		assertEquals(x, x2);
@@ -115,7 +115,7 @@ public class IdealTest {
 
 	@Test
 	public void symbolicConstantInequality2() {
-		SymbolicConstantIF x2 = idealFactory.newNumericSymbolicConstant(
+		SymbolicConstant x2 = idealFactory.newNumericSymbolicConstant(
 				objectFactory.stringObject("X"), typeFactory.realType());
 
 		assertFalse(x.equals(x2));
@@ -123,8 +123,8 @@ public class IdealTest {
 
 	@Test
 	public void commutativity1() {
-		SymbolicExpressionIF xpy = idealFactory.add(x, y);
-		SymbolicExpressionIF ypx = idealFactory.add(y, x);
+		SymbolicExpression xpy = idealFactory.add(x, y);
+		SymbolicExpression ypx = idealFactory.add(y, x);
 
 		out.println("commutativity1: " + xpy + " vs. " + ypx);
 		assertEquals(xpy, ypx);
@@ -134,8 +134,8 @@ public class IdealTest {
 	public void xplus1squared() {
 		NumericExpression xp1 = idealFactory
 				.add(x, idealFactory.intConstant(1));
-		SymbolicExpressionIF xp1squared = idealFactory.multiply(xp1, xp1);
-		SymbolicExpressionIF x2p2xp1 = idealFactory.add(idealFactory.multiply(
+		SymbolicExpression xp1squared = idealFactory.multiply(xp1, xp1);
+		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(
 				x, x), idealFactory.add(
 				idealFactory.multiply(idealFactory.intConstant(2), x),
 				idealFactory.intConstant(1)));

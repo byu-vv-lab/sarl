@@ -10,17 +10,17 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectio
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 public class CollectionComparator implements Comparator<SymbolicCollection> {
 
-	private Comparator<SymbolicExpressionIF> expressionComparator;
+	private Comparator<SymbolicExpression> expressionComparator;
 
 	public CollectionComparator() {
 	}
 
 	public void setExpressionComparator(
-			Comparator<SymbolicExpressionIF> expressionComparator) {
+			Comparator<SymbolicExpression> expressionComparator) {
 		this.expressionComparator = expressionComparator;
 	}
 
@@ -71,8 +71,8 @@ public class CollectionComparator implements Comparator<SymbolicCollection> {
 	private int compareSets(SymbolicSet s1, SymbolicSet s2) {
 		if (s1.isSorted()) {
 			if (s2.isSorted()) {
-				Iterator<SymbolicExpressionIF> iter1 = s1.iterator();
-				Iterator<SymbolicExpressionIF> iter2 = s2.iterator();
+				Iterator<SymbolicExpression> iter1 = s1.iterator();
+				Iterator<SymbolicExpression> iter2 = s2.iterator();
 
 				while (iter1.hasNext()) {
 					int result = expressionComparator.compare(iter1.next(),
@@ -96,14 +96,14 @@ public class CollectionComparator implements Comparator<SymbolicCollection> {
 	private int compareMaps(SymbolicMap m1, SymbolicMap m2) {
 		if (m1.isSorted()) {
 			if (m2.isSorted()) {
-				Iterator<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> iter1 = m1
+				Iterator<Entry<SymbolicExpression, SymbolicExpression>> iter1 = m1
 						.entries().iterator();
-				Iterator<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> iter2 = m2
+				Iterator<Entry<SymbolicExpression, SymbolicExpression>> iter2 = m2
 						.entries().iterator();
 				while (iter1.hasNext()) {
-					Entry<SymbolicExpressionIF, SymbolicExpressionIF> e1 = iter1
+					Entry<SymbolicExpression, SymbolicExpression> e1 = iter1
 							.next();
-					Entry<SymbolicExpressionIF, SymbolicExpressionIF> e2 = iter2
+					Entry<SymbolicExpression, SymbolicExpression> e2 = iter2
 							.next();
 					int result = expressionComparator.compare(e1.getKey(),
 							e2.getKey());

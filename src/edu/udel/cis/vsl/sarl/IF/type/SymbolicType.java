@@ -19,7 +19,7 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
  * @author siegel
  * 
  */
-public interface SymbolicTypeIF extends SymbolicObject {
+public interface SymbolicType extends SymbolicObject {
 
 	/**
 	 * The different kinds of types.

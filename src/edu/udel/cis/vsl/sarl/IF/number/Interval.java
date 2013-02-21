@@ -7,15 +7,15 @@ package edu.udel.cis.vsl.sarl.IF.number;
  * An instance of IntervalIF represents a numeric interval. Can be real or
  * integral.
  */
-public interface IntervalIF {
+public interface Interval {
 
 	boolean isReal();
 
 	boolean isIntegral();
 
-	NumberIF lower();
+	Number lower();
 
-	NumberIF upper();
+	Number upper();
 
 	boolean strictLower();
 

@@ -4,27 +4,27 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 
 public interface ObjectFactory {
 
-	void setExpressionComparator(Comparator<SymbolicExpressionIF> c);
+	void setExpressionComparator(Comparator<SymbolicExpression> c);
 
 	void setCollectionComparator(Comparator<SymbolicCollection> c);
 
-	void setTypeComparator(Comparator<SymbolicTypeIF> c);
+	void setTypeComparator(Comparator<SymbolicType> c);
 
-	void setTypeSequenceComparator(Comparator<SymbolicTypeSequenceIF> c);
+	void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c);
 
 	public void init();
 
@@ -39,9 +39,9 @@ public interface ObjectFactory {
 	 */
 	SymbolicObject canonic(SymbolicObject object);
 
-	SymbolicTypeIF canonic(SymbolicTypeIF type);
+	SymbolicType canonic(SymbolicType type);
 
-	SymbolicExpressionIF canonic(SymbolicExpressionIF expression);
+	SymbolicExpression canonic(SymbolicExpression expression);
 
 	BooleanObject trueObj();
 
@@ -59,7 +59,7 @@ public interface ObjectFactory {
 
 	NumberObject oneRealObj();
 
-	NumberObject numberObject(NumberIF value);
+	NumberObject numberObject(Number value);
 
 	StringObject stringObject(String string);
 
@@ -73,5 +73,5 @@ public interface ObjectFactory {
 
 	int numObjects();
 
-	NumberFactoryIF numberFactory();
+	NumberFactory numberFactory();
 }

@@ -9,16 +9,16 @@ import org.pcollections.PMap;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 		SymbolicMap {
 
-	private PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap;
+	private PMap<SymbolicExpression, SymbolicExpression> pmap;
 
 	PcollectionsSymbolicMap(
-			PMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
+			PMap<SymbolicExpression, SymbolicExpression> pmap) {
 		super();
 		this.pmap = pmap;
 	}
@@ -29,32 +29,32 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	PcollectionsSymbolicMap(
-			Map<SymbolicExpressionIF, SymbolicExpressionIF> javaMap) {
+			Map<SymbolicExpression, SymbolicExpression> javaMap) {
 		this(HashTreePMap.from(javaMap));
 	}
 
 	@Override
-	public SymbolicExpressionIF get(SymbolicExpressionIF key) {
+	public SymbolicExpression get(SymbolicExpression key) {
 		return pmap.get(key);
 	}
 
 	@Override
-	public Iterable<SymbolicExpressionIF> keys() {
+	public Iterable<SymbolicExpression> keys() {
 		return pmap.keySet();
 	}
 
 	@Override
-	public Iterable<SymbolicExpressionIF> values() {
+	public Iterable<SymbolicExpression> values() {
 		return pmap.values();
 	}
 
 	@Override
-	public Iterable<Entry<SymbolicExpressionIF, SymbolicExpressionIF>> entries() {
+	public Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries() {
 		return pmap.entrySet();
 	}
 
 	@Override
-	public Iterator<SymbolicExpressionIF> iterator() {
+	public Iterator<SymbolicExpression> iterator() {
 		return pmap.values().iterator();
 	}
 
@@ -91,12 +91,12 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public SymbolicMap put(SymbolicExpressionIF key, SymbolicExpressionIF value) {
+	public SymbolicMap put(SymbolicExpression key, SymbolicExpression value) {
 		return new PcollectionsSymbolicMap(pmap.plus(key, value));
 	}
 
 	@Override
-	public SymbolicMap remove(SymbolicExpressionIF key) {
+	public SymbolicMap remove(SymbolicExpression key) {
 		return new PcollectionsSymbolicMap(pmap.minus(key));
 	}
 

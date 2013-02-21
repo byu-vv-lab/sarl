@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * Empty monic: equivalent to 1.
@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  */
 public class One extends IdealExpression implements Constant, Monic {
 
-	protected One(SymbolicTypeIF type, NumberObject oneObj) {
+	protected One(SymbolicType type, NumberObject oneObj) {
 		super(SymbolicOperator.CONCRETE, type, oneObj);
 		assert oneObj.isOne();
 	}
@@ -89,7 +89,7 @@ public class One extends IdealExpression implements Constant, Monic {
 	}
 
 	@Override
-	public NumberIF number() {
+	public Number number() {
 		return value().getNumber();
 	}
 

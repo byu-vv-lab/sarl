@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.IF.object;
 
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 public interface NumberObject extends SymbolicObject, Comparable<NumberObject> {
 
-	NumberIF getNumber();
+	Number getNumber();
 
 	/**
 	 * Returns either -1, 0, or +1, depending on whether the value of this

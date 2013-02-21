@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A constant which is not 1.
@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  */
 public class NTConstant extends IdealExpression implements Constant {
 
-	protected NTConstant(SymbolicTypeIF type, NumberObject value) {
+	protected NTConstant(SymbolicType type, NumberObject value) {
 		super(SymbolicOperator.CONCRETE, type, value);
 		assert !value.isOne();
 	}
@@ -26,7 +26,7 @@ public class NTConstant extends IdealExpression implements Constant {
 		return (NumberObject) argument(0);
 	}
 
-	public NumberIF number() {
+	public Number number() {
 		return value().getNumber();
 	}
 

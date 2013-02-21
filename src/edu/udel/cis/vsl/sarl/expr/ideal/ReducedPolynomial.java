@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A reduced polynomial is a polynomial satisfying: (1) if the type is real then
@@ -19,7 +19,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  */
 public class ReducedPolynomial extends NumericPrimitive {
 
-	public ReducedPolynomial(SymbolicTypeIF type, SymbolicMap termMap) {
+	public ReducedPolynomial(SymbolicType type, SymbolicMap termMap) {
 		super(SymbolicOperator.ADD, type, termMap);
 	}
 

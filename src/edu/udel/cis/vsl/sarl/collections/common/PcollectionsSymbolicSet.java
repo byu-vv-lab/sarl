@@ -8,15 +8,15 @@ import org.pcollections.PSet;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		SymbolicSet {
 
-	private PSet<SymbolicExpressionIF> pset;
+	private PSet<SymbolicExpression> pset;
 
-	PcollectionsSymbolicSet(PSet<SymbolicExpressionIF> pset) {
+	PcollectionsSymbolicSet(PSet<SymbolicExpression> pset) {
 		super(SymbolicCollectionKind.SET);
 		this.pset = pset;
 	}
@@ -26,7 +26,7 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		this.pset = HashTreePSet.empty();
 	}
 
-	PcollectionsSymbolicSet(Collection<SymbolicExpressionIF> elements) {
+	PcollectionsSymbolicSet(Collection<SymbolicExpression> elements) {
 		this(HashTreePSet.from(elements));
 	}
 
@@ -36,12 +36,12 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	}
 
 	@Override
-	public Iterator<SymbolicExpressionIF> iterator() {
+	public Iterator<SymbolicExpression> iterator() {
 		return pset.iterator();
 	}
 
 	@Override
-	public boolean contains(SymbolicExpressionIF element) {
+	public boolean contains(SymbolicExpression element) {
 		return pset.contains(element);
 	}
 
@@ -66,7 +66,7 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	}
 
 	@Override
-	public SymbolicSet add(SymbolicExpressionIF element) {
+	public SymbolicSet add(SymbolicExpression element) {
 		return new PcollectionsSymbolicSet(pset.plus(element));
 	}
 
@@ -76,7 +76,7 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	}
 
 	@Override
-	public SymbolicSet remove(SymbolicExpressionIF element) {
+	public SymbolicSet remove(SymbolicExpression element) {
 		return new PcollectionsSymbolicSet(pset.minus(element));
 	}
 

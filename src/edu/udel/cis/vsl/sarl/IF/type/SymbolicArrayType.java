@@ -8,14 +8,14 @@ package edu.udel.cis.vsl.sarl.IF.type;
  * @author siegel
  * 
  */
-public interface SymbolicArrayTypeIF extends SymbolicTypeIF {
+public interface SymbolicArrayType extends SymbolicType {
 
 	/**
 	 * The type of each element of the array, a non-null symbolic type.
 	 * 
 	 * @return the element type
 	 */
-	SymbolicTypeIF elementType();
+	SymbolicType elementType();
 
 	/**
 	 * Is this a complete array type, i.e., is the extent specified? If true,

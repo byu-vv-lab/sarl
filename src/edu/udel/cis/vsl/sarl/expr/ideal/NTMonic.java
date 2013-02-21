@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A non-trivial monic is the product of at least two primitive powers. The set
@@ -20,7 +20,7 @@ public class NTMonic extends IdealExpression implements Monic {
 
 	private int degree = -1;
 
-	protected NTMonic(SymbolicTypeIF type, SymbolicMap factorMap) {
+	protected NTMonic(SymbolicType type, SymbolicMap factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
 		assert factorMap.size() >= 2;
 	}
@@ -80,7 +80,7 @@ public class NTMonic extends IdealExpression implements Monic {
 	public Polynomial expand(IdealFactory factory) {
 		Polynomial result = factory.one(type());
 
-		for (SymbolicExpressionIF expr : monicFactors()) {
+		for (SymbolicExpression expr : monicFactors()) {
 			PrimitivePower ppower = (PrimitivePower) expr;
 
 			result = factory.multiply(result, ppower.expand(factory));
@@ -101,7 +101,7 @@ public class NTMonic extends IdealExpression implements Monic {
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer();
 
-		for (SymbolicExpressionIF expr : monicFactors())
+		for (SymbolicExpression expr : monicFactors())
 			buffer.append(expr.atomString());
 		return buffer;
 	}
@@ -120,7 +120,7 @@ public class NTMonic extends IdealExpression implements Monic {
 	public int degree() {
 		if (degree < 0) {
 			degree = 0;
-			for (SymbolicExpressionIF expr : monicFactors())
+			for (SymbolicExpression expr : monicFactors())
 				degree += ((PrimitivePower) expr).degree();
 		}
 		return degree;

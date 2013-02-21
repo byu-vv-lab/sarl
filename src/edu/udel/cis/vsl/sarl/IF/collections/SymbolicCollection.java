@@ -1,10 +1,10 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public interface SymbolicCollection extends SymbolicObject,
-		Iterable<SymbolicExpressionIF> {
+		Iterable<SymbolicExpression> {
 
 	public enum SymbolicCollectionKind {
 		SET, SEQUENCE, MAP
@@ -14,6 +14,6 @@ public interface SymbolicCollection extends SymbolicObject,
 
 	SymbolicCollectionKind collectionKind();
 
-	SymbolicExpressionIF getFirst();
+	SymbolicExpression getFirst();
 
 }

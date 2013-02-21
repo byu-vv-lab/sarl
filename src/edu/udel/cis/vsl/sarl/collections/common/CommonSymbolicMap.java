@@ -2,10 +2,10 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import java.util.Map.Entry;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperatorIF;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperatorIF;
+import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 public abstract class CommonSymbolicMap extends CommonSymbolicCollection
 		implements SymbolicMap {
@@ -15,10 +15,10 @@ public abstract class CommonSymbolicMap extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicMap apply(UnaryOperatorIF operator) {
+	public SymbolicMap apply(UnaryOperator operator) {
 		SymbolicMap result = this;
 
-		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : this
+		for (Entry<SymbolicExpression, SymbolicExpression> entry : this
 				.entries())
 			result = result.put(entry.getKey(),
 					operator.apply(entry.getValue()));
@@ -26,19 +26,19 @@ public abstract class CommonSymbolicMap extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicMap combine(BinaryOperatorIF operator, SymbolicMap map) {
+	public SymbolicMap combine(BinaryOperator operator, SymbolicMap map) {
 		SymbolicMap result = this;
 
-		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : map
+		for (Entry<SymbolicExpression, SymbolicExpression> entry : map
 				.entries()) {
-			SymbolicExpressionIF key = entry.getKey();
-			SymbolicExpressionIF value2 = entry.getValue();
-			SymbolicExpressionIF value1 = this.get(key);
+			SymbolicExpression key = entry.getKey();
+			SymbolicExpression value2 = entry.getValue();
+			SymbolicExpression value1 = this.get(key);
 
 			if (value1 == null)
 				result = result.put(key, value2);
 			else {
-				SymbolicExpressionIF newValue = operator.apply(value1, value2);
+				SymbolicExpression newValue = operator.apply(value1, value2);
 
 				if (newValue == null)
 					result = result.remove(key);
@@ -53,7 +53,7 @@ public abstract class CommonSymbolicMap extends CommonSymbolicCollection
 		StringBuffer buffer = new StringBuffer("{");
 		boolean first = true;
 
-		for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : this
+		for (Entry<SymbolicExpression, SymbolicExpression> entry : this
 				.entries()) {
 			if (first)
 				first = false;

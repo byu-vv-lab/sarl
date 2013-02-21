@@ -2,16 +2,16 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -23,7 +23,7 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
 	private TypeSequenceComparator typeSequenceComparator;
 
-	private SymbolicPrimitiveType booleanType, integerType, realType;
+	private CommonSymbolicPrimitiveType booleanType, integerType, realType;
 
 	public CommonSymbolicTypeFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
@@ -31,64 +31,64 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 		typeSequenceComparator = new TypeSequenceComparator();
 		typeComparator.setTypeSequenceComparator(typeSequenceComparator);
 		typeSequenceComparator.setTypeComparator(typeComparator);
-		booleanType = (SymbolicPrimitiveType) objectFactory
-				.canonic(new SymbolicPrimitiveType(SymbolicTypeKind.BOOLEAN));
-		integerType = (SymbolicPrimitiveType) objectFactory
-				.canonic(new SymbolicPrimitiveType(SymbolicTypeKind.INTEGER));
-		realType = (SymbolicPrimitiveType) objectFactory
-				.canonic(new SymbolicPrimitiveType(SymbolicTypeKind.REAL));
+		booleanType = (CommonSymbolicPrimitiveType) objectFactory
+				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.BOOLEAN));
+		integerType = (CommonSymbolicPrimitiveType) objectFactory
+				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.INTEGER));
+		realType = (CommonSymbolicPrimitiveType) objectFactory
+				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.REAL));
 	}
 
 	public ObjectFactory objectFactory() {
 		return objectFactory;
 	}
 
-	public SymbolicPrimitiveType booleanType() {
+	public CommonSymbolicPrimitiveType booleanType() {
 		return booleanType;
 	}
 
-	public SymbolicPrimitiveType integerType() {
+	public CommonSymbolicPrimitiveType integerType() {
 		return integerType;
 	}
 
-	public SymbolicPrimitiveType realType() {
+	public CommonSymbolicPrimitiveType realType() {
 		return realType;
 	}
 
-	public SymbolicTypeSequenceIF sequence(Iterable<SymbolicTypeIF> elements) {
-		return new SymbolicTypeSequence(elements);
+	public SymbolicTypeSequence sequence(Iterable<SymbolicType> elements) {
+		return new CommonSymbolicTypeSequence(elements);
 	}
 
-	public SymbolicTypeSequenceIF sequence(SymbolicTypeIF[] elements) {
-		return new SymbolicTypeSequence(elements);
+	public SymbolicTypeSequence sequence(SymbolicType[] elements) {
+		return new CommonSymbolicTypeSequence(elements);
 	}
 
-	public SymbolicTypeSequenceIF singletonSequence(SymbolicTypeIF type) {
-		return new SymbolicTypeSequence(new SymbolicTypeIF[] { type });
+	public SymbolicTypeSequence singletonSequence(SymbolicType type) {
+		return new CommonSymbolicTypeSequence(new SymbolicType[] { type });
 	}
 
-	public SymbolicArrayTypeIF arrayType(SymbolicTypeIF elementType) {
-		return new SymbolicArrayType(elementType);
+	public SymbolicArrayType arrayType(SymbolicType elementType) {
+		return new CommonSymbolicArrayType(elementType);
 	}
 
-	public SymbolicCompleteArrayTypeIF arrayType(SymbolicTypeIF elementType,
-			SymbolicExpressionIF extent) {
-		return new SymbolicCompleteArrayType(elementType, extent);
+	public SymbolicCompleteArrayType arrayType(SymbolicType elementType,
+			SymbolicExpression extent) {
+		return new CommonSymbolicCompleteArrayType(elementType, extent);
 	}
 
-	public SymbolicTupleTypeIF tupleType(StringObject name,
-			SymbolicTypeSequenceIF fieldTypes) {
-		return new SymbolicTupleType(name, fieldTypes);
+	public SymbolicTupleType tupleType(StringObject name,
+			SymbolicTypeSequence fieldTypes) {
+		return new CommonSymbolicTupleType(name, fieldTypes);
 	}
 
-	public SymbolicUnionTypeIF unionType(StringObject name,
-			SymbolicTypeSequenceIF memberTypes) {
-		return new SymbolicUnionType(name, memberTypes);
+	public SymbolicUnionType unionType(StringObject name,
+			SymbolicTypeSequence memberTypes) {
+		return new CommonSymbolicUnionType(name, memberTypes);
 	}
 
-	public SymbolicFunctionTypeIF functionType(
-			SymbolicTypeSequenceIF inputTypes, SymbolicTypeIF outputType) {
-		return new SymbolicFunctionType(inputTypes, outputType);
+	public SymbolicFunctionType functionType(
+			SymbolicTypeSequence inputTypes, SymbolicType outputType) {
+		return new CommonSymbolicFunctionType(inputTypes, outputType);
 	}
 
 	public TypeComparator typeComparator() {
@@ -100,7 +100,7 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	}
 
 	@Override
-	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
+	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		typeComparator.setExpressionComparator(c);
 	}
 

@@ -4,12 +4,12 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.prove.SimplifierIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.prove.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 
 /**
@@ -18,15 +18,15 @@ import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
  * false, return no, if it is any other expression, return MAYBE. Results are
  * cached.
  */
-public class SimpleIdealProver implements TheoremProverIF {
+public class SimpleIdealProver implements TheoremProver {
 
 	private Map<SymbolicQuery, ResultType> queryCache;
 
-	private SymbolicUniverseIF universe;
+	private SymbolicUniverse universe;
 
 	private int numValidCalls = 0;
 
-	SimpleIdealProver(SymbolicUniverseIF universe) {
+	SimpleIdealProver(SymbolicUniverse universe) {
 		this.universe = universe;
 		queryCache = new HashMap<SymbolicQuery, ResultType>();
 	}
@@ -42,20 +42,20 @@ public class SimpleIdealProver implements TheoremProverIF {
 	}
 
 	@Override
-	public SymbolicUniverseIF universe() {
+	public SymbolicUniverse universe() {
 		return universe;
 	}
 
 	@Override
-	public ResultType valid(SymbolicExpressionIF assumption,
-			SymbolicExpressionIF predicate) {
+	public ResultType valid(SymbolicExpression assumption,
+			SymbolicExpression predicate) {
 		SymbolicQuery query = new SymbolicQuery(assumption, predicate);
 		ResultType result = queryCache.get(query);
 
 		numValidCalls++;
 		if (result == null) {
-			SimplifierIF simplifier = universe.simplifier(assumption);
-			SymbolicExpressionIF simple = simplifier.simplify(predicate);
+			Simplifier simplifier = universe.simplifier(assumption);
+			SymbolicExpression simple = simplifier.simplify(predicate);
 			Boolean concrete = universe.extractBoolean(simple);
 
 			if (concrete == null)
@@ -75,8 +75,8 @@ public class SimpleIdealProver implements TheoremProverIF {
 	 * 
 	 * @throws TheoremProverException
 	 */
-	public Map<SymbolicConstantIF, SymbolicExpressionIF> findModel(
-			SymbolicExpressionIF context) throws TheoremProverException {
+	public Map<SymbolicConstant, SymbolicExpression> findModel(
+			SymbolicExpression context) throws TheoremProverException {
 		throw new TheoremProverException(
 				"Concretization cannot be done using the simple ideal prover.");
 	}

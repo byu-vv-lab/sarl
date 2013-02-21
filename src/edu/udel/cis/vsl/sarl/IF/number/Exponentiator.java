@@ -20,9 +20,9 @@ public class Exponentiator<T> {
 
 	private T one;
 
-	private static NumberFactoryIF numberFactory = Numbers.REAL_FACTORY;
+	private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
-	private static IntegerNumberIF two = numberFactory.integer(2);
+	private static IntegerNumber two = numberFactory.integer(2);
 
 	public Exponentiator(Multiplier<T> multiplier, T one) {
 		this.multiplier = multiplier;
@@ -33,7 +33,7 @@ public class Exponentiator<T> {
 	// e = b0*1 + b1*2 + b2*4 + b3*8 + b4*16 + ...
 	// binaryPower = a^1, a^2, a^4, a^8, a^16,...
 	// a^e = ...
-	public T exp(T base, IntegerNumberIF exponent) {
+	public T exp(T base, IntegerNumber exponent) {
 		int signum = exponent.signum();
 
 		if (signum == 0) {
@@ -43,9 +43,9 @@ public class Exponentiator<T> {
 		} else if (signum > 0) {
 			int numBinaryDigits = 0;
 			boolean[] binaryExpansion;
-			IntegerNumberIF powerOf2 = numberFactory.oneInteger();
+			IntegerNumber powerOf2 = numberFactory.oneInteger();
 
-			for (IntegerNumberIF e = exponent; e.signum() > 0; e = numberFactory
+			for (IntegerNumber e = exponent; e.signum() > 0; e = numberFactory
 					.divide(e, two)) {
 				numBinaryDigits++;
 				powerOf2 = numberFactory.multiply(powerOf2, two);
@@ -69,7 +69,7 @@ public class Exponentiator<T> {
 			powerOf2 = numberFactory.divide(powerOf2, two);
 			for (int i = numBinaryDigits - 1; i >= 0; i--, powerOf2 = numberFactory
 					.divide(powerOf2, two)) {
-				IntegerNumberIF difference = numberFactory.subtract(exponent,
+				IntegerNumber difference = numberFactory.subtract(exponent,
 						powerOf2);
 
 				if (difference.signum() >= 0) {

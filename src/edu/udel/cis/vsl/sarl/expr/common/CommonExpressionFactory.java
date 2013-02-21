@@ -3,12 +3,12 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Collection;
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
@@ -22,7 +22,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private NumericExpressionFactory numericFactory;
 
-	private SymbolicExpressionIF nullExpression;
+	private SymbolicExpression nullExpression;
 
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		Comparator<NumericExpression> numericComparator = numericFactory
@@ -58,58 +58,58 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpressionIF canonic(SymbolicExpressionIF expression) {
-		return (SymbolicExpressionIF) objectFactory.canonic(expression);
+	public SymbolicExpression canonic(SymbolicExpression expression) {
+		return (SymbolicExpression) objectFactory.canonic(expression);
 	}
 
 	@Override
-	public Comparator<SymbolicExpressionIF> comparator() {
+	public Comparator<SymbolicExpression> comparator() {
 		return expressionComparator;
 	}
 
 	@Override
-	public SymbolicExpressionIF expression(SymbolicOperator operator,
-			SymbolicTypeIF type, SymbolicObject[] arguments) {
+	public SymbolicExpression expression(SymbolicOperator operator,
+			SymbolicType type, SymbolicObject[] arguments) {
 		return new CommonSymbolicExpression(operator, type, arguments);
 	}
 
 	@Override
-	public SymbolicExpressionIF expression(SymbolicOperator operator,
-			SymbolicTypeIF type, SymbolicObject arg0) {
+	public SymbolicExpression expression(SymbolicOperator operator,
+			SymbolicType type, SymbolicObject arg0) {
 		return new CommonSymbolicExpression(operator, type, arg0);
 
 	}
 
 	@Override
-	public SymbolicExpressionIF expression(SymbolicOperator operator,
-			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1) {
+	public SymbolicExpression expression(SymbolicOperator operator,
+			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
 		return new CommonSymbolicExpression(operator, type, arg0, arg1);
 
 	}
 
 	@Override
-	public SymbolicExpressionIF expression(SymbolicOperator operator,
-			SymbolicTypeIF type, SymbolicObject arg0, SymbolicObject arg1,
+	public SymbolicExpression expression(SymbolicOperator operator,
+			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
 		return new CommonSymbolicExpression(operator, type, arg0, arg1, arg2);
 
 	}
 
 	@Override
-	public SymbolicExpressionIF expression(SymbolicOperator operator,
-			SymbolicTypeIF type, Collection<SymbolicObject> args) {
+	public SymbolicExpression expression(SymbolicOperator operator,
+			SymbolicType type, Collection<SymbolicObject> args) {
 		return new CommonSymbolicExpression(operator, type, args);
 
 	}
 
 	@Override
-	public SymbolicConstantIF symbolicConstant(StringObject name,
-			SymbolicTypeIF type) {
+	public SymbolicConstant symbolicConstant(StringObject name,
+			SymbolicType type) {
 		return new CommonSymbolicConstant(name, type);
 	}
 
 	@Override
-	public SymbolicExpressionIF nullExpression() {
+	public SymbolicExpression nullExpression() {
 		return nullExpression;
 	}
 

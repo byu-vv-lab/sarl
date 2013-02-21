@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.expr;
 
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A "symbolic constant" is a symbol used in symbolic execution to represent an
@@ -17,12 +17,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
  * @author siegel
  * 
  */
-public interface SymbolicConstantIF extends SymbolicExpressionIF {
+public interface SymbolicConstant extends SymbolicExpression {
 
 	/** Returns the name of this symbolic constant */
 	StringObject name();
 
 	/** Returns the type of this symbolic constant */
-	SymbolicTypeIF type();
+	SymbolicType type();
 
 }

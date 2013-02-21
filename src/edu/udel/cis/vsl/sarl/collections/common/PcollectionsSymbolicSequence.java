@@ -8,7 +8,7 @@ import org.pcollections.TreePVector;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**
@@ -21,7 +21,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 		implements SymbolicSequence {
 
-	private PVector<SymbolicExpressionIF> pvector;
+	private PVector<SymbolicExpression> pvector;
 
 	public PcollectionsSymbolicSequence() {
 		super(SymbolicCollectionKind.SEQUENCE);
@@ -29,31 +29,31 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 	}
 
 	public PcollectionsSymbolicSequence(
-			Collection<SymbolicExpressionIF> elements) {
+			Collection<SymbolicExpression> elements) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.from(elements);
 	}
 
 	public PcollectionsSymbolicSequence(
-			Iterable<? extends SymbolicExpressionIF> elements) {
+			Iterable<? extends SymbolicExpression> elements) {
 		this();
-		for (SymbolicExpressionIF expr : elements)
+		for (SymbolicExpression expr : elements)
 			pvector = pvector.plus(expr);
 	}
 
-	public PcollectionsSymbolicSequence(SymbolicExpressionIF[] elements) {
+	public PcollectionsSymbolicSequence(SymbolicExpression[] elements) {
 		this();
-		for (SymbolicExpressionIF expr : elements)
+		for (SymbolicExpression expr : elements)
 			pvector = pvector.plus(expr);
 	}
 
-	public PcollectionsSymbolicSequence(SymbolicExpressionIF element) {
+	public PcollectionsSymbolicSequence(SymbolicExpression element) {
 		this();
 		pvector = pvector.plus(element);
 	}
 
 	@Override
-	public Iterator<SymbolicExpressionIF> iterator() {
+	public Iterator<SymbolicExpression> iterator() {
 		return pvector.iterator();
 	}
 
@@ -63,17 +63,17 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicExpressionIF get(int index) {
+	public SymbolicExpression get(int index) {
 		return pvector.get(index);
 	}
 
 	@Override
-	public SymbolicSequence add(SymbolicExpressionIF element) {
+	public SymbolicSequence add(SymbolicExpression element) {
 		return new PcollectionsSymbolicSequence(pvector.plus(element));
 	}
 
 	@Override
-	public SymbolicSequence set(int index, SymbolicExpressionIF element) {
+	public SymbolicSequence set(int index, SymbolicExpression element) {
 		return new PcollectionsSymbolicSequence(pvector.with(index, element));
 	}
 
@@ -89,8 +89,8 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 		if (size() != o.size())
 			return false;
 		SymbolicSequence that = (SymbolicSequence) o;
-		Iterator<SymbolicExpressionIF> these = this.iterator();
-		Iterator<SymbolicExpressionIF> those = that.iterator();
+		Iterator<SymbolicExpression> these = this.iterator();
+		Iterator<SymbolicExpression> those = that.iterator();
 
 		while (these.hasNext())
 			if (!those.hasNext() || !these.next().equals(those.next()))
@@ -105,14 +105,14 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		Iterator<SymbolicExpressionIF> iter = iterator();
+		Iterator<SymbolicExpression> iter = iterator();
 		int count = 0;
 
 		while (iter.hasNext()) {
-			SymbolicExpressionIF expr = iter.next();
+			SymbolicExpression expr = iter.next();
 
 			if (!expr.isCanonic()) {
-				PVector<SymbolicExpressionIF> newVector = pvector.subList(0,
+				PVector<SymbolicExpression> newVector = pvector.subList(0,
 						count);
 
 				newVector = newVector.plus(factory.canonic(expr));
@@ -126,8 +126,8 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicSequence setExtend(int index, SymbolicExpressionIF value,
-			SymbolicExpressionIF filler) {
+	public SymbolicSequence setExtend(int index, SymbolicExpression value,
+			SymbolicExpression filler) {
 		int size = pvector.size();
 
 		if (index < size)

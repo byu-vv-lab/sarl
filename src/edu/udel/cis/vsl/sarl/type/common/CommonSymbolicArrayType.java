@@ -1,13 +1,13 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class SymbolicArrayType extends SymbolicType implements
-		SymbolicArrayTypeIF {
+public class CommonSymbolicArrayType extends CommonSymbolicType implements
+		SymbolicArrayType {
 
-	private SymbolicTypeIF elementType;
+	private SymbolicType elementType;
 
 	/**
 	 * Creates new symbolic array type with given elementType. *
@@ -15,7 +15,7 @@ public class SymbolicArrayType extends SymbolicType implements
 	 * @param elementType
 	 *            any non-null type
 	 */
-	SymbolicArrayType(SymbolicTypeIF elementType) {
+	CommonSymbolicArrayType(SymbolicType elementType) {
 		super(SymbolicTypeKind.ARRAY);
 		assert elementType != null;
 		this.elementType = elementType;
@@ -26,17 +26,17 @@ public class SymbolicArrayType extends SymbolicType implements
 	 * be complete.
 	 */
 	@Override
-	protected boolean typeEquals(SymbolicType that) {
-		if (!elementType.equals(((SymbolicArrayType) that).elementType))
+	protected boolean typeEquals(CommonSymbolicType that) {
+		if (!elementType.equals(((CommonSymbolicArrayType) that).elementType))
 			return false;
 		if (isComplete()) {
-			if (((SymbolicArrayType) that).isComplete()) {
-				return ((SymbolicCompleteArrayType) this).extent().equals(
-						((SymbolicCompleteArrayType) that).extent());
+			if (((CommonSymbolicArrayType) that).isComplete()) {
+				return ((CommonSymbolicCompleteArrayType) this).extent().equals(
+						((CommonSymbolicCompleteArrayType) that).extent());
 			}
 			return false;
 		} else {
-			return !((SymbolicArrayType) that).isComplete();
+			return !((CommonSymbolicArrayType) that).isComplete();
 		}
 	}
 
@@ -46,7 +46,7 @@ public class SymbolicArrayType extends SymbolicType implements
 	}
 
 	@Override
-	public SymbolicTypeIF elementType() {
+	public SymbolicType elementType() {
 		return elementType;
 	}
 
@@ -67,11 +67,11 @@ public class SymbolicArrayType extends SymbolicType implements
 	@Override
 	public String toString() {
 		String result = "";
-		SymbolicTypeIF type;
+		SymbolicType type;
 
-		for (type = this; type instanceof SymbolicArrayType; type = ((SymbolicArrayType) type)
+		for (type = this; type instanceof CommonSymbolicArrayType; type = ((CommonSymbolicArrayType) type)
 				.elementType())
-			result += ((SymbolicArrayType) type).extentString();
+			result += ((CommonSymbolicArrayType) type).extentString();
 		return type + result;
 	}
 

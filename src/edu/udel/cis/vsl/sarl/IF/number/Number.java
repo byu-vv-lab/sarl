@@ -9,7 +9,7 @@ package edu.udel.cis.vsl.sarl.IF.number;
  * The natural comparison places some arbitrary order on NumberIFs consistent
  * with equals.
  * */
-public interface NumberIF extends Comparable<NumberIF> {
+public interface Number extends Comparable<Number> {
 
 	/**
 	 * Returns 0 if this number equals 0, -1 if this number is negative, 1 if

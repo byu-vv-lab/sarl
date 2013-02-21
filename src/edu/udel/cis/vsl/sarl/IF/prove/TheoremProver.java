@@ -3,16 +3,16 @@ package edu.udel.cis.vsl.sarl.IF.prove;
 import java.io.PrintStream;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 
-public interface TheoremProverIF {
+public interface TheoremProver {
 	/**
 	 * Get the symbolic universe associated with the theorem prover.
 	 */
-	SymbolicUniverseIF universe();
+	SymbolicUniverse universe();
 
 	/**
 	 * Attempts to determine whether the statement p(x)=>q(x) is a tautology.
@@ -35,8 +35,8 @@ public interface TheoremProverIF {
 	 * satisfiable. If it returns no, then q is satisfiable.
 	 * 
 	 */
-	ResultType valid(SymbolicExpressionIF assumption,
-			SymbolicExpressionIF predicate);
+	ResultType valid(SymbolicExpression assumption,
+			SymbolicExpression predicate);
 
 	/**
 	 * Returns the total number of calls made to the method valid on this
@@ -80,6 +80,6 @@ public interface TheoremProverIF {
 	 * @return a map of SymbolicConstants to their SymbolicExpression values.
 	 * @throws TheoremProverException
 	 */
-	Map<SymbolicConstantIF, SymbolicExpressionIF> findModel(
-			SymbolicExpressionIF context) throws TheoremProverException;
+	Map<SymbolicConstant, SymbolicExpression> findModel(
+			SymbolicExpression context) throws TheoremProverException;
 }

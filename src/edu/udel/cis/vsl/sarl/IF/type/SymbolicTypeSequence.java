@@ -2,11 +2,11 @@ package edu.udel.cis.vsl.sarl.IF.type;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
-public interface SymbolicTypeSequenceIF extends Iterable<SymbolicTypeIF>,
+public interface SymbolicTypeSequence extends Iterable<SymbolicType>,
 		SymbolicObject {
 
 	int numTypes();
 
-	SymbolicTypeIF getType(int index);
+	SymbolicType getType(int index);
 
 }

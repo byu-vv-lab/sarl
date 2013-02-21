@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.expr;
 
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
@@ -17,14 +17,14 @@ public class Expressions {
 	}
 
 	public static NumericExpressionFactory newIdealFactory(
-			NumberFactoryIF numberFactory, ObjectFactory objectFactory,
+			NumberFactory numberFactory, ObjectFactory objectFactory,
 			SymbolicTypeFactory typeFactory, CollectionFactory collectionFactory) {
 		return new IdealFactory(numberFactory, objectFactory, typeFactory,
 				collectionFactory);
 	}
 
 	public static ExpressionFactory newIdealExpressionFactory(
-			NumberFactoryIF numberFactory, ObjectFactory objectFactory,
+			NumberFactory numberFactory, ObjectFactory objectFactory,
 			SymbolicTypeFactory typeFactory, CollectionFactory collectionFactory) {
 		return newExpressionFactory(newIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory));

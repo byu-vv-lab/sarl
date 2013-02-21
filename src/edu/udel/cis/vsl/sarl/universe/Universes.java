@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.universe;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactoryIF;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
@@ -26,7 +26,7 @@ public class Universes {
 	}
 
 	public static FactorySystem newIdealFactorySystem() {
-		NumberFactoryIF numberFactory = Numbers.REAL_FACTORY;
+		NumberFactory numberFactory = Numbers.REAL_FACTORY;
 		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
 		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
 		CollectionFactory collectionFactory = Collections
@@ -39,7 +39,7 @@ public class Universes {
 				collectionFactory);
 	}
 
-	public static SymbolicUniverseIF newIdealUniverse() {
+	public static SymbolicUniverse newIdealUniverse() {
 		return new CommonSymbolicUniverse(newIdealFactorySystem());
 	}
 

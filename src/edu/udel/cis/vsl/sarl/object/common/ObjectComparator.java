@@ -4,30 +4,30 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
-import edu.udel.cis.vsl.sarl.IF.number.NumberIF;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeIF;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequenceIF;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
 public class ObjectComparator implements Comparator<SymbolicObject> {
 
-	private Comparator<SymbolicExpressionIF> expressionComparator;
+	private Comparator<SymbolicExpression> expressionComparator;
 
 	private Comparator<SymbolicCollection> collectionComparator;
 
-	private Comparator<SymbolicTypeIF> typeComparator;
+	private Comparator<SymbolicType> typeComparator;
 
-	private Comparator<SymbolicTypeSequenceIF> typeSequenceComparator;
+	private Comparator<SymbolicTypeSequence> typeSequenceComparator;
 
 	public ObjectComparator() {
 	}
 
-	public void setExpressionComparator(Comparator<SymbolicExpressionIF> c) {
+	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		expressionComparator = c;
 	}
 
@@ -35,15 +35,15 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		collectionComparator = c;
 	}
 
-	public void setTypeComparator(Comparator<SymbolicTypeIF> c) {
+	public void setTypeComparator(Comparator<SymbolicType> c) {
 		typeComparator = c;
 	}
 
-	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequenceIF> c) {
+	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		typeSequenceComparator = c;
 	}
 
-	public Comparator<SymbolicExpressionIF> expressionComparator() {
+	public Comparator<SymbolicExpression> expressionComparator() {
 		return expressionComparator;
 	}
 
@@ -51,11 +51,11 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		return collectionComparator;
 	}
 
-	public Comparator<SymbolicTypeIF> typeComparator() {
+	public Comparator<SymbolicType> typeComparator() {
 		return typeComparator;
 	}
 
-	public Comparator<SymbolicTypeSequenceIF> typeSequenceComparator() {
+	public Comparator<SymbolicTypeSequence> typeSequenceComparator() {
 		return typeSequenceComparator;
 	}
 
@@ -69,17 +69,17 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 		switch (kind) {
 		case EXPRESSION:
-			return expressionComparator.compare((SymbolicExpressionIF) o1,
-					(SymbolicExpressionIF) o2);
+			return expressionComparator.compare((SymbolicExpression) o1,
+					(SymbolicExpression) o2);
 		case EXPRESSION_COLLECTION:
 			return collectionComparator.compare((SymbolicCollection) o1,
 					(SymbolicCollection) o2);
 		case TYPE:
-			return typeComparator.compare((SymbolicTypeIF) o1,
-					(SymbolicTypeIF) o2);
+			return typeComparator.compare((SymbolicType) o1,
+					(SymbolicType) o2);
 		case TYPE_SEQUENCE:
-			return typeSequenceComparator.compare((SymbolicTypeSequenceIF) o1,
-					(SymbolicTypeSequenceIF) o2);
+			return typeSequenceComparator.compare((SymbolicTypeSequence) o1,
+					(SymbolicTypeSequence) o2);
 		case BOOLEAN:
 			return ((BooleanObject) o1).getBoolean() ? (((BooleanObject) o2)
 					.getBoolean() ? 0 : 1)
@@ -87,7 +87,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		case INT:
 			return ((IntObject) o1).getInt() - ((IntObject) o2).getInt();
 		case NUMBER:
-			return ((NumberIF) o1).compareTo((NumberIF) o2);
+			return ((Number) o1).compareTo((Number) o2);
 		case STRING:
 			return ((StringObject) o1).getString().compareTo(
 					((StringObject) o2).getString());
