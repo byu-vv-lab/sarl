@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,13 +58,13 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * Print the queries and results each time valid is called? Initialized by
 	 * constructor.
 	 */
-	private boolean showProverQueries;
+	private boolean showProverQueries = false;
 
 	/**
 	 * The printwriter used to print the queries and results. Initialized by
 	 * constructor.
 	 */
-	private PrintWriter out;
+	private PrintStream out;
 
 	/** The CVC3 object used to check queries. Set in method reset(). */
 	private ValidityChecker vc = null;
@@ -134,15 +134,12 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	 * @param showProverQueries
 	 *            print the queries?
 	 */
-	CVC3TheoremProver(SymbolicUniverseIF universe, PrintWriter out,
-			boolean showProverQueries) {
+	CVC3TheoremProver(SymbolicUniverseIF universe) {
 		if (universe == null) {
 			throw new RuntimeException("Null symbolic universe.");
 		} else {
 			this.universe = universe;
 		}
-		this.showProverQueries = showProverQueries;
-		this.out = out;
 	}
 
 	private <E> List<E> newSingletonList(E element) {
@@ -1048,6 +1045,12 @@ public class CVC3TheoremProver implements TheoremProverIF {
 	public Map<SymbolicConstantIF, SymbolicExpressionIF> findModel(
 			SymbolicExpressionIF context) throws TheoremProverException {
 		throw new TheoremProverException("Unimplemented");
+	}
+
+	@Override
+	public void setOutput(PrintStream out) {
+		this.out = out;
+		showProverQueries = out != null;
 	}
 
 }

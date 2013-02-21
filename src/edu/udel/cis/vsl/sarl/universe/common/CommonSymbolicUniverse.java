@@ -36,6 +36,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
+import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
@@ -80,6 +81,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	private ObjectComparator objectComparator;
 
+	private TheoremProverIF prover;
+
 	private SymbolicTypeIF booleanType, integerType, realType;
 
 	private SymbolicExpressionIF nullExpression;
@@ -115,6 +118,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
+		prover = Prove.newIdealCVC3HybridProver(this);
 	}
 
 	public NumericExpressionFactory numericExpressionFactory() {
@@ -462,14 +466,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverseIF {
 
 	@Override
 	public SimplifierIF simplifier(SymbolicExpressionIF assumption) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO: until we port the better one
+		return new IdentitySimplifier(this, assumption);
 	}
 
 	@Override
 	public TheoremProverIF prover() {
-		// TODO Auto-generated method stub
-		return null;
+		return prover;
 	}
 
 	@Override

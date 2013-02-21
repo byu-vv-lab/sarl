@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.prove;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
@@ -59,6 +60,16 @@ public interface TheoremProverIF {
 	 * Close the theorem prover.
 	 */
 	void close();
+
+	/**
+	 * If you want to see the queries and results (e.g., for debugging), set
+	 * this to the appropriate PrintStream. Setting to null turns off that
+	 * output. It is null, be default.
+	 * 
+	 * @param out
+	 *            PrintStream to which you want the output sent
+	 */
+	void setOutput(PrintStream out);
 
 	/**
 	 * Find a model for a path condition if it is satisfiable. Returns null

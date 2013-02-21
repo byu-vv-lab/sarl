@@ -1,14 +1,14 @@
 package edu.udel.cis.vsl.sarl.prove.ideal;
 
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverseIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstantIF;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpressionIF;
+import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverIF;
-import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 
 /**
@@ -23,11 +23,9 @@ public class IdealCVC3HybridProver implements TheoremProverIF {
 
 	private TheoremProverIF simpleProver, cvc3Prover;
 
-	public IdealCVC3HybridProver(SymbolicUniverseIF universe, PrintWriter out,
-			boolean showProverQueries) {
+	public IdealCVC3HybridProver(SymbolicUniverseIF universe) {
 		simpleProver = new SimpleIdealProver(universe);
-		cvc3Prover = CVC3TheoremProverFactory.newCVC3TheoremProver(universe,
-				out, showProverQueries);
+		cvc3Prover = CVC3TheoremProverFactory.newCVC3TheoremProver(universe);
 		this.universe = universe;
 	}
 
@@ -68,6 +66,12 @@ public class IdealCVC3HybridProver implements TheoremProverIF {
 	@Override
 	public int numValidCalls() {
 		return simpleProver.numValidCalls();
+	}
+
+	@Override
+	public void setOutput(PrintStream out) {
+		simpleProver.setOutput(out);
+		cvc3Prover.setOutput(out);
 	}
 
 }
