@@ -32,7 +32,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			SymbolicType type, SymbolicObject[] arguments) {
 		super(SymbolicObjectKind.EXPRESSION);
 		assert operator != null;
-		assert type != null;
+		assert operator == SymbolicOperator.NULL || type != null;
 		assert arguments != null;
 		this.operator = operator;
 		this.type = type;

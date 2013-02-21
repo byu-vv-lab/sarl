@@ -5,9 +5,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
- * Implementation of symbolic types using Flyweight Pattern. Note that the enum
- * SymbolicTypeKind is defined in
- * edu.udel.cis.vsl.sarl.symbolic.IF.type.SymbolicTypeIF.
  */
 public abstract class CommonSymbolicType extends CommonSymbolicObject implements
 		SymbolicType {

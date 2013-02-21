@@ -21,7 +21,7 @@
 	<property name="jar-name" value="sarl.jar" />
 	<property name="jar-path" value="${basedir}/${jar-name}" />
 
-<!--
+	<!--
 	<property name="main-class" value="edu.udel.cis.vsl.sarl.SARL" />
  -->
 
@@ -60,8 +60,9 @@
 
 	<path id="src.compile.classpath">
 		<pathelement location="${src.dir}" />
-		<pathelement location="${antlr.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${pcollections.jar}" />
+		<pathelement location="${clj-ds.classes}" />
 	</path>
 
 	<target name="compile" description="Compile all java source files.">
@@ -86,14 +87,17 @@
 		<pathelement location="${bin.dir}" />
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${pcollections.jar}" />
+		<pathelement location="${clj-ds.classes}" />
 	</path>
 
 	<path id="test.execute.classpath">
 		<pathelement location="${test.bin.dir}" />
 		<pathelement location="${bin.dir}" />
-		<pathelement location="${antlr.jar}" />
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${pcollections.jar}" />
+		<pathelement location="${clj-ds.classes}" />
 	</path>
 
 	<target name="test-init">
@@ -160,6 +164,8 @@
 		<pathelement location="${test.bin.dir}" />
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${bin.dir}" />
+		<pathelement location="${pcollections.jar}" />
+		<pathelement location="${clj-ds.classes}" />
 	</path>
 
 	<target name="cobertura-test" depends="cobertura-instrument">

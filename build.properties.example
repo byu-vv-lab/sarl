@@ -3,17 +3,23 @@
 # Cobertura is a test coverage analysis tool for Java.
 # Donwload from here: http://cobertura.sourceforge.net/download.html
 # Unpack, place the directory somewhere, and set the directory path here: 
-cobertura.lib.dir=/tools/cobertura-1.9.3
+cobertura.lib.dir=/VSL/Tools/lib/cobertura
 
 # JUnit is a well-known automated unit testing framework
 # for Java.  Download the JUnit jar file from
 # https://github.com/KentBeck/junit/downloads
 # All you need is the basic jar, e.g., "junit-4.10.jar".
 # Set the path to it here:
-junit.jar=/tools/junit-4.4.jar
+junit.jar=/VSL/Tools/lib/junit.jar
 
 # CVC3 is a satisfiability modulo theories prover.
 # Download source from here: http://www.cs.nyu.edu/acsys/cvc3/download.html
 # When building, configure with the --enable-dynamic and --enable-java flags.
 # Set the path to the java library here:
-cvc3.lib.jar=/tools/cvc3/java/lib/libcvc3-5.0.0.jar
+cvc3.lib.jar=/VSL/Tools/lib/libcvc3.jar
+
+cvc3.jni.dir=/VSL/Tools/lib/cvc3-dynamic-libs
+
+clj-ds.classes=/VSL/Tools/src/clj-ds-master/src/main/java
+
+pcollections.jar=/VSL/Tools/lib/pcollections.jar
