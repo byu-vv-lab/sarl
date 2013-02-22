@@ -12,13 +12,12 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
-		SymbolicMap {
+public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
 
-	private PMap<SymbolicExpression, SymbolicExpression> pmap;
+	private PMap<K, V> pmap;
 
-	PcollectionsSymbolicMap(
-			PMap<SymbolicExpression, SymbolicExpression> pmap) {
+	PcollectionsSymbolicMap(PMap<K, V> pmap) {
 		super();
 		this.pmap = pmap;
 	}
@@ -28,33 +27,32 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 		this.pmap = HashTreePMap.empty();
 	}
 
-	PcollectionsSymbolicMap(
-			Map<SymbolicExpression, SymbolicExpression> javaMap) {
+	PcollectionsSymbolicMap(Map<K, V> javaMap) {
 		this(HashTreePMap.from(javaMap));
 	}
 
 	@Override
-	public SymbolicExpression get(SymbolicExpression key) {
+	public V get(K key) {
 		return pmap.get(key);
 	}
 
 	@Override
-	public Iterable<SymbolicExpression> keys() {
+	public Iterable<K> keys() {
 		return pmap.keySet();
 	}
 
 	@Override
-	public Iterable<SymbolicExpression> values() {
+	public Iterable<V> values() {
 		return pmap.values();
 	}
 
 	@Override
-	public Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries() {
+	public Iterable<Entry<K, V>> entries() {
 		return pmap.entrySet();
 	}
 
 	@Override
-	public Iterator<SymbolicExpression> iterator() {
+	public Iterator<V> iterator() {
 		return pmap.values().iterator();
 	}
 
@@ -69,8 +67,8 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	protected boolean collectionEquals(SymbolicCollection o) {
-		PcollectionsSymbolicMap that = (PcollectionsSymbolicMap) o;
+	protected boolean collectionEquals(SymbolicCollection<V> o) {
+		PcollectionsSymbolicMap<?, ?> that = (PcollectionsSymbolicMap<?, ?>) o;
 
 		return pmap.equals(that.pmap);
 	}
@@ -91,13 +89,13 @@ public class PcollectionsSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public SymbolicMap put(SymbolicExpression key, SymbolicExpression value) {
-		return new PcollectionsSymbolicMap(pmap.plus(key, value));
+	public SymbolicMap<K, V> put(K key, V value) {
+		return new PcollectionsSymbolicMap<K, V>(pmap.plus(key, value));
 	}
 
 	@Override
-	public SymbolicMap remove(SymbolicExpression key) {
-		return new PcollectionsSymbolicMap(pmap.minus(key));
+	public SymbolicMap<K, V> remove(K key) {
+		return new PcollectionsSymbolicMap<K, V>(pmap.minus(key));
 	}
 
 	/**

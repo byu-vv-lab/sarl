@@ -269,8 +269,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0+arg1
 	 */
-	SymbolicExpression add(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression add(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns a symbolic expression representing the sum of the given argument
@@ -281,7 +280,7 @@ public interface SymbolicUniverse {
 	 *            all have the same type.
 	 * @return expression representing the sum
 	 */
-	SymbolicExpression add(SymbolicCollection args);
+	SymbolicExpression add(SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
@@ -294,8 +293,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0-arg1
 	 */
-	SymbolicExpression subtract(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression subtract(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the result of multiplying the two
@@ -308,8 +306,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 * arg1, the product of arg0 and arg1.
 	 */
-	SymbolicExpression multiply(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression multiply(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns symbolic expression representing the product of the given
@@ -320,7 +317,8 @@ public interface SymbolicUniverse {
 	 *            numeric type
 	 * @return a symbolic expression representing the product
 	 */
-	SymbolicExpression multiply(SymbolicCollection args);
+	SymbolicExpression multiply(
+			SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by
@@ -334,8 +332,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 / arg1
 	 */
-	SymbolicExpression divide(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression divide(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents arg0 modulo arg1. The two
@@ -348,8 +345,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of integer type
 	 * @return arg0 % arg1
 	 */
-	SymbolicExpression modulo(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression modulo(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the negative of the given
@@ -420,8 +416,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type
 	 * @return conjunction of arg0 and arg1
 	 */
-	SymbolicExpression and(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression and(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents the conjunction of the
@@ -434,7 +429,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the conjunction of the expressions in args
 	 */
-	SymbolicExpression and(SymbolicCollection args);
+	SymbolicExpression and(SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression representing the disjunction of the two
@@ -459,7 +454,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the disjunction of the expressions in args
 	 */
-	SymbolicExpression or(SymbolicCollection args);
+	SymbolicExpression or(SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression representing the logical negation of the
@@ -482,8 +477,7 @@ public interface SymbolicUniverse {
 	 *            symbolic expression of same numeric type
 	 * @return symbolic expression of boolean type arg0 < arg1
 	 */
-	SymbolicExpression lessThan(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression lessThan(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns expression equivalent to arg0 <= arg1 ("less than or equal to").
@@ -510,8 +504,7 @@ public interface SymbolicUniverse {
 	 *            symbolic expression of same numeric type
 	 * @return symbolic expression of boolean type arg0 = arg1
 	 */
-	SymbolicExpression equals(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression equals(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns expression equivalent to arg0 != arg1 ("not equals"). The
@@ -524,8 +517,7 @@ public interface SymbolicUniverse {
 	 *            symbolic expression of same numeric type
 	 * @return symbolic expression of boolean type arg0 != arg1
 	 */
-	SymbolicExpression neq(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	SymbolicExpression neq(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns the universally quantified expression forall(x).e.
@@ -619,7 +611,7 @@ public interface SymbolicUniverse {
 	 * input signature.
 	 */
 	SymbolicExpression apply(SymbolicExpression function,
-			SymbolicSequence argumentSequence);
+			SymbolicSequence<? extends SymbolicExpression> argumentSequence);
 
 	// Union type operations...
 
@@ -684,7 +676,7 @@ public interface SymbolicUniverse {
 	 * @return array consisting of those elements
 	 */
 	SymbolicExpression array(SymbolicType elementType,
-			SymbolicSequence elements);
+			SymbolicSequence<? extends SymbolicExpression> elements);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a
@@ -729,7 +721,7 @@ public interface SymbolicUniverse {
 			SymbolicExpression index, SymbolicExpression value);
 
 	SymbolicExpression denseArrayWrite(SymbolicExpression array,
-			SymbolicSequence values);
+			SymbolicSequence<? extends SymbolicExpression> values);
 
 	/**
 	 * Returns an expression representing an array with element type T defined
@@ -750,7 +742,7 @@ public interface SymbolicUniverse {
 	 * @return the tuple formed from the components
 	 */
 	SymbolicExpression tuple(SymbolicTupleType type,
-			SymbolicSequence components);
+			SymbolicSequence<? extends SymbolicExpression> components);
 
 	/**
 	 * Returns an expression that represents the result of reading a component
@@ -779,8 +771,8 @@ public interface SymbolicUniverse {
 	 *            the new value for the component
 	 * @return an expression representing the new tuple
 	 */
-	SymbolicExpression tupleWrite(SymbolicExpression tuple,
-			IntObject index, SymbolicExpression value);
+	SymbolicExpression tupleWrite(SymbolicExpression tuple, IntObject index,
+			SymbolicExpression value);
 
 	// Misc. expressions...
 
@@ -794,8 +786,7 @@ public interface SymbolicUniverse {
 	 * @return symbolic expression cast to new type
 	 * @exception
 	 */
-	SymbolicExpression cast(SymbolicType newType,
-			SymbolicExpression expression);
+	SymbolicExpression cast(SymbolicType newType, SymbolicExpression expression);
 
 	/**
 	 * Given three symbolic expressions of boolean type, returns a symbolic

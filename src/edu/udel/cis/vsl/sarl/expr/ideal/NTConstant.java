@@ -39,8 +39,9 @@ public class NTConstant extends IdealExpression implements Constant {
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
-		return factory.singletonMap(factory.one(type()), this);
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
+		return factory.singletonMap((Monic) factory.one(type()),
+				(Monomial) this);
 	}
 
 	@Override

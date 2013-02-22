@@ -19,12 +19,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  */
 public class ReducedPolynomial extends NumericPrimitive {
 
-	public ReducedPolynomial(SymbolicType type, SymbolicMap termMap) {
+	public ReducedPolynomial(SymbolicType type,
+			SymbolicMap<Monic, Monomial> termMap) {
 		super(SymbolicOperator.ADD, type, termMap);
 	}
 
-	public SymbolicMap termMap() {
-		return (SymbolicMap) argument(0);
+	@SuppressWarnings("unchecked")
+	public SymbolicMap<Monic, Monomial> termMap() {
+		return (SymbolicMap<Monic, Monomial>) argument(0);
 	}
 
 	@Override

@@ -228,7 +228,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		return unionType.name().toString() + "_inject_" + index;
 	}
 
-	private List<Expr> translateCollection(SymbolicCollection collection) {
+	private List<Expr> translateCollection(SymbolicCollection<?> collection) {
 		List<Expr> result = new LinkedList<Expr>();
 
 		for (SymbolicExpression expr : collection)
@@ -255,8 +255,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			return result;
 		switch (expr.operator()) {
 		case SYMBOLIC_CONSTANT:
-			result = vc.createOp(
-					((SymbolicConstant) expr).name().getString(),
+			result = vc.createOp(((SymbolicConstant) expr).name().getString(),
 					this.translateType(expr.type()));
 			break;
 		case LAMBDA:
@@ -285,7 +284,7 @@ public class CVC3TheoremProver implements TheoremProver {
 					.extent();
 			IntegerNumber extentNumber = (IntegerNumber) universe
 					.extractNumber(extentExpression);
-			SymbolicSequence sequence = (SymbolicSequence) object;
+			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
 			int size = sequence.size();
 			Type cvcType = translateType(type);
 
@@ -306,7 +305,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			break;
 		case TUPLE:
 			result = vc
-					.tupleExpr(translateCollection((SymbolicSequence) object));
+					.tupleExpr(translateCollection((SymbolicSequence<?>) object));
 			break;
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
@@ -335,7 +334,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 		if (numArgs == 1) {
 			result = vc.ratExpr(1);
-			for (SymbolicExpression operand : (SymbolicCollection) expr
+			for (SymbolicExpression operand : (SymbolicCollection<?>) expr
 					.argument(0))
 				result = vc.multExpr(result, translate(operand));
 		} else if (numArgs == 2)
@@ -353,7 +352,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (numArgs == 1)
-			result = vc.orExpr(translateCollection((SymbolicCollection) expr
+			result = vc.orExpr(translateCollection((SymbolicCollection<?>) expr
 					.argument(0)));
 		else if (numArgs == 2)
 			result = vc.orExpr(
@@ -448,8 +447,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @throws Cvc3Exception
 	 *             by CVC3
 	 */
-	private Expr translateIntegerDivision(
-			SymbolicExpression quotientExpression) throws Cvc3Exception {
+	private Expr translateIntegerDivision(SymbolicExpression quotientExpression)
+			throws Cvc3Exception {
 		Pair<Expr, Expr> value = getQuotientRemainderPair(
 				(SymbolicExpression) quotientExpression.argument(0),
 				(SymbolicExpression) quotientExpression.argument(1));
@@ -512,7 +511,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		boolean isBig = isBigArray(arrayExpression);
 		Expr origin = translate(arrayExpression);
 		Expr result = isBig ? bigArrayValue(origin) : origin;
-		List<Expr> values = translateCollection((SymbolicSequence) expr
+		List<Expr> values = translateCollection((SymbolicSequence<?>) expr
 				.argument(1));
 		int index = 0;
 
@@ -715,12 +714,10 @@ public class CVC3TheoremProver implements TheoremProver {
 							.sequence()));
 			break;
 		case FUNCTION:
-			result = vc
-					.funType(
-							translateTypeSequence(((SymbolicFunctionType) type)
-									.inputTypes()),
-							translateType(((SymbolicFunctionType) type)
-									.outputType()));
+			result = vc.funType(
+					translateTypeSequence(((SymbolicFunctionType) type)
+							.inputTypes()),
+					translateType(((SymbolicFunctionType) type).outputType()));
 			break;
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
@@ -762,7 +759,7 @@ public class CVC3TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
-						.plusExpr(translateCollection((SymbolicCollection) expr
+						.plusExpr(translateCollection((SymbolicCollection<?>) expr
 								.argument(0)));
 			else
 				throw new SARLInternalException(
@@ -775,20 +772,20 @@ public class CVC3TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
-						.andExpr(translateCollection((SymbolicCollection) expr
+						.andExpr(translateCollection((SymbolicCollection<?>) expr
 								.argument(0)));
 			else
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for AND: " + expr);
 			break;
 		case APPLY:
-			result = vc.funExpr(
-					translateFunction((SymbolicExpression) expr.argument(0)),
-					translateCollection((SymbolicCollection) expr.argument(1)));
+			result = vc.funExpr(translateFunction((SymbolicExpression) expr
+					.argument(0)),
+					translateCollection((SymbolicCollection<?>) expr
+							.argument(1)));
 			break;
 		case ARRAY_LAMBDA: {
-			SymbolicExpression function = (SymbolicExpression) expr
-					.argument(0);
+			SymbolicExpression function = (SymbolicExpression) expr.argument(0);
 			SymbolicOperator op0 = function.operator();
 			Expr var, body;
 
@@ -871,8 +868,8 @@ public class CVC3TheoremProver implements TheoremProver {
 			result = vc.notExpr(translateEquality(expr));
 			break;
 		case NOT:
-			result = vc.notExpr(translate((SymbolicExpression) expr
-					.argument(0)));
+			result = vc
+					.notExpr(translate((SymbolicExpression) expr.argument(0)));
 			break;
 		case OR:
 			result = translateOr(expr);

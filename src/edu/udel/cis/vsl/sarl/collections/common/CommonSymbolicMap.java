@@ -7,38 +7,37 @@ import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
-public abstract class CommonSymbolicMap extends CommonSymbolicCollection
-		implements SymbolicMap {
+public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+		extends CommonSymbolicCollection<V> implements SymbolicMap<K, V> {
 
 	public CommonSymbolicMap() {
 		super(SymbolicCollectionKind.MAP);
 	}
 
 	@Override
-	public SymbolicMap apply(UnaryOperator operator) {
-		SymbolicMap result = this;
+	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
+		SymbolicMap<K, V> result = this;
 
-		for (Entry<SymbolicExpression, SymbolicExpression> entry : this
-				.entries())
+		for (Entry<K, V> entry : this.entries())
 			result = result.put(entry.getKey(),
 					operator.apply(entry.getValue()));
 		return result;
 	}
 
 	@Override
-	public SymbolicMap combine(BinaryOperator operator, SymbolicMap map) {
-		SymbolicMap result = this;
+	public SymbolicMap<K, V> combine(BinaryOperator<V> operator,
+			SymbolicMap<K, V> map) {
+		SymbolicMap<K, V> result = this;
 
-		for (Entry<SymbolicExpression, SymbolicExpression> entry : map
-				.entries()) {
-			SymbolicExpression key = entry.getKey();
-			SymbolicExpression value2 = entry.getValue();
-			SymbolicExpression value1 = this.get(key);
+		for (Entry<K, V> entry : map.entries()) {
+			K key = entry.getKey();
+			V value2 = entry.getValue();
+			V value1 = this.get(key);
 
 			if (value1 == null)
 				result = result.put(key, value2);
 			else {
-				SymbolicExpression newValue = operator.apply(value1, value2);
+				V newValue = operator.apply(value1, value2);
 
 				if (newValue == null)
 					result = result.remove(key);
@@ -53,8 +52,7 @@ public abstract class CommonSymbolicMap extends CommonSymbolicCollection
 		StringBuffer buffer = new StringBuffer("{");
 		boolean first = true;
 
-		for (Entry<SymbolicExpression, SymbolicExpression> entry : this
-				.entries()) {
+		for (Entry<K, V> entry : this.entries()) {
 			if (first)
 				first = false;
 			else

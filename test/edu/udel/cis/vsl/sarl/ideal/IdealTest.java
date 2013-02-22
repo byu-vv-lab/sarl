@@ -147,7 +147,7 @@ public class IdealTest {
 	@Test
 	public void bigPower() {
 		// TODO: performance !
-		int exponent = 100;
+		int exponent = 10;
 		IntObject n = objectFactory.intObject(exponent);
 		IntObject m = objectFactory.intObject(exponent - 1);
 		NumericExpression xpy = idealFactory.add(x, y);

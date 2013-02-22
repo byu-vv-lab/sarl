@@ -19,7 +19,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 public interface NumericExpressionFactory {
 
 	void setObjectComparator(Comparator<SymbolicObject> c);
-	
+
 	void init();
 
 	NumberFactory numberFactory();
@@ -47,8 +47,8 @@ public interface NumericExpressionFactory {
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject arg0,
-			SymbolicObject arg1, SymbolicObject arg2);
+			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
+			SymbolicObject arg2);
 
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
@@ -61,7 +61,7 @@ public interface NumericExpressionFactory {
 	 *            all have the same type.
 	 * @return expression representing the sum
 	 */
-	NumericExpression add(SymbolicCollection args);
+	NumericExpression add(SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
@@ -98,7 +98,8 @@ public interface NumericExpressionFactory {
 	 *            numeric type
 	 * @return a symbolic expression representing the product
 	 */
-	NumericExpression multiply(SymbolicCollection args);
+	NumericExpression multiply(
+			SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by

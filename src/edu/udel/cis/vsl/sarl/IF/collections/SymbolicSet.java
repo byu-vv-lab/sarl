@@ -9,7 +9,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  * @author siegel
  * 
  */
-public interface SymbolicSet extends SymbolicCollection {
+public interface SymbolicSet<T extends SymbolicExpression> extends
+		SymbolicCollection<T> {
 
 	/**
 	 * Does this set contain the element?
@@ -18,7 +19,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a symbolic expression
 	 * @return true iff this set contains the element
 	 */
-	boolean contains(SymbolicExpression element);
+	boolean contains(T element);
 
 	/**
 	 * Is this a sorted map?
@@ -38,7 +39,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            any symbolic expression
 	 * @return collection obtained by adding element
 	 */
-	SymbolicSet add(SymbolicExpression element);
+	SymbolicSet<T> add(T element);
 
 	/**
 	 * Returns the union of the two sets.
@@ -49,7 +50,11 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a set of symbolic expressions
 	 * @return their union
 	 */
-	SymbolicSet addAll(SymbolicSet set);
+	SymbolicSet<T> addAll(SymbolicSet<? extends T> set);
+
+	// SymbolicSet<SymbolicExpression> expand();
+
+	// SymbolicSet<SymbolicExpression> addAllAnyKind(SymbolicSet<?> set);
 
 	/**
 	 * Returns the set obtained by removing the given element from a set. If the
@@ -62,7 +67,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a symbolic expressions
 	 * @return set-{element}
 	 */
-	SymbolicSet remove(SymbolicExpression element);
+	SymbolicSet<T> remove(T element);
 
 	/**
 	 * Returns the set set1-set2, i.e., the set consisting of all x in set1 such
@@ -74,7 +79,7 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a set of symbolic expressions
 	 * @return the set difference, set1-set2
 	 */
-	SymbolicSet removeAll(SymbolicSet set);
+	SymbolicSet<T> removeAll(SymbolicSet<? extends T> set);
 
 	/**
 	 * Returns the intersections of the sets.
@@ -85,5 +90,5 @@ public interface SymbolicSet extends SymbolicCollection {
 	 *            a set of symbolic expressions
 	 * @return the intersection of the two sets
 	 */
-	SymbolicSet keepOnly(SymbolicSet set);
+	SymbolicSet<T> keepOnly(SymbolicSet<? extends T> set);
 }

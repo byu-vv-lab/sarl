@@ -11,12 +11,12 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
-		SymbolicSet {
+public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
+		CommonSymbolicCollection<T> implements SymbolicSet<T> {
 
-	private PSet<SymbolicExpression> pset;
+	private PSet<T> pset;
 
-	PcollectionsSymbolicSet(PSet<SymbolicExpression> pset) {
+	PcollectionsSymbolicSet(PSet<T> pset) {
 		super(SymbolicCollectionKind.SET);
 		this.pset = pset;
 	}
@@ -26,7 +26,7 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		this.pset = HashTreePSet.empty();
 	}
 
-	PcollectionsSymbolicSet(Collection<SymbolicExpression> elements) {
+	PcollectionsSymbolicSet(Collection<T> elements) {
 		this(HashTreePSet.from(elements));
 	}
 
@@ -36,18 +36,18 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	}
 
 	@Override
-	public Iterator<SymbolicExpression> iterator() {
+	public Iterator<T> iterator() {
 		return pset.iterator();
 	}
 
 	@Override
-	public boolean contains(SymbolicExpression element) {
+	public boolean contains(T element) {
 		return pset.contains(element);
 	}
 
 	@Override
-	protected boolean collectionEquals(SymbolicCollection o) {
-		return pset.equals(((PcollectionsSymbolicSet) o).pset);
+	protected boolean collectionEquals(SymbolicCollection<T> o) {
+		return pset.equals(((PcollectionsSymbolicSet<T>) o).pset);
 	}
 
 	@Override
@@ -64,30 +64,42 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 	public boolean isSorted() {
 		return false;
 	}
+	
+	// /**
+	// * I say the cast is safe because instances are immutable.
+	// * Therefore, if A is a subtype of B, then "immutable-set-of-A"
+	// * is a subtype of "immutable-set-of-B".
+	// */
+	// @SuppressWarnings("unchecked")
+	// @Override
+	// public SymbolicSet<SymbolicExpression> expand() {
+	// return (SymbolicSet<SymbolicExpression>) this;
+	// }
+
 
 	@Override
-	public SymbolicSet add(SymbolicExpression element) {
-		return new PcollectionsSymbolicSet(pset.plus(element));
+	public SymbolicSet<T> add(T element) {
+		return new PcollectionsSymbolicSet<T>(pset.plus(element));
 	}
 
 	@Override
-	public SymbolicSet addAll(SymbolicSet set) {
-		return new PcollectionsSymbolicSet(pset.plusAll(pset));
+	public SymbolicSet<T> addAll(SymbolicSet<? extends T> set) {
+		return new PcollectionsSymbolicSet<T>(pset.plusAll(pset));
 	}
 
 	@Override
-	public SymbolicSet remove(SymbolicExpression element) {
-		return new PcollectionsSymbolicSet(pset.minus(element));
+	public SymbolicSet<T> remove(T element) {
+		return new PcollectionsSymbolicSet<T>(pset.minus(element));
 	}
 
 	@Override
-	public SymbolicSet removeAll(SymbolicSet set) {
-		return new PcollectionsSymbolicSet(
-				pset.minusAll(((PcollectionsSymbolicSet) set).pset));
+	public SymbolicSet<T> removeAll(SymbolicSet<? extends T> set) {
+		return new PcollectionsSymbolicSet<T>(
+				pset.minusAll(((PcollectionsSymbolicSet<?>) set).pset));
 	}
 
 	@Override
-	public SymbolicSet keepOnly(SymbolicSet set) {
+	public SymbolicSet<T> keepOnly(SymbolicSet<? extends T> set) {
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
@@ -96,5 +108,13 @@ public class PcollectionsSymbolicSet extends CommonSymbolicCollection implements
 		// TODO Auto-generated method stub
 
 	}
+
+	// @Override
+	// public SymbolicSet<SymbolicExpression> addAllAnyKind(SymbolicSet<?> set)
+	// {
+	// return addAll(set);
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 
 }

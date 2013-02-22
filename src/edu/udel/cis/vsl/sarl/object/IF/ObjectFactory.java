@@ -5,8 +5,8 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -20,7 +20,7 @@ public interface ObjectFactory {
 
 	void setExpressionComparator(Comparator<SymbolicExpression> c);
 
-	void setCollectionComparator(Comparator<SymbolicCollection> c);
+	void setCollectionComparator(Comparator<SymbolicCollection<?>> c);
 
 	void setTypeComparator(Comparator<SymbolicType> c);
 
@@ -37,11 +37,11 @@ public interface ObjectFactory {
 	 * @param object
 	 * @return
 	 */
-	SymbolicObject canonic(SymbolicObject object);
+	<T extends SymbolicObject> T canonic(T object);
 
-	SymbolicType canonic(SymbolicType type);
+	// SymbolicType canonic(SymbolicType type);
 
-	SymbolicExpression canonic(SymbolicExpression expression);
+	// SymbolicExpression canonic(SymbolicExpression expression);
 
 	BooleanObject trueObj();
 

@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.expr.ideal;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
@@ -67,16 +66,16 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		if (result != 0)
 			return result;
 
-		Iterator<SymbolicExpression> monomialIter1 = p1.termMap(idealFactory)
+		Iterator<Monomial> monomialIter1 = p1.termMap(idealFactory).values()
 				.iterator();
-		Iterator<SymbolicExpression> monomialIter2 = p2.termMap(idealFactory)
+		Iterator<Monomial> monomialIter2 = p2.termMap(idealFactory).values()
 				.iterator();
 
 		while (monomialIter1.hasNext()) {
-			Monomial monomial1 = (Monomial) monomialIter1.next();
+			Monomial monomial1 = monomialIter1.next();
 
 			if (monomialIter2.hasNext()) {
-				Monomial monomial2 = (Monomial) monomialIter2.next();
+				Monomial monomial2 = monomialIter2.next();
 
 				result = compareMonomials(monomial1, monomial2);
 				if (result != 0)
@@ -114,14 +113,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		if (result != 0)
 			return result;
 
-		Iterator<SymbolicExpression> ppIter1 = m1.monicFactors(idealFactory)
+		Iterator<PrimitivePower> ppIter1 = m1.monicFactors(idealFactory)
 				.iterator();
-		Iterator<SymbolicExpression> ppIter2 = m2.monicFactors(idealFactory)
+		Iterator<PrimitivePower> ppIter2 = m2.monicFactors(idealFactory)
 				.iterator();
 
 		while (ppIter1.hasNext()) {
-			PrimitivePower ppower1 = (PrimitivePower) ppIter1.next();
-			PrimitivePower ppower2 = (PrimitivePower) ppIter2.next();
+			PrimitivePower ppower1 = ppIter1.next();
+			PrimitivePower ppower2 = ppIter2.next();
 
 			result = comparePrimitives(ppower1.primitive(idealFactory),
 					ppower2.primitive(idealFactory));

@@ -11,7 +11,7 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
  */
 public class NTMonomial extends IdealExpression implements Monomial {
 
-	private SymbolicMap termMap = null;
+	private SymbolicMap<Monic, Monomial> termMap = null;
 
 	protected NTMonomial(Constant constant, Monic monic) {
 		super(SymbolicOperator.MULTIPLY, constant.type(), constant, monic);
@@ -30,9 +30,10 @@ public class NTMonomial extends IdealExpression implements Monomial {
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
 		if (termMap == null)
-			termMap = factory.singletonMap((Monic) argument(1), this);
+			termMap = factory
+					.singletonMap((Monic) argument(1), (Monomial) this);
 		return termMap;
 	}
 

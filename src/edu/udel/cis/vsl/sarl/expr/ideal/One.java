@@ -29,8 +29,8 @@ public class One extends IdealExpression implements Constant, Monic {
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
-		return factory.singletonMap(this, this);
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
+		return factory.singletonMap((Monic) this, (Monomial) this);
 	}
 
 	@Override
@@ -49,7 +49,8 @@ public class One extends IdealExpression implements Constant, Monic {
 	}
 
 	@Override
-	public SymbolicMap monicFactors(IdealFactory factory) {
+	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
+			IdealFactory factory) {
 		return factory.emptyMap();
 	}
 

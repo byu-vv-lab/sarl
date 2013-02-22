@@ -18,7 +18,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 	private Comparator<SymbolicExpression> expressionComparator;
 
-	private Comparator<SymbolicCollection> collectionComparator;
+	private Comparator<SymbolicCollection<?>> collectionComparator;
 
 	private Comparator<SymbolicType> typeComparator;
 
@@ -31,7 +31,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		expressionComparator = c;
 	}
 
-	public void setCollectionComparator(Comparator<SymbolicCollection> c) {
+	public void setCollectionComparator(Comparator<SymbolicCollection<?>> c) {
 		collectionComparator = c;
 	}
 
@@ -47,7 +47,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		return expressionComparator;
 	}
 
-	public Comparator<SymbolicCollection> collectionComparator() {
+	public Comparator<SymbolicCollection<?>> collectionComparator() {
 		return collectionComparator;
 	}
 
@@ -72,11 +72,10 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 			return expressionComparator.compare((SymbolicExpression) o1,
 					(SymbolicExpression) o2);
 		case EXPRESSION_COLLECTION:
-			return collectionComparator.compare((SymbolicCollection) o1,
-					(SymbolicCollection) o2);
+			return collectionComparator.compare((SymbolicCollection<?>) o1,
+					(SymbolicCollection<?>) o2);
 		case TYPE:
-			return typeComparator.compare((SymbolicType) o1,
-					(SymbolicType) o2);
+			return typeComparator.compare((SymbolicType) o1, (SymbolicType) o2);
 		case TYPE_SEQUENCE:
 			return typeSequenceComparator.compare((SymbolicTypeSequence) o1,
 					(SymbolicTypeSequence) o2);

@@ -12,8 +12,8 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -106,7 +106,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private Comparator<SymbolicExpression> wrappedComparator;
 
-	private SymbolicMap emptyMap;
+	private SymbolicMap<?, ?> emptyMap;
 
 	private SymbolicType integerType, realType;
 
@@ -182,18 +182,18 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Basic symbolic objects...
 
-	public SymbolicMap emptyMap() {
-		return emptyMap;
+	@SuppressWarnings("unchecked")
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptyMap() {
+		return (SymbolicMap<K, V>) emptyMap;
 	}
 
 	public IntObject oneIntObject() {
 		return oneIntObject;
 	}
 
-	public SymbolicMap singletonMap(SymbolicExpression key,
-			SymbolicExpression value) {
-		return collectionFactory.singletonSortedMap(wrappedComparator, key,
-				value);
+	public <K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
+			K key, V value) {
+		return collectionFactory.singletonSortedMap(comparator, key, value);
 	}
 
 	// Constants...
@@ -300,11 +300,13 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Monics...
 
-	private NTMonic ntMonic(SymbolicType type, SymbolicMap monicMap) {
+	private NTMonic ntMonic(SymbolicType type,
+			SymbolicMap<NumericPrimitive, PrimitivePower> monicMap) {
 		return new NTMonic(type, monicMap);
 	}
 
-	public Monic monic(SymbolicType type, SymbolicMap monicMap) {
+	public Monic monic(SymbolicType type,
+			SymbolicMap<NumericPrimitive, PrimitivePower> monicMap) {
 		if (monicMap.isEmpty())
 			return one(type);
 		if (monicMap.size() == 1)
@@ -343,16 +345,17 @@ public class IdealFactory implements NumericExpressionFactory {
 	 * @return
 	 */
 	public ReducedPolynomial reducedPolynomial(SymbolicType type,
-			SymbolicMap termMap) {
+			SymbolicMap<Monic, Monomial> termMap) {
 		return new ReducedPolynomial(type, termMap);
 	}
 
-	private NTPolynomial ntPolynomial(SymbolicMap termMap,
+	private NTPolynomial ntPolynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization) {
 		return new NTPolynomial(termMap, factorization);
 	}
 
-	public Polynomial polynomial(SymbolicMap termMap, Monomial factorization) {
+	public Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
+			Monomial factorization) {
 		if (termMap.size() == 0)
 			return zero(factorization.type());
 		if (termMap.size() == 1)
@@ -374,16 +377,18 @@ public class IdealFactory implements NumericExpressionFactory {
 	public Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicType type = fact1.type();
 		// maps from ReducedPolynomial to ReducedPolynomialPower...
-		SymbolicMap map1 = fact1.monicFactors(this);
-		SymbolicMap map2 = fact2.monicFactors(this);
-		SymbolicMap commonMap = collectionFactory.emptySortedMap();
-		SymbolicMap newMap1 = map1, newMap2 = map2;
+		SymbolicMap<NumericPrimitive, PrimitivePower> map1 = fact1
+				.monicFactors(this);
+		SymbolicMap<NumericPrimitive, PrimitivePower> map2 = fact2
+				.monicFactors(this);
+		SymbolicMap<NumericPrimitive, PrimitivePower> commonMap = collectionFactory
+				.emptySortedMap();
+		SymbolicMap<NumericPrimitive, PrimitivePower> newMap1 = map1, newMap2 = map2;
 
-		for (Entry<SymbolicExpression, SymbolicExpression> entry : map1
-				.entries()) {
-			NumericPrimitive base = (NumericPrimitive) entry.getKey();
-			PrimitivePower ppower1 = (PrimitivePower) entry.getValue();
-			PrimitivePower ppower2 = (PrimitivePower) map2.get(base);
+		for (Entry<NumericPrimitive, PrimitivePower> entry : map1.entries()) {
+			NumericPrimitive base = entry.getKey();
+			PrimitivePower ppower1 = entry.getValue();
+			PrimitivePower ppower2 = map2.get(base);
 
 			if (ppower2 != null) {
 				IntObject exponent1 = ppower1.primitivePowerExponent(this);
@@ -432,22 +437,24 @@ public class IdealFactory implements NumericExpressionFactory {
 				c1.number(), c2.number())));
 	}
 
-	private Constant getConstantFactor(SymbolicType type, SymbolicMap termMap) {
+	private Constant getConstantFactor(SymbolicType type,
+			SymbolicMap<Monic, Monomial> termMap) {
 		if (type.isReal())
 			return ((Monomial) termMap.iterator().next())
 					.monomialConstant(this);
 		else {
-			Iterator<SymbolicExpression> monomialIter = termMap.iterator();
-			IntegerNumber gcd = (IntegerNumber) ((Monomial) monomialIter
-					.next()).monomialConstant(this).number();
+			Iterator<Monomial> monomialIter = termMap.values().iterator();
+			IntegerNumber gcd = (IntegerNumber) monomialIter.next()
+					.monomialConstant(this).number();
 			boolean isNegative = gcd.signum() < 0;
 
 			if (isNegative)
 				gcd = numberFactory.negate(gcd);
 			while (monomialIter.hasNext()) {
-				gcd = numberFactory.gcd(gcd, (IntegerNumber) numberFactory
-						.abs(((Monomial) monomialIter.next()).monomialConstant(
-								this).number()));
+				gcd = numberFactory.gcd(
+						gcd,
+						(IntegerNumber) numberFactory.abs(monomialIter.next()
+								.monomialConstant(this).number()));
 				if (gcd.isOne())
 					break;
 			}
@@ -455,7 +462,9 @@ public class IdealFactory implements NumericExpressionFactory {
 		}
 	}
 
-	private SymbolicMap add(SymbolicMap termMap1, SymbolicMap termMap2) {
+	private SymbolicMap<Monic, Monomial> add(
+			SymbolicMap<Monic, Monomial> termMap1,
+			SymbolicMap<Monic, Monomial> termMap2) {
 		return termMap1.combine(monomialAdder, termMap2);
 	}
 
@@ -470,7 +479,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	 */
 	private Polynomial addNoCommon(Polynomial p1, Polynomial p2) {
 		SymbolicType type = p1.type();
-		SymbolicMap newMap = add(p1.termMap(this), p2.termMap(this));
+		SymbolicMap<Monic, Monomial> newMap = add(p1.termMap(this),
+				p2.termMap(this));
 
 		if (newMap.isEmpty())
 			return zero(type);
@@ -537,7 +547,8 @@ public class IdealFactory implements NumericExpressionFactory {
 				c1.number(), c2.number())));
 	}
 
-	private SymbolicMap multiply(Constant constant, SymbolicMap termMap) {
+	private SymbolicMap<Monic, Monomial> multiply(Constant constant,
+			SymbolicMap<Monic, Monomial> termMap) {
 		MonomialMultiplier multiplier = new MonomialMultiplier(this,
 				constant.number());
 
@@ -550,8 +561,9 @@ public class IdealFactory implements NumericExpressionFactory {
 		if (constant.isOne())
 			return polynomial;
 		else {
-			SymbolicMap oldTermMap = polynomial.termMap(this);
-			SymbolicMap newTermMap = multiply(constant, oldTermMap);
+			SymbolicMap<Monic, Monomial> oldTermMap = polynomial.termMap(this);
+			SymbolicMap<Monic, Monomial> newTermMap = multiply(constant,
+					oldTermMap);
 			Monomial oldFactorization = polynomial.factorization(this);
 			Monomial newFactorization = monomial(
 					multiply(constant, oldFactorization.monomialConstant(this)),
@@ -574,8 +586,10 @@ public class IdealFactory implements NumericExpressionFactory {
 				multiply(m1.monic(this), m2.monic(this)));
 	}
 
-	private SymbolicMap multiply(Monomial monomial, SymbolicMap termMap) {
-		SymbolicMap result = collectionFactory.emptySortedMap();
+	private SymbolicMap<Monic, Monomial> multiply(Monomial monomial,
+			SymbolicMap<Monic, Monomial> termMap) {
+		SymbolicMap<Monic, Monomial> result = collectionFactory
+				.emptySortedMap();
 
 		for (SymbolicExpression expr : termMap) {
 			Monomial m = (Monomial) expr;
@@ -591,15 +605,14 @@ public class IdealFactory implements NumericExpressionFactory {
 				multiply(monomial, polynomial.factorization(this)));
 	}
 
-	private SymbolicMap multiply(SymbolicMap termMap1, SymbolicMap termMap2) {
-		SymbolicMap result = collectionFactory.emptySortedMap();
+	private SymbolicMap<Monic, Monomial> multiply(
+			SymbolicMap<Monic, Monomial> termMap1,
+			SymbolicMap<Monic, Monomial> termMap2) {
+		SymbolicMap<Monic, Monomial> result = collectionFactory
+				.emptySortedMap();
 
-		for (SymbolicExpression expr : termMap1) {
-			Monomial monomial = (Monomial) expr;
-			SymbolicMap product = multiply(monomial, termMap2);
-
-			result = add(result, product);
-		}
+		for (Monomial monomial : termMap1.values())
+			result = add(result, multiply(monomial, termMap2));
 		return result;
 	}
 
@@ -638,7 +651,8 @@ public class IdealFactory implements NumericExpressionFactory {
 				c1.number(), c2.number())));
 	}
 
-	private SymbolicMap divide(SymbolicMap termMap, Constant constant) {
+	private SymbolicMap<Monic, Monomial> divide(
+			SymbolicMap<Monic, Monomial> termMap, Constant constant) {
 		MonomialDivider divider = new MonomialDivider(this, constant.number());
 
 		return termMap.apply(divider);
@@ -770,7 +784,8 @@ public class IdealFactory implements NumericExpressionFactory {
 				monomial.monic(this));
 	}
 
-	private SymbolicMap negate(SymbolicMap termMap) {
+	private SymbolicMap<Monic, Monomial> negate(
+			SymbolicMap<Monic, Monomial> termMap) {
 		return termMap.apply(monomialNegater);
 
 	}
@@ -811,8 +826,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject arg0,
-			SymbolicObject arg1, SymbolicObject arg2) {
+			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
+			SymbolicObject arg2) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
 	}
 
@@ -825,7 +840,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public NumericExpression add(SymbolicCollection args) {
+	public NumericExpression add(
+			SymbolicCollection<? extends SymbolicExpression> args) {
 		int size = args.size();
 		NumericExpression result = null;
 
@@ -841,7 +857,8 @@ public class IdealFactory implements NumericExpressionFactory {
 		return result;
 	}
 
-	private NumericExpression addWithCast(SymbolicCollection args) {
+	private NumericExpression addWithCast(
+			SymbolicCollection<? extends SymbolicExpression> args) {
 		int size = args.size();
 		NumericExpression result = null;
 
@@ -874,7 +891,8 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public NumericExpression multiply(SymbolicCollection args) {
+	public NumericExpression multiply(
+			SymbolicCollection<? extends SymbolicExpression> args) {
 		int size = args.size();
 		NumericExpression result = null;
 
@@ -890,7 +908,8 @@ public class IdealFactory implements NumericExpressionFactory {
 		return result;
 	}
 
-	private NumericExpression multiplyWithCast(SymbolicCollection args) {
+	private NumericExpression multiplyWithCast(
+			SymbolicCollection<? extends SymbolicExpression> args) {
 		int size = args.size();
 		NumericExpression result = null;
 
@@ -986,9 +1005,12 @@ public class IdealFactory implements NumericExpressionFactory {
 
 		switch (operator) {
 		case ADD:
-			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION)
-				return addWithCast((SymbolicCollection) arg0);
-			else
+			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION) {
+				@SuppressWarnings("unchecked")
+				SymbolicCollection<? extends SymbolicExpression> collection = (SymbolicCollection<? extends SymbolicExpression>) arg0;
+
+				return addWithCast(collection);
+			} else
 				return add(castToReal((NumericExpression) arg0),
 						castToReal((NumericExpression) numericExpression
 								.argument(1)));
@@ -1003,9 +1025,12 @@ public class IdealFactory implements NumericExpressionFactory {
 					castToReal((NumericPrimitive) numericExpression.argument(1)),
 					castToReal((NumericPrimitive) numericExpression.argument(2)));
 		case MULTIPLY:
-			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION)
-				return multiplyWithCast((SymbolicCollection) arg0);
-			else
+			if (kind0 == SymbolicObjectKind.EXPRESSION_COLLECTION) {
+				@SuppressWarnings("unchecked")
+				SymbolicCollection<? extends SymbolicExpression> collection = (SymbolicCollection<? extends SymbolicExpression>) arg0;
+
+				return multiplyWithCast(collection);
+			} else
 				return multiply(castToReal((NumericExpression) arg0),
 						castToReal((NumericExpression) numericExpression
 								.argument(1)));
@@ -1084,7 +1109,7 @@ public class IdealFactory implements NumericExpressionFactory {
  * @author siegel
  * 
  */
-class MonomialAdder implements BinaryOperator {
+class MonomialAdder implements BinaryOperator<Monomial> {
 	private IdealFactory factory;
 
 	public MonomialAdder(IdealFactory factory) {
@@ -1092,17 +1117,13 @@ class MonomialAdder implements BinaryOperator {
 	}
 
 	@Override
-	public SymbolicExpression apply(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		Constant c0 = ((Monomial) arg0).monomialConstant(factory);
-		Constant c1 = ((Monomial) arg1).monomialConstant(factory);
-		Constant c2 = factory.add(c0, c1);
-		Monomial monomial;
+	public Monomial apply(Monomial arg0, Monomial arg1) {
+		Constant c = factory.add(arg0.monomialConstant(factory),
+				arg1.monomialConstant(factory));
 
-		if (c2.isZero())
+		if (c.isZero())
 			return null;
-		monomial = factory.ntMonomial(c2, ((Monomial) arg0).monic(factory));
-		return monomial;
+		return factory.ntMonomial(c, arg0.monic(factory));
 	}
 }
 
@@ -1113,7 +1134,7 @@ class MonomialAdder implements BinaryOperator {
  * @author siegel
  * 
  */
-class PrimitivePowerMultiplier implements BinaryOperator {
+class PrimitivePowerMultiplier implements BinaryOperator<PrimitivePower> {
 	private IdealFactory factory;
 
 	public PrimitivePowerMultiplier(IdealFactory factory) {
@@ -1121,21 +1142,15 @@ class PrimitivePowerMultiplier implements BinaryOperator {
 	}
 
 	@Override
-	public SymbolicExpression apply(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		NumericPrimitive base = ((PrimitivePower) arg0).primitive(factory);
-		IntObject exp0 = ((PrimitivePower) arg0)
-				.primitivePowerExponent(factory);
-		IntObject exp1 = ((PrimitivePower) arg1)
-				.primitivePowerExponent(factory);
-		IntObject newExponent = exp0.plus(exp1);
-		PrimitivePower result = factory.primitivePower(base, newExponent);
-
-		return result;
+	public PrimitivePower apply(PrimitivePower arg0, PrimitivePower arg1) {
+		return factory.primitivePower(
+				arg0.primitive(factory),
+				arg0.primitivePowerExponent(factory).plus(
+						arg1.primitivePowerExponent(factory)));
 	}
 }
 
-class MonomialDivider implements UnaryOperator {
+class MonomialDivider implements UnaryOperator<Monomial> {
 	private IdealFactory factory;
 	private Number scalar;
 	private NumberFactory numberFactory;
@@ -1146,20 +1161,15 @@ class MonomialDivider implements UnaryOperator {
 	}
 
 	@Override
-	public SymbolicExpression apply(SymbolicExpression arg) {
-		Monomial oldMonomial = (Monomial) arg;
-		Constant oldConstant = oldMonomial.monomialConstant(factory);
-		Number oldCoefficient = oldConstant.number();
-		Number newCoefficient = numberFactory.divide(oldCoefficient, scalar);
-		Constant newConstant = factory.constant(newCoefficient);
-		Monomial newMonomial = factory.monomial(newConstant,
-				oldMonomial.monic(factory));
-
-		return newMonomial;
+	public Monomial apply(Monomial arg) {
+		return factory.monomial(
+				factory.constant(numberFactory.divide(
+						arg.monomialConstant(factory).number(), scalar)),
+				arg.monic(factory));
 	}
 }
 
-class MonomialMultiplier implements UnaryOperator {
+class MonomialMultiplier implements UnaryOperator<Monomial> {
 	private IdealFactory factory;
 	private Number scalar;
 	private NumberFactory numberFactory;
@@ -1170,21 +1180,15 @@ class MonomialMultiplier implements UnaryOperator {
 	}
 
 	@Override
-	public SymbolicExpression apply(SymbolicExpression arg) {
-		Monomial oldMonomial = (Monomial) arg;
-		Constant oldConstant = oldMonomial.monomialConstant(factory);
-		Number oldCoefficient = oldConstant.number();
-		Number newCoefficient = numberFactory
-				.multiply(oldCoefficient, scalar);
-		Constant newConstant = factory.constant(newCoefficient);
-		Monomial newMonomial = factory.monomial(newConstant,
-				oldMonomial.monic(factory));
-
-		return newMonomial;
+	public Monomial apply(Monomial arg) {
+		return factory.monomial(
+				factory.constant(numberFactory.multiply(
+						arg.monomialConstant(factory).number(), scalar)),
+				arg.monic(factory));
 	}
 }
 
-class MonomialNegater implements UnaryOperator {
+class MonomialNegater implements UnaryOperator<Monomial> {
 	private IdealFactory factory;
 
 	public MonomialNegater(IdealFactory factory) {
@@ -1192,7 +1196,7 @@ class MonomialNegater implements UnaryOperator {
 	}
 
 	@Override
-	public SymbolicExpression apply(SymbolicExpression arg) {
-		return factory.negate((Monomial) arg);
+	public Monomial apply(Monomial arg) {
+		return factory.negate(arg);
 	}
 }

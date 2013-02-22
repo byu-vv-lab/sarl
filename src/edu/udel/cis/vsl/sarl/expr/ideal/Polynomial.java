@@ -16,7 +16,7 @@ public interface Polynomial extends RationalExpression {
 	 * 
 	 * @return
 	 */
-	SymbolicMap termMap(IdealFactory factory);
+	SymbolicMap<Monic, Monomial> termMap(IdealFactory factory);
 
 	/**
 	 * The leading term of this polynomial, or null if the polynomial is 0.

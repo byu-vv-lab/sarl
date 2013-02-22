@@ -12,49 +12,32 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class CljSortedSymbolicMap extends CommonSymbolicMap implements
-		SymbolicMap {
+public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
 
-	private PersistentTreeMap<SymbolicExpression, SymbolicExpression> pmap;
+	private PersistentTreeMap<K, V> pmap;
 
-	CljSortedSymbolicMap(Comparator<SymbolicExpression> comparator) {
-		super();
-		this.pmap = new PersistentTreeMap<SymbolicExpression, SymbolicExpression>(
-				null, comparator);
+	Comparator<K> restrict(final Comparator<? super K> c) {
+		return new Comparator<K>() {
+			@Override
+			public int compare(K o1, K o2) {
+				return c.compare(o1, o2);
+			}
+
+		};
 	}
 
-	// CljSortedSymbolicMap() {
-	// super();
-	// this.pmap = new PersistentTreeMap<SymbolicExpressionIF,
-	// SymbolicExpressionIF>();
-	// }
-
-	// CljSortedSymbolicMap(
-	// PersistentTreeMap<SymbolicExpressionIF, SymbolicExpressionIF> pmap) {
-	// super();
-	// this.pmap = pmap;
-	// }
-
-	CljSortedSymbolicMap(
-			Map<SymbolicExpression, SymbolicExpression> javaMap,
-			Comparator<SymbolicExpression> comparator) {
+	CljSortedSymbolicMap(Comparator<? super K> comparator) {
 		super();
-		pmap = new PersistentTreeMap<SymbolicExpression, SymbolicExpression>(
-				null, comparator);
-		for (Entry<SymbolicExpression, SymbolicExpression> entry : javaMap
-				.entrySet())
+		this.pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
+	}
+
+	CljSortedSymbolicMap(Map<K, V> javaMap, Comparator<? super K> comparator) {
+		super();
+		pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
+		for (Entry<K, V> entry : javaMap.entrySet())
 			pmap = pmap.assoc(entry.getKey(), entry.getValue());
 	}
-
-	// CljSortedSymbolicMap(Map<SymbolicExpressionIF, SymbolicExpressionIF>
-	// javaMap) {
-	// super();
-	// pmap = new PersistentTreeMap<SymbolicExpressionIF,
-	// SymbolicExpressionIF>();
-	// for (Entry<SymbolicExpressionIF, SymbolicExpressionIF> entry : javaMap
-	// .entrySet())
-	// pmap = pmap.assoc(entry.getKey(), entry.getValue());
-	// }
 
 	@Override
 	public int size() {
@@ -62,27 +45,27 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public Iterator<SymbolicExpression> iterator() {
+	public Iterator<V> iterator() {
 		return pmap.vals();
 	}
 
 	@Override
-	public SymbolicExpression get(SymbolicExpression key) {
+	public V get(K key) {
 		return pmap.get(key);
 	}
 
 	@Override
-	public Iterable<SymbolicExpression> keys() {
+	public Iterable<K> keys() {
 		return pmap.keySet();
 	}
 
 	@Override
-	public Iterable<SymbolicExpression> values() {
+	public Iterable<V> values() {
 		return pmap.values();
 	}
 
 	@Override
-	public Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries() {
+	public Iterable<Entry<K, V>> entries() {
 		return pmap.entrySet();
 	}
 
@@ -92,9 +75,9 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	protected boolean collectionEquals(SymbolicCollection o) {
+	protected boolean collectionEquals(SymbolicCollection<V> o) {
 		if (o instanceof CljSortedSymbolicMap)
-			return pmap.equals(((CljSortedSymbolicMap) o).pmap);
+			return pmap.equals(((CljSortedSymbolicMap<?, ?>) o).pmap);
 		return false;
 	}
 
@@ -109,14 +92,15 @@ public class CljSortedSymbolicMap extends CommonSymbolicMap implements
 	}
 
 	@Override
-	public SymbolicMap put(SymbolicExpression key, SymbolicExpression value) {
-		return new CljSortedSymbolicMap(pmap.assoc(key, value),
+	public SymbolicMap<K, V> put(K key, V value) {
+		return new CljSortedSymbolicMap<K, V>(pmap.assoc(key, value),
 				pmap.comparator());
 	}
 
 	@Override
-	public SymbolicMap remove(SymbolicExpression key) {
-		return new CljSortedSymbolicMap(pmap.without(key), pmap.comparator());
+	public SymbolicMap<K, V> remove(K key) {
+		return new CljSortedSymbolicMap<K, V>(pmap.without(key),
+				pmap.comparator());
 	}
 
 	@Override

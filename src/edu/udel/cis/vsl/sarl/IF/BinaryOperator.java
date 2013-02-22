@@ -1,7 +1,5 @@
 package edu.udel.cis.vsl.sarl.IF;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-
 /**
  * Interface for a binary operation on symbolic expressions.
  * 
@@ -10,9 +8,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  * @author siegel
  * 
  */
-public interface BinaryOperator {
+public interface BinaryOperator<T> {
 
-	SymbolicExpression apply(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	T apply(T arg0, T arg1);
 
 }

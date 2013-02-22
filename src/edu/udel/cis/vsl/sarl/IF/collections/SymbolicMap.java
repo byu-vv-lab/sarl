@@ -27,7 +27,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  * @author siegel
  * 
  */
-public interface SymbolicMap extends SymbolicCollection {
+public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+		extends SymbolicCollection<V> {
 
 	/**
 	 * Gets the value associated to the given key, or returns null if there is
@@ -37,28 +38,28 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            the key
 	 * @return value associated to key
 	 */
-	SymbolicExpression get(SymbolicExpression key);
+	V get(K key);
 
 	/**
 	 * Returns the keys of the map.
 	 * 
 	 * @return the keys
 	 */
-	Iterable<SymbolicExpression> keys();
+	Iterable<K> keys();
 
 	/**
 	 * Same as elements().
 	 * 
 	 * @return the values of the map
 	 */
-	Iterable<SymbolicExpression> values();
+	Iterable<V> values();
 
 	/**
 	 * Returns the key-value paris ("entries") of the map.
 	 * 
 	 * @return the entries
 	 */
-	Iterable<Entry<SymbolicExpression, SymbolicExpression>> entries();
+	Iterable<Entry<K, V>> entries();
 
 	/**
 	 * Is this map empty?
@@ -86,7 +87,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 * @return a map based on the original map but with the given value
 	 *         associated to the given key
 	 */
-	SymbolicMap put(SymbolicExpression key, SymbolicExpression value);
+	SymbolicMap<K, V> put(K key, V value);
 
 	/**
 	 * Remove entry with given key (noop if key is not present in map).
@@ -96,7 +97,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 * @return a map obtained by removing entry with given key or the original
 	 *         map if such an entry is not present
 	 */
-	SymbolicMap remove(SymbolicExpression key);
+	SymbolicMap<K, V> remove(K key);
 
 	/**
 	 * Returns a map obtained by applying the given unary operator to the values
@@ -107,7 +108,7 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            a unary operator on values
 	 * @return a map obtained from the given one by applying operator to values
 	 */
-	SymbolicMap apply(UnaryOperator operator);
+	SymbolicMap<K, V> apply(UnaryOperator<V> operator);
 
 	/**
 	 * Combines that map with this one using the given binary operator. Iterates
@@ -139,5 +140,5 @@ public interface SymbolicMap extends SymbolicCollection {
 	 *            a symbolic map
 	 * @return a map obtained by combining this map and the given map
 	 */
-	SymbolicMap combine(BinaryOperator operator, SymbolicMap map);
+	SymbolicMap<K, V> combine(BinaryOperator<V> operator, SymbolicMap<K, V> map);
 }

@@ -165,7 +165,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					+ type);
 	}
 
-	protected SymbolicSet set(SymbolicExpression x, SymbolicExpression y) {
+	protected SymbolicSet<SymbolicExpression> set(SymbolicExpression x,
+			SymbolicExpression y) {
 		return collectionFactory.singletonHashSet(x).add(y);
 	}
 
@@ -185,19 +186,19 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		switch (operator) {
 		case ADD: // 1 or 2 args
 			if (numArgs == 1) // collection
-				return add((SymbolicCollection) args[0]);
+				return add((SymbolicCollection<?>) args[0]);
 			else
 				return add((SymbolicExpression) args[0],
 						(SymbolicExpression) args[1]);
 		case AND: // 1 or 2 args
 			if (numArgs == 1) // collection
-				return and((SymbolicCollection) args[0]);
+				return and((SymbolicCollection<?>) args[0]);
 			else
 				return and((SymbolicExpression) args[0],
 						(SymbolicExpression) args[1]);
 		case APPLY: // 2 args: function and sequence
 			return apply((SymbolicExpression) args[0],
-					(SymbolicSequence) args[1]);
+					(SymbolicSequence<?>) args[1]);
 		case ARRAY_LAMBDA:
 			return arrayLambda((SymbolicCompleteArrayType) type,
 					(SymbolicExpression) args[0]);
@@ -206,8 +207,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					(SymbolicExpression) args[1]);
 		case ARRAY_WRITE:
 			return arrayWrite((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1],
-					(SymbolicExpression) args[2]);
+					(SymbolicExpression) args[1], (SymbolicExpression) args[2]);
 		case CAST:
 			return castToReal((SymbolicExpression) args[0]);
 		case CONCRETE:
@@ -218,11 +218,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				return expression(SymbolicOperator.CONCRETE, type, args[0]);
 		case COND:
 			return cond((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1],
-					(SymbolicExpression) args[2]);
+					(SymbolicExpression) args[1], (SymbolicExpression) args[2]);
 		case DENSE_ARRAY_WRITE:
 			return denseArrayWrite((SymbolicExpression) args[0],
-					(SymbolicSequence) args[1]);
+					(SymbolicSequence<?>) args[1]);
 		case DIVIDE:
 			return divide((SymbolicExpression) args[0],
 					(SymbolicExpression) args[1]);
@@ -254,7 +253,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					(SymbolicExpression) args[1]);
 		case MULTIPLY:
 			if (numArgs == 1) // collection
-				return multiply((SymbolicCollection) args[0]);
+				return multiply((SymbolicCollection<?>) args[0]);
 			else
 				return multiply((SymbolicExpression) args[0],
 						(SymbolicExpression) args[1]);
@@ -267,7 +266,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return not((SymbolicExpression) args[0]);
 		case OR: {
 			if (numArgs == 1) // collection
-				return or((SymbolicCollection) args[0]);
+				return or((SymbolicCollection<?>) args[0]);
 			else
 				return or((SymbolicExpression) args[0],
 						(SymbolicExpression) args[1]);
@@ -277,16 +276,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				return power((SymbolicExpression) args[0],
 						(SymbolicExpression) args[1]);
 			else
-				return power((SymbolicExpression) args[0],
-						(IntObject) args[1]);
+				return power((SymbolicExpression) args[0], (IntObject) args[1]);
 		case SUBTRACT:
 			return subtract((SymbolicExpression) args[0],
 					(SymbolicExpression) args[1]);
 		case SYMBOLIC_CONSTANT:
 			return symbolicConstant((StringObject) args[0], type);
 		case TUPLE_READ:
-			return tupleRead((SymbolicExpression) args[0],
-					(IntObject) args[1]);
+			return tupleRead((SymbolicExpression) args[0], (IntObject) args[1]);
 		case TUPLE_WRITE:
 			return tupleWrite((SymbolicExpression) args[0],
 					(IntObject) args[1], (SymbolicExpression) args[2]);
@@ -319,7 +316,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression add(SymbolicCollection args) {
+	public SymbolicExpression add(SymbolicCollection<?> args) {
 		int size = args.size();
 		SymbolicExpression result = null;
 
@@ -340,7 +337,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * apply the binary and operator to them in order.
 	 */
 	@Override
-	public SymbolicExpression and(SymbolicCollection args) {
+	public SymbolicExpression and(SymbolicCollection<?> args) {
 		SymbolicExpression result = trueExpr;
 
 		for (SymbolicExpression arg : args)
@@ -380,16 +377,30 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			boolean isAnd0 = arg0.operator() == SymbolicOperator.AND;
 			boolean isAnd1 = arg1.operator() == SymbolicOperator.AND;
 
-			if (isAnd0 && isAnd1)
+			if (isAnd0 && isAnd1) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg0
+						.argument(0);
+
 				return expression(SymbolicOperator.AND, booleanType,
-						((SymbolicSet) arg0.argument(0))
-								.addAll((SymbolicSet) arg1.argument(0)));
-			if (isAnd0 && !isAnd1)
+						result.addAll((SymbolicSet<?>) arg1.argument(0)));
+			}
+			if (isAnd0 && !isAnd1) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg0
+						.argument(0);
+
 				return expression(SymbolicOperator.AND, booleanType,
-						((SymbolicSet) arg0.argument(0)).add(arg1));
-			if (!isAnd0 && isAnd1)
+						result.add(arg1));
+			}
+			if (!isAnd0 && isAnd1) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg1
+						.argument(0);
+
 				return expression(SymbolicOperator.AND, booleanType,
-						((SymbolicSet) arg1.argument(0)).add(arg0));
+						result.add(arg0));
+			}
 			return expression(SymbolicOperator.AND, booleanType,
 					set(arg0, arg1));
 		}
@@ -438,8 +449,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicFunctionType functionType(
-			SymbolicTypeSequence inputTypes, SymbolicType outputType) {
+	public SymbolicFunctionType functionType(SymbolicTypeSequence inputTypes,
+			SymbolicType outputType) {
 		return typeFactory.functionType(inputTypes, outputType);
 	}
 
@@ -583,7 +594,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression multiply(SymbolicCollection args) {
+	public SymbolicExpression multiply(SymbolicCollection<?> args) {
 		int size = args.size();
 		SymbolicExpression result = null;
 
@@ -619,8 +630,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression power(SymbolicExpression base,
-			IntObject exponent) {
+	public SymbolicExpression power(SymbolicExpression base, IntObject exponent) {
 		return numericExpressionFactory.power((NumericExpression) base,
 				exponent);
 	}
@@ -633,8 +643,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression castToReal(
-			SymbolicExpression numericExpression) {
+	public SymbolicExpression castToReal(SymbolicExpression numericExpression) {
 		return numericExpressionFactory
 				.castToReal((NumericExpression) numericExpression);
 	}
@@ -697,7 +706,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			if (op0 == SymbolicOperator.AND) {
 				SymbolicExpression result = falseExpr;
 
-				for (SymbolicExpression clause : (SymbolicSet) arg0
+				for (SymbolicExpression clause : (SymbolicSet<?>) arg0
 						.argument(0))
 					result = or(result, and(clause, arg1));
 				return result;
@@ -705,21 +714,33 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			if (op1 == SymbolicOperator.AND) {
 				SymbolicExpression result = falseExpr;
 
-				for (SymbolicExpression clause : (SymbolicSet) arg1
+				for (SymbolicExpression clause : (SymbolicSet<?>) arg1
 						.argument(0))
 					result = or(result, and(arg0, clause));
 				return result;
 			}
-			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR)
+			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg0
+						.argument(0);
+
 				return expression(op0, booleanType,
-						((SymbolicSet) arg0.argument(0))
-								.addAll((SymbolicSet) arg1.argument(0)));
-			if (op0 == SymbolicOperator.OR)
-				return expression(op0, booleanType,
-						((SymbolicSet) arg0.argument(0)).add(arg1));
-			if (op1 == SymbolicOperator.OR)
-				return expression(op1, booleanType,
-						((SymbolicSet) arg1.argument(0)).add(arg0));
+						result.addAll((SymbolicSet<?>) arg1.argument(0)));
+			}
+			if (op0 == SymbolicOperator.OR) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg0
+						.argument(0);
+
+				return expression(op0, booleanType, result.add(arg1));
+			}
+			if (op1 == SymbolicOperator.OR) {
+				@SuppressWarnings("unchecked")
+				SymbolicSet<SymbolicExpression> result = (SymbolicSet<SymbolicExpression>) arg1
+						.argument(0);
+
+				return expression(op1, booleanType, result.add(arg0));
+			}
 			return expression(SymbolicOperator.OR, booleanType, set(arg0, arg1));
 		}
 	}
@@ -728,7 +749,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * Assume nothing about the list of args.
 	 */
 	@Override
-	public SymbolicExpression or(SymbolicCollection args) {
+	public SymbolicExpression or(SymbolicCollection<?> args) {
 		SymbolicExpression result = falseExpr;
 
 		for (SymbolicExpression arg : args)
@@ -771,14 +792,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		case AND: {
 			SymbolicExpression result = falseExpr;
 
-			for (SymbolicExpression clause : (SymbolicSet) arg.argument(0))
+			for (SymbolicExpression clause : (SymbolicSet<?>) arg.argument(0))
 				result = or(result, not(clause));
 			return result;
 		}
 		case OR: {
 			SymbolicExpression result = trueExpr;
 
-			for (SymbolicExpression clause : (SymbolicSet) arg.argument(0))
+			for (SymbolicExpression clause : (SymbolicSet<?>) arg.argument(0))
 				result = and(result, not(clause));
 			return result;
 		}
@@ -824,8 +845,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	public SymbolicExpression forallIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high,
-			SymbolicExpression predicate) {
+			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
 		SymbolicExpression result = trueExpr;
 
 		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
@@ -862,8 +882,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	public SymbolicExpression existsIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high,
-			SymbolicExpression predicate) {
+			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
 		SymbolicExpression result = falseExpr;
 
 		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
@@ -965,8 +984,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * @param type1
 	 * @return
 	 */
-	public SymbolicExpression equals(SymbolicType type0,
-			SymbolicType type1) {
+	public SymbolicExpression equals(SymbolicType type0, SymbolicType type1) {
 		return equals(type0, type1, 0);
 	}
 
@@ -977,8 +995,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * @param type1
 	 * @return
 	 */
-	private SymbolicExpression equals(SymbolicType type0,
-			SymbolicType type1, int nestingDepth) {
+	private SymbolicExpression equals(SymbolicType type0, SymbolicType type1,
+			int nestingDepth) {
 		if (type0.equals(type1))
 			return trueExpr;
 
@@ -1113,7 +1131,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 								arg1));
 			} else {
 				SymbolicConstant[] boundVariables = new SymbolicConstant[numInputs];
-				SymbolicSequence sequence;
+				SymbolicSequence<?> sequence;
 				SymbolicExpression expr;
 
 				for (int i = 0; i < numInputs; i++)
@@ -1226,7 +1244,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (predicate.operator() == SymbolicOperator.AND) {
 			SymbolicExpression result = trueExpr;
 
-			for (SymbolicExpression clause : (SymbolicSet) predicate
+			for (SymbolicExpression clause : (SymbolicSet<?>) predicate
 					.argument(0))
 				result = and(result, forall(boundVariable, clause));
 			return result;
@@ -1245,7 +1263,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (predicate.operator() == SymbolicOperator.OR) {
 			SymbolicExpression result = falseExpr;
 
-			for (SymbolicExpression clause : (SymbolicSet) predicate
+			for (SymbolicExpression clause : (SymbolicSet<?>) predicate
 					.argument(0))
 				result = or(result, exists(boundVariable, clause));
 			return result;
@@ -1275,7 +1293,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression apply(SymbolicExpression function,
-			SymbolicSequence argumentSequence) {
+			SymbolicSequence<?> argumentSequence) {
 		SymbolicOperator op0 = function.operator();
 		SymbolicExpression result;
 
@@ -1339,7 +1357,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	@Override
 	public SymbolicExpression array(SymbolicType elementType,
-			SymbolicSequence elements) {
+			SymbolicSequence<?> elements) {
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, symbolic(elements.size())), elements);
 	}
@@ -1369,7 +1387,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				if (indexNumber.compareTo(denseArrayMaxSize) < 0) {
 					int indexInt = indexNumber.intValue();
 
-					SymbolicSequence values = (SymbolicSequence) array
+					SymbolicSequence<?> values = (SymbolicSequence<?>) array
 							.argument(1);
 					int size = values.size();
 
@@ -1385,8 +1403,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			}
 		}
 		return expression(SymbolicOperator.ARRAY_READ,
-				((SymbolicArrayType) array.type()).elementType(), array,
-				index);
+				((SymbolicArrayType) array.type()).elementType(), array, index);
 	}
 
 	@Override
@@ -1397,12 +1414,16 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (indexNumber != null && indexNumber.compareTo(denseArrayMaxSize) < 0) {
 			SymbolicOperator op = array.operator();
 			int indexInt = indexNumber.intValue();
-			SymbolicSequence sequence;
+			SymbolicSequence<SymbolicExpression> sequence;
 			SymbolicExpression origin;
 
 			if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+				@SuppressWarnings("unchecked")
+				SymbolicSequence<SymbolicExpression> arg1 = (SymbolicSequence<SymbolicExpression>) array
+						.argument(1);
+
+				sequence = arg1;
 				origin = (SymbolicExpression) array.argument(0);
-				sequence = ((SymbolicSequence) array.argument(1));
 			} else {
 				origin = array;
 				sequence = collectionFactory.emptySequence();
@@ -1417,26 +1438,26 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression denseArrayWrite(SymbolicExpression array,
-			SymbolicSequence values) {
+			SymbolicSequence<?> values) {
 		return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
 				array, values);
 	}
 
 	@Override
-	public SymbolicExpression arrayLambda(
-			SymbolicCompleteArrayType arrayType, SymbolicExpression function) {
+	public SymbolicExpression arrayLambda(SymbolicCompleteArrayType arrayType,
+			SymbolicExpression function) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public SymbolicExpression tupleUnsafe(SymbolicTupleType type,
-			SymbolicSequence components) {
+			SymbolicSequence<?> components) {
 		return expression(SymbolicOperator.CONCRETE, type, components);
 	}
 
 	@Override
 	public SymbolicExpression tuple(SymbolicTupleType type,
-			SymbolicSequence components) {
+			SymbolicSequence<?> components) {
 		int n = components.size();
 		SymbolicTypeSequence fieldTypes = type.sequence();
 		int m = fieldTypes.numTypes();
@@ -1464,11 +1485,11 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		int indexInt = index.getInt();
 
 		if (op == SymbolicOperator.CONCRETE)
-			return ((SymbolicSequence) tuple.argument(0)).get(indexInt);
+			return ((SymbolicSequence<?>) tuple.argument(0)).get(indexInt);
 		return expression(
 				SymbolicOperator.TUPLE_READ,
-				((SymbolicTupleType) tuple.type()).sequence().getType(
-						indexInt), tuple, index);
+				((SymbolicTupleType) tuple.type()).sequence().getType(indexInt),
+				tuple, index);
 	}
 
 	@Override
@@ -1483,9 +1504,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (!fieldType.equals(valueType))
 			throw new IllegalArgumentException("Expected expresion of type "
 					+ fieldType + " but saw type " + valueType + ": " + value);
-		if (op == SymbolicOperator.CONCRETE)
-			return expression(op, tupleType,
-					((SymbolicSequence) tuple.argument(0)).set(indexInt, value));
+		if (op == SymbolicOperator.CONCRETE) {
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> arg0 = (SymbolicSequence<SymbolicExpression>) tuple
+					.argument(0);
+
+			return expression(op, tupleType, arg0.set(indexInt, value));
+		}
 		return expression(SymbolicOperator.TUPLE_WRITE, tupleType, tuple, value);
 	}
 
@@ -1501,15 +1526,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					.castToReal((NumericExpression) expression);
 		}
 		if (oldType.typeKind() == SymbolicTypeKind.UNION) {
-			Integer index = ((SymbolicUnionType) oldType)
-					.indexOfType(newType);
+			Integer index = ((SymbolicUnionType) oldType).indexOfType(newType);
 
 			if (index != null)
 				return unionExtract(intObject(index), expression);
 		}
 		if (newType.typeKind() == SymbolicTypeKind.UNION) {
-			Integer index = ((SymbolicUnionType) newType)
-					.indexOfType(oldType);
+			Integer index = ((SymbolicUnionType) newType).indexOfType(oldType);
 
 			if (index != null)
 				return unionInject((SymbolicUnionType) newType,

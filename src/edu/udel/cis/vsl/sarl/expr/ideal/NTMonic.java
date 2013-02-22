@@ -16,11 +16,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  */
 public class NTMonic extends IdealExpression implements Monic {
 
-	private SymbolicMap polynomialMap = null;
+	private SymbolicMap<Monic, Monomial> polynomialMap = null;
 
 	private int degree = -1;
 
-	protected NTMonic(SymbolicType type, SymbolicMap factorMap) {
+	protected NTMonic(SymbolicType type,
+			SymbolicMap<NumericPrimitive, PrimitivePower> factorMap) {
 		super(SymbolicOperator.MULTIPLY, type, factorMap);
 		assert factorMap.size() >= 2;
 	}
@@ -36,19 +37,21 @@ public class NTMonic extends IdealExpression implements Monic {
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
 		if (polynomialMap == null)
-			polynomialMap = factory.singletonMap(this, this);
+			polynomialMap = factory.singletonMap((Monic) this, (Monomial) this);
 		return polynomialMap;
 	}
 
 	@Override
-	public SymbolicMap monicFactors(IdealFactory factory) {
+	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
+			IdealFactory factory) {
 		return monicFactors();
 	}
 
-	public SymbolicMap monicFactors() {
-		return (SymbolicMap) argument(0);
+	@SuppressWarnings("unchecked")
+	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors() {
+		return (SymbolicMap<NumericPrimitive, PrimitivePower>) argument(0);
 	}
 
 	@Override

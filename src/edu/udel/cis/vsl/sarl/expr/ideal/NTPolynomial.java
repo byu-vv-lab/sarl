@@ -30,28 +30,30 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	 * @param monomialMap
 	 * @param leadingTerm
 	 */
-	protected NTPolynomial(SymbolicMap termMap, Monomial factorization) {
+	protected NTPolynomial(SymbolicMap<Monic, Monomial> termMap,
+			Monomial factorization) {
 		super(SymbolicOperator.ADD, factorization.type(), termMap);
 		assert termMap.size() >= 2;
 		this.factorization = factorization;
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
 		return termMap();
 	}
 
-	public SymbolicMap termMap() {
-		return (SymbolicMap) argument(0);
+	@SuppressWarnings("unchecked")
+	public SymbolicMap<Monic, Monomial> termMap() {
+		return (SymbolicMap<Monic, Monomial>) argument(0);
 	}
 
 	@Override
 	public Monomial leadingTerm() {
-		SymbolicMap map = termMap();
+		SymbolicMap<Monic, Monomial> map = termMap();
 
 		if (map.isEmpty())
 			return null;
-		return (Monomial) map.iterator().next();
+		return map.iterator().next();
 	}
 
 	@Override

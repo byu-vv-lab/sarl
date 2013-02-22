@@ -130,10 +130,10 @@ public class LinearSolver {
 			if (fp.type().isInteger()) {
 				intMatrix[intConstraintId][numIntMonics] = numberFactory
 						.rational(value);
-				for (Entry<SymbolicExpression, SymbolicExpression> term : fp
-						.termMap(idealFactory).entries()) {
-					Monomial monomial = (Monomial) term.getValue();
-					Monic monic = (Monic) term.getKey();
+				for (Entry<Monic, Monomial> term : fp.termMap(idealFactory)
+						.entries()) {
+					Monomial monomial = term.getValue();
+					Monic monic = term.getKey();
 					Number coefficient = monomial
 							.monomialConstant(idealFactory).number();
 
@@ -144,10 +144,10 @@ public class LinearSolver {
 			} else {
 				realMatrix[realConstraintId][numRealMonics] = (RationalNumber) value;
 
-				for (Entry<SymbolicExpression, SymbolicExpression> term : fp
-						.termMap(idealFactory).entries()) {
-					Monomial monomial = (Monomial) term.getValue();
-					Monic monic = (Monic) term.getKey();
+				for (Entry<Monic, Monomial> term : fp.termMap(idealFactory)
+						.entries()) {
+					Monomial monomial = term.getValue();
+					Monic monic = term.getKey();
 					Number coefficient = monomial
 							.monomialConstant(idealFactory).number();
 

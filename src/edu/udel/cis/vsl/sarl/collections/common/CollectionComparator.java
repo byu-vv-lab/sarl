@@ -12,20 +12,20 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
-public class CollectionComparator implements Comparator<SymbolicCollection> {
+public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 
-	private Comparator<SymbolicExpression> expressionComparator;
+	private Comparator<SymbolicExpression> elementComparator;
 
 	public CollectionComparator() {
 	}
 
-	public void setExpressionComparator(
-			Comparator<SymbolicExpression> expressionComparator) {
-		this.expressionComparator = expressionComparator;
+	public void setElementComparator(
+			Comparator<SymbolicExpression> elementComparator) {
+		this.elementComparator = elementComparator;
 	}
 
 	@Override
-	public int compare(SymbolicCollection o1, SymbolicCollection o2) {
+	public int compare(SymbolicCollection<?> o1, SymbolicCollection<?> o2) {
 		SymbolicCollectionKind kind = o1.collectionKind();
 		int result = kind.compareTo(o2.collectionKind());
 
@@ -37,22 +37,22 @@ public class CollectionComparator implements Comparator<SymbolicCollection> {
 		// compare two sequences, sets, compare two maps
 		switch (kind) {
 		case SEQUENCE:
-			return compareSequences((SymbolicSequence) o1,
-					(SymbolicSequence) o2);
+			return compareSequences((SymbolicSequence<?>) o1,
+					(SymbolicSequence<?>) o2);
 		case SET:
-			return compareSets((SymbolicSet) o1, (SymbolicSet) o2);
+			return compareSets((SymbolicSet<?>) o1, (SymbolicSet<?>) o2);
 		case MAP:
-			return compareMaps((SymbolicMap) o1, (SymbolicMap) o2);
+			return compareMaps((SymbolicMap<?, ?>) o1, (SymbolicMap<?, ?>) o2);
 		default:
 			throw new SARLInternalException("unreachable");
 		}
 	}
 
-	private int compareSequences(SymbolicSequence s1, SymbolicSequence s2) {
+	private int compareSequences(SymbolicSequence<?> s1, SymbolicSequence<?> s2) {
 		int size = s1.size();
 
 		for (int i = 0; i < size; i++) {
-			int result = expressionComparator.compare(s1.get(i), s2.get(i));
+			int result = elementComparator.compare(s1.get(i), s2.get(i));
 
 			if (result != 0)
 				return result;
@@ -68,14 +68,14 @@ public class CollectionComparator implements Comparator<SymbolicCollection> {
 	 * @param s2
 	 * @return
 	 */
-	private int compareSets(SymbolicSet s1, SymbolicSet s2) {
+	private int compareSets(SymbolicSet<?> s1, SymbolicSet<?> s2) {
 		if (s1.isSorted()) {
 			if (s2.isSorted()) {
-				Iterator<SymbolicExpression> iter1 = s1.iterator();
-				Iterator<SymbolicExpression> iter2 = s2.iterator();
+				Iterator<? extends SymbolicExpression> iter1 = s1.iterator();
+				Iterator<? extends SymbolicExpression> iter2 = s2.iterator();
 
 				while (iter1.hasNext()) {
-					int result = expressionComparator.compare(iter1.next(),
+					int result = elementComparator.compare(iter1.next(),
 							iter2.next());
 
 					if (result != 0)
@@ -93,24 +93,23 @@ public class CollectionComparator implements Comparator<SymbolicCollection> {
 		}
 	}
 
-	private int compareMaps(SymbolicMap m1, SymbolicMap m2) {
+	private <K1 extends SymbolicExpression, V1 extends SymbolicExpression, K2 extends SymbolicExpression, V2 extends SymbolicExpression> int compareMaps(
+			SymbolicMap<K1, V1> m1, SymbolicMap<K2, V2> m2) {
 		if (m1.isSorted()) {
 			if (m2.isSorted()) {
-				Iterator<Entry<SymbolicExpression, SymbolicExpression>> iter1 = m1
-						.entries().iterator();
-				Iterator<Entry<SymbolicExpression, SymbolicExpression>> iter2 = m2
-						.entries().iterator();
+				Iterator<Entry<K1, V1>> iter1 = m1.entries().iterator();
+				Iterator<Entry<K2, V2>> iter2 = m2.entries().iterator();
 				while (iter1.hasNext()) {
-					Entry<SymbolicExpression, SymbolicExpression> e1 = iter1
+					Entry<? extends SymbolicExpression, ? extends SymbolicExpression> e1 = iter1
 							.next();
-					Entry<SymbolicExpression, SymbolicExpression> e2 = iter2
+					Entry<? extends SymbolicExpression, ? extends SymbolicExpression> e2 = iter2
 							.next();
-					int result = expressionComparator.compare(e1.getKey(),
+					int result = elementComparator.compare(e1.getKey(),
 							e2.getKey());
 
 					if (result != 0)
 						return result;
-					result = expressionComparator.compare(e1.getValue(),
+					result = elementComparator.compare(e1.getValue(),
 							e2.getValue());
 					if (result != 0)
 						return result;

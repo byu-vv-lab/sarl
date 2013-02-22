@@ -18,42 +18,40 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
  * @author siegel
  * 
  */
-public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
-		implements SymbolicSequence {
+public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
+		CommonSymbolicCollection<T> implements SymbolicSequence<T> {
 
-	private PVector<SymbolicExpression> pvector;
+	private PVector<T> pvector;
 
 	public PcollectionsSymbolicSequence() {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.empty();
 	}
 
-	public PcollectionsSymbolicSequence(
-			Collection<SymbolicExpression> elements) {
+	public PcollectionsSymbolicSequence(Collection<T> elements) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.from(elements);
 	}
 
-	public PcollectionsSymbolicSequence(
-			Iterable<? extends SymbolicExpression> elements) {
+	public PcollectionsSymbolicSequence(Iterable<? extends T> elements) {
 		this();
-		for (SymbolicExpression expr : elements)
+		for (T expr : elements)
 			pvector = pvector.plus(expr);
 	}
 
-	public PcollectionsSymbolicSequence(SymbolicExpression[] elements) {
+	public PcollectionsSymbolicSequence(T[] elements) {
 		this();
-		for (SymbolicExpression expr : elements)
+		for (T expr : elements)
 			pvector = pvector.plus(expr);
 	}
 
-	public PcollectionsSymbolicSequence(SymbolicExpression element) {
+	public PcollectionsSymbolicSequence(T element) {
 		this();
 		pvector = pvector.plus(element);
 	}
 
 	@Override
-	public Iterator<SymbolicExpression> iterator() {
+	public Iterator<T> iterator() {
 		return pvector.iterator();
 	}
 
@@ -63,34 +61,34 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicExpression get(int index) {
+	public T get(int index) {
 		return pvector.get(index);
 	}
 
 	@Override
-	public SymbolicSequence add(SymbolicExpression element) {
-		return new PcollectionsSymbolicSequence(pvector.plus(element));
+	public SymbolicSequence<T> add(T element) {
+		return new PcollectionsSymbolicSequence<T>(pvector.plus(element));
 	}
 
 	@Override
-	public SymbolicSequence set(int index, SymbolicExpression element) {
-		return new PcollectionsSymbolicSequence(pvector.with(index, element));
+	public SymbolicSequence<T> set(int index, T element) {
+		return new PcollectionsSymbolicSequence<T>(pvector.with(index, element));
 	}
 
 	@Override
-	public SymbolicSequence remove(int index) {
-		return new PcollectionsSymbolicSequence(pvector.minus(index));
+	public SymbolicSequence<T> remove(int index) {
+		return new PcollectionsSymbolicSequence<T>(pvector.minus(index));
 	}
 
 	@Override
-	protected boolean collectionEquals(SymbolicCollection o) {
+	protected boolean collectionEquals(SymbolicCollection<T> o) {
 		if (this == o)
 			return true;
 		if (size() != o.size())
 			return false;
-		SymbolicSequence that = (SymbolicSequence) o;
-		Iterator<SymbolicExpression> these = this.iterator();
-		Iterator<SymbolicExpression> those = that.iterator();
+		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
+		Iterator<T> these = this.iterator();
+		Iterator<T> those = that.iterator();
 
 		while (these.hasNext())
 			if (!those.hasNext() || !these.next().equals(those.next()))
@@ -105,15 +103,14 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		Iterator<SymbolicExpression> iter = iterator();
+		Iterator<T> iter = iterator();
 		int count = 0;
 
 		while (iter.hasNext()) {
-			SymbolicExpression expr = iter.next();
+			T expr = iter.next();
 
 			if (!expr.isCanonic()) {
-				PVector<SymbolicExpression> newVector = pvector.subList(0,
-						count);
+				PVector<T> newVector = pvector.subList(0, count);
 
 				newVector = newVector.plus(factory.canonic(expr));
 				while (iter.hasNext())
@@ -126,8 +123,7 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 	}
 
 	@Override
-	public SymbolicSequence setExtend(int index, SymbolicExpression value,
-			SymbolicExpression filler) {
+	public SymbolicSequence<T> setExtend(int index, T value, T filler) {
 		int size = pvector.size();
 
 		if (index < size)
@@ -135,7 +131,7 @@ public class PcollectionsSymbolicSequence extends CommonSymbolicCollection
 		for (int i = size; i < index; i++)
 			pvector = pvector.plus(filler);
 		pvector = pvector.plus(value);
-		return new PcollectionsSymbolicSequence(pvector);
+		return new PcollectionsSymbolicSequence<T>(pvector);
 	}
 
 }

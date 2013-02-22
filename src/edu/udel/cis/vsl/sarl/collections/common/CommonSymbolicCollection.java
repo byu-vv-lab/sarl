@@ -5,8 +5,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
-public abstract class CommonSymbolicCollection extends CommonSymbolicObject
-		implements SymbolicCollection {
+public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
+		extends CommonSymbolicObject implements SymbolicCollection<T> {
 
 	private SymbolicCollectionKind collectionKind;
 
@@ -27,11 +27,12 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 	 * @param o
 	 * @return
 	 */
-	protected abstract boolean collectionEquals(SymbolicCollection o);
+	protected abstract boolean collectionEquals(SymbolicCollection<T> o);
 
 	@Override
 	protected boolean intrinsicEquals(SymbolicObject o) {
-		SymbolicCollection that = (SymbolicCollection) o;
+		@SuppressWarnings("unchecked")
+		SymbolicCollection<T> that = (SymbolicCollection<T>) o;
 
 		if (collectionKind != that.collectionKind())
 			return false;
@@ -41,7 +42,7 @@ public abstract class CommonSymbolicCollection extends CommonSymbolicObject
 	}
 
 	@Override
-	public SymbolicExpression getFirst() {
+	public T getFirst() {
 		return iterator().next();
 	}
 

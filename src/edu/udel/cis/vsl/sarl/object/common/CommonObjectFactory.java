@@ -62,7 +62,8 @@ public class CommonObjectFactory implements ObjectFactory {
 		comparator.setExpressionComparator(c);
 	}
 
-	public void setCollectionComparator(Comparator<SymbolicCollection> c) {
+	public void setCollectionComparator(
+			Comparator<SymbolicCollection<?>> c) {
 		comparator.setCollectionComparator(c);
 	}
 
@@ -92,7 +93,7 @@ public class CommonObjectFactory implements ObjectFactory {
 	 * @param object
 	 * @return
 	 */
-	public SymbolicObject canonic(SymbolicObject object) {
+	public <T extends SymbolicObject> T canonic(T object) {
 		if (object.isCanonic())
 			return object;
 		else {
@@ -104,17 +105,20 @@ public class CommonObjectFactory implements ObjectFactory {
 				objectList.add(object);
 				return object;
 			}
-			return result;
+			@SuppressWarnings("unchecked")
+			T result2 = (T) result;
+
+			return result2;
 		}
 	}
 
-	public SymbolicType canonic(SymbolicType type) {
-		return (SymbolicType) canonic((SymbolicObject) type);
-	}
-
-	public SymbolicExpression canonic(SymbolicExpression expression) {
-		return (SymbolicExpression) canonic((SymbolicObject) expression);
-	}
+	// public SymbolicType canonic(SymbolicType type) {
+	// return (SymbolicType) canonic((SymbolicObject) type);
+	// }
+	//
+	// public SymbolicExpression canonic(SymbolicExpression expression) {
+	// return (SymbolicExpression) canonic((SymbolicObject) expression);
+	// }
 
 	public BooleanObject trueObj() {
 		return trueObj;

@@ -15,154 +15,172 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private ObjectFactory objectFactory;
 
-	private SymbolicSet emptyHashSet, emptySortedSet;
+	private SymbolicSet<?> emptyHashSet, emptySortedSet;
 
-	private SymbolicMap emptyHashMap, emptySortedMap;
+	private SymbolicMap<?, ?> emptyHashMap, emptySortedMap;
 
-	private SymbolicSequence emptySequence;
+	private SymbolicSequence<?> emptySequence;
 
 	private CollectionComparator comparator;
 
-	private Comparator<SymbolicExpression> expressionComparator;
+	private Comparator<SymbolicExpression> elementComparator;
 
 	public CommonCollectionFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
 		this.comparator = new CollectionComparator();
-		emptyHashSet = (SymbolicSet) objectFactory
-				.canonic(new PcollectionsSymbolicSet());
-		emptyHashMap = (SymbolicMap) objectFactory
-				.canonic(new PcollectionsSymbolicMap());
+		emptyHashSet = objectFactory
+				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
+		emptyHashMap = objectFactory
+				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());
 	}
 
 	@Override
-	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
-		comparator.setExpressionComparator(c);
-		this.expressionComparator = c;
+	public void setElementComparator(Comparator<SymbolicExpression> c) {
+		comparator.setElementComparator(c);
+		this.elementComparator = c;
 	}
 
 	@Override
 	public void init() {
-		assert expressionComparator != null;
-		emptySortedMap = (SymbolicMap) objectFactory
-				.canonic(new CljSortedSymbolicMap(expressionComparator));
-		emptySequence = new PcollectionsSymbolicSequence();
+		assert elementComparator != null;
+		emptySortedMap = objectFactory
+				.canonic(new CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>(
+						elementComparator));
+		emptySequence = objectFactory
+				.canonic(new PcollectionsSymbolicSequence<SymbolicExpression>());
 		// etc.
 	}
 
 	@Override
-	public Comparator<SymbolicCollection> comparator() {
+	public Comparator<SymbolicCollection<? extends SymbolicExpression>> comparator() {
 		return comparator;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public SymbolicSet emptyHashSet() {
-		return emptyHashSet;
+	public <T extends SymbolicExpression> SymbolicSet<T> emptyHashSet() {
+		return (SymbolicSet<T>) emptyHashSet;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet() {
+		return (SymbolicSet<T>) emptySortedSet;
 	}
 
 	@Override
-	public SymbolicSet emptySortedSet() {
-		return emptySortedSet;
+	public <T extends SymbolicExpression> SymbolicSet<T> singletonHashSet(
+			T element) {
+		SymbolicSet<T> empty = emptyHashSet();
+
+		return empty.add(element);
 	}
 
 	@Override
-	public SymbolicSet singletonHashSet(SymbolicExpression element) {
-		return emptyHashSet.add(element);
+	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
+			T element) {
+		SymbolicSet<T> empty = emptySortedSet();
+
+		return empty.add(element);
 	}
 
 	@Override
-	public SymbolicSet singletonSortedSet(SymbolicExpression element) {
-		return emptySortedSet.add(element);
+	public <T extends SymbolicExpression> SymbolicSequence<T> sequence(
+			Iterable<? extends T> elements) {
+		return new PcollectionsSymbolicSequence<T>(elements);
 	}
 
 	@Override
-	public SymbolicSequence sequence(
-			Iterable<? extends SymbolicExpression> elements) {
-		return new PcollectionsSymbolicSequence(elements);
+	public <T extends SymbolicExpression> SymbolicSequence<T> sequence(
+			T[] elements) {
+		return new PcollectionsSymbolicSequence<T>(elements);
 	}
 
 	@Override
-	public SymbolicSequence sequence(SymbolicExpression[] elements) {
-		return new PcollectionsSymbolicSequence(elements);
+	public <T extends SymbolicExpression> SymbolicSequence<T> singletonSequence(
+			T element) {
+		return new PcollectionsSymbolicSequence<T>(element);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends SymbolicExpression> SymbolicSequence<T> emptySequence() {
+		return (SymbolicSequence<T>) emptySequence;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptySortedMap() {
+		return (SymbolicMap<K, V>) emptySortedMap;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptyHashMap() {
+		return (SymbolicMap<K, V>) emptyHashMap;
 	}
 
 	@Override
-	public SymbolicSequence singletonSequence(SymbolicExpression element) {
-		return new PcollectionsSymbolicSequence(element);
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonSortedMap(
+			K key, V value) {
+		SymbolicMap<K, V> empty = emptySortedMap();
+
+		return empty.put(key, value);
 	}
 
 	@Override
-	public SymbolicSequence emptySequence() {
-		return emptySequence;
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonHashMap(
+			K key, V value) {
+		SymbolicMap<K, V> empty = emptyHashMap();
+
+		return empty.put(key, value);
 	}
 
 	@Override
-	public SymbolicMap emptySortedMap() {
-		return emptySortedMap;
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
+			Map<K, V> javaMap) {
+		return new CljSortedSymbolicMap<K, V>(javaMap, elementComparator);
 	}
 
 	@Override
-	public SymbolicMap emptyHashMap() {
-		return emptyHashMap;
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> hashMap(
+			Map<K, V> javaMap) {
+		return new PcollectionsSymbolicMap<K, V>(javaMap);
 	}
 
 	@Override
-	public SymbolicMap singletonSortedMap(SymbolicExpression key,
-			SymbolicExpression value) {
-		return emptySortedMap.put(key, value);
-	}
-
-	@Override
-	public SymbolicMap singletonHashMap(SymbolicExpression key,
-			SymbolicExpression value) {
-		return emptyHashMap.put(key, value);
-	}
-
-	@Override
-	public SymbolicMap sortedMap(
-			Map<SymbolicExpression, SymbolicExpression> javaMap) {
-		return new CljSortedSymbolicMap(javaMap, expressionComparator);
-	}
-
-	@Override
-	public SymbolicMap hashMap(
-			Map<SymbolicExpression, SymbolicExpression> javaMap) {
-		return new PcollectionsSymbolicMap(javaMap);
-	}
-
-	@Override
-	public SymbolicSet emptySortedSet(
-			Comparator<SymbolicExpression> comparator) {
+	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet(
+			Comparator<? super T> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SymbolicSet singletonSortedSet(SymbolicExpression element,
-			Comparator<SymbolicExpression> comparator) {
+	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
+			T element, Comparator<? super T> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public SymbolicMap emptySortedMap(
-			Comparator<SymbolicExpression> comparator) {
-		return new CljSortedSymbolicMap(comparator);
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptySortedMap(
+			Comparator<? super K> comparator) {
+		return new CljSortedSymbolicMap<K, V>(comparator);
 	}
 
 	@Override
-	public SymbolicMap singletonSortedMap(
-			Comparator<SymbolicExpression> comparator,
-			SymbolicExpression key, SymbolicExpression value) {
-		SymbolicMap result = new CljSortedSymbolicMap(comparator);
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonSortedMap(
+			Comparator<? super K> comparator, K key, V value) {
+		SymbolicMap<K, V> result = new CljSortedSymbolicMap<K, V>(comparator);
 
 		result = result.put(key, value);
 		return result;
 	}
 
 	@Override
-	public SymbolicMap sortedMap(Comparator<SymbolicExpression> comparator,
-			Map<SymbolicExpression, SymbolicExpression> javaMap) {
-		return new CljSortedSymbolicMap(javaMap, comparator);
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
+			Comparator<? super K> comparator, Map<K, V> javaMap) {
+		return new CljSortedSymbolicMap<K, V>(javaMap, comparator);
 	}
 
 }

@@ -21,7 +21,7 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	/**
 	 * Singleton map from this to this.
 	 */
-	private SymbolicMap monicFactors = null;
+	private SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors = null;
 
 	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments) {
@@ -44,9 +44,11 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	}
 
 	@Override
-	public SymbolicMap monicFactors(IdealFactory factory) {
+	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
+			IdealFactory factory) {
 		if (monicFactors == null)
-			monicFactors = factory.singletonMap(this, this);
+			monicFactors = factory.singletonMap((NumericPrimitive) this,
+					(PrimitivePower) this);
 		return monicFactors;
 	}
 
@@ -61,8 +63,8 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	}
 
 	@Override
-	public SymbolicMap termMap(IdealFactory factory) {
-		return monicFactors(factory);
+	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
+		return factory.singletonMap((Monic) this, (Monomial) this);
 	}
 
 	@Override
