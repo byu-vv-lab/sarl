@@ -83,23 +83,10 @@ public class NTMonic extends IdealExpression implements Monic {
 	public Polynomial expand(IdealFactory factory) {
 		Polynomial result = factory.one(type());
 
-		for (SymbolicExpression expr : monicFactors()) {
-			PrimitivePower ppower = (PrimitivePower) expr;
-
+		for (PrimitivePower ppower : monicFactors())
 			result = factory.multiply(result, ppower.expand(factory));
-		}
 		return result;
 	}
-
-	// @Override
-	// public boolean isZero() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public boolean isOne() {
-	// return false;
-	// }
 
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer();
@@ -123,8 +110,8 @@ public class NTMonic extends IdealExpression implements Monic {
 	public int degree() {
 		if (degree < 0) {
 			degree = 0;
-			for (SymbolicExpression expr : monicFactors())
-				degree += ((PrimitivePower) expr).degree();
+			for (PrimitivePower expr : monicFactors())
+				degree += expr.degree();
 		}
 		return degree;
 	}

@@ -47,8 +47,7 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
 			IdealFactory factory) {
 		if (monicFactors == null)
-			monicFactors = factory.singletonMap((NumericPrimitive) this,
-					(PrimitivePower) this);
+			monicFactors = factory.singletonMap(this, (PrimitivePower) this);
 		return monicFactors;
 	}
 
@@ -110,16 +109,6 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 	public Polynomial expand(IdealFactory factory) {
 		return this;
 	}
-
-	// @Override
-	// public boolean isZero() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public boolean isOne() {
-	// return false;
-	// }
 
 	@Override
 	public int degree() {

@@ -60,10 +60,10 @@ public class IdealTest {
 		c2 = idealFactory.constant(n2);
 		c10 = idealFactory.intConstant(10);
 		Xobj = objectFactory.stringObject("X");
-		x = idealFactory.newNumericSymbolicConstant(Xobj,
-				typeFactory.integerType());
-		y = idealFactory.newNumericSymbolicConstant(
-				objectFactory.stringObject("Y"), typeFactory.integerType());
+		x = objectFactory.canonic(idealFactory.newNumericSymbolicConstant(Xobj,
+				typeFactory.integerType()));
+		y = objectFactory.canonic(idealFactory.newNumericSymbolicConstant(
+				objectFactory.stringObject("Y"), typeFactory.integerType()));
 	}
 
 	@After
@@ -135,8 +135,8 @@ public class IdealTest {
 		NumericExpression xp1 = idealFactory
 				.add(x, idealFactory.intConstant(1));
 		SymbolicExpression xp1squared = idealFactory.multiply(xp1, xp1);
-		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(
-				x, x), idealFactory.add(
+		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(x,
+				x), idealFactory.add(
 				idealFactory.multiply(idealFactory.intConstant(2), x),
 				idealFactory.intConstant(1)));
 
@@ -146,8 +146,7 @@ public class IdealTest {
 
 	@Test
 	public void bigPower() {
-		// TODO: performance !
-		int exponent = 10;
+		int exponent = 100;
 		IntObject n = objectFactory.intObject(exponent);
 		IntObject m = objectFactory.intObject(exponent - 1);
 		NumericExpression xpy = idealFactory.add(x, y);
@@ -155,9 +154,9 @@ public class IdealTest {
 		NumericExpression xpyem = idealFactory.power(xpy, m);
 		NumericExpression quotient = idealFactory.divide(xpyen, xpyem);
 
-		out.println("xplusye20: (X+Y)^" + n + " = " + xpyen);
-		out.println("xplusye20: (X+Y)^" + m + " = " + xpyem);
-		out.println("xplusye20: quotient : " + quotient);
+		out.println("bigPower: (X+Y)^" + n + " = " + xpyen);
+		out.println("bigPower: (X+Y)^" + m + " = " + xpyem);
+		out.println("bigPower: quotient : " + quotient);
 		assertEquals(xpy, quotient);
 	}
 

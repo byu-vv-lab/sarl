@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -104,8 +105,6 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private IdealComparator comparator;
 
-	private Comparator<SymbolicExpression> wrappedComparator;
-
 	private SymbolicMap<?, ?> emptyMap;
 
 	private SymbolicType integerType, realType;
@@ -130,17 +129,10 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.typeFactory = typeFactory;
 		this.collectionFactory = collectionFactory;
 		this.comparator = new IdealComparator(this);
-		this.wrappedComparator = new Comparator<SymbolicExpression>() {
-			@Override
-			public int compare(SymbolicExpression o1, SymbolicExpression o2) {
-				return comparator.compare((IdealExpression) o1,
-						(IdealExpression) o2);
-			}
-		};
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
-		this.emptyMap = collectionFactory.emptySortedMap(wrappedComparator);
+		this.emptyMap = collectionFactory.emptySortedMap(comparator);
 		this.oneInt = (One) objectFactory.canonic(new One(integerType,
 				objectFactory.numberObject(numberFactory.oneInteger())));
 		this.oneReal = (One) objectFactory.canonic(new One(realType,
@@ -440,24 +432,19 @@ public class IdealFactory implements NumericExpressionFactory {
 	private Constant getConstantFactor(SymbolicType type,
 			SymbolicMap<Monic, Monomial> termMap) {
 		if (type.isReal())
-			return ((Monomial) termMap.iterator().next())
-					.monomialConstant(this);
+			return termMap.getFirst().monomialConstant(this);
 		else {
 			Iterator<Monomial> monomialIter = termMap.values().iterator();
 			IntegerNumber gcd = (IntegerNumber) monomialIter.next()
 					.monomialConstant(this).number();
-			boolean isNegative = gcd.signum() < 0;
 
-			if (isNegative)
+			if (gcd.signum() < 0)
 				gcd = numberFactory.negate(gcd);
-			while (monomialIter.hasNext()) {
+			while (!gcd.isOne() && monomialIter.hasNext())
 				gcd = numberFactory.gcd(
 						gcd,
 						(IntegerNumber) numberFactory.abs(monomialIter.next()
 								.monomialConstant(this).number()));
-				if (gcd.isOne())
-					break;
-			}
 			return constant(gcd);
 		}
 	}
@@ -485,7 +472,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		if (newMap.isEmpty())
 			return zero(type);
 		if (newMap.size() == 1)
-			return (Monomial) newMap.iterator().next();
+			return newMap.getFirst();
 		else {
 			Monomial factorization;
 			Constant c = getConstantFactor(type, newMap);
@@ -573,6 +560,59 @@ public class IdealFactory implements NumericExpressionFactory {
 		}
 	}
 
+	// public Monic multiply(Monic monic1, Monic monic2) {
+	// SymbolicMap<NumericPrimitive, PrimitivePower> factorMap1 = monic1
+	// .monicFactors(this);
+	// SymbolicMap<NumericPrimitive, PrimitivePower> factorMap2 = monic1
+	// .monicFactors(this);
+	// SymbolicMap<NumericPrimitive, PrimitivePower> productMap = emptyMap();
+	// Iterator<Entry<NumericPrimitive, PrimitivePower>> iter1 = factorMap1
+	// .entries().iterator();
+	// Iterator<Entry<NumericPrimitive, PrimitivePower>> iter2 = factorMap2
+	// .entries().iterator();
+	//
+	// if (iter1.hasNext() && iter2.hasNext()) {
+	// Entry<NumericPrimitive, PrimitivePower> entry1 = iter1.next(), entry2 =
+	// iter2
+	// .next();
+	//
+	// do {
+	// NumericPrimitive p1 = entry1.getKey(), p2 = entry2.getKey();
+	// int compare = comparator.comparePrimitives(p1, p2);
+	//
+	// if (compare == 0) {
+	// productMap = productMap.put(
+	// p1,
+	// primitivePower(
+	// p1,
+	// entry1.getValue()
+	// .primitivePowerExponent(this)
+	// .plus(entry2.getValue()
+	// .primitivePowerExponent(
+	// this))));
+	// entry1 = iter1.next();
+	// entry2 = iter2.next();
+	// } else if (compare < 0) {
+	// productMap = productMap.put(entry1.getKey(),
+	// entry1.getValue());
+	// entry1 = iter1.next();
+	// } else {
+	// productMap = productMap.put(entry2.getKey(),
+	// entry2.getValue());
+	// entry2 = iter2.next();
+	// }
+	// } while (entry1 != null && entry2 != null);
+	// while (entry1 != null) {
+	// productMap = productMap.put(entry1.getKey(), entry1.getValue());
+	// entry1 = iter1.next();
+	// }
+	// while (entry2 != null) {
+	// productMap = productMap.put(entry2.getKey(), entry2.getValue());
+	// entry2 = iter2.next();
+	// }
+	// }
+	// }
+
 	public Monic multiply(Monic monic1, Monic monic2) {
 		return monic(
 				monic1.type(),
@@ -586,13 +626,13 @@ public class IdealFactory implements NumericExpressionFactory {
 				multiply(m1.monic(this), m2.monic(this)));
 	}
 
+	// order is unchanged
 	private SymbolicMap<Monic, Monomial> multiply(Monomial monomial,
 			SymbolicMap<Monic, Monomial> termMap) {
 		SymbolicMap<Monic, Monomial> result = collectionFactory
 				.emptySortedMap();
 
-		for (SymbolicExpression expr : termMap) {
-			Monomial m = (Monomial) expr;
+		for (Monomial m : termMap) {
 			Monomial product = multiply(monomial, m);
 
 			result = result.put(product.monic(this), product);
@@ -605,16 +645,58 @@ public class IdealFactory implements NumericExpressionFactory {
 				multiply(monomial, polynomial.factorization(this)));
 	}
 
+	/**
+	 * Multiplies two term maps, returning a term map.
+	 * 
+	 * The trick to performance is to do perform all intermediate computations
+	 * using mutable data structures, and only wrap things up into the immutable
+	 * structures at the end.
+	 * 
+	 * @param termMap1
+	 *            a term map
+	 * @param termMap2
+	 *            a term map of same type
+	 * @return term map product
+	 */
 	private SymbolicMap<Monic, Monomial> multiply(
 			SymbolicMap<Monic, Monomial> termMap1,
 			SymbolicMap<Monic, Monomial> termMap2) {
-		SymbolicMap<Monic, Monomial> result = collectionFactory
-				.emptySortedMap();
+		HashMap<Monic, Constant> productMap = new HashMap<Monic, Constant>();
+		SymbolicMap<Monic, Monomial> result = emptyMap();
 
-		for (Monomial monomial : termMap1.values())
-			result = add(result, multiply(monomial, termMap2));
+		for (Entry<Monic, Monomial> entry1 : termMap1.entries())
+			for (Entry<Monic, Monomial> entry2 : termMap2.entries()) {
+				Monic monicProduct = multiply(entry1.getKey(), entry2.getKey());
+				Constant constantProduct = multiply(entry1.getValue()
+						.monomialConstant(this), entry2.getValue()
+						.monomialConstant(this));
+				Constant oldConstant = productMap.get(monicProduct);
+				Constant newConstant = oldConstant == null ? constantProduct
+						: add(oldConstant, constantProduct);
+
+				if (newConstant.isZero())
+					productMap.remove(monicProduct);
+				else
+					productMap.put(monicProduct, newConstant);
+			}
+		for (Entry<Monic, Constant> entry : productMap.entrySet()) {
+			Monic monic = entry.getKey();
+
+			result = result.put(monic, monomial(entry.getValue(), monic));
+		}
 		return result;
 	}
+
+	// private SymbolicMap<Monic, Monomial> multiplyOld(
+	// SymbolicMap<Monic, Monomial> termMap1,
+	// SymbolicMap<Monic, Monomial> termMap2) {
+	// SymbolicMap<Monic, Monomial> result = collectionFactory
+	// .emptySortedMap();
+	//
+	// for (Monomial monomial : termMap1.values())
+	// result = add(result, multiply(monomial, termMap2));
+	// return result;
+	// }
 
 	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
 		if (poly1.isZero())
@@ -625,6 +707,8 @@ public class IdealFactory implements NumericExpressionFactory {
 			return poly2;
 		if (poly2.isOne())
 			return poly1;
+		if (poly1 instanceof Monomial && poly2 instanceof Monomial)
+			return multiply((Monomial) poly1, (Monomial) poly2);
 		return polynomial(multiply(poly1.termMap(this), poly2.termMap(this)),
 				multiply(poly1.factorization(this), poly2.factorization(this)));
 	}

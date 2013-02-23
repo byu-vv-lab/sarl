@@ -17,6 +17,22 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		this.idealFactory = idealFactory;
 	}
 
+	private static boolean debug = false;
+
+	@Override
+	public int compare(NumericExpression o1, NumericExpression o2) {
+		if (debug) {
+			int result;
+
+			System.out.print("Comparing " + o1 + " and " + o2 + ": ");
+			result = compareWork(o1, o2);
+			System.out.println(result);
+			System.out.flush();
+			return result;
+		} else
+			return compareWork(o1, o2);
+	}
+
 	/**
 	 * Compares IdealExpressions. First come all expressions of integer type,
 	 * then all of real type. Within a type, first all the NTRationalExpression,
@@ -32,13 +48,8 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	 * primitive powers
 	 * 
 	 * to compare two primitive power of same degree: compare the bases
-	 * 
-	 * to compare two primitives: NEED comparator on everything else. That
-	 * general comparator needs to invoke this comparator though. The two
-	 * comparators need to know about each other.
 	 */
-	@Override
-	public int compare(NumericExpression o1, NumericExpression o2) {
+	public int compareWork(NumericExpression o1, NumericExpression o2) {
 		IdealExpression e1 = (IdealExpression) o1;
 		IdealExpression e2 = (IdealExpression) o2;
 		SymbolicType t1 = e1.type();
@@ -46,7 +57,10 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 		if (t1.isInteger()) {
 			if (t2.isInteger()) {
-				return comparePolynomials((Polynomial) e1, (Polynomial) e2);
+				if (o1 instanceof Monic && o2 instanceof Monic)
+					return compareMonics((Monic) o1, (Monic) o2);
+				else
+					return comparePolynomials((Polynomial) e1, (Polynomial) e2);
 			} else {
 				return -1;
 			}
@@ -140,7 +154,7 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	 * @param p2
 	 * @return
 	 */
-	private int comparePrimitives(NumericPrimitive p1, NumericPrimitive p2) {
+	public int comparePrimitives(NumericPrimitive p1, NumericPrimitive p2) {
 		int result = p1.operator().compareTo(p2.operator());
 
 		if (result != 0)

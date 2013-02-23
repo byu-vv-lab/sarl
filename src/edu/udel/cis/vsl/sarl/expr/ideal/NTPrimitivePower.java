@@ -24,8 +24,7 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 	@Override
 	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
 			IdealFactory factory) {
-		return factory.singletonMap((NumericPrimitive) primitive(),
-				(PrimitivePower) this);
+		return factory.singletonMap(primitive(), (PrimitivePower) this);
 	}
 
 	@Override
@@ -91,16 +90,6 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 			return this;
 		return (Polynomial) factory.power(expandedPrimitive, exponent());
 	}
-
-	// @Override
-	// public boolean isZero() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public boolean isOne() {
-	// return false;
-	// }
 
 	@Override
 	public String toString() {

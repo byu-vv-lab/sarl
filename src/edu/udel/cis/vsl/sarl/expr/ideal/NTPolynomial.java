@@ -53,7 +53,7 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 
 		if (map.isEmpty())
 			return null;
-		return map.iterator().next();
+		return map.getFirst();
 	}
 
 	@Override
@@ -70,16 +70,6 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	public Polynomial denominator(IdealFactory factory) {
 		return factory.one(type());
 	}
-
-	// @Override
-	// public boolean isZero() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public boolean isOne() {
-	// return false;
-	// }
 
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer();
@@ -104,8 +94,8 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	public int degree() {
 		if (degree < 0) {
 			degree = 0;
-			for (SymbolicExpression expr : termMap().keys()) {
-				int termDegree = ((Monic) expr).degree();
+			for (Monic expr : termMap().keys()) {
+				int termDegree = expr.degree();
 
 				if (termDegree > degree)
 					degree = termDegree;
