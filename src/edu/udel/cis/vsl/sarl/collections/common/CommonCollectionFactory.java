@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
@@ -54,6 +55,12 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public Comparator<SymbolicCollection<? extends SymbolicExpression>> comparator() {
 		return comparator;
+	}
+
+	@Override
+	public <T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
+			Collection<T> javaCollection) {
+		return new BasicCollection<T>(javaCollection);
 	}
 
 	@SuppressWarnings("unchecked")

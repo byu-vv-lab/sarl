@@ -1241,6 +1241,7 @@ class MonomialDivider implements UnaryOperator<Monomial> {
 
 	public MonomialDivider(IdealFactory factory, Number scalar) {
 		this.factory = factory;
+		this.scalar = scalar;
 		this.numberFactory = factory.numberFactory();
 	}
 
@@ -1260,6 +1261,7 @@ class MonomialMultiplier implements UnaryOperator<Monomial> {
 
 	public MonomialMultiplier(IdealFactory factory, Number scalar) {
 		this.factory = factory;
+		this.scalar = scalar;
 		this.numberFactory = factory.numberFactory();
 	}
 

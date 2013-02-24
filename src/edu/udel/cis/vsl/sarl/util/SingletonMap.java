@@ -93,4 +93,33 @@ public class SingletonMap<K, V> implements Map<K, V> {
 		});
 	}
 
+	@Override
+	public String toString() {
+		return "{" + theKey + "=" + theValue + "}";
+	}
+
+	@Override
+	public int hashCode() {
+		return theKey.hashCode() + theValue.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o instanceof Map<?, ?>) {
+			Map<?, ?> that = (Map<?, ?>) o;
+
+			if (that.size() != 1)
+				return false;
+			else {
+				Entry<?, ?> thatEntry = that.entrySet().iterator().next();
+
+				return theKey.equals(thatEntry.getKey())
+						&& theValue.equals(thatEntry.getValue());
+			}
+		}
+		return false;
+	}
+
 }

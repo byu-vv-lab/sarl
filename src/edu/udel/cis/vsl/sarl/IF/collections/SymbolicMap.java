@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
+import java.util.Comparator;
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
@@ -74,6 +75,14 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * @return
 	 */
 	boolean isSorted();
+
+	/**
+	 * If this map is sorted, returns the comparator used to sort the keys,
+	 * otherwise returns null.
+	 * 
+	 * @return the key comparator or null
+	 */
+	Comparator<? super K> comparator();
 
 	/**
 	 * Returns a symbolic map equivalent to the given one except that the entry

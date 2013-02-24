@@ -7,7 +7,7 @@ public interface SymbolicCollection<T extends SymbolicExpression> extends
 		SymbolicObject, Iterable<T> {
 
 	public enum SymbolicCollectionKind {
-		SET, SEQUENCE, MAP
+		BASIC, SET, SEQUENCE, MAP
 	}
 
 	int size();

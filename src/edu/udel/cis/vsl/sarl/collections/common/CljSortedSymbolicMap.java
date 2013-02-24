@@ -109,4 +109,9 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 		// need to construct whole new map replacing keys and values
 		// with canonic representative if not already
 	}
+
+	@Override
+	public Comparator<? super K> comparator() {
+		return pmap.comparator();
+	}
 }

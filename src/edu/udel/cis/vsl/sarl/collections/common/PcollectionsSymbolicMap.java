@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -112,6 +113,11 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 	public void canonizeChildren(CommonObjectFactory factory) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Comparator<? super K> comparator() {
+		return null;
 	}
 
 }

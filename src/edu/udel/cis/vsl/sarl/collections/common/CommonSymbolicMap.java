@@ -27,6 +27,9 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 	@Override
 	public SymbolicMap<K, V> combine(BinaryOperator<V> operator,
 			SymbolicMap<K, V> map) {
+
+		// System.out.println("size1=" + this.size() + " size2=" + map.size());
+
 		SymbolicMap<K, V> result = this;
 
 		for (Entry<K, V> entry : map.entries()) {

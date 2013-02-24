@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections.IF;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
@@ -25,6 +26,9 @@ public interface CollectionFactory {
 	void setElementComparator(Comparator<SymbolicExpression> c);
 
 	void init();
+
+	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
+			Collection<T> javaCollection);
 
 	/**
 	 * Returns the empty hash set.

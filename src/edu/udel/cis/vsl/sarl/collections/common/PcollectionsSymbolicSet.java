@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.pcollections.HashTreePSet;
@@ -64,7 +65,7 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 	public boolean isSorted() {
 		return false;
 	}
-	
+
 	// /**
 	// * I say the cast is safe because instances are immutable.
 	// * Therefore, if A is a subtype of B, then "immutable-set-of-A"
@@ -75,7 +76,6 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 	// public SymbolicSet<SymbolicExpression> expand() {
 	// return (SymbolicSet<SymbolicExpression>) this;
 	// }
-
 
 	@Override
 	public SymbolicSet<T> add(T element) {
@@ -107,6 +107,11 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 	public void canonizeChildren(CommonObjectFactory factory) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Comparator<T> comparator() {
+		return null;
 	}
 
 	// @Override

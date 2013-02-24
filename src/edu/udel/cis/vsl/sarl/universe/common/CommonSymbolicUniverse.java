@@ -1,19 +1,22 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -534,11 +537,225 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 						variable, value));
 	}
 
+	private SymbolicCollection<?> substituteGenericCollection(
+			SymbolicCollection<?> set,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		Iterator<? extends SymbolicExpression> iter = set.iterator();
+
+		while (iter.hasNext()) {
+			SymbolicExpression oldElement = iter.next();
+			SymbolicExpression newElement = substitute(oldElement, map);
+
+			if (newElement != oldElement) {
+				Collection<SymbolicExpression> newSet = new LinkedList<SymbolicExpression>();
+
+				for (SymbolicExpression e : set) {
+					if (e == oldElement)
+						break;
+					newSet.add(e);
+				}
+				newSet.add(newElement);
+				while (iter.hasNext())
+					newSet.add(substitute(iter.next(), map));
+				return collectionFactory.basicCollection(newSet);
+			}
+		}
+		return set;
+	}
+
+	private SymbolicCollection<?> substituteSequence(
+			SymbolicSequence<?> sequence,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
+
+		while (iter.hasNext()) {
+			SymbolicExpression oldElement = iter.next();
+			SymbolicExpression newElement = substitute(oldElement, map);
+
+			if (newElement != oldElement) {
+				SymbolicSequence<SymbolicExpression> newSequence = collectionFactory
+						.emptySequence();
+
+				for (SymbolicExpression e : sequence) {
+					if (e == oldElement)
+						break;
+					newSequence.add(e);
+				}
+				newSequence.add(newElement);
+				while (iter.hasNext())
+					newSequence.add(substitute(iter.next(), map));
+				return newSequence;
+			}
+		}
+		return sequence;
+	}
+
+	/**
+	 * Only sequences need to be preserved because other collections are all
+	 * processed through method make anyway.
+	 * 
+	 * @param collection
+	 * @param map
+	 * @return
+	 */
+	private SymbolicCollection<?> substitute(SymbolicCollection<?> collection,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		SymbolicCollectionKind kind = collection.collectionKind();
+
+		if (kind == SymbolicCollectionKind.SEQUENCE)
+			return substituteSequence((SymbolicSequence<?>) collection, map);
+		return substituteGenericCollection(collection, map);
+	}
+
+	private SymbolicType substitute(SymbolicType type,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		switch (type.typeKind()) {
+		case BOOLEAN:
+		case INTEGER:
+		case REAL:
+			return type;
+		case ARRAY: {
+			SymbolicArrayType arrayType = (SymbolicArrayType) type;
+			SymbolicType elementType = arrayType.elementType();
+			SymbolicType newElementType = substitute(elementType, map);
+
+			if (arrayType.isComplete()) {
+				SymbolicExpression extent = ((SymbolicCompleteArrayType) arrayType)
+						.extent();
+				SymbolicExpression newExtent = substitute(extent, map);
+
+				if (elementType != newElementType || extent != newExtent)
+					return typeFactory.arrayType(newElementType, newExtent);
+				return arrayType;
+			}
+			if (elementType != newElementType)
+				return typeFactory.arrayType(newElementType);
+			return arrayType;
+		}
+		case FUNCTION: {
+			SymbolicFunctionType functionType = (SymbolicFunctionType) type;
+			SymbolicTypeSequence inputs = functionType.inputTypes();
+			SymbolicTypeSequence newInputs = substitute(inputs, map);
+			SymbolicType output = functionType.outputType();
+			SymbolicType newOutput = substitute(output, map);
+
+			if (inputs != newInputs || output != newOutput)
+				return typeFactory.functionType(newInputs, newOutput);
+			return functionType;
+		}
+		case TUPLE: {
+			SymbolicTupleType tupleType = (SymbolicTupleType) type;
+			SymbolicTypeSequence fields = tupleType.sequence();
+			SymbolicTypeSequence newFields = substitute(fields, map);
+
+			if (fields != newFields)
+				return typeFactory.tupleType(tupleType.name(), newFields);
+			return tupleType;
+
+		}
+		case UNION: {
+			SymbolicUnionType unionType = (SymbolicUnionType) type;
+			SymbolicTypeSequence members = unionType.sequence();
+			SymbolicTypeSequence newMembers = substitute(members, map);
+
+			if (members != newMembers)
+				return typeFactory.unionType(unionType.name(), newMembers);
+			return unionType;
+		}
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+	}
+
+	private SymbolicTypeSequence substitute(SymbolicTypeSequence sequence,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		int count = 0;
+
+		for (SymbolicType t : sequence) {
+			SymbolicType newt = substitute(t, map);
+
+			if (t != newt) {
+				int numTypes = sequence.numTypes();
+				SymbolicType[] newTypes = new SymbolicType[numTypes];
+
+				for (int i = 0; i < count; i++)
+					newTypes[i] = sequence.getType(i);
+				newTypes[count] = newt;
+				for (int i = count + 1; i < numTypes; i++)
+					newTypes[i] = substitute(sequence.getType(i), map);
+				return typeFactory.sequence(newTypes);
+			}
+			count++;
+		}
+		return sequence;
+	}
+
+	/**
+	 * If no changes takes place, result returned will be == given expression.
+	 */
 	@Override
 	public SymbolicExpression substitute(SymbolicExpression expression,
 			Map<SymbolicConstant, SymbolicExpression> map) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicOperator operator = expression.operator();
+
+		if (operator == SymbolicOperator.SYMBOLIC_CONSTANT) {
+			SymbolicExpression newValue = map
+					.get((SymbolicConstant) expression);
+
+			if (newValue != null)
+				return newValue;
+		}
+		{
+			int numArgs = expression.numArguments();
+			SymbolicType type = expression.type();
+			SymbolicType newType = substitute(type, map);
+			SymbolicObject[] newArgs = type == newType ? null
+					: new SymbolicObject[numArgs];
+
+			for (int i = 0; i < numArgs; i++) {
+				SymbolicObject arg = expression.argument(i);
+				SymbolicObjectKind kind = arg.symbolicObjectKind();
+
+				switch (kind) {
+				case BOOLEAN:
+				case INT:
+				case NUMBER:
+				case STRING:
+					break;
+				default:
+					SymbolicObject newArg = null;
+
+					switch (kind) {
+					case EXPRESSION:
+						newArg = substitute((SymbolicExpression) arg, map);
+						break;
+					case EXPRESSION_COLLECTION:
+						newArg = substitute((SymbolicCollection<?>) arg, map);
+						break;
+					case TYPE:
+						newArg = substitute((SymbolicType) arg, map);
+						break;
+					case TYPE_SEQUENCE:
+						newArg = substitute((SymbolicTypeSequence) arg, map);
+					default:
+						throw new SARLInternalException("unreachable");
+					}
+					if (newArg != arg) {
+						if (newArgs == null) {
+							newArgs = new SymbolicObject[numArgs];
+
+							for (int j = 0; j < i; j++)
+								newArgs[j] = expression.argument(j);
+						}
+					}
+					if (newArgs != null)
+						newArgs[i] = newArg;
+				}
+			}
+			if (newType == type && newArgs == null)
+				return expression;
+			return make(expression.operator(), newType, newArgs);
+		}
 	}
 
 	@Override

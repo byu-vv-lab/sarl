@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
+import java.util.Comparator;
+
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
@@ -27,6 +29,14 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 * @return
 	 */
 	boolean isSorted();
+
+	/**
+	 * If the set is sorted, returns the compartor used for sorting, else
+	 * returns null.
+	 * 
+	 * @return the comparator or null
+	 */
+	Comparator<T> comparator();
 
 	/**
 	 * Returns the collection obtained by adding the given element to the given
