@@ -120,4 +120,9 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 		return IdealKind.NumericPrimitive;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return factory.zero(type());
+	}
+
 }

@@ -89,4 +89,9 @@ public class NTConstant extends IdealExpression implements Constant {
 		return isZero() ? -1 : 0;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return this;
+	}
+
 }

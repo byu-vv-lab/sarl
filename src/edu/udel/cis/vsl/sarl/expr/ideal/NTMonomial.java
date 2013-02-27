@@ -91,4 +91,9 @@ public class NTMonomial extends IdealExpression implements Monomial {
 		return IdealKind.NTMonomial;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return factory.zero(type());
+	}
+
 }

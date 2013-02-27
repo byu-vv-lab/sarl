@@ -116,4 +116,9 @@ public class NTMonic extends IdealExpression implements Monic {
 		return degree;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return factory.zero(type());
+	}
+
 }

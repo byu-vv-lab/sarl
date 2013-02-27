@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.expr.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
  * A non-trivial polynomial is the sum of at least 2 monomials with different
@@ -107,6 +108,14 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	@Override
 	public IdealKind idealKind() {
 		return IdealKind.NTPolynomial;
+	}
+
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		SymbolicType type = type();
+		Constant constant = (Constant) termMap().get(factory.one(type));
+
+		return constant == null ? factory.zero(type) : constant;
 	}
 
 }

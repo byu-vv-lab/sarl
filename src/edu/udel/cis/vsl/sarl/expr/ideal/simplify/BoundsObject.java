@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal;
+package edu.udel.cis.vsl.sarl.expr.ideal.simplify;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;

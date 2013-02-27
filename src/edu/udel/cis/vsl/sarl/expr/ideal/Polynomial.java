@@ -26,6 +26,13 @@ public interface Polynomial extends RationalExpression {
 	Monomial leadingTerm();
 
 	/**
+	 * The constant term of this polynomial, which may be 0.
+	 * 
+	 * @return constant term
+	 */
+	Constant constantTerm(IdealFactory factory);
+
+	/**
 	 * Returns a factorization of this polynomial expressed as a Monomial in
 	 * which the "variables" are ReducedPolynomials as well as other standard
 	 * NumericPrimitives, such as symbolic constants, etc.

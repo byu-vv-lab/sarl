@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal;
+package edu.udel.cis.vsl.sarl.expr.common;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 

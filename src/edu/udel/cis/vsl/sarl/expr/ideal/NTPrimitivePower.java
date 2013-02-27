@@ -106,4 +106,9 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 		return IdealKind.NTPrimitivePower;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return factory.zero(type());
+	}
+
 }

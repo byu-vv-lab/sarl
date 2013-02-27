@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal;
+package edu.udel.cis.vsl.sarl.expr.ideal.simplify;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +12,10 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.expr.ideal.IdealFactory;
+import edu.udel.cis.vsl.sarl.expr.ideal.Monic;
+import edu.udel.cis.vsl.sarl.expr.ideal.Monomial;
+import edu.udel.cis.vsl.sarl.expr.ideal.Polynomial;
 
 /**
  * Simplifies a constant map. This take as input a map which associates constant

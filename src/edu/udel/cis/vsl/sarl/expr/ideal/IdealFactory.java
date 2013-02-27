@@ -351,8 +351,64 @@ public class IdealFactory implements NumericExpressionFactory {
 		if (termMap.size() == 0)
 			return zero(factorization.type());
 		if (termMap.size() == 1)
-			return (Monomial) termMap.iterator().next();
+			return termMap.getFirst();
 		return ntPolynomial(termMap, factorization);
+	}
+
+	private Constant getConstantFactor(SymbolicType type,
+			SymbolicMap<Monic, Monomial> termMap) {
+		if (type.isReal())
+			return termMap.getFirst().monomialConstant(this);
+		else {
+			Iterator<Monomial> monomialIter = termMap.values().iterator();
+			IntegerNumber gcd = (IntegerNumber) monomialIter.next()
+					.monomialConstant(this).number();
+
+			if (gcd.signum() < 0)
+				gcd = numberFactory.negate(gcd);
+			while (!gcd.isOne() && monomialIter.hasNext())
+				gcd = numberFactory.gcd(
+						gcd,
+						(IntegerNumber) numberFactory.abs(monomialIter.next()
+								.monomialConstant(this).number()));
+			return constant(gcd);
+		}
+	}
+
+	public Polynomial polynomialWithTrivialFactorization(SymbolicType type,
+			SymbolicMap<Monic, Monomial> termMap) {
+		Monomial factorization;
+		Constant c = getConstantFactor(type, termMap);
+
+		if (c.isOne())
+			factorization = reducedPolynomial(type, termMap);
+		else
+			factorization = monomial(c,
+					reducedPolynomial(type, divide(termMap, c)));
+		return polynomial(termMap, factorization);
+	}
+
+	public Polynomial subtractConstantTerm(Polynomial polynomial) {
+		SymbolicType type = polynomial.type();
+
+		if (polynomial instanceof Constant)
+			return zero(type);
+		else {
+			Constant constant = polynomial.constantTerm(this);
+
+			if (constant.isZero())
+				return polynomial;
+			if (polynomial instanceof NTPolynomial) {
+				SymbolicMap<Monic, Monomial> termMap = polynomial.termMap(this)
+						.remove(one(type));
+
+				if (termMap.size() == 1)
+					return termMap.getFirst();
+				assert termMap.size() > 1;
+				return polynomialWithTrivialFactorization(type, termMap);
+			} else
+				throw new SARLInternalException("unreachable");
+		}
 	}
 
 	// Rational expressions
@@ -368,7 +424,6 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	public Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicType type = fact1.type();
-		// maps from ReducedPolynomial to ReducedPolynomialPower...
 		SymbolicMap<NumericPrimitive, PrimitivePower> map1 = fact1
 				.monicFactors(this);
 		SymbolicMap<NumericPrimitive, PrimitivePower> map2 = fact2
@@ -429,26 +484,6 @@ public class IdealFactory implements NumericExpressionFactory {
 				c1.number(), c2.number())));
 	}
 
-	private Constant getConstantFactor(SymbolicType type,
-			SymbolicMap<Monic, Monomial> termMap) {
-		if (type.isReal())
-			return termMap.getFirst().monomialConstant(this);
-		else {
-			Iterator<Monomial> monomialIter = termMap.values().iterator();
-			IntegerNumber gcd = (IntegerNumber) monomialIter.next()
-					.monomialConstant(this).number();
-
-			if (gcd.signum() < 0)
-				gcd = numberFactory.negate(gcd);
-			while (!gcd.isOne() && monomialIter.hasNext())
-				gcd = numberFactory.gcd(
-						gcd,
-						(IntegerNumber) numberFactory.abs(monomialIter.next()
-								.monomialConstant(this).number()));
-			return constant(gcd);
-		}
-	}
-
 	private SymbolicMap<Monic, Monomial> add(
 			SymbolicMap<Monic, Monomial> termMap1,
 			SymbolicMap<Monic, Monomial> termMap2) {
@@ -473,17 +508,8 @@ public class IdealFactory implements NumericExpressionFactory {
 			return zero(type);
 		if (newMap.size() == 1)
 			return newMap.getFirst();
-		else {
-			Monomial factorization;
-			Constant c = getConstantFactor(type, newMap);
-
-			if (c.isOne())
-				factorization = reducedPolynomial(type, newMap);
-			else
-				factorization = monomial(c,
-						reducedPolynomial(type, divide(newMap, c)));
-			return polynomial(newMap, factorization);
-		}
+		else
+			return polynomialWithTrivialFactorization(type, newMap);
 	}
 
 	/**
@@ -1207,7 +1233,7 @@ class MonomialAdder implements BinaryOperator<Monomial> {
 
 		if (c.isZero())
 			return null;
-		return factory.ntMonomial(c, arg0.monic(factory));
+		return factory.monomial(c, arg0.monic(factory));
 	}
 }
 

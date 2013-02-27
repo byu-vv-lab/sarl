@@ -99,4 +99,9 @@ public class One extends IdealExpression implements Constant, Monic {
 		return IdealKind.Constant;
 	}
 
+	@Override
+	public Constant constantTerm(IdealFactory factory) {
+		return this;
+	}
+
 }

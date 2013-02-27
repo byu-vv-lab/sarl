@@ -45,9 +45,8 @@ import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
 /**
- * This class provides partial implementation of the SymbolicUniverseIF
- * interface. Generic implementations of methods "make" and "canonicalize" are
- * given.
+ * A standard implementation of SymbolicUniverse, relying heavily on a given
+ * NumericExpressionFactory for dealing with numeric issues.
  * 
  * @author siegel
  */
@@ -96,19 +95,19 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	public CommonSymbolicUniverse(FactorySystem system) {
 		// this.system = system;
-		this.objectFactory = system.objectFactory();
-		this.typeFactory = system.typeFactory();
-		this.expressionFactory = system.expressionFactory();
-		this.collectionFactory = system.collectionFactory();
-		this.numericExpressionFactory = expressionFactory.numericFactory();
-		this.numberFactory = numericExpressionFactory.numberFactory();
-		this.objectComparator = objectFactory.comparator();
-		this.booleanType = typeFactory.booleanType();
-		this.integerType = typeFactory.integerType();
-		this.realType = typeFactory.realType();
-		this.trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
+		objectFactory = system.objectFactory();
+		typeFactory = system.typeFactory();
+		expressionFactory = system.expressionFactory();
+		collectionFactory = system.collectionFactory();
+		numericExpressionFactory = expressionFactory.numericFactory();
+		numberFactory = numericExpressionFactory.numberFactory();
+		objectComparator = objectFactory.comparator();
+		booleanType = typeFactory.booleanType();
+		integerType = typeFactory.integerType();
+		realType = typeFactory.realType();
+		trueExpr = expression(SymbolicOperator.CONCRETE, booleanType,
 				objectFactory.trueObj());
-		this.falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
+		falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
 				objectFactory.falseObj());
 		zeroInt = expression(SymbolicOperator.CONCRETE, integerType,
 				objectFactory.zeroIntObj());
