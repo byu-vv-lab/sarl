@@ -40,6 +40,11 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		expressionComparator.setObjectComparator(c);
 		numericFactory.setObjectComparator(c);
 	}
+	
+	@Override
+	public void setTypeComparator(Comparator<SymbolicType> c) {
+		expressionComparator.setTypeComparator(c);
+	}
 
 	@Override
 	public void init() {

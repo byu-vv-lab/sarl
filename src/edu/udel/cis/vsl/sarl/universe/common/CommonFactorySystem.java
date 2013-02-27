@@ -34,6 +34,7 @@ public class CommonFactorySystem implements FactorySystem {
 				.typeSequenceComparator());
 		typeFactory.setExpressionComparator(expressionFactory.comparator());
 		expressionFactory.setObjectComparator(objectFactory.comparator());
+		expressionFactory.setTypeComparator(typeFactory.typeComparator());
 		collectionFactory.setElementComparator(expressionFactory.comparator());
 		objectFactory.init();
 		typeFactory.init();
