@@ -59,7 +59,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	@Override
 	public SymbolicExpression canonic(SymbolicExpression expression) {
-		return (SymbolicExpression) objectFactory.canonic(expression);
+		return objectFactory.canonic(expression);
 	}
 
 	@Override

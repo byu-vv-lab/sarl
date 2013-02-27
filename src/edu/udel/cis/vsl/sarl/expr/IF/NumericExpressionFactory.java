@@ -50,6 +50,14 @@ public interface NumericExpressionFactory {
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2);
 
+	NumericExpression zeroInt();
+
+	NumericExpression zeroReal();
+
+	NumericExpression oneInt();
+
+	NumericExpression oneReal();
+
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
 	/**

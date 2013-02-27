@@ -79,7 +79,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	private CollectionFactory collectionFactory;
 
-	private NumericExpressionFactory numericExpressionFactory;
+	private NumericExpressionFactory numericFactory;
 
 	private ObjectComparator objectComparator;
 
@@ -91,16 +91,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	private SymbolicExpression trueExpr, falseExpr;
 
-	private SymbolicExpression zeroInt, zeroReal, oneInt, oneReal;
-
 	public CommonSymbolicUniverse(FactorySystem system) {
 		// this.system = system;
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		expressionFactory = system.expressionFactory();
 		collectionFactory = system.collectionFactory();
-		numericExpressionFactory = expressionFactory.numericFactory();
-		numberFactory = numericExpressionFactory.numberFactory();
+		numericFactory = expressionFactory.numericFactory();
+		numberFactory = numericFactory.numberFactory();
 		objectComparator = objectFactory.comparator();
 		booleanType = typeFactory.booleanType();
 		integerType = typeFactory.integerType();
@@ -109,14 +107,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				objectFactory.trueObj());
 		falseExpr = expression(SymbolicOperator.CONCRETE, booleanType,
 				objectFactory.falseObj());
-		zeroInt = expression(SymbolicOperator.CONCRETE, integerType,
-				objectFactory.zeroIntObj());
-		zeroReal = expression(SymbolicOperator.CONCRETE, realType,
-				objectFactory.zeroRealObj());
-		oneInt = expression(SymbolicOperator.CONCRETE, integerType,
-				objectFactory.oneIntObj());
-		oneReal = expression(SymbolicOperator.CONCRETE, realType,
-				objectFactory.oneRealObj());
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
@@ -124,7 +114,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	public NumericExpressionFactory numericExpressionFactory() {
-		return numericExpressionFactory;
+		return numericFactory;
 	}
 
 	@Override
@@ -133,28 +123,36 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
-		return expressionFactory.canonic(expression);
+		return objectFactory.canonic(expression);
 	}
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {
-		return expressionFactory.expression(operator, type, arguments);
+		return type.isNumeric() ? numericFactory.newNumericExpression(operator,
+				type, arguments) : expressionFactory.expression(operator, type,
+				arguments);
 	}
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0) {
-		return expressionFactory.expression(operator, type, arg0);
+		return type.isNumeric() ? numericFactory.newNumericExpression(operator,
+				type, arg0) : expressionFactory
+				.expression(operator, type, arg0);
 	}
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
-		return expressionFactory.expression(operator, type, arg0, arg1);
+		return type.isNumeric() ? numericFactory.newNumericExpression(operator,
+				type, arg0, arg1) : expressionFactory.expression(operator,
+				type, arg0, arg1);
 	}
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
-		return expressionFactory.expression(operator, type, arg0, arg1, arg2);
+		return type.isNumeric() ? numericFactory.newNumericExpression(operator,
+				type, arg0, arg1, arg2) : expressionFactory.expression(
+				operator, type, arg0, arg1, arg2);
 	}
 
 	protected SymbolicExpression zero(SymbolicType type) {
@@ -214,7 +212,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return castToReal((SymbolicExpression) args[0]);
 		case CONCRETE:
 			if (type.isNumeric())
-				return canonic(numericExpressionFactory
+				return canonic(numericFactory
 						.newConcreteNumericExpression((NumberObject) args[0]));
 			else
 				return expression(SymbolicOperator.CONCRETE, type, args[0]);
@@ -514,8 +512,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		SymbolicConstant result;
 
 		if (type.isNumeric())
-			result = numericExpressionFactory.newNumericSymbolicConstant(name,
-					type);
+			result = numericFactory.newNumericSymbolicConstant(name, type);
 		else
 			result = expressionFactory.symbolicConstant(name, type);
 		return result;
@@ -759,8 +756,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression symbolic(NumberObject numberObject) {
-		return numericExpressionFactory
-				.newConcreteNumericExpression(numberObject);
+		return numericFactory.newConcreteNumericExpression(numberObject);
 	}
 
 	@Override
@@ -770,42 +766,42 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression zeroInt() {
-		return zeroInt;
+		return numericFactory.zeroInt();
 	}
 
 	@Override
 	public SymbolicExpression zeroReal() {
-		return zeroReal;
+		return numericFactory.zeroReal();
 	}
 
 	@Override
 	public SymbolicExpression oneInt() {
-		return oneInt;
+		return numericFactory.oneInt();
 	}
 
 	@Override
 	public SymbolicExpression oneReal() {
-		return oneReal;
+		return numericFactory.oneReal();
 	}
 
 	@Override
 	public SymbolicExpression add(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		return numericExpressionFactory.add((NumericExpression) arg0,
+		return numericFactory.add((NumericExpression) arg0,
 				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpression subtract(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		return numericExpressionFactory.subtract((NumericExpression) arg0,
+		return numericFactory.subtract((NumericExpression) arg0,
 				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpression multiply(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		return numericExpressionFactory.multiply((NumericExpression) arg0,
+		return numericFactory.multiply((NumericExpression) arg0,
 				(NumericExpression) arg1);
 	}
 
@@ -829,39 +825,37 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public SymbolicExpression divide(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		return numericExpressionFactory.divide((NumericExpression) arg0,
+		return numericFactory.divide((NumericExpression) arg0,
 				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpression modulo(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		return numericExpressionFactory.modulo((NumericExpression) arg0,
+		return numericFactory.modulo((NumericExpression) arg0,
 				(NumericExpression) arg1);
 	}
 
 	@Override
 	public SymbolicExpression minus(SymbolicExpression arg) {
-		return numericExpressionFactory.minus((NumericExpression) arg);
+		return numericFactory.minus((NumericExpression) arg);
 	}
 
 	@Override
 	public SymbolicExpression power(SymbolicExpression base, IntObject exponent) {
-		return numericExpressionFactory.power((NumericExpression) base,
-				exponent);
+		return numericFactory.power((NumericExpression) base, exponent);
 	}
 
 	@Override
 	public SymbolicExpression power(SymbolicExpression base,
 			SymbolicExpression exponent) {
-		return numericExpressionFactory.power((NumericExpression) base,
+		return numericFactory.power((NumericExpression) base,
 				(NumericExpression) exponent);
 	}
 
 	@Override
 	public SymbolicExpression castToReal(SymbolicExpression numericExpression) {
-		return numericExpressionFactory
-				.castToReal((NumericExpression) numericExpression);
+		return numericFactory.castToReal((NumericExpression) numericExpression);
 	}
 
 	@Override
@@ -1327,7 +1321,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 						result,
 						forallInt(
 								index,
-								zeroInt,
+								zeroInt(),
 								length,
 								equals(arrayRead(arg0, index),
 										arrayRead(arg1, index),
@@ -1738,8 +1732,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (oldType.equals(newType))
 			return expression;
 		if (oldType.isInteger() && newType.isReal()) {
-			return numericExpressionFactory
-					.castToReal((NumericExpression) expression);
+			return numericFactory.castToReal((NumericExpression) expression);
 		}
 		if (oldType.typeKind() == SymbolicTypeKind.UNION) {
 			Integer index = ((SymbolicUnionType) oldType).indexOfType(newType);

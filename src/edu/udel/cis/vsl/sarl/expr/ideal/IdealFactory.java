@@ -133,9 +133,9 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
 		this.emptyMap = collectionFactory.emptySortedMap(comparator);
-		this.oneInt = (One) objectFactory.canonic(new One(integerType,
+		this.oneInt = objectFactory.canonic(new One(integerType,
 				objectFactory.numberObject(numberFactory.oneInteger())));
-		this.oneReal = (One) objectFactory.canonic(new One(realType,
+		this.oneReal = objectFactory.canonic(new One(realType,
 				objectFactory.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
 		this.zeroReal = canonicIntConstant(0);
@@ -148,18 +148,22 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
 	}
 
+	@Override
 	public void setObjectComparator(Comparator<SymbolicObject> c) {
 		comparator.setObjectComparator(c);
 	}
 
+	@Override
 	public void init() {
 		assert comparator.objectComparator() != null;
 	}
 
+	@Override
 	public NumberFactory numberFactory() {
 		return numberFactory;
 	}
 
+	@Override
 	public ObjectFactory objectFactory() {
 		return objectFactory;
 	}
@@ -198,7 +202,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	private Constant canonicIntConstant(int value) {
-		return (Constant) objectFactory.canonic(intConstant(value));
+		return objectFactory.canonic(intConstant(value));
 	}
 
 	public Constant realConstant(int value) {
@@ -210,7 +214,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	private Constant canonicRealConstant(int value) {
-		return (Constant) objectFactory.canonic(realConstant(value));
+		return objectFactory.canonic(realConstant(value));
 	}
 
 	public Constant constant(NumberObject object) {
@@ -224,10 +228,12 @@ public class IdealFactory implements NumericExpressionFactory {
 		return constant(objectFactory.numberObject(number));
 	}
 
+	@Override
 	public Constant zeroInt() {
 		return zeroInt;
 	}
 
+	@Override
 	public Constant zeroReal() {
 		return zeroReal;
 	}
@@ -236,10 +242,12 @@ public class IdealFactory implements NumericExpressionFactory {
 		return type.isInteger() ? zeroInt : zeroReal;
 	}
 
+	@Override
 	public One oneInt() {
 		return oneInt;
 	}
 
+	@Override
 	public One oneReal() {
 		return oneReal;
 	}
@@ -302,7 +310,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		if (monicMap.isEmpty())
 			return one(type);
 		if (monicMap.size() == 1)
-			return (PrimitivePower) monicMap.iterator().next();
+			return monicMap.iterator().next();
 		return ntMonic(type, monicMap);
 	}
 
@@ -1040,7 +1048,7 @@ public class IdealFactory implements NumericExpressionFactory {
 			NumericExpression arg1) {
 		if (arg0.type().isInteger())
 			return divide((Polynomial) arg0, (Polynomial) arg1);
-		return divide((RationalExpression) arg0, (RationalExpression) arg1);
+		return divide(arg0, arg1);
 	}
 
 	@Override
