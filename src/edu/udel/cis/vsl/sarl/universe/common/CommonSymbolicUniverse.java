@@ -1,14 +1,11 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -52,6 +49,8 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  */
 public class CommonSymbolicUniverse implements SymbolicUniverse {
 
+	// Fields...
+
 	/**
 	 * A sequence of array writes in which the index never exceeds this bound
 	 * will be represented in a dense format, i.e., like a regular Java array.
@@ -85,11 +84,15 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	private TheoremProver prover;
 
+	private Substituter substituter;
+
 	private SymbolicType booleanType, integerType, realType;
 
 	private SymbolicExpression nullExpression;
 
 	private SymbolicExpression trueExpr, falseExpr;
+
+	// Constructor...
 
 	public CommonSymbolicUniverse(FactorySystem system) {
 		// this.system = system;
@@ -111,16 +114,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
 		prover = Prove.newIdealCVC3HybridProver(this);
+		substituter = new Substituter(this, collectionFactory, typeFactory);
 	}
 
-	public NumericExpressionFactory numericExpressionFactory() {
-		return numericFactory;
-	}
-
-	@Override
-	public SymbolicObject canonic(SymbolicObject object) {
-		return objectFactory.canonic(object);
-	}
+	// Helper methods...
 
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
@@ -165,12 +162,327 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					+ type);
 	}
 
-	protected SymbolicSet<SymbolicExpression> set(SymbolicExpression x,
+	protected SymbolicSet<SymbolicExpression> hashSet(SymbolicExpression x,
 			SymbolicExpression y) {
 		return collectionFactory.singletonHashSet(x).add(y);
 	}
 
-	// Exported methods...
+	private SymbolicConstant boundVar(int index, SymbolicType type) {
+		return symbolicConstant(stringObject("x" + index), type);
+	}
+
+	/**
+	 * Returns a symbolic constant of integer type for use in binding
+	 * expressions (e.g., "forall int i...").
+	 * 
+	 * @param index
+	 *            unique ID to be used in name of the symbolic constant
+	 * @return the symbolic constant
+	 */
+	private SymbolicConstant intBoundVar(int index) {
+		return symbolicConstant(stringObject("i" + index), integerType);
+	}
+
+	/**
+	 * Returns a boolean expression which holds iff the two types are equal,
+	 * using nestingDepth to control the name of the next bound variable.
+	 * 
+	 * @param type0
+	 *            a symbolic type
+	 * @param type1
+	 *            a symbolic type
+	 * @return a boolean expression which holds iff the two types are equal
+	 */
+	private SymbolicExpression equals(SymbolicType type0, SymbolicType type1,
+			int nestingDepth) {
+		if (type0.equals(type1))
+			return trueExpr;
+
+		SymbolicTypeKind kind = type0.typeKind();
+
+		if (kind != type1.typeKind())
+			return falseExpr;
+		switch (kind) {
+		case BOOLEAN:
+		case INTEGER:
+		case REAL:
+			return trueExpr;
+		case ARRAY: {
+			SymbolicArrayType a0 = (SymbolicArrayType) type0;
+			SymbolicArrayType a1 = (SymbolicArrayType) type1;
+
+			if (a0.isComplete() != a1.isComplete())
+				return falseExpr;
+			else {
+				SymbolicExpression result = equals(a0.elementType(),
+						a1.elementType(), nestingDepth);
+
+				if (a0.isComplete())
+					result = and(
+							result,
+							equals(((SymbolicCompleteArrayType) a0).extent(),
+									((SymbolicCompleteArrayType) a1).extent(),
+									nestingDepth));
+				return result;
+			}
+		}
+		case FUNCTION:
+			return and(
+					equals(((SymbolicFunctionType) type0).inputTypes(),
+							((SymbolicFunctionType) type1).inputTypes(),
+							nestingDepth),
+					equals(((SymbolicFunctionType) type0).outputType(),
+							((SymbolicFunctionType) type1).outputType(),
+							nestingDepth));
+		case TUPLE: {
+			SymbolicTupleType t0 = (SymbolicTupleType) type0;
+			SymbolicTupleType t1 = (SymbolicTupleType) type1;
+
+			if (!t0.name().equals(t1.name()))
+				return falseExpr;
+			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+		}
+		case UNION: {
+			SymbolicUnionType t0 = (SymbolicUnionType) type0;
+			SymbolicUnionType t1 = (SymbolicUnionType) type1;
+
+			if (!t0.name().equals(t1.name()))
+				return falseExpr;
+			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+		}
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+
+	}
+
+	/**
+	 * Returns a boolean expression which holds iff the two types are equal.
+	 * 
+	 * @param type0
+	 * @param type1
+	 * @return
+	 */
+	protected SymbolicExpression equals(SymbolicType type0, SymbolicType type1) {
+		return equals(type0, type1, 0);
+	}
+
+	private SymbolicExpression equals(SymbolicExpression arg0,
+			SymbolicExpression arg1, int quantifierDepth) {
+		if (arg0.equals(arg1))
+			return trueExpr;
+
+		SymbolicType type = arg0.type();
+		SymbolicExpression result = equals(type, arg1.type(), quantifierDepth);
+
+		if (result.equals(falseExpr))
+			return result;
+		switch (type.typeKind()) {
+		case BOOLEAN:
+			return equiv(arg0, arg1);
+		case INTEGER:
+		case REAL: {
+			SymbolicExpression difference = subtract(arg1, arg0);
+			Number number = extractNumber(difference);
+
+			if (number == null)
+				return expression(SymbolicOperator.EQUALS, booleanType,
+						zero(arg0.type()), difference);
+			else
+				return number.isZero() ? trueExpr : falseExpr;
+		}
+		case ARRAY: {
+			SymbolicExpression length = length(arg0);
+
+			if (!((SymbolicArrayType) type).isComplete())
+				result = and(result,
+						equals(length, length(arg1), quantifierDepth));
+			if (result.isFalse())
+				return result;
+			else {
+				SymbolicConstant index = intBoundVar(quantifierDepth);
+
+				result = and(
+						result,
+						forallInt(
+								index,
+								zeroInt(),
+								length,
+								equals(arrayRead(arg0, index),
+										arrayRead(arg1, index),
+										quantifierDepth + 1)));
+				return result;
+			}
+		}
+		case FUNCTION: {
+			SymbolicTypeSequence inputTypes = ((SymbolicFunctionType) type)
+					.inputTypes();
+			int numInputs = inputTypes.numTypes();
+
+			if (numInputs == 0) {
+				result = and(
+						result,
+						expression(SymbolicOperator.EQUALS, booleanType, arg0,
+								arg1));
+			} else {
+				SymbolicConstant[] boundVariables = new SymbolicConstant[numInputs];
+				SymbolicSequence<?> sequence;
+				SymbolicExpression expr;
+
+				for (int i = 0; i < numInputs; i++)
+					boundVariables[i] = boundVar(quantifierDepth + i,
+							inputTypes.getType(i));
+				sequence = collectionFactory.sequence(boundVariables);
+				expr = equals(apply(arg0, sequence), apply(arg1, sequence),
+						quantifierDepth + numInputs);
+				for (int i = numInputs - 1; i >= 0; i--)
+					expr = forall(boundVariables[i], expr);
+				result = and(result, expr);
+				return result;
+			}
+		}
+		case TUPLE: {
+			int numComponents = ((SymbolicTupleType) type).sequence()
+					.numTypes();
+
+			for (int i = 0; i < numComponents; i++) {
+				IntObject index = intObject(i);
+
+				result = and(
+						result,
+						equals(tupleRead(arg0, index), tupleRead(arg1, index),
+								quantifierDepth));
+			}
+			return result;
+		}
+		case UNION: {
+			SymbolicUnionType unionType = (SymbolicUnionType) type;
+
+			if (arg0.operator() == SymbolicOperator.UNION_INJECT) {
+				IntObject index = (IntObject) arg0.argument(0);
+				SymbolicExpression value0 = (SymbolicExpression) arg0
+						.argument(1);
+
+				if (arg1.operator() == SymbolicOperator.UNION_INJECT)
+					return index.equals(arg1.argument(0)) ? and(
+							result,
+							equals(value0,
+									(SymbolicExpression) arg1.argument(1),
+									quantifierDepth)) : falseExpr;
+				else
+					return and(
+							result,
+							and(unionTest(index, arg1),
+									equals(value0, unionExtract(index, arg1),
+											quantifierDepth)));
+			} else if (arg1.operator() == SymbolicOperator.UNION_INJECT) {
+				IntObject index = (IntObject) arg1.argument(0);
+
+				return and(
+						result,
+						and(unionTest(index, arg0),
+								equals((SymbolicExpression) arg1.argument(1),
+										unionExtract(index, arg0),
+										quantifierDepth)));
+			} else {
+				int numTypes = unionType.sequence().numTypes();
+				SymbolicExpression expr = falseExpr;
+
+				for (int i = 0; i < numTypes; i++) {
+					IntObject index = intObject(i);
+					SymbolicExpression clause = result;
+
+					clause = and(clause, unionTest(index, arg0));
+					if (clause.isFalse())
+						continue;
+					clause = and(clause, unionTest(index, arg1));
+					if (clause.isFalse())
+						continue;
+					clause = and(
+							clause,
+							equals(unionExtract(index, arg0),
+									unionExtract(index, arg1), quantifierDepth));
+					if (clause.isFalse())
+						continue;
+					expr = or(expr, clause);
+				}
+				return expr;
+			}
+		}
+		default:
+			throw new SARLInternalException("Unknown type: " + type);
+		}
+	}
+
+	private SymbolicExpression equals(SymbolicTypeSequence seq0,
+			SymbolicTypeSequence seq1, int nestingDepth) {
+		int size = seq0.numTypes();
+
+		if (size != seq1.numTypes())
+			return falseExpr;
+		if (size == 0)
+			return trueExpr;
+		else {
+			SymbolicExpression result = equals(seq0.getType(0),
+					seq1.getType(1), nestingDepth);
+
+			if (size > 1)
+				for (int i = 1; i < size; i++)
+					result = and(
+							result,
+							equals(seq0.getType(i), seq1.getType(i),
+									nestingDepth));
+			return result;
+		}
+	}
+
+	protected SymbolicExpression forallIntConcrete(SymbolicConstant index,
+			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
+		SymbolicExpression result = trueExpr;
+
+		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
+				.increment(i)) {
+			SymbolicExpression iExpression = symbolic(numberObject(i));
+			SymbolicExpression substitutedPredicate = substitute(predicate,
+					index, iExpression);
+
+			result = and(result, substitutedPredicate);
+		}
+		return result;
+	}
+
+	protected SymbolicExpression existsIntConcrete(SymbolicConstant index,
+			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
+		SymbolicExpression result = falseExpr;
+
+		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
+				.increment(i)) {
+			SymbolicExpression iExpression = symbolic(numberObject(i));
+			SymbolicExpression substitutedPredicate = substitute(predicate,
+					index, iExpression);
+
+			result = or(result, substitutedPredicate);
+		}
+		return result;
+	}
+
+	protected SymbolicExpression tupleUnsafe(SymbolicTupleType type,
+			SymbolicSequence<?> components) {
+		return expression(SymbolicOperator.CONCRETE, type, components);
+	}
+
+	// Public methods...
+
+	public NumericExpressionFactory numericExpressionFactory() {
+		return numericFactory;
+	}
+
+	// Public methods implementing SymbolicUniverse...
+
+	@Override
+	public SymbolicObject canonic(SymbolicObject object) {
+		return objectFactory.canonic(object);
+	}
 
 	/**
 	 * For exists and forall, must provide an instance of
@@ -402,7 +714,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 						result.add(arg0));
 			}
 			return expression(SymbolicOperator.AND, booleanType,
-					set(arg0, arg1));
+					hashSet(arg0, arg1));
 		}
 	}
 
@@ -526,234 +838,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return null;
 	}
 
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			SymbolicConstant variable, SymbolicExpression value) {
-		return substitute(expression,
-				new SingletonMap<SymbolicConstant, SymbolicExpression>(
-						variable, value));
-	}
-
-	private SymbolicCollection<?> substituteGenericCollection(
-			SymbolicCollection<?> set,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		Iterator<? extends SymbolicExpression> iter = set.iterator();
-
-		while (iter.hasNext()) {
-			SymbolicExpression oldElement = iter.next();
-			SymbolicExpression newElement = substitute(oldElement, map);
-
-			if (newElement != oldElement) {
-				Collection<SymbolicExpression> newSet = new LinkedList<SymbolicExpression>();
-
-				for (SymbolicExpression e : set) {
-					if (e == oldElement)
-						break;
-					newSet.add(e);
-				}
-				newSet.add(newElement);
-				while (iter.hasNext())
-					newSet.add(substitute(iter.next(), map));
-				return collectionFactory.basicCollection(newSet);
-			}
-		}
-		return set;
-	}
-
-	private SymbolicCollection<?> substituteSequence(
-			SymbolicSequence<?> sequence,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
-
-		while (iter.hasNext()) {
-			SymbolicExpression oldElement = iter.next();
-			SymbolicExpression newElement = substitute(oldElement, map);
-
-			if (newElement != oldElement) {
-				SymbolicSequence<SymbolicExpression> newSequence = collectionFactory
-						.emptySequence();
-
-				for (SymbolicExpression e : sequence) {
-					if (e == oldElement)
-						break;
-					newSequence.add(e);
-				}
-				newSequence.add(newElement);
-				while (iter.hasNext())
-					newSequence.add(substitute(iter.next(), map));
-				return newSequence;
-			}
-		}
-		return sequence;
-	}
-
-	/**
-	 * Only sequences need to be preserved because other collections are all
-	 * processed through method make anyway.
-	 * 
-	 * @param collection
-	 * @param map
-	 * @return
-	 */
-	private SymbolicCollection<?> substitute(SymbolicCollection<?> collection,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		SymbolicCollectionKind kind = collection.collectionKind();
-
-		if (kind == SymbolicCollectionKind.SEQUENCE)
-			return substituteSequence((SymbolicSequence<?>) collection, map);
-		return substituteGenericCollection(collection, map);
-	}
-
-	private SymbolicType substitute(SymbolicType type,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		switch (type.typeKind()) {
-		case BOOLEAN:
-		case INTEGER:
-		case REAL:
-			return type;
-		case ARRAY: {
-			SymbolicArrayType arrayType = (SymbolicArrayType) type;
-			SymbolicType elementType = arrayType.elementType();
-			SymbolicType newElementType = substitute(elementType, map);
-
-			if (arrayType.isComplete()) {
-				SymbolicExpression extent = ((SymbolicCompleteArrayType) arrayType)
-						.extent();
-				SymbolicExpression newExtent = substitute(extent, map);
-
-				if (elementType != newElementType || extent != newExtent)
-					return typeFactory.arrayType(newElementType, newExtent);
-				return arrayType;
-			}
-			if (elementType != newElementType)
-				return typeFactory.arrayType(newElementType);
-			return arrayType;
-		}
-		case FUNCTION: {
-			SymbolicFunctionType functionType = (SymbolicFunctionType) type;
-			SymbolicTypeSequence inputs = functionType.inputTypes();
-			SymbolicTypeSequence newInputs = substitute(inputs, map);
-			SymbolicType output = functionType.outputType();
-			SymbolicType newOutput = substitute(output, map);
-
-			if (inputs != newInputs || output != newOutput)
-				return typeFactory.functionType(newInputs, newOutput);
-			return functionType;
-		}
-		case TUPLE: {
-			SymbolicTupleType tupleType = (SymbolicTupleType) type;
-			SymbolicTypeSequence fields = tupleType.sequence();
-			SymbolicTypeSequence newFields = substitute(fields, map);
-
-			if (fields != newFields)
-				return typeFactory.tupleType(tupleType.name(), newFields);
-			return tupleType;
-
-		}
-		case UNION: {
-			SymbolicUnionType unionType = (SymbolicUnionType) type;
-			SymbolicTypeSequence members = unionType.sequence();
-			SymbolicTypeSequence newMembers = substitute(members, map);
-
-			if (members != newMembers)
-				return typeFactory.unionType(unionType.name(), newMembers);
-			return unionType;
-		}
-		default:
-			throw new SARLInternalException("unreachable");
-		}
-	}
-
-	private SymbolicTypeSequence substitute(SymbolicTypeSequence sequence,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		int count = 0;
-
-		for (SymbolicType t : sequence) {
-			SymbolicType newt = substitute(t, map);
-
-			if (t != newt) {
-				int numTypes = sequence.numTypes();
-				SymbolicType[] newTypes = new SymbolicType[numTypes];
-
-				for (int i = 0; i < count; i++)
-					newTypes[i] = sequence.getType(i);
-				newTypes[count] = newt;
-				for (int i = count + 1; i < numTypes; i++)
-					newTypes[i] = substitute(sequence.getType(i), map);
-				return typeFactory.sequence(newTypes);
-			}
-			count++;
-		}
-		return sequence;
-	}
-
-	/**
-	 * If no changes takes place, result returned will be == given expression.
-	 */
-	@Override
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		SymbolicOperator operator = expression.operator();
-
-		if (operator == SymbolicOperator.SYMBOLIC_CONSTANT) {
-			SymbolicExpression newValue = map
-					.get((SymbolicConstant) expression);
-
-			if (newValue != null)
-				return newValue;
-		}
-		{
-			int numArgs = expression.numArguments();
-			SymbolicType type = expression.type();
-			SymbolicType newType = substitute(type, map);
-			SymbolicObject[] newArgs = type == newType ? null
-					: new SymbolicObject[numArgs];
-
-			for (int i = 0; i < numArgs; i++) {
-				SymbolicObject arg = expression.argument(i);
-				SymbolicObjectKind kind = arg.symbolicObjectKind();
-
-				switch (kind) {
-				case BOOLEAN:
-				case INT:
-				case NUMBER:
-				case STRING:
-					break;
-				default:
-					SymbolicObject newArg = null;
-
-					switch (kind) {
-					case EXPRESSION:
-						newArg = substitute((SymbolicExpression) arg, map);
-						break;
-					case EXPRESSION_COLLECTION:
-						newArg = substitute((SymbolicCollection<?>) arg, map);
-						break;
-					case TYPE:
-						newArg = substitute((SymbolicType) arg, map);
-						break;
-					case TYPE_SEQUENCE:
-						newArg = substitute((SymbolicTypeSequence) arg, map);
-					default:
-						throw new SARLInternalException("unreachable");
-					}
-					if (newArg != arg) {
-						if (newArgs == null) {
-							newArgs = new SymbolicObject[numArgs];
-
-							for (int j = 0; j < i; j++)
-								newArgs[j] = expression.argument(j);
-						}
-					}
-					if (newArgs != null)
-						newArgs[i] = newArg;
-				}
-			}
-			if (newType == type && newArgs == null)
-				return expression;
-			return make(expression.operator(), newType, newArgs);
-		}
-	}
-
 	@Override
 	public SymbolicExpression symbolic(NumberObject numberObject) {
 		return numericFactory.newConcreteNumericExpression(numberObject);
@@ -870,6 +954,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
+	public SymbolicExpression substitute(SymbolicExpression expression,
+			Map<SymbolicConstant, SymbolicExpression> map) {
+		return substituter.substitute(expression, map);
+	}
+
+	@Override
 	public SymbolicExpression symbolic(BooleanObject object) {
 		return expression(SymbolicOperator.CONCRETE, booleanType, object);
 	}
@@ -951,7 +1041,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 				return expression(op1, booleanType, result.add(arg0));
 			}
-			return expression(SymbolicOperator.OR, booleanType, set(arg0, arg1));
+			return expression(SymbolicOperator.OR, booleanType,
+					hashSet(arg0, arg1));
 		}
 	}
 
@@ -1044,29 +1135,24 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		}
 	}
 
+	@Override
 	public SymbolicExpression implies(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
 		return or(not(arg0), arg1);
 	}
 
+	@Override
 	public SymbolicExpression equiv(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
 		return and(implies(arg0, arg1), implies(arg1, arg0));
 	}
 
-	public SymbolicExpression forallIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
-		SymbolicExpression result = trueExpr;
-
-		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
-				.increment(i)) {
-			SymbolicExpression iExpression = symbolic(numberObject(i));
-			SymbolicExpression substitutedPredicate = substitute(predicate,
-					index, iExpression);
-
-			result = and(result, substitutedPredicate);
-		}
-		return result;
+	@Override
+	public SymbolicExpression substitute(SymbolicExpression expression,
+			SymbolicConstant variable, SymbolicExpression value) {
+		return substitute(expression,
+				new SingletonMap<SymbolicConstant, SymbolicExpression>(
+						variable, value));
 	}
 
 	@Override
@@ -1089,21 +1175,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				index,
 				implies(and(lessThanEquals(low, index), lessThan(index, high)),
 						predicate));
-	}
-
-	public SymbolicExpression existsIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
-		SymbolicExpression result = falseExpr;
-
-		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
-				.increment(i)) {
-			SymbolicExpression iExpression = symbolic(numberObject(i));
-			SymbolicExpression substitutedPredicate = substitute(predicate,
-					index, iExpression);
-
-			result = or(result, substitutedPredicate);
-		}
-		return result;
 	}
 
 	@Override
@@ -1160,273 +1231,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return number.signum() >= 0 ? trueExpr : falseExpr;
 	}
 
-	// private SymbolicExpressionIF equals(SymbolicTypeSequenceIF seq0,
-	// SymbolicTypeSequenceIF seq1) {
-	// return equals(seq0, seq1, 0);
-	// }
-
-	private SymbolicExpression equals(SymbolicTypeSequence seq0,
-			SymbolicTypeSequence seq1, int nestingDepth) {
-		int size = seq0.numTypes();
-
-		if (size != seq1.numTypes())
-			return falseExpr;
-		if (size == 0)
-			return trueExpr;
-		else {
-			SymbolicExpression result = equals(seq0.getType(0),
-					seq1.getType(1), nestingDepth);
-
-			if (size > 1)
-				for (int i = 1; i < size; i++)
-					result = and(
-							result,
-							equals(seq0.getType(i), seq1.getType(i),
-									nestingDepth));
-			return result;
-		}
-	}
-
-	/**
-	 * Returns a boolean expression which holds iff the two types are equal.
-	 * 
-	 * @param type0
-	 * @param type1
-	 * @return
-	 */
-	public SymbolicExpression equals(SymbolicType type0, SymbolicType type1) {
-		return equals(type0, type1, 0);
-	}
-
-	/**
-	 * Returns a boolean expression which holds iff the two types are equal.
-	 * 
-	 * @param type0
-	 * @param type1
-	 * @return
-	 */
-	private SymbolicExpression equals(SymbolicType type0, SymbolicType type1,
-			int nestingDepth) {
-		if (type0.equals(type1))
-			return trueExpr;
-
-		SymbolicTypeKind kind = type0.typeKind();
-
-		if (kind != type1.typeKind())
-			return falseExpr;
-		switch (kind) {
-		case BOOLEAN:
-		case INTEGER:
-		case REAL:
-			return trueExpr;
-		case ARRAY: {
-			SymbolicArrayType a0 = (SymbolicArrayType) type0;
-			SymbolicArrayType a1 = (SymbolicArrayType) type1;
-
-			if (a0.isComplete() != a1.isComplete())
-				return falseExpr;
-			else {
-				SymbolicExpression result = equals(a0.elementType(),
-						a1.elementType(), nestingDepth);
-
-				if (a0.isComplete())
-					result = and(
-							result,
-							equals(((SymbolicCompleteArrayType) a0).extent(),
-									((SymbolicCompleteArrayType) a1).extent(),
-									nestingDepth));
-				return result;
-			}
-		}
-		case FUNCTION:
-			return and(
-					equals(((SymbolicFunctionType) type0).inputTypes(),
-							((SymbolicFunctionType) type1).inputTypes(),
-							nestingDepth),
-					equals(((SymbolicFunctionType) type0).outputType(),
-							((SymbolicFunctionType) type1).outputType(),
-							nestingDepth));
-		case TUPLE: {
-			SymbolicTupleType t0 = (SymbolicTupleType) type0;
-			SymbolicTupleType t1 = (SymbolicTupleType) type1;
-
-			if (!t0.name().equals(t1.name()))
-				return falseExpr;
-			return equals(t0.sequence(), t1.sequence(), nestingDepth);
-		}
-		case UNION: {
-			SymbolicUnionType t0 = (SymbolicUnionType) type0;
-			SymbolicUnionType t1 = (SymbolicUnionType) type1;
-
-			if (!t0.name().equals(t1.name()))
-				return falseExpr;
-			return equals(t0.sequence(), t1.sequence(), nestingDepth);
-		}
-		default:
-			throw new SARLInternalException("unreachable");
-		}
-
-	}
-
 	@Override
 	public SymbolicExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
 		return equals(arg0, arg1, 0);
-	}
-
-	private SymbolicConstant boundVar(int index, SymbolicType type) {
-		return symbolicConstant(stringObject("x" + index), type);
-	}
-
-	private SymbolicConstant intBoundVar(int index) {
-		return symbolicConstant(stringObject("i" + index), integerType);
-	}
-
-	private SymbolicExpression equals(SymbolicExpression arg0,
-			SymbolicExpression arg1, int quantifierDepth) {
-		if (arg0.equals(arg1))
-			return trueExpr;
-
-		SymbolicType type = arg0.type();
-		SymbolicExpression result = equals(type, arg1.type(), quantifierDepth);
-
-		if (result.equals(falseExpr))
-			return result;
-		switch (type.typeKind()) {
-		case BOOLEAN:
-			return equiv(arg0, arg1);
-		case INTEGER:
-		case REAL: {
-			SymbolicExpression difference = subtract(arg1, arg0);
-			Number number = extractNumber(difference);
-
-			if (number == null)
-				return expression(SymbolicOperator.EQUALS, booleanType,
-						zero(arg0.type()), difference);
-			else
-				return number.isZero() ? trueExpr : falseExpr;
-		}
-		case ARRAY: {
-			SymbolicExpression length = length(arg0);
-
-			if (!((SymbolicArrayType) type).isComplete())
-				result = and(result,
-						equals(length, length(arg1), quantifierDepth));
-			if (result.isFalse())
-				return result;
-			else {
-				SymbolicConstant index = intBoundVar(quantifierDepth);
-
-				result = and(
-						result,
-						forallInt(
-								index,
-								zeroInt(),
-								length,
-								equals(arrayRead(arg0, index),
-										arrayRead(arg1, index),
-										quantifierDepth + 1)));
-				return result;
-			}
-		}
-		case FUNCTION: {
-			SymbolicTypeSequence inputTypes = ((SymbolicFunctionType) type)
-					.inputTypes();
-			int numInputs = inputTypes.numTypes();
-
-			if (numInputs == 0) {
-				result = and(
-						result,
-						expression(SymbolicOperator.EQUALS, booleanType, arg0,
-								arg1));
-			} else {
-				SymbolicConstant[] boundVariables = new SymbolicConstant[numInputs];
-				SymbolicSequence<?> sequence;
-				SymbolicExpression expr;
-
-				for (int i = 0; i < numInputs; i++)
-					boundVariables[i] = boundVar(quantifierDepth + i,
-							inputTypes.getType(i));
-				sequence = collectionFactory.sequence(boundVariables);
-				expr = equals(apply(arg0, sequence), apply(arg1, sequence),
-						quantifierDepth + numInputs);
-				for (int i = numInputs - 1; i >= 0; i--)
-					expr = forall(boundVariables[i], expr);
-				result = and(result, expr);
-				return result;
-			}
-		}
-		case TUPLE: {
-			int numComponents = ((SymbolicTupleType) type).sequence()
-					.numTypes();
-
-			for (int i = 0; i < numComponents; i++) {
-				IntObject index = intObject(i);
-
-				result = and(
-						result,
-						equals(tupleRead(arg0, index), tupleRead(arg1, index),
-								quantifierDepth));
-			}
-			return result;
-		}
-		case UNION: {
-			SymbolicUnionType unionType = (SymbolicUnionType) type;
-
-			if (arg0.operator() == SymbolicOperator.UNION_INJECT) {
-				IntObject index = (IntObject) arg0.argument(0);
-				SymbolicExpression value0 = (SymbolicExpression) arg0
-						.argument(1);
-
-				if (arg1.operator() == SymbolicOperator.UNION_INJECT)
-					return index.equals(arg1.argument(0)) ? and(
-							result,
-							equals(value0,
-									(SymbolicExpression) arg1.argument(1),
-									quantifierDepth)) : falseExpr;
-				else
-					return and(
-							result,
-							and(unionTest(index, arg1),
-									equals(value0, unionExtract(index, arg1),
-											quantifierDepth)));
-			} else if (arg1.operator() == SymbolicOperator.UNION_INJECT) {
-				IntObject index = (IntObject) arg1.argument(0);
-
-				return and(
-						result,
-						and(unionTest(index, arg0),
-								equals((SymbolicExpression) arg1.argument(1),
-										unionExtract(index, arg0),
-										quantifierDepth)));
-			} else {
-				int numTypes = unionType.sequence().numTypes();
-				SymbolicExpression expr = falseExpr;
-
-				for (int i = 0; i < numTypes; i++) {
-					IntObject index = intObject(i);
-					SymbolicExpression clause = result;
-
-					clause = and(clause, unionTest(index, arg0));
-					if (clause.isFalse())
-						continue;
-					clause = and(clause, unionTest(index, arg1));
-					if (clause.isFalse())
-						continue;
-					clause = and(
-							clause,
-							equals(unionExtract(index, arg0),
-									unionExtract(index, arg1), quantifierDepth));
-					if (clause.isFalse())
-						continue;
-					expr = or(expr, clause);
-				}
-				return expr;
-			}
-		}
-		default:
-			throw new SARLInternalException("Unknown type: " + type);
-		}
 	}
 
 	@Override
@@ -1658,11 +1466,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			SymbolicExpression function) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public SymbolicExpression tupleUnsafe(SymbolicTupleType type,
-			SymbolicSequence<?> components) {
-		return expression(SymbolicOperator.CONCRETE, type, components);
 	}
 
 	@Override

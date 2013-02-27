@@ -39,6 +39,13 @@ public interface Polynomial extends RationalExpression {
 	 */
 	Monomial factorization(IdealFactory factory);
 
+	/**
+	 * Returns the degree of the polynomial, i.e., the maximum degree of a
+	 * monomial term, or -1 if the polynomial is 0. A numeric primitive always
+	 * has degree 1, even if it "wraps" a polynomial of higher degree.
+	 * 
+	 * @return the degree of the polynomial
+	 */
 	int degree();
 
 }

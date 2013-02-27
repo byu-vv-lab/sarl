@@ -9,8 +9,8 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -229,6 +229,22 @@ public interface SymbolicUniverse {
 	SymbolicExpression substitute(SymbolicExpression expression,
 			Map<SymbolicConstant, SymbolicExpression> map);
 
+	/**
+	 * Performs substitution of a single symbolic constant. This is for
+	 * convenience; it is a special case of the method that takes an entire map.
+	 * 
+	 * @param expression
+	 *            the expression in which substitution should take place
+	 * @param variable
+	 *            the symbolic constant which should be replaced
+	 * @param value
+	 *            the thing that replaces the variable
+	 * @return the expression that results from performing the substitution on
+	 *         the given expression
+	 */
+	SymbolicExpression substitute(SymbolicExpression expression,
+			SymbolicConstant variable, SymbolicExpression value);
+
 	// Numbers...
 
 	/** The number factory used by this universe. */
@@ -280,7 +296,7 @@ public interface SymbolicUniverse {
 	 *            all have the same type.
 	 * @return expression representing the sum
 	 */
-	SymbolicExpression add(SymbolicCollection<? extends SymbolicExpression> args);
+	SymbolicExpression add(SymbolicCollection<?> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
@@ -317,8 +333,7 @@ public interface SymbolicUniverse {
 	 *            numeric type
 	 * @return a symbolic expression representing the product
 	 */
-	SymbolicExpression multiply(
-			SymbolicCollection<? extends SymbolicExpression> args);
+	SymbolicExpression multiply(SymbolicCollection<?> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by
@@ -429,7 +444,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the conjunction of the expressions in args
 	 */
-	SymbolicExpression and(SymbolicCollection<? extends SymbolicExpression> args);
+	SymbolicExpression and(SymbolicCollection<?> args);
 
 	/**
 	 * Returns a symbolic expression representing the disjunction of the two
@@ -454,7 +469,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the disjunction of the expressions in args
 	 */
-	SymbolicExpression or(SymbolicCollection<? extends SymbolicExpression> args);
+	SymbolicExpression or(SymbolicCollection<?> args);
 
 	/**
 	 * Returns a symbolic expression representing the logical negation of the
@@ -465,6 +480,29 @@ public interface SymbolicUniverse {
 	 * @return negation of arg
 	 */
 	SymbolicExpression not(SymbolicExpression arg);
+
+	/**
+	 * Returns a symbolic expression representing "p implies q", i.e., p=>q.
+	 * 
+	 * @param arg0
+	 *            a symbolic expression of boolean type (p)
+	 * @param arg1
+	 *            a symbolic expression of boolean type (q)
+	 * @return p=>q
+	 */
+	SymbolicExpression implies(SymbolicExpression arg0, SymbolicExpression arg1);
+
+	/**
+	 * Returns a symbolic expression representing "p is equivalent to q", i.e.,
+	 * p<=>q.
+	 * 
+	 * @param arg0
+	 *            a symbolic expression of boolean type (p)
+	 * @param arg1
+	 *            a symbolic expression of boolean type (q)
+	 * @return p<=>q
+	 */
+	SymbolicExpression equiv(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns expression equivalent to arg0 < arg1. The arguments must be
@@ -611,7 +649,7 @@ public interface SymbolicUniverse {
 	 * input signature.
 	 */
 	SymbolicExpression apply(SymbolicExpression function,
-			SymbolicSequence<? extends SymbolicExpression> argumentSequence);
+			SymbolicSequence<?> argumentSequence);
 
 	// Union type operations...
 
@@ -676,7 +714,7 @@ public interface SymbolicUniverse {
 	 * @return array consisting of those elements
 	 */
 	SymbolicExpression array(SymbolicType elementType,
-			SymbolicSequence<? extends SymbolicExpression> elements);
+			SymbolicSequence<?> elements);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a
@@ -721,7 +759,7 @@ public interface SymbolicUniverse {
 			SymbolicExpression index, SymbolicExpression value);
 
 	SymbolicExpression denseArrayWrite(SymbolicExpression array,
-			SymbolicSequence<? extends SymbolicExpression> values);
+			SymbolicSequence<?> values);
 
 	/**
 	 * Returns an expression representing an array with element type T defined
@@ -742,7 +780,7 @@ public interface SymbolicUniverse {
 	 * @return the tuple formed from the components
 	 */
 	SymbolicExpression tuple(SymbolicTupleType type,
-			SymbolicSequence<? extends SymbolicExpression> components);
+			SymbolicSequence<?> components);
 
 	/**
 	 * Returns an expression that represents the result of reading a component

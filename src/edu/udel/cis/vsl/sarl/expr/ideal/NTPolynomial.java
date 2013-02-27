@@ -21,15 +21,17 @@ public class NTPolynomial extends IdealExpression implements Polynomial {
 	 */
 	private Monomial factorization;
 
+	/**
+	 * The degree of the polynomial, or -1 if the degree has not yet been
+	 * computed.
+	 */
 	private int degree = -1;
 
 	/**
-	 * The leading term should be the term corresponding to the maximal monic in
-	 * the fixed total order on monics. Or null if the monomialMap is empty.
-	 * 
-	 * @param type
-	 * @param monomialMap
-	 * @param leadingTerm
+	 * Constructs new NTPolynomial with given term map and factoriation. The
+	 * term map must have at least 2 entries. The factorization must be a valid
+	 * factorization of the polynomial represented by the termMap; this is not
+	 * checked.
 	 */
 	protected NTPolynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization) {
