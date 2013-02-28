@@ -1,6 +1,6 @@
-package edu.udel.cis.vsl.sarl.expr.common;
+package edu.udel.cis.vsl.sarl.simplify.common;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 /**
  * Represents the result of a simplification operation. The original is some
@@ -12,24 +12,24 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  */
 public class Simplification {
 
-	private SymbolicExpression original;
+	private SymbolicObject original;
 
-	private SymbolicExpression result;
+	private SymbolicObject result;
 
 	private boolean success;
 
-	public Simplification(SymbolicExpression original,
-			SymbolicExpression result, boolean success) {
+	public Simplification(SymbolicObject original, SymbolicObject result,
+			boolean success) {
 		this.original = original;
 		this.result = result;
 		this.success = success;
 	}
 
-	public SymbolicExpression original() {
+	public SymbolicObject original() {
 		return original;
 	}
 
-	public SymbolicExpression result() {
+	public SymbolicObject result() {
 		return result;
 	}
 
@@ -37,10 +37,12 @@ public class Simplification {
 		return success;
 	}
 
+	@Override
 	public String toString() {
 		return "[" + original + ", " + result + ", " + success + "]";
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Simplification) {
 			Simplification that = (Simplification) object;
@@ -50,6 +52,7 @@ public class Simplification {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return original.hashCode();
 	}

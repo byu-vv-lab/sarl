@@ -99,25 +99,23 @@ public class Substituter {
 			SymbolicSequence<?> sequence,
 			Map<SymbolicConstant, SymbolicExpression> map) {
 		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
+		int count = 0;
 
 		while (iter.hasNext()) {
 			SymbolicExpression oldElement = iter.next();
 			SymbolicExpression newElement = substitute(oldElement, map);
 
 			if (newElement != oldElement) {
-				SymbolicSequence<SymbolicExpression> newSequence = collectionFactory
-						.emptySequence();
+				@SuppressWarnings("unchecked")
+				SymbolicSequence<SymbolicExpression> newSequence = (SymbolicSequence<SymbolicExpression>) sequence
+						.subSequence(0, count);
 
-				for (SymbolicExpression e : sequence) {
-					if (e == oldElement)
-						break;
-					newSequence.add(e);
-				}
-				newSequence.add(newElement);
+				newSequence = newSequence.add(newElement);
 				while (iter.hasNext())
-					newSequence.add(substitute(iter.next(), map));
+					newSequence = newSequence.add(substitute(iter.next(), map));
 				return newSequence;
 			}
+			count++;
 		}
 		return sequence;
 	}

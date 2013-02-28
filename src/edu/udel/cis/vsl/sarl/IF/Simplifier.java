@@ -1,6 +1,5 @@
-package edu.udel.cis.vsl.sarl.IF.prove;
+package edu.udel.cis.vsl.sarl.IF;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;

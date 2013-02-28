@@ -86,6 +86,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 			return true;
 		if (size() != o.size())
 			return false;
+
 		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
 		Iterator<T> these = this.iterator();
 		Iterator<T> those = that.iterator();
@@ -99,6 +100,11 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 	@Override
 	protected int computeHashCode() {
 		return pvector.hashCode();
+	}
+
+	@Override
+	public SymbolicSequence<T> subSequence(int start, int end) {
+		return new PcollectionsSymbolicSequence<T>(pvector.subList(start, end));
 	}
 
 	@Override
@@ -128,10 +134,19 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 		if (index < size)
 			return set(index, value);
-		for (int i = size; i < index; i++)
-			pvector = pvector.plus(filler);
-		pvector = pvector.plus(value);
-		return new PcollectionsSymbolicSequence<T>(pvector);
+		else {
+			PVector<T> newVector = pvector;
+
+			for (int i = size; i < index; i++)
+				newVector = newVector.plus(filler);
+			newVector = newVector.plus(value);
+			return new PcollectionsSymbolicSequence<T>(newVector);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return pvector.toString();
 	}
 
 }

@@ -1,10 +1,10 @@
-package edu.udel.cis.vsl.sarl.universe.common;
+package edu.udel.cis.vsl.sarl.simplify.common;
 
+import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
-import edu.udel.cis.vsl.sarl.IF.prove.Simplifier;
 
 public class IdentitySimplifier implements Simplifier {
 

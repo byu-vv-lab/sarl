@@ -25,7 +25,7 @@ public class UniverseTest {
 	// private NumberFactory numberFactory;
 	private StringObject Xobj; // "X"
 	private StringObject Yobj; // "Y"
-	private SymbolicType realType;
+	private SymbolicType realType, integerType;
 	private SymbolicConstant x; // real symbolic constant "X"
 	private SymbolicConstant y; // resl symbolic constant "Y"
 	private SymbolicExpression two; // real 2.0
@@ -38,6 +38,7 @@ public class UniverseTest {
 		Xobj = universe.stringObject("X");
 		Yobj = universe.stringObject("Y");
 		realType = universe.realType();
+		integerType = universe.integerType();
 		x = universe.symbolicConstant(Xobj, realType);
 		y = universe.symbolicConstant(Yobj, realType);
 		two = universe.castToReal(universe.symbolic(2));
@@ -90,5 +91,29 @@ public class UniverseTest {
 		out.println("sub2:  map = " + map);
 		out.println("sub2: newU = " + newU);
 		assertEquals(expected, newU);
+	}
+
+	@Test
+	public void subArray1() {
+		int n = 3;
+		SymbolicConstant[] sc = new SymbolicConstant[n];
+		Map<SymbolicConstant, SymbolicExpression> map = new HashMap<SymbolicConstant, SymbolicExpression>();
+		SymbolicExpression array1 = universe.symbolicConstant(
+				universe.stringObject("a"), universe.arrayType(integerType));
+		SymbolicExpression array2;
+
+		for (int i = 0; i < n; i++)
+			sc[i] = universe.symbolicConstant(universe.stringObject("x" + i),
+					integerType);
+		for (int i = 0; i < n; i++)
+			map.put(sc[i], sc[n - 1 - i]);
+		for (int i = 0; i < n; i++)
+			array1 = universe.arrayWrite(array1, universe.symbolic(i), sc[i]);
+		array2 = universe.substitute(array1, map);
+		out.println("subArray1: array1 = " + array1);
+		out.println("subArray1: array2 = " + array2);
+		for (int i = 0; i < n; i++)
+			assertEquals(sc[n - 1 - i],
+					universe.arrayRead(array2, universe.symbolic(i)));
 	}
 }

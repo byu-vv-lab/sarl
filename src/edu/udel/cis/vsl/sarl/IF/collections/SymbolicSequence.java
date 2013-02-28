@@ -63,4 +63,17 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 */
 	SymbolicSequence<T> setExtend(int index, T value, T filler);
 
+	/**
+	 * Returns the subsequence whose first element is the element at position
+	 * start and last element is the element at position end-1. The length of
+	 * the subsequence is therefore end-start.
+	 * 
+	 * @param start
+	 *            index of first element
+	 * @param end
+	 *            one more than then index of last element
+	 * @return the subsequence
+	 */
+	SymbolicSequence<T> subSequence(int start, int end);
+
 }
