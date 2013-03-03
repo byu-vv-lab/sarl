@@ -105,9 +105,20 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		// TODO Auto-generated method stub
-		// need to construct whole new map replacing keys and values
-		// with canonic representative if not already
+		for (Entry<K, V> entry : entries()) {
+			K key = entry.getKey();
+			V value = entry.getValue();
+
+			if (!key.isCanonic() || !value.isCanonic()) {
+				if (key.isCanonic())
+					pmap = pmap.assoc(key, factory.canonic(value));
+				else {
+					pmap = pmap.without(key);
+					pmap = pmap.assoc(factory.canonic(key),
+							factory.canonic(value));
+				}
+			}
+		}
 	}
 
 	@Override

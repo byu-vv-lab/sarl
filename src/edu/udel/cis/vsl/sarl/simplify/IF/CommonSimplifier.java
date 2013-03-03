@@ -1,6 +1,9 @@
 package edu.udel.cis.vsl.sarl.simplify.IF;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -8,6 +11,7 @@ import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
+import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -19,7 +23,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
+import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
 
 /**
  * A partial implementation of Simplifer which can be extended.
@@ -28,9 +32,6 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
  * 
  */
 public abstract class CommonSimplifier implements Simplifier {
-
-	// why Simplification. Why not just say success iff original!=result.
-	// i.e. routines must return same object if no simplification possible
 
 	protected SymbolicUniverse universe;
 
@@ -46,8 +47,14 @@ public abstract class CommonSimplifier implements Simplifier {
 		return universe;
 	}
 
-	protected abstract NumericExpression simplifyNumeric(
-			NumericExpression expression);
+	/**
+	 * Implement this, using simplifyGeneric whenever you want.
+	 * 
+	 * @param expression
+	 *            any symbolic expression.
+	 * @return
+	 */
+	protected abstract SymbolicExpression simplify(SymbolicExpression expression);
 
 	protected SymbolicType simplifyTypeWork(SymbolicType type) {
 		switch (type.typeKind()) {
@@ -63,7 +70,7 @@ public abstract class CommonSimplifier implements Simplifier {
 			if (arrayType.isComplete()) {
 				SymbolicExpression extent = ((SymbolicCompleteArrayType) arrayType)
 						.extent();
-				SymbolicExpression simplifiedExtent = simplify(extent);
+				SymbolicExpression simplifiedExtent = apply(extent);
 
 				if (elementType != simplifiedElementType
 						|| extent != simplifiedExtent)
@@ -157,13 +164,47 @@ public abstract class CommonSimplifier implements Simplifier {
 		return result;
 	}
 
+	protected SymbolicSequence<?> simplifySequenceWork(
+			SymbolicSequence<?> sequence) {
+		@SuppressWarnings("unchecked")
+		SymbolicSequence<SymbolicExpression> theSequence = (SymbolicSequence<SymbolicExpression>) sequence;
+
+		return theSequence.apply(this);
+	}
+
+	protected SymbolicCollection<?> simplifyGenericCollection(
+			SymbolicCollection<?> collection) {
+		int count = 0;
+		Iterator<? extends SymbolicExpression> iter = collection.iterator();
+
+		while (iter.hasNext()) {
+			SymbolicExpression x = iter.next();
+			SymbolicExpression y = apply(x);
+
+			if (x != y) {
+				Iterator<? extends SymbolicExpression> iter2 = collection
+						.iterator();
+				List<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
+
+				for (int i = 0; i < count; i++)
+					list.add(iter2.next());
+				list.add(y);
+				while (iter.hasNext())
+					list.add(apply(iter.next()));
+				return new BasicCollection<SymbolicExpression>(list);
+			}
+			count++;
+		}
+		return collection;
+	}
+
 	protected SymbolicCollection<?> simplifyCollectionWork(
 			SymbolicCollection<?> collection) {
-		// TODO
 		SymbolicCollectionKind kind = collection.collectionKind();
-		// BASIC, SET, SEQUENCE, MAP
-		// have unary operator apply
-		return null;
+
+		if (kind == SymbolicCollectionKind.SEQUENCE)
+			return simplifySequenceWork((SymbolicSequence<?>) collection);
+		return simplifyGenericCollection(collection);
 	}
 
 	protected SymbolicCollection<?> simplifyCollection(
@@ -186,7 +227,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		case STRING:
 			return object;
 		case EXPRESSION:
-			return simplify((SymbolicExpression) object);
+			return apply((SymbolicExpression) object);
 		case EXPRESSION_COLLECTION:
 			return simplifyCollection((SymbolicCollection<?>) object);
 		case TYPE:
@@ -247,16 +288,19 @@ public abstract class CommonSimplifier implements Simplifier {
 		}
 	}
 
+	// also need to simplify numeric relational expressions like
+	// 0<a, 0<=a, 0==a, 0!=a
+	// !(0<=a) <=> a<0 <=> -a>0 <=> 0<-a
+
+	// also might be able to simplify symbolic constants such as booleans
+
 	@Override
-	public SymbolicExpression simplify(SymbolicExpression expression) {
+	public SymbolicExpression apply(SymbolicExpression expression) {
 		SymbolicExpression result = (SymbolicExpression) simplifyMap
 				.get(expression);
 
 		if (result == null) {
-			if (expression.isNumeric())
-				result = simplifyNumeric((NumericExpression) expression);
-			else
-				result = simplifyGenericExpression(expression);
+			result = simplify(expression);
 			simplifyMap.put(expression, result);
 		}
 		return result;

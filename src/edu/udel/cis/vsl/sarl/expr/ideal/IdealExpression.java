@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
+import java.util.Collection;
+
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
@@ -20,6 +22,11 @@ public abstract class IdealExpression extends CommonSymbolicExpression
 
 	protected IdealExpression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments) {
+		super(operator, type, arguments);
+	}
+
+	protected IdealExpression(SymbolicOperator operator, SymbolicType type,
+			Collection<SymbolicObject> arguments) {
 		super(operator, type, arguments);
 	}
 

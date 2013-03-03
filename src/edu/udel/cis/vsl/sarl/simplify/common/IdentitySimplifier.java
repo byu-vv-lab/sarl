@@ -29,7 +29,7 @@ public class IdentitySimplifier implements Simplifier {
 	}
 
 	@Override
-	public SymbolicExpression simplify(SymbolicExpression expression) {
+	public SymbolicExpression apply(SymbolicExpression expression) {
 		return expression;
 	}
 

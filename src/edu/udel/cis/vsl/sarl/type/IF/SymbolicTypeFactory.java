@@ -12,7 +12,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicPrimitiveType;
 import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
 
@@ -24,11 +23,11 @@ public interface SymbolicTypeFactory {
 
 	ObjectFactory objectFactory();
 
-	CommonSymbolicPrimitiveType booleanType();
+	SymbolicType booleanType();
 
-	CommonSymbolicPrimitiveType integerType();
+	SymbolicType integerType();
 
-	CommonSymbolicPrimitiveType realType();
+	SymbolicType realType();
 
 	SymbolicTypeSequence sequence(Iterable<SymbolicType> elements);
 

@@ -55,7 +55,7 @@ public class SimpleIdealProver implements TheoremProver {
 		numValidCalls++;
 		if (result == null) {
 			Simplifier simplifier = universe.simplifier(assumption);
-			SymbolicExpression simple = simplifier.simplify(predicate);
+			SymbolicExpression simple = simplifier.apply(predicate);
 			Boolean concrete = universe.extractBoolean(simple);
 
 			if (concrete == null)

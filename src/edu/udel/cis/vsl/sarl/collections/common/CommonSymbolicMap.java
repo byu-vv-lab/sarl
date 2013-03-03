@@ -18,24 +18,42 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
 		SymbolicMap<K, V> result = this;
 
-		for (Entry<K, V> entry : this.entries())
-			result = result.put(entry.getKey(),
-					operator.apply(entry.getValue()));
+		for (Entry<K, V> entry : this.entries()) {
+			K key = entry.getKey();
+			V value = entry.getValue();
+			V newValue = operator.apply(value);
+
+			if (newValue == null)
+				result = result.remove(key);
+			else if (value != newValue)
+				result = result.put(key, newValue);
+		}
 		return result;
 	}
+
+	// public <K2 extends SymbolicExpression, V2 extends SymbolicExpression>
+	// SymbolicMap<K2, V2> apply(
+	// Transform<K, K2> keyTransform, Transform<V, V2> valueTransform) {
+	// // TODO
+	// return null;
+	// }
 
 	@Override
 	public SymbolicMap<K, V> combine(BinaryOperator<V> operator,
 			SymbolicMap<K, V> map) {
+		SymbolicMap<K, V> result, map2;
 
-		// System.out.println("size1=" + this.size() + " size2=" + map.size());
-
-		SymbolicMap<K, V> result = this;
-
-		for (Entry<K, V> entry : map.entries()) {
+		if (this.size() >= map.size()) {
+			result = this;
+			map2 = map;
+		} else {
+			result = map;
+			map2 = this;
+		}
+		for (Entry<K, V> entry : map2.entries()) {
 			K key = entry.getKey();
 			V value2 = entry.getValue();
-			V value1 = this.get(key);
+			V value1 = result.get(key);
 
 			if (value1 == null)
 				result = result.put(key, value2);

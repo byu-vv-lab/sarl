@@ -153,7 +153,7 @@ public interface SymbolicUniverse {
 	 * Applies the given operator to the arguments and returns the resulting
 	 * expression in the canonic form used by this universe. The arguments
 	 * should have the form required by the operator; see the documentation in
-	 * the SymbolicExpressionIF interface.
+	 * the SymbolicExpression interface.
 	 * 
 	 * @param operator
 	 *            a symbolic operator

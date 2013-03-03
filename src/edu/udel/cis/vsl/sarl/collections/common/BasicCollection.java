@@ -15,7 +15,7 @@ public class BasicCollection<T extends SymbolicExpression> extends
 
 	private Collection<T> javaCollection;
 
-	BasicCollection(Collection<T> javaCollection) {
+	public BasicCollection(Collection<T> javaCollection) {
 		super(SymbolicCollectionKind.BASIC);
 		this.javaCollection = javaCollection;
 	}

@@ -1,12 +1,13 @@
 package edu.udel.cis.vsl.sarl.expr.IF;
 
+import java.util.Collection;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -36,6 +37,9 @@ public interface NumericExpressionFactory {
 
 	NumericSymbolicConstant newNumericSymbolicConstant(StringObject name,
 			SymbolicType type);
+
+	NumericExpression newNumericExpression(SymbolicOperator operator,
+			SymbolicType numericType, Collection<SymbolicObject> arguments);
 
 	NumericExpression newNumericExpression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject[] arguments);
@@ -177,5 +181,21 @@ public interface NumericExpressionFactory {
 	 * If this is not possible, returns null.
 	 */
 	Number extractNumber(NumericExpression expression);
+
+	BooleanExpression lessThan(NumericExpression arg0, NumericExpression arg1);
+
+	BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1);
+
+	BooleanExpression notLessThan(NumericExpression arg0, NumericExpression arg1);
+
+	BooleanExpression notLessThanEquals(NumericExpression arg0,
+			NumericExpression arg1);
+
+	BooleanExpression equals(NumericExpression arg0, NumericExpression arg1);
+
+	BooleanExpression neq(NumericExpression arg0, NumericExpression arg1);
+
+	void setExpressionFactory(ExpressionFactory expressionFactory);
 
 }

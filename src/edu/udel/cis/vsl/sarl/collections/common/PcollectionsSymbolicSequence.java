@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -141,6 +142,35 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 				newVector = newVector.plus(filler);
 			newVector = newVector.plus(value);
 			return new PcollectionsSymbolicSequence<T>(newVector);
+		}
+	}
+
+	@Override
+	public <U extends SymbolicExpression> SymbolicSequence<U> apply(
+			Transform<T, U> transform) {
+		int count = 0;
+		Iterator<T> iter = pvector.iterator();
+
+		while (iter.hasNext()) {
+			T t = iter.next();
+			U u = transform.apply(t);
+
+			if (t != u) {
+				@SuppressWarnings("unchecked")
+				PVector<U> newVector = (PVector<U>) pvector.subList(0, count);
+
+				newVector = newVector.plus(u);
+				while (iter.hasNext())
+					newVector = newVector.plus(transform.apply(iter.next()));
+				return new PcollectionsSymbolicSequence<U>(newVector);
+			}
+			count++;
+		}
+		{
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<U> result = (SymbolicSequence<U>) this;
+
+			return result;
 		}
 	}
 

@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.collections;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 public interface SymbolicSequence<T extends SymbolicExpression> extends
@@ -75,5 +76,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 * @return the subsequence
 	 */
 	SymbolicSequence<T> subSequence(int start, int end);
+
+	<U extends SymbolicExpression> SymbolicSequence<U> apply(
+			Transform<T, U> transform);
 
 }

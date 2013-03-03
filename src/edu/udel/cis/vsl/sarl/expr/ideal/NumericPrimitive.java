@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
+import java.util.Collection;
+
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -25,6 +27,11 @@ public class NumericPrimitive extends IdealExpression implements PrimitivePower 
 
 	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments) {
+		super(operator, type, arguments);
+	}
+
+	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
+			Collection<SymbolicObject> arguments) {
 		super(operator, type, arguments);
 	}
 

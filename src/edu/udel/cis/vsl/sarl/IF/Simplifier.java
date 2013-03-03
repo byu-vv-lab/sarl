@@ -4,7 +4,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 
-
 /**
  * A simplifier is an object for simplifying symbolic expressions. It is created
  * with a given "assumption", which is a boolean-valued symbolic expression. The
@@ -25,7 +24,8 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
  * 
  * Etc.
  */
-public interface Simplifier {
+public interface Simplifier extends
+		Transform<SymbolicExpression, SymbolicExpression> {
 
 	/** Returns the symbolic universe associated to this simplifier */
 	SymbolicUniverse universe();
@@ -33,11 +33,12 @@ public interface Simplifier {
 	/** Returns the simplified assumption */
 	SymbolicExpression newAssumption();
 
-	/**
-	 * Returns the simplified version of the given expression (under the
-	 * assumption).
-	 */
-	SymbolicExpression simplify(SymbolicExpression expression);
+	// /**
+	// * Returns the simplified version of the given expression (under the
+	// * assumption).
+	// apply does this now
+	// */
+	// SymbolicExpression simplify(SymbolicExpression expression);
 
 	/**
 	 * If the assumption can be represented as a simple interval constraint,

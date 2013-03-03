@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.expr.ideal;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,9 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
@@ -93,9 +97,18 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * </pre>
  * 
  */
+
+// create separate class IdealRelationFactory for lt, eq, ...
+// and interface NumericRelationFactory
+// needs numeric factory, expression factory, true, false exprs.
+
 public class IdealFactory implements NumericExpressionFactory {
 
 	private NumberFactory numberFactory;
+
+	private ExpressionFactory expressionFactory;
+
+	private BooleanExpressionFactory booleanFactory;
 
 	private ObjectFactory objectFactory;
 
@@ -115,6 +128,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private Constant zeroInt, zeroReal, twoInt, twoReal, negOneInt, negOneReal;
 
+	private BooleanExpression trueExpr, falseExpr;
+
 	private MonomialAdder monomialAdder;
 
 	private MonomialNegater monomialNegater;
@@ -133,10 +148,10 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
 		this.emptyMap = collectionFactory.emptySortedMap(comparator);
-		this.oneInt = objectFactory.canonic(new One(integerType,
-				objectFactory.numberObject(numberFactory.oneInteger())));
-		this.oneReal = objectFactory.canonic(new One(realType,
-				objectFactory.numberObject(numberFactory.oneRational())));
+		this.oneInt = objectFactory.canonic(new One(integerType, objectFactory
+				.numberObject(numberFactory.oneInteger())));
+		this.oneReal = objectFactory.canonic(new One(realType, objectFactory
+				.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
 		this.zeroReal = canonicIntConstant(0);
 		this.twoInt = canonicIntConstant(2);
@@ -154,8 +169,17 @@ public class IdealFactory implements NumericExpressionFactory {
 	}
 
 	@Override
+	public void setExpressionFactory(ExpressionFactory expressionFactory) {
+		this.expressionFactory = expressionFactory;
+	}
+
+	@Override
 	public void init() {
 		assert comparator.objectComparator() != null;
+		assert expressionFactory != null;
+		booleanFactory = expressionFactory.booleanFactory();
+		trueExpr = booleanFactory.trueExpr();
+		falseExpr = booleanFactory.falseExpr();
 	}
 
 	@Override
@@ -932,6 +956,12 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+			SymbolicType numericType, Collection<SymbolicObject> arguments) {
+		return new NumericPrimitive(operator, numericType, arguments);
+	}
+
+	@Override
+	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0) {
 		return new NumericPrimitive(operator, numericType, arg0);
 	}
@@ -1059,6 +1089,8 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	@Override
 	public NumericExpression minus(NumericExpression arg) {
+		if (arg.isZero())
+			return arg;
 		if (arg instanceof Polynomial)
 			return negate((Polynomial) arg);
 		else
@@ -1216,6 +1248,147 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public IdealComparator numericComparator() {
 		return comparator;
+	}
+
+	private BooleanExpression isPositive(Polynomial polynomial) {
+		Number number = extractNumber(polynomial);
+
+		if (number == null) {
+			return booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN,
+					zero(polynomial.type()), polynomial);
+		}
+		return number.signum() > 0 ? trueExpr : falseExpr;
+	}
+
+	private BooleanExpression isNegative(Polynomial polynomial) {
+		return isPositive(negate(polynomial));
+	}
+
+	private BooleanExpression isNonnegative(Polynomial polynomial) {
+		Number number = extractNumber(polynomial);
+
+		if (number == null) {
+			return booleanFactory.booleanExpression(
+					SymbolicOperator.LESS_THAN_EQUALS, zero(polynomial.type()),
+					polynomial);
+		}
+		return number.signum() >= 0 ? trueExpr : falseExpr;
+	}
+
+	// 4 relations: 0<, 0<=, 0==, 0!=
+
+	// 0<p/q <=> (0<p && 0<q) || (0<-p && 0<-q)
+
+	// 0<=p/q <=> (0<=p && 0<q) || (0<=-p && 0<-q)
+
+	// 0==p/q <=> 0==p
+
+	// 0!=p/q <=> 0!=
+
+	private BooleanExpression arePositive(Polynomial p1, Polynomial p2) {
+		BooleanExpression result = isPositive(p1);
+
+		if (result.isFalse())
+			return result;
+		return booleanFactory.and(result, isPositive(p2));
+	}
+
+	private BooleanExpression areNegative(Polynomial p1, Polynomial p2) {
+		BooleanExpression result = isNegative(p1);
+
+		if (result.isFalse())
+			return result;
+		return booleanFactory.and(result, isNegative(p2));
+	}
+
+	private BooleanExpression isPositive(RationalExpression rational) {
+		Number number = extractNumber(rational);
+
+		if (number == null) {
+			Polynomial numerator = rational.numerator(this);
+			Polynomial denominator = rational.denominator(this);
+			BooleanExpression result = arePositive(numerator, denominator);
+
+			if (result.isTrue())
+				return result;
+			return booleanFactory.or(result,
+					areNegative(numerator, denominator));
+		}
+		return number.signum() > 0 ? trueExpr : falseExpr;
+	}
+
+	private BooleanExpression isNonnegative(RationalExpression rational) {
+		Number number = extractNumber(rational);
+
+		if (number == null) {
+			Polynomial numerator = rational.numerator(this);
+			Polynomial denominator = rational.denominator(this);
+			BooleanExpression result = booleanFactory.and(
+					isNonnegative(numerator), isPositive(denominator));
+
+			if (result.isTrue())
+				return result;
+			return booleanFactory.or(result, booleanFactory.and(
+					isNonnegative(negate(numerator)), isNegative(denominator)));
+		}
+		return number.signum() >= 0 ? trueExpr : falseExpr;
+	}
+
+	@Override
+	public BooleanExpression lessThan(NumericExpression arg0,
+			NumericExpression arg1) {
+		NumericExpression difference = subtract(arg1, arg0);
+
+		if (difference instanceof Polynomial)
+			return isPositive((Polynomial) difference);
+		return isPositive((RationalExpression) difference);
+	}
+
+	@Override
+	public BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		NumericExpression difference = subtract(arg1, arg0);
+
+		if (difference instanceof Polynomial)
+			return isNonnegative((Polynomial) difference);
+		return isNonnegative((RationalExpression) difference);
+	}
+
+	@Override
+	public BooleanExpression notLessThan(NumericExpression arg0,
+			NumericExpression arg1) {
+		return lessThanEquals(arg1, arg0);
+	}
+
+	@Override
+	public BooleanExpression notLessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		return lessThan(arg1, arg0);
+	}
+
+	@Override
+	public BooleanExpression equals(NumericExpression arg0,
+			NumericExpression arg1) {
+		NumericExpression difference = subtract(arg1, arg0);
+		Number number = extractNumber(difference);
+
+		if (number == null)
+			return booleanFactory.booleanExpression(SymbolicOperator.EQUALS,
+					zero(arg0.type()), difference);
+		else
+			return number.signum() == 0 ? trueExpr : falseExpr;
+	}
+
+	@Override
+	public BooleanExpression neq(NumericExpression arg0, NumericExpression arg1) {
+		NumericExpression difference = subtract(arg1, arg0);
+		Number number = extractNumber(difference);
+
+		if (number == null)
+			return booleanFactory.booleanExpression(SymbolicOperator.NEQ,
+					zero(arg0.type()), difference);
+		else
+			return number.signum() != 0 ? trueExpr : falseExpr;
 	}
 
 }

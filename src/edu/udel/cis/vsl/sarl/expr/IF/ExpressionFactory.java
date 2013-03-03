@@ -21,6 +21,8 @@ public interface ExpressionFactory {
 
 	NumericExpressionFactory numericFactory();
 
+	BooleanExpressionFactory booleanFactory();
+
 	ObjectFactory objectFactory();
 
 	SymbolicExpression canonic(SymbolicExpression expression);

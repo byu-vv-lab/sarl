@@ -99,20 +99,22 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 		return new PcollectionsSymbolicMap<K, V>(pmap.minus(key));
 	}
 
-	/**
-	 * Runs a few simple tests.
-	 * 
-	 * @param args
-	 *            ignored
-	 */
-	public static void main(String[] args) {
-		// TODO
-	}
-
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		// TODO Auto-generated method stub
+		for (Entry<K, V> entry : entries()) {
+			K key = entry.getKey();
+			V value = entry.getValue();
 
+			if (!key.isCanonic() || !value.isCanonic()) {
+				if (key.isCanonic())
+					pmap = pmap.plus(key, factory.canonic(value));
+				else {
+					pmap = pmap.minus(key);
+					pmap = pmap.plus(factory.canonic(key),
+							factory.canonic(value));
+				}
+			}
+		}
 	}
 
 	@Override

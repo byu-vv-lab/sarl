@@ -16,13 +16,13 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.ideal.IdealExpression;
 import edu.udel.cis.vsl.sarl.expr.ideal.IdealFactory;
 import edu.udel.cis.vsl.sarl.expr.ideal.Monomial;
 import edu.udel.cis.vsl.sarl.expr.ideal.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.expr.ideal.Polynomial;
 import edu.udel.cis.vsl.sarl.expr.ideal.RationalExpression;
+import edu.udel.cis.vsl.sarl.expr.ideal.ReducedPolynomial;
 import edu.udel.cis.vsl.sarl.simplify.IF.CommonSimplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.Simplification;
 
@@ -105,6 +105,74 @@ public class IdealSimplifier extends CommonSimplifier {
 		//initialize();
 	}
 
+	/***********************************************************************
+	 * Begin Simplification Routines...................................... *
+	 ***********************************************************************/
+
+	protected SymbolicExpression simplify(SymbolicExpression expression) {
+		// special handling for:
+		// symbolic constants (booleans, numeric, ...)
+		// numeric expressions (polynomials, ...)
+		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
+		if (expression instanceof Polynomial)
+			return simplifyPolynomial((Polynomial)expression);
+		
+
+		return null;
+	}
+
+	/**
+	 * Simplifies a factored polynomial. Result could be either Polynomial or
+	 * RationalExpression.
+	 * 
+	 * 
+	 * sub(P) { write P=aX+b, X pseudo-primitive factored poly if
+	 * map.contains(X) return a*map(X)+b; if P has more than one term: loop over
+	 * terms of P and call sub. if any simplify, return sum of result. if P has
+	 * more than one factor: loop over factors of P and call sub. if any
+	 * simplify, return product of result. return P }
+	 */
+	private Polynomial simplifyPolynomialWork(Polynomial fp) {
+		AffineExpression affine = affineFactory.affine(fp);
+		Polynomial pseudo = affine.pseudo();
+		Number pseudoValue = constantMap.get(pseudo);
+
+		if (pseudoValue != null)
+			return factory.constant(pseudoValue);
+		{
+			SymbolicType type = fp.type();
+			int numTerms = fp.termMap(factory).size();
+
+			if (numTerms > 1) {
+				Polynomial result = (Polynomial) simplifyGenericExpression(fp);
+
+				if (result != fp)
+					return result;
+			}
+			{
+				Monomial f1 = fp.factorization(factory);
+
+				if (f1.degree() > 1) {
+					Monomial f2 = (Monomial) simplify(f1);
+
+					if (f2 != f1)
+						return f2.expand(factory);
+				}
+			}
+		}
+		return fp;
+	}
+
+	private Polynomial simplifyPolynomial(Polynomial polynomial) {
+		Polynomial result = (Polynomial) simplifyMap.get(polynomial);
+
+		if (result == null) {
+			result = simplifyPolynomialWork(polynomial);
+			simplifyMap.put(polynomial, result);
+		}
+		return result;
+	}
+
 	@Override
 	public SymbolicExpression newAssumption() {
 		// TODO Auto-generated method stub
@@ -116,966 +184,19 @@ public class IdealSimplifier extends CommonSimplifier {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	// 4 relations: 0<, 0<=, 0==, 0!=
+	
+	// 0<p/q <=> (0<p && 0<q) || (0<-p && 0<-q)
+	
+	// 0<=p/q <=> (0<=p && 0<q) || (0<=-p && 0<-q)
+	
+	// 0==p/q <=> 0==p
+	
+	// 0!=p/q <=> 0!=p
+	
 
-	@Override
-	protected NumericExpression simplifyNumeric(NumericExpression expression) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/***********************************************************************
-	 * Begin Simplification Routines...................................... *
-	 ***********************************************************************/
-//
-//	/**
-//	 * Takes a tree expression in ideal canonical form, and simplifies it,
-//	 * returning a tree expression in canonical form.
-//	 * <p>
-//	 * 
-//	 * If type is boolean, the expression and result returned are instances of
-//	 * CnfBooleanExpression. If type is integer, Polynomial. If type is real,
-//	 * RationalExpression.
-//	 * <p>
-//	 * 
-//	 * If the type is not one of those primitive types, then the expression must
-//	 * be an instance of one of the following, and an instance of one of the
-//	 * following will also be returned:
-//	 * 
-//	 * Tuple, TupleRead, TupleWrite, ArrayRead, ArrayWrite,
-//	 * EvaluatedFunctionExpression, ConditionalExpression,
-//	 * SymbolicConstantExpression.
-//	 */
-//	private Simplification simplifyTree(SymbolicExpression expression) {
-//		assert expression != null;
-//
-//		Simplification result = treeSimplifyMap.get(expression);
-//
-//		if (result != null)
-//			return result;
-//
-//		SymbolicType type = expression.type();
-//
-//		if (type.isBoolean()) {
-//			assert expression instanceof CnfBooleanExpression;
-//			// result will be instance of CnfBooleanExpression
-//			result = simplifyCnf((CnfBooleanExpression) expression);
-//		} else if (type.isInteger()) {
-//			assert expression instanceof Polynomial;
-//			// result will be instance of Polynomial (if integer type)
-//			// or RationalExpression (if real type)...
-//			result = simplifyPolynomial((Polynomial) expression);
-//		} else if (type.isReal()) {
-//			assert expression instanceof RationalExpression;
-//			// result will be instance of RationalExpression....
-//			result = simplifyRational((RationalExpression) expression);
-//		} else if (expression instanceof Tuple) {
-//			result = simplifyTuple((Tuple) expression);
-//		} else if (expression instanceof TupleRead) {
-//			result = simplifyTupleRead((TupleRead) expression);
-//		} else if (expression instanceof TupleWrite) {
-//			result = simplifyTupleWrite((TupleWrite) expression);
-//		} else if (expression instanceof ArrayRead) {
-//			result = simplifyArrayRead((ArrayRead) expression);
-//		} else if (expression instanceof ArrayWrite) {
-//			result = simplifyArrayWrite((ArrayWrite) expression);
-//		} else if (expression instanceof ArrayLambdaExpression) {
-//			result = simplifyArrayLambda((ArrayLambdaExpression) expression);
-//		} else if (expression instanceof ArrayExpression) {
-//			result = simplifyArrayExpression((ArrayExpression) expression);
-//		} else if (expression instanceof EvaluatedFunctionExpression) {
-//			result = simplifyApply((EvaluatedFunctionExpression) expression);
-//		} else if (expression instanceof LambdaExpression) {
-//			result = simplifyLambda((LambdaExpression) expression);
-//		} else if (expression instanceof ConditionalExpression) {
-//			result = simplifyConditional((ConditionalExpression) expression);
-//		} else if (expression instanceof SymbolicConstantExpression) {
-//			result = simplifySymbolicConstant((SymbolicConstantExpression) expression);
-//		} else {
-//			throw new IllegalArgumentException("Unknown type of expression: "
-//					+ expression);
-//		}
-//		treeSimplifyMap.put(expression, result);
-//		return result;
-//	}
-//
-//	/**
-//	 * Simplifies a CnfBooleanExpression. Result will be instanceof
-//	 * CnfBooleanExpression.
-//	 */
-//	private Simplification simplifyCnf(CnfBooleanExpression cnf) {
-//		Simplification simplification = treeSimplifyMap.get(cnf);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		int numClauses = cnf.numClauses();
-//		Simplification[] arguments = new Simplification[numClauses];
-//		IdealExpression result = null;
-//
-//		for (int i = 0; i < numClauses; i++) {
-//			OrExpression clause = cnf.clause(i);
-//			Simplification argument = simplifyOr(clause);
-//
-//			if (result != null) {
-//				result = universe.and(result, argument.result());
-//			} else {
-//				if (argument.success()) {
-//					result = trueExpression();
-//					for (int j = 0; j < i; j++)
-//						result = universe.and(result, arguments[j].result());
-//					result = universe.and(result, argument.result());
-//				} else {
-//					arguments[i] = argument;
-//				}
-//			}
-//		}
-//		if (result == null)
-//			simplification = new Simplification(cnf,
-//					universe.canonicalizeTree(cnf), false);
-//		else
-//			simplification = new Simplification(cnf, result, true);
-//		treeSimplifyMap.put(cnf, simplification);
-//		return simplification;
-//	}
-//
-//	/** Simplifies an OrExpression, returning a CnfBooleanExpression. */
-//	private Simplification simplifyOr(OrExpression or) {
-//		Simplification simplification = treeSimplifyMap.get(or);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		int numClauses = or.numClauses();
-//		Simplification[] arguments = new Simplification[numClauses];
-//		boolean change = false;
-//		IdealExpression result;
-//
-//		for (int i = 0; i < numClauses; i++) {
-//			BasicExpression basic = or.clause(i);
-//			Simplification argument = simplifyBasic(basic);
-//
-//			change = change || argument.success();
-//			arguments[i] = argument;
-//		}
-//		if (change) {
-//			result = falseExpression();
-//			for (int i = 0; i < numClauses; i++) {
-//				result = universe.or(result, arguments[i].result());
-//			}
-//		} else {
-//			result = universe.canonicalizeTree(or);
-//		}
-//		simplification = new Simplification(or, result, change);
-//		treeSimplifyMap.put(or, simplification);
-//		return simplification;
-//	}
-//
-//	/** Result is CnfBooleanExpression. */
-//	private Simplification simplifyBasic(BasicExpression basic) {
-//		if (basic instanceof LiteralExpression) {
-//			return simplifyLiteral((LiteralExpression) basic);
-//		} else if (basic instanceof QuantifierExpression) {
-//			return simplifyQuantifier((QuantifierExpression) basic);
-//		} else if (basic instanceof RelationalExpression) {
-//			return simplifyRelational((RelationalExpression) basic);
-//		} else {
-//			throw new IllegalArgumentException("Unknown type of basic: "
-//					+ basic);
-//		}
-//	}
-//
-//	/** Result is CnfBooleanExpression */
-//	private Simplification simplifyLiteral(LiteralExpression literal) {
-//		Simplification simplification = treeSimplifyMap.get(literal);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		Simplification arg = simplifyBooleanPrimitive(literal.primitive());
-//
-//		if (arg.success()) {
-//			IdealExpression result;
-//
-//			if (literal.not())
-//				result = universe.not(arg.result());
-//			else
-//				result = arg.result();
-//			simplification = new Simplification(literal, result, true);
-//		} else {
-//			simplification = new Simplification(literal,
-//					universe.canonicalizeTree(literal), false);
-//		}
-//		treeSimplifyMap.put(literal, simplification);
-//		return simplification;
-//	}
-//
-//	/** Result is CnfBooleanExpression */
-//	private Simplification simplifyQuantifier(QuantifierExpression expression) {
-//		Simplification simplification = treeSimplifyMap.get(expression);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		Simplification predicateSimplification = simplifyCnf(expression
-//				.predicate());
-//
-//		if (predicateSimplification.success()) {
-//			IdealExpression result;
-//
-//			if (expression.quantifier() == Quantifier.FORALL)
-//				result = universe.forall(expression.variable()
-//						.symbolicConstant(), predicateSimplification.result());
-//			else
-//				result = universe.exists(expression.variable()
-//						.symbolicConstant(), predicateSimplification.result());
-//			simplification = new Simplification(expression, result, true);
-//		} else {
-//			simplification = new Simplification(expression,
-//					universe.canonicalizeTree(expression), false);
-//		}
-//		treeSimplifyMap.put(expression, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a boolean primitive, always returning a CnfBooleanExpression.
-//	 * Lookup in the boolean map is done here.
-//	 */
-//	private Simplification simplifyBooleanPrimitive(BooleanPrimitive primitive) {
-//		Simplification simplification = treeSimplifyMap.get(primitive);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		Boolean value = booleanMap.get(primitive);
-//
-//		if (value != null)
-//			return new Simplification(primitive, (value ? trueExpression()
-//					: falseExpression()), true);
-//
-//		switch (primitive.booleanPrimitiveKind()) {
-//		case ARRAY_READ:
-//			simplification = simplifyArrayRead((ArrayRead) primitive);
-//			break;
-//		case TUPLE_READ:
-//			simplification = simplifyTupleRead((TupleRead) primitive);
-//			break;
-//		case APPLY:
-//			simplification = simplifyApply((EvaluatedFunctionExpression) primitive);
-//			break;
-//		case SYMBOLIC_CONSTANT:
-//			simplification = simplifySymbolicConstant((SymbolicConstantExpressionIF) primitive);
-//			break;
-//		default:
-//			throw new IllegalArgumentException(
-//					"Unknown type of boolean primitive: " + primitive);
-//		}
-//		treeSimplifyMap.put(primitive, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a numeric primitive. The type of the primitive will be either
-//	 * integer or real. If the type is integer, a Polynomial is returned. If the
-//	 * type is real, a RationalExpression is returned.
-//	 * 
-//	 * @param primitive
-//	 * @return
-//	 */
-//	private Simplification simplifyNumericPrimitive(NumericPrimitive primitive) {
-//		Simplification simplification = treeSimplifyMap.get(primitive);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		Polynomial pseudo = fpFactory().factoredPolynomial(primitive);
-//		Number value = constantMap.get(pseudo);
-//
-//		if (value != null) {
-//			simplification = new Simplification(primitive,
-//					universe.concreteExpression(value), true);
-//		} else {
-//			switch (primitive.numericPrimitiveKind()) {
-//			case CAST:
-//				// result will be instance of RationalExpression...
-//				simplification = simplifyCast((RealCastExpression) primitive);
-//				break;
-//			case ARRAY_READ:
-//				// result will be either factored poly or rational, depending on
-//				// type...
-//				simplification = simplifyArrayRead((ArrayRead) primitive);
-//				break;
-//			case TUPLE_READ:
-//				// result will be either factored poly or rational, depending on
-//				// type...
-//				simplification = simplifyTupleRead((TupleRead) primitive);
-//				break;
-//			case SYMBOLIC_CONSTANT:
-//				// result will be either factored poly or rational, depending on
-//				// type...
-//				simplification = simplifySymbolicConstant((SymbolicConstantExpression) primitive);
-//				break;
-//			case APPLY:
-//				simplification = simplifyApply((EvaluatedFunctionExpression) primitive);
-//				break;
-//			case COND:
-//				simplification = simplifyConditional((ConditionalExpression) primitive);
-//				break;
-//			case INT_DIV:
-//				// result will be factored poly...
-//				simplification = simplifyIntDiv((IntegerDivisionExpression) primitive);
-//				break;
-//			case INT_MOD:
-//				// result will be factored poly...
-//				simplification = simplifyIntMod((IntegerModulusExpression) primitive);
-//				break;
-//			default:
-//				throw new RuntimeException(
-//						"Unknown kind of numeric primitive: " + primitive);
-//			}
-//		}
-//		treeSimplifyMap.put(primitive, simplification);
-//		return simplification;
-//	}
-//
-//	/*
-//	 * Simplifies an ArrayRead expression. The result will be either an
-//	 * ArrayRead, or an element of the array (if the index expression could be
-//	 * concretized and an explicit element extracted from the array). The
-//	 * elements of the array must be instances of SymbolicExpression.
-//	 */
-//	private Simplification simplifyArrayRead(ArrayRead read) {
-//		Simplification simplification = treeSimplifyMap.get(read);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = read.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		Polynomial oldIndex = (Polynomial) read.index();
-//		Simplification indexSimplification = simplifyPolynomial(oldIndex);
-//		SymbolicExpression oldArray = read.array();
-//		Simplification arraySimplification = simplifyTree(oldArray);
-//		boolean change = !newType.equals(oldType)
-//				|| indexSimplification.success()
-//				|| arraySimplification.success();
-//
-//		if (change) {
-//			IdealExpression result = universe.arrayRead(
-//					arraySimplification.result(), indexSimplification.result());
-//
-//			simplification = new Simplification(read, result, true);
-//		} else {
-//			simplification = new Simplification(read,
-//					universe.canonicalizeTree(read), false);
-//		}
-//		treeSimplifyMap.put(read, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyArrayWrite(ArrayWrite write) {
-//		Simplification simplification = treeSimplifyMap.get(write);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = write.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		Polynomial oldIndex = (Polynomial) write.index();
-//		Simplification indexSimplification = simplifyPolynomial(oldIndex);
-//		SymbolicExpression oldArray = write.array();
-//		Simplification arraySimplification = simplifyTree(oldArray);
-//		SymbolicExpression oldValue = write.value();
-//		Simplification valueSimplification = simplifyTree(oldValue);
-//		boolean change = !newType.equals(oldType)
-//				|| indexSimplification.success()
-//				|| arraySimplification.success()
-//				|| valueSimplification.success();
-//
-//		if (change) {
-//			IdealExpression result = universe.arrayWrite(
-//					arraySimplification.result(), indexSimplification.result(),
-//					valueSimplification.result());
-//
-//			simplification = new Simplification(write, result, true);
-//		} else {
-//			simplification = new Simplification(write,
-//					universe.canonicalizeTree(write), false);
-//		}
-//		treeSimplifyMap.put(write, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyArrayLambda(ArrayLambdaExpression arrayLambda) {
-//		Simplification simplification = treeSimplifyMap.get(arrayLambda);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicCompleteArrayTypeIF oldType = arrayLambda.type();
-//		SymbolicCompleteArrayTypeIF newType = (SymbolicCompleteArrayTypeIF) simplifyType(oldType);
-//		SymbolicExpression oldFunction = arrayLambda.function();
-//		Simplification functionSimplification = simplifyTree(oldFunction);
-//		boolean change = !newType.equals(oldType)
-//				|| functionSimplification.success();
-//
-//		if (change) {
-//			IdealExpression result = universe.arrayLambda(newType,
-//					functionSimplification.result());
-//
-//			simplification = new Simplification(arrayLambda, result, true);
-//		} else {
-//			simplification = new Simplification(arrayLambda,
-//					universe.canonicalizeTree(arrayLambda), false);
-//		}
-//		treeSimplifyMap.put(arrayLambda, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyArrayExpression(ArrayExpression array) {
-//		Simplification simplification = treeSimplifyMap.get(array);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = array.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		SymbolicExpression oldOrigin = array.origin();
-//		Simplification originSimplification = simplifyTree(oldOrigin);
-//		SymbolicExpression[] oldElements = array.elements();
-//		int length = oldElements.length;
-//		SymbolicExpression[] newElements = null;
-//
-//		for (int i = 0; i < length; i++) {
-//			SymbolicExpression oldElement = oldElements[i];
-//
-//			if (oldElement != null) {
-//				Simplification elementSimplification = simplifyTree(oldElement);
-//
-//				if (elementSimplification.success()) {
-//					if (newElements == null) {
-//						newElements = new SymbolicExpression[length];
-//
-//						for (int j = 0; j < i; j++)
-//							newElements[j] = oldElements[j];
-//					}
-//					newElements[i] = elementSimplification.result()
-//							.expression();
-//				}
-//			}
-//		}
-//		if (!newType.equals(oldType) || originSimplification.success()
-//				|| newElements != null) {
-//			if (newElements == null)
-//				newElements = oldElements;
-//
-//			ArrayExpression newArray = universe.arrayFactory().arrayExpression(
-//					originSimplification.result().expression(), newElements);
-//			IdealExpression result = universe.ideal(newArray);
-//
-//			simplification = new Simplification(array, result, true);
-//		} else {
-//			simplification = new Simplification(array,
-//					universe.canonicalizeTree(array), false);
-//		}
-//		treeSimplifyMap.put(array, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyTupleRead(TupleRead read) {
-//		Simplification simplification = treeSimplifyMap.get(read);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = read.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		NumericConcreteExpressionIF index = read.index();
-//		SymbolicExpression oldTuple = read.tuple();
-//		Simplification tupleSimplification = simplifyTree(oldTuple);
-//		boolean change = !oldType.equals(newType)
-//				|| tupleSimplification.success();
-//
-//		if (change) {
-//			simplification = new Simplification(read, universe.tupleRead(
-//					tupleSimplification.result(), index), true);
-//		} else {
-//			simplification = new Simplification(read,
-//					universe.canonicalizeTree(read), false);
-//		}
-//		treeSimplifyMap.put(read, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyTupleWrite(TupleWrite write) {
-//		Simplification simplification = treeSimplifyMap.get(write);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = write.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		NumericConcreteExpressionIF index = write.index();
-//		SymbolicExpression oldTuple = write.tuple();
-//		Simplification tupleSimplification = simplifyTree(oldTuple);
-//		SymbolicExpression oldValue = write.value();
-//		Simplification valueSimplification = simplifyTree(oldValue);
-//		boolean change = !oldType.equals(newType)
-//				|| tupleSimplification.success()
-//				|| valueSimplification.success();
-//
-//		if (change) {
-//			simplification = new Simplification(write, universe.tupleWrite(
-//					tupleSimplification.result(), index,
-//					valueSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(write,
-//					universe.canonicalizeTree(write), false);
-//		}
-//		treeSimplifyMap.put(write, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyTuple(Tuple tuple) {
-//		Simplification simplification = treeSimplifyMap.get(tuple);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicTupleTypeIF oldType = tuple.type();
-//		SymbolicTupleTypeIF newType = (SymbolicTupleTypeIF) simplifyType(oldType);
-//		boolean change = !newType.equals(oldType);
-//		SymbolicExpression[] oldComponents = tuple.components();
-//		int numElements = oldComponents.length;
-//		IdealExpression[] newComponents = new IdealExpression[numElements];
-//
-//		for (int i = 0; i < numElements; i++) {
-//			Simplification elementSimplification = simplifyTree(oldComponents[i]);
-//
-//			change = change || elementSimplification.success();
-//			newComponents[i] = elementSimplification.result();
-//		}
-//		if (change) {
-//			simplification = new Simplification(tuple,
-//					universe.tupleExpression(newType, newComponents), true);
-//		} else {
-//			simplification = new Simplification(tuple,
-//					universe.canonicalizeTree(tuple), false);
-//		}
-//		treeSimplifyMap.put(tuple, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyConditional(ConditionalExpression cond) {
-//		Simplification simplification = treeSimplifyMap.get(cond);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = cond.type();
-//		SymbolicType newType = (SymbolicTupleTypeIF) simplifyType(oldType);
-//		SymbolicExpression oldPredicate = cond.predicate();
-//		Simplification predicateSimplification = simplifyTree(oldPredicate);
-//		SymbolicExpression trueBranch = cond.trueValue();
-//		Simplification trueSimplification = simplifyTree(trueBranch);
-//		SymbolicExpression falseBranch = cond.falseValue();
-//		Simplification falseSimplification = simplifyTree(falseBranch);
-//		boolean change = !newType.equals(oldType)
-//				|| predicateSimplification.success()
-//				|| trueSimplification.success()
-//				|| falseSimplification.success();
-//
-//		if (change) {
-//			IdealExpression result = universe.cond(
-//					predicateSimplification.result(),
-//					trueSimplification.result(), falseSimplification.result());
-//
-//			simplification = new Simplification(cond, result, true);
-//		} else {
-//			simplification = new Simplification(cond,
-//					universe.canonicalizeTree(cond), false);
-//		}
-//		treeSimplifyMap.put(cond, simplification);
-//		return simplification;
-//	}
-//
-//	/** Result is Polynomial */
-//	private Simplification simplifyIntDiv(IntegerDivisionExpression expression) {
-//		Simplification simplification = treeSimplifyMap.get(expression);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicExpression numerator = expression.numerator();
-//		Simplification numeratorSimplification = simplifyTree(numerator);
-//		SymbolicExpression denominator = expression.denominator();
-//		Simplification denominatorSimplification = simplifyTree(denominator);
-//		boolean change = numeratorSimplification.success()
-//				|| denominatorSimplification.success();
-//
-//		if (change) {
-//			simplification = new Simplification(expression, universe.divide(
-//					numeratorSimplification.result(),
-//					denominatorSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(expression,
-//					universe.canonicalizeTree(expression), false);
-//		}
-//		treeSimplifyMap.put(expression, simplification);
-//		return simplification;
-//	}
-//
-//	/** Result is Polynomial */
-//	private Simplification simplifyIntMod(IntegerModulusExpression expression) {
-//		Simplification simplification = treeSimplifyMap.get(expression);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicExpression numerator = expression.numerator();
-//		Simplification numeratorSimplification = simplifyTree(numerator);
-//		SymbolicExpression denominator = expression.denominator();
-//		Simplification denominatorSimplification = simplifyTree(denominator);
-//		boolean change = numeratorSimplification.success()
-//				|| denominatorSimplification.success();
-//
-//		if (change) {
-//			simplification = new Simplification(expression, universe.modulo(
-//					numeratorSimplification.result(),
-//					denominatorSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(expression,
-//					universe.canonicalizeTree(expression), false);
-//		}
-//		treeSimplifyMap.put(expression, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyApply(EvaluatedFunctionExpression apply) {
-//		Simplification simplification = treeSimplifyMap.get(apply);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = apply.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		SymbolicExpression oldFunction = apply.function();
-//		Simplification functionSimplification = simplifyTree(oldFunction);
-//		int numArgs = apply.arguments().length;
-//		IdealExpression[] newArguments = new IdealExpression[numArgs];
-//		boolean change = !newType.equals(oldType)
-//				|| functionSimplification.success();
-//
-//		for (int i = 0; i < numArgs; i++) {
-//			Simplification argumentSimplification = simplifyTree(apply
-//					.functionArgument(i));
-//			change = change || argumentSimplification.success();
-//			newArguments[i] = argumentSimplification.result();
-//		}
-//		if (change) {
-//			// need array of function arguments...
-//			simplification = new Simplification(apply, universe.apply(
-//					functionSimplification.result(), newArguments), true);
-//		} else {
-//			simplification = new Simplification(apply,
-//					universe.canonicalizeTree(apply), false);
-//		}
-//		treeSimplifyMap.put(apply, simplification);
-//		return simplification;
-//	}
-//
-//	// type might change...
-//	// simplify symbolicConstantExpression, expression, type
-//	private Simplification simplifyLambda(LambdaExpression lambda) {
-//		Simplification simplification = treeSimplifyMap.get(lambda);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = lambda.type();
-//		SymbolicType newType = simplifyType(oldType);
-//		SymbolicConstantExpressionIF oldSymbolicConstantExpression = lambda
-//				.variable();
-//		Simplification constantSimplification = simplifySymbolicConstant(oldSymbolicConstantExpression);
-//		SymbolicExpression oldValueExpression = lambda.expression();
-//		Simplification valueSimplification = simplifyTree(oldValueExpression);
-//		boolean change = !newType.equals(oldType)
-//				|| constantSimplification.success()
-//				|| valueSimplification.success();
-//
-//		if (change) {
-//			SymbolicConstant symbolicConstant = ((SymbolicConstantExpressionIF) constantSimplification
-//					.result().expression()).symbolicConstant();
-//
-//			simplification = new Simplification(lambda, universe.lambda(
-//					symbolicConstant, valueSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(lambda,
-//					universe.canonicalizeTree(lambda), false);
-//		}
-//		treeSimplifyMap.put(lambda, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a "cast to real" expression. The result is always a rational
-//	 * expression and has type real.
-//	 */
-//	private Simplification simplifyCast(RealCastExpression cast) {
-//		Simplification simplification = treeSimplifyMap.get(cast);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		NumericPrimitive intExpression = cast.integerExpression();
-//		Simplification intSimplification = simplifyNumericPrimitive(intExpression);
-//
-//		if (intSimplification.success()) {
-//			simplification = new Simplification(cast,
-//					universe.castToReal(intSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(cast,
-//					universe.canonicalizeTree(cast), false);
-//		}
-//		treeSimplifyMap.put(cast, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a symbolic constant expression.
-//	 * 
-//	 * If type is boolean, this returns an instance of CnfBooleanExpression.
-//	 * 
-//	 * If type is integer, this returns an instance of Polynomial.
-//	 * 
-//	 * If type is real, this returns an instance of RationalExpression.
-//	 * 
-//	 * Otherwise, this returns an instance of SymbolicConstantExpression. In
-//	 * this case, the type returned may differ from the original type because
-//	 * simplifications can change the type. For example, type int[N] might
-//	 * change to int[10], if N simplifies to 10.
-//	 */
-//	private Simplification simplifySymbolicConstant(
-//			SymbolicConstantExpressionIF expression) {
-//		Simplification simplification = treeSimplifyMap.get(expression);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		SymbolicType oldType = expression.type();
-//
-//		if (oldType.isNumeric()) {
-//			Polynomial pseudo = fpFactory().factoredPolynomial(
-//					(SymbolicConstantExpression) expression);
-//			Number value = constantMap.get(pseudo);
-//
-//			if (value != null) {
-//				simplification = new Simplification(expression,
-//						universe.canonicalizeTree(concreteFactory().concrete(
-//								value)), true);
-//			} else {
-//				simplification = new Simplification(expression,
-//						universe.canonicalizeTree(expression), false);
-//			}
-//		} else if (oldType.isBoolean()) {
-//			Boolean value = booleanMap.get(expression); // why does this work?
-//			// expression is SymbolicConstantExpressionIF is not a
-//			// BooleanPrimitive
-//			// note: a BooleanPrimitive "is a" SymbolicExpression
-//
-//			if (value != null) {
-//				simplification = new Simplification(expression,
-//						(value ? trueExpression() : falseExpression()), true);
-//			} else {
-//				simplification = new Simplification(expression,
-//						universe.canonicalizeTree(expression), false);
-//			}
-//		} else {
-//			SymbolicType newType = simplifyType(oldType);
-//			boolean change = !newType.equals(oldType);
-//
-//			if (change) {
-//				SymbolicConstant oldSymbolicConstant = expression
-//						.symbolicConstant();
-//				SymbolicConstant newSymbolicConstant = universe
-//						.getOrCreateSymbolicConstant(
-//								oldSymbolicConstant.name(), newType);
-//
-//				simplification = new Simplification(expression,
-//						universe.canonicalizeTree(constantFactory().expression(
-//								newSymbolicConstant)), true);
-//			} else {
-//				simplification = new Simplification(expression,
-//						universe.canonicalizeTree(expression), false);
-//			}
-//		}
-//		treeSimplifyMap.put(expression, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a rational expression, returning a rational expression. Type
-//	 * is of course real.
-//	 */
-//	private Simplification simplifyRational(RationalExpression rational) {
-//		Simplification simplification = treeSimplifyMap.get(rational);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		Simplification numeratorSimplification = simplifyPolynomial(rational
-//				.numerator());
-//		Simplification denominatorSimplification = simplifyPolynomial(rational
-//				.denominator());
-//		boolean change = numeratorSimplification.success()
-//				|| denominatorSimplification.success();
-//
-//		if (change) {
-//			simplification = new Simplification(rational, universe.divide(
-//					numeratorSimplification.result(),
-//					denominatorSimplification.result()), true);
-//		} else {
-//			simplification = new Simplification(rational,
-//					universe.canonicalizeTree(rational), false);
-//		}
-//		treeSimplifyMap.put(rational, simplification);
-//		return simplification;
-//	}
-//
-//	/**
-//	 * Simplifies a factored polynomial. Result could be either Polynomial or
-//	 * RationalExpression.
-//	 * 
-//	 * 
-//	 * sub(P) { write P=aX+b, X pseudo-primitive factored poly if
-//	 * map.contains(X) return a*map(X)+b; if P has more than one term: loop over
-//	 * terms of P and call sub. if any simplify, return sum of result. if P has
-//	 * more than one factor: loop over factors of P and call sub. if any
-//	 * simplify, return product of result. return P }
-//	 */
-//	private Simplification simplifyPolynomial(Polynomial fp) {
-//		Simplification simplification = treeSimplifyMap.get(fp);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		AffineExpression affine = affineFactory().affine(fp);
-//		Polynomial pseudo = affine.pseudo();
-//		Number pseudoValue = constantMap.get(pseudo);
-//
-//		if (pseudoValue != null) {
-//			simplification = new Simplification(fp,
-//					universe.concreteExpression(affineFactory().affineValue(
-//							affine, pseudoValue)), true);
-//		} else {
-//			SymbolicType type = fp.type();
-//			Polynomial poly = fp.polynomial();
-//			int numTerms = poly.numTerms();
-//			IdealExpression result = null;
-//
-//			if (numTerms >= 1) {
-//				boolean change = false;
-//				Monomial[] oldTerms = poly.terms();
-//				IdealExpression[] newTerms = new IdealExpression[numTerms];
-//
-//				for (int i = 0; i < numTerms; i++) {
-//					Monomial oldMonomial = oldTerms[i];
-//					Simplification monomialSimplification = simplifyMonomial(oldMonomial);
-//
-//					newTerms[i] = monomialSimplification.result();
-//					change = change || monomialSimplification.success();
-//				}
-//				if (change) {
-//					result = (type.isInteger() ? universe.zeroInt() : universe
-//							.zeroReal());
-//					for (int i = 0; i < numTerms; i++)
-//						result = universe.add(result, newTerms[i]);
-//				}
-//			}
-//			if (result == null) {
-//				Factorization factorization = fp.factorization();
-//				int numFactors = factorization.numFactors();
-//
-//				if (numFactors > 1) {
-//					boolean change = false;
-//					PowerExpression[] oldFactors = factorization.factorPowers();
-//					IdealExpression[] newFactors = new IdealExpression[numFactors];
-//
-//					for (int i = 0; i < numFactors; i++) {
-//						Polynomial oldPolynomial = (Polynomial) oldFactors[i]
-//								.base();
-//						Polynomial oldPolynomial = fpFactory()
-//								.factoredPolynomial(oldPolynomial);
-//						Simplification factorSimplification = simplifyPolynomial(oldPolynomial);
-//
-//						change = change || factorSimplification.success();
-//						newFactors[i] = factorSimplification.result();
-//					}
-//					if (change) {
-//						result = (type.isInteger() ? universe.oneInt()
-//								: universe.oneReal());
-//						for (int i = 0; i < numFactors; i++)
-//							result = universe.multiply(
-//									result,
-//									universe.power(newFactors[i],
-//											oldFactors[i].exponent()));
-//					} // end if (change)...
-//				} // end if numFactors>1
-//			} // end if (result == null)
-//			if (result == null) {
-//				simplification = new Simplification(fp,
-//						universe.canonicalizeTree(fp), false);
-//			} else {
-//				simplification = new Simplification(fp, result, true);
-//			}
-//		} // end if (pseudoValue != null) {...} else ...
-//		treeSimplifyMap.put(fp, simplification);
-//		return simplification;
-//	}
-//
-//	private Simplification simplifyMonomial(Monomial monomial) {
-//		Simplification simplification = treeSimplifyMap.get(monomial);
-//
-//		if (simplification != null)
-//			return simplification;
-//
-//		MonicMonomial monic = monomial.monicMonomial();
-//		PowerExpression[] factorPowers = monic.factorPowers();
-//		int numFactorPowers = factorPowers.length;
-//		Simplification[] factorSimplifications = new Simplification[numFactorPowers];
-//		boolean change = false;
-//
-//		for (int i = 0; i < numFactorPowers; i++) {
-//			PowerExpression factorPower = factorPowers[i];
-//			NumericPrimitive factor = (NumericPrimitive) factorPower.base();
-//			Simplification factorSimplification = simplifyNumericPrimitive(factor);
-//
-//			change = change || factorSimplification.success();
-//			factorSimplifications[i] = factorSimplification;
-//		}
-//		if (change) {
-//			IdealExpression result = universe.canonicalizeTree(monomial
-//					.coefficient());
-//
-//			for (int i = 0; i < numFactorPowers; i++) {
-//				IdealExpression base = factorSimplifications[i].result();
-//				IdealExpression exponent = universe
-//						.canonicalizeTree(factorPowers[i].exponent());
-//
-//				result = universe.multiply(result,
-//						universe.power(base, exponent));
-//			}
-//			simplification = new Simplification(monomial, result, true);
-//		} else {
-//			simplification = new Simplification(monomial,
-//					universe.canonicalizeTree(monomial), false);
-//		}
-//		treeSimplifyMap.put(monomial, simplification);
-//		return simplification;
-//	}
-//
-//	/** Result is returned as CnfBooleanExpression */
-//	private Simplification simplifyRelational(RelationalExpression expression) {
+//	private Simplification simplifyRelational(SymbolicExpression expression) {
 //		Simplification simplification = treeSimplifyMap.get(expression);
 //
 //		if (simplification != null)
