@@ -39,7 +39,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 import edu.udel.cis.vsl.sarl.prove.Prove;
-import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifier;
+import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
@@ -85,6 +85,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	private NumericExpressionFactory numericFactory;
 
+	private SimplifierFactory simplifierFactory;
+
 	private ObjectComparator objectComparator;
 
 	private TheoremProver prover;
@@ -119,6 +121,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		nullExpression = expressionFactory.nullExpression();
 		prover = Prove.newIdealCVC3HybridProver(this);
 		substituter = new Substituter(this, collectionFactory, typeFactory);
+		// simplifierFactory = new IdealS
 	}
 
 	// Helper methods...
@@ -742,7 +745,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public Simplifier simplifier(SymbolicExpression assumption) {
 		// TODO: until we port the better one
-		return new IdentitySimplifier(this, assumption);
+		// return new IdentitySimplifier(this, assumption);
+		return simplifierFactory.newSimplifier((BooleanExpression) assumption);
 	}
 
 	@Override
@@ -1409,6 +1413,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public ObjectComparator comparator() {
 		return objectComparator;
+	}
+
+	public void setSimplifierFactory(SimplifierFactory simplifierFactory) {
+		this.simplifierFactory = simplifierFactory;
 	}
 
 }

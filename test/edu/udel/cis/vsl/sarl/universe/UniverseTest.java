@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -116,4 +117,20 @@ public class UniverseTest {
 			assertEquals(sc[n - 1 - i],
 					universe.arrayRead(array2, universe.symbolic(i)));
 	}
+
+	@Test
+	public void simplifyTrivial() {
+		Simplifier simplifier = universe.simplifier(universe.symbolic(true));
+
+		assertEquals(x, simplifier.apply(x));
+	}
+
+	@Test
+	public void simplifyConstant() {
+		SymbolicExpression assumption = universe.equals(x, three);
+		Simplifier simplifier = universe.simplifier(assumption);
+
+		assertEquals(three, simplifier.apply(x));
+	}
+
 }

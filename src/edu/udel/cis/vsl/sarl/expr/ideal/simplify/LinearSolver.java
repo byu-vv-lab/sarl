@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -55,8 +54,9 @@ public class LinearSolver {
 
 	private Map<Monic, Integer> intIdMap, realIdMap;
 
-	LinearSolver(NumberFactory numberFactory) {
-		this.numberFactory = numberFactory;
+	LinearSolver(IdealFactory idealFactory) {
+		this.idealFactory = idealFactory;
+		this.numberFactory = idealFactory.numberFactory();
 	}
 
 	/**
@@ -78,9 +78,7 @@ public class LinearSolver {
 				numRealConstraints++;
 				monics = realMonicSet;
 			}
-			for (SymbolicExpression expr : fp.termMap(idealFactory).keys()) {
-				Monic monic = (Monic) expr;
-
+			for (Monic monic : fp.termMap(idealFactory).keys()) {
 				assert !monic.isOne();
 				monics.add(monic);
 			}
@@ -111,7 +109,7 @@ public class LinearSolver {
 	 * Builds the matrix representations of the maps. For the integer
 	 * constraints, there is one row for each integer entry in the map and one
 	 * column for each monic of integer type, plus one additional column to hold
-	 * the value associated to the constaint value associated to the map entry.
+	 * the value associated to the constant value associated to the map entry.
 	 * The real map is similar.
 	 */
 	private void buildMatrices() {
@@ -196,6 +194,7 @@ public class LinearSolver {
 					.numerator(intMatrix[i][numIntMonics]), numberFactory
 					.divide(lcm, numberFactory
 							.denominator(intMatrix[i][numIntMonics])));
+			// TODO: check this.
 			// is fp in pseudo primitive form? i think so
 			map.put(fp, value);
 			if (fp.isZero() && !value.isZero()) // inconsistency
@@ -252,9 +251,9 @@ public class LinearSolver {
 		return true;
 	}
 
-	public static boolean reduceConstantMap(NumberFactory numberFactory,
+	public static boolean reduceConstantMap(IdealFactory idealFactory,
 			Map<Polynomial, Number> map) {
-		LinearSolver solver = new LinearSolver(numberFactory);
+		LinearSolver solver = new LinearSolver(idealFactory);
 
 		return solver.reduce(map);
 	}

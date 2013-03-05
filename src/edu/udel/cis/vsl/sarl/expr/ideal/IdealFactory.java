@@ -153,7 +153,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		this.oneReal = objectFactory.canonic(new One(realType, objectFactory
 				.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
-		this.zeroReal = canonicIntConstant(0);
+		this.zeroReal = canonicRealConstant(0);
 		this.twoInt = canonicIntConstant(2);
 		this.twoReal = canonicRealConstant(2);
 		this.negOneInt = canonicIntConstant(-1);
@@ -185,6 +185,10 @@ public class IdealFactory implements NumericExpressionFactory {
 	@Override
 	public NumberFactory numberFactory() {
 		return numberFactory;
+	}
+
+	public BooleanExpressionFactory booleanFactory() {
+		return booleanFactory;
 	}
 
 	@Override
@@ -555,6 +559,13 @@ public class IdealFactory implements NumericExpressionFactory {
 	 * @return the sum p1+p2
 	 */
 	public Polynomial add(Polynomial p1, Polynomial p2) {
+
+		assert p1.type().equals(p2.type());
+		if (p1.isZero())
+			return p2;
+		if (p2.isZero())
+			return p1;
+
 		Monomial fact1 = p1.factorization(this);
 		Monomial fact2 = p2.factorization(this);
 		Monomial[] triple = extractCommonality(fact1, fact2);

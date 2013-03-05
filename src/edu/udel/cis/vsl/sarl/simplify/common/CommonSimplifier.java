@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.simplify.IF;
+package edu.udel.cis.vsl.sarl.simplify.common;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +39,7 @@ public abstract class CommonSimplifier implements Simplifier {
 	protected Map<SymbolicObject, SymbolicObject> simplifyMap = new HashMap<SymbolicObject, SymbolicObject>();
 
 	public CommonSimplifier(SymbolicUniverse universe) {
+		assert universe != null;
 		this.universe = universe;
 	}
 
@@ -54,7 +55,8 @@ public abstract class CommonSimplifier implements Simplifier {
 	 *            any symbolic expression.
 	 * @return
 	 */
-	protected abstract SymbolicExpression simplify(SymbolicExpression expression);
+	protected abstract SymbolicExpression simplifyExpression(
+			SymbolicExpression expression);
 
 	protected SymbolicType simplifyTypeWork(SymbolicType type) {
 		switch (type.typeKind()) {
@@ -300,7 +302,7 @@ public abstract class CommonSimplifier implements Simplifier {
 				.get(expression);
 
 		if (result == null) {
-			result = simplify(expression);
+			result = simplifyExpression(expression);
 			simplifyMap.put(expression, result);
 		}
 		return result;
