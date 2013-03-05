@@ -1,7 +1,7 @@
-package edu.udel.cis.vsl.sarl.expr.ideal.simplify;
+package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import edu.udel.cis.vsl.sarl.IF.number.Number;
-import edu.udel.cis.vsl.sarl.expr.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.Polynomial;
 
 /**
  * Represents an expression of the form aX+b, where X is a

@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal;
+package edu.udel.cis.vsl.sarl.ideal;
 
 /**
  * A nontrivial rational expression. It consists of a numerator and denominator,

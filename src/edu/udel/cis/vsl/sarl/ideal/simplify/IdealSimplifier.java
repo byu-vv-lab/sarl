@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal.simplify;
+package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -19,9 +19,9 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
-import edu.udel.cis.vsl.sarl.expr.ideal.Constant;
-import edu.udel.cis.vsl.sarl.expr.ideal.Monomial;
-import edu.udel.cis.vsl.sarl.expr.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.Constant;
+import edu.udel.cis.vsl.sarl.ideal.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.Polynomial;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**

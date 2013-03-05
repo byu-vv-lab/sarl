@@ -7,7 +7,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
 import edu.udel.cis.vsl.sarl.expr.common.CommonExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.ideal.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 

@@ -1,13 +1,13 @@
-package edu.udel.cis.vsl.sarl.expr.ideal.simplify;
+package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.ideal.Constant;
-import edu.udel.cis.vsl.sarl.expr.ideal.IdealFactory;
-import edu.udel.cis.vsl.sarl.expr.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.Polynomial;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class AffineFactory {

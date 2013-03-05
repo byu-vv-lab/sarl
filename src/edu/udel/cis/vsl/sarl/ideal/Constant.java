@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.expr.ideal;
+package edu.udel.cis.vsl.sarl.ideal;
 
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
