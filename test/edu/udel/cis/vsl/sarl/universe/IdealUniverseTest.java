@@ -18,7 +18,7 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
-public class UniverseTest {
+public class IdealUniverseTest {
 
 	private static PrintStream out = System.out;
 

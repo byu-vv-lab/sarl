@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Collection;
 
@@ -6,6 +6,12 @@ import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 
 /**
  * A numeric primitive expression. Other class may want to extend this.

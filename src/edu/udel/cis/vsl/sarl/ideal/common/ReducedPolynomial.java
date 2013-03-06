@@ -1,7 +1,11 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 
 /**
  * A reduced polynomial is a polynomial satisfying: (1) if the type is real then

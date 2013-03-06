@@ -1,4 +1,8 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
+
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 
 /**
  * A nontrivial rational expression. It consists of a numerator and denominator,

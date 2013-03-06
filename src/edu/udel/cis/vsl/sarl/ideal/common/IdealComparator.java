@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -6,14 +6,20 @@ import java.util.Iterator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 
 public class IdealComparator implements Comparator<NumericExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;
 
-	private IdealFactory idealFactory;
+	private CommonIdealFactory idealFactory;
 
-	public IdealComparator(IdealFactory idealFactory) {
+	public IdealComparator(CommonIdealFactory idealFactory) {
 		this.idealFactory = idealFactory;
 	}
 

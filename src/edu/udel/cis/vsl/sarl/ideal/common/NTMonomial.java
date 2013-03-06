@@ -1,6 +1,11 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 
 /**
  * A non-trivial monomial is the product of a constant and a monic. The constant

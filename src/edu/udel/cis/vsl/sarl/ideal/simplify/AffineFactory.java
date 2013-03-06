@@ -5,9 +5,9 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.ideal.Constant;
-import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class AffineFactory {

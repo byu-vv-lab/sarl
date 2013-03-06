@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Collection;
 

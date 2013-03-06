@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
-import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
 public class IdealSimplifierFactory implements SimplifierFactory {

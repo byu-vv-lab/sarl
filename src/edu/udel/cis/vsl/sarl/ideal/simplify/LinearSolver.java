@@ -11,10 +11,10 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.Monic;
-import edu.udel.cis.vsl.sarl.ideal.Monomial;
-import edu.udel.cis.vsl.sarl.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 
 /**
  * Simplifies a constant map. This take as input a map which associates constant

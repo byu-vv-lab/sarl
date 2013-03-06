@@ -6,8 +6,8 @@ import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.ideal.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.simplify.IdealSimplifierFactory;
+import edu.udel.cis.vsl.sarl.ideal.Ideal;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -44,12 +44,12 @@ public class Universes {
 
 	public static SymbolicUniverse newIdealUniverse() {
 		FactorySystem system = newIdealFactorySystem();
-		CommonSymbolicUniverse result = new CommonSymbolicUniverse(system);
-		SimplifierFactory simplifierFactory = new IdealSimplifierFactory(
-				(IdealFactory) system.numericFactory(), result);
+		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
+		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
+				(IdealFactory) system.numericFactory(), universe);
 
-		result.setSimplifierFactory(simplifierFactory);
-		return result;
+		universe.setSimplifierFactory(simplifierFactory);
+		return universe;
 	}
 
 }

@@ -1,6 +1,7 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.IF;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 
 /**
  * A Monic is a product of powers of primitive expressions

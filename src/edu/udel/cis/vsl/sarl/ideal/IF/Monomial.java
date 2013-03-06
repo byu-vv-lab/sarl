@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.IF;
 
 /**
  * A Monomial is the product of a constant and a Monic.

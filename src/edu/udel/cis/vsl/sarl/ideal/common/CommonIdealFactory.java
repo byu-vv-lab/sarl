@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.ideal;
+package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -27,8 +27,14 @@ import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -102,7 +108,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 // and interface NumericRelationFactory
 // needs numeric factory, expression factory, true, false exprs.
 
-public class IdealFactory implements NumericExpressionFactory {
+public class CommonIdealFactory implements IdealFactory {
 
 	private NumberFactory numberFactory;
 
@@ -136,7 +142,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	private PrimitivePowerMultiplier primitivePowerMultipler;
 
-	public IdealFactory(NumberFactory numberFactory,
+	public CommonIdealFactory(NumberFactory numberFactory,
 			ObjectFactory objectFactory, SymbolicTypeFactory typeFactory,
 			CollectionFactory collectionFactory) {
 		this.numberFactory = numberFactory;
@@ -187,6 +193,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return numberFactory;
 	}
 
+	@Override
 	public BooleanExpressionFactory booleanFactory() {
 		return booleanFactory;
 	}
@@ -206,15 +213,18 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Basic symbolic objects...
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptyMap() {
 		return (SymbolicMap<K, V>) emptyMap;
 	}
 
+	@Override
 	public IntObject oneIntObject() {
 		return oneIntObject;
 	}
 
+	@Override
 	public <K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
 			K key, V value) {
 		return collectionFactory.singletonSortedMap(comparator, key, value);
@@ -222,6 +232,7 @@ public class IdealFactory implements NumericExpressionFactory {
 
 	// Constants...
 
+	@Override
 	public Constant intConstant(int value) {
 		if (value == 1)
 			return oneInt;
@@ -252,6 +263,7 @@ public class IdealFactory implements NumericExpressionFactory {
 				object);
 	}
 
+	@Override
 	public Constant constant(Number number) {
 		return constant(objectFactory.numberObject(number));
 	}
@@ -266,6 +278,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return zeroReal;
 	}
 
+	@Override
 	public Constant zero(SymbolicType type) {
 		return type.isInteger() ? zeroInt : zeroReal;
 	}
@@ -280,6 +293,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return oneReal;
 	}
 
+	@Override
 	public One one(SymbolicType type) {
 		return type.isInteger() ? oneInt : oneReal;
 	}
@@ -352,6 +366,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return new NTMonomial(constant, monic);
 	}
 
+	@Override
 	public Monomial monomial(Constant constant, Monic monic) {
 		if (constant.isZero())
 			return constant;
@@ -382,6 +397,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return new NTPolynomial(termMap, factorization);
 	}
 
+	@Override
 	public Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization) {
 		if (termMap.size() == 0)
@@ -424,6 +440,7 @@ public class IdealFactory implements NumericExpressionFactory {
 		return polynomial(termMap, factorization);
 	}
 
+	@Override
 	public Polynomial subtractConstantTerm(Polynomial polynomial) {
 		SymbolicType type = polynomial.type();
 
@@ -558,6 +575,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	 *            a Polynomial
 	 * @return the sum p1+p2
 	 */
+	@Override
 	public Polynomial add(Polynomial p1, Polynomial p2) {
 
 		assert p1.type().equals(p2.type());
@@ -767,6 +785,7 @@ public class IdealFactory implements NumericExpressionFactory {
 	// return result;
 	// }
 
+	@Override
 	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
 		if (poly1.isZero())
 			return poly1;
@@ -816,6 +835,7 @@ public class IdealFactory implements NumericExpressionFactory {
 				monomial.monic(this));
 	}
 
+	@Override
 	public Polynomial divide(Polynomial polynomial, Constant constant) {
 		return polynomial(divide(polynomial.termMap(this), constant),
 				divide(polynomial.factorization(this), constant));
@@ -1412,9 +1432,9 @@ public class IdealFactory implements NumericExpressionFactory {
  * 
  */
 class MonomialAdder implements BinaryOperator<Monomial> {
-	private IdealFactory factory;
+	private CommonIdealFactory factory;
 
-	public MonomialAdder(IdealFactory factory) {
+	public MonomialAdder(CommonIdealFactory factory) {
 		this.factory = factory;
 	}
 
@@ -1437,9 +1457,9 @@ class MonomialAdder implements BinaryOperator<Monomial> {
  * 
  */
 class PrimitivePowerMultiplier implements BinaryOperator<PrimitivePower> {
-	private IdealFactory factory;
+	private CommonIdealFactory factory;
 
-	public PrimitivePowerMultiplier(IdealFactory factory) {
+	public PrimitivePowerMultiplier(CommonIdealFactory factory) {
 		this.factory = factory;
 	}
 
@@ -1453,11 +1473,11 @@ class PrimitivePowerMultiplier implements BinaryOperator<PrimitivePower> {
 }
 
 class MonomialDivider implements UnaryOperator<Monomial> {
-	private IdealFactory factory;
+	private CommonIdealFactory factory;
 	private Number scalar;
 	private NumberFactory numberFactory;
 
-	public MonomialDivider(IdealFactory factory, Number scalar) {
+	public MonomialDivider(CommonIdealFactory factory, Number scalar) {
 		this.factory = factory;
 		this.scalar = scalar;
 		this.numberFactory = factory.numberFactory();
@@ -1473,11 +1493,11 @@ class MonomialDivider implements UnaryOperator<Monomial> {
 }
 
 class MonomialMultiplier implements UnaryOperator<Monomial> {
-	private IdealFactory factory;
+	private CommonIdealFactory factory;
 	private Number scalar;
 	private NumberFactory numberFactory;
 
-	public MonomialMultiplier(IdealFactory factory, Number scalar) {
+	public MonomialMultiplier(CommonIdealFactory factory, Number scalar) {
 		this.factory = factory;
 		this.scalar = scalar;
 		this.numberFactory = factory.numberFactory();
@@ -1493,9 +1513,9 @@ class MonomialMultiplier implements UnaryOperator<Monomial> {
 }
 
 class MonomialNegater implements UnaryOperator<Monomial> {
-	private IdealFactory factory;
+	private CommonIdealFactory factory;
 
-	public MonomialNegater(IdealFactory factory) {
+	public MonomialNegater(CommonIdealFactory factory) {
 		this.factory = factory;
 	}
 

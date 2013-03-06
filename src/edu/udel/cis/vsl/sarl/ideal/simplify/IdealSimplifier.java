@@ -19,9 +19,9 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
-import edu.udel.cis.vsl.sarl.ideal.Constant;
-import edu.udel.cis.vsl.sarl.ideal.Monomial;
-import edu.udel.cis.vsl.sarl.ideal.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**
@@ -143,7 +143,6 @@ public class IdealSimplifier extends CommonSimplifier {
 		if (pseudoValue != null)
 			return info.idealFactory.constant(info.affineFactory.affineValue(
 					affine, pseudoValue));
-		// ???return info.idealFactory.constant(pseudoValue);
 		{
 			int numTerms = fp.termMap(info.idealFactory).size();
 
