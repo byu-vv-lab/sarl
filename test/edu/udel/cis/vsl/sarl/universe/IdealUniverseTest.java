@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -21,7 +20,6 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
 public class IdealUniverseTest {
 
 	private static PrintStream out = System.out;
-
 	private SymbolicUniverse universe;
 	// private NumberFactory numberFactory;
 	private StringObject Xobj; // "X"
@@ -116,21 +114,6 @@ public class IdealUniverseTest {
 		for (int i = 0; i < n; i++)
 			assertEquals(sc[n - 1 - i],
 					universe.arrayRead(array2, universe.symbolic(i)));
-	}
-
-	@Test
-	public void simplifyTrivial() {
-		Simplifier simplifier = universe.simplifier(universe.symbolic(true));
-
-		assertEquals(x, simplifier.apply(x));
-	}
-
-	@Test
-	public void simplifyConstant() {
-		SymbolicExpression assumption = universe.equals(x, three);
-		Simplifier simplifier = universe.simplifier(assumption);
-
-		assertEquals(three, simplifier.apply(x));
 	}
 
 }

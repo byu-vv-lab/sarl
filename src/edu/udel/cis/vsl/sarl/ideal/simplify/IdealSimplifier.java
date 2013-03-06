@@ -115,10 +115,9 @@ public class IdealSimplifier extends CommonSimplifier {
 		// symbolic constants (booleans, numeric, ...)
 		// numeric expressions (polynomials, ...)
 		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
+		expression = simplifyGenericExpression(expression);
 		if (expression instanceof Polynomial)
 			return simplifyPolynomial((Polynomial) expression);
-		else
-			expression = simplifyGenericExpression(expression);
 		if (isNumericRelational(expression))
 			return simplifyRelational((BooleanExpression) expression);
 		return expression;
