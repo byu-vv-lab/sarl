@@ -189,7 +189,9 @@ public class IdealSimplifyTest {
 	}
 
 	/**
-	 * X+Y=3 && X-Y=2 : X->5/2, Y->1/2
+	 * X^3+Y^7=3 && X^3-Y^7=2 : X^3->5/2, Y^7->1/2
+	 * 
+	 * This requires linearizePolynomials to be true.
 	 */
 	@Test
 	public void linearSolve2() {
@@ -198,6 +200,8 @@ public class IdealSimplifyTest {
 		SymbolicExpression assumption = universe.and(
 				universe.equals(universe.add(x3, y7), three),
 				universe.equals(universe.subtract(x3, y7), two));
+		// SymbolicExpression newAssumption = universe.and(universe.equals(arg0,
+		// arg1))
 		Simplifier simplifier = universe.simplifier(assumption);
 
 		assertEquals(universe.divide(universe.castToReal(universe.symbolic(5)),
@@ -206,7 +210,7 @@ public class IdealSimplifyTest {
 		assertEquals(universe.divide(universe.castToReal(universe.symbolic(1)),
 				universe.castToReal(universe.symbolic(2))),
 				simplifier.apply(y7));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		// assertEquals(assumption, simplifier.newAssumption());
 	}
 
 }

@@ -15,7 +15,7 @@ public class SimplifierInfo {
 	 * elimination is performed on all equalities, and not just degree 1
 	 * equalities.
 	 */
-	public boolean linearizePolynomials = false;
+	public boolean linearizePolynomials = true;
 
 	public SymbolicUniverse universe;
 
