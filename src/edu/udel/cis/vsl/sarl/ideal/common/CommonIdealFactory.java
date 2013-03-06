@@ -841,8 +841,20 @@ public class CommonIdealFactory implements IdealFactory {
 				divide(polynomial.factorization(this), constant));
 	}
 
+	/**
+	 * Divides two polynomials of real type. Result is a RationalExpression.
+	 * Simplifications are performed by canceling common factors as possible.
+	 * 
+	 * @param numerator
+	 *            a polynomial of real type
+	 * @param denominator
+	 *            a polynomial of real type
+	 * @return numerator/denominator
+	 */
 	public RationalExpression divide(Polynomial numerator,
 			Polynomial denominator) {
+		assert numerator.type().isReal();
+		assert denominator.type().isReal();
 		if (numerator.isZero())
 			return numerator;
 		if (denominator.isOne())
@@ -869,6 +881,33 @@ public class CommonIdealFactory implements IdealFactory {
 		}
 	}
 
+	/**
+	 * Returns 1/r, where r is a rational expression (which must necessarily
+	 * have real type).
+	 * 
+	 * @param r
+	 *            a rational expression
+	 * @return 1/r
+	 */
+	public RationalExpression invert(RationalExpression r) {
+		return divide(r.denominator(this), r.numerator(this));
+	}
+
+	/**
+	 * Division of two rational expressions (which must necessarily have real
+	 * type).
+	 * 
+	 * @param r1
+	 *            a rational expression
+	 * @param r2
+	 *            a rational expression
+	 * @return r1/r2 as rational expression
+	 */
+	public RationalExpression divide(RationalExpression r1,
+			RationalExpression r2) {
+		return multiply(r1, invert(r2));
+	}
+
 	// Integer division D: assume all terms positive
 	// (ad)D(bd) = aDb
 	// (ad)%(bd) = (a%b)d
@@ -878,8 +917,20 @@ public class CommonIdealFactory implements IdealFactory {
 				(IntegerNumber) c2.number()));
 	}
 
+	/**
+	 * Division of two polynomials of integer type.
+	 * 
+	 * @param numerator
+	 *            polynomial of integer type
+	 * @param denominator
+	 *            polynomial of integer type
+	 * @return result of division as Polynomial, which might be a new primitive
+	 *         expression
+	 */
 	public Polynomial intDividePolynomials(Polynomial numerator,
 			Polynomial denominator) {
+		assert numerator.type().isInteger();
+		assert denominator.type().isInteger();
 		if (numerator.isZero())
 			return numerator;
 		if (denominator.isOne())
@@ -1104,12 +1155,17 @@ public class CommonIdealFactory implements IdealFactory {
 		return result;
 	}
 
+	/**
+	 * Note: this must handle both integer and real division.
+	 */
 	@Override
 	public NumericExpression divide(NumericExpression arg0,
 			NumericExpression arg1) {
 		if (arg0.type().isInteger())
+			return intDividePolynomials((Polynomial) arg0, (Polynomial) arg1);
+		if (arg0 instanceof Polynomial && arg1 instanceof Polynomial)
 			return divide((Polynomial) arg0, (Polynomial) arg1);
-		return divide(arg0, arg1);
+		return divide((RationalExpression) arg0, (RationalExpression) arg1);
 	}
 
 	@Override

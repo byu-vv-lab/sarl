@@ -18,12 +18,12 @@ public class IdealSimplifyTest {
 	private SymbolicUniverse universe;
 	// private NumberFactory numberFactory;
 	private StringObject Xobj; // "X"
-	// private StringObject Yobj; // "Y"
+	private StringObject Yobj; // "Y"
 	private StringObject uobj; // "u"
 	// private StringObject vobj; // "v"
 	private SymbolicType realType, integerType;
 	private SymbolicConstant x; // real symbolic constant "X"
-	// private SymbolicConstant y; // real symbolic constant "Y"
+	private SymbolicConstant y; // real symbolic constant "Y"
 	private SymbolicConstant u; // integer symbolic constant "u"
 	// private SymbolicConstant v; // integer symbolic constant "v"
 	private SymbolicExpression two; // real 2.0
@@ -35,13 +35,13 @@ public class IdealSimplifyTest {
 		universe = Universes.newIdealUniverse();
 		// numberFactory = universe.numberFactory();
 		Xobj = universe.stringObject("X");
-		// Yobj = universe.stringObject("Y");
+		Yobj = universe.stringObject("Y");
 		uobj = universe.stringObject("u");
 		// vobj = universe.stringObject("v");
 		realType = universe.realType();
 		integerType = universe.integerType();
 		x = universe.symbolicConstant(Xobj, realType);
-		// y = universe.symbolicConstant(Yobj, realType);
+		y = universe.symbolicConstant(Yobj, realType);
 		u = universe.symbolicConstant(uobj, integerType);
 		// v = universe.symbolicConstant(vobj, integerType);
 		two = universe.castToReal(universe.symbolic(2));
@@ -168,6 +168,44 @@ public class IdealSimplifyTest {
 
 		assertEquals(universe.castToReal(universe.symbolic(7)),
 				simplifier.apply(read));
+		assertEquals(trueExpr, simplifier.newAssumption());
+	}
+
+	/**
+	 * X+Y=3 && X-Y=2 : X->5/2, Y->1/2
+	 */
+	@Test
+	public void linearSolve1() {
+		SymbolicExpression assumption = universe.and(
+				universe.equals(universe.add(x, y), three),
+				universe.equals(universe.subtract(x, y), two));
+		Simplifier simplifier = universe.simplifier(assumption);
+
+		assertEquals(universe.divide(universe.castToReal(universe.symbolic(5)),
+				universe.castToReal(universe.symbolic(2))), simplifier.apply(x));
+		assertEquals(universe.divide(universe.castToReal(universe.symbolic(1)),
+				universe.castToReal(universe.symbolic(2))), simplifier.apply(y));
+		assertEquals(trueExpr, simplifier.newAssumption());
+	}
+
+	/**
+	 * X+Y=3 && X-Y=2 : X->5/2, Y->1/2
+	 */
+	@Test
+	public void linearSolve2() {
+		SymbolicExpression x3 = universe.power(x, universe.intObject(3));
+		SymbolicExpression y7 = universe.power(y, universe.intObject(7));
+		SymbolicExpression assumption = universe.and(
+				universe.equals(universe.add(x3, y7), three),
+				universe.equals(universe.subtract(x3, y7), two));
+		Simplifier simplifier = universe.simplifier(assumption);
+
+		assertEquals(universe.divide(universe.castToReal(universe.symbolic(5)),
+				universe.castToReal(universe.symbolic(2))),
+				simplifier.apply(x3));
+		assertEquals(universe.divide(universe.castToReal(universe.symbolic(1)),
+				universe.castToReal(universe.symbolic(2))),
+				simplifier.apply(y7));
 		assertEquals(trueExpr, simplifier.newAssumption());
 	}
 

@@ -96,9 +96,8 @@ public class LinearSolver {
 		i = 0;
 		for (Monic monic : realMonicSet)
 			realMonics[i++] = monic;
-		// sort into ascending order, i.e., highest degree first:
-		Arrays.sort(intMonics);
-		Arrays.sort(realMonics);
+		Arrays.sort(intMonics, idealFactory.numericComparator());
+		Arrays.sort(realMonics, idealFactory.numericComparator());
 		for (i = 0; i < numIntMonics; i++)
 			intIdMap.put(intMonics[i], i);
 		for (i = 0; i < numRealMonics; i++)

@@ -155,7 +155,7 @@ public class IdealSimplifier extends CommonSimplifier {
 				Monomial f1 = fp.factorization(info.idealFactory);
 
 				if (f1.degree() > 1) {
-					Monomial f2 = (Monomial) simplifyExpression(f1);
+					Monomial f2 = (Monomial) simplifyGenericExpression(f1);
 
 					if (f2 != f1)
 						return f2.expand(info.idealFactory);
