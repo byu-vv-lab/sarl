@@ -261,6 +261,32 @@ public interface SymbolicUniverse {
 	 */
 	SymbolicExpression symbolic(int value);
 
+	/**
+	 * Creates a concrete expression from the given double based on the string
+	 * representation of the double. Since the double is a finite-precision
+	 * floating-point value, be aware that this translation might not yield the
+	 * exact real number you expect.
+	 * 
+	 * @param value
+	 *            a Java double
+	 * @return a concrete symbolic expression of real type representing the
+	 *         double
+	 */
+	SymbolicExpression symbolic(double value);
+
+	/**
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
+	 * 
+	 * @param numerator
+	 *            a Java int
+	 * @param denominator
+	 *            a Java int
+	 * @return the real number formed by dividing numerator by denominator, as a
+	 *         symbolic expression
+	 */
+	SymbolicExpression rational(int numerator, int denominator);
+
 	/** The symbolic expression representing the 0 integer value. */
 	SymbolicExpression zeroInt();
 
@@ -383,6 +409,18 @@ public interface SymbolicUniverse {
 	 *            a non-negative concrete integer exponent
 	 */
 	SymbolicExpression power(SymbolicExpression base, IntObject exponent);
+
+	/**
+	 * Shorthand for power(base, intObject(exponent)).
+	 * 
+	 * @param base
+	 *            he base expression in the power expression
+	 * 
+	 * @param exponent
+	 *            a non-negative concrete integer exponent
+	 * @return power(base, intObject(exponent))
+	 */
+	SymbolicExpression power(SymbolicExpression base, int exponent);
 
 	/**
 	 * General power operator: e^b. Both e and b are numeric expressions.

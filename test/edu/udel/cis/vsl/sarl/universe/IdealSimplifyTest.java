@@ -44,8 +44,8 @@ public class IdealSimplifyTest {
 		y = universe.symbolicConstant(Yobj, realType);
 		u = universe.symbolicConstant(uobj, integerType);
 		// v = universe.symbolicConstant(vobj, integerType);
-		two = universe.castToReal(universe.symbolic(2));
-		three = universe.castToReal(universe.symbolic(3));
+		two = universe.symbolic(2.0);
+		three = universe.symbolic(3.0);
 		trueExpr = universe.symbolic(true);
 		falseExpr = universe.symbolic(false);
 	}
@@ -166,8 +166,7 @@ public class IdealSimplifyTest {
 				.equals(u, universe.symbolic(2));
 		Simplifier simplifier = universe.simplifier(assumption);
 
-		assertEquals(universe.castToReal(universe.symbolic(7)),
-				simplifier.apply(read));
+		assertEquals(universe.symbolic(7.0), simplifier.apply(read));
 		assertEquals(trueExpr, simplifier.newAssumption());
 	}
 
@@ -181,10 +180,8 @@ public class IdealSimplifyTest {
 				universe.equals(universe.subtract(x, y), two));
 		Simplifier simplifier = universe.simplifier(assumption);
 
-		assertEquals(universe.divide(universe.castToReal(universe.symbolic(5)),
-				universe.castToReal(universe.symbolic(2))), simplifier.apply(x));
-		assertEquals(universe.divide(universe.castToReal(universe.symbolic(1)),
-				universe.castToReal(universe.symbolic(2))), simplifier.apply(y));
+		assertEquals(universe.rational(5, 2), simplifier.apply(x));
+		assertEquals(universe.rational(1, 2), simplifier.apply(y));
 		assertEquals(trueExpr, simplifier.newAssumption());
 	}
 
@@ -195,22 +192,94 @@ public class IdealSimplifyTest {
 	 */
 	@Test
 	public void linearSolve2() {
-		SymbolicExpression x3 = universe.power(x, universe.intObject(3));
-		SymbolicExpression y7 = universe.power(y, universe.intObject(7));
+		SymbolicExpression x3 = universe.power(x, 3);
+		SymbolicExpression y7 = universe.power(y, 7);
 		SymbolicExpression assumption = universe.and(
 				universe.equals(universe.add(x3, y7), three),
 				universe.equals(universe.subtract(x3, y7), two));
-		// SymbolicExpression newAssumption = universe.and(universe.equals(arg0,
-		// arg1))
+		SymbolicExpression newAssumption = universe.and(
+				universe.equals(x3, universe.rational(5, 2)),
+				universe.equals(y7, universe.rational(1, 2)));
 		Simplifier simplifier = universe.simplifier(assumption);
 
-		assertEquals(universe.divide(universe.castToReal(universe.symbolic(5)),
-				universe.castToReal(universe.symbolic(2))),
-				simplifier.apply(x3));
-		assertEquals(universe.divide(universe.castToReal(universe.symbolic(1)),
-				universe.castToReal(universe.symbolic(2))),
-				simplifier.apply(y7));
-		// assertEquals(assumption, simplifier.newAssumption());
+		assertEquals(universe.rational(5, 2), simplifier.apply(x3));
+		assertEquals(universe.rational(1, 2), simplifier.apply(y7));
+		assertEquals(newAssumption, simplifier.newAssumption());
 	}
 
+	/**
+	 * X<1 && X<1.5-> X<1
+	 */
+	@Test
+	public void simplifyPCBound1() {
+		SymbolicExpression p0 = universe.lessThan(x, universe.symbolic(1.0));
+		SymbolicExpression p1 = universe.and(p0,
+				universe.lessThan(x, universe.symbolic(1.5)));
+		Simplifier simplifier = universe.simplifier(p1);
+
+		assertEquals(p0, simplifier.newAssumption());
+		assertEquals(x, simplifier.apply(x));
+	}
+
+	/**
+	 * X<=1 : X>=1 -> X==1
+	 */
+	@Test
+	public void simplifyBound1() {
+		SymbolicExpression one = universe.symbolic(1.0);
+		SymbolicExpression assumption = universe.lessThanEquals(x, one);
+		Simplifier simplifier = universe.simplifier(assumption);
+
+		assertEquals(universe.equals(x, one),
+				simplifier.apply(universe.lessThanEquals(one, x)));
+	}
+
+	/**
+	 * X<=1 : X<=1 -> true
+	 */
+	@Test
+	public void simplifyBound2() {
+		SymbolicExpression one = universe.symbolic(1.0);
+		SymbolicExpression assumption = universe.lessThanEquals(x, one);
+		Simplifier simplifier = universe.simplifier(assumption);
+
+		assertEquals(universe.symbolic(true),
+				simplifier.apply(universe.lessThanEquals(x, one)));
+	}
+
+	/**
+	 * Integer division. true : 2(u/2) -> 2(u/2)
+	 */
+	@Test
+	public void simplifyIntDivNo() {
+		SymbolicExpression e = universe.multiply(universe.symbolic(2),
+				universe.divide(u, universe.symbolic(2)));
+		Simplifier simplifier = universe.simplifier(trueExpr);
+
+		assertEquals(e, simplifier.apply(e));
+	}
+
+	/**
+	 * Integer division. true : (2u)/2 -> u
+	 */
+	@Test
+	public void simplifyIntDivYes() {
+		SymbolicExpression e = universe.divide(
+				universe.multiply(universe.symbolic(2), u),
+				universe.symbolic(2));
+
+		assertEquals(u, e);
+	}
+
+	/**
+	 * Integer modulus. true : (2u)%2 -> 0
+	 */
+	@Test
+	public void simplifyIntMod() {
+		SymbolicExpression e = universe.modulo(
+				universe.multiply(universe.symbolic(2), u),
+				universe.symbolic(2));
+
+		assertEquals(universe.zeroInt(), e);
+	}
 }

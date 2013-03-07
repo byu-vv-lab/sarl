@@ -818,11 +818,32 @@ public class CommonIdealFactory implements IdealFactory {
 
 	/*************************** DIVIDE *******************************/
 
+	/**
+	 * Divides two constants. The constants must have the same type. If the type
+	 * is integer, integer division is performed.
+	 * 
+	 * @param c1
+	 *            a constant
+	 * @param c2
+	 *            a constant of the same type as c1
+	 * @return the constant c1/c2
+	 */
 	public Constant divide(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.divide(
 				c1.number(), c2.number())));
 	}
 
+	/**
+	 * Divides all the monomials in the termMap by the non-zero constant. The
+	 * constant and all of the monomials must have the same type. If the type is
+	 * integer, integer division is performed.
+	 * 
+	 * @param termMap
+	 *            a map from Monic to Monomial
+	 * @param constant
+	 *            a constant
+	 * @return termMap resulting from dividing all monomials by the constant
+	 */
 	private SymbolicMap<Monic, Monomial> divide(
 			SymbolicMap<Monic, Monomial> termMap, Constant constant) {
 		MonomialDivider divider = new MonomialDivider(this, constant.number());
@@ -830,11 +851,28 @@ public class CommonIdealFactory implements IdealFactory {
 		return termMap.apply(divider);
 	}
 
+	/**
+	 * Divides the monomial by the non-zero constant. The monomial and constant
+	 * must have the same type. If type is integer, integer division is
+	 * performed on the coefficient.
+	 * 
+	 * @param monomial
+	 * @param constant
+	 * @return
+	 */
 	public Monomial divide(Monomial monomial, Constant constant) {
 		return monomial(divide(monomial.monomialConstant(this), constant),
 				monomial.monic(this));
 	}
 
+	/**
+	 * Divides each term in a polynomial by a constant. The polynomial and
+	 * constant must have the same type. If the type is integer, this will
+	 * perform integer division on each term; this is only equivalent to integer
+	 * division of the polynomial by the constant if the constant divides each
+	 * term.
+	 * 
+	 */
 	@Override
 	public Polynomial divide(Polynomial polynomial, Constant constant) {
 		return polynomial(divide(polynomial.termMap(this), constant),
@@ -908,17 +946,76 @@ public class CommonIdealFactory implements IdealFactory {
 		return multiply(r1, invert(r2));
 	}
 
-	// Integer division D: assume all terms positive
-	// (ad)D(bd) = aDb
-	// (ad)%(bd) = (a%b)d
-
 	public Constant intDivideConstants(Constant c1, Constant c2) {
 		return constant(numberFactory.divide((IntegerNumber) c1.number(),
 				(IntegerNumber) c2.number()));
 	}
 
+	public Constant intModuloConstants(Constant c1, Constant c2) {
+		return constant(numberFactory.mod((IntegerNumber) c1.number(),
+				(IntegerNumber) c2.number()));
+	}
+
+	/**
+	 * Given two non-zero polynomials p1 and p2 of integer type, factor out
+	 * common factors, including a positive constant. Returns a triple (r,q1,q2)
+	 * of Polynomials such that:
+	 * 
+	 * <ul>
+	 * <li>p1=r*q1 and p2=r*q2</li>
+	 * <li>the gcd of the absolute values of all the coefficients in q1 and q2
+	 * together is 1</li>
+	 * <li>the factorizations of q1 and q2 have no common factors</li>
+	 * <li>the leading coefficient of r is positive</li>
+	 * </ul>
+	 * 
+	 * This is used in integer division and modulus operations. For integer
+	 * division: p1/p2 = q1/q2. For modulus: p1%p2 = r*(q1%q2).
+	 * 
+	 * @param poly1
+	 * @param poly2
+	 * @return
+	 */
+	private Polynomial[] intFactor(Polynomial poly1, Polynomial poly2) {
+		Monomial fact1 = poly1.factorization(this);
+		Monomial fact2 = poly2.factorization(this);
+		Monomial[] triple = extractCommonality(fact1, fact2);
+		Polynomial r, q1, q2;
+		IntegerNumber c1, c2;
+
+		if (triple[0].isOne()) {
+			q1 = poly1;
+			q2 = poly2;
+			r = oneInt;
+		} else {
+			q1 = triple[1].expand(this);
+			fact1 = q1.factorization(this);
+			q2 = triple[2].expand(this);
+			fact2 = q2.factorization(this);
+			r = triple[0].expand(this);
+		}
+		c1 = (IntegerNumber) numberFactory.abs(fact1.monomialConstant(this)
+				.number());
+		c2 = (IntegerNumber) numberFactory.abs(fact2.monomialConstant(this)
+				.number());
+		if (!c1.isOne() && !c2.isOne()) {
+			IntegerNumber gcd = numberFactory.gcd(c1, c2);
+
+			if (!gcd.isOne()) {
+				Constant gcdConstant = constant(gcd);
+
+				q1 = divide(q1, gcdConstant);
+				q2 = divide(q2, gcdConstant);
+				r = multiply(gcdConstant, r);
+			}
+		}
+		return new Polynomial[] { r, q1, q2 };
+	}
+
 	/**
 	 * Division of two polynomials of integer type.
+	 * 
+	 * Integer division D: assume all terms positive. (ad)/(bd) = a/b
 	 * 
 	 * @param numerator
 	 *            polynomial of integer type
@@ -935,24 +1032,20 @@ public class CommonIdealFactory implements IdealFactory {
 			return numerator;
 		if (denominator.isOne())
 			return numerator;
-		else { // cancel common factors...
-			Monomial[] triple = extractCommonality(
-					numerator.factorization(this),
-					denominator.factorization(this));
-			Constant denomConstant;
+		if (numerator instanceof Constant && denominator instanceof Constant)
+			return intDivideConstants((Constant) numerator,
+					(Constant) denominator);
+		else {
+			Polynomial[] triple = intFactor(numerator, denominator);
 
-			if (!triple[0].isOne()) {
-				numerator = triple[1].expand(this);
-				denominator = triple[2].expand(this);
-			}
-			denomConstant = denominator.factorization(this).monomialConstant(
-					this);
-			if (!denomConstant.isOne()) {
-				denominator = divide(denominator, denomConstant);
-				numerator = divide(numerator, denomConstant);
-			}
+			numerator = triple[1];
+			denominator = triple[2];
 			if (denominator.isOne())
 				return numerator;
+			if (numerator instanceof Constant
+					&& denominator instanceof Constant)
+				return intDivideConstants((Constant) numerator,
+						(Constant) denominator);
 			return newNumericExpression(SymbolicOperator.INT_DIVIDE,
 					integerType, numerator, denominator);
 		}
@@ -961,6 +1054,10 @@ public class CommonIdealFactory implements IdealFactory {
 	/**
 	 * Integer modulus. Assume numerator is nonnegative and denominator is
 	 * positive.
+	 * 
+	 * (ad)%(bd) = (a%b)d
+	 * 
+	 * Ex: (2u)%2 = (u%1)2 = 0
 	 * 
 	 * @param numerator
 	 * @param denominator
@@ -972,27 +1069,26 @@ public class CommonIdealFactory implements IdealFactory {
 			return numerator;
 		if (denominator.isOne())
 			return zeroInt;
-		else { // cancel common factors...
-			Monomial[] triple = extractCommonality(
-					numerator.factorization(this),
-					denominator.factorization(this));
-			boolean isOne = triple[0].isOne();
+		if (numerator instanceof Constant && denominator instanceof Constant)
+			return intModuloConstants((Constant) numerator,
+					(Constant) denominator);
+		else {
+			Polynomial[] triple = intFactor(numerator, denominator);
 
-			if (!isOne) {
-				numerator = triple[1].expand(this);
-				denominator = triple[2].expand(this);
-			}
+			numerator = triple[1];
+			denominator = triple[2];
 			if (denominator.isOne())
 				return zeroInt;
-			else {
-				Polynomial result = newNumericExpression(
-						SymbolicOperator.MODULO, integerType, numerator,
-						denominator);
-
-				if (!isOne)
-					result = multiply(triple[0].expand(this), result);
-				return result;
-			}
+			if (numerator instanceof Constant
+					&& denominator instanceof Constant)
+				return multiply(
+						intModuloConstants((Constant) numerator,
+								(Constant) denominator), triple[0]);
+			else
+				return multiply(
+						triple[0],
+						newNumericExpression(SymbolicOperator.MODULO,
+								integerType, numerator, denominator));
 		}
 	}
 

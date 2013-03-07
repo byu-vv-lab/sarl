@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -98,6 +99,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	private SymbolicExpression nullExpression;
 
 	private BooleanExpression trueExpr, falseExpr;
+
+	private Map<BooleanExpression, Simplifier> simplifierMap = new HashMap<BooleanExpression, Simplifier>();
 
 	// Constructor...
 
@@ -744,9 +747,15 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public Simplifier simplifier(SymbolicExpression assumption) {
-		// TODO: until we port the better one
-		// return new IdentitySimplifier(this, assumption);
-		return simplifierFactory.newSimplifier((BooleanExpression) assumption);
+		Simplifier result = simplifierMap.get((BooleanExpression) assumption);
+
+		if (result == null) {
+			BooleanExpression canonicAssumption = (BooleanExpression) canonic(assumption);
+
+			result = simplifierFactory.newSimplifier(canonicAssumption);
+			simplifierMap.put(canonicAssumption, result);
+		}
+		return result;
 	}
 
 	@Override
@@ -800,6 +809,19 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public SymbolicExpression symbolic(int value) {
 		return symbolic(numberObject(numberFactory.integer(value)));
+	}
+
+	@Override
+	public SymbolicExpression symbolic(double value) {
+		return symbolic(numberObject(numberFactory.rational(Double
+				.toString(value))));
+	}
+
+	@Override
+	public SymbolicExpression rational(int numerator, int denominator) {
+		return symbolic(numberObject(numberFactory.divide(
+				numberFactory.rational(numberFactory.integer(numerator)),
+				numberFactory.rational(numberFactory.integer(denominator)))));
 	}
 
 	@Override
@@ -882,6 +904,11 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public NumericExpression power(SymbolicExpression base, IntObject exponent) {
 		return numericFactory.power((NumericExpression) base, exponent);
+	}
+
+	@Override
+	public SymbolicExpression power(SymbolicExpression base, int exponent) {
+		return power(base, intObject(exponent));
 	}
 
 	@Override
@@ -1207,7 +1234,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return (SymbolicExpression) object.argument(1);
 		return expression(
 				SymbolicOperator.UNION_EXTRACT,
-				((SymbolicUnionType) object).sequence().getType(
+				((SymbolicUnionType) object.type()).sequence().getType(
 						memberIndex.getInt()), memberIndex, object);
 	}
 
