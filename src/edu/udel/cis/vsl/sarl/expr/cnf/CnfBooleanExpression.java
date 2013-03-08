@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
 public class CnfBooleanExpression extends CommonSymbolicExpression implements

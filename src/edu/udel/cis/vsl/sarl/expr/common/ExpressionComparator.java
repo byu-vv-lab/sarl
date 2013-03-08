@@ -2,10 +2,10 @@ package edu.udel.cis.vsl.sarl.expr.common;
 
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 
 /**
  * Comparator of symbolic expressions.

@@ -17,6 +17,8 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -26,8 +28,8 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -280,7 +282,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 		switch (kind) {
 		case ARRAY: {
-			SymbolicExpression extentExpression = ((SymbolicCompleteArrayType) type)
+			NumericExpression extentExpression = ((SymbolicCompleteArrayType) type)
 					.extent();
 			IntegerNumber extentNumber = (IntegerNumber) universe
 					.extractNumber(extentExpression);
@@ -941,8 +943,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	@Override
-	public ResultType valid(SymbolicExpression symbolicAssumption,
-			SymbolicExpression symbolicPredicate) {
+	public ResultType valid(BooleanExpression symbolicAssumption,
+			BooleanExpression symbolicPredicate) {
 		QueryResult result = null;
 
 		numValidCalls++;

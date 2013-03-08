@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -18,7 +19,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;

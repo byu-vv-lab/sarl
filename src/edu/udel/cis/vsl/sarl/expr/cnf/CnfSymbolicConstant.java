@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.expr.cnf;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanSymbolicConstant;
 
 public class CnfSymbolicConstant extends CnfBooleanExpression implements
 		BooleanSymbolicConstant {

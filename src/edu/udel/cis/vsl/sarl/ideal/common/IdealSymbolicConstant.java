@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.ideal.common;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
 
 public class IdealSymbolicConstant extends NumericPrimitive implements
 		NumericSymbolicConstant {

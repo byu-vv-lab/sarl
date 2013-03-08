@@ -10,6 +10,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -152,9 +153,10 @@ public class Substituter {
 			SymbolicType newElementType = substitute(elementType, map);
 
 			if (arrayType.isComplete()) {
-				SymbolicExpression extent = ((SymbolicCompleteArrayType) arrayType)
+				NumericExpression extent = ((SymbolicCompleteArrayType) arrayType)
 						.extent();
-				SymbolicExpression newExtent = substitute(extent, map);
+				NumericExpression newExtent = (NumericExpression) substitute(
+						extent, map);
 
 				if (elementType != newElementType || extent != newExtent)
 					return typeFactory.arrayType(newElementType, newExtent);

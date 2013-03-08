@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.number;
 
+import java.math.BigInteger;
+
 /**
  * A number factory is used to produce concrete rational and integer numbers.
  * The rational and integer numbers live in two separate worlds. Different
@@ -42,8 +44,7 @@ public interface NumberFactory {
 	boolean isIntegral(RationalNumber arg0);
 
 	/** Returns the rational number which is the quotient of the two integers. */
-	RationalNumber fraction(IntegerNumber numerator,
-			IntegerNumber denominator);
+	RationalNumber fraction(IntegerNumber numerator, IntegerNumber denominator);
 
 	/** Casts an integer to a rational number. */
 	RationalNumber integerToRational(IntegerNumber integer);
@@ -231,5 +232,37 @@ public interface NumberFactory {
 	 * @param matrix
 	 */
 	void gaussianElimination(RationalNumber[][] matrix);
+
+	/**
+	 * Returns the rational number which is the quotient of the two given
+	 * integers. It can of course be simplified.
+	 * 
+	 * @param numerator
+	 *            any BigInteger
+	 * @param denominator
+	 *            any BigInteger
+	 * @return numerator/denominator
+	 */
+	RationalNumber rational(BigInteger numerator, BigInteger denominator);
+
+	/**
+	 * Returns the IntegerNumber with value specified by the BigInteger. No
+	 * precision is lost
+	 * 
+	 * @param big
+	 *            any BigInteger
+	 * @return the corresponding IntegerNumber
+	 */
+	IntegerNumber integer(BigInteger big);
+
+	/**
+	 * Returns the IntegerNumber with value specified by the long. No precision
+	 * is lost.
+	 * 
+	 * @param value
+	 *            any long
+	 * @return the corresponding IntegerNumber
+	 */
+	IntegerNumber integer(long value);
 
 }

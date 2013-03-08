@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.simplify.common;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -24,6 +26,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
 
 /**
  * A partial implementation of Simplifer which can be extended.
@@ -70,9 +73,9 @@ public abstract class CommonSimplifier implements Simplifier {
 			SymbolicType simplifiedElementType = simplifyType(elementType);
 
 			if (arrayType.isComplete()) {
-				SymbolicExpression extent = ((SymbolicCompleteArrayType) arrayType)
+				NumericExpression extent = ((SymbolicCompleteArrayType) arrayType)
 						.extent();
-				SymbolicExpression simplifiedExtent = apply(extent);
+				NumericExpression simplifiedExtent = (NumericExpression) apply(extent);
 
 				if (elementType != simplifiedElementType
 						|| extent != simplifiedExtent)
@@ -132,7 +135,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		return result;
 	}
 
-	protected SymbolicTypeSequence simplifyTypeSequenceWork(
+	protected Iterable<? extends SymbolicType> simplifyTypeSequenceWork(
 			SymbolicTypeSequence sequence) {
 		int size = sequence.numTypes();
 
@@ -148,7 +151,7 @@ public abstract class CommonSimplifier implements Simplifier {
 				newTypes[i] = simplifiedType;
 				for (int j = i + 1; j < size; j++)
 					newTypes[j] = simplifyType(sequence.getType(j));
-				return universe.typeSequence(newTypes);
+				return Arrays.asList(newTypes);
 			}
 		}
 		return sequence;
@@ -156,14 +159,8 @@ public abstract class CommonSimplifier implements Simplifier {
 
 	protected SymbolicTypeSequence simplifyTypeSequence(
 			SymbolicTypeSequence sequence) {
-		SymbolicTypeSequence result = (SymbolicTypeSequence) simplifyMap
-				.get(sequence);
-
-		if (result == null) {
-			result = simplifyTypeSequenceWork(sequence);
-			simplifyMap.put(sequence, result);
-		}
-		return result;
+		return new CommonSymbolicTypeSequence(
+				simplifyTypeSequenceWork(sequence));
 	}
 
 	protected SymbolicSequence<?> simplifySequenceWork(

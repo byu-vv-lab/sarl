@@ -2,6 +2,8 @@ package edu.udel.cis.vsl.sarl.expr.IF;
 
 import java.util.Collection;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;

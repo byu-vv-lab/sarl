@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -31,70 +32,85 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 		typeSequenceComparator = new TypeSequenceComparator();
 		typeComparator.setTypeSequenceComparator(typeSequenceComparator);
 		typeSequenceComparator.setTypeComparator(typeComparator);
-		booleanType = (CommonSymbolicPrimitiveType) objectFactory
-				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.BOOLEAN));
-		integerType = (CommonSymbolicPrimitiveType) objectFactory
-				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.INTEGER));
-		realType = (CommonSymbolicPrimitiveType) objectFactory
-				.canonic(new CommonSymbolicPrimitiveType(SymbolicTypeKind.REAL));
+		booleanType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
+				SymbolicTypeKind.BOOLEAN));
+		integerType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
+				SymbolicTypeKind.INTEGER));
+		realType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
+				SymbolicTypeKind.REAL));
 	}
 
+	@Override
 	public ObjectFactory objectFactory() {
 		return objectFactory;
 	}
 
+	@Override
 	public CommonSymbolicPrimitiveType booleanType() {
 		return booleanType;
 	}
 
+	@Override
 	public CommonSymbolicPrimitiveType integerType() {
 		return integerType;
 	}
 
+	@Override
 	public CommonSymbolicPrimitiveType realType() {
 		return realType;
 	}
 
-	public SymbolicTypeSequence sequence(Iterable<SymbolicType> elements) {
+	@Override
+	public SymbolicTypeSequence sequence(
+			Iterable<? extends SymbolicType> elements) {
 		return new CommonSymbolicTypeSequence(elements);
 	}
 
+	@Override
 	public SymbolicTypeSequence sequence(SymbolicType[] elements) {
 		return new CommonSymbolicTypeSequence(elements);
 	}
 
+	@Override
 	public SymbolicTypeSequence singletonSequence(SymbolicType type) {
 		return new CommonSymbolicTypeSequence(new SymbolicType[] { type });
 	}
 
+	@Override
 	public SymbolicArrayType arrayType(SymbolicType elementType) {
 		return new CommonSymbolicArrayType(elementType);
 	}
 
+	@Override
 	public SymbolicCompleteArrayType arrayType(SymbolicType elementType,
-			SymbolicExpression extent) {
+			NumericExpression extent) {
 		return new CommonSymbolicCompleteArrayType(elementType, extent);
 	}
 
+	@Override
 	public SymbolicTupleType tupleType(StringObject name,
 			SymbolicTypeSequence fieldTypes) {
 		return new CommonSymbolicTupleType(name, fieldTypes);
 	}
 
+	@Override
 	public SymbolicUnionType unionType(StringObject name,
 			SymbolicTypeSequence memberTypes) {
 		return new CommonSymbolicUnionType(name, memberTypes);
 	}
 
-	public SymbolicFunctionType functionType(
-			SymbolicTypeSequence inputTypes, SymbolicType outputType) {
+	@Override
+	public SymbolicFunctionType functionType(SymbolicTypeSequence inputTypes,
+			SymbolicType outputType) {
 		return new CommonSymbolicFunctionType(inputTypes, outputType);
 	}
 
+	@Override
 	public TypeComparator typeComparator() {
 		return typeComparator;
 	}
 
+	@Override
 	public TypeSequenceComparator typeSequenceComparator() {
 		return typeSequenceComparator;
 	}

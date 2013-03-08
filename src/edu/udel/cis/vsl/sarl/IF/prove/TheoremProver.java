@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
@@ -35,8 +36,7 @@ public interface TheoremProver {
 	 * satisfiable. If it returns no, then q is satisfiable.
 	 * 
 	 */
-	ResultType valid(SymbolicExpression assumption,
-			SymbolicExpression predicate);
+	ResultType valid(BooleanExpression assumption, BooleanExpression predicate);
 
 	/**
 	 * Returns the total number of calls made to the method valid on this

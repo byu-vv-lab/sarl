@@ -1,15 +1,20 @@
 package edu.udel.cis.vsl.sarl.universe.common;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -32,10 +37,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
@@ -129,6 +132,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	// Helper methods...
 
+	protected SARLException err(String message) {
+		return new SARLException(message);
+	}
+
+	protected SARLInternalException ierr(String message) {
+		return new SARLInternalException(message);
+	}
+
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}
@@ -160,8 +171,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		else if (type.isReal())
 			return zeroReal();
 		else
-			throw new SARLInternalException("Expected type int or real, not "
-					+ type);
+			throw ierr("Expected type int or real, not " + type);
 	}
 
 	protected SymbolicSet<SymbolicExpression> hashSet(SymbolicExpression x,
@@ -181,8 +191,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 *            unique ID to be used in name of the symbolic constant
 	 * @return the symbolic constant
 	 */
-	private SymbolicConstant intBoundVar(int index) {
-		return symbolicConstant(stringObject("i" + index), integerType);
+	private NumericSymbolicConstant intBoundVar(int index) {
+		return numericFactory.newNumericSymbolicConstant(stringObject("i"
+				+ index), integerType);
 	}
 
 	/**
@@ -253,7 +264,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return equals(t0.sequence(), t1.sequence(), nestingDepth);
 		}
 		default:
-			throw new SARLInternalException("unreachable");
+			throw ierr("unreachable");
 		}
 
 	}
@@ -281,13 +292,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return result;
 		switch (type.typeKind()) {
 		case BOOLEAN:
-			return equiv(arg0, arg1);
+			return equiv((BooleanExpression) arg0, (BooleanExpression) arg1);
 		case INTEGER:
 		case REAL:
 			return numericFactory.equals((NumericExpression) arg0,
 					(NumericExpression) arg1);
 		case ARRAY: {
-			SymbolicExpression length = length(arg0);
+			NumericExpression length = length(arg0);
 
 			if (!((SymbolicArrayType) type).isComplete())
 				result = and(result,
@@ -295,7 +306,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			if (result.isFalse())
 				return result;
 			else {
-				SymbolicConstant index = intBoundVar(quantifierDepth);
+				NumericSymbolicConstant index = intBoundVar(quantifierDepth);
 
 				result = and(
 						result,
@@ -315,14 +326,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			int numInputs = inputTypes.numTypes();
 
 			if (numInputs == 0) {
-				result = and(
-						result,
-						expression(SymbolicOperator.EQUALS, booleanType, arg0,
-								arg1));
+				result = and(result, booleanFactory.booleanExpression(
+						SymbolicOperator.EQUALS, arg0, arg1));
 			} else {
 				SymbolicConstant[] boundVariables = new SymbolicConstant[numInputs];
 				SymbolicSequence<?> sequence;
-				SymbolicExpression expr;
+				BooleanExpression expr;
 
 				for (int i = 0; i < numInputs; i++)
 					boundVariables[i] = boundVar(quantifierDepth + i,
@@ -385,7 +394,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 				for (int i = 0; i < numTypes; i++) {
 					IntObject index = intObject(i);
-					SymbolicExpression clause = result;
+					BooleanExpression clause = result;
 
 					clause = and(clause, unionTest(index, arg0));
 					if (clause.isFalse())
@@ -405,7 +414,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			}
 		}
 		default:
-			throw new SARLInternalException("Unknown type: " + type);
+			throw ierr("Unknown type: " + type);
 		}
 	}
 
@@ -431,15 +440,16 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		}
 	}
 
-	protected BooleanExpression forallIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
+	protected BooleanExpression forallIntConcrete(
+			NumericSymbolicConstant index, IntegerNumber low,
+			IntegerNumber high, BooleanExpression predicate) {
 		BooleanExpression result = trueExpr;
 
 		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
 				.increment(i)) {
-			SymbolicExpression iExpression = symbolic(numberObject(i));
-			SymbolicExpression substitutedPredicate = substitute(predicate,
-					index, iExpression);
+			SymbolicExpression iExpression = number(numberObject(i));
+			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
+					predicate, index, iExpression);
 
 			result = and(result, substitutedPredicate);
 		}
@@ -452,9 +462,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
 				.increment(i)) {
-			SymbolicExpression iExpression = symbolic(numberObject(i));
-			SymbolicExpression substitutedPredicate = substitute(predicate,
-					index, iExpression);
+			SymbolicExpression iExpression = number(numberObject(i));
+			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
+					predicate, index, iExpression);
 
 			result = or(result, substitutedPredicate);
 		}
@@ -485,6 +495,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * expressions or SymbolicConstantExpressionIF. There are separate methods
 	 * for those.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public SymbolicExpression make(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] args) {
@@ -493,16 +504,16 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		switch (operator) {
 		case ADD: // 1 or 2 args
 			if (numArgs == 1) // collection
-				return add((SymbolicCollection<?>) args[0]);
+				return add((Iterable<? extends NumericExpression>) args[0]);
 			else
-				return add((SymbolicExpression) args[0],
-						(SymbolicExpression) args[1]);
+				return add((NumericExpression) args[0],
+						(NumericExpression) args[1]);
 		case AND: // 1 or 2 args
 			if (numArgs == 1) // collection
-				return and((SymbolicCollection<?>) args[0]);
+				return and((Iterable<? extends BooleanExpression>) args[0]);
 			else
-				return and((SymbolicExpression) args[0],
-						(SymbolicExpression) args[1]);
+				return and((BooleanExpression) args[0],
+						(BooleanExpression) args[1]);
 		case APPLY: // 2 args: function and sequence
 			return apply((SymbolicExpression) args[0],
 					(SymbolicSequence<?>) args[1]);
@@ -511,12 +522,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					(SymbolicExpression) args[0]);
 		case ARRAY_READ:
 			return arrayRead((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+					(NumericExpression) args[1]);
 		case ARRAY_WRITE:
 			return arrayWrite((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1], (SymbolicExpression) args[2]);
+					(NumericExpression) args[1], (SymbolicExpression) args[2]);
 		case CAST:
-			return castToReal((SymbolicExpression) args[0]);
+			return castToReal((NumericExpression) args[0]);
 		case CONCRETE:
 			if (type.isNumeric())
 				return canonic(numericFactory
@@ -524,69 +535,69 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			else
 				return expression(SymbolicOperator.CONCRETE, type, args[0]);
 		case COND:
-			return cond((SymbolicExpression) args[0],
+			return cond((BooleanExpression) args[0],
 					(SymbolicExpression) args[1], (SymbolicExpression) args[2]);
 		case DENSE_ARRAY_WRITE:
 			return denseArrayWrite((SymbolicExpression) args[0],
 					(SymbolicSequence<?>) args[1]);
 		case DIVIDE:
-			return divide((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return divide((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case EQUALS:
 			return equals((SymbolicExpression) args[0],
 					(SymbolicExpression) args[1]);
 		case EXISTS:
 			return exists((SymbolicConstant) args[0],
-					(SymbolicExpression) args[1]);
+					(BooleanExpression) args[1]);
 		case FORALL:
 			return forall((SymbolicConstant) args[0],
-					(SymbolicExpression) args[1]);
+					(BooleanExpression) args[1]);
 		case INT_DIVIDE:
-			return divide((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return divide((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case LAMBDA:
 			return lambda((SymbolicConstant) args[0],
 					(SymbolicExpression) args[1]);
 		case LENGTH:
 			return length((SymbolicConstant) args[0]);
 		case LESS_THAN:
-			return lessThan((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return lessThan((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case LESS_THAN_EQUALS:
-			return lessThanEquals((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return lessThanEquals((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case MODULO:
-			return modulo((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return modulo((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case MULTIPLY:
 			if (numArgs == 1) // collection
-				return multiply((SymbolicCollection<?>) args[0]);
+				return multiply((Iterable<? extends NumericExpression>) args[0]);
 			else
-				return multiply((SymbolicExpression) args[0],
-						(SymbolicExpression) args[1]);
+				return multiply((NumericExpression) args[0],
+						(NumericExpression) args[1]);
 		case NEGATIVE:
-			return minus((SymbolicExpression) args[0]);
+			return minus((NumericExpression) args[0]);
 		case NEQ:
 			return neq((SymbolicExpression) args[0],
 					(SymbolicExpression) args[1]);
 		case NOT:
-			return not((SymbolicExpression) args[0]);
+			return not((BooleanExpression) args[0]);
 		case OR: {
 			if (numArgs == 1) // collection
-				return or((SymbolicCollection<?>) args[0]);
+				return or((Iterable<? extends BooleanExpression>) args[0]);
 			else
-				return or((SymbolicExpression) args[0],
-						(SymbolicExpression) args[1]);
+				return or((BooleanExpression) args[0],
+						(BooleanExpression) args[1]);
 		}
 		case POWER: // exponent could be expression or int constant
 			if (args[1] instanceof SymbolicExpression)
-				return power((SymbolicExpression) args[0],
-						(SymbolicExpression) args[1]);
+				return power((NumericExpression) args[0],
+						(NumericExpression) args[1]);
 			else
-				return power((SymbolicExpression) args[0], (IntObject) args[1]);
+				return power((NumericExpression) args[0], (IntObject) args[1]);
 		case SUBTRACT:
-			return subtract((SymbolicExpression) args[0],
-					(SymbolicExpression) args[1]);
+			return subtract((NumericExpression) args[0],
+					(NumericExpression) args[1]);
 		case SYMBOLIC_CONSTANT:
 			return symbolicConstant((StringObject) args[0], type);
 		case TUPLE_READ:
@@ -612,8 +623,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return unionTest((IntObject) args[0], expression);
 		}
 		default:
-			throw new IllegalArgumentException("Unknown expression kind: "
-					+ operator);
+			throw ierr("Unknown expression kind: " + operator);
 		}
 	}
 
@@ -623,20 +633,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression add(SymbolicCollection<?> args) {
-		int size = args.size();
-		SymbolicExpression result = null;
+	public NumericExpression add(Iterable<? extends NumericExpression> args) {
+		Iterator<? extends NumericExpression> iter = args.iterator();
 
-		if (size == 0)
-			throw new IllegalArgumentException(
-					"Collection must contain at least one element");
-		for (SymbolicExpression arg : args) {
-			if (result == null)
-				result = arg;
-			else
-				result = add(result, arg);
+		if (!iter.hasNext())
+			throw err("Iterable argument to add was empty but should have at least one element");
+		else {
+			NumericExpression result = iter.next();
+
+			while (iter.hasNext())
+				result = add(result, iter.next());
+			return result;
 		}
-		return result;
 	}
 
 	/**
@@ -644,10 +652,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * apply the binary and operator to them in order.
 	 */
 	@Override
-	public BooleanExpression and(SymbolicCollection<?> args) {
+	public BooleanExpression and(Iterable<? extends BooleanExpression> args) {
 		BooleanExpression result = trueExpr;
 
-		for (SymbolicExpression arg : args)
+		for (BooleanExpression arg : args)
 			result = and(result, arg);
 		return result;
 	}
@@ -670,10 +678,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * </pre>
 	 */
 	@Override
-	public BooleanExpression and(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return booleanFactory.and((BooleanExpression) arg0,
-				(BooleanExpression) arg1);
+	public BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1) {
+		return booleanFactory.and(arg0, arg1);
 	}
 
 	@Override
@@ -693,7 +699,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicCompleteArrayType arrayType(SymbolicType elementType,
-			SymbolicExpression extent) {
+			NumericExpression extent) {
 		return typeFactory.arrayType(elementType, extent);
 	}
 
@@ -702,32 +708,46 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return typeFactory.arrayType(elementType);
 	}
 
-	@Override
 	public SymbolicTypeSequence typeSequence(SymbolicType[] types) {
 		return typeFactory.sequence(types);
 	}
 
-	@Override
-	public SymbolicTypeSequence typeSequence(Iterable<SymbolicType> types) {
+	public SymbolicTypeSequence typeSequence(
+			Iterable<? extends SymbolicType> types) {
 		return typeFactory.sequence(types);
 	}
 
-	@Override
 	public SymbolicTupleType tupleType(StringObject name,
 			SymbolicTypeSequence fieldTypes) {
 		return typeFactory.tupleType(name, fieldTypes);
 	}
 
 	@Override
+	public SymbolicTupleType tupleType(StringObject name,
+			Iterable<? extends SymbolicType> types) {
+		return tupleType(name, typeSequence(types));
+	}
+
 	public SymbolicFunctionType functionType(SymbolicTypeSequence inputTypes,
 			SymbolicType outputType) {
 		return typeFactory.functionType(inputTypes, outputType);
 	}
 
 	@Override
+	public SymbolicFunctionType functionType(
+			Iterable<? extends SymbolicType> inputTypes, SymbolicType outputType) {
+		return typeFactory.functionType(typeSequence(inputTypes), outputType);
+	}
+
 	public SymbolicUnionType unionType(StringObject name,
 			SymbolicTypeSequence memberTypes) {
 		return typeFactory.unionType(name, memberTypes);
+	}
+
+	@Override
+	public SymbolicUnionType unionType(StringObject name,
+			Iterable<? extends SymbolicType> memberTypes) {
+		return typeFactory.unionType(name, typeSequence(memberTypes));
 	}
 
 	@Override
@@ -746,7 +766,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public Simplifier simplifier(SymbolicExpression assumption) {
+	public Simplifier simplifier(BooleanExpression assumption) {
 		Simplifier result = simplifierMap.get((BooleanExpression) assumption);
 
 		if (result == null) {
@@ -794,32 +814,24 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicConstant extractSymbolicConstant(
-			SymbolicExpression expression) {
-		if (expression instanceof SymbolicConstant)
-			return (SymbolicConstant) expression;
-		return null;
-	}
-
-	@Override
-	public SymbolicExpression symbolic(NumberObject numberObject) {
+	public NumericExpression number(NumberObject numberObject) {
 		return numericFactory.newConcreteNumericExpression(numberObject);
 	}
 
 	@Override
-	public SymbolicExpression symbolic(int value) {
-		return symbolic(numberObject(numberFactory.integer(value)));
+	public NumericExpression integer(int value) {
+		return number(numberObject(numberFactory.integer(value)));
 	}
 
 	@Override
-	public SymbolicExpression symbolic(double value) {
-		return symbolic(numberObject(numberFactory.rational(Double
+	public NumericExpression rational(double value) {
+		return number(numberObject(numberFactory.rational(Double
 				.toString(value))));
 	}
 
 	@Override
-	public SymbolicExpression rational(int numerator, int denominator) {
-		return symbolic(numberObject(numberFactory.divide(
+	public NumericExpression rational(int numerator, int denominator) {
+		return number(numberObject(numberFactory.divide(
 				numberFactory.rational(numberFactory.integer(numerator)),
 				numberFactory.rational(numberFactory.integer(denominator)))));
 	}
@@ -845,86 +857,78 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public NumericExpression add(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.add((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
+		return numericFactory.add(arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression subtract(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.subtract((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public NumericExpression subtract(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.subtract(arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression multiply(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.multiply((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public NumericExpression multiply(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.multiply(arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression multiply(SymbolicCollection<?> args) {
-		int size = args.size();
-		NumericExpression result = null;
+	public NumericExpression multiply(Iterable<? extends NumericExpression> args) {
+		Iterator<? extends NumericExpression> iter = args.iterator();
 
-		if (size == 0)
-			throw new IllegalArgumentException(
-					"Collection must contain at least one element");
-		for (SymbolicExpression arg : args) {
-			if (result == null)
-				result = (NumericExpression) arg;
-			else
-				result = multiply(result, arg);
+		if (!iter.hasNext())
+			throw err("Iterable argument to multiply was empty but should have"
+					+ " at least one element");
+		else {
+			NumericExpression result = iter.next();
+
+			while (iter.hasNext())
+				result = multiply(result, iter.next());
+			return result;
 		}
-		return result;
 	}
 
 	@Override
-	public NumericExpression divide(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.divide((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public NumericExpression divide(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.divide(arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression modulo(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.modulo((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public NumericExpression modulo(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.modulo(arg0, arg1);
 	}
 
 	@Override
-	public NumericExpression minus(SymbolicExpression arg) {
-		return numericFactory.minus((NumericExpression) arg);
+	public NumericExpression minus(NumericExpression arg) {
+		return numericFactory.minus(arg);
 	}
 
 	@Override
-	public NumericExpression power(SymbolicExpression base, IntObject exponent) {
-		return numericFactory.power((NumericExpression) base, exponent);
+	public NumericExpression power(NumericExpression base, IntObject exponent) {
+		return numericFactory.power(base, exponent);
 	}
 
 	@Override
-	public SymbolicExpression power(SymbolicExpression base, int exponent) {
+	public NumericExpression power(NumericExpression base, int exponent) {
 		return power(base, intObject(exponent));
 	}
 
 	@Override
-	public NumericExpression power(SymbolicExpression base,
-			SymbolicExpression exponent) {
-		return numericFactory.power((NumericExpression) base,
-				(NumericExpression) exponent);
+	public NumericExpression power(NumericExpression base,
+			NumericExpression exponent) {
+		return numericFactory.power(base, exponent);
 	}
 
 	@Override
-	public NumericExpression castToReal(SymbolicExpression numericExpression) {
-		return numericFactory.castToReal((NumericExpression) numericExpression);
+	public NumericExpression castToReal(NumericExpression numericExpression) {
+		return numericFactory.castToReal(numericExpression);
 	}
 
 	@Override
-	public Number extractNumber(SymbolicExpression expression) {
+	public Number extractNumber(NumericExpression expression) {
 		if (expression.operator() == SymbolicOperator.CONCRETE) {
 			SymbolicObject object = expression.argument(0);
 
@@ -941,12 +945,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public BooleanExpression symbolic(BooleanObject object) {
+	public BooleanExpression bool(BooleanObject object) {
 		return booleanFactory.symbolic(object);
 	}
 
 	@Override
-	public BooleanExpression symbolic(boolean value) {
+	public BooleanExpression bool(boolean value) {
 		return booleanFactory.symbolic(value);
 	}
 
@@ -970,19 +974,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * expressions.
 	 */
 	@Override
-	public BooleanExpression or(SymbolicExpression arg0, SymbolicExpression arg1) {
-		return booleanFactory.or((BooleanExpression) arg0,
-				(BooleanExpression) arg1);
+	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {
+		return booleanFactory.or(arg0, arg1);
 	}
 
 	/**
 	 * Assume nothing about the list of args.
 	 */
 	@Override
-	public BooleanExpression or(SymbolicCollection<?> args) {
+	public BooleanExpression or(Iterable<? extends BooleanExpression> args) {
 		BooleanExpression result = falseExpr;
 
-		for (SymbolicExpression arg : args)
+		for (BooleanExpression arg : args)
 			result = or(result, arg);
 		return result;
 	}
@@ -1015,7 +1018,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * </pre>
 	 */
 	@Override
-	public BooleanExpression not(SymbolicExpression arg) {
+	public BooleanExpression not(BooleanExpression arg) {
 		SymbolicOperator operator = arg.operator();
 
 		switch (operator) {
@@ -1028,22 +1031,20 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 					(NumericExpression) arg.argument(0),
 					(NumericExpression) arg.argument(1));
 		default:
-			return booleanFactory.not((BooleanExpression) arg);
+			return booleanFactory.not(arg);
 		}
 	}
 
 	@Override
-	public BooleanExpression implies(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return booleanFactory.implies((BooleanExpression) arg0,
-				(BooleanExpression) arg1);
+	public BooleanExpression implies(BooleanExpression arg0,
+			BooleanExpression arg1) {
+		return booleanFactory.implies(arg0, arg1);
 	}
 
 	@Override
-	public BooleanExpression equiv(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return booleanFactory.equiv((BooleanExpression) arg0,
-				(BooleanExpression) arg1);
+	public BooleanExpression equiv(BooleanExpression arg0,
+			BooleanExpression arg1) {
+		return booleanFactory.equiv(arg0, arg1);
 	}
 
 	@Override
@@ -1055,9 +1056,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public BooleanExpression forallInt(SymbolicConstant index,
-			SymbolicExpression low, SymbolicExpression high,
-			SymbolicExpression predicate) {
+	public BooleanExpression forallInt(NumericSymbolicConstant index,
+			NumericExpression low, NumericExpression high,
+			BooleanExpression predicate) {
 		IntegerNumber lowNumber = (IntegerNumber) extractNumber(low);
 
 		if (lowNumber != null) {
@@ -1077,9 +1078,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public BooleanExpression existsInt(SymbolicConstant index,
-			SymbolicExpression low, SymbolicExpression high,
-			SymbolicExpression predicate) {
+	public BooleanExpression existsInt(NumericSymbolicConstant index,
+			NumericExpression low, NumericExpression high,
+			BooleanExpression predicate) {
 		IntegerNumber lowNumber = (IntegerNumber) extractNumber(low);
 
 		if (lowNumber != null) {
@@ -1102,20 +1103,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * a<b => 0<b-a.
 	 */
 	@Override
-	public BooleanExpression lessThan(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.lessThan((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public BooleanExpression lessThan(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.lessThan(arg0, arg1);
 	}
 
 	/**
 	 * a<=b => 0<=b-a.
 	 */
 	@Override
-	public BooleanExpression lessThanEquals(SymbolicExpression arg0,
-			SymbolicExpression arg1) {
-		return numericFactory.lessThanEquals((NumericExpression) arg0,
-				(NumericExpression) arg1);
+	public BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		return numericFactory.lessThanEquals(arg0, arg1);
 	}
 
 	@Override
@@ -1136,6 +1135,13 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return not(equals(arg0, arg1));
 	}
 
+	private <T extends SymbolicExpression> SymbolicSequence<T> sequence(
+			Iterable<T> elements) {
+		if (elements instanceof SymbolicSequence<?>)
+			return (SymbolicSequence<T>) elements;
+		return collectionFactory.sequence(elements);
+	}
+
 	/**
 	 * We are assuming that each type has a nonempty domain.
 	 * 
@@ -1147,20 +1153,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	@Override
 	public BooleanExpression forall(SymbolicConstant boundVariable,
-			SymbolicExpression predicate) {
-		return booleanFactory.forall(boundVariable,
-				(BooleanExpression) predicate);
+			BooleanExpression predicate) {
+		return booleanFactory.forall(boundVariable, predicate);
 	}
 
 	@Override
 	public BooleanExpression exists(SymbolicConstant boundVariable,
-			SymbolicExpression predicate) {
-		return booleanFactory.exists(boundVariable,
-				(BooleanExpression) predicate);
+			BooleanExpression predicate) {
+		return booleanFactory.exists(boundVariable, predicate);
 	}
 
 	@Override
-	public Boolean extractBoolean(SymbolicExpression expression) {
+	public Boolean extractBoolean(BooleanExpression expression) {
 		if (expression == trueExpr)
 			return true;
 		if (expression == falseExpr)
@@ -1180,20 +1184,33 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression apply(SymbolicExpression function,
-			SymbolicSequence<?> argumentSequence) {
+			Iterable<? extends SymbolicExpression> argumentSequence) {
 		SymbolicOperator op0 = function.operator();
 		SymbolicExpression result;
 
 		if (op0 == SymbolicOperator.LAMBDA) {
-			assert argumentSequence.size() == 1;
+			Iterator<? extends SymbolicExpression> iter = argumentSequence
+					.iterator();
+			SymbolicExpression arg;
+
+			if (!iter.hasNext())
+				throw err("Argument argumentSequence to method apply is empty"
+						+ " but since function is a lambda expression it should"
+						+ " have at least one element");
+			arg = iter.next();
+			assert !iter.hasNext();
+			if (iter.hasNext())
+				throw err("Argument argumentSequence to method apply has more than one element"
+						+ " but since function is a lambda expression it should"
+						+ " have exactly one element");
 			result = substitute((SymbolicExpression) function.argument(1),
-					new SingletonMap<SymbolicConstant, SymbolicExpression>(
-							(SymbolicConstant) function.argument(0),
-							argumentSequence.getFirst()));
-		} else
+					(SymbolicConstant) function.argument(0), arg);
+		} else {
+			// TODO check the argument types...
 			result = expression(SymbolicOperator.APPLY,
 					((SymbolicFunctionType) function.type()).outputType(),
-					function, argumentSequence);
+					function, sequence(argumentSequence));
+		}
 		return result;
 	}
 
@@ -1202,11 +1219,20 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			IntObject memberIndex, SymbolicExpression object) {
 		SymbolicType objectType = object.type();
 		int indexInt = memberIndex.getInt();
-		SymbolicType memberType = unionType.sequence().getType(indexInt);
+		int numMembers = unionType.sequence().numTypes();
+		SymbolicType memberType;
 
+		if (indexInt < 0 || indexInt >= numMembers)
+			throw err("Argument memberIndex to unionInject is out of range.\n"
+					+ "unionType: " + unionType + "\nSaw: " + indexInt
+					+ "\nExpected: integer in range [0," + (numMembers - 1)
+					+ "]");
+		memberType = unionType.sequence().getType(indexInt);
 		if (!memberType.equals(objectType))
-			throw new IllegalArgumentException("Expected type " + memberType
-					+ " but object has type " + objectType + ": " + object);
+			throw err("Argument object of unionInject has the wrong type.\n"
+					+ "Its type should agree with the type of member "
+					+ memberIndex + " of the union type.\n" + "Expected: "
+					+ memberType + "\n.Saw: " + objectType + ": " + object);
 		// inject_i(extract_i(x))=x...
 		if (object.operator() == SymbolicOperator.UNION_EXTRACT
 				&& unionType.equals(((SymbolicExpression) object.argument(1))
@@ -1217,12 +1243,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression unionTest(IntObject memberIndex,
+	public BooleanExpression unionTest(IntObject memberIndex,
 			SymbolicExpression object) {
 		if (object.operator() == SymbolicOperator.UNION_INJECT)
 			return object.argument(0).equals(memberIndex) ? trueExpr
 					: falseExpr;
-		return expression(SymbolicOperator.UNION_TEST, booleanType,
+		return booleanFactory.booleanExpression(SymbolicOperator.UNION_TEST,
 				memberIndex, object);
 	}
 
@@ -1239,14 +1265,25 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	/**
-	 * Need to know type of elements in case empty. We do not check element
-	 * types, but maybe we should.
+	 * Need to know type of elements in case empty.
 	 */
 	@Override
 	public SymbolicExpression array(SymbolicType elementType,
-			SymbolicSequence<?> elements) {
+			Iterable<? extends SymbolicExpression> elements) {
+		int count = 0;
+
+		for (SymbolicExpression element : elements) {
+			if (!elementType.equals(element.type()))
+				throw new SARLException(
+						"Element "
+								+ count
+								+ " of array sequence argument did not have correct element type:\n"
+								+ "Expected: " + elementType + "\nSaw: "
+								+ element.type());
+			count++;
+		}
 		return expression(SymbolicOperator.CONCRETE,
-				arrayType(elementType, symbolic(elements.size())), elements);
+				arrayType(elementType, integer(count)), sequence(elements));
 	}
 
 	@Override
@@ -1263,7 +1300,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression arrayRead(SymbolicExpression array,
-			SymbolicExpression index) {
+			NumericExpression index) {
 		SymbolicOperator op = array.operator();
 
 		if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
@@ -1297,7 +1334,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression arrayWrite(SymbolicExpression array,
-			SymbolicExpression index, SymbolicExpression value) {
+			NumericExpression index, SymbolicExpression value) {
 		IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
 
 		if (indexNumber != null && indexNumber.compareTo(denseArrayMaxSize) < 0) {
@@ -1327,9 +1364,29 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression denseArrayWrite(SymbolicExpression array,
-			SymbolicSequence<?> values) {
-		return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
-				array, values);
+			Iterable<? extends SymbolicExpression> values) {
+		if (!(array.type() instanceof SymbolicArrayType))
+			throw new SARLException(
+					"Argument 0 of denseArrayWrite must have array type but had type "
+							+ array.type());
+		else {
+			SymbolicType elementType = ((SymbolicArrayType) array.type())
+					.elementType();
+			int count = 0;
+
+			for (SymbolicExpression value : values) {
+				if (!elementType.equals(value.type()))
+					throw new SARLException(
+							"Element "
+									+ count
+									+ " of values argument to denseArrayWrite has wrong type.\n"
+									+ "Expected: " + elementType + "\nSaw: "
+									+ value.type());
+				count++;
+			}
+			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
+					array, sequence(values));
+		}
 	}
 
 	@Override
@@ -1341,25 +1398,27 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public SymbolicExpression tuple(SymbolicTupleType type,
-			SymbolicSequence<?> components) {
-		int n = components.size();
+			Iterable<? extends SymbolicExpression> components) {
 		SymbolicTypeSequence fieldTypes = type.sequence();
+		SymbolicSequence<? extends SymbolicExpression> sequence = sequence(components);
 		int m = fieldTypes.numTypes();
+		int n = sequence.size();
 
 		if (n != m)
-			throw new IllegalArgumentException("Tuple type has exactly" + m
+			throw err("In method tuple, tuple type has exactly" + m
 					+ " components but sequence has length " + n);
 		for (int i = 0; i < n; i++) {
 			SymbolicType fieldType = fieldTypes.getType(i);
-			SymbolicType componentType = components.get(i).type();
+			SymbolicType componentType = sequence.get(i).type();
 
 			if (!fieldType.equals(componentType))
-				throw new IllegalArgumentException(
-						"Expected expression of type " + fieldType
-								+ " but saw type " + componentType
-								+ " at position " + i);
+				throw err("Element "
+						+ i
+						+ " of components argument to method tuple has wrong type.\n"
+						+ "\nExpected: " + fieldType + "\nSaw: "
+						+ componentType);
 		}
-		return expression(SymbolicOperator.CONCRETE, type, components);
+		return expression(SymbolicOperator.CONCRETE, type, sequence);
 	}
 
 	@Override
@@ -1426,7 +1485,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicExpression cond(SymbolicExpression predicate,
+	public SymbolicExpression cond(BooleanExpression predicate,
 			SymbolicExpression trueValue, SymbolicExpression falseValue) {
 		if (predicate.isTrue())
 			return trueValue;
@@ -1444,6 +1503,63 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	public void setSimplifierFactory(SimplifierFactory simplifierFactory) {
 		this.simplifierFactory = simplifierFactory;
+	}
+
+	@Override
+	public NumericExpression integer(long value) {
+		return number(numberFactory.integer(value));
+	}
+
+	@Override
+	public NumericExpression integer(BigInteger value) {
+		return number(numberFactory.integer(value));
+	}
+
+	@Override
+	public NumericExpression rational(int value) {
+		return number(numberFactory.rational(numberFactory.integer(value)));
+	}
+
+	@Override
+	public NumericExpression rational(long value) {
+		return number(numberFactory.rational(numberFactory.integer(value)));
+	}
+
+	@Override
+	public NumericExpression rational(BigInteger value) {
+		return number(numberFactory.rational(numberFactory.integer(value)));
+	}
+
+	@Override
+	public NumericExpression rational(float value) {
+		return number(numberFactory.rational(Float.toString(value)));
+	}
+
+	@Override
+	public NumericExpression rational(long numerator, long denominator) {
+		return rational(BigInteger.valueOf(numerator),
+				BigInteger.valueOf(denominator));
+	}
+
+	@Override
+	public NumericExpression rational(BigInteger numerator,
+			BigInteger denominator) {
+		return number(numberFactory.rational(numerator, denominator));
+	}
+
+	@Override
+	public NumericExpression number(Number number) {
+		return number(numberObject(number));
+	}
+
+	@Override
+	public BooleanExpression trueExpression() {
+		return trueExpr;
+	}
+
+	@Override
+	public BooleanExpression falseExpression() {
+		return falseExpr;
 	}
 
 }

@@ -6,11 +6,12 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 
 /**
  * A very simple prover. It works by just simplifying the predicate based on the
@@ -47,15 +48,16 @@ public class SimpleIdealProver implements TheoremProver {
 	}
 
 	@Override
-	public ResultType valid(SymbolicExpression assumption,
-			SymbolicExpression predicate) {
+	public ResultType valid(BooleanExpression assumption,
+			BooleanExpression predicate) {
 		SymbolicQuery query = new SymbolicQuery(assumption, predicate);
 		ResultType result = queryCache.get(query);
 
 		numValidCalls++;
 		if (result == null) {
 			Simplifier simplifier = universe.simplifier(assumption);
-			SymbolicExpression simple = simplifier.apply(predicate);
+			BooleanExpression simple = (BooleanExpression) simplifier
+					.apply(predicate);
 			Boolean concrete = universe.extractBoolean(simple);
 
 			if (concrete == null)

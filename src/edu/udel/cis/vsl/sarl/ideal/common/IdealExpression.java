@@ -2,9 +2,9 @@ package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Collection;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
 public abstract class IdealExpression extends CommonSymbolicExpression

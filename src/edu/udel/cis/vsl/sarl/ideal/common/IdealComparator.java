@@ -3,9 +3,9 @@ package edu.udel.cis.vsl.sarl.ideal.common;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;

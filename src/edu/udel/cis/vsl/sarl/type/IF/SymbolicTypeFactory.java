@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.type.IF;
 
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -29,7 +30,7 @@ public interface SymbolicTypeFactory {
 
 	SymbolicType realType();
 
-	SymbolicTypeSequence sequence(Iterable<SymbolicType> elements);
+	SymbolicTypeSequence sequence(Iterable<? extends SymbolicType> elements);
 
 	SymbolicTypeSequence sequence(SymbolicType[] elements);
 
@@ -38,7 +39,7 @@ public interface SymbolicTypeFactory {
 	SymbolicArrayType arrayType(SymbolicType elementType);
 
 	SymbolicCompleteArrayType arrayType(SymbolicType elementType,
-			SymbolicExpression extent);
+			NumericExpression extent);
 
 	SymbolicTupleType tupleType(StringObject name,
 			SymbolicTypeSequence fieldTypes);

@@ -1,11 +1,13 @@
 package edu.udel.cis.vsl.sarl.IF;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -22,7 +24,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 
 /**
@@ -57,7 +58,7 @@ public interface SymbolicUniverse {
 	 * (array length). Neither argument can be null.
 	 */
 	SymbolicCompleteArrayType arrayType(SymbolicType elementType,
-			SymbolicExpression extent);
+			NumericExpression extent);
 
 	/**
 	 * Returns the incomplete array type with the given element type. The
@@ -66,33 +67,13 @@ public interface SymbolicUniverse {
 	SymbolicArrayType arrayType(SymbolicType elementType);
 
 	/**
-	 * Returns a type sequence based on the given array of types.
-	 * 
-	 * @param types
-	 *            an array of types; must be non-null and each element must be
-	 *            non-null
-	 * @return a SymbolicTypeSequenceIF based on the array
-	 */
-	SymbolicTypeSequence typeSequence(SymbolicType[] types);
-
-	/**
-	 * Returns a type sequence based on the given iterable object.
-	 * 
-	 * @param types
-	 *            an iterable thing: must be non-null and all elements returned
-	 *            by the iterator.
-	 * @return a SymbolicTypeSequenceIF based on the iterator
-	 */
-	SymbolicTypeSequence typeSequence(Iterable<SymbolicType> types);
-
-	/**
 	 * The tuple type defined by the given sequence of component types. The
 	 * tuple type consists of all tuples of values (x_0,...,x_{n-1}), where
 	 * x_{i} has type fieldsTypes[i]. A tuple type also has a name, and two
 	 * tuple types are not equal if they have unequal names.
 	 */
 	SymbolicTupleType tupleType(StringObject name,
-			SymbolicTypeSequence fieldTypes);
+			Iterable<? extends SymbolicType> fieldTypes);
 
 	/**
 	 * Returns the function type. A function type is specified by an array of
@@ -104,8 +85,8 @@ public interface SymbolicUniverse {
 	 *            the output type of the function
 	 * @return the function type
 	 */
-	SymbolicFunctionType functionType(SymbolicTypeSequence inputTypes,
-			SymbolicType outputType);
+	SymbolicFunctionType functionType(
+			Iterable<? extends SymbolicType> inputTypes, SymbolicType outputType);
 
 	/**
 	 * The type which is the union of the given types.
@@ -115,7 +96,7 @@ public interface SymbolicUniverse {
 	 * @return
 	 */
 	SymbolicUnionType unionType(StringObject name,
-			SymbolicTypeSequence memberTypes);
+			Iterable<? extends SymbolicType> memberTypes);
 
 	// Symbolic Objects...
 
@@ -173,7 +154,7 @@ public interface SymbolicUniverse {
 	 * equivalent simplified expression, assuming the assumption holds. The
 	 * assumption is any boolean-valued symbolic expression in this universe.
 	 */
-	Simplifier simplifier(SymbolicExpression assumption);
+	Simplifier simplifier(BooleanExpression assumption);
 
 	/**
 	 * Returns the theorem prover associated to this universe.
@@ -203,12 +184,6 @@ public interface SymbolicUniverse {
 	 * details are unimportant because symbolic constants are immutable.
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
-
-	/**
-	 * Attempts to interpret the given symbolic expression as a symbolic
-	 * constant. If this is not possible, returns null.
-	 */
-	SymbolicConstant extractSymbolicConstant(SymbolicExpression expression);
 
 	/**
 	 * Substitutes symbolic expressions for symbolic constants in a symbolic
@@ -244,13 +219,13 @@ public interface SymbolicUniverse {
 	SymbolicExpression substitute(SymbolicExpression expression,
 			SymbolicConstant variable, SymbolicExpression value);
 
-	// Numbers...
+	// Integers...
 
-	/** The number factory used by this universe. */
-	NumberFactory numberFactory();
+	/** The symbolic expression representing the 0 integer value. */
+	NumericExpression zeroInt();
 
-	/** The symbolic expression wrapping the given concrete number */
-	SymbolicExpression symbolic(NumberObject numberObject);
+	/** The symbolic expression representing the integer 1. */
+	NumericExpression oneInt();
 
 	/**
 	 * Creates the integer symbolic expression with given int value.
@@ -259,7 +234,27 @@ public interface SymbolicUniverse {
 	 *            a Java int
 	 * @return a symbolic expression representing that concrete integer value
 	 */
-	SymbolicExpression symbolic(int value);
+	NumericExpression integer(int value);
+
+	NumericExpression integer(long value);
+
+	NumericExpression integer(BigInteger value);
+
+	// Rationals...
+
+	/** The symbolic expression representing the real number 0. */
+	NumericExpression zeroReal();
+
+	/** The symbolic expression representing the real number 1. */
+	NumericExpression oneReal();
+
+	NumericExpression rational(int value);
+
+	NumericExpression rational(long value);
+
+	NumericExpression rational(BigInteger value);
+
+	NumericExpression rational(float value);
 
 	/**
 	 * Creates a concrete expression from the given double based on the string
@@ -272,7 +267,7 @@ public interface SymbolicUniverse {
 	 * @return a concrete symbolic expression of real type representing the
 	 *         double
 	 */
-	SymbolicExpression symbolic(double value);
+	NumericExpression rational(double value);
 
 	/**
 	 * Returns the symbolic concrete real number numerator/denominator (real
@@ -285,19 +280,33 @@ public interface SymbolicUniverse {
 	 * @return the real number formed by dividing numerator by denominator, as a
 	 *         symbolic expression
 	 */
-	SymbolicExpression rational(int numerator, int denominator);
+	NumericExpression rational(int numerator, int denominator);
 
-	/** The symbolic expression representing the 0 integer value. */
-	SymbolicExpression zeroInt();
+	NumericExpression rational(long numerator, long denominator);
 
-	/** The symbolic expression representing the real number 0. */
-	SymbolicExpression zeroReal();
+	NumericExpression rational(BigInteger numerator, BigInteger denominator);
 
-	/** The symbolic expression representing the integer 1. */
-	SymbolicExpression oneInt();
+	// General Numbers...
 
-	/** The symbolic expression representing the real number 1. */
-	SymbolicExpression oneReal();
+	/** The number factory used by this universe. */
+	NumberFactory numberFactory();
+
+	NumericExpression number(Number number);
+
+	/** The symbolic expression wrapping the given concrete number */
+	NumericExpression number(NumberObject numberObject);
+
+	/**
+	 * Returns the Number value if the given symbolic expression has a concrete
+	 * numerical value, else returns null.
+	 * 
+	 * @param expression
+	 *            a symbolic expression
+	 * @return Number value or null
+	 */
+	Number extractNumber(NumericExpression expression);
+
+	// Numeric operations...
 
 	/**
 	 * Returns a symbolic expression which is the result of adding the two given
@@ -310,7 +319,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0+arg1
 	 */
-	SymbolicExpression add(SymbolicExpression arg0, SymbolicExpression arg1);
+	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression representing the sum of the given argument
@@ -321,7 +330,7 @@ public interface SymbolicUniverse {
 	 *            all have the same type.
 	 * @return expression representing the sum
 	 */
-	SymbolicExpression add(SymbolicCollection<?> args);
+	NumericExpression add(Iterable<? extends NumericExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
@@ -334,7 +343,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0-arg1
 	 */
-	SymbolicExpression subtract(SymbolicExpression arg0, SymbolicExpression arg1);
+	NumericExpression subtract(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the result of multiplying the two
@@ -347,7 +356,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 * arg1, the product of arg0 and arg1.
 	 */
-	SymbolicExpression multiply(SymbolicExpression arg0, SymbolicExpression arg1);
+	NumericExpression multiply(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns symbolic expression representing the product of the given
@@ -358,7 +367,7 @@ public interface SymbolicUniverse {
 	 *            numeric type
 	 * @return a symbolic expression representing the product
 	 */
-	SymbolicExpression multiply(SymbolicCollection<?> args);
+	NumericExpression multiply(Iterable<? extends NumericExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by
@@ -372,7 +381,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of the same numeric type
 	 * @return arg0 / arg1
 	 */
-	SymbolicExpression divide(SymbolicExpression arg0, SymbolicExpression arg1);
+	NumericExpression divide(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents arg0 modulo arg1. The two
@@ -385,7 +394,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of integer type
 	 * @return arg0 % arg1
 	 */
-	SymbolicExpression modulo(SymbolicExpression arg0, SymbolicExpression arg1);
+	NumericExpression modulo(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which is the negative of the given
@@ -396,7 +405,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of integer or real type
 	 * @return -arg
 	 */
-	SymbolicExpression minus(SymbolicExpression arg);
+	NumericExpression minus(NumericExpression arg);
 
 	/**
 	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
@@ -408,7 +417,7 @@ public interface SymbolicUniverse {
 	 * @param exponent
 	 *            a non-negative concrete integer exponent
 	 */
-	SymbolicExpression power(SymbolicExpression base, IntObject exponent);
+	NumericExpression power(NumericExpression base, IntObject exponent);
 
 	/**
 	 * Shorthand for power(base, intObject(exponent)).
@@ -420,7 +429,7 @@ public interface SymbolicUniverse {
 	 *            a non-negative concrete integer exponent
 	 * @return power(base, intObject(exponent))
 	 */
-	SymbolicExpression power(SymbolicExpression base, int exponent);
+	NumericExpression power(NumericExpression base, int exponent);
 
 	/**
 	 * General power operator: e^b. Both e and b are numeric expressions.
@@ -430,25 +439,32 @@ public interface SymbolicUniverse {
 	 * @param exponent
 	 *            the exponent in the power expression
 	 */
-	SymbolicExpression power(SymbolicExpression base,
-			SymbolicExpression exponent);
+	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
 	/** Casts a real or integer type expression to an expression of real type. */
-	SymbolicExpression castToReal(SymbolicExpression numericExpression);
-
-	/**
-	 * Attempts to interpret the given symbolic expression as a concrete number.
-	 * If this is not possible, returns null.
-	 */
-	Number extractNumber(SymbolicExpression expression);
+	NumericExpression castToReal(NumericExpression numericExpression);
 
 	// Booleans...
+
+	/**
+	 * If the given expression has a concrete boolean value, this returns it,
+	 * else it returns null.
+	 * 
+	 * @param expression
+	 *            any BooleanExpression
+	 * @return one of the two concrete Boolean values, if possible, else false
+	 */
+	Boolean extractBoolean(BooleanExpression expression);
+
+	BooleanExpression trueExpression();
+
+	BooleanExpression falseExpression();
 
 	/**
 	 * The symbolic expression wrapping the given boolean object (true or
 	 * false).
 	 */
-	SymbolicExpression symbolic(BooleanObject object);
+	BooleanExpression bool(BooleanObject object);
 
 	/**
 	 * Short cut for symbolic(booleanObject(value)).
@@ -456,7 +472,7 @@ public interface SymbolicUniverse {
 	 * @param value
 	 * @return symbolic expression wrapping boolean value
 	 */
-	SymbolicExpression symbolic(boolean value);
+	BooleanExpression bool(boolean value);
 
 	/**
 	 * Returns a symbolic expression representing the conjunction of the two
@@ -468,7 +484,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type
 	 * @return conjunction of arg0 and arg1
 	 */
-	SymbolicExpression and(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents the conjunction of the
@@ -481,7 +497,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the conjunction of the expressions in args
 	 */
-	SymbolicExpression and(SymbolicCollection<?> args);
+	BooleanExpression and(Iterable<? extends BooleanExpression> args);
 
 	/**
 	 * Returns a symbolic expression representing the disjunction of the two
@@ -493,7 +509,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type
 	 * @return disjunction of arg0 and arg1
 	 */
-	SymbolicExpression or(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents the disjunction of the
@@ -506,7 +522,7 @@ public interface SymbolicUniverse {
 	 *            a sequence of expressions of boolean type
 	 * @return the disjunction of the expressions in args
 	 */
-	SymbolicExpression or(SymbolicCollection<?> args);
+	BooleanExpression or(Iterable<? extends BooleanExpression> args);
 
 	/**
 	 * Returns a symbolic expression representing the logical negation of the
@@ -516,7 +532,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type
 	 * @return negation of arg
 	 */
-	SymbolicExpression not(SymbolicExpression arg);
+	BooleanExpression not(BooleanExpression arg);
 
 	/**
 	 * Returns a symbolic expression representing "p implies q", i.e., p=>q.
@@ -527,7 +543,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type (q)
 	 * @return p=>q
 	 */
-	SymbolicExpression implies(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression implies(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns a symbolic expression representing "p is equivalent to q", i.e.,
@@ -539,7 +555,7 @@ public interface SymbolicUniverse {
 	 *            a symbolic expression of boolean type (q)
 	 * @return p<=>q
 	 */
-	SymbolicExpression equiv(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression equiv(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns expression equivalent to arg0 < arg1. The arguments must be
@@ -552,7 +568,7 @@ public interface SymbolicUniverse {
 	 *            symbolic expression of same numeric type
 	 * @return symbolic expression of boolean type arg0 < arg1
 	 */
-	SymbolicExpression lessThan(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression lessThan(NumericExpression arg0, NumericExpression arg1);
 
 	/**
 	 * Returns expression equivalent to arg0 <= arg1 ("less than or equal to").
@@ -565,34 +581,33 @@ public interface SymbolicUniverse {
 	 *            symbolic expression of same numeric type
 	 * @return symbolic expression of boolean type arg0 <= arg1
 	 */
-	SymbolicExpression lessThanEquals(SymbolicExpression arg0,
-			SymbolicExpression arg1);
+	BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1);
 
 	/**
-	 * Returns expression equivalent to arg0 = arg1 ("equals"). The arguments
-	 * must be numeric of the same type (i.e., both are of integer type or both
-	 * are of real type).
+	 * Returns expression equivalent to arg0 = arg1 ("equals"). This is a
+	 * general equals operator (not just for numeric expressions). To be equal,
+	 * the arguments must have equal types. The notion of equals then depends on
+	 * the particular type.
 	 * 
 	 * @param arg0
-	 *            symbolic expression of numeric type
+	 *            a symbolic expression
 	 * @param arg1
-	 *            symbolic expression of same numeric type
+	 *            a symbolic expression
 	 * @return symbolic expression of boolean type arg0 = arg1
 	 */
-	SymbolicExpression equals(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression equals(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
-	 * Returns expression equivalent to arg0 != arg1 ("not equals"). The
-	 * arguments must be numeric of the same type (i.e., both are of integer
-	 * type or both are of real type).
+	 * Returns expression equivalent to arg0 != arg1 ("not equals").
 	 * 
 	 * @param arg0
-	 *            symbolic expression of numeric type
+	 *            a symbolic expression
 	 * @param arg1
-	 *            symbolic expression of same numeric type
+	 *            a symbolic expression
 	 * @return symbolic expression of boolean type arg0 != arg1
 	 */
-	SymbolicExpression neq(SymbolicExpression arg0, SymbolicExpression arg1);
+	BooleanExpression neq(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
 	 * Returns the universally quantified expression forall(x).e.
@@ -603,8 +618,8 @@ public interface SymbolicUniverse {
 	 *            the expression e (of boolean type)
 	 * @return the expression forall(x).e
 	 */
-	SymbolicExpression forall(SymbolicConstant boundVariable,
-			SymbolicExpression predicate);
+	BooleanExpression forall(SymbolicConstant boundVariable,
+			BooleanExpression predicate);
 
 	/**
 	 * A special case of "forall" that is very common: forall integers i such
@@ -622,9 +637,9 @@ public interface SymbolicUniverse {
 	 *            some boolean symbolic expression, usually involving i
 	 * @return an expression equivalent to "forall int i. low<=i<high -> p(i)".
 	 */
-	SymbolicExpression forallInt(SymbolicConstant index,
-			SymbolicExpression low, SymbolicExpression high,
-			SymbolicExpression predicate);
+	BooleanExpression forallInt(NumericSymbolicConstant index,
+			NumericExpression low, NumericExpression high,
+			BooleanExpression predicate);
 
 	/**
 	 * Returns the existenially quantified expression exists(x).e.
@@ -635,8 +650,8 @@ public interface SymbolicUniverse {
 	 *            the expression e (of boolean type)
 	 * @return the expression exists(x).e
 	 */
-	SymbolicExpression exists(SymbolicConstant boundVariable,
-			SymbolicExpression predicate);
+	BooleanExpression exists(SymbolicConstant boundVariable,
+			BooleanExpression predicate);
 
 	/**
 	 * A special case of "exists" that is very common: exists integer i such
@@ -654,15 +669,9 @@ public interface SymbolicUniverse {
 	 *            some boolean symbolic expression, usually involving i
 	 * @return an expression equivalent to "exists int i. low<=i<high && p(i)".
 	 */
-	SymbolicExpression existsInt(SymbolicConstant index,
-			SymbolicExpression low, SymbolicExpression high,
-			SymbolicExpression predicate);
-
-	/**
-	 * Attempts to interpret the given symbolic expression as a concrete boolean
-	 * value. If this is not possible, returns null.
-	 */
-	Boolean extractBoolean(SymbolicExpression expression);
+	BooleanExpression existsInt(NumericSymbolicConstant index,
+			NumericExpression low, NumericExpression high,
+			BooleanExpression predicate);
 
 	// Functions...
 
@@ -686,7 +695,7 @@ public interface SymbolicUniverse {
 	 * input signature.
 	 */
 	SymbolicExpression apply(SymbolicExpression function,
-			SymbolicSequence<?> argumentSequence);
+			Iterable<? extends SymbolicExpression> argumentSequence);
 
 	// Union type operations...
 
@@ -720,8 +729,7 @@ public interface SymbolicUniverse {
 	 * @return a boolean expression telling whether the object belongs to the
 	 *         specified member type
 	 */
-	SymbolicExpression unionTest(IntObject memberIndex,
-			SymbolicExpression object);
+	BooleanExpression unionTest(IntObject memberIndex, SymbolicExpression object);
 
 	/**
 	 * Casts an object whose type is a union type to a representation whose type
@@ -751,7 +759,7 @@ public interface SymbolicUniverse {
 	 * @return array consisting of those elements
 	 */
 	SymbolicExpression array(SymbolicType elementType,
-			SymbolicSequence<?> elements);
+			Iterable<? extends SymbolicExpression> elements);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a
@@ -762,7 +770,7 @@ public interface SymbolicUniverse {
 	 * @return a symbolic expression of integer type representing the length of
 	 *         the array
 	 */
-	SymbolicExpression length(SymbolicExpression array);
+	NumericExpression length(SymbolicExpression array);
 
 	/**
 	 * Returns an expression representing the value of the element of the array
@@ -776,7 +784,7 @@ public interface SymbolicUniverse {
 	 * @return expression representing value of index-th element of the array
 	 */
 	SymbolicExpression arrayRead(SymbolicExpression array,
-			SymbolicExpression index);
+			NumericExpression index);
 
 	/**
 	 * Returns an expression representing the result of modifying an array by
@@ -793,10 +801,10 @@ public interface SymbolicUniverse {
 	 *         element to value
 	 */
 	SymbolicExpression arrayWrite(SymbolicExpression array,
-			SymbolicExpression index, SymbolicExpression value);
+			NumericExpression index, SymbolicExpression value);
 
 	SymbolicExpression denseArrayWrite(SymbolicExpression array,
-			SymbolicSequence<?> values);
+			Iterable<? extends SymbolicExpression> values);
 
 	/**
 	 * Returns an expression representing an array with element type T defined
@@ -817,7 +825,7 @@ public interface SymbolicUniverse {
 	 * @return the tuple formed from the components
 	 */
 	SymbolicExpression tuple(SymbolicTupleType type,
-			SymbolicSequence<?> components);
+			Iterable<? extends SymbolicExpression> components);
 
 	/**
 	 * Returns an expression that represents the result of reading a component
@@ -864,20 +872,19 @@ public interface SymbolicUniverse {
 	SymbolicExpression cast(SymbolicType newType, SymbolicExpression expression);
 
 	/**
-	 * Given three symbolic expressions of boolean type, returns a symbolic
-	 * expression that is equivalent to
-	 * "if predicate then trueValue else falseValue". Equivalent to (p -> q_t)
-	 * && (!p -> q_f).
+	 * "If-then-else" expression. Note that trueCase and falseCase must have the
+	 * same type, which becomes the type of this expression.
 	 * 
 	 * @param predicate
 	 *            the test condition p
 	 * @param trueValue
-	 *            the value q_t if condition is true
+	 *            the value if condition is true
 	 * @param falseValue
-	 *            the value q_f if condition is false
-	 * @return symbolic expression equivalent to (p -> q_t) && (!p -> q_f).
+	 *            the value if condition is false
+	 * @return symbolic expression whose values is trueCase if predicate holds,
+	 *         falseCase if predicate is false
 	 */
-	SymbolicExpression cond(SymbolicExpression predicate,
-			SymbolicExpression trueValue, SymbolicExpression falseValue);
+	SymbolicExpression cond(BooleanExpression predicate,
+			SymbolicExpression trueCase, SymbolicExpression falseCase);
 
 }

@@ -6,7 +6,7 @@ package edu.udel.cis.vsl.sarl.IF;
  * no need to declare or catch it. It will be thrown all the way up to main and
  * reported.
  * */
-public class SARLInternalException extends RuntimeException {
+public class SARLInternalException extends SARLException {
 
 	/**
 	 * Eclipse made me do it.

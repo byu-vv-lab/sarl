@@ -3,11 +3,11 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Arrays;
 import java.util.Collection;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 

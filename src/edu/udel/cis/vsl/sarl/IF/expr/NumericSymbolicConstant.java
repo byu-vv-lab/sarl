@@ -1,6 +1,5 @@
-package edu.udel.cis.vsl.sarl.expr.IF;
+package edu.udel.cis.vsl.sarl.IF.expr;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 
 public interface NumericSymbolicConstant extends SymbolicConstant,
 		NumericExpression {

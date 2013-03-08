@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Collection;
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -11,7 +12,6 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 

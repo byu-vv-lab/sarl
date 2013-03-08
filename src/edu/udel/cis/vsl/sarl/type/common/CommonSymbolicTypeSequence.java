@@ -14,7 +14,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 
 	private ArrayList<SymbolicType> elements;
 
-	CommonSymbolicTypeSequence(Iterable<SymbolicType> types) {
+	public CommonSymbolicTypeSequence(Iterable<? extends SymbolicType> types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>();
 		for (SymbolicType type : types) {
@@ -22,7 +22,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		}
 	}
 
-	CommonSymbolicTypeSequence(SymbolicType[] types) {
+	public CommonSymbolicTypeSequence(SymbolicType[] types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>(types.length);
 		for (SymbolicType type : types) {
@@ -48,7 +48,8 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 	@Override
 	protected boolean intrinsicEquals(SymbolicObject object) {
 		if (object instanceof CommonSymbolicTypeSequence) {
-			return elements.equals(((CommonSymbolicTypeSequence) object).elements);
+			return elements
+					.equals(((CommonSymbolicTypeSequence) object).elements);
 		}
 		return false;
 	}

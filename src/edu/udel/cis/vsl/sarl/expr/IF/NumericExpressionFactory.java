@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
@@ -33,7 +36,7 @@ public interface NumericExpressionFactory {
 
 	Comparator<NumericExpression> numericComparator();
 
-	SymbolicExpression newConcreteNumericExpression(NumberObject numberObject);
+	NumericExpression newConcreteNumericExpression(NumberObject numberObject);
 
 	NumericSymbolicConstant newNumericSymbolicConstant(StringObject name,
 			SymbolicType type);

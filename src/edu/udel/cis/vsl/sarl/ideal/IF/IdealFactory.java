@@ -1,12 +1,12 @@
 package edu.udel.cis.vsl.sarl.ideal.IF;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.One;
 

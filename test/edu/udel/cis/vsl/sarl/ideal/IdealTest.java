@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
@@ -16,8 +18,6 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;

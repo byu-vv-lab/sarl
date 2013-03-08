@@ -34,8 +34,7 @@ public class RealNumberFactory implements NumberFactory {
 		}
 
 		@Override
-		public IntegerNumber multiply(IntegerNumber arg0,
-				IntegerNumber arg1) {
+		public IntegerNumber multiply(IntegerNumber arg0, IntegerNumber arg1) {
 			return factory.multiply(arg0, arg1);
 		}
 
@@ -59,7 +58,8 @@ public class RealNumberFactory implements NumberFactory {
 		}
 	}
 
-	private RealInteger integer(BigInteger big) {
+	@Override
+	public RealInteger integer(BigInteger big) {
 		RealInteger oldValue = integerMap.get(big);
 
 		if (oldValue != null) {
@@ -72,7 +72,13 @@ public class RealNumberFactory implements NumberFactory {
 		}
 	}
 
-	private RealRational rational(BigInteger numerator, BigInteger denominator) {
+	@Override
+	public RealInteger integer(long value) {
+		return integer(BigInteger.valueOf(value));
+	}
+
+	@Override
+	public RealRational rational(BigInteger numerator, BigInteger denominator) {
 		int signum = denominator.signum();
 		RationalKey key;
 		RealRational oldValue;
@@ -253,8 +259,7 @@ public class RealNumberFactory implements NumberFactory {
 	}
 
 	@Override
-	public RationalNumber multiply(RationalNumber arg0,
-			RationalNumber arg1) {
+	public RationalNumber multiply(RationalNumber arg0, RationalNumber arg1) {
 		RealRational x = (RealRational) arg0;
 		RealRational y = (RealRational) arg1;
 
@@ -385,8 +390,7 @@ public class RealNumberFactory implements NumberFactory {
 	}
 
 	@Override
-	public RationalNumber subtract(RationalNumber arg0,
-			RationalNumber arg1) {
+	public RationalNumber subtract(RationalNumber arg0, RationalNumber arg1) {
 		return add(arg0, negate(arg1));
 	}
 

@@ -4,11 +4,12 @@ import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
+import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 
 /**
@@ -43,8 +44,7 @@ public class IdealCVC3HybridProver implements TheoremProver {
 		return universe;
 	}
 
-	public ResultType valid(SymbolicExpression assumption,
-			SymbolicExpression expr) {
+	public ResultType valid(BooleanExpression assumption, BooleanExpression expr) {
 		ResultType result = simpleProver.valid(assumption, expr);
 
 		if (result == ResultType.MAYBE) {

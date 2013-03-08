@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal.IF;
 
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 
 /**
  * A quotient of a two polynomials. The second polynomial (the denominator) must
