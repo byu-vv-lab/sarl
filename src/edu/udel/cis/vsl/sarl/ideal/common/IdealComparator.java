@@ -13,6 +13,36 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 
+/**
+ * Comparator for ideal numeric expressions. This comparator is very heavily
+ * used in most numeric operations (e.g., adding and multiplying polynomials) so
+ * performance is critical.
+ * 
+ * The order is defined as follows. First come all expressions of integer type,
+ * then all of real type. Within a type, first all the NTRationalExpression,
+ * then everything else. "Everything else" are instances of Polynomial.
+ * Polynomials are sorted first by degree: larger degree comes first (since
+ * that's the way you typically write them). Given two polynomials of the same
+ * degree:
+ * 
+ * if the two polynomials are monomials of the same degree, compare monics, then
+ * constants
+ * 
+ * to compare two monics of the same degree: use dictionary order on the
+ * primitive powers
+ * 
+ * to compare two primitive power of same degree: compare the bases
+ * 
+ * If the two polynomials of the same degree are not monomials, then
+ * compare their leading terms.  If those are equal, move to the next
+ * pair of terms. Etc.
+ * 
+ * TODO: all of these expressions should be assigned order numbers
+ * for fast comparisons.
+ * 
+ * @author siegel
+ * 
+ */
 public class IdealComparator implements Comparator<NumericExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;

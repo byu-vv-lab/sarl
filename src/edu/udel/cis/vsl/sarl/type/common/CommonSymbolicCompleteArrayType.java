@@ -39,4 +39,9 @@ public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 			extent = factory.canonic(extent);
 	}
 
+	@Override
+	public boolean isComplete() {
+		return true;
+	}
+
 }

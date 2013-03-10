@@ -84,13 +84,13 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * <li>DENSE_ARRAY_WRITE: Represents the result of multiple writes to an array.
  * 2 arguments. arg0 is an expression of array type T[]. Arg 2 is a
  * SymbolicSequence, say v0,...,v(n-1). Each element of the sequence is either
- * null or an expression of type T. The dense array write expression represents
- * the result of starting with arg0 and then for each i for which v(i) is
- * non-null, setting the array element in position i to v(i). It is thus
- * equivalent to a sequence of array write operations. It is included here to
- * allow a dense representation of the array, which can have performance
- * benefits, in particular constant-time lookup and modification (just like for
- * regular concrete arrays)</li>
+ * NULL (i.e., the expression with operator NULL; see below) or an expression of
+ * type T. The dense array write expression represents the result of starting
+ * with arg0 and then for each i for which v(i) is non-NULL, setting the array
+ * element in position i to v(i). It is thus equivalent to a sequence of array
+ * write operations. It is included here to allow a dense representation of the
+ * array, which can have performance benefits, in particular constant-time
+ * lookup and modification (just like for regular concrete arrays)</li>
  * 
  * <li>DIVIDE: real division: 2 arguments: arg 0 the numerator, arg 1 the
  * denominator. Both must be symbolic expressions of real type. Has real type.</li>
@@ -273,15 +273,15 @@ public interface SymbolicExpression extends SymbolicObject {
 
 	/** Is this the "NULL" symbolic expression? */
 	boolean isNull();
-	
+
 	boolean isFalse();
-	
+
 	boolean isTrue();
-	
+
 	boolean isZero();
-	
+
 	boolean isOne();
-	
+
 	boolean isNumeric();
 
 }

@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.object.common;
 
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public abstract class CommonSymbolicObject implements SymbolicObject {
@@ -12,8 +13,18 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	private long id = -1;
 
+	private RationalNumber order;
+
 	protected CommonSymbolicObject(SymbolicObjectKind kind) {
 		this.kind = kind;
+	}
+
+	public void setOrder(RationalNumber number) {
+		order = number;
+	}
+
+	public RationalNumber getOrder() {
+		return order;
 	}
 
 	public boolean isCanonic() {

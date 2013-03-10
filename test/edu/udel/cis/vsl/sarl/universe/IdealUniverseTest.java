@@ -16,7 +16,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
@@ -95,6 +94,10 @@ public class IdealUniverseTest {
 		assertEquals(expected, newU);
 	}
 
+	/**
+	 * Tests substitution of symbolic constants applied to an array of symbolic
+	 * constants.
+	 */
 	@Test
 	public void subArray1() {
 		int n = 3;
@@ -119,38 +122,4 @@ public class IdealUniverseTest {
 					universe.arrayRead(array2, universe.integer(i)));
 	}
 
-	private SymbolicExpression write2d(SymbolicExpression array,
-			NumericExpression i, NumericExpression j, SymbolicExpression value) {
-		SymbolicExpression row = universe.arrayRead(array, i);
-		SymbolicExpression newRow = universe.arrayWrite(row, j, value);
-
-		return universe.arrayWrite(array, i, newRow);
-	}
-
-	private SymbolicExpression read2d(SymbolicExpression array,
-			NumericExpression i, NumericExpression j) {
-		SymbolicExpression row = universe.arrayRead(array, i);
-
-		return universe.arrayRead(row, j);
-	}
-
-	/**
-	 * Write and read a 2d array.
-	 */
-	@Test
-	public void array2d() {
-		SymbolicArrayType t = universe.arrayType(universe
-				.arrayType(integerType));
-		SymbolicExpression a = universe.symbolicConstant(
-				universe.stringObject("a"), t);
-		NumericExpression zero = universe.zeroInt();
-		NumericExpression twoInt = universe.integer(2);
-		SymbolicExpression read;
-
-		a = write2d(a, zero, zero, twoInt);
-		read = read2d(a, zero, zero);
-		assertEquals(twoInt, read);
-		// for the heck of it...
-		out.println("array2d: new row is: " + universe.arrayRead(a, zero));
-	}
 }

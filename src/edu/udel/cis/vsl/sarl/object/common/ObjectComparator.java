@@ -59,39 +59,52 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 		return typeSequenceComparator;
 	}
 
+	// TODO: possibly. Stick another field in SymbolicObject:
+	// RationalNumber order. Add a tree here?, which is sorted
+	// (TreeMap?). Whenever you canonicalize a
+	// SymbolicObject add it to the tree, and find the things
+	// immediately preceding and after it. Take their orders
+	// and average them and assign that to the new thing.
+	// Modify compare map: if both objects are canonic,
+	// just compare their orders.
+
 	@Override
 	public int compare(SymbolicObject o1, SymbolicObject o2) {
-		SymbolicObjectKind kind = o1.symbolicObjectKind();
-		int result = kind.compareTo(o2.symbolicObjectKind());
+		if (o1 == o2)
+			return 0;
+		else {
+			SymbolicObjectKind kind = o1.symbolicObjectKind();
+			int result = kind.compareTo(o2.symbolicObjectKind());
 
-		if (result != 0)
-			return result;
-
-		switch (kind) {
-		case EXPRESSION:
-			return expressionComparator.compare((SymbolicExpression) o1,
-					(SymbolicExpression) o2);
-		case EXPRESSION_COLLECTION:
-			return collectionComparator.compare((SymbolicCollection<?>) o1,
-					(SymbolicCollection<?>) o2);
-		case TYPE:
-			return typeComparator.compare((SymbolicType) o1, (SymbolicType) o2);
-		case TYPE_SEQUENCE:
-			return typeSequenceComparator.compare((SymbolicTypeSequence) o1,
-					(SymbolicTypeSequence) o2);
-		case BOOLEAN:
-			return ((BooleanObject) o1).getBoolean() ? (((BooleanObject) o2)
-					.getBoolean() ? 0 : 1)
-					: (((BooleanObject) o2).getBoolean() ? -1 : 0);
-		case INT:
-			return ((IntObject) o1).getInt() - ((IntObject) o2).getInt();
-		case NUMBER:
-			return ((Number) o1).compareTo((Number) o2);
-		case STRING:
-			return ((StringObject) o1).getString().compareTo(
-					((StringObject) o2).getString());
-		default:
-			throw new SARLInternalException("unreachable");
+			if (result != 0)
+				return result;
+			switch (kind) {
+			case EXPRESSION:
+				return expressionComparator.compare((SymbolicExpression) o1,
+						(SymbolicExpression) o2);
+			case EXPRESSION_COLLECTION:
+				return collectionComparator.compare((SymbolicCollection<?>) o1,
+						(SymbolicCollection<?>) o2);
+			case TYPE:
+				return typeComparator.compare((SymbolicType) o1,
+						(SymbolicType) o2);
+			case TYPE_SEQUENCE:
+				return typeSequenceComparator.compare(
+						(SymbolicTypeSequence) o1, (SymbolicTypeSequence) o2);
+			case BOOLEAN:
+				return ((BooleanObject) o1).getBoolean() ? (((BooleanObject) o2)
+						.getBoolean() ? 0 : 1) : (((BooleanObject) o2)
+						.getBoolean() ? -1 : 0);
+			case INT:
+				return ((IntObject) o1).getInt() - ((IntObject) o2).getInt();
+			case NUMBER:
+				return ((Number) o1).compareTo((Number) o2);
+			case STRING:
+				return ((StringObject) o1).getString().compareTo(
+						((StringObject) o2).getString());
+			default:
+				throw new SARLInternalException("unreachable");
+			}
 		}
 	}
 }

@@ -197,17 +197,18 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	/**
-	 * Returns a boolean expression which holds iff the two types are equal,
-	 * using nestingDepth to control the name of the next bound variable.
+	 * Returns a boolean expression which holds iff the two types are
+	 * compatible, using nestingDepth to control the name of the next bound
+	 * variable.
 	 * 
 	 * @param type0
 	 *            a symbolic type
 	 * @param type1
 	 *            a symbolic type
-	 * @return a boolean expression which holds iff the two types are equal
+	 * @return a boolean expression which holds iff the two types are compatible
 	 */
-	private BooleanExpression equals(SymbolicType type0, SymbolicType type1,
-			int nestingDepth) {
+	private BooleanExpression compatible(SymbolicType type0,
+			SymbolicType type1, int nestingDepth) {
 		if (type0.equals(type1))
 			return trueExpr;
 
@@ -223,28 +224,24 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		case ARRAY: {
 			SymbolicArrayType a0 = (SymbolicArrayType) type0;
 			SymbolicArrayType a1 = (SymbolicArrayType) type1;
+			BooleanExpression result = compatible(a0.elementType(),
+					a1.elementType(), nestingDepth);
 
-			if (a0.isComplete() != a1.isComplete())
-				return falseExpr;
-			else {
-				BooleanExpression result = equals(a0.elementType(),
-						a1.elementType(), nestingDepth);
-
-				if (a0.isComplete())
-					result = and(
-							result,
-							equals(((SymbolicCompleteArrayType) a0).extent(),
-									((SymbolicCompleteArrayType) a1).extent(),
-									nestingDepth));
-				return result;
-			}
+			if (a0.isComplete() && a1.isComplete())
+				result = and(
+						result,
+						equals(((SymbolicCompleteArrayType) a0).extent(),
+								((SymbolicCompleteArrayType) a1).extent(),
+								nestingDepth));
+			return result;
 		}
 		case FUNCTION:
 			return and(
-					equals(((SymbolicFunctionType) type0).inputTypes(),
+					compatibleTypeSequence(
+							((SymbolicFunctionType) type0).inputTypes(),
 							((SymbolicFunctionType) type1).inputTypes(),
 							nestingDepth),
-					equals(((SymbolicFunctionType) type0).outputType(),
+					compatible(((SymbolicFunctionType) type0).outputType(),
 							((SymbolicFunctionType) type1).outputType(),
 							nestingDepth));
 		case TUPLE: {
@@ -253,7 +250,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 			if (!t0.name().equals(t1.name()))
 				return falseExpr;
-			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+			return compatibleTypeSequence(t0.sequence(), t1.sequence(),
+					nestingDepth);
 		}
 		case UNION: {
 			SymbolicUnionType t0 = (SymbolicUnionType) type0;
@@ -261,7 +259,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 			if (!t0.name().equals(t1.name()))
 				return falseExpr;
-			return equals(t0.sequence(), t1.sequence(), nestingDepth);
+			return compatibleTypeSequence(t0.sequence(), t1.sequence(),
+					nestingDepth);
 		}
 		default:
 			throw ierr("unreachable");
@@ -270,14 +269,37 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	/**
-	 * Returns a boolean expression which holds iff the two types are equal.
+	 * Returns a boolean expression which holds iff the two types are
+	 * compatible. Two types are compatible if it is possible for them to have a
+	 * value in common. For the most part, this is the same as saying they are
+	 * the same type. The exception is that an incomplete array type and a
+	 * complete array type with compatible element types are compatible.
 	 * 
 	 * @param type0
+	 *            a type
 	 * @param type1
-	 * @return
+	 *            a type
+	 * @return a boolean expression which holds iff the two types are compatible
 	 */
-	protected BooleanExpression equals(SymbolicType type0, SymbolicType type1) {
-		return equals(type0, type1, 0);
+	protected BooleanExpression compatible(SymbolicType type0,
+			SymbolicType type1) {
+		return compatible(type0, type1, 0);
+	}
+
+	/**
+	 * Are the two types definitely incompatible? If this method returns true,
+	 * the types cannot be compatible (i.e., there cannot be any object
+	 * belonging to both). If it returns false, the two types are probably
+	 * compatible, but there is no guarantee.
+	 * 
+	 * @param type0
+	 *            a type
+	 * @param type1
+	 *            a type
+	 * @return true iff definitely not compatible
+	 */
+	protected boolean incompatible(SymbolicType type0, SymbolicType type1) {
+		return compatible(type0, type1).isFalse();
 	}
 
 	private BooleanExpression equals(SymbolicExpression arg0,
@@ -286,7 +308,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return trueExpr;
 
 		SymbolicType type = arg0.type();
-		BooleanExpression result = equals(type, arg1.type(), quantifierDepth);
+		BooleanExpression result = compatible(type, arg1.type(),
+				quantifierDepth);
 
 		if (result.equals(falseExpr))
 			return result;
@@ -300,7 +323,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		case ARRAY: {
 			NumericExpression length = length(arg0);
 
-			if (!((SymbolicArrayType) type).isComplete())
+			if (!(type instanceof SymbolicCompleteArrayType)
+					|| !(arg1.type() instanceof SymbolicCompleteArrayType))
 				result = and(result,
 						equals(length, length(arg1), quantifierDepth));
 			if (result.isFalse())
@@ -418,7 +442,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		}
 	}
 
-	private BooleanExpression equals(SymbolicTypeSequence seq0,
+	private BooleanExpression compatibleTypeSequence(SymbolicTypeSequence seq0,
 			SymbolicTypeSequence seq1, int nestingDepth) {
 		int size = seq0.numTypes();
 
@@ -427,14 +451,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		if (size == 0)
 			return trueExpr;
 		else {
-			BooleanExpression result = equals(seq0.getType(0), seq1.getType(1),
-					nestingDepth);
+			BooleanExpression result = compatible(seq0.getType(0),
+					seq1.getType(1), nestingDepth);
 
 			if (size > 1)
 				for (int i = 1; i < size; i++)
 					result = and(
 							result,
-							equals(seq0.getType(i), seq1.getType(i),
+							compatible(seq0.getType(i), seq1.getType(i),
 									nestingDepth));
 			return result;
 		}
@@ -1272,94 +1296,194 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			Iterable<? extends SymbolicExpression> elements) {
 		int count = 0;
 
+		if (elementType == null)
+			throw err("Argument elementType to method array was null");
+		if (elements == null)
+			throw err("Argument elements to method array was null");
 		for (SymbolicExpression element : elements) {
-			if (!elementType.equals(element.type()))
-				throw new SARLException(
-						"Element "
-								+ count
-								+ " of array sequence argument did not have correct element type:\n"
-								+ "Expected: " + elementType + "\nSaw: "
-								+ element.type());
+			if (element == null || element.isNull())
+				throw err("Element " + count
+						+ " of array elements argument has illegal value:\n"
+						+ element);
+			if (incompatible(elementType, element.type()))
+				throw err("Element "
+						+ count
+						+ " of array elements argument had incompatible type:\n"
+						+ "Expected: " + elementType + "\nSaw: "
+						+ element.type());
 			count++;
 		}
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, integer(count)), sequence(elements));
 	}
 
+	// TODO: if the length of the type ever becomes known through
+	// simplification, the type must change. So you can simplify
+	// array<int> to array <int,5> for example.
+
 	@Override
 	public NumericExpression length(SymbolicExpression array) {
-		SymbolicArrayType type = (SymbolicArrayType) array.type();
+		if (array == null)
+			throw err("Argument array to method length was null");
+		if (!(array.type() instanceof SymbolicArrayType))
+			throw err("Argument array to method length does not have array type."
+					+ "\narray: " + array + "\ntype: " + array.type());
+		else {
+			SymbolicArrayType type = (SymbolicArrayType) array.type();
 
-		if (type.isComplete())
-			return (NumericExpression) ((SymbolicCompleteArrayType) type)
-					.extent();
-		else
-			return numericFactory.newNumericExpression(SymbolicOperator.LENGTH,
-					integerType, array);
+			if (type.isComplete())
+				return (NumericExpression) ((SymbolicCompleteArrayType) type)
+						.extent();
+			else
+				return numericFactory.newNumericExpression(
+						SymbolicOperator.LENGTH, integerType, array);
+		}
 	}
 
 	@Override
 	public SymbolicExpression arrayRead(SymbolicExpression array,
 			NumericExpression index) {
-		SymbolicOperator op = array.operator();
-
-		if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+		if (array == null)
+			throw err("Argument array to method arrayRead is null.");
+		if (index == null)
+			throw err("Argument index to method arrayRead is null.");
+		if (!(array.type() instanceof SymbolicArrayType))
+			throw err("Argument array to method arrayRead does not have array type."
+					+ "\narray: " + array + "\ntype: " + array.type());
+		else {
+			SymbolicArrayType arrayType = (SymbolicArrayType) array.type();
+			SymbolicOperator op = array.operator();
 			IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
 
 			if (indexNumber != null) {
-				SymbolicExpression origin = (SymbolicExpression) array
-						.argument(0);
+				if (indexNumber.signum() < 0)
+					throw err("Argument index to arrayRead is negative."
+							+ "\nindex: " + indexNumber);
+				if (arrayType.isComplete()) {
+					IntegerNumber lengthNumber = (IntegerNumber) extractNumber(((SymbolicCompleteArrayType) arrayType)
+							.extent());
 
-				if (indexNumber.compareTo(denseArrayMaxSize) < 0) {
-					int indexInt = indexNumber.intValue();
-
-					SymbolicSequence<?> values = (SymbolicSequence<?>) array
-							.argument(1);
-					int size = values.size();
-
-					if (indexInt < size) {
-						SymbolicExpression value = values.get(indexInt);
-
-						if (!value.isNull())
-							return value;
-					}
+					if (lengthNumber != null
+							&& indexNumber.compareTo(lengthNumber) >= 0)
+						throw err("Array index out of bounds in method arrayRead."
+								+ "\narray: "
+								+ array
+								+ "\nextent: "
+								+ lengthNumber + "\nindex: " + indexNumber);
 				}
-				// either indexNumber too big or entry is null
-				return arrayRead(origin, index);
+				if (op == SymbolicOperator.CONCRETE)
+					return ((SymbolicSequence<?>) array.argument(0))
+							.get(indexNumber.intValue());
+				else if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+					SymbolicExpression origin = (SymbolicExpression) array
+							.argument(0);
+
+					if (indexNumber.compareTo(denseArrayMaxSize) < 0) {
+						int indexInt = indexNumber.intValue();
+
+						SymbolicSequence<?> values = (SymbolicSequence<?>) array
+								.argument(1);
+						int size = values.size();
+
+						if (indexInt < size) {
+							SymbolicExpression value = values.get(indexInt);
+
+							if (!value.isNull())
+								return value;
+						}
+					}
+					// either indexNumber too big or entry is null
+					return arrayRead(origin, index);
+				}
+			}
+			return expression(SymbolicOperator.ARRAY_READ,
+					((SymbolicArrayType) array.type()).elementType(), array,
+					index);
+		}
+	}
+
+	private SymbolicExpression arrayWrite_noCheck(SymbolicExpression array,
+			SymbolicArrayType arrayType, NumericExpression index,
+			SymbolicExpression value) {
+		IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
+
+		if (indexNumber != null) {
+			int indexInt = indexNumber.intValue();
+			SymbolicOperator op = array.operator();
+
+			if (indexNumber.signum() < 0)
+				throw err("Argument index to arrayWrite is negative."
+						+ "\nindex: " + indexNumber);
+			if (arrayType.isComplete()) {
+				IntegerNumber lengthNumber = (IntegerNumber) extractNumber(((SymbolicCompleteArrayType) arrayType)
+						.extent());
+
+				if (lengthNumber != null
+						&& indexNumber.compareTo(lengthNumber) >= 0)
+					throw err("Array index out of bounds in method arrayWrite."
+							+ "\narray: " + array + "\nextent: " + lengthNumber
+							+ "\nindex: " + indexNumber);
+			}
+			if (op == SymbolicOperator.CONCRETE) {
+				@SuppressWarnings("unchecked")
+				SymbolicSequence<SymbolicExpression> sequence = (SymbolicSequence<SymbolicExpression>) array
+						.argument(1);
+
+				return expression(op, arrayType, sequence.set(indexInt, value));
+			}
+			if (indexInt < DENSE_ARRAY_MAX_SIZE) {
+				SymbolicSequence<SymbolicExpression> sequence;
+				SymbolicExpression origin;
+
+				if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
+					@SuppressWarnings("unchecked")
+					SymbolicSequence<SymbolicExpression> arg1 = (SymbolicSequence<SymbolicExpression>) array
+							.argument(1);
+
+					sequence = arg1;
+					origin = (SymbolicExpression) array.argument(0);
+				} else {
+					origin = array;
+					sequence = collectionFactory.emptySequence();
+				}
+				sequence = sequence.setExtend(indexInt, value, nullExpression);
+				return expression(SymbolicOperator.DENSE_ARRAY_WRITE,
+						arrayType, origin, sequence);
 			}
 		}
-		return expression(SymbolicOperator.ARRAY_READ,
-				((SymbolicArrayType) array.type()).elementType(), array, index);
+		return expression(SymbolicOperator.ARRAY_WRITE, arrayType, array,
+				index, value);
 	}
 
 	@Override
 	public SymbolicExpression arrayWrite(SymbolicExpression array,
 			NumericExpression index, SymbolicExpression value) {
-		IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
+		if (array == null)
+			throw err("Argument array to method arrayWrite is null.");
+		if (index == null)
+			throw err("Argument index to method arrayWrite is null.");
+		if (value == null)
+			throw err("Argument value to method arrayWrite is null.");
+		if (!(array.type() instanceof SymbolicArrayType))
+			throw err("Argument array to method arrayWrite does not have array type."
+					+ "\narray: " + array + "\ntype: " + array.type());
+		if (!index.type().isInteger())
+			throw err("Argument index to method arrayWrite does not have integer type."
+					+ "\nindex: " + index + "\ntype: " + index.type());
+		if (value.isNull())
+			throw err("Argument value to method arrayWrite is NULL.");
+		else {
+			SymbolicArrayType arrayType = (SymbolicArrayType) array.type();
 
-		if (indexNumber != null && indexNumber.compareTo(denseArrayMaxSize) < 0) {
-			SymbolicOperator op = array.operator();
-			int indexInt = indexNumber.intValue();
-			SymbolicSequence<SymbolicExpression> sequence;
-			SymbolicExpression origin;
-
-			if (op == SymbolicOperator.DENSE_ARRAY_WRITE) {
-				@SuppressWarnings("unchecked")
-				SymbolicSequence<SymbolicExpression> arg1 = (SymbolicSequence<SymbolicExpression>) array
-						.argument(1);
-
-				sequence = arg1;
-				origin = (SymbolicExpression) array.argument(0);
-			} else {
-				origin = array;
-				sequence = collectionFactory.emptySequence();
-			}
-			sequence = sequence.setExtend(indexInt, value, nullExpression);
-			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
-					origin, sequence);
+			if (incompatible(arrayType.elementType(), value.type()))
+				throw err("Argument value to method arrayWrite has incompatible type."
+						+ "\nvalue: "
+						+ value
+						+ "\ntype: "
+						+ value.type()
+						+ "\nExpected: " + arrayType.elementType());
+			return arrayWrite_noCheck(array, arrayType, index, value);
 		}
-		return expression(SymbolicOperator.ARRAY_WRITE, array.type(), array,
-				index, value);
 	}
 
 	@Override
@@ -1375,13 +1499,16 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			int count = 0;
 
 			for (SymbolicExpression value : values) {
-				if (!elementType.equals(value.type()))
-					throw new SARLException(
-							"Element "
-									+ count
-									+ " of values argument to denseArrayWrite has wrong type.\n"
-									+ "Expected: " + elementType + "\nSaw: "
-									+ value.type());
+				if (value == null)
+					throw err("Element " + count
+							+ " of values argument to denseArrayWrite is null."
+							+ "\nUse NULL expression instead");
+				if (value.isNull() || incompatible(elementType, value.type()))
+					throw err("Element "
+							+ count
+							+ " of values argument to denseArrayWrite has incompatible type.\n"
+							+ "Expected: " + elementType + "\nSaw: "
+							+ value.type());
 				count++;
 			}
 			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
@@ -1411,10 +1538,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			SymbolicType fieldType = fieldTypes.getType(i);
 			SymbolicType componentType = sequence.get(i).type();
 
-			if (!fieldType.equals(componentType))
+			if (incompatible(fieldType, componentType))
 				throw err("Element "
 						+ i
-						+ " of components argument to method tuple has wrong type.\n"
+						+ " of components argument to method tuple has incompatible type.\n"
 						+ "\nExpected: " + fieldType + "\nSaw: "
 						+ componentType);
 		}
@@ -1444,9 +1571,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		SymbolicType fieldType = tupleType.sequence().getType(indexInt);
 		SymbolicType valueType = value.type();
 
-		if (!fieldType.equals(valueType))
-			throw new IllegalArgumentException("Expected expresion of type "
-					+ fieldType + " but saw type " + valueType + ": " + value);
+		if (incompatible(fieldType, valueType))
+			throw err("Argument value to tupleWrite has incompatible type."
+					+ "\nExpected: " + fieldType + "\nSaw: " + valueType);
 		if (op == SymbolicOperator.CONCRETE) {
 			@SuppressWarnings("unchecked")
 			SymbolicSequence<SymbolicExpression> arg0 = (SymbolicSequence<SymbolicExpression>) tuple
@@ -1480,8 +1607,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				return unionInject((SymbolicUnionType) newType,
 						intObject(index), expression);
 		}
-		throw new IllegalArgumentException("Cannot cast from type " + oldType
-				+ " to type " + newType + ": " + expression);
+		throw err("Cannot cast from type " + oldType + " to type " + newType
+				+ ": " + expression);
 	}
 
 	@Override

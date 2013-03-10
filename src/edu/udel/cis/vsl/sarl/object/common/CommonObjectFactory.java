@@ -8,8 +8,8 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -27,6 +27,9 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	private ArrayList<SymbolicObject> objectList = new ArrayList<SymbolicObject>();
 
+	// TODO: think about this:
+	// private NavigableSet<SymbolicObject> sortedSet;
+
 	private BooleanObject trueObj, falseObj;
 
 	private IntObject zeroIntObj, oneIntObj;
@@ -39,18 +42,14 @@ public class CommonObjectFactory implements ObjectFactory {
 	public CommonObjectFactory(NumberFactory numberFactory) {
 		this.numberFactory = numberFactory;
 		this.comparator = new ObjectComparator();
-		this.trueObj = (BooleanObject) canonic(new CommonBooleanObject(true));
-		this.falseObj = (BooleanObject) canonic(new CommonBooleanObject(false));
-		this.zeroIntObj = (IntObject) canonic(intObject(0));
-		this.oneIntObj = (IntObject) canonic(intObject(1));
-		this.zeroIntegerObj = (NumberObject) canonic(numberObject(numberFactory
-				.zeroInteger()));
-		this.zeroRealObj = (NumberObject) canonic(numberObject(numberFactory
-				.zeroRational()));
-		this.oneIntegerObj = (NumberObject) canonic(numberObject(numberFactory
-				.oneInteger()));
-		this.oneRealObj = (NumberObject) canonic(numberObject(numberFactory
-				.oneRational()));
+		this.trueObj = canonic(new CommonBooleanObject(true));
+		this.falseObj = canonic(new CommonBooleanObject(false));
+		this.zeroIntObj = canonic(intObject(0));
+		this.oneIntObj = canonic(intObject(1));
+		this.zeroIntegerObj = canonic(numberObject(numberFactory.zeroInteger()));
+		this.zeroRealObj = canonic(numberObject(numberFactory.zeroRational()));
+		this.oneIntegerObj = canonic(numberObject(numberFactory.oneInteger()));
+		this.oneRealObj = canonic(numberObject(numberFactory.oneRational()));
 	}
 
 	@Override
@@ -62,8 +61,7 @@ public class CommonObjectFactory implements ObjectFactory {
 		comparator.setExpressionComparator(c);
 	}
 
-	public void setCollectionComparator(
-			Comparator<SymbolicCollection<?>> c) {
+	public void setCollectionComparator(Comparator<SymbolicCollection<?>> c) {
 		comparator.setCollectionComparator(c);
 	}
 
@@ -80,6 +78,10 @@ public class CommonObjectFactory implements ObjectFactory {
 		assert comparator.collectionComparator() != null;
 		assert comparator.typeComparator() != null;
 		assert comparator.typeSequenceComparator() != null;
+		// TODO set the orders of all the objects you already created??
+		// maybe only do this the first time they are used in
+		// a comparison. How will the other comparators
+		// do this
 	}
 
 	public ObjectComparator comparator() {
@@ -108,17 +110,11 @@ public class CommonObjectFactory implements ObjectFactory {
 			@SuppressWarnings("unchecked")
 			T result2 = (T) result;
 
+			// TODO set the order if you can.
+
 			return result2;
 		}
 	}
-
-	// public SymbolicType canonic(SymbolicType type) {
-	// return (SymbolicType) canonic((SymbolicObject) type);
-	// }
-	//
-	// public SymbolicExpression canonic(SymbolicExpression expression) {
-	// return (SymbolicExpression) canonic((SymbolicObject) expression);
-	// }
 
 	public BooleanObject trueObj() {
 		return trueObj;
@@ -157,7 +153,7 @@ public class CommonObjectFactory implements ObjectFactory {
 	}
 
 	public StringObject stringObject(String string) {
-		return new CommonStringObject(string);
+		return canonic(new CommonStringObject(string));
 	}
 
 	public IntObject intObject(int value) {

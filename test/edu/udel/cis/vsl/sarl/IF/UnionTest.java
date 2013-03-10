@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -20,7 +21,16 @@ public class UnionTest {
 	private SymbolicUniverse universe;
 	private SymbolicType intType, realType, booleanType;
 	private SymbolicArrayType realArray, unionArray;
+
+	/**
+	 * union1 is union of intType, realType, booleanType, realArray
+	 */
 	private SymbolicUnionType union1;
+
+	/**
+	 * a has type array-of-union1. Its elements are: 2/3, true, and 10. Or more
+	 * precisely: inject(1, 2/3), inject(2, true), and inject(0, 10).
+	 */
 	SymbolicExpression a;
 
 	@Before
@@ -113,5 +123,17 @@ public class UnionTest {
 		assertEquals(universe.bool(true), test0);
 		assertEquals(universe.bool(false), test1);
 		assertEquals(universe.bool(false), test2);
+	}
+
+	@Test
+	public void castInject() {
+		NumericExpression x = universe.rational(5, 6);
+		SymbolicExpression u_x = universe.unionInject(union1,
+				universe.intObject(1), x);
+		SymbolicExpression cast_x = universe.cast(union1, x);
+
+		assertEquals(union1, u_x.type());
+		assertEquals(union1, cast_x.type());
+		assertEquals(u_x, cast_x);
 	}
 }

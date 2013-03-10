@@ -25,7 +25,7 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	 * @param sequence
 	 */
 	CommonSymbolicUnionType(StringObject name, SymbolicTypeSequence sequence) {
-		super(SymbolicTypeKind.TUPLE);
+		super(SymbolicTypeKind.UNION);
 		assert sequence != null;
 
 		int n = sequence.numTypes();

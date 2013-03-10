@@ -750,7 +750,9 @@ public interface SymbolicUniverse {
 	// Arrays...
 
 	/**
-	 * Returns the concrete array consisting of given sequence of elements.
+	 * Returns the concrete array consisting of given sequence of elements. The
+	 * type of the array will be the complete array type determined by the
+	 * element type and the number of elements.
 	 * 
 	 * @param elementType
 	 *            the type of each element of the array
