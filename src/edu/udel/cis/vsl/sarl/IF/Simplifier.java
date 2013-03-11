@@ -10,7 +10,7 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
  * assumption itself can be simplified; the simplified version of the assumption
  * can then be obtained by the method newAssumption. Any other symbolic
  * expression can be simplified (subject to the assumption) using the method
- * simplify.
+ * "apply" (provided by the supertype Transform).
  * 
  * Example:
  * 
@@ -32,13 +32,6 @@ public interface Simplifier extends
 
 	/** Returns the simplified assumption */
 	SymbolicExpression newAssumption();
-
-	// /**
-	// * Returns the simplified version of the given expression (under the
-	// * assumption).
-	// apply does this now
-	// */
-	// SymbolicExpression simplify(SymbolicExpression expression);
 
 	/**
 	 * If the assumption can be represented as a simple interval constraint,

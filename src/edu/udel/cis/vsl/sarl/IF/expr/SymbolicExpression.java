@@ -7,51 +7,42 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * An instance of this type represents a symbolic expression. This is the root
  * of the symbolic expression type hierarchy.
  * 
- * Symbolic expressions are immutable: they cannot be modified after they are
- * instantiated. (Or at least, not in a way visible to the user.)
+ * A symbolic expression is a kind of symbolic object (SymbolicObject). Like all
+ * symbolic objects, symbolic expressions are immutable: they cannot be modified
+ * after they are instantiated. (Or at least, not in a way visible to the user.)
  * 
- * A symbolic expression has an operator, a type, and some number of arguments,
- * which together fully specify the expression. The arguments implement the
- * SymbolicObject interface. SymbolicExpressionIF extends SymbolicObject, i.e.,
- * a symbolic expression can be used as an argument (but so can other types of
- * objects).
+ * A symbolic expression has an operator (SymbolicOperator), a type
+ * (SymbolicType), and some number of arguments, which together fully specify
+ * the expression. The arguments implement the SymbolicObject interface.
+ * SymbolicExpression extends SymbolicObject, so a symbolic expression can be
+ * used as an argument (but so can other kinds of symbolic objects).
  * 
  * The difference between symbolic expressions and symbolic objects which are
  * not symbolic expressions is that the latter may have essential fields that
  * are not arguments. (An essential field is used in the "equals" method.) In
- * contrast, a symbolic expression is completely determined by its kind, type,
- * and arguments.
- * 
- * Types implementing SymbolicObject include
- * <ul>
- * <li>SymbolicExpressionIF</li>
- * <li>SymbolicCollection (including SymbolicMap and SymbolicSequence)</li>
- * <li>NumberObject</li>
- * <li>IntObject</li>
- * <li>BooleanObject</li>
- * <li>StringObject</li>
- * </ul>
- * 
- * Every symbolic expression has a type, which is an instance of SymbolicTypeIF.
+ * contrast, a symbolic expression is completely determined by its operator,
+ * type, and arguments.
  * 
  * The symbolic expression operators are as follows:
  * 
  * <ul>
  * <li>ADD: an expression representing the sum of symbolic expressions. This has
- * 1 or 2 arguments. If 1, the argument is a SymbolicCollection with at least
- * one element; the ADD expression represents the sum of the elements in the
- * collection. If 2, then both arguments are symbolic expressions and have the
- * same numeric (integer or real) type, and the ADD expression represents the
- * sum of the two arguments.</li>
+ * 1 or 2 arguments. If 1, the argument is an Iterable<? extends
+ * NumericExpression> with at least one element; the ADD expression represents
+ * the sum of the elements in the collection. The elements of the collection
+ * must all have the same numeric (integer or real) type. If 2, then both
+ * arguments are symbolic expressions and have the same numeric (integer or
+ * real) type, and the ADD expression represents the sum of the two arguments.</li>
  * 
  * <li>AND: boolean conjunction. Has 1 or 2 arguments, similar to ADD. If 1, the
- * argument is a collection with at least one element. All symbolic expressions
- * in the collection have boolean type. If there are 2 arguments, they are both
- * symbolic expressions of boolean type.</li>
+ * argument is an Iterable<? extends BooleanExpression>. All symbolic
+ * expressions in the collection have boolean type. If there are 2 arguments,
+ * they are both symbolic expressions of boolean type.</li>
  * 
  * <li>APPLY: an expression representing a value of the form f(x). Takes 2
- * arguments. Arg 0 is f, a symbolic expression of function type. Arg 1 is a
- * SymbolicSequence containing the arguments to f in order.</li>
+ * arguments. Arg 0 is f, a symbolic expression of function type. Arg 1 is an
+ * Iterable<? extends SymbolicExpression> containing the arguments to f in
+ * order.</li>
  * 
  * <li>ARRAY_LAMBDA: an array expression of type T[] formed by providing a
  * function f from integers to T. 1 argument: a symbolic expression f of
@@ -67,30 +58,34 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * array expression, arg 1 is the index expression, arg 2 is the new value being
  * assigned to that position in the array.</li>
  * 
- * <li>CAST: an expression representing the resulting of converting a value from
+ * <li>CAST: an expression representing the result of converting a value from
  * one type to another. 1 argument: the value being cast. The type() method in
  * this expression yields the new type to which the element is being cast.</li>
  * 
  * <li>CONCRETE: a concrete value acting as a symbolic expression. One argument,
  * which is the concrete value. Argument may be BooleanObject, NumberObject, or
- * SymbolicCollection. The latter serves as concrete values for arrays, tuples.</li>
+ * an Iterable<? extends SymbolicExpression>. The last case is used to represent
+ * concrete values for arrays or tuples.</li>
  * 
- * <li>COND: a conditional expression, as in C's ternary expression (arg0 ? arg1
- * : arg2). 3 arguments. Arg 0 is the boolean predicate expression, arg1 the
- * expression which is the result if arg0 evaluates to true, arg2 the expression
- * which is the result if arg0 evaluates to false. arg1 and arg2 must have the
- * same type, which is the type of this expression.</li>
+ * <li>COND: a conditional expression, also known as "if-then-else", as in C's
+ * ternary expression (arg0 ? arg1 : arg2). 3 arguments. Arg 0 is the boolean
+ * predicate expression (an instance of BooleanExpression), arg1 the expression
+ * which is the result if arg0 evaluates to true, arg2 the expression which is
+ * the result if arg0 evaluates to false. arg1 and arg2 must have the same type,
+ * which is the type of this expression.</li>
  * 
- * <li>DENSE_ARRAY_WRITE: Represents the result of multiple writes to an array.
- * 2 arguments. arg0 is an expression of array type T[]. Arg 2 is a
- * SymbolicSequence, say v0,...,v(n-1). Each element of the sequence is either
- * NULL (i.e., the expression with operator NULL; see below) or an expression of
- * type T. The dense array write expression represents the result of starting
- * with arg0 and then for each i for which v(i) is non-NULL, setting the array
- * element in position i to v(i). It is thus equivalent to a sequence of array
- * write operations. It is included here to allow a dense representation of the
- * array, which can have performance benefits, in particular constant-time
- * lookup and modification (just like for regular concrete arrays)</li>
+ * <li>DENSE_ARRAY_WRITE: Represents the result of multiple writes to distinct
+ * concrete positions in an array. 2 arguments. arg0 is an expression of array
+ * type T[]. arg1 is an Iterable<? extends SymbolicExpression>, say
+ * v0,...,v(n-1). Each element of the sequence is either NULL (i.e., the
+ * expression with operator NULL; see below) or an expression of type T. The
+ * dense array write expression represents the result of starting with arg0 and
+ * then for each i for which v(i) is non-NULL, setting the array element in
+ * position i to v(i). It is thus equivalent to a sequence of array write
+ * operations (which can be performed in any order since they are to distinct
+ * positions). It is included here to allow a dense representation of the array,
+ * which can have performance benefits, in particular constant-time lookup and
+ * modification (just like for regular concrete arrays)</li>
  * 
  * <li>DIVIDE: real division: 2 arguments: arg 0 the numerator, arg 1 the
  * denominator. Both must be symbolic expressions of real type. Has real type.</li>
@@ -99,12 +94,10 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * expressions. Has boolean type.</li>
  * 
  * <li>EXISTS: existential quantification: exists x.e. 2 arguments. arg0 is a
- * symbolic constant x, and arg1 is e, a boolean-valued symbolic expression. Has
- * boolean type.</li>
+ * symbolic constant x, and arg1 is e, a BooleanExpression. Has boolean type.</li>
  * 
  * <li>FORALL: universal quantification: forall x.e. 2 arguments. arg0 is a
- * symbolic constant x, and arg1 is e, a boolean-valued symbolic expression. Has
- * boolean type.</li>
+ * symbolic constant x, and arg1 is e, a BooleanExpression. Has boolean type.</li>
  * 
  * <li>INT_DIVIDE: integer division: 2 arguments, both symbolic expressions: arg
  * 0 numerator, arg 1 denominator. Has integer type.</li>
@@ -134,12 +127,13 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * <li>NEGATIVE: numerical negation, - arg0. 1 argument. Type is same as that of
  * argument.</li>
  * 
- * <li>NEQ: arg0 != arg1. 2 arguments. Boolean type.</li>
+ * <li>NEQ: arg0 != arg1. 2 arguments, both symbolic expressions. Boolean type.</li>
  * 
  * <li>NOT: logical negation, !arg0. 1 argument. Boolean type.</li>
  * 
  * <li>NULL: used to represent no symbolic expression in case where Java's null
- * is not acceptable</li>
+ * is not acceptable. This is the only kind of symbolic expression that has a
+ * null type!</li>
  * 
  * <li>OR: boolean disjunction. Like AND, takes 1 or 2 arguments. If 1 argument,
  * the argument is a collection with at least one element. If 2 arguments, both
@@ -274,14 +268,40 @@ public interface SymbolicExpression extends SymbolicObject {
 	/** Is this the "NULL" symbolic expression? */
 	boolean isNull();
 
+	/**
+	 * Is this the boolean "false" expression?
+	 * 
+	 * @return true iff this is the boolean expression "false".
+	 */
 	boolean isFalse();
 
+	/**
+	 * Is this the boolean "true" expression?
+	 * 
+	 * @return true iff this is the boolean expression "true".
+	 */
 	boolean isTrue();
 
+	/**
+	 * Is this the integer or real 0 expression?
+	 * 
+	 * @return true iff this is the integer 0 or the real 0
+	 */
 	boolean isZero();
 
+	/**
+	 * Is this the integer or real 1 expression?
+	 * 
+	 * @return true iff this is the integer 1 or the real 1
+	 */
 	boolean isOne();
 
+	/**
+	 * Is this a numeric expression, i.e., does this have integer or real type?
+	 * If true, this may be safely cast to NumericExpression.
+	 * 
+	 * @return true iff type is integer or real
+	 */
 	boolean isNumeric();
 
 }

@@ -5,12 +5,12 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection.SymbolicCollectionKind;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 
 public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 

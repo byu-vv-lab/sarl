@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF.collections;
+package edu.udel.cis.vsl.sarl.collections.IF;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;

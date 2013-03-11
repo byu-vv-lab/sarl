@@ -4,8 +4,8 @@ import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 
 public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicCollection<V> implements SymbolicMap<K, V> {

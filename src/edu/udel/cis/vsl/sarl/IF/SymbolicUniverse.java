@@ -28,34 +28,103 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 
 /**
  * A symbolic universe is used for the creation and manipulation of symbolic
- * objects and types. The symbolic objects and types created by this universe
- * are said to belong to this universe. Every symbolic object/type belongs to
- * one universe, though a reference to the universe is not necessarily stored in
- * the object/type.
+ * objects. The symbolic objects created by this universe are said to belong to
+ * this universe. Every symbolic object belongs to one universe, though a
+ * reference to the universe is not necessarily stored in the object/type.
  * 
  * Symbolic expressions are a kind of symbolic object. Every symbolic expression
  * has a symbolic type. Other symbolic objects include symbolic collections,
- * such as sequences, sets, and maps.
+ * such as sequences, sets, and maps; symbolic types; and various concrete
+ * objects. See SymbolicObject.
  * 
- * Symbolic objects implement the Immutable Pattern. All symbolic objects are
+ * Symbolic objects implement the Immutable Pattern: all symbolic objects are
  * immutable, i.e., they cannot be modified after they are created.
  */
 public interface SymbolicUniverse {
 
+	// General...
+
+	/**
+	 * Returns a comparator on the set of all symbolic objects. This defines a
+	 * total order on all symbolic objects.
+	 * 
+	 * @return a comparator on all symbolic objects
+	 */
+	Comparator<SymbolicObject> comparator();
+
+	/**
+	 * Returns the unique representative instance from the given object's
+	 * equivalence class, where the equivalence relation is determined by
+	 * "equals". (Refer to the "Flyweight Pattern".)
+	 * 
+	 * A symbolic universe does not necessarily use the Flyweight Pattern on the
+	 * symbolic objects it creates, but this method gives the user the option to
+	 * use that pattern, in full or in part.
+	 * 
+	 * The methods in this universe which return symbolic expressions may return
+	 * distinct instances which are equivalent (under "equals"). However,
+	 * canonic is guaranteed to return a unique instance from each equivalence
+	 * class, i.e., if a.equals(b) then canonic(a)==canonic(b).
+	 * 
+	 * @param object
+	 *            a symbolic object
+	 * @return canonical representative equal to object
+	 */
+	SymbolicObject canonic(SymbolicObject object);
+
+	/**
+	 * Returns the number of canonic symbolic objects controlled by this
+	 * universe.
+	 * 
+	 * @return the number of canonic symbolic objects
+	 */
+	int numObjects();
+
+	/**
+	 * Each canonic symbolic object is assigned a unique ID number. The numbers
+	 * start from 0 and there are no gaps, i.e., they are in the range
+	 * 0..numExpressions-1.
+	 * 
+	 * @return the canonic symbolic object with the given ID number.
+	 */
+	SymbolicObject objectWithId(int id);
+
+	/**
+	 * Returns the set of all canonic symbolic objects controlled by this
+	 * universe as a Java Collection.
+	 * 
+	 * @return the set of all canonic symbolic objects
+	 */
+	Collection<SymbolicObject> objects();
+
 	// Types...
 
-	/** The boolean type. */
+	/**
+	 * The boolean type.
+	 * 
+	 * @return the boolean type
+	 * */
 	SymbolicType booleanType();
 
-	/** The integer type, representing the set of mathematical integers. */
+	/**
+	 * The integer type, representing the set of mathematical integers.
+	 * 
+	 * @return the integer type
+	 * */
 	SymbolicType integerType();
 
-	/** The real type, representing the set of mathematical real numbers. */
+	/**
+	 * The real type, representing the set of mathematical real numbers.
+	 * 
+	 * @return the real type
+	 * */
 	SymbolicType realType();
 
 	/**
 	 * Returns the complete array type with the given element type and extent
 	 * (array length). Neither argument can be null.
+	 * 
+	 * @return the complete array type
 	 */
 	SymbolicCompleteArrayType arrayType(SymbolicType elementType,
 			NumericExpression extent);
@@ -63,21 +132,25 @@ public interface SymbolicUniverse {
 	/**
 	 * Returns the incomplete array type with the given element type. The
 	 * element type cannot be null.
+	 * 
+	 * @return the incomplete array type
 	 */
 	SymbolicArrayType arrayType(SymbolicType elementType);
 
 	/**
 	 * The tuple type defined by the given sequence of component types. The
 	 * tuple type consists of all tuples of values (x_0,...,x_{n-1}), where
-	 * x_{i} has type fieldsTypes[i]. A tuple type also has a name, and two
-	 * tuple types are not equal if they have unequal names.
+	 * x_{i} has type fieldsTypes_i. A tuple type also has a name, and two tuple
+	 * types are not equal if they have unequal names.
+	 * 
+	 * @return the tuple type specified by the given name and field types
 	 */
 	SymbolicTupleType tupleType(StringObject name,
 			Iterable<? extends SymbolicType> fieldTypes);
 
 	/**
-	 * Returns the function type. A function type is specified by an array of
-	 * inputs types, and an output type.
+	 * Returns the specified function type. A function type is specified by a
+	 * sequence of inputs types, and an output type.
 	 * 
 	 * @param inputTypes
 	 *            sequence of input types
@@ -89,58 +162,35 @@ public interface SymbolicUniverse {
 			Iterable<? extends SymbolicType> inputTypes, SymbolicType outputType);
 
 	/**
-	 * The type which is the union of the given types.
+	 * The type which is the union of the given member types. Say the member
+	 * types are t_0,...,t_{n-1} and call the union type u. For 0<=i<n, there
+	 * are functions inject_i: t_i -> u, extract_i: u -> t_i, and test_i: u ->
+	 * {true,false}. The domain of u consists of all expressions of the form
+	 * inject_i(x_i). extract_i(inject_i(x))=x and extract_i is undefined on any
+	 * element of u that is not in the image of inject_i. test_i(x) is true iff
+	 * x=inject_i(x_i) for some x_i in t_i.
 	 * 
 	 * @param name
+	 *            the name of the union type
 	 * @param memberTypes
-	 * @return
+	 *            the sequence of member types
+	 * @return the specified union type
 	 */
 	SymbolicUnionType unionType(StringObject name,
 			Iterable<? extends SymbolicType> memberTypes);
 
-	// Symbolic Objects...
-
-	// General...
-
-	Comparator<SymbolicObject> comparator();
-
-	/**
-	 * Returns the unique representative instance from the given object's
-	 * equivalence class, where the equivalence relation is determined by
-	 * "equals".
-	 * 
-	 * @param object
-	 *            a symbolic object
-	 * @return canonical representative equal to object
-	 */
-	SymbolicObject canonic(SymbolicObject object);
-
-	/** Returns the number of symbolic objects controlled by this universe. */
-	int numObjects();
-
-	/**
-	 * Returns the symbolic expression with the given ID (in the range
-	 * 0..numExpressions-1).
-	 */
-	SymbolicObject objectWithId(int index);
-
-	/**
-	 * Returns the set of all canonic symbolic objects controlled by this
-	 * universe.
-	 */
-	Collection<SymbolicObject> objects();
-
 	/**
 	 * Applies the given operator to the arguments and returns the resulting
-	 * expression in the canonic form used by this universe. The arguments
-	 * should have the form required by the operator; see the documentation in
-	 * the SymbolicExpression interface.
+	 * expression in the form used by this universe. The arguments should have
+	 * the form required by the operator; see the documentation in the
+	 * SymbolicExpression interface. The result returned should be identical to
+	 * what would be returned by calling the specific methods (e.g., add(...)).
 	 * 
 	 * @param operator
 	 *            a symbolic operator
 	 * @param type
-	 *            the type which the resulting expression should have (it may
-	 *            not be unambiguous)
+	 *            the type which the resulting expression should have (since it
+	 *            may not be unambiguous)
 	 * @param arguments
 	 *            arguments which should be appropriate for the specified
 	 *            operator
@@ -166,12 +216,49 @@ public interface SymbolicUniverse {
 	// Symbolic primitive objects: ints, boolean, reals, strings
 	// Note: these are not symbolic expressions, just symbolic objects!
 
+	/**
+	 * Returns the BooleanObject wrapping the given boolean value. A
+	 * BooleanObject is a SymbolicObject so can be used as an argument of a
+	 * SymbolicExpression.
+	 * 
+	 * @param value
+	 *            true or false
+	 * @return the corresponding BooleanObject
+	 */
 	BooleanObject booleanObject(boolean value);
 
+	/**
+	 * Returns the IntObject wrapping the given Java int value. An IntObject is
+	 * a SymbolicObject so can be used as an argument of a symbolic expression.
+	 * It is used in cases where a "small" concrete integer is needed. For
+	 * concrete integers of arbitrary size, use IntegerNumber instead and create
+	 * a NumberObject.
+	 * 
+	 * @param value
+	 *            any Java int
+	 * @return an IntObject wrapping that value
+	 */
 	IntObject intObject(int value);
 
+	/**
+	 * Returns the NumberObject wrapping the given Number value. These are SARL
+	 * Numbers, not Java Numbers. They are used to represent infinite precision,
+	 * unbounded integers and rational numbers.
+	 * 
+	 * @param value
+	 *            a SARL Number
+	 * @return the NumberObject wrapping that Number
+	 */
 	NumberObject numberObject(Number value);
 
+	/**
+	 * Returns the StringObject wrapping the given String value. A StringObject
+	 * is a SymbolicObject so can be used as an argument to a SymbolicExpression
+	 * 
+	 * @param string
+	 *            any Java String
+	 * @return the StringObject wrapping that string
+	 */
 	StringObject stringObject(String string);
 
 	// Symbolic constants...
@@ -182,6 +269,17 @@ public interface SymbolicUniverse {
 	 * use a Flyweight Pattern to return the same object if called twice with
 	 * the same arguments. Or it may create a new object each time. These
 	 * details are unimportant because symbolic constants are immutable.
+	 * 
+	 * This method will return the right kind of SymbolicConstant based on the
+	 * type: if the type is numeric (integer or real), an instance of
+	 * NumericSymbolicConstant will be returned. If the type is boolean, a
+	 * BooleanSymbolicConstant will be returned.
+	 * 
+	 * @param name
+	 *            the name to give to this symbolic constant; it will be used to
+	 *            identify the object and for printing
+	 * @param the
+	 *            type of this symbolic constant
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
 
@@ -192,6 +290,11 @@ public interface SymbolicUniverse {
 	 * Each occurrence of symbolic constant X in expression will be replaced
 	 * with expression map(X), if map(X) is not null. The substitutions are all
 	 * simultaneous.
+	 * 
+	 * Note that substitutions are not recursive, i.e., no substitutions are
+	 * applied to the resulting expression after the first substitution.
+	 * 
+	 * Example: map={X->Y, Y->X}. expression=X/Y. result of substitution is Y/X.
 	 * 
 	 * @param expression
 	 *            any symbolic expression
@@ -221,28 +324,56 @@ public interface SymbolicUniverse {
 
 	// Integers...
 
-	/** The symbolic expression representing the 0 integer value. */
+	/**
+	 * The symbolic expression representing the 0 integer value.
+	 * 
+	 * @return the integer 0 as a numeric symbolic expression
+	 */
 	NumericExpression zeroInt();
 
-	/** The symbolic expression representing the integer 1. */
+	/**
+	 * The symbolic expression representing the integer 1.
+	 * 
+	 * @return the integer 1 as a numeric symbolic expression
+	 */
 	NumericExpression oneInt();
 
 	/**
-	 * Creates the integer symbolic expression with given int value.
+	 * Returns the integer symbolic expression with given int value.
 	 * 
 	 * @param value
 	 *            a Java int
-	 * @return a symbolic expression representing that concrete integer value
+	 * @return the symbolic expression of integer type representing with that
+	 *         value
 	 */
 	NumericExpression integer(int value);
 
+	/**
+	 * Returns the numeric symbolic expression with the given long value.
+	 * 
+	 * @param value
+	 *            any Java long
+	 * @return the symbolic expression of integer type with that value
+	 */
 	NumericExpression integer(long value);
 
+	/**
+	 * Returns the numeric symbolic expression with the given BigIntger value.
+	 * The BigInteger class is a standard Java class for represeting integers of
+	 * any size.
+	 * 
+	 * @param value
+	 *            any BigInteger
+	 * @return the symbolic expression of integer type with that value
+	 */
 	NumericExpression integer(BigInteger value);
 
 	// Rationals...
 
-	/** The symbolic expression representing the real number 0. */
+	/**
+	 * The symbolic expression representing the real number 0. Note that this is
+	 * NOT equal to the integer number 0, since they have different types.
+	 */
 	NumericExpression zeroReal();
 
 	/** The symbolic expression representing the real number 1. */

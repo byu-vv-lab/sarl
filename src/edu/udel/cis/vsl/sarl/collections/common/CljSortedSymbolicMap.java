@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 
 import com.trifork.clj_ds.PersistentTreeMap;
 
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>

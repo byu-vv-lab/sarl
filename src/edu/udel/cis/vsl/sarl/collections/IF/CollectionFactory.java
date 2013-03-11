@@ -4,10 +4,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicMap;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**

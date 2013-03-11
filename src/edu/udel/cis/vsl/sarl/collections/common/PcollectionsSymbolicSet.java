@@ -8,9 +8,9 @@ import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
 import edu.udel.cis.vsl.sarl.IF.Transform;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends

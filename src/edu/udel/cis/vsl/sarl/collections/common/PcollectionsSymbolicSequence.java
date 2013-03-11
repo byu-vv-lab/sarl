@@ -7,9 +7,9 @@ import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
 import edu.udel.cis.vsl.sarl.IF.Transform;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**

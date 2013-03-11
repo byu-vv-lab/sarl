@@ -10,8 +10,6 @@ import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -37,6 +35,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
@@ -50,7 +50,8 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
 /**
  * A standard implementation of SymbolicUniverse, relying heavily on a given
- * NumericExpressionFactory for dealing with numeric issues.
+ * NumericExpressionFactory for dealing with numeric issues and a
+ * BooleanExpressionFactory for dealing with boolean expressions.
  * 
  * @author siegel
  */
@@ -71,42 +72,111 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	public final static int QUANTIFIER_EXPAND_BOUND = 1000;
 
+	/**
+	 * IntegerNumber versions of the corresponding static int fields.
+	 */
 	private IntegerNumber denseArrayMaxSize, quantifierExpandBound;
 
 	// private FactorySystem system;
 
+	/**
+	 * Factory for producing general symbolic objects, canonicalizing them, etc.
+	 */
 	private ObjectFactory objectFactory;
 
+	/**
+	 * Factory for producing symbolic types.
+	 */
 	private SymbolicTypeFactory typeFactory;
 
+	/**
+	 * Factory for producing general symbolic expressions.
+	 */
 	private ExpressionFactory expressionFactory;
 
+	/**
+	 * Factory for producing and manipulating boolean expressions.
+	 */
 	private BooleanExpressionFactory booleanFactory;
 
+	/**
+	 * The factory for producing and manipulating concrete numbers (such as
+	 * infinite precision integers and rationals).
+	 */
 	private NumberFactory numberFactory;
 
+	/**
+	 * Factory for producing and manipulating instances of SymbolicCollection,
+	 * which are various collections of symbolic expressions.
+	 */
 	private CollectionFactory collectionFactory;
 
+	/**
+	 * Factory for dealing with symbolic expressions of numeric (i.e., integer
+	 * or real) type. Includes dealing with relational expressions less-than and
+	 * less-than-or-equal-to.
+	 */
 	private NumericExpressionFactory numericFactory;
 
+	/**
+	 * Factory for producing Simplifiers.
+	 */
 	private SimplifierFactory simplifierFactory;
 
+	/**
+	 * The comparator on all symbolic objects used by this universe to sort such
+	 * objects.
+	 */
 	private ObjectComparator objectComparator;
 
+	/**
+	 * The abstract theorem prover used by this universe.
+	 */
 	private TheoremProver prover;
 
+	/**
+	 * The object used to perform substitutions on symbolic expressions.
+	 */
 	private Substituter substituter;
 
+	/**
+	 * The three common primitive types, obtainable from the type factory but
+	 * stored in fields here for convenience.
+	 */
 	private SymbolicType booleanType, integerType, realType;
 
+	/**
+	 * The "NULL" symbolic expression, which is not the Java null but is used to
+	 * represent "no expression" in certain contexts where a Java null is not
+	 * allowed or desirable. It is a symbolic expression with operator NULL,
+	 * null type, and no arguments.
+	 */
 	private SymbolicExpression nullExpression;
 
+	/**
+	 * The boolean symbolic concrete values true and false as symbolic
+	 * expressions.
+	 */
 	private BooleanExpression trueExpr, falseExpr;
 
+	/**
+	 * A map from boolean valued symbolic expressions to simplifiers. The
+	 * simplifer corresponding to a key "assumption" will be the simplifier
+	 * formed from the assumption. The simplifier stores all kinds of data
+	 * obtained by analyzing the assumptions, caches all simplifications made
+	 * under that assumption, and so on. The assumption is typically the
+	 * "path condition" of symbolic execution.
+	 */
 	private Map<BooleanExpression, Simplifier> simplifierMap = new HashMap<BooleanExpression, Simplifier>();
 
 	// Constructor...
 
+	/**
+	 * Constructs a new CommonSymbolicUniverse from the given system of factories.
+	 * 
+	 * @param system
+	 *            a factory system
+	 */
 	public CommonSymbolicUniverse(FactorySystem system) {
 		// this.system = system;
 		objectFactory = system.objectFactory();
@@ -127,19 +197,54 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		nullExpression = expressionFactory.nullExpression();
 		prover = Prove.newIdealCVC3HybridProver(this);
 		substituter = new Substituter(this, collectionFactory, typeFactory);
-		// simplifierFactory = new IdealS
 	}
 
 	// Helper methods...
 
+	/**
+	 * Returns a new instance of SARLException with the given message. (A
+	 * SARLExcpetion is a RuntimeException, so it is not required to declare
+	 * when it is thrown.) It is provided here for convenience since it is used
+	 * a lot and it is short to say "throw err(...)" then
+	 * "throw new SARLExcpeption(...)".
+	 * 
+	 * This type of exception is usually thrown when the user does something
+	 * wrong, like provide bad parameter values to a method.
+	 * 
+	 * @param message
+	 *            an error message
+	 * @return a new instance of SARLException with that message.
+	 */
 	protected SARLException err(String message) {
 		return new SARLException(message);
 	}
 
+	/**
+	 * Throws a new instance of SARLInternalException with the given message.
+	 * This type of exception is thrown when something bad happens that
+	 * shouldn't be possible. (It is the developers' fault, not the user's.) A
+	 * message that this is an internal error and it should be reported to the
+	 * developers is pre-pended to the given message.
+	 * 
+	 * Note SARLInterException extends SARLException extends RuntimeException.
+	 * 
+	 * @param message
+	 *            an explanation of the unexpected thing that happened
+	 * @return new instance of SARLInternalExcpetion with that message
+	 */
 	protected SARLInternalException ierr(String message) {
 		return new SARLInternalException(message);
 	}
 
+	/**
+	 * Invokes the object factory's generic canonic method on a symbolic
+	 * expression. Here for convenience.
+	 * 
+	 * @param expression
+	 *            a symbolic expression
+	 * @return canonic representative of that object's equivalence class under
+	 *         "equals" (a la Flyweight Pattern)
+	 */
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}

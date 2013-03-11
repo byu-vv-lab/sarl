@@ -1,7 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.expr;
 
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicSet;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 
 public interface BooleanExpression extends SymbolicExpression {
 	

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.collections.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class BasicCollection<T extends SymbolicExpression> extends

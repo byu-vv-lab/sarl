@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.number;
 
-import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 /**
@@ -16,7 +16,7 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
  */
 public class Exponentiator<T> {
 
-	private Multiplier<T> multiplier;
+	private BinaryOperator<T> multiplier;
 
 	private T one;
 
@@ -24,7 +24,7 @@ public class Exponentiator<T> {
 
 	private static IntegerNumber two = numberFactory.integer(2);
 
-	public Exponentiator(Multiplier<T> multiplier, T one) {
+	public Exponentiator(BinaryOperator<T> multiplier, T one) {
 		this.multiplier = multiplier;
 		this.one = one;
 	}
@@ -89,10 +89,10 @@ public class Exponentiator<T> {
 
 			for (int i = 0; i < numBinaryDigits; i++) {
 				if (i > 0)
-					binaryPower = multiplier.multiply(binaryPower, binaryPower);
+					binaryPower = multiplier.apply(binaryPower, binaryPower);
 				if (binaryExpansion[i])
-					result = (result == null ? binaryPower : multiplier
-							.multiply(result, binaryPower));
+					result = (result == null ? binaryPower : multiplier.apply(
+							result, binaryPower));
 			}
 			return result;
 		} else {

@@ -1,13 +1,11 @@
 package edu.udel.cis.vsl.sarl.IF;
 
 /**
- * Interface for a unary operator on symbolic expressions.
+ * A UnaryOperator on a type T is an object which provides a method "apply" that
+ * takes an element of T and returns an element of T. It is a Transform<T,T>.
  * 
  * @author siegel
  * 
  */
-public interface UnaryOperator<T> {
-
-	T apply(T arg);
-
+public interface UnaryOperator<T> extends Transform<T, T> {
 }

@@ -5,11 +5,11 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.Multiplier;
+import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Exponentiator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 
 public class RealNumberFactory implements NumberFactory {
@@ -22,11 +22,11 @@ public class RealNumberFactory implements NumberFactory {
 
 	private RealRational zeroRational, oneRational;
 
-	private Multiplier<IntegerNumber> multiplier;
+	private BinaryOperator<IntegerNumber> multiplier;
 
 	private Exponentiator<IntegerNumber> exponentiator;
 
-	class IntMultiplier implements Multiplier<IntegerNumber> {
+	class IntMultiplier implements BinaryOperator<IntegerNumber> {
 		private RealNumberFactory factory;
 
 		IntMultiplier(RealNumberFactory factory) {
@@ -34,7 +34,7 @@ public class RealNumberFactory implements NumberFactory {
 		}
 
 		@Override
-		public IntegerNumber multiply(IntegerNumber arg0, IntegerNumber arg1) {
+		public IntegerNumber apply(IntegerNumber arg0, IntegerNumber arg1) {
 			return factory.multiply(arg0, arg1);
 		}
 

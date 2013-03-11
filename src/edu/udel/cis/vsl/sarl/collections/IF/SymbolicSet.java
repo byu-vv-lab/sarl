@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF.collections;
+package edu.udel.cis.vsl.sarl.collections.IF;
 
 import java.util.Comparator;
 

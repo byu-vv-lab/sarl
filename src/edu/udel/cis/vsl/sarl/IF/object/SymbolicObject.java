@@ -1,21 +1,20 @@
 package edu.udel.cis.vsl.sarl.IF.object;
 
 /**
- * Any kind of symbolic object.
+ * The root of the symbolic object type hierarchy. Represents any kind of
+ * symbolic object: symbolic expressions, symbolic types, symbolic expression
+ * collections, etc.
  * 
- * Also provides
- * <ul>
- * <li>useful <code>equals</code> and <code>hashCode</code> methods
- * <li>a comparator consistent with <code>equals</code>, so there is a total
- * order on symbolic objects</li>
- * <li>useful <code>toString</code> methods (provided by each implementing
- * class)</li>
- * </ul>
+ * All symbolic objects provide reasonable hash code methods that are consistent
+ * with equals.
+ * 
  * 
  * The kind determines the Java type of this object as follows:
  * <ul>
- * <li>SYMBOLIC_EXPRESSION: SymbolicExpressionIF</li>
- * <li>COLLECTION: SymbolicCollection</li>
+ * <li>SYMBOLIC_EXPRESSION: SymbolicExpression</li>
+ * <li>EXPRESSION_COLLECTION: SymbolicCollection</li>
+ * <li>TYPE: SymbolicType</li>
+ * <li>TYPE_SEQUENCE: SymbolicTypeSequence</li>
  * <li>NUMBER: NumberObject</li>
  * <li>INT: IntObject</li>
  * <li>BOOLEAN: BooleanObject</li>
@@ -38,9 +37,32 @@ public interface SymbolicObject {
 		TYPE_SEQUENCE
 	}
 
+	/**
+	 * What kindn of symbolic object is this? The kind determines the specific
+	 * type to which this object can be safely cast. See the comments for this
+	 * interface and the enumerated type SymbolicObjectKind for description.
+	 * 
+	 * @return the kind of this symbolic object.
+	 */
+	SymbolicObjectKind symbolicObjectKind();
+
+	/**
+	 * The equals method, included here to emphasize that the method provided by
+	 * Object must be overridden!
+	 * 
+	 * @param o
+	 *            any Java object
+	 * @return true iff this represents the "same" symbolic object as o
+	 */
 	@Override
 	boolean equals(Object o);
 
+	/**
+	 * The hash code method, included here to emphasize that the method provided
+	 * by Object must be overridden!
+	 * 
+	 * @return the hash code of this symbolic object
+	 */
 	@Override
 	int hashCode();
 
@@ -51,10 +73,20 @@ public interface SymbolicObject {
 	 */
 	long id();
 
+	/**
+	 * Is this object the unique representative of its equivalence class (under
+	 * "equals")?
+	 * 
+	 * @return true iff this object is canonic
+	 */
 	boolean isCanonic();
 
-	SymbolicObjectKind symbolicObjectKind();
-
+	/**
+	 * Returns the string representation of this object, included here to
+	 * emphasize that the method provided by Object must be overridden!
+	 * 
+	 * @return a string representation of this object
+	 */
 	@Override
 	String toString();
 
