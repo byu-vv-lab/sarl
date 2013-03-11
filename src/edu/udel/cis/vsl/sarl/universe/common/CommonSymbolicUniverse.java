@@ -172,7 +172,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	// Constructor...
 
 	/**
-	 * Constructs a new CommonSymbolicUniverse from the given system of factories.
+	 * Constructs a new CommonSymbolicUniverse from the given system of
+	 * factories.
 	 * 
 	 * @param system
 	 *            a factory system
@@ -763,6 +764,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public NumericExpression add(Iterable<? extends NumericExpression> args) {
+		if (args == null)
+			throw err("Argument args to method add was null");
+
 		Iterator<? extends NumericExpression> iter = args.iterator();
 
 		if (!iter.hasNext())
@@ -985,20 +989,31 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return numericFactory.oneReal();
 	}
 
+	private void checkSameType(SymbolicExpression arg0,
+			SymbolicExpression arg1, String message) {
+		if (!arg0.type().equals(arg1.type()))
+			throw err(message + ".\narg0: " + arg0 + "\narg0 type: "
+					+ arg0.type() + "\narg1: " + arg1 + "\narg1 type: "
+					+ arg1.type());
+	}
+
 	@Override
 	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
+		checkSameType(arg0, arg1, "Arguments to add had different types");
 		return numericFactory.add(arg0, arg1);
 	}
 
 	@Override
 	public NumericExpression subtract(NumericExpression arg0,
 			NumericExpression arg1) {
+		checkSameType(arg0, arg1, "Arguments to subtract had different types");
 		return numericFactory.subtract(arg0, arg1);
 	}
 
 	@Override
 	public NumericExpression multiply(NumericExpression arg0,
 			NumericExpression arg1) {
+		checkSameType(arg0, arg1, "Arguments to multiply had different types");
 		return numericFactory.multiply(arg0, arg1);
 	}
 
@@ -1021,12 +1036,19 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	@Override
 	public NumericExpression divide(NumericExpression arg0,
 			NumericExpression arg1) {
+		checkSameType(arg0, arg1, "Arguments to divide had different types");
 		return numericFactory.divide(arg0, arg1);
 	}
 
 	@Override
 	public NumericExpression modulo(NumericExpression arg0,
 			NumericExpression arg1) {
+		if (!arg0.type().isInteger())
+			throw err("Argument arg0 to modulo did not have integer type.\n"
+					+ "\narg0: " + arg0 + "\narg0 type: " + arg0.type());
+		if (!arg1.type().isInteger())
+			throw err("Argument arg1 to modulo did not have integer type.\n"
+					+ "\narg0: " + arg1 + "\narg0 type: " + arg1.type());
 		return numericFactory.modulo(arg0, arg1);
 	}
 
@@ -1037,6 +1059,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public NumericExpression power(NumericExpression base, IntObject exponent) {
+		if (exponent.isNegative())
+			throw err("Argument exponent to method power was negative."
+					+ "\nexponent: " + exponent);
 		return numericFactory.power(base, exponent);
 	}
 

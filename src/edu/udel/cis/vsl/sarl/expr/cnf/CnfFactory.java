@@ -47,32 +47,32 @@ public class CnfFactory implements BooleanExpressionFactory {
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			Collection<SymbolicObject> args) {
-		return new CnfBooleanExpression(operator, _booleanType, args);
+		return new CnfExpression(operator, _booleanType, args);
 	}
 
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject[] args) {
-		return new CnfBooleanExpression(operator, _booleanType, args);
+		return new CnfExpression(operator, _booleanType, args);
 	}
 
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0) {
-		return new CnfBooleanExpression(operator, _booleanType, arg0);
+		return new CnfExpression(operator, _booleanType, arg0);
 	}
 
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1) {
-		return new CnfBooleanExpression(operator, _booleanType, arg0, arg1);
+		return new CnfExpression(operator, _booleanType, arg0, arg1);
 
 	}
 
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
-		return new CnfBooleanExpression(operator, _booleanType, arg0, arg1,
+		return new CnfExpression(operator, _booleanType, arg0, arg1,
 				arg2);
 
 	}
@@ -113,8 +113,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (arg0.equals(arg1))
 			return arg0;
 		else {
-			CnfBooleanExpression c0 = (CnfBooleanExpression) arg0;
-			CnfBooleanExpression c1 = (CnfBooleanExpression) arg1;
+			CnfExpression c0 = (CnfExpression) arg0;
+			CnfExpression c1 = (CnfExpression) arg1;
 			boolean isAnd0 = c0.operator() == SymbolicOperator.AND;
 			boolean isAnd1 = c1.operator() == SymbolicOperator.AND;
 
@@ -146,8 +146,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (arg0.equals(arg1))
 			return arg0;
 		else {
-			CnfBooleanExpression c0 = (CnfBooleanExpression) arg0;
-			CnfBooleanExpression c1 = (CnfBooleanExpression) arg1;
+			CnfExpression c0 = (CnfExpression) arg0;
+			CnfExpression c1 = (CnfExpression) arg1;
 			SymbolicOperator op0 = c0.operator();
 			SymbolicOperator op1 = c1.operator();
 
@@ -181,7 +181,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	@Override
 	public BooleanExpression not(BooleanExpression arg) {
-		CnfBooleanExpression cnf = (CnfBooleanExpression) arg;
+		CnfExpression cnf = (CnfExpression) arg;
 		SymbolicOperator operator = cnf.operator();
 
 		switch (operator) {
@@ -246,7 +246,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (predicate.operator() == SymbolicOperator.AND) {
 			BooleanExpression result = trueExpr;
 
-			for (BooleanExpression clause : ((CnfBooleanExpression) predicate)
+			for (BooleanExpression clause : ((CnfExpression) predicate)
 					.booleanSetArg(0))
 				result = and(result, forall(boundVariable, clause));
 			return result;
@@ -265,7 +265,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (predicate.operator() == SymbolicOperator.OR) {
 			BooleanExpression result = falseExpr;
 
-			for (BooleanExpression clause : ((CnfBooleanExpression) predicate)
+			for (BooleanExpression clause : ((CnfExpression) predicate)
 					.booleanSetArg(0))
 				result = or(result, exists(boundVariable, clause));
 			return result;

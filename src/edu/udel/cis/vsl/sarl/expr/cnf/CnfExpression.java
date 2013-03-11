@@ -9,34 +9,34 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
-public class CnfBooleanExpression extends CommonSymbolicExpression implements
+public class CnfExpression extends CommonSymbolicExpression implements
 		BooleanExpression {
 
-	protected CnfBooleanExpression(SymbolicOperator kind, SymbolicType type,
+	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			Collection<SymbolicObject> args) {
 		super(kind, type, args);
 		assert type.isBoolean();
 	}
 
-	protected CnfBooleanExpression(SymbolicOperator kind, SymbolicType type,
+	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject[] args) {
 		super(kind, type, args);
 		assert type.isBoolean();
 	}
 
-	protected CnfBooleanExpression(SymbolicOperator kind, SymbolicType type,
+	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg) {
 		super(kind, type, arg);
 		assert type.isBoolean();
 	}
 
-	protected CnfBooleanExpression(SymbolicOperator kind, SymbolicType type,
+	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1) {
 		super(kind, type, arg0, arg1);
 		assert type.isBoolean();
 	}
 
-	protected CnfBooleanExpression(SymbolicOperator kind, SymbolicType type,
+	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
 		super(kind, type, arg0, arg1, arg2);
 		assert type.isBoolean();
