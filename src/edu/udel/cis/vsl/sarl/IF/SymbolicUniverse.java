@@ -39,6 +39,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
  * 
  * Symbolic objects implement the Immutable Pattern: all symbolic objects are
  * immutable, i.e., they cannot be modified after they are created.
+ * 
+ * @author siegel
  */
 public interface SymbolicUniverse {
 

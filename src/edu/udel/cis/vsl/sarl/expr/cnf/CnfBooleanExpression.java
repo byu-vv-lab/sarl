@@ -53,8 +53,17 @@ public class CnfBooleanExpression extends CommonSymbolicExpression implements
 		return (SymbolicCollection<BooleanExpression>) argument(i);
 	}
 
+	/**
+	 * Returns the i-th argument of this expression in the case where the i-th
+	 * argument should be an instance of SymbolicSet<BooleanExpression>. A
+	 * SARLException is thrown if that argument is not an instance of that type,
+	 * or if i is out of range.
+	 * 
+	 * @param i
+	 *            integer in range [0,numArgs-1]
+	 * @return the i-th argument of this expression
+	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	public SymbolicSet<BooleanExpression> booleanSetArg(int i) {
 		return (SymbolicSet<BooleanExpression>) argument(i);
 	}

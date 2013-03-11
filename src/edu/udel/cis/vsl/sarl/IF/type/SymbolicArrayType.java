@@ -19,7 +19,7 @@ public interface SymbolicArrayType extends SymbolicType {
 
 	/**
 	 * Is this a complete array type, i.e., is the extent specified? If true,
-	 * this can be safely cast to SymbolicCompleteArrayTypeIF.
+	 * this can be safely cast to SymbolicCompleteArrayType.
 	 * 
 	 * @return true iff this array type is complete
 	 */

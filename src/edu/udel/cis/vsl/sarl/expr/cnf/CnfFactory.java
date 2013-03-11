@@ -113,21 +113,27 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (arg0.equals(arg1))
 			return arg0;
 		else {
-			boolean isAnd0 = arg0.operator() == SymbolicOperator.AND;
-			boolean isAnd1 = arg1.operator() == SymbolicOperator.AND;
+			CnfBooleanExpression c0 = (CnfBooleanExpression) arg0;
+			CnfBooleanExpression c1 = (CnfBooleanExpression) arg1;
+			boolean isAnd0 = c0.operator() == SymbolicOperator.AND;
+			boolean isAnd1 = c1.operator() == SymbolicOperator.AND;
 
 			if (isAnd0 && isAnd1)
-				return booleanExpression(SymbolicOperator.AND, arg0
-						.booleanSetArg(0).addAll(arg1.booleanSetArg(0)));
+				return booleanExpression(SymbolicOperator.AND, c0
+						.booleanSetArg(0).addAll(c1.booleanSetArg(0)));
 			if (isAnd0 && !isAnd1)
-				return booleanExpression(SymbolicOperator.AND, arg0
-						.booleanSetArg(0).add(arg1));
+				return booleanExpression(SymbolicOperator.AND, c0
+						.booleanSetArg(0).add(c1));
 			if (!isAnd0 && isAnd1)
-				return booleanExpression(SymbolicOperator.AND, arg1
-						.booleanSetArg(0).add(arg0));
-			return booleanExpression(SymbolicOperator.AND, hashSet(arg0, arg1));
+				return booleanExpression(SymbolicOperator.AND, c1
+						.booleanSetArg(0).add(c0));
+			return booleanExpression(SymbolicOperator.AND, hashSet(c0, c1));
 		}
 	}
+
+	// TODO: cast arg0 and arg1 to CnfBooleanExpression to use
+	// the specialized argument methods and get rid of those
+	// arguments from the BooleanExpression interface.
 
 	@Override
 	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {
@@ -140,74 +146,77 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (arg0.equals(arg1))
 			return arg0;
 		else {
-			SymbolicOperator op0 = arg0.operator();
-			SymbolicOperator op1 = arg1.operator();
+			CnfBooleanExpression c0 = (CnfBooleanExpression) arg0;
+			CnfBooleanExpression c1 = (CnfBooleanExpression) arg1;
+			SymbolicOperator op0 = c0.operator();
+			SymbolicOperator op1 = c1.operator();
 
 			if (op0 == SymbolicOperator.AND) {
 				BooleanExpression result = falseExpr;
 
-				for (BooleanExpression clause : arg0.booleanSetArg(0))
-					result = or(result, and(clause, arg1));
+				for (BooleanExpression clause : c0.booleanSetArg(0))
+					result = or(result, and(clause, c1));
 				return result;
 			}
 			if (op1 == SymbolicOperator.AND) {
 				BooleanExpression result = falseExpr;
 
-				for (BooleanExpression clause : arg1.booleanSetArg(0))
-					result = or(result, and(arg0, clause));
+				for (BooleanExpression clause : c1.booleanSetArg(0))
+					result = or(result, and(c0, clause));
 				return result;
 			}
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {
 				return booleanExpression(op0,
-						arg0.booleanSetArg(0).addAll(arg1.booleanSetArg(0)));
+						c0.booleanSetArg(0).addAll(c1.booleanSetArg(0)));
 			}
 			if (op0 == SymbolicOperator.OR) {
-				return booleanExpression(op0, arg0.booleanSetArg(0).add(arg1));
+				return booleanExpression(op0, c0.booleanSetArg(0).add(c1));
 			}
 			if (op1 == SymbolicOperator.OR) {
-				return booleanExpression(op1, arg1.booleanSetArg(0).add(arg0));
+				return booleanExpression(op1, c1.booleanSetArg(0).add(c0));
 			}
-			return booleanExpression(SymbolicOperator.OR, hashSet(arg0, arg1));
+			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}
 	}
 
 	@Override
 	public BooleanExpression not(BooleanExpression arg) {
-		SymbolicOperator operator = arg.operator();
+		CnfBooleanExpression cnf = (CnfBooleanExpression) arg;
+		SymbolicOperator operator = cnf.operator();
 
 		switch (operator) {
 		case AND: {
 			BooleanExpression result = falseExpr;
 
-			for (BooleanExpression clause : arg.booleanSetArg(0))
+			for (BooleanExpression clause : cnf.booleanSetArg(0))
 				result = or(result, not(clause));
 			return result;
 		}
 		case OR: {
 			BooleanExpression result = trueExpr;
 
-			for (BooleanExpression clause : arg.booleanSetArg(0))
+			for (BooleanExpression clause : cnf.booleanSetArg(0))
 				result = and(result, not(clause));
 			return result;
 		}
 		case NOT:
-			return arg.booleanArg(0);
+			return cnf.booleanArg(0);
 		case FORALL:
 			return booleanExpression(SymbolicOperator.EXISTS,
-					(SymbolicConstant) arg.argument(0), not(arg.booleanArg(1)));
+					(SymbolicConstant) cnf.argument(0), not(cnf.booleanArg(1)));
 		case EXISTS:
 			return booleanExpression(SymbolicOperator.FORALL,
-					(SymbolicConstant) arg.argument(0), not(arg.booleanArg(1)));
+					(SymbolicConstant) cnf.argument(0), not(cnf.booleanArg(1)));
 		case EQUALS:
 			return booleanExpression(SymbolicOperator.NEQ,
-					(SymbolicExpression) arg.argument(0),
-					(SymbolicExpression) arg.argument(1));
+					(SymbolicExpression) cnf.argument(0),
+					(SymbolicExpression) cnf.argument(1));
 		case NEQ:
 			return booleanExpression(SymbolicOperator.EQUALS,
-					(SymbolicExpression) arg.argument(0),
-					(SymbolicExpression) arg.argument(1));
+					(SymbolicExpression) cnf.argument(0),
+					(SymbolicExpression) cnf.argument(1));
 		default:
-			return booleanExpression(SymbolicOperator.NOT, arg);
+			return booleanExpression(SymbolicOperator.NOT, cnf);
 		}
 	}
 
@@ -237,7 +246,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (predicate.operator() == SymbolicOperator.AND) {
 			BooleanExpression result = trueExpr;
 
-			for (BooleanExpression clause : predicate.booleanSetArg(0))
+			for (BooleanExpression clause : ((CnfBooleanExpression) predicate)
+					.booleanSetArg(0))
 				result = and(result, forall(boundVariable, clause));
 			return result;
 		}
@@ -255,7 +265,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 		if (predicate.operator() == SymbolicOperator.OR) {
 			BooleanExpression result = falseExpr;
 
-			for (BooleanExpression clause : predicate.booleanSetArg(0))
+			for (BooleanExpression clause : ((CnfBooleanExpression) predicate)
+					.booleanSetArg(0))
 				result = or(result, exists(boundVariable, clause));
 			return result;
 		}

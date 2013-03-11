@@ -2,10 +2,9 @@ package edu.udel.cis.vsl.sarl.IF.type;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 
-
 /**
- * A complete array type specifies not only the elementn type but also the
- * extent (length) of the array. This is a symbolic expression of integer type.
+ * A complete array type specifies not only the element type but also the extent
+ * (length) of the array. The extent is a symbolic expression of integer type.
  * 
  * @author siegel
  * 
@@ -13,8 +12,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 public interface SymbolicCompleteArrayType extends SymbolicArrayType {
 
 	/**
-	 * The extent of arrays in this type. Non-null integer-valued symbolic
-	 * expressions.
+	 * Returns the extent (length) of any array of this type. This is a non-null
+	 * integer-valued symbolic expression.
 	 */
 	NumericExpression extent();
 

@@ -6,8 +6,8 @@ package edu.udel.cis.vsl.sarl.IF.number;
  * Integer numbers and rational numbers live in two different universes, so are
  * never equal.
  * 
- * The natural comparison places some arbitrary order on NumberIFs consistent
- * with equals.
+ * The natural comparison places some arbitrary order on Numbers consistent with
+ * equals.
  * */
 public interface Number extends Comparable<Number> {
 

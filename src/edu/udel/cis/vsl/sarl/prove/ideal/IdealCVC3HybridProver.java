@@ -54,7 +54,7 @@ public class IdealCVC3HybridProver implements TheoremProver {
 	}
 
 	public Map<SymbolicConstant, SymbolicExpression> findModel(
-			SymbolicExpression context) throws TheoremProverException {
+			BooleanExpression context) throws TheoremProverException {
 		return cvc3Prover.findModel(context);
 	}
 

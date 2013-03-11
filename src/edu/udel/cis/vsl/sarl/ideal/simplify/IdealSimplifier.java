@@ -18,7 +18,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
@@ -506,8 +505,8 @@ public class IdealSimplifier extends CommonSimplifier {
 		BooleanExpression cnf = assumption;
 
 		if (cnf.operator() == SymbolicOperator.AND) {
-			SymbolicSet<? extends BooleanExpression> clauses = cnf
-					.booleanSetArg(0);
+			Iterable<? extends BooleanExpression> clauses = cnf
+					.booleanCollectionArg(0);
 
 			for (BooleanExpression clause : clauses) {
 				if (!extractBoundsOr(clause, boundMap, booleanMap)) {
@@ -586,8 +585,8 @@ public class IdealSimplifier extends CommonSimplifier {
 					aBoundMap);
 			Map<BooleanExpression, Boolean> originalBooleanMap = new HashMap<BooleanExpression, Boolean>(
 					aBooleanMap);
-			Iterator<BooleanExpression> clauses = or.booleanCollectionArg(0)
-					.iterator();
+			Iterator<? extends BooleanExpression> clauses = or
+					.booleanCollectionArg(0).iterator();
 			boolean satisfiable = extractBoundsBasic(clauses.next(), aBoundMap,
 					aBooleanMap); // result <- p & q0:
 

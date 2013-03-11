@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.IF;
 
 /**
- * A Transform from type S to type T is an object that provides a method method
- * "apply" which takes an element of S and returns an element of T.
+ * A Transform from type S to type T is an object that provides a method "apply"
+ * which takes an element of S and returns an element of T.
  * 
  * @author siegel
  * 

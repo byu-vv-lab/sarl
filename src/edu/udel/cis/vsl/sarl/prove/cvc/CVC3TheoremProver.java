@@ -1042,7 +1042,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	@Override
 	public Map<SymbolicConstant, SymbolicExpression> findModel(
-			SymbolicExpression context) throws TheoremProverException {
+			BooleanExpression context) throws TheoremProverException {
 		throw new TheoremProverException("Unimplemented");
 	}
 

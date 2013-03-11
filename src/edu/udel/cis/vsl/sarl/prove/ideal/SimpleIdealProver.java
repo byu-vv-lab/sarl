@@ -77,8 +77,9 @@ public class SimpleIdealProver implements TheoremProver {
 	 * 
 	 * @throws TheoremProverException
 	 */
+	@Override
 	public Map<SymbolicConstant, SymbolicExpression> findModel(
-			SymbolicExpression context) throws TheoremProverException {
+			BooleanExpression context) throws TheoremProverException {
 		throw new TheoremProverException(
 				"Concretization cannot be done using the simple ideal prover.");
 	}

@@ -72,14 +72,18 @@ public interface TheoremProver {
 	void setOutput(PrintStream out);
 
 	/**
-	 * Find a model for a path condition if it is satisfiable. Returns null
-	 * otherwise.
+	 * Finds a model for a predicate if that predicate is satisfiable, else
+	 * returns null. The model assigns a concrete value to each symbolic
+	 * constant occurring in the predicate.
 	 * 
-	 * @param context
-	 *            - the SymbolicExpressionIF path condition
-	 * @return a map of SymbolicConstants to their SymbolicExpression values.
+	 * @param predicate
+	 *            a boolean expression (e.g., the path condition)
+	 * @return a map of SymbolicConstants to their (concrete) SymbolicExpression
+	 *         values
 	 * @throws TheoremProverException
+	 *             if something goes wrong with the automated theorem prover
+	 *             during this call
 	 */
 	Map<SymbolicConstant, SymbolicExpression> findModel(
-			SymbolicExpression context) throws TheoremProverException;
+			BooleanExpression predicate) throws TheoremProverException;
 }

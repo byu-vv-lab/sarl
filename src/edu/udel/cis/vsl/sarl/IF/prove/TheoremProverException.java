@@ -1,6 +1,8 @@
 package edu.udel.cis.vsl.sarl.IF.prove;
 
-public class TheoremProverException extends Exception {
+import edu.udel.cis.vsl.sarl.IF.SARLException;
+
+public class TheoremProverException extends SARLException {
 
 	/**
 	 * Generated ID.

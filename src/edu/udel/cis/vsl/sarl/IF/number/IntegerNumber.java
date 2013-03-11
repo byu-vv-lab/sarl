@@ -4,7 +4,7 @@ package edu.udel.cis.vsl.sarl.IF.number;
 public interface IntegerNumber extends Number {
 
 	/**
-	 * Attempts to extract a Java int value from the IntegerNumberIF. The answer
+	 * Attempts to extract a Java int value from this IntegerNumber. The answer
 	 * could be wrong if the integer value is outside of the range of the Java
 	 * int type.
 	 */
