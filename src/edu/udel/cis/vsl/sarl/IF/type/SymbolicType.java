@@ -8,13 +8,13 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
  * Every symbolic type has a "kind", given by the enumerate type
  * SymbolicTypeKind.
  * 
- * If the kind is ARRAY, the object can be cast to SymbolicArrayTypeIF.
+ * If the kind is ARRAY, the object can be cast to SymbolicArrayType.
  * 
- * If the kind is FUNCTION, the object can be cast to SymbolicFunctionTypeIF.
+ * If the kind is FUNCTION, the object can be cast to SymbolicFunctionType.
  * 
- * If the kind is TUPLE, the object can be cast to SymbolicTupleTypeIF.
+ * If the kind is TUPLE, the object can be cast to SymbolicTupleType.
  * 
- * If the kind is UNION, the object can be cast to SymbolicUnionTypeIF.
+ * If the kind is UNION, the object can be cast to SymbolicUnionType.
  * 
  * @author siegel
  * 
