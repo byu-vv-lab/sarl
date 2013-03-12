@@ -6,7 +6,6 @@ import java.util.Comparator;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -16,24 +15,75 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * A NumericExpressionFactory provides all of the functionality needed to create
+ * and manipulate expressions of numeric type. For example, it must provide
+ * methods to instantiate new numeric expression instances, to add, subtract,
+ * multiply, and divide numeric expressions, etc. A general ExpressionFactory
+ * will use one or more NumericExpressionFactorys by delegating out all
+ * numerical operations to it.
+ * 
+ * Different implementations of NumericExpressionFactory can deal with
+ * arithmetic issues in different ways, e.g., by treating real types as the
+ * mathematical reals or as finite-precision floating point numbers, and so on.
+ * 
+ * @author siegel
+ * 
+ */
 public interface NumericExpressionFactory {
 
-	void setObjectComparator(Comparator<SymbolicObject> c);
+	/**
+	 * Returns the boolean expression factory used by this numeric expression
+	 * factory. The boolean factory is needed to produce relational expressions
+	 * such as "x<y".
+	 * 
+	 * @return the boolean expression factory used by this factory
+	 */
+	BooleanExpressionFactory booleanFactory();
 
+	/**
+	 * Initialize this numeric expression factory. This factory should not be
+	 * used until it has been initialized.
+	 */
 	void init();
 
+	/**
+	 * Returns the number factory used by this numeric factory.
+	 * 
+	 * @return the number factory
+	 */
 	NumberFactory numberFactory();
 
+	/**
+	 * Returns the object factory used by this numeric factory.
+	 * 
+	 * @return the object factory
+	 */
 	ObjectFactory objectFactory();
 
+	/**
+	 * Returns the type factory used by this numeric expression factory.
+	 * 
+	 * @return the type factory
+	 */
 	SymbolicTypeFactory typeFactory();
 
+	/**
+	 * Returns the collection factory used by this numeric expression factory.
+	 * 
+	 * @return the collection factory
+	 */
 	CollectionFactory collectionFactory();
 
+	/**
+	 * Returns a comparator on all numeric expressions that are controlled by
+	 * this factory
+	 * 
+	 * @return a comparator on numeric expressions
+	 */
 	Comparator<NumericExpression> numericComparator();
 
 	NumericExpression newConcreteNumericExpression(NumberObject numberObject);
@@ -68,17 +118,6 @@ public interface NumericExpressionFactory {
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
 	/**
-	 * Returns a symbolic expression representing the sum of the given argument
-	 * sequence.
-	 * 
-	 * @param args
-	 *            a sequence of symbolic expressions of numeric type. They must
-	 *            all have the same type.
-	 * @return expression representing the sum
-	 */
-	NumericExpression add(SymbolicCollection<? extends SymbolicExpression> args);
-
-	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
 	 * from arg0. The two given expressions must have the same (numeric) type:
 	 * either both integers, or both real.
@@ -103,18 +142,6 @@ public interface NumericExpressionFactory {
 	 * @return arg0 * arg1, the product of arg0 and arg1.
 	 */
 	NumericExpression multiply(NumericExpression arg0, NumericExpression arg1);
-
-	/**
-	 * Returns symbolic expression representing the product of the given
-	 * sequence of expressions.
-	 * 
-	 * @param args
-	 *            symbolic expression sequence; all elements have the same
-	 *            numeric type
-	 * @return a symbolic expression representing the product
-	 */
-	NumericExpression multiply(
-			SymbolicCollection<? extends SymbolicExpression> args);
 
 	/**
 	 * Returns a symbolic expression which is the result of dividing arg0 by
@@ -198,7 +225,5 @@ public interface NumericExpressionFactory {
 	BooleanExpression equals(NumericExpression arg0, NumericExpression arg1);
 
 	BooleanExpression neq(NumericExpression arg0, NumericExpression arg1);
-
-	void setExpressionFactory(ExpressionFactory expressionFactory);
 
 }

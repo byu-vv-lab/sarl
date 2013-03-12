@@ -1,36 +1,49 @@
 
 
-Making flyweighting of numbers optional.
-
-Make some kind of SARLConfiguration class encapsulating options such as:
-  flwyeightNumbers, flyweightExpressions, flyweightTypes, flyweightObjects,
-  etc.   These can be fed to universe.
-
-Finish implementing universe methods. 
-
 Think about how to do quick dispatch to right routine for
 numeric operation.
 
-Need proper comparison methods
-  Primitives (used as keys to factorMap)
-  Monics (used as keys to termMap)
-  others?
+Add Herbrand arithmetic.
 
-comparisons on SymbolicObject: decomposed by kind
-SymbolicExpression
-NumericExpression : can have own order
-...
+Add new type: HerbrandReal
+  is numeric
+  
+Add new numeric factory: HerbrandFactory extends NumericFactory
+Add HerbrandExpression extends NumericExpression
 
-want to order Monics by degree.
+The arguments to a HerbranExpression can be any kinds of expression
+(not just Herbrand).  So no cast is necessary.
 
-total order on numeric expressions
+Relational expressions can also include Herbrand and so cannot
+be simplified.  Must have HerbrandRelational expressions?
 
-1. NTRationalExpression  (/)
-2. NTPolynomial  (+) : order
-3. NTMonomial (*) : order by monic, then constant
-4. NTMonic  (*) : order by degree, then dictionary
-5. NTPrimitivePower (POWER)
-   ReducedPolynomial (+) (extends NumericPrimitive)
-6. NumericPrimitive (anything)
-7. NTConstant, including One
+In Universe:
+  add(x,y)
+: if at least one argument is Herbrand, use the HerbrandFactory.
+Else use the numericFactory.
+
+How to simplify in presence of mixed:
+
+How to prove things in presence of mixed:
+  translate Herbrand operations (+, -, ...) as uninterpreted functions
+  PLUS, MINUS, ..., on real values?
+
+How to substitute:
+  same as always?
+  
+Create HerbrandFactory implements NumericFactory
+  all operations result in a HerbrandExpression
+
+Create HerbrandIdealFactory implement NumericFactory
+  look at type: if at least one argument is Herbrand,
+  result is Herbrand.
+  add casts?
+  
+Real, HerbrandRealType, Integer, FiniteInteger...
+
+
+Bitwise integers with shifts, etc.
+
+
+
 

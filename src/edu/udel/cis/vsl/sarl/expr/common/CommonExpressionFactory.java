@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Collection;
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -27,34 +26,19 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private SymbolicExpression nullExpression;
 
-	public CommonExpressionFactory(NumericExpressionFactory numericFactory,
-			BooleanExpressionFactory booleanFactory) {
-		Comparator<NumericExpression> numericComparator = numericFactory
-				.numericComparator();
-
-		this.objectFactory = numericFactory.objectFactory();
+	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		this.numericFactory = numericFactory;
-		this.booleanFactory = booleanFactory;
-		numericFactory.setExpressionFactory(this);
-		expressionComparator = new ExpressionComparator(numericComparator);
-		nullExpression = canonic(expression(SymbolicOperator.NULL, null,
+		this.objectFactory = numericFactory.objectFactory();
+		this.booleanFactory = numericFactory.booleanFactory();
+		this.expressionComparator = new ExpressionComparator(
+				numericFactory.numericComparator(), objectFactory.comparator(),
+				numericFactory.typeFactory().typeComparator());
+		this.nullExpression = canonic(expression(SymbolicOperator.NULL, null,
 				new SymbolicObject[] {}));
 	}
 
 	@Override
-	public void setObjectComparator(Comparator<SymbolicObject> c) {
-		expressionComparator.setObjectComparator(c);
-		numericFactory.setObjectComparator(c);
-	}
-
-	@Override
-	public void setTypeComparator(Comparator<SymbolicType> c) {
-		expressionComparator.setTypeComparator(c);
-	}
-
-	@Override
 	public void init() {
-		assert expressionComparator.objectComparator() != null;
 		numericFactory.init();
 	}
 

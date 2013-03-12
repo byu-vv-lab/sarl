@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.ideal;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.simplify.IdealSimplifierFactory;
@@ -14,9 +15,10 @@ public class Ideal {
 
 	public static IdealFactory newIdealFactory(NumberFactory numberFactory,
 			ObjectFactory objectFactory, SymbolicTypeFactory typeFactory,
-			CollectionFactory collectionFactory) {
+			CollectionFactory collectionFactory,
+			BooleanExpressionFactory booleanFactory) {
 		return new CommonIdealFactory(numberFactory, objectFactory,
-				typeFactory, collectionFactory);
+				typeFactory, collectionFactory, booleanFactory);
 	}
 
 	public static SimplifierFactory newIdealSimplifierFactory(

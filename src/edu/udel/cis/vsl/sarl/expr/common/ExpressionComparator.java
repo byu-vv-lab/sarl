@@ -25,16 +25,13 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 
 	private Comparator<NumericExpression> numericComparator;
 
-	public ExpressionComparator(Comparator<NumericExpression> numericComparator) {
+	public ExpressionComparator(
+			Comparator<NumericExpression> numericComparator,
+			Comparator<SymbolicObject> objectComparator,
+			Comparator<SymbolicType> typeComparator) {
 		this.numericComparator = numericComparator;
-	}
-
-	public void setObjectComparator(Comparator<SymbolicObject> c) {
-		objectComparator = c;
-	}
-
-	public void setTypeComparator(Comparator<SymbolicType> c) {
-		typeComparator = c;
+		this.objectComparator = objectComparator;
+		this.typeComparator = typeComparator;
 	}
 
 	public Comparator<SymbolicObject> objectComparator() {

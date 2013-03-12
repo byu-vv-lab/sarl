@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal.common;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -27,7 +26,6 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
@@ -103,16 +101,9 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * </pre>
  * 
  */
-
-// create separate class IdealRelationFactory for lt, eq, ...
-// and interface NumericRelationFactory
-// needs numeric factory, expression factory, true, false exprs.
-
 public class CommonIdealFactory implements IdealFactory {
 
 	private NumberFactory numberFactory;
-
-	private ExpressionFactory expressionFactory;
 
 	private BooleanExpressionFactory booleanFactory;
 
@@ -132,7 +123,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	private IntObject oneIntObject;
 
-	private Constant zeroInt, zeroReal, twoInt, twoReal, negOneInt, negOneReal;
+	private Constant zeroInt, zeroReal;
 
 	private BooleanExpression trueExpr, falseExpr;
 
@@ -144,12 +135,17 @@ public class CommonIdealFactory implements IdealFactory {
 
 	public CommonIdealFactory(NumberFactory numberFactory,
 			ObjectFactory objectFactory, SymbolicTypeFactory typeFactory,
-			CollectionFactory collectionFactory) {
+			CollectionFactory collectionFactory,
+			BooleanExpressionFactory booleanFactory) {
 		this.numberFactory = numberFactory;
 		this.objectFactory = objectFactory;
 		this.typeFactory = typeFactory;
 		this.collectionFactory = collectionFactory;
+		this.booleanFactory = booleanFactory;
+		this.trueExpr = booleanFactory.trueExpr();
+		this.falseExpr = booleanFactory.falseExpr();
 		this.comparator = new IdealComparator(this);
+		this.comparator.setObjectComparator(objectFactory.comparator());
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
@@ -160,32 +156,13 @@ public class CommonIdealFactory implements IdealFactory {
 				.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
 		this.zeroReal = canonicRealConstant(0);
-		this.twoInt = canonicIntConstant(2);
-		this.twoReal = canonicRealConstant(2);
-		this.negOneInt = canonicIntConstant(-1);
-		this.negOneReal = canonicRealConstant(-1);
 		this.monomialAdder = new MonomialAdder(this);
 		this.monomialNegater = new MonomialNegater(this);
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
 	}
 
 	@Override
-	public void setObjectComparator(Comparator<SymbolicObject> c) {
-		comparator.setObjectComparator(c);
-	}
-
-	@Override
-	public void setExpressionFactory(ExpressionFactory expressionFactory) {
-		this.expressionFactory = expressionFactory;
-	}
-
-	@Override
 	public void init() {
-		assert comparator.objectComparator() != null;
-		assert expressionFactory != null;
-		booleanFactory = expressionFactory.booleanFactory();
-		trueExpr = booleanFactory.trueExpr();
-		falseExpr = booleanFactory.falseExpr();
 	}
 
 	@Override
@@ -201,14 +178,6 @@ public class CommonIdealFactory implements IdealFactory {
 	@Override
 	public ObjectFactory objectFactory() {
 		return objectFactory;
-	}
-
-	public SymbolicType integerType() {
-		return integerType;
-	}
-
-	public SymbolicType realType() {
-		return realType;
 	}
 
 	// Basic symbolic objects...
@@ -244,7 +213,7 @@ public class CommonIdealFactory implements IdealFactory {
 		return objectFactory.canonic(intConstant(value));
 	}
 
-	public Constant realConstant(int value) {
+	private Constant realConstant(int value) {
 		if (value == 1)
 			return oneReal;
 		return new NTConstant(realType,
@@ -256,7 +225,7 @@ public class CommonIdealFactory implements IdealFactory {
 		return objectFactory.canonic(realConstant(value));
 	}
 
-	public Constant constant(NumberObject object) {
+	private Constant constant(NumberObject object) {
 		if (object.isOne())
 			return object.isInteger() ? oneInt : oneReal;
 		return new NTConstant(object.isInteger() ? integerType : realType,
@@ -298,30 +267,6 @@ public class CommonIdealFactory implements IdealFactory {
 		return type.isInteger() ? oneInt : oneReal;
 	}
 
-	public Constant twoInt() {
-		return twoInt;
-	}
-
-	public Constant twoReal() {
-		return twoReal;
-	}
-
-	public Constant two(SymbolicType type) {
-		return type.isInteger() ? twoInt : twoReal;
-	}
-
-	public Constant negOneInt() {
-		return negOneInt;
-	}
-
-	public Constant negOneReal() {
-		return negOneReal;
-	}
-
-	public Constant negOne(SymbolicType type) {
-		return type.isInteger() ? negOneInt : negOneReal;
-	}
-
 	// PrimitivePowers...
 
 	private NTPrimitivePower ntPrimitivePower(NumericPrimitive primitive,
@@ -329,8 +274,7 @@ public class CommonIdealFactory implements IdealFactory {
 		return new NTPrimitivePower(primitive, exponent);
 	}
 
-	public PrimitivePower primitivePower(NumericPrimitive primitive,
-			IntObject exponent) {
+	PrimitivePower primitivePower(NumericPrimitive primitive, IntObject exponent) {
 		if (exponent.isZero())
 			throw new IllegalArgumentException(
 					"Exponent to primitive power must be positive: "
@@ -347,7 +291,7 @@ public class CommonIdealFactory implements IdealFactory {
 		return new NTMonic(type, monicMap);
 	}
 
-	public Monic monic(SymbolicType type,
+	private Monic monic(SymbolicType type,
 			SymbolicMap<NumericPrimitive, PrimitivePower> monicMap) {
 		if (monicMap.isEmpty())
 			return one(type);
@@ -358,11 +302,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	// Monomials...
 
-	public MonomialAdder newMonomialAdder() {
-		return new MonomialAdder(this);
-	}
-
-	NTMonomial ntMonomial(Constant constant, Monic monic) {
+	private NTMonomial ntMonomial(Constant constant, Monic monic) {
 		return new NTMonomial(constant, monic);
 	}
 
@@ -387,7 +327,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @param termMap
 	 * @return
 	 */
-	public ReducedPolynomial reducedPolynomial(SymbolicType type,
+	private ReducedPolynomial reducedPolynomial(SymbolicType type,
 			SymbolicMap<Monic, Monomial> termMap) {
 		return new ReducedPolynomial(type, termMap);
 	}
@@ -427,7 +367,7 @@ public class CommonIdealFactory implements IdealFactory {
 		}
 	}
 
-	public Polynomial polynomialWithTrivialFactorization(SymbolicType type,
+	private Polynomial polynomialWithTrivialFactorization(SymbolicType type,
 			SymbolicMap<Monic, Monomial> termMap) {
 		Monomial factorization;
 		Constant c = getConstantFactor(type, termMap);
@@ -475,7 +415,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	// Extract Commonality...
 
-	public Monic[] extractCommonality(Monic fact1, Monic fact2) {
+	private Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicType type = fact1.type();
 		SymbolicMap<NumericPrimitive, PrimitivePower> map1 = fact1
 				.monicFactors(this);
@@ -521,7 +461,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
 	 */
-	public Monomial[] extractCommonality(Monomial fact1, Monomial fact2) {
+	private Monomial[] extractCommonality(Monomial fact1, Monomial fact2) {
 		Monic[] monicTriple = extractCommonality(fact1.monic(this),
 				fact2.monic(this));
 
@@ -532,7 +472,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	/***************************** ADD ********************************/
 
-	public Constant add(Constant c1, Constant c2) {
+	Constant add(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.add(
 				c1.number(), c2.number())));
 	}
@@ -577,7 +517,6 @@ public class CommonIdealFactory implements IdealFactory {
 	 */
 	@Override
 	public Polynomial add(Polynomial p1, Polynomial p2) {
-
 		assert p1.type().equals(p2.type());
 		if (p1.isZero())
 			return p2;
@@ -595,7 +534,8 @@ public class CommonIdealFactory implements IdealFactory {
 				addNoCommon(triple[1].expand(this), triple[2].expand(this)));
 	}
 
-	public RationalExpression add(RationalExpression r1, RationalExpression r2) {
+	private RationalExpression addRational(RationalExpression r1,
+			RationalExpression r2) {
 		Polynomial num1 = r1.numerator(this);
 		Polynomial num2 = r2.numerator(this);
 		Polynomial den1 = r1.denominator(this);
@@ -616,7 +556,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	/************************** MULTIPLY ******************************/
 
-	public Constant multiply(Constant c1, Constant c2) {
+	private Constant multiply(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.multiply(
 				c1.number(), c2.number())));
 	}
@@ -629,7 +569,7 @@ public class CommonIdealFactory implements IdealFactory {
 		return termMap.apply(multiplier);
 	}
 
-	public Polynomial multiply(Constant constant, Polynomial polynomial) {
+	private Polynomial multiply(Constant constant, Polynomial polynomial) {
 		if (constant.isZero())
 			return constant;
 		if (constant.isOne())
@@ -647,89 +587,17 @@ public class CommonIdealFactory implements IdealFactory {
 		}
 	}
 
-	// public Monic multiply(Monic monic1, Monic monic2) {
-	// SymbolicMap<NumericPrimitive, PrimitivePower> factorMap1 = monic1
-	// .monicFactors(this);
-	// SymbolicMap<NumericPrimitive, PrimitivePower> factorMap2 = monic1
-	// .monicFactors(this);
-	// SymbolicMap<NumericPrimitive, PrimitivePower> productMap = emptyMap();
-	// Iterator<Entry<NumericPrimitive, PrimitivePower>> iter1 = factorMap1
-	// .entries().iterator();
-	// Iterator<Entry<NumericPrimitive, PrimitivePower>> iter2 = factorMap2
-	// .entries().iterator();
-	//
-	// if (iter1.hasNext() && iter2.hasNext()) {
-	// Entry<NumericPrimitive, PrimitivePower> entry1 = iter1.next(), entry2 =
-	// iter2
-	// .next();
-	//
-	// do {
-	// NumericPrimitive p1 = entry1.getKey(), p2 = entry2.getKey();
-	// int compare = comparator.comparePrimitives(p1, p2);
-	//
-	// if (compare == 0) {
-	// productMap = productMap.put(
-	// p1,
-	// primitivePower(
-	// p1,
-	// entry1.getValue()
-	// .primitivePowerExponent(this)
-	// .plus(entry2.getValue()
-	// .primitivePowerExponent(
-	// this))));
-	// entry1 = iter1.next();
-	// entry2 = iter2.next();
-	// } else if (compare < 0) {
-	// productMap = productMap.put(entry1.getKey(),
-	// entry1.getValue());
-	// entry1 = iter1.next();
-	// } else {
-	// productMap = productMap.put(entry2.getKey(),
-	// entry2.getValue());
-	// entry2 = iter2.next();
-	// }
-	// } while (entry1 != null && entry2 != null);
-	// while (entry1 != null) {
-	// productMap = productMap.put(entry1.getKey(), entry1.getValue());
-	// entry1 = iter1.next();
-	// }
-	// while (entry2 != null) {
-	// productMap = productMap.put(entry2.getKey(), entry2.getValue());
-	// entry2 = iter2.next();
-	// }
-	// }
-	// }
-
-	public Monic multiply(Monic monic1, Monic monic2) {
+	private Monic multiply(Monic monic1, Monic monic2) {
 		return monic(
 				monic1.type(),
 				monic1.monicFactors(this).combine(primitivePowerMultipler,
 						monic2.monicFactors(this)));
 	}
 
-	public Monomial multiply(Monomial m1, Monomial m2) {
+	private Monomial multiply(Monomial m1, Monomial m2) {
 		return monomial(
 				multiply(m1.monomialConstant(this), m2.monomialConstant(this)),
 				multiply(m1.monic(this), m2.monic(this)));
-	}
-
-	// order is unchanged
-	private SymbolicMap<Monic, Monomial> multiply(Monomial monomial,
-			SymbolicMap<Monic, Monomial> termMap) {
-		SymbolicMap<Monic, Monomial> result = collectionFactory
-				.emptySortedMap();
-
-		for (Monomial m : termMap) {
-			Monomial product = multiply(monomial, m);
-
-			result = result.put(product.monic(this), product);
-		}
-		return result;
-	}
-
-	public Polynomial multiply(Monomial monomial, Polynomial polynomial) {
-		return polynomial(multiply(monomial, polynomial.termMap(this)),
-				multiply(monomial, polynomial.factorization(this)));
 	}
 
 	/**
@@ -774,17 +642,6 @@ public class CommonIdealFactory implements IdealFactory {
 		return result;
 	}
 
-	// private SymbolicMap<Monic, Monomial> multiplyOld(
-	// SymbolicMap<Monic, Monomial> termMap1,
-	// SymbolicMap<Monic, Monomial> termMap2) {
-	// SymbolicMap<Monic, Monomial> result = collectionFactory
-	// .emptySortedMap();
-	//
-	// for (Monomial monomial : termMap1.values())
-	// result = add(result, multiply(monomial, termMap2));
-	// return result;
-	// }
-
 	@Override
 	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
 		if (poly1.isZero())
@@ -801,7 +658,7 @@ public class CommonIdealFactory implements IdealFactory {
 				multiply(poly1.factorization(this), poly2.factorization(this)));
 	}
 
-	public RationalExpression multiply(RationalExpression r1,
+	private RationalExpression multiplyRational(RationalExpression r1,
 			RationalExpression r2) {
 		// (n1/d1)*(n2/d2)
 		if (r1.isZero())
@@ -828,7 +685,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 *            a constant of the same type as c1
 	 * @return the constant c1/c2
 	 */
-	public Constant divide(Constant c1, Constant c2) {
+	private Constant divide(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.divide(
 				c1.number(), c2.number())));
 	}
@@ -860,7 +717,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @param constant
 	 * @return
 	 */
-	public Monomial divide(Monomial monomial, Constant constant) {
+	private Monomial divide(Monomial monomial, Constant constant) {
 		return monomial(divide(monomial.monomialConstant(this), constant),
 				monomial.monic(this));
 	}
@@ -889,7 +746,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 *            a polynomial of real type
 	 * @return numerator/denominator
 	 */
-	public RationalExpression divide(Polynomial numerator,
+	private RationalExpression divide(Polynomial numerator,
 			Polynomial denominator) {
 		assert numerator.type().isReal();
 		assert denominator.type().isReal();
@@ -927,7 +784,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 *            a rational expression
 	 * @return 1/r
 	 */
-	public RationalExpression invert(RationalExpression r) {
+	private RationalExpression invert(RationalExpression r) {
 		return divide(r.denominator(this), r.numerator(this));
 	}
 
@@ -941,17 +798,17 @@ public class CommonIdealFactory implements IdealFactory {
 	 *            a rational expression
 	 * @return r1/r2 as rational expression
 	 */
-	public RationalExpression divide(RationalExpression r1,
+	private RationalExpression divide(RationalExpression r1,
 			RationalExpression r2) {
-		return multiply(r1, invert(r2));
+		return multiplyRational(r1, invert(r2));
 	}
 
-	public Constant intDivideConstants(Constant c1, Constant c2) {
+	private Constant intDivideConstants(Constant c1, Constant c2) {
 		return constant(numberFactory.divide((IntegerNumber) c1.number(),
 				(IntegerNumber) c2.number()));
 	}
 
-	public Constant intModuloConstants(Constant c1, Constant c2) {
+	private Constant intModuloConstants(Constant c1, Constant c2) {
 		return constant(numberFactory.mod((IntegerNumber) c1.number(),
 				(IntegerNumber) c2.number()));
 	}
@@ -1024,7 +881,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @return result of division as Polynomial, which might be a new primitive
 	 *         expression
 	 */
-	public Polynomial intDividePolynomials(Polynomial numerator,
+	private Polynomial intDividePolynomials(Polynomial numerator,
 			Polynomial denominator) {
 		assert numerator.type().isInteger();
 		assert denominator.type().isInteger();
@@ -1063,7 +920,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @param denominator
 	 * @return
 	 */
-	public Polynomial intModulusPolynomials(Polynomial numerator,
+	private Polynomial intModulusPolynomials(Polynomial numerator,
 			Polynomial denominator) {
 		if (numerator.isZero())
 			return numerator;
@@ -1094,12 +951,12 @@ public class CommonIdealFactory implements IdealFactory {
 
 	/*************************** NEGATE *******************************/
 
-	public Constant negate(Constant constant) {
+	private Constant negate(Constant constant) {
 		return constant(objectFactory.numberObject(numberFactory
 				.negate(constant.number())));
 	}
 
-	public Monomial negate(Monomial monomial) {
+	Monomial negate(Monomial monomial) {
 		return monomial(negate(monomial.monomialConstant(this)),
 				monomial.monic(this));
 	}
@@ -1110,13 +967,13 @@ public class CommonIdealFactory implements IdealFactory {
 
 	}
 
-	public Polynomial negate(Polynomial polynomial) {
+	private Polynomial negate(Polynomial polynomial) {
 		return polynomial(negate(polynomial.termMap(this)),
 				negate(polynomial.factorization(this)));
 	}
 
-	public RationalExpression negate(RationalExpression rational) {
-		// here NO NEED TO go through all division checks, factorizations,
+	private RationalExpression negate(RationalExpression rational) {
+		// TODO: here NO NEED TO go through all division checks, factorizations,
 		// etc. just need to negate numerator. Need divideNoCommon...
 		return divide(negate(rational.numerator(this)),
 				rational.denominator(this));
@@ -1162,25 +1019,8 @@ public class CommonIdealFactory implements IdealFactory {
 		if (arg0.type().isInteger())
 			return add((Polynomial) arg0, (Polynomial) arg1);
 		else
-			return add((RationalExpression) arg0, (RationalExpression) arg1);
-	}
-
-	@Override
-	public NumericExpression add(
-			SymbolicCollection<? extends SymbolicExpression> args) {
-		int size = args.size();
-		NumericExpression result = null;
-
-		if (size == 0)
-			throw new IllegalArgumentException(
-					"Collection must contain at least one element");
-		for (SymbolicExpression arg : args) {
-			if (result == null)
-				result = (NumericExpression) arg;
-			else
-				result = add(result, (NumericExpression) arg);
-		}
-		return result;
+			return addRational((RationalExpression) arg0,
+					(RationalExpression) arg1);
 	}
 
 	private NumericExpression addWithCast(
@@ -1212,26 +1052,8 @@ public class CommonIdealFactory implements IdealFactory {
 		if (arg0.type().isInteger())
 			return multiply((Polynomial) arg0, (Polynomial) arg1);
 		else
-			return multiply((RationalExpression) arg0,
+			return multiplyRational((RationalExpression) arg0,
 					(RationalExpression) arg1);
-	}
-
-	@Override
-	public NumericExpression multiply(
-			SymbolicCollection<? extends SymbolicExpression> args) {
-		int size = args.size();
-		NumericExpression result = null;
-
-		if (size == 0)
-			throw new IllegalArgumentException(
-					"Collection must contain at least one element");
-		for (SymbolicExpression arg : args) {
-			if (result == null)
-				result = (NumericExpression) arg;
-			else
-				result = multiply(result, (NumericExpression) arg);
-		}
-		return result;
 	}
 
 	private NumericExpression multiplyWithCast(
@@ -1278,21 +1100,6 @@ public class CommonIdealFactory implements IdealFactory {
 			return negate((Polynomial) arg);
 		else
 			return negate((RationalExpression) arg);
-	}
-
-	public Polynomial power(Polynomial base, IntObject exponent) {
-		Polynomial result = one(base.type());
-		int n = exponent.getInt();
-
-		while (n > 0) {
-			if (n % 2 != 0) {
-				result = multiply(result, base);
-				n -= 1;
-			}
-			base = multiply(base, base);
-			n /= 2;
-		}
-		return result;
 	}
 
 	@Override

@@ -13,10 +13,6 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public interface ExpressionFactory {
 
-	void setObjectComparator(Comparator<SymbolicObject> c);
-
-	void setTypeComparator(Comparator<SymbolicType> c);
-
 	void init();
 
 	NumericExpressionFactory numericFactory();

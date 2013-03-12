@@ -14,9 +14,8 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 public class Expressions {
 
 	public static ExpressionFactory newExpressionFactory(
-			NumericExpressionFactory numericFactory,
-			BooleanExpressionFactory booleanFactory) {
-		return new CommonExpressionFactory(numericFactory, booleanFactory);
+			NumericExpressionFactory numericFactory) {
+		return new CommonExpressionFactory(numericFactory);
 	}
 
 	public static BooleanExpressionFactory newCnfFactory(
@@ -28,9 +27,13 @@ public class Expressions {
 	public static ExpressionFactory newIdealExpressionFactory(
 			NumberFactory numberFactory, ObjectFactory objectFactory,
 			SymbolicTypeFactory typeFactory, CollectionFactory collectionFactory) {
-		return newExpressionFactory(Ideal.newIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory), new CnfFactory(
-				typeFactory, objectFactory, collectionFactory));
+		BooleanExpressionFactory booleanFactory = new CnfFactory(typeFactory,
+				objectFactory, collectionFactory);
+		NumericExpressionFactory numericFactory = Ideal.newIdealFactory(
+				numberFactory, objectFactory, typeFactory, collectionFactory,
+				booleanFactory);
+
+		return newExpressionFactory(numericFactory);
 	}
 
 }
