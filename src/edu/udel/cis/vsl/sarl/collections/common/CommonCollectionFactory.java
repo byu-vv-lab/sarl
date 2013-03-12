@@ -33,6 +33,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
 		emptyHashMap = objectFactory
 				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());
+		objectFactory.setCollectionComparator(comparator);
 	}
 
 	@Override

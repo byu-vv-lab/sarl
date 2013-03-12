@@ -9,10 +9,12 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CommonExpressionFactory implements ExpressionFactory {
 
@@ -24,17 +26,26 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private BooleanExpressionFactory booleanFactory;
 
+	private SymbolicTypeFactory typeFactory;
+
+	private CollectionFactory collectionFactory;
+
 	private SymbolicExpression nullExpression;
 
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		this.numericFactory = numericFactory;
 		this.objectFactory = numericFactory.objectFactory();
 		this.booleanFactory = numericFactory.booleanFactory();
+		this.typeFactory = numericFactory.typeFactory();
+		this.collectionFactory = numericFactory.collectionFactory();
 		this.expressionComparator = new ExpressionComparator(
 				numericFactory.numericComparator(), objectFactory.comparator(),
-				numericFactory.typeFactory().typeComparator());
+				typeFactory.typeComparator());
 		this.nullExpression = canonic(expression(SymbolicOperator.NULL, null,
 				new SymbolicObject[] {}));
+		typeFactory.setExpressionComparator(expressionComparator);
+		collectionFactory.setElementComparator(expressionComparator);
+		objectFactory.setExpressionComparator(expressionComparator);
 	}
 
 	@Override
@@ -144,6 +155,11 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	@Override
 	public BooleanExpressionFactory booleanFactory() {
 		return booleanFactory;
+	}
+
+	@Override
+	public SymbolicTypeFactory typeFactory() {
+		return typeFactory;
 	}
 
 }

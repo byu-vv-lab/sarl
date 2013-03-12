@@ -38,6 +38,8 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 				SymbolicTypeKind.INTEGER));
 		realType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
 				SymbolicTypeKind.REAL));
+		objectFactory.setTypeComparator(typeComparator);
+		objectFactory.setTypeSequenceComparator(typeSequenceComparator);
 	}
 
 	@Override

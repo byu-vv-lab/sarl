@@ -28,13 +28,6 @@ public class CommonFactorySystem implements FactorySystem {
 		this.expressionFactory = expressionFactory;
 		this.collectionFactory = collectionFactory;
 
-		objectFactory.setCollectionComparator(collectionFactory.comparator());
-		objectFactory.setExpressionComparator(expressionFactory.comparator());
-		objectFactory.setTypeComparator(typeFactory.typeComparator());
-		objectFactory.setTypeSequenceComparator(typeFactory
-				.typeSequenceComparator());
-		typeFactory.setExpressionComparator(expressionFactory.comparator());
-		collectionFactory.setElementComparator(expressionFactory.comparator());
 		objectFactory.init();
 		typeFactory.init();
 		expressionFactory.init();

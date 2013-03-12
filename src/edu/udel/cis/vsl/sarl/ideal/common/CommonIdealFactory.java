@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -1379,107 +1377,5 @@ public class CommonIdealFactory implements IdealFactory {
 					zero(arg0.type()), difference);
 		else
 			return number.signum() != 0 ? trueExpr : falseExpr;
-	}
-
-}
-
-/**
- * Add c0*m + c1*m, where m is a monic and c0 and c1 are constants. The answer
- * is (c0+c1)*m, or null if c0+c1=0.
- * 
- * @author siegel
- * 
- */
-class MonomialAdder implements BinaryOperator<Monomial> {
-	private CommonIdealFactory factory;
-
-	public MonomialAdder(CommonIdealFactory factory) {
-		this.factory = factory;
-	}
-
-	@Override
-	public Monomial apply(Monomial arg0, Monomial arg1) {
-		Constant c = factory.add(arg0.monomialConstant(factory),
-				arg1.monomialConstant(factory));
-
-		if (c.isZero())
-			return null;
-		return factory.monomial(c, arg0.monic(factory));
-	}
-}
-
-/**
- * Multiply p^i*p^j, where p is a NumericPrimitive and i and j are positive
- * IntObjects. The answer is p^{i+j}.
- * 
- * @author siegel
- * 
- */
-class PrimitivePowerMultiplier implements BinaryOperator<PrimitivePower> {
-	private CommonIdealFactory factory;
-
-	public PrimitivePowerMultiplier(CommonIdealFactory factory) {
-		this.factory = factory;
-	}
-
-	@Override
-	public PrimitivePower apply(PrimitivePower arg0, PrimitivePower arg1) {
-		return factory.primitivePower(
-				arg0.primitive(factory),
-				arg0.primitivePowerExponent(factory).plus(
-						arg1.primitivePowerExponent(factory)));
-	}
-}
-
-class MonomialDivider implements UnaryOperator<Monomial> {
-	private CommonIdealFactory factory;
-	private Number scalar;
-	private NumberFactory numberFactory;
-
-	public MonomialDivider(CommonIdealFactory factory, Number scalar) {
-		this.factory = factory;
-		this.scalar = scalar;
-		this.numberFactory = factory.numberFactory();
-	}
-
-	@Override
-	public Monomial apply(Monomial arg) {
-		return factory.monomial(
-				factory.constant(numberFactory.divide(
-						arg.monomialConstant(factory).number(), scalar)),
-				arg.monic(factory));
-	}
-}
-
-class MonomialMultiplier implements UnaryOperator<Monomial> {
-	private CommonIdealFactory factory;
-	private Number scalar;
-	private NumberFactory numberFactory;
-
-	public MonomialMultiplier(CommonIdealFactory factory, Number scalar) {
-		this.factory = factory;
-		this.scalar = scalar;
-		this.numberFactory = factory.numberFactory();
-	}
-
-	@Override
-	public Monomial apply(Monomial arg) {
-		return factory.monomial(
-				factory.constant(numberFactory.multiply(
-						arg.monomialConstant(factory).number(), scalar)),
-				arg.monic(factory));
-	}
-}
-
-class MonomialNegater implements UnaryOperator<Monomial> {
-	private CommonIdealFactory factory;
-
-	public MonomialNegater(CommonIdealFactory factory) {
-		this.factory = factory;
-	}
-
-	@Override
-	public Monomial apply(Monomial arg) {
-		return factory.negate(arg);
 	}
 }

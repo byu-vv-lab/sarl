@@ -10,6 +10,7 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public interface ExpressionFactory {
 
@@ -18,6 +19,8 @@ public interface ExpressionFactory {
 	NumericExpressionFactory numericFactory();
 
 	BooleanExpressionFactory booleanFactory();
+	
+	SymbolicTypeFactory typeFactory();
 
 	ObjectFactory objectFactory();
 
