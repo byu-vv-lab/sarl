@@ -10,6 +10,7 @@ import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 public abstract class IdealExpression extends CommonSymbolicExpression
 		implements NumericExpression {
 
+	// TODO: use this or get rid of it
 	public enum IdealKind {
 		NTRationalExpression,
 		NTPolynomial,

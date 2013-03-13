@@ -39,10 +39,6 @@ public interface ObjectFactory {
 	 */
 	<T extends SymbolicObject> T canonic(T object);
 
-	// SymbolicType canonic(SymbolicType type);
-
-	// SymbolicExpression canonic(SymbolicExpression expression);
-
 	BooleanObject trueObj();
 
 	BooleanObject falseObj();

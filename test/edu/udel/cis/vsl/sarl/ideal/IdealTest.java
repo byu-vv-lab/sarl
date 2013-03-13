@@ -60,9 +60,9 @@ public class IdealTest {
 		c2 = idealFactory.constant(n2);
 		c10 = idealFactory.intConstant(10);
 		Xobj = objectFactory.stringObject("X");
-		x = objectFactory.canonic(idealFactory.newNumericSymbolicConstant(Xobj,
+		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
-		y = objectFactory.canonic(idealFactory.newNumericSymbolicConstant(
+		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 	}
 
@@ -102,7 +102,7 @@ public class IdealTest {
 
 	@Test
 	public void symbolicConstantEquality() {
-		SymbolicConstant x2 = idealFactory.newNumericSymbolicConstant(
+		SymbolicConstant x2 = idealFactory.symbolicConstant(
 				objectFactory.stringObject("X"), typeFactory.integerType());
 
 		assertEquals(x, x2);
@@ -115,7 +115,7 @@ public class IdealTest {
 
 	@Test
 	public void symbolicConstantInequality2() {
-		SymbolicConstant x2 = idealFactory.newNumericSymbolicConstant(
+		SymbolicConstant x2 = idealFactory.symbolicConstant(
 				objectFactory.stringObject("X"), typeFactory.realType());
 
 		assertFalse(x.equals(x2));

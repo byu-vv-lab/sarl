@@ -17,6 +17,13 @@ import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * A CNF factory is an implementation of BooleanExpressionFactory that works by
+ * putting all boolean expressions into a conjunctive normal form.
+ * 
+ * @author siegel
+ * 
+ */
 public class CnfFactory implements BooleanExpressionFactory {
 
 	private CollectionFactory collectionFactory;
@@ -72,8 +79,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 	@Override
 	public BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
-		return new CnfExpression(operator, _booleanType, arg0, arg1,
-				arg2);
+		return new CnfExpression(operator, _booleanType, arg0, arg1, arg2);
 
 	}
 
@@ -130,10 +136,6 @@ public class CnfFactory implements BooleanExpressionFactory {
 			return booleanExpression(SymbolicOperator.AND, hashSet(c0, c1));
 		}
 	}
-
-	// TODO: cast arg0 and arg1 to CnfBooleanExpression to use
-	// the specialized argument methods and get rid of those
-	// arguments from the BooleanExpression interface.
 
 	@Override
 	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {

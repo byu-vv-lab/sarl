@@ -33,12 +33,11 @@ import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
  * 
  * to compare two primitive power of same degree: compare the bases
  * 
- * If the two polynomials of the same degree are not monomials, then
- * compare their leading terms.  If those are equal, move to the next
- * pair of terms. Etc.
+ * If the two polynomials of the same degree are not monomials, then compare
+ * their leading terms. If those are equal, move to the next pair of terms. Etc.
  * 
- * TODO: all of these expressions should be assigned order numbers
- * for fast comparisons.
+ * TODO: all of these expressions should be assigned order numbers for fast
+ * comparisons.
  * 
  * @author siegel
  * 
@@ -49,8 +48,10 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 	private CommonIdealFactory idealFactory;
 
-	public IdealComparator(CommonIdealFactory idealFactory) {
+	public IdealComparator(CommonIdealFactory idealFactory,
+			Comparator<SymbolicObject> objectComparator) {
 		this.idealFactory = idealFactory;
+		this.objectComparator = objectComparator;
 	}
 
 	private static boolean debug = false;
@@ -223,16 +224,6 @@ public class IdealComparator implements Comparator<NumericExpression> {
 			return result;
 		return comparePolynomials(e1.denominator(idealFactory),
 				e2.denominator(idealFactory));
-	}
-
-	/**
-	 * The general comparator is used to compare objects that are not instances
-	 * of IdealExpression.
-	 * 
-	 * @param comparator
-	 */
-	public void setObjectComparator(Comparator<SymbolicObject> comparator) {
-		this.objectComparator = comparator;
 	}
 
 	public Comparator<SymbolicObject> objectComparator() {

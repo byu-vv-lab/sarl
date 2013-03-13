@@ -298,7 +298,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * @return the symbolic constant
 	 */
 	private NumericSymbolicConstant intBoundVar(int index) {
-		return numericFactory.newNumericSymbolicConstant(stringObject("i"
+		return numericFactory.symbolicConstant(stringObject("i"
 				+ index), integerType);
 	}
 
@@ -661,7 +661,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		case CONCRETE:
 			if (type.isNumeric())
 				return canonic(numericFactory
-						.newConcreteNumericExpression((NumberObject) args[0]));
+						.number((NumberObject) args[0]));
 			else
 				return expression(SymbolicOperator.CONCRETE, type, args[0]);
 		case COND:
@@ -940,7 +940,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	public SymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type) {
 		if (type.isNumeric())
-			return numericFactory.newNumericSymbolicConstant(name, type);
+			return numericFactory.symbolicConstant(name, type);
 		if (type.isBoolean())
 			return booleanFactory.booleanSymbolicConstant(name);
 		return expressionFactory.symbolicConstant(name, type);
@@ -948,7 +948,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 	@Override
 	public NumericExpression number(NumberObject numberObject) {
-		return numericFactory.newConcreteNumericExpression(numberObject);
+		return numericFactory.number(numberObject);
 	}
 
 	@Override
@@ -1465,7 +1465,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				return (NumericExpression) ((SymbolicCompleteArrayType) type)
 						.extent();
 			else
-				return numericFactory.newNumericExpression(
+				return numericFactory.expression(
 						SymbolicOperator.LENGTH, integerType, array);
 		}
 	}

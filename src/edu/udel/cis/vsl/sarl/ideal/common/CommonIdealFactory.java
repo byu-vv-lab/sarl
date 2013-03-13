@@ -142,8 +142,7 @@ public class CommonIdealFactory implements IdealFactory {
 		this.booleanFactory = booleanFactory;
 		this.trueExpr = booleanFactory.trueExpr();
 		this.falseExpr = booleanFactory.falseExpr();
-		this.comparator = new IdealComparator(this);
-		this.comparator.setObjectComparator(objectFactory.comparator());
+		this.comparator = new IdealComparator(this, objectFactory.comparator());
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();
@@ -901,8 +900,8 @@ public class CommonIdealFactory implements IdealFactory {
 					&& denominator instanceof Constant)
 				return intDivideConstants((Constant) numerator,
 						(Constant) denominator);
-			return newNumericExpression(SymbolicOperator.INT_DIVIDE,
-					integerType, numerator, denominator);
+			return expression(SymbolicOperator.INT_DIVIDE, integerType,
+					numerator, denominator);
 		}
 	}
 
@@ -942,8 +941,8 @@ public class CommonIdealFactory implements IdealFactory {
 			else
 				return multiply(
 						triple[0],
-						newNumericExpression(SymbolicOperator.MODULO,
-								integerType, numerator, denominator));
+						expression(SymbolicOperator.MODULO, integerType,
+								numerator, denominator));
 		}
 	}
 
@@ -982,31 +981,31 @@ public class CommonIdealFactory implements IdealFactory {
 	// Methods specified in interface NumericExpressionFactory...
 
 	@Override
-	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject[] arguments) {
 		return new NumericPrimitive(operator, numericType, arguments);
 	}
 
 	@Override
-	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive expression(SymbolicOperator operator,
 			SymbolicType numericType, Collection<SymbolicObject> arguments) {
 		return new NumericPrimitive(operator, numericType, arguments);
 	}
 
 	@Override
-	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0) {
 		return new NumericPrimitive(operator, numericType, arg0);
 	}
 
 	@Override
-	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1);
 	}
 
 	@Override
-	public NumericPrimitive newNumericExpression(SymbolicOperator operator,
+	public NumericPrimitive expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
 		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
@@ -1123,8 +1122,7 @@ public class CommonIdealFactory implements IdealFactory {
 	@Override
 	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
-		return newNumericExpression(SymbolicOperator.POWER, base.type(), base,
-				exponent);
+		return expression(SymbolicOperator.POWER, base.type(), base, exponent);
 	}
 
 	/**
@@ -1156,7 +1154,7 @@ public class CommonIdealFactory implements IdealFactory {
 			return constant(numberFactory.rational(((NumberObject) arg0)
 					.getNumber()));
 		case COND:
-			return newNumericExpression(
+			return expression(
 					operator,
 					realType,
 					arg0,
@@ -1197,7 +1195,7 @@ public class CommonIdealFactory implements IdealFactory {
 		case SYMBOLIC_CONSTANT:
 		case TUPLE_READ:
 		case UNION_EXTRACT:
-			return newNumericExpression(SymbolicOperator.CAST, realType,
+			return expression(SymbolicOperator.CAST, realType,
 					numericExpression);
 		default:
 			throw new SARLInternalException("Should be unreachable");
@@ -1212,14 +1210,13 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	@Override
-	public NumericExpression newConcreteNumericExpression(
-			NumberObject numberObject) {
+	public NumericExpression number(NumberObject numberObject) {
 		return constant(numberObject);
 	}
 
 	@Override
-	public NumericSymbolicConstant newNumericSymbolicConstant(
-			StringObject name, SymbolicType type) {
+	public NumericSymbolicConstant symbolicConstant(StringObject name,
+			SymbolicType type) {
 		return new IdealSymbolicConstant(name, type);
 	}
 
@@ -1234,7 +1231,7 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	@Override
-	public IdealComparator numericComparator() {
+	public IdealComparator comparator() {
 		return comparator;
 	}
 

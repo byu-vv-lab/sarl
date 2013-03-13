@@ -36,6 +36,12 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 public interface NumericExpressionFactory {
 
 	/**
+	 * Initialize this numeric expression factory. This factory should not be
+	 * used until it has been initialized.
+	 */
+	void init();
+
+	/**
 	 * Returns the boolean expression factory used by this numeric expression
 	 * factory. The boolean factory is needed to produce relational expressions
 	 * such as "x<y".
@@ -43,12 +49,6 @@ public interface NumericExpressionFactory {
 	 * @return the boolean expression factory used by this factory
 	 */
 	BooleanExpressionFactory booleanFactory();
-
-	/**
-	 * Initialize this numeric expression factory. This factory should not be
-	 * used until it has been initialized.
-	 */
-	void init();
 
 	/**
 	 * Returns the number factory used by this numeric factory.
@@ -84,26 +84,26 @@ public interface NumericExpressionFactory {
 	 * 
 	 * @return a comparator on numeric expressions
 	 */
-	Comparator<NumericExpression> numericComparator();
+	Comparator<NumericExpression> comparator();
 
-	NumericExpression newConcreteNumericExpression(NumberObject numberObject);
+	NumericExpression number(NumberObject numberObject);
 
-	NumericSymbolicConstant newNumericSymbolicConstant(StringObject name,
+	NumericSymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type);
 
-	NumericExpression newNumericExpression(SymbolicOperator operator,
+	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, Collection<SymbolicObject> arguments);
 
-	NumericExpression newNumericExpression(SymbolicOperator operator,
+	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject[] arguments);
 
-	NumericExpression newNumericExpression(SymbolicOperator operator,
+	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0);
 
-	NumericExpression newNumericExpression(SymbolicOperator operator,
+	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1);
 
-	NumericExpression newNumericExpression(SymbolicOperator operator,
+	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2);
 

@@ -41,6 +41,9 @@ Create HerbrandIdealFactory implement NumericFactory
   
 Real, HerbrandRealType, Integer, FiniteInteger...
 
+isReal(): true if HerbrandReal or Real? 
+
+
 
 Bitwise integers with shifts, etc.
 

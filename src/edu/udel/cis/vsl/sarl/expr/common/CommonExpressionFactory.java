@@ -39,10 +39,10 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		this.typeFactory = numericFactory.typeFactory();
 		this.collectionFactory = numericFactory.collectionFactory();
 		this.expressionComparator = new ExpressionComparator(
-				numericFactory.numericComparator(), objectFactory.comparator(),
+				numericFactory.comparator(), objectFactory.comparator(),
 				typeFactory.typeComparator());
-		this.nullExpression = canonic(expression(SymbolicOperator.NULL, null,
-				new SymbolicObject[] {}));
+		this.nullExpression = objectFactory.canonic(expression(
+				SymbolicOperator.NULL, null, new SymbolicObject[] {}));
 		typeFactory.setExpressionComparator(expressionComparator);
 		collectionFactory.setElementComparator(expressionComparator);
 		objectFactory.setExpressionComparator(expressionComparator);
@@ -64,11 +64,6 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	}
 
 	@Override
-	public SymbolicExpression canonic(SymbolicExpression expression) {
-		return objectFactory.canonic(expression);
-	}
-
-	@Override
 	public Comparator<SymbolicExpression> comparator() {
 		return expressionComparator;
 	}
@@ -78,7 +73,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, SymbolicObject[] arguments) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.newNumericExpression(operator, type,
+				return numericFactory.expression(operator, type,
 						arguments);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arguments);
@@ -92,7 +87,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		if (type != null) {
 			if (type.isNumeric())
 				return numericFactory
-						.newNumericExpression(operator, type, arg0);
+						.expression(operator, type, arg0);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0);
 		}
@@ -104,7 +99,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.newNumericExpression(operator, type,
+				return numericFactory.expression(operator, type,
 						arg0, arg1);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0, arg1);
@@ -118,7 +113,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicObject arg2) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.newNumericExpression(operator, type,
+				return numericFactory.expression(operator, type,
 						arg0, arg1, arg2);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0, arg1,
@@ -133,7 +128,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		if (type != null) {
 			if (type.isNumeric())
 				return numericFactory
-						.newNumericExpression(operator, type, args);
+						.expression(operator, type, args);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, args);
 		}
