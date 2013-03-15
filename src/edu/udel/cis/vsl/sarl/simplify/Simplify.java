@@ -14,7 +14,7 @@ public class Simplify {
 		return new IdentitySimplifier(universe, assumption);
 	}
 
-	public static SimplifierFactory newIdentifySimplifierFactory(
+	public static SimplifierFactory newIdentitySimplifierFactory(
 			SymbolicUniverse universe) {
 		return new IdentitySimplifierFactory(universe);
 	}

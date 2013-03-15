@@ -8,6 +8,8 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -26,9 +28,16 @@ public interface SymbolicTypeFactory {
 
 	SymbolicType booleanType();
 
-	SymbolicType integerType();
+	SymbolicIntegerType integerType();
 
-	SymbolicType realType();
+	SymbolicIntegerType herbrandIntegerType();
+
+	SymbolicIntegerType boundedIntegerType(NumericExpression min,
+			NumericExpression max, boolean cyclic);
+
+	SymbolicRealType realType();
+
+	SymbolicRealType herbrandRealType();
 
 	SymbolicTypeSequence sequence(Iterable<? extends SymbolicType> elements);
 

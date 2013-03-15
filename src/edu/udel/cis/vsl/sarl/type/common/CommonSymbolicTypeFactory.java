@@ -8,6 +8,10 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -24,7 +28,11 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
 	private TypeSequenceComparator typeSequenceComparator;
 
-	private CommonSymbolicPrimitiveType booleanType, integerType, realType;
+	private CommonSymbolicPrimitiveType booleanType;
+
+	private SymbolicIntegerType integerType, herbrandIntegerType;
+
+	private SymbolicRealType realType, herbrandRealType;
 
 	public CommonSymbolicTypeFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
@@ -34,10 +42,14 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 		typeSequenceComparator.setTypeComparator(typeComparator);
 		booleanType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
 				SymbolicTypeKind.BOOLEAN));
-		integerType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
-				SymbolicTypeKind.INTEGER));
-		realType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
-				SymbolicTypeKind.REAL));
+		integerType = objectFactory.canonic(new CommonSymbolicIntegerType(
+				IntegerKind.IDEAL));
+		herbrandIntegerType = objectFactory
+				.canonic(new CommonSymbolicIntegerType(IntegerKind.HERBRAND));
+		realType = objectFactory.canonic(new CommonSymbolicRealType(
+				RealKind.IDEAL));
+		herbrandRealType = objectFactory.canonic(new CommonSymbolicRealType(
+				RealKind.HERBRAND));
 		objectFactory.setTypeComparator(typeComparator);
 		objectFactory.setTypeSequenceComparator(typeSequenceComparator);
 	}
@@ -53,13 +65,31 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	}
 
 	@Override
-	public CommonSymbolicPrimitiveType integerType() {
+	public SymbolicIntegerType integerType() {
 		return integerType;
 	}
 
 	@Override
-	public CommonSymbolicPrimitiveType realType() {
+	public SymbolicIntegerType herbrandIntegerType() {
+		return herbrandIntegerType;
+	}
+
+	@Override
+	public SymbolicIntegerType boundedIntegerType(NumericExpression min,
+			NumericExpression max, boolean cyclic) {
+		// TODO
+		throw new UnsupportedOperationException(
+				"Bounded integer not yet supported");
+	}
+
+	@Override
+	public SymbolicRealType realType() {
 		return realType;
+	}
+
+	@Override
+	public SymbolicRealType herbrandRealType() {
+		return herbrandRealType;
 	}
 
 	@Override

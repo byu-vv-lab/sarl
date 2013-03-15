@@ -1125,13 +1125,20 @@ public class CommonIdealFactory implements IdealFactory {
 		return expression(SymbolicOperator.POWER, base.type(), base, exponent);
 	}
 
+	@Override
+	public NumericExpression cast(NumericExpression numericExpression,
+			SymbolicType newType) {
+		if (numericExpression.type().isIdeal() && newType.equals(realType))
+			return castToReal(numericExpression);
+		return expression(SymbolicOperator.CAST, newType, numericExpression);
+	}
+
 	/**
 	 * For ideal arithmetic, this respects almost every operation. cast(a O p) =
 	 * cast(a) O cast(p), for O=+,-,*, Not division. Nod modulus. Primities get
 	 * a CAST operator in front of them. Constants get cast by number factory.
 	 */
-	@Override
-	public NumericExpression castToReal(NumericExpression numericExpression) {
+	private NumericExpression castToReal(NumericExpression numericExpression) {
 		if (numericExpression.type().isReal())
 			return numericExpression;
 

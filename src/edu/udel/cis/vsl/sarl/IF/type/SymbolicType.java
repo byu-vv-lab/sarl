@@ -61,4 +61,22 @@ public interface SymbolicType extends SymbolicObject {
 	 */
 	SymbolicTypeKind typeKind();
 
+	/**
+	 * Is this a Herbrand type? There are Herbrand variants of real and integer
+	 * types. Operations on Herbrand expressions are treated as uninterpreted
+	 * functions: no simplifications or transformations of any kind are
+	 * performed.
+	 * 
+	 * @return true iff this type is a Herbrand type
+	 */
+	boolean isHerbrand();
+	
+	/**
+	 * Is this an Ideal numeric type?  These are the mathematical integer
+	 * and real types.
+	 * 
+	 * @return true iff this is the ideal real type or ideal integer type
+	 */
+	boolean isIdeal();
+
 }

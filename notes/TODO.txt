@@ -41,12 +41,29 @@ Create HerbrandIdealFactory implement NumericFactory
   
 Real, HerbrandRealType, Integer, FiniteInteger...
 
-isReal(): true if HerbrandReal or Real? 
+Types:
+  REAL, HERBRAND_REAL, INTEGER, HERBRAND_INTEGER
+methods:
+  isReal(): true iff REAL, HERBRAND_REAL
+  isHerbrand(): true iff HERBRAND_REAL, HERBRAND_INTEGER
 
+Better Idea:
 
+How about creating a SymbolicRealType
+and then within that a RealKind: IDEAL, HERBRAND, FLOAT
 
-Bitwise integers with shifts, etc.
+Similarly a SymbolicIntegerType:
+IDEAL, HERBRAND, FINITE (cyclic, ...)
 
+Create factories for these things.
 
+Then create a HybridFactory that will look at the types of the arguments
+in detail and choose which factory to delegate the operation too.
 
+Universe:
+
+SymbolicRealType herbrandRealType();
+SymbolicRealType floatingPointType(int ..., int ...);
+SymbolicIntegerType hergrandIntegerType();
+SymbolicIntegerType finiteIntegerType(NumericExpression min, NumericExpression max, boolean cyclic);
 

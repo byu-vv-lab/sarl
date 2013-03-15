@@ -71,4 +71,22 @@ public abstract class CommonSymbolicType extends CommonSymbolicObject implements
 				|| kind == SymbolicTypeKind.REAL;
 	}
 
+	/**
+	 * Note: returns false, since that is usually the case. This method must be
+	 * overridden by any concrete class that actually is a Herbrand type.
+	 */
+	@Override
+	public boolean isHerbrand() {
+		return false;
+	}
+
+	/**
+	 * Note: returns false, since that is usually the case. This method must be
+	 * overridden by any concrete class that actually is an Ideal numeric type.
+	 */
+	@Override
+	public boolean isIdeal() {
+		return false;
+	}
+
 }

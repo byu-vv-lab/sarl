@@ -19,7 +19,7 @@ public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 
 	@Override
 	protected int computeHashCode() {
-		return super.hashCode() + extent.hashCode();
+		return super.computeHashCode() + extent.hashCode();
 	}
 
 	@Override

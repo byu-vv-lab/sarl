@@ -22,6 +22,8 @@ import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
@@ -121,6 +123,47 @@ public interface SymbolicUniverse {
 	 * @return the real type
 	 * */
 	SymbolicType realType();
+
+	/**
+	 * Returns the Herbrand integer type. All operations in which at least one
+	 * argument has Herbrand integer type will be treated as uninterpreted
+	 * functions: no simplifications or other transformations will be performed.
+	 * 
+	 * @return the Herbrand integer type
+	 */
+	SymbolicIntegerType herbrandIntegerType();
+
+	/**
+	 * Returns the bounded integer types with specified upper and lower bounds.
+	 * Either of the bounds may be null, indication no bound (i.e., + or -
+	 * infinity). If cyclic is true, then all operations treat the domain
+	 * cyclically (i.e., max+1 = min).
+	 * 
+	 * @param min
+	 *            smallest integer value in the domain or null
+	 * @param max
+	 *            largest integer value in the domain or null
+	 * @param cyclic
+	 *            should operations treat the domain cyclically?
+	 * @return the bounded integer type as specified
+	 */
+	SymbolicIntegerType boundedIntegerType(NumericExpression min,
+			NumericExpression max, boolean cyclic);
+
+	/**
+	 * Returns the Herbrand real type. All operations in which at least one
+	 * argument has Herbrand real type will be treated as uninterpreted
+	 * functions: no simplifications or other transformations will be performed.
+	 * Operations may involve mixed real and Herbrand real types, but the result
+	 * will always be a Herbrand expression as long as at least one argument is
+	 * Herbrand.
+	 * 
+	 * A Herbrand value and non-Herbrand value are always considered to be not
+	 * equal, even if they are concrete expressions.
+	 * 
+	 * @return the Herbrand integer type
+	 */
+	SymbolicRealType herbrandRealType();
 
 	/**
 	 * Returns the complete array type with the given element type and extent
@@ -573,9 +616,6 @@ public interface SymbolicUniverse {
 	 *            the exponent in the power expression
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
-
-	/** Casts a real or integer type expression to an expression of real type. */
-	NumericExpression castToReal(NumericExpression numericExpression);
 
 	// Booleans...
 

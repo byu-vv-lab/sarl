@@ -203,9 +203,11 @@ public interface NumericExpressionFactory {
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
-	/** Casts a real or integer type expression to an expression of real type. */
-	NumericExpression castToReal(NumericExpression numericExpression);
+//	/** Casts a real or integer type expression to an expression of real type. */
+//	NumericExpression castToReal(NumericExpression numericExpression);
 
+	NumericExpression cast(NumericExpression numericExpression, SymbolicType newType);
+	
 	/**
 	 * Attempts to interpret the given symbolic expression as a concrete number.
 	 * If this is not possible, returns null.

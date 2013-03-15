@@ -71,10 +71,26 @@ public class Universes {
 		FactorySystem system = newHerbrandFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Simplify
-				.newIdentifySimplifierFactory(universe);
+				.newIdentitySimplifierFactory(universe);
 
 		universe.setSimplifierFactory(simplifierFactory);
 		return universe;
+	}
+	
+	public static SymbolicUniverse newStandardUniverse() {
+		// TODO
+		// need a simplifier for Herbrand: even if PLUS
+		// is uninterpreted, if x=y the PLUS(x,z)=PLUS(y,z).
+		
+		// translate Herbrand operations as functions.
+		// functions type is herbrandRealxherbrandReal->herbrandReal,
+		// ditto for integer.
+		// need to cast any other numeric expression to herbrand
+		// before applying.
+		// LTE(x,y), LT(x,y).  But  x==y means sub can take place?
+		// not necessarily?
+		// then use IdealSimplifier as usual
+		return null;
 	}
 
 }

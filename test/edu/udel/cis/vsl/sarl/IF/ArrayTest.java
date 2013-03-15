@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
@@ -119,6 +120,19 @@ public class ArrayTest {
 		assertEquals(twoInt, read);
 		// for the heck of it...
 		out.println("array2d: new row is: " + universe.arrayRead(a, zero));
+	}
+
+	@Test
+	public void canonic1() {
+		SymbolicArrayType t1 = universe.arrayType(integerType,
+				universe.integer(3));
+		SymbolicArrayType t2 = universe.arrayType(integerType,
+				universe.integer(3));
+
+		assertEquals(t1, t2);
+		t1 = (SymbolicArrayType) universe.canonic(t1);
+		t2 = (SymbolicArrayType) universe.canonic(t2);
+		assertSame(t1, t2);
 	}
 
 }

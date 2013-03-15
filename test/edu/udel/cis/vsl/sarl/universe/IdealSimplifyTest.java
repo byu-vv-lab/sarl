@@ -158,11 +158,11 @@ public class IdealSimplifyTest {
 				universe.stringObject("a"), universe.arrayType(realType));
 
 		a = universe.arrayWrite(a, universe.integer(0),
-				universe.castToReal(universe.integer(5)));
+				universe.cast(realType, universe.integer(5)));
 		a = universe.arrayWrite(a, universe.integer(1),
-				universe.castToReal(universe.integer(6)));
+				universe.cast(realType, universe.integer(6)));
 		a = universe.arrayWrite(a, universe.integer(2),
-				universe.castToReal(universe.integer(7)));
+				universe.cast(realType, universe.integer(7)));
 
 		SymbolicExpression read = universe.arrayRead(a, u);
 		BooleanExpression assumption = universe.equals(u, universe.integer(2));

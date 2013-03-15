@@ -29,6 +29,8 @@ import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -298,8 +300,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * @return the symbolic constant
 	 */
 	private NumericSymbolicConstant intBoundVar(int index) {
-		return numericFactory.symbolicConstant(stringObject("i"
-				+ index), integerType);
+		return numericFactory.symbolicConstant(stringObject("i" + index),
+				integerType);
 	}
 
 	/**
@@ -315,6 +317,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	private BooleanExpression compatible(SymbolicType type0,
 			SymbolicType type1, int nestingDepth) {
+		// since the "equals" case should be by far the most frequent
+		// case, we check it first...
 		if (type0.equals(type1))
 			return trueExpr;
 
@@ -324,9 +328,12 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return falseExpr;
 		switch (kind) {
 		case BOOLEAN:
+			throw ierr("Unreachable: types are not equal but both have BOOLEAN kind");
 		case INTEGER:
 		case REAL:
-			return trueExpr;
+			// types are not equal but have same kind. We do not consider
+			// Herbrand real and real to be compatible, e.g.
+			return falseExpr;
 		case ARRAY: {
 			SymbolicArrayType a0 = (SymbolicArrayType) type0;
 			SymbolicArrayType a1 = (SymbolicArrayType) type1;
@@ -371,7 +378,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		default:
 			throw ierr("unreachable");
 		}
-
 	}
 
 	/**
@@ -657,11 +663,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 			return arrayWrite((SymbolicExpression) args[0],
 					(NumericExpression) args[1], (SymbolicExpression) args[2]);
 		case CAST:
-			return castToReal((NumericExpression) args[0]);
+			return cast(type, (SymbolicExpression) args[0]);
 		case CONCRETE:
 			if (type.isNumeric())
-				return canonic(numericFactory
-						.number((NumberObject) args[0]));
+				return canonic(numericFactory.number((NumberObject) args[0]));
 			else
 				return expression(SymbolicOperator.CONCRETE, type, args[0]);
 		case COND:
@@ -826,8 +831,24 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
+	public SymbolicIntegerType herbrandIntegerType() {
+		return typeFactory.herbrandIntegerType();
+	}
+
+	@Override
 	public SymbolicType realType() {
 		return realType;
+	}
+
+	@Override
+	public SymbolicIntegerType boundedIntegerType(NumericExpression min,
+			NumericExpression max, boolean cyclic) {
+		return typeFactory.boundedIntegerType(min, max, cyclic);
+	}
+
+	@Override
+	public SymbolicRealType herbrandRealType() {
+		return typeFactory.herbrandRealType();
 	}
 
 	@Override
@@ -1074,11 +1095,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
 		return numericFactory.power(base, exponent);
-	}
-
-	@Override
-	public NumericExpression castToReal(NumericExpression numericExpression) {
-		return numericFactory.castToReal(numericExpression);
 	}
 
 	@Override
@@ -1465,8 +1481,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				return (NumericExpression) ((SymbolicCompleteArrayType) type)
 						.extent();
 			else
-				return numericFactory.expression(
-						SymbolicOperator.LENGTH, integerType, array);
+				return numericFactory.expression(SymbolicOperator.LENGTH,
+						integerType, array);
 		}
 	}
 
@@ -1721,8 +1737,8 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 
 		if (oldType.equals(newType))
 			return expression;
-		if (oldType.isInteger() && newType.isReal()) {
-			return numericFactory.castToReal((NumericExpression) expression);
+		if (oldType.isNumeric() && newType.isNumeric()) {
+			return numericFactory.cast((NumericExpression) expression, newType);
 		}
 		if (oldType.typeKind() == SymbolicTypeKind.UNION) {
 			Integer index = ((SymbolicUnionType) oldType).indexOfType(newType);

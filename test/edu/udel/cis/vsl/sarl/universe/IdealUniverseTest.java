@@ -42,8 +42,9 @@ public class IdealUniverseTest {
 		integerType = universe.integerType();
 		x = (NumericSymbolicConstant) universe.symbolicConstant(Xobj, realType);
 		y = (NumericSymbolicConstant) universe.symbolicConstant(Yobj, realType);
-		two = universe.castToReal(universe.integer(2));
-		three = universe.castToReal(universe.integer(3));
+		two = (NumericExpression) universe.cast(realType, universe.integer(2));
+		three = (NumericExpression) universe
+				.cast(realType, universe.integer(3));
 
 		out.println("    x = " + x);
 		out.println("    y = " + y);

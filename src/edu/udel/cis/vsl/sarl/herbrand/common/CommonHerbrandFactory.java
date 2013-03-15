@@ -58,6 +58,8 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 				.numberObject(numberFactory.zeroInteger())));
 		this.zeroReal = objectFactory.canonic(number(objectFactory
 				.numberObject(numberFactory.zeroRational())));
+		this.comparator = new HerbrandComparator(objectFactory.comparator(),
+				typeFactory.typeComparator());
 	}
 
 	private SymbolicType herbrandType(SymbolicType type) {
@@ -227,11 +229,11 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public HerbrandExpression castToReal(NumericExpression numericExpression) {
-		if (numericExpression.type().isReal())
-			return (HerbrandExpression) numericExpression;
-		return expression(SymbolicOperator.CAST, herbrandRealType,
-				numericExpression);
+	public NumericExpression cast(NumericExpression numericExpression,
+			SymbolicType newType) {
+		if (newType.equals(numericExpression.type()))
+			return numericExpression;
+		return expression(SymbolicOperator.CAST, newType, numericExpression);
 	}
 
 	@Override
@@ -286,5 +288,4 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 		return booleanFactory.booleanExpression(SymbolicOperator.NEQ, arg0,
 				arg1);
 	}
-
 }

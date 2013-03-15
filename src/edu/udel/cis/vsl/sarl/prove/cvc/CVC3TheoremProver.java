@@ -40,6 +40,12 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
+// TODO: to translate Herbrand expressions: translate types as usual
+// integer or real, but create new uninterpreted operations:
+// INT_PLUS, INT_TIMES, INT_DIVIDE, INT_MOD, INT_MINUS, INT_NEGATIVE, INT_EQ,
+// INT_NEQ, INT_LT, INT_LTE, ditto for REAL_*.  Declare these operations
+// only as they are encountered.
+
 /**
  * An implementation of TheoremProverIF using the automated theorem prover CVC3.
  * Transforms a theorem proving query into the language of CVC3, invokes CVC3
