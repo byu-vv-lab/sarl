@@ -8,6 +8,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 		SymbolicFunctionType {
 
+	private final static int classCode = CommonSymbolicFunctionType.class
+			.hashCode();
+
 	private SymbolicTypeSequence inputTypes;
 
 	private SymbolicType outputType;
@@ -31,8 +34,7 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return typeKind().hashCode() + inputTypes.hashCode()
-				+ outputType.hashCode();
+		return classCode ^ inputTypes.hashCode() ^ outputType.hashCode();
 	}
 
 	@Override

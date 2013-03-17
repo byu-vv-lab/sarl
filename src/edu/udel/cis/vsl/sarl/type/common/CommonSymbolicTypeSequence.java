@@ -12,6 +12,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		SymbolicTypeSequence {
 
+	private final static int classCode = CommonSymbolicTypeSequence.class
+			.hashCode();
+
 	private ArrayList<SymbolicType> elements;
 
 	public CommonSymbolicTypeSequence(Iterable<? extends SymbolicType> types) {
@@ -70,8 +73,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicObjectKind.TYPE_SEQUENCE.hashCode()
-				^ elements.hashCode();
+		return classCode ^ elements.hashCode();
 	}
 
 	@Override

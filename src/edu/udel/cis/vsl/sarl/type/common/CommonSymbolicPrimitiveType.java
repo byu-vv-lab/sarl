@@ -4,6 +4,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 
+	private final static int classCode = CommonSymbolicPrimitiveType.class
+			.hashCode();
+
 	CommonSymbolicPrimitiveType(SymbolicTypeKind kind) {
 		super(kind);
 	}
@@ -15,7 +18,7 @@ public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 
 	@Override
 	protected int computeHashCode() {
-		return typeKind().hashCode();
+		return classCode ^ typeKind().hashCode();
 	}
 
 	/**

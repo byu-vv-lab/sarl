@@ -8,6 +8,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicTupleType extends CommonSymbolicType implements
 		SymbolicTupleType {
 
+	private final static int classCode = CommonSymbolicTupleType.class
+			.hashCode();
+
 	private SymbolicTypeSequence sequence;
 
 	private StringObject name;
@@ -29,8 +32,7 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicTypeKind.TUPLE.hashCode() ^ name.hashCode()
-				^ sequence.hashCode();
+		return classCode ^ name.hashCode() ^ sequence.hashCode();
 	}
 
 	@Override

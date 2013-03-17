@@ -7,6 +7,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		SymbolicArrayType {
 
+	private final static int classCode = CommonSymbolicArrayType.class
+			.hashCode();
+
 	private SymbolicType elementType;
 
 	/**
@@ -31,8 +34,9 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 			return false;
 		if (isComplete()) {
 			if (((CommonSymbolicArrayType) that).isComplete()) {
-				return ((CommonSymbolicCompleteArrayType) this).extent().equals(
-						((CommonSymbolicCompleteArrayType) that).extent());
+				return ((CommonSymbolicCompleteArrayType) this).extent()
+						.equals(((CommonSymbolicCompleteArrayType) that)
+								.extent());
 			}
 			return false;
 		} else {
@@ -42,7 +46,7 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicTypeKind.ARRAY.hashCode() ^ elementType.hashCode();
+		return classCode ^ elementType.hashCode();
 	}
 
 	@Override

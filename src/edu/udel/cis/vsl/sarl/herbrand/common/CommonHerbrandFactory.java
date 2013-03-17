@@ -21,6 +21,21 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+
+// TODO: instead create a function for each operator: PLUS, TIMES, etc.
+// however, equality is still equality.
+
+// simplifier: still need to simplify for equality...hmmm...how would
+// this simplifier cooperate with others (like Ideal)?
+// ideal factory would builld constant map and substitute.  why
+// can't i just use IdealFactory?  it will encounter numeric expressions
+// that are not Ideal expressions.  will it freak out?
+// these could still be IdealExpressions.  There is no need for
+// Herbrand expressions.  
+
+// translator to cvc3: just needs to know that RealTypes get translated
+// to real--no matter what kind of real.
+
 public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private NumberFactory numberFactory;

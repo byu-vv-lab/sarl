@@ -12,6 +12,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicUnionType extends CommonSymbolicType implements
 		SymbolicUnionType {
 
+	private final static int classCode = CommonSymbolicUnionType.class
+			.hashCode();
+
 	private SymbolicTypeSequence sequence;
 
 	private StringObject name;
@@ -54,8 +57,7 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicTypeKind.UNION.hashCode() ^ name.hashCode()
-				^ sequence.hashCode();
+		return classCode ^ name.hashCode() ^ sequence.hashCode();
 	}
 
 	@Override

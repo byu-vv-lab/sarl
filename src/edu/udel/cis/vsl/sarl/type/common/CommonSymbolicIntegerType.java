@@ -6,7 +6,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		SymbolicIntegerType {
 
-	public final static int classCode = CommonSymbolicIntegerType.class
+	private final static int classCode = CommonSymbolicIntegerType.class
 			.hashCode();
 
 	private IntegerKind integerKind;

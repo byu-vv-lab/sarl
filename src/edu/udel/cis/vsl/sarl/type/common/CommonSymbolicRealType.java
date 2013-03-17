@@ -6,7 +6,8 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class CommonSymbolicRealType extends CommonSymbolicType implements
 		SymbolicRealType {
 
-	public final static int classCode = CommonSymbolicRealType.class.hashCode();
+	private final static int classCode = CommonSymbolicRealType.class
+			.hashCode();
 
 	private RealKind realKind;
 

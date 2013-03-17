@@ -58,11 +58,11 @@ public class Expressions {
 		NumericExpressionFactory idealFactory = Ideal.newIdealFactory(
 				numberFactory, objectFactory, typeFactory, collectionFactory,
 				booleanFactory);
-		NumericExpressionFactory herbrandFactory = Herbrand.newHerbrandFactory(
-				numberFactory, objectFactory, typeFactory, collectionFactory,
-				booleanFactory);
+//		NumericExpressionFactory herbrandFactory = Herbrand.newHerbrandFactory(
+//				numberFactory, objectFactory, typeFactory, collectionFactory,
+//				booleanFactory);
 		NumericExpressionFactory numericFactory = new CommonNumericExpressionFactory(
-				idealFactory, herbrandFactory);
+				idealFactory);
 
 		return newExpressionFactory(numericFactory);
 	}
