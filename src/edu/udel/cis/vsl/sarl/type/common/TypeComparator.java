@@ -4,6 +4,8 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -39,9 +41,13 @@ public class TypeComparator implements Comparator<SymbolicType> {
 			return result;
 		switch (kind) {
 		case BOOLEAN:
-		case INTEGER:
-		case REAL:
 			return 0;
+		case INTEGER:
+			return ((SymbolicIntegerType) o1).integerKind().compareTo(
+					((SymbolicIntegerType) o2).integerKind());
+		case REAL:
+			return ((SymbolicRealType) o1).realKind().compareTo(
+					((SymbolicRealType) o2).realKind());
 		case ARRAY: {
 			CommonSymbolicArrayType t1 = (CommonSymbolicArrayType) o1;
 			CommonSymbolicArrayType t2 = (CommonSymbolicArrayType) o2;
@@ -53,7 +59,8 @@ public class TypeComparator implements Comparator<SymbolicType> {
 				if (t1.isComplete())
 					return t2.isComplete() ? expressionComparator.compare(
 							((CommonSymbolicCompleteArrayType) t1).extent(),
-							((CommonSymbolicCompleteArrayType) t2).extent()) : -1;
+							((CommonSymbolicCompleteArrayType) t2).extent())
+							: -1;
 				else
 					return t2.isComplete() ? 1 : 0;
 			}

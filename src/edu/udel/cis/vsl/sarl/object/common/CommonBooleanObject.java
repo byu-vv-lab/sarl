@@ -33,7 +33,7 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 
 	@Override
 	public String toString() {
-		return new Boolean(value).toString();
+		return Boolean.toString(value);
 	}
 
 	@Override
@@ -43,6 +43,16 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	@Override
 	public int compareTo(BooleanObject o) {
 		return value ? (o.getBoolean() ? 0 : 1) : (o.getBoolean() ? -1 : 0);
+	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		return new StringBuffer(Boolean.toString(value));
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return new StringBuffer(Boolean.toString(value));
 	}
 
 }

@@ -46,4 +46,28 @@ public class BasicCollection<T extends SymbolicExpression> extends
 				"canonization not implemented in BasicCollection");
 	}
 
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("{");
+		boolean first = true;
+
+		for (T element : this) {
+			if (first)
+				first = false;
+			else
+				result.append(", ");
+			result.append(element.toStringBuffer(false));
+		}
+		result.append("}");
+		return result;
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		StringBuffer result = new StringBuffer("Collection");
+
+		result.append(toStringBuffer(true));
+		return result;
+	}
+
 }

@@ -8,6 +8,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
@@ -104,7 +106,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return arguments.length;
 	}
 
-	private StringBuffer toStringBuffer(SymbolicObject[] objects) {
+	private StringBuffer toStringBufferLong(SymbolicObject[] objects) {
 		StringBuffer buffer = new StringBuffer("{");
 		boolean first = true;
 
@@ -116,22 +118,308 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			if (object == null)
 				buffer.append("null");
 			else
-				buffer.append(object.toString());
+				buffer.append(object.toStringBufferLong());
 		}
 		buffer.append("}");
 		return buffer;
 	}
 
 	@Override
-	public String toString() {
+	public StringBuffer toStringBufferLong() {
 		StringBuffer buffer = new StringBuffer(operator.toString());
 
 		buffer.append("[");
 		buffer.append(type.toString());
 		buffer.append("; ");
-		buffer.append(toStringBuffer(arguments));
+		buffer.append(toStringBufferLong(arguments));
 		buffer.append("]");
-		return buffer.toString();
+		return buffer;
+	}
+
+	private void accumulate(StringBuffer buffer, String opString,
+			SymbolicCollection<?> operands, boolean atomizeArgs) {
+		boolean first = true;
+
+		// opString = " " + opString + " ";
+		for (SymbolicExpression arg : operands) {
+			if (first)
+				first = false;
+			else
+				buffer.append(opString);
+			buffer.append(arg.toStringBuffer(atomizeArgs));
+		}
+	}
+
+	private void processBinary(StringBuffer buffer, String opString,
+			SymbolicObject arg0, SymbolicObject arg1, boolean atomizeArgs) {
+		buffer.append(arg0.toStringBuffer(atomizeArgs));
+		buffer.append(opString);
+		buffer.append(arg1.toStringBuffer(atomizeArgs));
+	}
+
+	private void processFlexibleBinary(StringBuffer buffer, String opString,
+			boolean atomizeArgs, boolean atomizeResult) {
+		if (arguments.length == 1)
+			accumulate(buffer, opString, (SymbolicCollection<?>) arguments[0],
+					atomizeArgs);
+		else
+			processBinary(buffer, opString, arguments[0], arguments[1],
+					atomizeArgs);
+		if (atomizeResult) {
+			buffer.insert(0, '(');
+			buffer.append(')');
+		}
+	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer();
+
+		switch (operator) {
+		case ADD:
+			processFlexibleBinary(result, "+", false, atomize);
+			return result;
+		case AND:
+			processFlexibleBinary(result, " && ", false, atomize);
+			return result;
+		case APPLY: {
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("(");
+			accumulate(result, ",", (SymbolicCollection<?>) arguments[1], false);
+			result.append(")");
+			return result;
+		}
+		case ARRAY_LAMBDA:
+			return toStringBufferLong();
+		case ARRAY_READ:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("[");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append("]");
+			return result;
+		case ARRAY_WRITE:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("[");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append("<-");
+			result.append(arguments[2].toStringBuffer(false));
+			result.append("]");
+			return result;
+		case CAST:
+			result.append('(');
+			result.append(type.toStringBuffer(false));
+			result.append(')');
+			result.append(arguments[0].toStringBuffer(true));
+			return result;
+		case CONCRETE: {
+			if (type.isInteger() && type.isIdeal() || type.isReal()
+					&& type.isIdeal())
+				return arguments[0].toStringBuffer(atomize);
+			else {
+				result.append('(');
+				result.append(type.toStringBuffer(false));
+				result.append(')');
+				result.append(arguments[0].toStringBuffer(false));
+				if (atomize)
+					atomize(result);
+				return result;
+			}
+		}
+		case COND:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append(" ? ");
+			result.append(arguments[1].toStringBuffer(true));
+			result.append(" : ");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case DENSE_ARRAY_WRITE: {
+			int count = 0;
+
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("[");
+			for (SymbolicExpression value : (SymbolicSequence<?>) arguments[1]) {
+				if (!value.isNull()) {
+					if (count > 0)
+						result.append(", ");
+					result.append(count + "<-");
+					result.append(value.toStringBuffer(false));
+				}
+				count++;
+			}
+			result.append("]");
+			return result;
+		}
+		case DIVIDE:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("/");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case EQUALS:
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" == ");
+			result.append(arguments[1].toStringBuffer(false));
+			if (atomize)
+				atomize(result);
+			return result;
+		case EXISTS:
+			result.append("exists ");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" : ");
+			result.append(((SymbolicExpression) arguments[0]).type()
+					.toStringBuffer(false));
+			result.append(" . ");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case FORALL:
+			result.append("forall ");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" : ");
+			result.append(((SymbolicExpression) arguments[0]).type()
+					.toStringBuffer(false));
+			result.append(" . ");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case INT_DIVIDE: {
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("\u00F7");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		}
+		case LAMBDA:
+			result.append("lambda ");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" : ");
+			result.append(((SymbolicExpression) arguments[0]).type()
+					.toStringBuffer(false));
+			result.append(" . ");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case LENGTH:
+			result.append("length(");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(")");
+			return result;
+		case LESS_THAN:
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" < ");
+			result.append(arguments[1].toStringBuffer(false));
+			if (atomize)
+				atomize(result);
+			return result;
+		case LESS_THAN_EQUALS:
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" <= ");
+			result.append(arguments[1].toStringBuffer(false));
+			if (atomize)
+				atomize(result);
+			return result;
+		case MODULO:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("%");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case MULTIPLY:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("*");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case NEGATIVE:
+			result.append("-");
+			result.append(arguments[0].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case NEQ:
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(" != ");
+			result.append(arguments[1].toStringBuffer(false));
+			if (atomize)
+				atomize(result);
+			return result;
+		case NOT:
+			result.append("!");
+			result.append(arguments[0].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case NULL:
+			result.append("NULL");
+			return result;
+		case OR:
+			processFlexibleBinary(result, " || ", false, atomize);
+			if (atomize)
+				atomize(result);
+			return result;
+		case POWER:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("^");
+			result.append(arguments[1].toStringBuffer(true));
+			if (atomize)
+				atomize(result);
+			return result;
+		case SUBTRACT:
+			processBinary(result, " - ", arguments[0], arguments[1], true);
+			if (atomize)
+				atomize(result);
+			return result;
+		case SYMBOLIC_CONSTANT:
+			result.append(arguments[0].toStringBuffer(false));
+			return result;
+		case TUPLE_READ:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append(".");
+			result.append(arguments[1].toStringBuffer(false));
+			if (atomize)
+				atomize(result);
+			return result;
+		case TUPLE_WRITE:
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("[.");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append("<-");
+			result.append(arguments[2].toStringBuffer(false));
+			result.append("]");
+			return result;
+		case UNION_EXTRACT:
+			result.append("extract(");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(",");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append(")");
+			return result;
+		case UNION_INJECT:
+			result.append("inject(");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(",");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append(")");
+			return result;
+		case UNION_TEST:
+			result.append("test(");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(",");
+			result.append(arguments[1].toStringBuffer(false));
+			result.append(")");
+			return result;
+		default:
+			return toStringBufferLong();
+		}
 	}
 
 	@Override

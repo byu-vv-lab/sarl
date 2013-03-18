@@ -75,8 +75,29 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 	}
 
 	@Override
-	public String toString() {
-		return pmap.toString();
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("{");
+		boolean first = true;
+
+		for (Entry<K, V> entry : entries()) {
+			if (first)
+				first = false;
+			else
+				result.append(", ");
+			result.append(entry.getKey().toStringBuffer(false));
+			result.append("->");
+			result.append(entry.getValue().toStringBuffer(false));
+		}
+		result.append("}");
+		return result;
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		StringBuffer result = new StringBuffer("UnsortedMap");
+
+		result.append(toStringBuffer(true));
+		return result;
 	}
 
 	@Override

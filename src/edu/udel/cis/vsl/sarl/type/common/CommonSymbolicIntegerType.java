@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
@@ -10,6 +11,8 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 			.hashCode();
 
 	private IntegerKind integerKind;
+
+	private StringBuffer name;
 
 	public CommonSymbolicIntegerType(IntegerKind kind) {
 		super(SymbolicTypeKind.INTEGER);
@@ -36,8 +39,26 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public String toString() {
-		return integerKind.toString();
+	public StringBuffer toStringBuffer(boolean atomize) {
+		if (name == null) {
+			String shortName;
+
+			switch (integerKind) {
+			case IDEAL:
+				shortName = "int";
+				break;
+			case HERBRAND:
+				shortName = "hint";
+				break;
+			case BOUNDED:
+				shortName = "bounded";
+				break;
+			default:
+				throw new SARLInternalException("unreachable");
+			}
+			name = new StringBuffer(shortName);
+		}
+		return name;
 	}
 
 	@Override

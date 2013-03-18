@@ -91,4 +91,15 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value - o.getInt();
 	}
 
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		return new StringBuffer(Integer.toString(value));
+
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return new StringBuffer(Integer.toString(value));
+	}
+
 }

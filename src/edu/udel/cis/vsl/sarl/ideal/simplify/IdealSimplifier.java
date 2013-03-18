@@ -34,6 +34,8 @@ import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
  */
 public class IdealSimplifier extends CommonSimplifier {
 
+	private final static boolean debug = false;
+
 	private SimplifierInfo info;
 
 	/**
@@ -467,6 +469,7 @@ public class IdealSimplifier extends CommonSimplifier {
 
 					if (fp instanceof SymbolicConstant) {
 						// symbolic constant: will be entirely eliminated
+						// TODO: also check for cast symbolic constants?
 					} else {
 						BooleanExpression constraint = info.idealFactory
 								.equals(fp, info.idealFactory.constant(entry
@@ -520,6 +523,23 @@ public class IdealSimplifier extends CommonSimplifier {
 		return updateConstantMap();
 	}
 
+	private void processHerbrandCast(Polynomial poly, Number value) {
+		if (poly.operator() == SymbolicOperator.CAST) {
+			SymbolicType type = poly.type();
+			SymbolicExpression original = (SymbolicExpression) poly.argument(0);
+			SymbolicType originalType = original.type();
+
+			if (originalType.isHerbrand() && originalType.isInteger()
+					&& type.isInteger() || originalType.isReal()
+					&& type.isReal()) {
+				SymbolicExpression constant = universe.cast(originalType,
+						universe.number(value));
+
+				simplifyMap.put(original, constant);
+			}
+		}
+	}
+
 	private boolean updateConstantMap() {
 		for (BoundsObject bounds : boundMap.values()) {
 			Number lower = bounds.lower();
@@ -529,18 +549,18 @@ public class IdealSimplifier extends CommonSimplifier {
 
 				assert !bounds.strictLower && !bounds.strictUpper;
 				constantMap.put(expression, lower);
+				processHerbrandCast(expression, lower);
 			}
 		}
 
 		boolean satisfiable = LinearSolver.reduceConstantMap(info.idealFactory,
 				constantMap);
 
-		if (info.verbose) {
+		if (debug) {
 			printBoundMap(info.out);
 			printConstantMap(info.out);
 			printBooleanMap(info.out);
 		}
-
 		return satisfiable;
 	}
 

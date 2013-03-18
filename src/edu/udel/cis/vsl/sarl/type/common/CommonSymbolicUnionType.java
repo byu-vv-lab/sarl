@@ -61,8 +61,14 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public String toString() {
-		return "Union[" + name + "," + sequence + "]";
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("Union[");
+
+		result.append(name.toStringBuffer(false));
+		result.append(",");
+		result.append(sequence.toStringBuffer(false));
+		result.append("]");
+		return result;
 	}
 
 	@Override

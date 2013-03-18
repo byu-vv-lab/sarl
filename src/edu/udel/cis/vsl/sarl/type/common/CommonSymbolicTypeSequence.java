@@ -59,15 +59,30 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 
 	@Override
 	public String toString() {
-		String result = "<";
+		// String result = "<";
+		// int n = numTypes();
+		//
+		// for (int i = 0; i < n; i++) {
+		// if (i > 0)
+		// result += ",";
+		// result += getType(i);
+		// }
+		// result += ">";
+		// return result;
+		return toStringBuffer(false).toString();
+	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("<");
 		int n = numTypes();
 
 		for (int i = 0; i < n; i++) {
 			if (i > 0)
-				result += ",";
-			result += getType(i);
+				result.append(",");
+			result.append(getType(i).toStringBuffer(false));
 		}
-		result += ">";
+		result.append(">");
 		return result;
 	}
 
@@ -86,6 +101,11 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 			if (!type.isCanonic())
 				elements.set(i, factory.canonic(type));
 		}
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return toStringBuffer(false);
 	}
 
 }

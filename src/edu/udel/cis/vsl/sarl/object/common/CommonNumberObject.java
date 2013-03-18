@@ -69,4 +69,14 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 	public int compareTo(NumberObject o) {
 		return value.compareTo(o.getNumber());
 	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		return new StringBuffer(value.toString());
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return new StringBuffer(value.toString());
+	}
 }

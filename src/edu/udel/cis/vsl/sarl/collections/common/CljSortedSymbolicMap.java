@@ -125,4 +125,31 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 	public Comparator<? super K> comparator() {
 		return pmap.comparator();
 	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("{");
+		boolean first = true;
+
+		for (Entry<K, V> entry : entries()) {
+			if (first)
+				first = false;
+			else
+				result.append(", ");
+			result.append(entry.getKey().toStringBuffer(false));
+			result.append("->");
+			result.append(entry.getValue().toStringBuffer(false));
+		}
+		result.append("}");
+		return result;
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		StringBuffer result = new StringBuffer("SortedMap");
+
+		result.append(toStringBuffer(true));
+		return result;
+	}
+
 }

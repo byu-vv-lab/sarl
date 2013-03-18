@@ -7,13 +7,21 @@ public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 	private final static int classCode = CommonSymbolicPrimitiveType.class
 			.hashCode();
 
+	private StringBuffer name;
+
 	CommonSymbolicPrimitiveType(SymbolicTypeKind kind) {
 		super(kind);
 	}
 
 	@Override
-	public String toString() {
-		return typeKind().toString();
+	public StringBuffer toStringBuffer(boolean atomize) {
+		if (name == null) {
+			if (isBoolean())
+				name = new StringBuffer("boolean");
+			else
+				name = new StringBuffer(typeKind().toString());
+		}
+		return name;
 	}
 
 	@Override

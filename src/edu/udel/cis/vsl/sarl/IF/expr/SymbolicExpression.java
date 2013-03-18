@@ -255,13 +255,7 @@ public interface SymbolicExpression extends SymbolicObject {
 	 */
 	int numArguments();
 
-	/**
-	 * A nice human-readable stand-alone representation of the symbolic
-	 * expression.
-	 */
-	@Override
-	String toString();
-
+	
 	/** Returns the type of this symbolic expression. */
 	SymbolicType type();
 

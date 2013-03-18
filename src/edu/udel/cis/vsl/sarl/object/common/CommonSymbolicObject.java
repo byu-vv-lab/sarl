@@ -92,4 +92,20 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	public abstract void canonizeChildren(CommonObjectFactory factory);
 
+	/**
+	 * Place parentheses around the string buffer.
+	 * 
+	 * @param buffer
+	 *            a string buffer
+	 */
+	protected void atomize(StringBuffer buffer) {
+		buffer.insert(0, '(');
+		buffer.append(')');
+	}
+
+	@Override
+	public String toString() {
+		return toStringBuffer(false).toString();
+	}
+
 }

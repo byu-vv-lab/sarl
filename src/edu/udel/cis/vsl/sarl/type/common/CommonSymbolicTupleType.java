@@ -36,8 +36,11 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public String toString() {
-		return name.toString() + sequence;
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer(name.toStringBuffer(false));
+
+		result.append(sequence.toStringBuffer(false));
+		return result;
 	}
 
 	@Override

@@ -46,12 +46,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;
 
+	private Comparator<SymbolicType> typeComparator;
+
 	private CommonIdealFactory idealFactory;
 
-	public IdealComparator(CommonIdealFactory idealFactory,
-			Comparator<SymbolicObject> objectComparator) {
+	public IdealComparator(CommonIdealFactory idealFactory) {
 		this.idealFactory = idealFactory;
-		this.objectComparator = objectComparator;
+		this.objectComparator = idealFactory.objectFactory().comparator();
+		this.typeComparator = idealFactory.typeFactory().typeComparator();
 	}
 
 	private static boolean debug = false;
@@ -91,23 +93,18 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		IdealExpression e2 = (IdealExpression) o2;
 		SymbolicType t1 = e1.type();
 		SymbolicType t2 = e2.type();
+		int result = typeComparator.compare(t1, t2);
 
+		if (result != 0)
+			return result;
 		if (t1.isInteger()) {
-			if (t2.isInteger()) {
-				if (o1 instanceof Monic && o2 instanceof Monic)
-					return compareMonics((Monic) o1, (Monic) o2);
-				else
-					return comparePolynomials((Polynomial) e1, (Polynomial) e2);
-			} else {
-				return -1;
-			}
+			if (o1 instanceof Monic && o2 instanceof Monic)
+				return compareMonics((Monic) o1, (Monic) o2);
+			else
+				return comparePolynomials((Polynomial) e1, (Polynomial) e2);
 		} else {
-			if (t2.isInteger()) {
-				return 1;
-			} else {
-				return compareRationals((RationalExpression) e1,
-						(RationalExpression) e2);
-			}
+			return compareRationals((RationalExpression) e1,
+					(RationalExpression) e2);
 		}
 	}
 

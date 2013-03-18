@@ -43,8 +43,14 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public String toString() {
-		return inputTypes + "->" + outputType;
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = inputTypes.toStringBuffer(true);
+
+		result.append("->");
+		result.append(outputType.toStringBuffer(true));
+		if (atomize)
+			atomize(result);
+		return result;
 	}
 
 	@Override

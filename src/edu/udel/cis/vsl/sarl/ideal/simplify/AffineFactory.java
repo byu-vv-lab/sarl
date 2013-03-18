@@ -44,7 +44,7 @@ public class AffineFactory {
 		SymbolicType type = (coefficient instanceof IntegerNumber ? integerType
 				: realType);
 
-		assert pseudo == null || type.equals(pseudo.type());
+		//assert pseudo == null || type.equals(pseudo.type());
 		assert type.isInteger() && offset instanceof IntegerNumber
 				|| type.isReal() && offset instanceof RationalNumber;
 		return new AffineExpression(pseudo, coefficient, offset);

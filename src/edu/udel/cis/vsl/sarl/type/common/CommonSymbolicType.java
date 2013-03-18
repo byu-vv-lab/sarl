@@ -89,4 +89,11 @@ public abstract class CommonSymbolicType extends CommonSymbolicObject implements
 		return false;
 	}
 
+	/**
+	 * For now, toStringBufferLong = toStringBuffer(false), for types.
+	 */
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return toStringBuffer(false);
+	}
 }

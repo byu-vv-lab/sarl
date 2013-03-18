@@ -251,6 +251,11 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}
+	
+	// TODO...for IdealFactory, these will all make Ideal
+	// expressions.  They can have herbrand or ideal type.
+	// How should IdealFactory deal with things of non-ideal type?
+	// treat them all as ideal?
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {

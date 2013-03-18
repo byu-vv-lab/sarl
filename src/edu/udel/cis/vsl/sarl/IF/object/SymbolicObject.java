@@ -82,12 +82,32 @@ public interface SymbolicObject {
 	boolean isCanonic();
 
 	/**
-	 * Returns the string representation of this object, included here to
+	 * Returns a string representation of this object, included here to
 	 * emphasize that the method provided by Object must be overridden!
+	 * 
+	 * Same as toStringBuffer(false).toString();
 	 * 
 	 * @return a string representation of this object
 	 */
 	@Override
 	String toString();
+
+	/**
+	 * Returns a string representation of this object as a StringBuffer. Use
+	 * this instead of "toString()" for performance reasons if you are going to
+	 * be building up big strings.
+	 * 
+	 * @param atomize
+	 *            if true, place parentheses around the string if necessary in
+	 *            order to include this as a term in a larger expression
+	 */
+	StringBuffer toStringBuffer(boolean atomize);
+
+	/**
+	 * Returns a detailed string representation of this object as a
+	 * StringBuffer. It never needs to be atomized.
+	 * 
+	 */
+	StringBuffer toStringBufferLong();
 
 }

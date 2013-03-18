@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.simplify.common;
 
 import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
@@ -10,10 +11,10 @@ public class IdentitySimplifier implements Simplifier {
 
 	private SymbolicUniverse universe;
 
-	private SymbolicExpression assumption;
+	private BooleanExpression assumption;
 
 	public IdentitySimplifier(SymbolicUniverse universe,
-			SymbolicExpression assumption) {
+			BooleanExpression assumption) {
 		this.universe = universe;
 		this.assumption = assumption;
 	}
@@ -24,7 +25,7 @@ public class IdentitySimplifier implements Simplifier {
 	}
 
 	@Override
-	public SymbolicExpression newAssumption() {
+	public BooleanExpression newAssumption() {
 		return assumption;
 	}
 

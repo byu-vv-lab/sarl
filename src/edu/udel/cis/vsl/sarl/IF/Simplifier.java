@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
@@ -31,7 +32,7 @@ public interface Simplifier extends
 	SymbolicUniverse universe();
 
 	/** Returns the simplified assumption */
-	SymbolicExpression newAssumption();
+	BooleanExpression newAssumption();
 
 	/**
 	 * If the assumption can be represented as a simple interval constraint,

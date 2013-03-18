@@ -64,19 +64,31 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		return "[]";
 	}
 
+	// public String toString() {
+	// String result = "";
+	// SymbolicType type;
+	//
+	// for (type = this; type instanceof CommonSymbolicArrayType; type =
+	// ((CommonSymbolicArrayType) type)
+	// .elementType())
+	// result += ((CommonSymbolicArrayType) type).extentString();
+	// return type + result;
+	// }
+
 	/**
 	 * Nice human-readable representation of the array type. Example
 	 * "int[2][][4]". elementType: "int[][4]". extent: 2.
 	 */
 	@Override
-	public String toString() {
-		String result = "";
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer();
 		SymbolicType type;
 
 		for (type = this; type instanceof CommonSymbolicArrayType; type = ((CommonSymbolicArrayType) type)
 				.elementType())
-			result += ((CommonSymbolicArrayType) type).extentString();
-		return type + result;
+			result.append(((CommonSymbolicArrayType) type).extentString());
+		result.insert(0, type.toStringBuffer(false));
+		return result;
 	}
 
 	@Override

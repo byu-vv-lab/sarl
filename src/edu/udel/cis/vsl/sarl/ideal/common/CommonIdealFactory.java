@@ -142,7 +142,7 @@ public class CommonIdealFactory implements IdealFactory {
 		this.booleanFactory = booleanFactory;
 		this.trueExpr = booleanFactory.trueExpr();
 		this.falseExpr = booleanFactory.falseExpr();
-		this.comparator = new IdealComparator(this, objectFactory.comparator());
+		this.comparator = new IdealComparator(this);
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
 		this.oneIntObject = objectFactory.oneIntObj();

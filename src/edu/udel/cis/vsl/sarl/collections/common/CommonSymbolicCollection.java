@@ -46,4 +46,9 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 		return iterator().next();
 	}
 
+	@Override
+	public String toString() {
+		return toStringBuffer(true).toString();
+	}
+
 }

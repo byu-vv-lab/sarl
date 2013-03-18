@@ -175,8 +175,29 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public String toString() {
-		return pvector.toString();
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer();
+		boolean first = true;
+
+		result.append("<");
+
+		for (T element : this) {
+			if (first)
+				first = false;
+			else
+				result.append(",");
+			result.append(element.toStringBuffer(false));
+		}
+		result.append(">");
+		return result;
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		StringBuffer result = new StringBuffer("Sequence");
+
+		result.append(toStringBuffer(true));
+		return result;
 	}
 
 }

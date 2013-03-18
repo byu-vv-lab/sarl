@@ -41,4 +41,14 @@ public class CommonStringObject extends CommonSymbolicObject implements
 	public int compareTo(StringObject o) {
 		return value.compareTo(o.getString());
 	}
+
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		return new StringBuffer(value);
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		return new StringBuffer(value);
+	}
 }
