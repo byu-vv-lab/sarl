@@ -29,18 +29,18 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 
 /**
- * A symbolic universe is used for the creation and manipulation of symbolic
- * objects. The symbolic objects created by this universe are said to belong to
- * this universe. Every symbolic object belongs to one universe, though a
- * reference to the universe is not necessarily stored in the object/type.
+ * A symbolic universe is used for the creation and manipulation of
+ * {@link SymbolicObject}s. The symbolic objects created by this universe are
+ * said to belong to this universe. Every symbolic object belongs to one
+ * universe, though a reference to the universe is not necessarily stored in the
+ * object.
  * 
- * Symbolic expressions are a kind of symbolic object. Every symbolic expression
- * has a symbolic type. Other symbolic objects include symbolic collections,
- * such as sequences, sets, and maps; symbolic types; and various concrete
- * objects. See SymbolicObject.
+ * {@link SymbolicExpression}s are one kind of symbolic object. Other symbolic
+ * objects include {@link SymbolicCollection}s (such as sequences, sets, and
+ * maps), {@link SymbolicType}s, and various concrete {@link SymbolicObject}s.
  * 
- * Symbolic objects implement the Immutable Pattern: all symbolic objects are
- * immutable, i.e., they cannot be modified after they are created.
+ * {@link SymbolicObject}s implement the Immutable Pattern: all symbolic objects
+ * are immutable, i.e., they cannot be modified after they are created.
  * 
  * @author siegel
  */
@@ -111,23 +111,19 @@ public interface SymbolicUniverse {
 	SymbolicType booleanType();
 
 	/**
-	 * The integer type, representing the set of mathematical integers.
+	 * The "ideal" integer type, representing the set of mathematical integers.
 	 * 
 	 * @return the integer type
 	 * */
 	SymbolicType integerType();
 
 	/**
-	 * The real type, representing the set of mathematical real numbers.
-	 * 
-	 * @return the real type
-	 * */
-	SymbolicType realType();
-
-	/**
 	 * Returns the Herbrand integer type. All operations in which at least one
 	 * argument has Herbrand integer type will be treated as uninterpreted
 	 * functions: no simplifications or other transformations will be performed.
+	 * 
+	 * Note: to create a concrete number of herbrand integer type, create an
+	 * ideal concrete integer then cast it to the herbrand type.
 	 * 
 	 * @return the Herbrand integer type
 	 */
@@ -138,6 +134,8 @@ public interface SymbolicUniverse {
 	 * Either of the bounds may be null, indication no bound (i.e., + or -
 	 * infinity). If cyclic is true, then all operations treat the domain
 	 * cyclically (i.e., max+1 = min).
+	 * 
+	 * NOTE: NOT YET IMPLEMENTED
 	 * 
 	 * @param min
 	 *            smallest integer value in the domain or null
@@ -151,6 +149,13 @@ public interface SymbolicUniverse {
 			NumericExpression max, boolean cyclic);
 
 	/**
+	 * The "ideal" real type, representing the set of mathematical real numbers.
+	 * 
+	 * @return the real type
+	 * */
+	SymbolicRealType realType();
+
+	/**
 	 * Returns the Herbrand real type. All operations in which at least one
 	 * argument has Herbrand real type will be treated as uninterpreted
 	 * functions: no simplifications or other transformations will be performed.
@@ -161,9 +166,14 @@ public interface SymbolicUniverse {
 	 * A Herbrand value and non-Herbrand value are always considered to be not
 	 * equal, even if they are concrete expressions.
 	 * 
-	 * @return the Herbrand integer type
+	 * Note: to create a concrete number of herbrand real type, create an ideal
+	 * concrete real then cast it to the herbrand type.
+	 * 
+	 * @return the Herbrand real type
 	 */
 	SymbolicRealType herbrandRealType();
+
+	// TODO: floating point types
 
 	/**
 	 * Returns the complete array type with the given element type and extent
@@ -467,9 +477,18 @@ public interface SymbolicUniverse {
 	/** The number factory used by this universe. */
 	NumberFactory numberFactory();
 
+	/**
+	 * The concrete symbolic expression wrapping the given number. The type of
+	 * the expression will be the ideal integer or real type, determined by the
+	 * kind of number (IntegerNumber or RationalNumber).
+	 * 
+	 * @param number
+	 *            any sarl Number
+	 * @return the symbolic expression wrapping that number
+	 */
 	NumericExpression number(Number number);
 
-	/** The symbolic expression wrapping the given concrete number */
+	/** The symbolic expression wrapping the given concrete number object. */
 	NumericExpression number(NumberObject numberObject);
 
 	/**
@@ -629,8 +648,18 @@ public interface SymbolicUniverse {
 	 */
 	Boolean extractBoolean(BooleanExpression expression);
 
+	/**
+	 * Returns the boolean literal "true".
+	 * 
+	 * @return the symbolic expression "true"
+	 */
 	BooleanExpression trueExpression();
 
+	/**
+	 * Returns the boolean literal "false".
+	 * 
+	 * @return the symbolic expression "false"
+	 */
 	BooleanExpression falseExpression();
 
 	/**
@@ -978,6 +1007,19 @@ public interface SymbolicUniverse {
 	SymbolicExpression arrayWrite(SymbolicExpression array,
 			NumericExpression index, SymbolicExpression value);
 
+	/**
+	 * Returns an array obtained by performing a sequence of writes, given in a
+	 * "dense" format, to an array. The sequence of values are used to write to
+	 * the indexes 0, 1, .... A null element in the sequence is simply ignored.
+	 * 
+	 * @param array
+	 *            a symbolic expression of array type
+	 * @param values
+	 *            a sequence of symbolic expressions, each of which is either
+	 *            null or a symbolic expression of the appropriate type
+	 * @return the array resulting from writing to the given array in position
+	 *         0,...,n-1, where n is the length of the sequence.
+	 */
 	SymbolicExpression denseArrayWrite(SymbolicExpression array,
 			Iterable<? extends SymbolicExpression> values);
 

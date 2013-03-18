@@ -141,11 +141,14 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	private Substituter substituter;
 
-	/**
-	 * The three common primitive types, obtainable from the type factory but
-	 * stored in fields here for convenience.
-	 */
-	private SymbolicType booleanType, integerType, realType;
+	/** The boolean type. */
+	private SymbolicType booleanType;
+
+	/** The ideal integer type. */
+	private SymbolicIntegerType integerType;
+
+	/** The ideal real type. */
+	private SymbolicRealType realType;
 
 	/**
 	 * The "NULL" symbolic expression, which is not the Java null but is used to
@@ -251,9 +254,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}
-	
+
 	// TODO...for IdealFactory, these will all make Ideal
-	// expressions.  They can have herbrand or ideal type.
+	// expressions. They can have herbrand or ideal type.
 	// How should IdealFactory deal with things of non-ideal type?
 	// treat them all as ideal?
 
@@ -841,7 +844,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public SymbolicType realType() {
+	public SymbolicRealType realType() {
 		return realType;
 	}
 

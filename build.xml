@@ -208,7 +208,7 @@
 	<target name="javadoc">
 		<delete dir="${javadoc.dir}" quiet="true" />
 		<mkdir dir="${javadoc.dir}" />
-		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpathref="javadoc.classpath" failonerror="false">
+		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpathref="javadoc.classpath" failonerror="false">
 			<fileset dir="${src.dir}" defaultexcludes="yes">
 				<include name="**/*.java" />
 			</fileset>
