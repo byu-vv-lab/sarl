@@ -73,12 +73,11 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
-	 * Compares IdealExpressions. First come all expressions of integer type,
-	 * then all of real type. Within a type, first all the NTRationalExpression,
-	 * then everything else. "Everything else" are instances of Polynomial.
-	 * Polynomials are sorted first by degree: larger degree comes first (since
-	 * that's the way you typically write them). Given two polynomials of the
-	 * same degree:
+	 * Compares IdealExpressions. First compare types. Within a type, first all
+	 * the NTRationalExpression, then everything else. "Everything else" are
+	 * instances of Polynomial. Polynomials are sorted first by degree: larger
+	 * degree comes first (since that's the way you typically write them). Given
+	 * two polynomials of the same degree:
 	 * 
 	 * if the two polynomials are monomials of the same degree, compare monics,
 	 * then constants

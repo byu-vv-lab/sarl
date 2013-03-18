@@ -5,11 +5,7 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
-import edu.udel.cis.vsl.sarl.expr.common.CommonNumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.Ideal;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -87,19 +83,14 @@ public class Universes {
 		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
 		CollectionFactory collectionFactory = Collections
 				.newCollectionFactory(objectFactory);
-		BooleanExpressionFactory booleanFactory = new CnfFactory(typeFactory,
-				objectFactory, collectionFactory);
-		IdealFactory idealFactory = Ideal.newIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
-		NumericExpressionFactory numericFactory = new CommonNumericExpressionFactory(
-				idealFactory);
 		ExpressionFactory expressionFactory = Expressions
-				.newExpressionFactory(numericFactory);
+				.newStandardExpressionFactory(numberFactory, objectFactory,
+						typeFactory, collectionFactory);
 		FactorySystem system = newFactorySystem(objectFactory, typeFactory,
 				expressionFactory, collectionFactory);
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
-		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
-				idealFactory, universe);
+		SimplifierFactory simplifierFactory = Expressions
+				.standardSimplifierFactory(expressionFactory, universe);
 		universe.setSimplifierFactory(simplifierFactory);
 
 		return universe;

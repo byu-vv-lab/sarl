@@ -26,6 +26,8 @@ public interface ExpressionFactory {
 	 */
 	void init();
 
+	// SimplifierFactory simplifierFactory();
+
 	/**
 	 * Returns the numeric expression factory used by this expression factory.
 	 * 

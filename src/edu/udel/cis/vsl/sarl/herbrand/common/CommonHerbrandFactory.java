@@ -3,10 +3,10 @@ package edu.udel.cis.vsl.sarl.herbrand.common;
 import java.util.Collection;
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -14,27 +14,14 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-
-
-// TODO: instead create a function for each operator: PLUS, TIMES, etc.
-// however, equality is still equality.
-
-// simplifier: still need to simplify for equality...hmmm...how would
-// this simplifier cooperate with others (like Ideal)?
-// ideal factory would builld constant map and substitute.  why
-// can't i just use IdealFactory?  it will encounter numeric expressions
-// that are not Ideal expressions.  will it freak out?
-// these could still be IdealExpressions.  There is no need for
-// Herbrand expressions.  
-
-// translator to cvc3: just needs to know that RealTypes get translated
-// to real--no matter what kind of real.
 
 public class CommonHerbrandFactory implements NumericExpressionFactory {
 
@@ -50,9 +37,17 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private Comparator<NumericExpression> comparator;
 
-	private SymbolicType herbrandIntegerType, herbrandRealType;
+	private SymbolicType herbrandIntegerType, herbrandRealType, booleanType;
 
 	private HerbrandExpression zeroInt, zeroReal, oneInt, oneReal;
+
+	private SymbolicFunctionType realBinaryOp, realUnaryOp, integerBinaryOp,
+			integerUnaryOp, realBinaryPred, integerBinaryPred;
+
+	private SymbolicConstant plusReal, plusInteger, minusReal, minusInteger,
+			timesReal, timesInteger, divideReal, divideInteger, negativeReal,
+			negativeInteger, modulo, powerInteger, powerReal, lessThanInteger,
+			lessThanReal, lteInteger, lteReal;
 
 	public CommonHerbrandFactory(NumberFactory numberFactory,
 			ObjectFactory objectFactory, SymbolicTypeFactory typeFactory,
@@ -63,8 +58,9 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 		this.typeFactory = typeFactory;
 		this.collectionFactory = collectionFactory;
 		this.booleanFactory = booleanFactory;
-		this.herbrandIntegerType = typeFactory.integerType();
-		this.herbrandRealType = typeFactory.realType();
+		this.herbrandIntegerType = typeFactory.herbrandIntegerType();
+		this.herbrandRealType = typeFactory.herbrandRealType();
+		this.booleanType = typeFactory.booleanType();
 		this.oneInt = objectFactory.canonic(number(objectFactory
 				.numberObject(numberFactory.oneInteger())));
 		this.oneReal = objectFactory.canonic(number(objectFactory
@@ -77,16 +73,226 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 				typeFactory.typeComparator());
 	}
 
-	private SymbolicType herbrandType(SymbolicType type) {
-		if (type.isReal())
-			return herbrandRealType;
-		if (type.isInteger())
-			return herbrandIntegerType;
-		throw new SARLInternalException("Unknown numeric type: " + type);
+	private SymbolicSequence<NumericExpression> sequence(NumericExpression e0,
+			NumericExpression e1) {
+		return collectionFactory.sequence(new NumericExpression[] { e0, e1 });
 	}
 
-	private SymbolicType herbrandType(NumericExpression expression) {
-		return herbrandType(expression.type());
+	private SymbolicFunctionType realBinaryOp() {
+		if (realBinaryOp == null)
+			realBinaryOp = objectFactory.canonic(typeFactory.functionType(
+					typeFactory.sequence(new SymbolicType[] { herbrandRealType,
+							herbrandRealType }), herbrandRealType));
+		return realBinaryOp;
+	}
+
+	private SymbolicFunctionType integerBinaryOp() {
+		if (integerBinaryOp == null)
+			integerBinaryOp = objectFactory.canonic(typeFactory.functionType(
+					typeFactory.sequence(new SymbolicType[] {
+							herbrandIntegerType, herbrandIntegerType }),
+					herbrandIntegerType));
+		return integerBinaryOp;
+	}
+
+	private SymbolicFunctionType realUnaryOp() {
+		if (realUnaryOp == null)
+			realUnaryOp = objectFactory.canonic(typeFactory.functionType(
+					typeFactory
+							.sequence(new SymbolicType[] { herbrandRealType }),
+					herbrandRealType));
+		return realUnaryOp;
+	}
+
+	private SymbolicFunctionType integerUnaryOp() {
+		if (integerUnaryOp == null)
+			integerUnaryOp = objectFactory
+					.canonic(typeFactory.functionType(
+							typeFactory
+									.sequence(new SymbolicType[] { herbrandIntegerType }),
+							herbrandIntegerType));
+		return integerUnaryOp;
+	}
+
+	private SymbolicFunctionType realBinaryPred() {
+		if (realBinaryPred == null)
+			realBinaryPred = objectFactory.canonic(typeFactory.functionType(
+					typeFactory.sequence(new SymbolicType[] { herbrandRealType,
+							herbrandRealType }), booleanType));
+		return realBinaryPred;
+	}
+
+	private SymbolicFunctionType integerBinaryPred() {
+		if (integerBinaryPred == null)
+			integerBinaryPred = objectFactory.canonic(typeFactory.functionType(
+					typeFactory.sequence(new SymbolicType[] {
+							herbrandIntegerType, herbrandIntegerType }),
+					booleanType));
+		return integerBinaryPred;
+	}
+
+	private SymbolicConstant plusReal() {
+		if (plusReal == null)
+			plusReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("PLUS_REAL"), realBinaryOp()));
+		return plusReal;
+	}
+
+	private SymbolicConstant plusInteger() {
+		if (plusInteger == null)
+			plusInteger = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("PLUS_INT"), integerBinaryOp()));
+		return plusInteger;
+	}
+
+	private SymbolicConstant plusOperator(SymbolicType type) {
+		return type.isInteger() ? plusInteger() : plusReal();
+	}
+
+	private SymbolicConstant minusReal() {
+		if (minusReal == null)
+			minusReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("MINUS_REAL"), realBinaryOp()));
+		return minusReal;
+	}
+
+	private SymbolicConstant minusInteger() {
+		if (minusInteger == null)
+			minusInteger = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("MINUS_INT"),
+							integerBinaryOp()));
+		return minusInteger;
+	}
+
+	private SymbolicConstant minusOperator(SymbolicType type) {
+		return type.isInteger() ? minusInteger() : minusReal();
+	}
+
+	private SymbolicConstant timesReal() {
+		if (timesReal == null)
+			timesReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("TIMES_REAL"), realBinaryOp()));
+		return timesReal;
+	}
+
+	private SymbolicConstant timesInteger() {
+		if (timesInteger == null)
+			timesInteger = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("TIMES_INT"),
+							integerBinaryOp()));
+		return timesInteger;
+	}
+
+	private SymbolicConstant timesOperator(SymbolicType type) {
+		return type.isInteger() ? timesInteger() : timesReal();
+	}
+
+	private SymbolicConstant divideReal() {
+		if (divideReal == null)
+			divideReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("DIVIDE_REAL"), realBinaryOp()));
+		return divideReal;
+	}
+
+	private SymbolicConstant divideInteger() {
+		if (divideInteger == null)
+			divideInteger = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("DIVIDE_INT"),
+							integerBinaryOp()));
+		return divideInteger;
+	}
+
+	private SymbolicConstant divideOperator(SymbolicType type) {
+		return type.isInteger() ? divideInteger() : divideReal();
+	}
+
+	private SymbolicConstant moduloOperator() {
+		if (modulo == null)
+			modulo = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("MODULO"), integerBinaryOp()));
+		return modulo;
+	}
+
+	private SymbolicConstant negativeInteger() {
+		if (negativeInteger == null)
+			negativeInteger = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("NEGATIVE_INT"),
+					integerUnaryOp()));
+		return negativeInteger;
+	}
+
+	private SymbolicConstant negativeReal() {
+		if (negativeReal == null)
+			negativeReal = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("NEGATIVE_REAL"),
+							realUnaryOp()));
+		return negativeReal;
+	}
+
+	private SymbolicConstant negativeOperator(SymbolicType type) {
+		return type.isInteger() ? negativeInteger() : negativeReal();
+	}
+
+	private SymbolicConstant powerReal() {
+		if (powerReal == null)
+			powerReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("POWER_REAL"), realBinaryOp()));
+		return powerReal;
+	}
+
+	private SymbolicConstant powerInteger() {
+		if (powerInteger == null)
+			powerInteger = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("POWER_INT"),
+							integerBinaryOp()));
+		return powerInteger;
+	}
+
+	// private SymbolicConstant powerOperator(SymbolicType type) {
+	// return type.isInteger() ? powerInteger() : powerReal();
+	// }
+
+	private SymbolicConstant lessThanInteger() {
+		if (lessThanInteger == null)
+			lessThanInteger = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("LT_INT"), integerBinaryPred()));
+		return lessThanInteger;
+	}
+
+	private SymbolicConstant lessThanReal() {
+		if (lessThanReal == null)
+			lessThanReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("LT_REAL"), realBinaryPred()));
+		return lessThanReal;
+	}
+
+	private SymbolicConstant lessThanOperator(SymbolicType type) {
+		return type.isInteger() ? lessThanInteger() : lessThanReal();
+	}
+
+	private SymbolicConstant lteInteger() {
+		if (lteInteger == null)
+			lteInteger = objectFactory
+					.canonic(symbolicConstant(
+							objectFactory.stringObject("LTE_INT"),
+							integerBinaryPred()));
+		return lteInteger;
+	}
+
+	private SymbolicConstant lteReal() {
+		if (lteReal == null)
+			lteReal = objectFactory.canonic(symbolicConstant(
+					objectFactory.stringObject("LTE_REAL"), realBinaryPred()));
+		return lteReal;
+	}
+
+	private SymbolicConstant lteOperator(SymbolicType type) {
+		return type.isInteger() ? lteInteger() : lteReal();
 	}
 
 	@Override
@@ -189,58 +395,127 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	}
 
 	@Override
-	public HerbrandExpression add(NumericExpression arg0, NumericExpression arg1) {
-		return expression(SymbolicOperator.ADD, herbrandType(arg0), arg0, arg1);
+	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
+		SymbolicType t0 = arg0.type();
+
+		return expression(SymbolicOperator.APPLY, t0, plusOperator(t0),
+				sequence(arg0, arg1));
 	}
 
 	@Override
-	public HerbrandExpression subtract(NumericExpression arg0,
+	public NumericExpression subtract(NumericExpression arg0,
 			NumericExpression arg1) {
-		return expression(SymbolicOperator.SUBTRACT, herbrandType(arg0), arg0,
-				arg1);
+		SymbolicType t0 = arg0.type();
+
+		return expression(SymbolicOperator.APPLY, t0, minusOperator(t0),
+				sequence(arg0, arg1));
 	}
 
 	@Override
-	public HerbrandExpression multiply(NumericExpression arg0,
+	public NumericExpression multiply(NumericExpression arg0,
 			NumericExpression arg1) {
-		return expression(SymbolicOperator.MULTIPLY, herbrandType(arg0), arg0,
-				arg1);
+		SymbolicType t0 = arg0.type();
+
+		return expression(SymbolicOperator.APPLY, t0, timesOperator(t0),
+				sequence(arg0, arg1));
 	}
 
 	@Override
-	public HerbrandExpression divide(NumericExpression arg0,
+	public NumericExpression divide(NumericExpression arg0,
 			NumericExpression arg1) {
-		SymbolicType type = herbrandType(arg0.type());
+		SymbolicType t0 = arg0.type();
 
-		if (type.isReal())
-			return expression(SymbolicOperator.DIVIDE, type, arg0, arg1);
+		return expression(SymbolicOperator.APPLY, t0, divideOperator(t0),
+				sequence(arg0, arg1));
+	}
+
+	@Override
+	public NumericExpression modulo(NumericExpression arg0,
+			NumericExpression arg1) {
+		SymbolicType t0 = arg0.type();
+
+		return expression(SymbolicOperator.APPLY, t0, moduloOperator(),
+				sequence(arg0, arg1));
+	}
+
+	@Override
+	public NumericExpression minus(NumericExpression arg) {
+		SymbolicType type = arg.type();
+
+		return expression(SymbolicOperator.APPLY, type, negativeOperator(type),
+				collectionFactory.singletonSequence(arg));
+	}
+
+	@Override
+	public NumericExpression power(NumericExpression base, IntObject exponent) {
+		SymbolicType type = base.type();
+
+		if (type.isInteger())
+			return expression(
+					SymbolicOperator.APPLY,
+					type,
+					powerInteger(),
+					sequence(base, number(objectFactory
+							.numberObject(numberFactory.integer(exponent
+									.getInt())))));
 		else
-			return expression(SymbolicOperator.INT_DIVIDE, type, arg0, arg1);
+			return expression(
+					SymbolicOperator.APPLY,
+					type,
+					powerReal(),
+					sequence(base, number(objectFactory
+							.numberObject(numberFactory.rational(numberFactory
+									.integer(exponent.getInt()))))));
 	}
 
 	@Override
-	public HerbrandExpression modulo(NumericExpression arg0,
-			NumericExpression arg1) {
-		return expression(SymbolicOperator.MODULO, herbrandIntegerType, arg0,
-				arg1);
-	}
-
-	@Override
-	public HerbrandExpression minus(NumericExpression arg) {
-		return expression(SymbolicOperator.NEGATIVE, herbrandType(arg), arg);
-	}
-
-	@Override
-	public HerbrandExpression power(NumericExpression base, IntObject exponent) {
-		return power(base, number(objectFactory.numberObject(numberFactory
-				.integer(exponent.getInt()))));
-	}
-
-	@Override
-	public HerbrandExpression power(NumericExpression base,
+	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
-		return expression(SymbolicOperator.POWER, herbrandType(base), base,
-				exponent);
+		SymbolicType t1 = base.type(), t2 = exponent.type();
+
+		if (t1.isInteger() && t2.isInteger()) {
+			return expression(SymbolicOperator.APPLY, herbrandIntegerType,
+					powerInteger(), sequence(base, exponent));
+		} else {
+			if (t1.isInteger())
+				base = cast(base, herbrandRealType);
+			if (t2.isInteger())
+				exponent = cast(exponent, herbrandRealType);
+			return expression(SymbolicOperator.APPLY, herbrandRealType,
+					powerReal(), sequence(base, exponent));
+		}
+	}
+
+	@Override
+	public BooleanExpression lessThan(NumericExpression arg0,
+			NumericExpression arg1) {
+		SymbolicType t0 = arg0.type();
+
+		return booleanFactory.booleanExpression(SymbolicOperator.APPLY,
+				lessThanOperator(t0), sequence(arg0, arg1));
+	}
+
+	@Override
+	public BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		SymbolicType t0 = arg0.type();
+
+		return booleanFactory.booleanExpression(SymbolicOperator.APPLY,
+				lteOperator(t0), sequence(arg0, arg1));
+	}
+
+	@Override
+	public BooleanExpression notLessThan(NumericExpression arg0,
+			NumericExpression arg1) {
+		return booleanFactory.booleanExpression(SymbolicOperator.NOT,
+				lessThan(arg0, arg1));
+	}
+
+	@Override
+	public BooleanExpression notLessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		return booleanFactory.booleanExpression(SymbolicOperator.NOT,
+				lessThanEquals(arg0, arg1));
 	}
 
 	@Override
@@ -261,34 +536,6 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public BooleanExpression lessThan(NumericExpression arg0,
-			NumericExpression arg1) {
-		return booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN,
-				arg0, arg1);
-	}
-
-	@Override
-	public BooleanExpression lessThanEquals(NumericExpression arg0,
-			NumericExpression arg1) {
-		return booleanFactory.booleanExpression(
-				SymbolicOperator.LESS_THAN_EQUALS, arg0, arg1);
-	}
-
-	@Override
-	public BooleanExpression notLessThan(NumericExpression arg0,
-			NumericExpression arg1) {
-		return booleanFactory.booleanExpression(SymbolicOperator.NOT,
-				lessThan(arg0, arg1));
-	}
-
-	@Override
-	public BooleanExpression notLessThanEquals(NumericExpression arg0,
-			NumericExpression arg1) {
-		return booleanFactory.booleanExpression(SymbolicOperator.NOT,
-				lessThanEquals(arg0, arg1));
 	}
 
 	@Override

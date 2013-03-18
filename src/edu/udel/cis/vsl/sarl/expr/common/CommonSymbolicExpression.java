@@ -201,7 +201,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(true));
 			result.append("[");
 			result.append(arguments[1].toStringBuffer(false));
-			result.append("<-");
+			result.append(":=");
 			result.append(arguments[2].toStringBuffer(false));
 			result.append("]");
 			return result;
@@ -212,18 +212,17 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(true));
 			return result;
 		case CONCRETE: {
-			if (type.isInteger() && type.isIdeal() || type.isReal()
-					&& type.isIdeal())
-				return arguments[0].toStringBuffer(atomize);
-			else {
+			if (!type.isNumeric() && !type.isBoolean()) {
 				result.append('(');
 				result.append(type.toStringBuffer(false));
 				result.append(')');
-				result.append(arguments[0].toStringBuffer(false));
-				if (atomize)
-					atomize(result);
-				return result;
 			}
+			result.append(arguments[0].toStringBuffer(false));
+			if (type.isHerbrand())
+				result.append('h');
+			if (atomize)
+				atomize(result);
+			return result;
 		}
 		case COND:
 			result.append(arguments[0].toStringBuffer(true));
@@ -243,7 +242,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				if (!value.isNull()) {
 					if (count > 0)
 						result.append(", ");
-					result.append(count + "<-");
+					result.append(count + ":=");
 					result.append(value.toStringBuffer(false));
 				}
 				count++;
@@ -392,7 +391,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(true));
 			result.append("[.");
 			result.append(arguments[1].toStringBuffer(false));
-			result.append("<-");
+			result.append(":=");
 			result.append(arguments[2].toStringBuffer(false));
 			result.append("]");
 			return result;
