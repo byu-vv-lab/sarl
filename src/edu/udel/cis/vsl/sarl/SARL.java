@@ -5,6 +5,10 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class SARL {
 
+	public static SymbolicUniverse newStandardUuniverse() {
+		return Universes.newStandardUniverse();
+	}
+
 	public static SymbolicUniverse newIdealUniverse() {
 		return Universes.newIdealUniverse();
 	}
