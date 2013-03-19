@@ -11,14 +11,17 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * 
  * The kind determines the Java type of this object as follows:
  * <ul>
- * <li>SYMBOLIC_EXPRESSION: SymbolicExpression</li>
- * <li>EXPRESSION_COLLECTION: SymbolicCollection</li>
- * <li>TYPE: SymbolicType</li>
- * <li>TYPE_SEQUENCE: SymbolicTypeSequence</li>
- * <li>NUMBER: NumberObject</li>
- * <li>INT: IntObject</li>
- * <li>BOOLEAN: BooleanObject</li>
- * <li>STRING: StringObject</li>
+ * <li>SYMBOLIC_EXPRESSION:
+ * {@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}</li>
+ * <li>EXPRESSION_COLLECTION:
+ * {@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}</li>
+ * <li>TYPE: {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}</li>
+ * <li>TYPE_SEQUENCE: {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence}
+ * </li>
+ * <li>NUMBER: {@link edu.udel.cis.vsl.sarl.IF.object.NumberObject}</li>
+ * <li>INT: {@link edu.udel.cis.vsl.sarl.IF.object.IntObject}</li>
+ * <li>BOOLEAN: {@link edu.udel.cis.vsl.sarl.IF.object.BooleanObject}</li>
+ * <li>STRING: {@link edu.udel.cis.vsl.sarl.IF.object.StringObject}</li>
  * </ul>
  * 
  * @author siegel
@@ -38,7 +41,7 @@ public interface SymbolicObject {
 	}
 
 	/**
-	 * What kindn of symbolic object is this? The kind determines the specific
+	 * Which kind of symbolic object is this? The kind determines the specific
 	 * type to which this object can be safely cast. See the comments for this
 	 * interface and the enumerated type SymbolicObjectKind for description.
 	 * 
@@ -100,6 +103,8 @@ public interface SymbolicObject {
 	 * @param atomize
 	 *            if true, place parentheses around the string if necessary in
 	 *            order to include this as a term in a larger expression
+	 * 
+	 * @return a string representation of this object
 	 */
 	StringBuffer toStringBuffer(boolean atomize);
 
@@ -107,6 +112,7 @@ public interface SymbolicObject {
 	 * Returns a detailed string representation of this object as a
 	 * StringBuffer. It never needs to be atomized.
 	 * 
+	 * @return detailed string representation of this object
 	 */
 	StringBuffer toStringBufferLong();
 
