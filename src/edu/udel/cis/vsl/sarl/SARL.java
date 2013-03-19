@@ -24,7 +24,7 @@ public class SARL {
 	 * 
 	 * @return a new standard symbolic universe
 	 */
-	public static SymbolicUniverse newStandardUuniverse() {
+	public static SymbolicUniverse newStandardUniverse() {
 		return Universes.newStandardUniverse();
 	}
 
