@@ -149,10 +149,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
+	 * Compares two monics of the same type.
 	 * 
 	 * @param m1
+	 *            a monic
 	 * @param m2
-	 * @return
+	 *            a monic of the same type as <code>m1</code>
+	 * @return a negative integer if m1 precedes m2, 0 if they are equal, else a
+	 *         positive integer
 	 */
 	private int compareMonics(Monic m1, Monic m2) {
 		int result = m2.degree() - m1.degree();
@@ -181,11 +185,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
-	 * ReducedPolynomial, IdealSymbolicConstant, all others.
+	 * Compares two numeric primitives of the same type.
 	 * 
 	 * @param p1
+	 *            a numeric primitive
 	 * @param p2
-	 * @return
+	 *            a numeric primitive of same type
+	 * @return a negative integer if p1 precedes p2, 0 if they are equals, else
+	 *         a positive integer
 	 */
 	public int comparePrimitives(NumericPrimitive p1, NumericPrimitive p2) {
 		int result = p1.operator().compareTo(p2.operator());

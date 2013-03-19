@@ -317,12 +317,16 @@ public class CommonIdealFactory implements IdealFactory {
 	// ReducedPolynomials and Polynomials...
 
 	/**
-	 * The pre-requisite is that the polynomial specified by the sum of the
+	 * Returns a new reduced polynomial from the given type and term map. The
+	 * pre-requisite is that the polynomial specified by the sum of the
 	 * monomials of the term map is reduced. This will not be checked.
 	 * 
 	 * @param type
+	 *            the numeric type of the polynomial
 	 * @param termMap
-	 * @return
+	 *            the terms of the polynomial expressed as a map; all of the
+	 *            terms must have the specified type
+	 * @return the reduced polynomial as specified
 	 */
 	private ReducedPolynomial reducedPolynomial(SymbolicType type,
 			SymbolicMap<Monic, Monomial> termMap) {
@@ -457,6 +461,12 @@ public class CommonIdealFactory implements IdealFactory {
 	 * containing 3 factorizations a, g1, g2 (in that order), satisfying
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
+	 * 
+	 * @param fact1
+	 *            a factorization
+	 * @param fact2
+	 *            a factorization of the same type
+	 * @return the array {a,g1,g2}
 	 */
 	private Monomial[] extractCommonality(Monomial fact1, Monomial fact2) {
 		Monic[] monicTriple = extractCommonality(fact1.monic(this),
@@ -711,8 +721,10 @@ public class CommonIdealFactory implements IdealFactory {
 	 * performed on the coefficient.
 	 * 
 	 * @param monomial
+	 *            a monomial
 	 * @param constant
-	 * @return
+	 *            a non-zero constant
+	 * @return the quotient monomial/constant
 	 */
 	private Monomial divide(Monomial monomial, Constant constant) {
 		return monomial(divide(monomial.monomialConstant(this), constant),
@@ -827,8 +839,10 @@ public class CommonIdealFactory implements IdealFactory {
 	 * division: p1/p2 = q1/q2. For modulus: p1%p2 = r*(q1%q2).
 	 * 
 	 * @param poly1
+	 *            a non-0 polynomial of integer type
 	 * @param poly2
-	 * @return
+	 *            a non-0 polynomial of integer type
+	 * @return the triple (r,q1,q2) described above
 	 */
 	private Polynomial[] intFactor(Polynomial poly1, Polynomial poly2) {
 		Monomial fact1 = poly1.factorization(this);
@@ -914,8 +928,10 @@ public class CommonIdealFactory implements IdealFactory {
 	 * Ex: (2u)%2 = (u%1)2 = 0
 	 * 
 	 * @param numerator
+	 *            an integer polynomial assumed to be nonnegative
 	 * @param denominator
-	 * @return
+	 *            an integer polynomial assumed to be positive
+	 * @return the polynomial representing numberator%denominator
 	 */
 	private Polynomial intModulusPolynomials(Polynomial numerator,
 			Polynomial denominator) {

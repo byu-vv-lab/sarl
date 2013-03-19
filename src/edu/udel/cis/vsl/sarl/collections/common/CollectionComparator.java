@@ -61,12 +61,16 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 	}
 
 	/**
-	 * Assume sets have the same size. All sorted sets come first, then unsorted
-	 * ones.
+	 * Compares two sets. Assumes sets have the same size. All sorted sets come
+	 * first, then unsorted ones.
 	 * 
 	 * @param s1
+	 *            a symbolic set
 	 * @param s2
-	 * @return
+	 *            a symbolic set of the same size as <code>s1</code>
+	 * @return a negative integer if the first set precedes the second, 0 if the
+	 *         two sets are equal, a positive integer if the second set precedes
+	 *         the first
 	 */
 	private int compareSets(SymbolicSet<?> s1, SymbolicSet<?> s2) {
 		if (s1.isSorted()) {

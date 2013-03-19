@@ -200,19 +200,23 @@
 
 	<!-- Javadoc Tasks -->
 
+	<!--
 	<path id="javadoc.classpath">
 		<pathelement location="${src.dir}" />
 		<pathelement location="${junit.jar}" />
+
 	</path>
-	
+	-->
 
 	<target name="javadoc">
 		<delete dir="${javadoc.dir}" quiet="true" />
 		<mkdir dir="${javadoc.dir}" />
-		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpath="${bin.dir}" sourcepath="${src.dir}" failonerror="false">
+		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpathref="test.execute.classpath" sourcepath="${src.dir}" failonerror="false">
+			<!--
 			<fileset dir="${src.dir}" defaultexcludes="yes">
 				<include name="**/*.java" />
 			</fileset>
+			-->
 		</javadoc>
 	</target>
 

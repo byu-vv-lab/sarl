@@ -52,11 +52,15 @@ public abstract class CommonSimplifier implements Simplifier {
 	}
 
 	/**
-	 * Implement this, using simplifyGeneric whenever you want.
+	 * Simplifies a symbolic expression. A concrete extension of this class must
+	 * implement this method. The implementation may use
+	 * {@link CommonSimplifier#simplifyGenericExpression}, a generic
+	 * simplification method provided here.
+	 * 
 	 * 
 	 * @param expression
 	 *            any symbolic expression.
-	 * @return
+	 * @return the simplified version of that expression
 	 */
 	protected abstract SymbolicExpression simplifyExpression(
 			SymbolicExpression expression);

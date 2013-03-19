@@ -14,9 +14,13 @@ import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 public interface Monic extends Monomial {
 
 	/**
-	 * Map from Primitive to PrimitivePower.
+	 * Returns the factors of this monic as a map from
+	 * {@link edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive} to
+	 * {@link PrimitivePower}. A key in the map is a primitive x and the value
+	 * associated to x will be a primitive power x^i (x raised to the i-th
+	 * power) for some positive integer i.
 	 * 
-	 * @return
+	 * @return the factors of this monic as a map
 	 */
 	SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
 			IdealFactory factory);

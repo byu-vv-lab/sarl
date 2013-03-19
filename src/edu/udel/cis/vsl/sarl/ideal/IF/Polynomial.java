@@ -12,30 +12,47 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 public interface Polynomial extends RationalExpression {
 
 	/**
-	 * Map from Monic to Monomial. The polynomial is sum of the monomials.
+	 * Returns the terms of this polynomial as a map from {@link Monic} to
+	 * {@link Monomial}. The polynomial is sum of the monomials. A key in the
+	 * map is a monomial m occurring in one of the terms. The value associated
+	 * to m is a monomial c*m for some non-zero constant c.
 	 * 
-	 * @return
+	 * @param factory
+	 *            the ideal factory owning this polynomial
+	 * 
+	 * @return the terms of this polynomial as a map
 	 */
 	SymbolicMap<Monic, Monomial> termMap(IdealFactory factory);
 
 	/**
 	 * The leading term of this polynomial, or null if the polynomial is 0.
 	 * 
-	 * @return
+	 * @return the leading term of this polynomial or null
 	 */
 	Monomial leadingTerm();
 
 	/**
 	 * The constant term of this polynomial, which may be 0.
 	 * 
-	 * @return constant term
+	 * @param factory
+	 *            the ideal factory owning this polynomial
+	 * 
+	 * @return the constant term of this polynomial
 	 */
 	Constant constantTerm(IdealFactory factory);
 
 	/**
-	 * Returns a factorization of this polynomial expressed as a Monomial in
-	 * which the "variables" are ReducedPolynomials as well as other standard
-	 * NumericPrimitives, such as symbolic constants, etc.
+	 * Returns a factorization of this polynomial expressed as a
+	 * {@link Monomial} in which the "variables" are
+	 * {@link edu.udel.cis.vsl.sarl.ideal.common.ReducedPolynomial}s as well as
+	 * other standard
+	 * {@link edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive}s, such as
+	 * symbolic constants, etc.
+	 * 
+	 * @param factory
+	 *            the ideal factory owning this polynomial
+	 * 
+	 * @return a factorization of this polynomial
 	 */
 	Monomial factorization(IdealFactory factory);
 

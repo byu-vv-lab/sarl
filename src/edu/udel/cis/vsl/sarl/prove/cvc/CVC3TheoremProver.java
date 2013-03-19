@@ -627,7 +627,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * unionName_i.
 	 * 
 	 * @param expr
-	 * @return
+	 *            a "union extract" expression
+	 * @return the CVC3 translation of that expression
 	 */
 	private Expr translateUnionExtract(SymbolicExpression expr) {
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
@@ -647,7 +648,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * UNION_INJECT expression.
 	 * 
 	 * @param expr
-	 * @return
+	 *            a "union inject" expression
+	 * @return the CVC3 translation of that expression
 	 */
 	private Expr translateUnionInject(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
@@ -669,7 +671,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * true iff arg1 belongs to the specified member type of the union type.
 	 * 
 	 * @param expr
-	 * @return
+	 *            a "union test" expression
+	 * @return the CVC3 translation of that expression
 	 */
 	private Expr translateUnionTest(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
@@ -688,7 +691,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 *            a SARL symbolic expression type
 	 * @return the equivalent CVC3 type
 	 * @throws Cvc3Exception
-	 *             by CVC3
+	 *             if CVC3 throws an exception
 	 */
 	private Type translateType(SymbolicType type) throws Cvc3Exception {
 		Type result = typeMap.get(type);

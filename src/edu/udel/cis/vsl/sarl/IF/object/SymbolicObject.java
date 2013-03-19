@@ -10,19 +10,41 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * 
  * 
  * The kind determines the Java type of this object as follows:
- * <ul>
- * <li>SYMBOLIC_EXPRESSION:
- * {@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}</li>
- * <li>EXPRESSION_COLLECTION:
- * {@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}</li>
- * <li>TYPE: {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}</li>
- * <li>TYPE_SEQUENCE: {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence}
- * </li>
- * <li>NUMBER: {@link edu.udel.cis.vsl.sarl.IF.object.NumberObject}</li>
- * <li>INT: {@link edu.udel.cis.vsl.sarl.IF.object.IntObject}</li>
- * <li>BOOLEAN: {@link edu.udel.cis.vsl.sarl.IF.object.BooleanObject}</li>
- * <li>STRING: {@link edu.udel.cis.vsl.sarl.IF.object.StringObject}</li>
- * </ul>
+ * 
+ * <table>
+ * <tr>
+ *   <td>SYMBOLIC_EXPRESSION</td>
+ *   <td>{@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}</td>
+ * </tr>
+ * <tr>
+ *   <td>EXPRESSION_COLLECTION</td>
+ *   <td>{@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}</td>
+ * </tr>
+ * <tr>
+ *   <td>TYPE</td>
+ *   <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}</td>
+ * </tr>
+ * <tr>
+ *   <td>TYPE_SEQUENCE</td>
+ *   <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence}</td>
+ * </tr>
+ * <tr>
+ *   <td>NUMBER</td>
+ *   <td>{@link NumberObject}</td>
+ * </tr>
+ * <tr>
+ *   <td>INT</td>
+ *   <td>{@link IntObject}</td>
+ * </tr>
+ * <tr>
+ *   <td>BOOLEAN</td>
+ *   <td>{@link BooleanObject}</td>
+ * </tr>
+ * <tr>
+ *   <td>STRING</td>
+ *   <td>{@link StringObject}</td>
+ * </tr>
+ * </table>
  * 
  * @author siegel
  * 
@@ -70,11 +92,12 @@ public interface SymbolicObject {
 	int hashCode();
 
 	/**
-	 * Every symbolic object has a unique ID number, returned by this method.
+	 * Every canonic symbolic object has a unique ID number, returned by this
+	 * method. If this object is not canonic, the value returned is undefined.
 	 * 
-	 * @return the ID number of this symbolic object
+	 * @return the ID number of this canonic symbolic object
 	 */
-	long id();
+	int id();
 
 	/**
 	 * Is this object the unique representative of its equivalence class (under

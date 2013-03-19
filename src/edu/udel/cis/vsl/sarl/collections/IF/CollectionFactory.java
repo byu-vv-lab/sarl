@@ -194,7 +194,7 @@ public interface CollectionFactory {
 	 * should not be modified after this method is invoked.
 	 * 
 	 * @param javaMap
-	 * @return a symbolic map based on the given Java map
+	 * @return a sorted symbolic map based on the given Java map
 	 */
 	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
 			Comparator<? super K> comparator, Map<K, V> javaMap);
@@ -203,7 +203,8 @@ public interface CollectionFactory {
 	 * Returns an (unsorted) hash symbolic map based on the given Java Map.
 	 * 
 	 * @param javaMap
-	 * @return
+	 *            a Java {@link java.util.Map}
+	 * @return an (unsorted) hash symbolic map based on the javaMap
 	 */
 	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> hashMap(
 			Map<K, V> javaMap);

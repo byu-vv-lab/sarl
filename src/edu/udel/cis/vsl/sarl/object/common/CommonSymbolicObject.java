@@ -3,6 +3,12 @@ package edu.udel.cis.vsl.sarl.object.common;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
+/**
+ * An implementation of {@link SymbolicObject}.
+ * 
+ * @author siegel
+ * 
+ */
 public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	private SymbolicObjectKind kind;
@@ -11,7 +17,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	private boolean hashed = false;
 
-	private long id = -1;
+	private int id = -1;
 
 	private RationalNumber order;
 
@@ -36,11 +42,11 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * 
 	 * @param id
 	 */
-	void setId(long id) {
+	void setId(int id) {
 		this.id = id;
 	}
 
-	public long id() {
+	public int id() {
 		return id;
 	}
 

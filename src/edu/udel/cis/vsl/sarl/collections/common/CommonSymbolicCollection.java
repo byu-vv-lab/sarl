@@ -25,7 +25,9 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 	 * this have the same kind.
 	 * 
 	 * @param o
-	 * @return
+	 *            a symbolic collection with the same
+	 *            <code>collectionKind</code> as this
+	 * @return true iff the two collections are equal
 	 */
 	protected abstract boolean collectionEquals(SymbolicCollection<T> o);
 

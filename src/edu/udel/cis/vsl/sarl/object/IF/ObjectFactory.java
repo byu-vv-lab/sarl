@@ -31,11 +31,13 @@ public interface ObjectFactory {
 	ObjectComparator comparator();
 
 	/**
-	 * This canonic will be used for all symbolic objects including types,
-	 * expressions, sets, etc.
+	 * Returns the canonic representative of the object's equivalence class.
+	 * This will be used for the "canonicalization" of all symbolic objects in a
+	 * universe.
 	 * 
 	 * @param object
-	 * @return
+	 *            any symbolic object
+	 * @return the canonic representative
 	 */
 	<T extends SymbolicObject> T canonic(T object);
 

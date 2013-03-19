@@ -30,17 +30,21 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 
 /**
  * A symbolic universe is used for the creation and manipulation of
- * {@link SymbolicObject}s. The symbolic objects created by this universe are
- * said to belong to this universe. Every symbolic object belongs to one
- * universe, though a reference to the universe is not necessarily stored in the
- * object.
+ * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s. The symbolic objects
+ * created by this universe are said to belong to this universe. Every symbolic
+ * object belongs to one universe, though a reference to the universe is not
+ * necessarily stored in the object.
  * 
- * {@link SymbolicExpression}s are one kind of symbolic object. Other symbolic
- * objects include {@link SymbolicCollection}s (such as sequences, sets, and
- * maps), {@link SymbolicType}s, and various concrete {@link SymbolicObject}s.
+ * {@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}s are one kind of
+ * symbolic object. Other symbolic objects include
+ * {@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}s (such as
+ * sequences, sets, and maps),
+ * {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}s, and various concrete
+ * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s.
  * 
- * {@link SymbolicObject}s implement the Immutable Pattern: all symbolic objects
- * are immutable, i.e., they cannot be modified after they are created.
+ * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s implement the
+ * Immutable Pattern: all symbolic objects are immutable, i.e., they cannot be
+ * modified after they are created.
  * 
  * @author siegel
  */
@@ -333,8 +337,8 @@ public interface SymbolicUniverse {
 	 * @param name
 	 *            the name to give to this symbolic constant; it will be used to
 	 *            identify the object and for printing
-	 * @param the
-	 *            type of this symbolic constant
+	 * @param type
+	 *            the type of this symbolic constant
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
 
@@ -1084,7 +1088,6 @@ public interface SymbolicUniverse {
 	 * @param expression
 	 *            a symbolic expression
 	 * @return symbolic expression cast to new type
-	 * @exception
 	 */
 	SymbolicExpression cast(SymbolicType newType, SymbolicExpression expression);
 
@@ -1094,9 +1097,9 @@ public interface SymbolicUniverse {
 	 * 
 	 * @param predicate
 	 *            the test condition p
-	 * @param trueValue
+	 * @param trueCase
 	 *            the value if condition is true
-	 * @param falseValue
+	 * @param falseCase
 	 *            the value if condition is false
 	 * @return symbolic expression whose values is trueCase if predicate holds,
 	 *         falseCase if predicate is false

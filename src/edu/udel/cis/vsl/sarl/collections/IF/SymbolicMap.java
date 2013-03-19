@@ -65,14 +65,14 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	/**
 	 * Is this map empty?
 	 * 
-	 * @return
+	 * @return true iff this map has no entries
 	 */
 	boolean isEmpty();
 
 	/**
 	 * Is this a map whose keys are sorted?
 	 * 
-	 * @return
+	 * @return true iff this is a sorted map
 	 */
 	boolean isSorted();
 

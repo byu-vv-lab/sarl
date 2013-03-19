@@ -68,9 +68,12 @@ public interface ExpressionFactory {
 	 * Returns an expression with the given operator type and argument sequence.
 	 * 
 	 * @param operator
+	 *            a symbolic operator
 	 * @param type
+	 *            a symbolic type
 	 * @param arguments
-	 * @return
+	 *            the arguments to the operator as an array
+	 * @return the expression specified by above
 	 */
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments);

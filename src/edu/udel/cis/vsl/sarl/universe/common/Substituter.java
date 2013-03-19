@@ -128,8 +128,11 @@ public class Substituter {
 	 * method make anyway.
 	 * 
 	 * @param collection
+	 *            any kind of symbolic collection
 	 * @param map
-	 * @return
+	 *            a symbolic map from symbolic constants to symbolic expressions
+	 * @return a collection in which substitution has been applied to each
+	 *         element using the given map
 	 */
 	private SymbolicCollection<?> substitute(SymbolicCollection<?> collection,
 			Map<SymbolicConstant, SymbolicExpression> map) {

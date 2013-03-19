@@ -89,13 +89,6 @@ public class CommonObjectFactory implements ObjectFactory {
 		return comparator;
 	}
 
-	/**
-	 * This canonic will be used for all symbolic objects including types,
-	 * expressions, sets, etc.
-	 * 
-	 * @param object
-	 * @return
-	 */
 	public <T extends SymbolicObject> T canonic(T object) {
 		if (object.isCanonic())
 			return object;
