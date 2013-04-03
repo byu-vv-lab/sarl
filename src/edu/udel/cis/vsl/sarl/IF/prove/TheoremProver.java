@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.prove;
 
@@ -25,7 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
 
 public interface TheoremProver {
 	/**
@@ -55,6 +55,34 @@ public interface TheoremProver {
 	 * 
 	 */
 	ResultType valid(BooleanExpression assumption, BooleanExpression predicate);
+
+	/**
+	 * Attempts to determine whether p(x)=>q(x) is valid, and, if not, also
+	 * returns a model (counter-example). The specification is exactly the same
+	 * as for {@link valid}, except that a {@link ValidityResult} is returned.
+	 * This provides a method {@link ValidityResult.getResultType} that returns
+	 * the result type, but also a method {@link ValidityResult.getModel} that
+	 * provides the model. That method will return null if the result type is
+	 * YES or MAYBE. It may return null even if the result type is NO, either
+	 * because the assumption is not satisfiable or a model could not be found
+	 * for some reason.
+	 * 
+	 * If the model is non-null, it will be a map in which the key set consists
+	 * of all the symbolic constants of non-function type that occur in the
+	 * assumption or predicate. The value associated to a key will be a concrete
+	 * symbolic expression.
+	 * 
+	 * @param assumption
+	 *            the assumption p(x)
+	 * @param predicate
+	 *            the predicate q(x)
+	 * @throws TheoremProverException
+	 *             if something goes wrong with the automated theorem prover
+	 *             during this call
+	 * @return a validity result as specified above
+	 */
+	ValidityResult validOrModel(BooleanExpression assumption,
+			BooleanExpression predicate);
 
 	/**
 	 * Returns the total number of calls made to the method valid on this
@@ -89,19 +117,20 @@ public interface TheoremProver {
 	 */
 	void setOutput(PrintStream out);
 
-	/**
-	 * Finds a model for a predicate if that predicate is satisfiable, else
-	 * returns null. The model assigns a concrete value to each symbolic
-	 * constant occurring in the predicate.
-	 * 
-	 * @param predicate
-	 *            a boolean expression (e.g., the path condition)
-	 * @return a map of SymbolicConstants to their (concrete) SymbolicExpression
-	 *         values
-	 * @throws TheoremProverException
-	 *             if something goes wrong with the automated theorem prover
-	 *             during this call
-	 */
-	Map<SymbolicConstant, SymbolicExpression> findModel(
-			BooleanExpression predicate) throws TheoremProverException;
+	// /**
+	// * Finds a model for a predicate if that predicate is satisfiable, else
+	// * returns null. The model assigns a concrete value to each symbolic
+	// * constant occurring in the predicate.
+	// *
+	// * @param predicate
+	// * a boolean expression (e.g., the path condition)
+	// * @return a map of SymbolicConstants to their (concrete)
+	// SymbolicExpression
+	// * values
+	// * @throws TheoremProverException
+	// * if something goes wrong with the automated theorem prover
+	// * during this call
+	// */
+	// Map<SymbolicConstant, SymbolicExpression> findModel(
+	// BooleanExpression predicate) throws TheoremProverException;
 }

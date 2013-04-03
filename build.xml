@@ -23,7 +23,7 @@
 
 	<!--
 	<property name="main-class" value="edu.udel.cis.vsl.sarl.SARL" />
- -->
+ 	-->
 
 	<!-- Junit: automated unit tester Properties  -->
 
@@ -199,14 +199,6 @@
 	<target name="cobertura" depends="cobertura-html-coverage-report" />
 
 	<!-- Javadoc Tasks -->
-
-	<!--
-	<path id="javadoc.classpath">
-		<pathelement location="${src.dir}" />
-		<pathelement location="${junit.jar}" />
-
-	</path>
-	-->
 
 	<target name="javadoc">
 		<delete dir="${javadoc.dir}" quiet="true" />

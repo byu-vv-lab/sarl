@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
@@ -43,9 +43,9 @@ import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.prove.TernaryResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult;
+import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -57,12 +57,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.util.Pair;
-
-// TODO: to translate Herbrand expressions: translate types as usual
-// integer or real, but create new uninterpreted operations:
-// INT_PLUS, INT_TIMES, INT_DIVIDE, INT_MOD, INT_MINUS, INT_NEGATIVE, INT_EQ,
-// INT_NEQ, INT_LT, INT_LTE, ditto for REAL_*.  Declare these operations
-// only as they are encountered.
 
 /**
  * An implementation of TheoremProverIF using the automated theorem prover CVC3.
@@ -129,6 +123,19 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * separate map is needed. Set in method reset().
 	 */
 	private Map<SymbolicExpression, Op> functionMap;
+
+	/**
+	 * Mapping of CVC3 variables to their corresponding symbolic constants.
+	 * Needed in order to construct model when there is a counter example. Set
+	 */
+	private Map<Expr, SymbolicConstant> varMap;
+
+	/**
+	 * Mapping of CVC3 "Op"s to their corresponding symbolic constants. A CVC3
+	 * "Op" is used to represent a function. In SARL, a function is represented
+	 * by a symbolic constant of function type. This is used for finding models.
+	 */
+	private Map<Op, SymbolicConstant> opMap;
 
 	/**
 	 * Mapping of integer division expressions. Since integer division and
@@ -283,6 +290,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		case SYMBOLIC_CONSTANT:
 			result = vc.createOp(((SymbolicConstant) expr).name().getString(),
 					this.translateType(expr.type()));
+			opMap.put(result, (SymbolicConstant) expr);
 			break;
 		case LAMBDA:
 			result = vc.lambdaExpr(
@@ -351,6 +359,8 @@ public class CVC3TheoremProver implements TheoremProver {
 		Expr result = isBoundVariable ? newBoundVariable(name, type) : vc
 				.varExpr(name, type);
 
+		// TODO: only do this if you need a model...
+		varMap.put(result, symbolicConstant);
 		return result;
 	}
 
@@ -482,6 +492,18 @@ public class CVC3TheoremProver implements TheoremProver {
 		return value.left;
 	}
 
+	private void assertIndexInBounds(SymbolicExpression arrayExpression,
+			NumericExpression index) {
+		NumericExpression length = universe.length(arrayExpression);
+		BooleanExpression predicate = universe.lessThan(index, length);
+		Expr cvcPredicate;
+
+		predicate = universe.and(
+				universe.lessThanEquals(universe.zeroInt(), index), predicate);
+		cvcPredicate = translate(predicate);
+		vc.assertFormula(cvcPredicate);
+	}
+
 	/**
 	 * Translates an array-read expression a[i] into equivalent CVC3 expression
 	 * 
@@ -495,10 +517,13 @@ public class CVC3TheoremProver implements TheoremProver {
 			throws Cvc3Exception {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
-		Expr array = translate(arrayExpression);
-		Expr index = translate((SymbolicExpression) expr.argument(1));
-		Expr result;
+		NumericExpression indexExpression = (NumericExpression) expr
+				.argument(1);
+		Expr array, index, result;
 
+		assertIndexInBounds(arrayExpression, indexExpression);
+		array = translate(arrayExpression);
+		index = translate((SymbolicExpression) expr.argument(1));
 		if (isBigArray(arrayExpression))
 			array = bigArrayValue(array);
 		result = vc.readExpr(array, index);
@@ -519,14 +544,17 @@ public class CVC3TheoremProver implements TheoremProver {
 			throws Cvc3Exception {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
-		Expr array = translate(arrayExpression);
-		Expr index = translate((SymbolicExpression) expr.argument(1));
-		Expr value = translate((SymbolicExpression) expr.argument(2));
-		Expr result = isBigArray(arrayExpression) ? bigArray(
-				bigArrayLength(array),
+		NumericExpression indexExpression = (NumericExpression) expr
+				.argument(1);
+		Expr array, index, value, result;
+
+		assertIndexInBounds(arrayExpression, indexExpression);
+		array = translate(arrayExpression);
+		index = translate(indexExpression);
+		value = translate((SymbolicExpression) expr.argument(2));
+		result = isBigArray(arrayExpression) ? bigArray(bigArrayLength(array),
 				vc.writeExpr(bigArrayValue(array), index, value)) : vc
 				.writeExpr(array, index, value);
-
 		return result;
 	}
 
@@ -546,6 +574,7 @@ public class CVC3TheoremProver implements TheoremProver {
 				result = vc.writeExpr(result, vc.ratExpr(index), value);
 			index++;
 		}
+		assertIndexInBounds(arrayExpression, universe.integer(index - 1));
 		if (isBig)
 			result = bigArray(bigArrayLength(origin), result);
 		return result;
@@ -967,10 +996,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		expressionMap = new LinkedHashMap<SymbolicExpression, Expr>();
 		functionMap = new LinkedHashMap<SymbolicExpression, Op>();
 		integerDivisionMap = new LinkedHashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
+		varMap = new LinkedHashMap<Expr, SymbolicConstant>();
+		opMap = new LinkedHashMap<Op, SymbolicConstant>();
 	}
 
-	@Override
-	public ResultType valid(BooleanExpression symbolicAssumption,
+	private QueryResult queryCVC3(BooleanExpression symbolicAssumption,
 			BooleanExpression symbolicPredicate) {
 		QueryResult result = null;
 
@@ -1011,11 +1041,18 @@ public class CVC3TheoremProver implements TheoremProver {
 					"Error in parsing the symbolic expression or querying CVC3:\n"
 							+ e);
 		}
+		return result;
+	}
+
+	private void popCVC3() {
 		try {
 			vc.pop();
 		} catch (Cvc3Exception e) {
 			throw new SARLInternalException("CVC3 error: " + e);
 		}
+	}
+
+	private ResultType translateResult(QueryResult result) {
 		if (showProverQueries) {
 			out.println("CVC3 result      " + numValidCalls + ": " + result);
 			out.flush();
@@ -1034,6 +1071,15 @@ public class CVC3TheoremProver implements TheoremProver {
 			out.println("Warning: Unknown CVC3 query result: " + result);
 			return ResultType.MAYBE;
 		}
+	}
+
+	@Override
+	public ResultType valid(BooleanExpression symbolicAssumption,
+			BooleanExpression symbolicPredicate) {
+		QueryResult result = queryCVC3(symbolicAssumption, symbolicPredicate);
+
+		popCVC3();
+		return translateResult(result);
 	}
 
 	@Override
@@ -1068,15 +1114,38 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	@Override
-	public Map<SymbolicConstant, SymbolicExpression> findModel(
-			BooleanExpression context) throws TheoremProverException {
-		throw new TheoremProverException("Unimplemented");
-	}
-
-	@Override
 	public void setOutput(PrintStream out) {
 		this.out = out;
 		showProverQueries = out != null;
+	}
+
+	/**
+	 * In progres. Some notes from comments from CVC3 source for function
+	 * vc_getConcreteModel:
+	 * 
+	 * "Will assign concrete values to all user created variables. This function
+	 * should only be called after a query which return false. Returns an array
+	 * of Exprs with size *size. The caller is responsible for freeing the array
+	 * when finished with it by calling vc_deleteVector."
+	 */
+	@Override
+	public ValidityResult validOrModel(BooleanExpression assumption,
+			BooleanExpression predicate) {
+		QueryResult cvcResult = queryCVC3(assumption, predicate);
+		ResultType resultType = translateResult(cvcResult);
+		ValidityResult result;
+
+		if (cvcResult.equals(QueryResult.INVALID)) {
+			Map<?, ?> cvcModel = vc.getConcreteModel();
+			CVC3ModelFinder finder = new CVC3ModelFinder(universe, vc, varMap,
+					opMap, cvcModel, out);
+			Map<SymbolicConstant, SymbolicExpression> model = finder.getModel();
+
+			result = new ValidityResult(resultType, model);
+		} else
+			result = new ValidityResult(resultType);
+		popCVC3();
+		return result;
 	}
 
 }

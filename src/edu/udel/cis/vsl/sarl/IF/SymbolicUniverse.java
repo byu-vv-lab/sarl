@@ -137,7 +137,7 @@ public interface SymbolicUniverse {
 	 * 
 	 * @return the integer type
 	 * */
-	SymbolicType integerType();
+	SymbolicIntegerType integerType();
 
 	/**
 	 * Returns the Herbrand integer type. All operations in which at least one

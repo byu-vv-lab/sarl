@@ -1,28 +1,66 @@
 
-IdealFactory:
-  can arguments have non-ideal type?
+
+Heaps:
+
+/** This is the type for head IDs.  Every heap has an unchanging
+ * heap ID.  As objects are added or removed from the heap, the
+ * heap expression itself changes, but the underlying heap ID
+ * is constant.  References to heap objects always include the
+ * heap ID indicating to which heap the reference points.  This
+ * is necessary so that when we canonicalize a heap, we can 
+ * determine which references refer to that heap and therefore
+ * must be updated. */
+SymbolicType heapIdType();
+
+/** This is the type of a heap. */
+SymbolicType heapType();
+
+/** Returns the incomplete reference type, which is a super-type
+ * of all reference types.  Situation is analogous to array types.
+ */
+SymbolicType referenceType();
+
+/** Returns type "reference-to-T", where T is the given type.
+ * This is a complete reference type. */
+SymbolicType completeReferenceType(SymbolicType type);
+
+/** Returns a heap ID which simply wraps the given string object.
+ * Two heapIds with equal names are equal. */
+SymbolicExpression heapId(StringObject name);
+
+/** Returns the empty heap with the given heap ID. */
+SymbolicExpression emptyHeap(SymbolicExpression heapId);
+
+/** Allocates an object on the heap.  Returns a pair: the first
+ * component is the new heap, the second is reference to the new
+ * object in the new heap. */
+Pair<SymbolicExpression,SymbolicExpression> 
+  malloc(SymbolicExpression heap, SymbolicType type);
   
-Reason why we might want that: to use IdealSimplifier
-  on herbrand expressions and equals.
+/** Given an expression of heap type, returns
+ * the heap ID; given an expression of reference type, returns
+ * the heap ID of the referenced heap. */
+SymbolicExpression heapIdOf(SymbolicExpression expr);
 
-Proposal: before passing anything to any ideal method,
-including equals, you have to cast to an ideal type
-Maybe even insist an IdealExpression must have ideal type.
-Use HerbrandExpression for others?
+/** Deallocates an object on the heap.  Given a heap and a reference
+ * to an element on the heap, returns the new heap which is obtained
+ * by removing the referenced object from the original. Result
+ * is undefined if heapIdOf(ref) does not equal heapIdOf(heap). 
+ */
+SymbolicExpression free(SymbolicExpression heap, SymbolicExpression ref);
 
-Example:
-  a[i] : herbrand int
-  3h : herbrand constant 3
-
-predicate p: a[i]==3h -> (int)a[i] == 3 -> (int)a[i] - 3 = 0
-constant map: (int)a[i] : 3
-   change to a[i] : 3h
-problem: keys in constantMap are Polynomials
-
-instead of constantMap, add to simplifyMap
-
-solution: 
-expression e: PLUS(x,1h) -> PLUS(3h,1h)
-
-simplifier: if arguments don't have ideal type, then
-  treat them generically only.
+/** Dereferences a reference to the heap.  The given ref must
+ * have a complete reference type, say "reference-to-T".  The type
+ * of the expression returned will then be T.   The heaps ID of
+ * the ref and the heap must be equal. */
+SymbolicExpression dereference(SymbolicExpression heap,
+  SymbolicExpression ref);
+ 
+/** Canonicalize heap.
+ * Given a heap and a collection of expressions, returns a pair.
+ * The first component of the pair is the new heap, the second
+ * element is the collection obtained by updating all references
+ * to objects in the given heap to their new values. */
+Pair<SymbolicExpression, SymbolicCollection<SymbolicExpression>>
+  canonic(SymbolicExpression heap,
+          SymbolicCollection<SymbolicExpression>> expressions);
