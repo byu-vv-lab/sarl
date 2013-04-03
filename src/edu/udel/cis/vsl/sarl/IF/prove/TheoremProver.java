@@ -19,12 +19,9 @@
 package edu.udel.cis.vsl.sarl.IF.prove;
 
 import java.io.PrintStream;
-import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
 
 public interface TheoremProver {
