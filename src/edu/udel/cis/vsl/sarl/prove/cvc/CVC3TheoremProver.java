@@ -18,6 +18,8 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
+// TODO: why not have one prover per assumtion (like Simplifier)?
+// reuse that assumption.  Use push ahd pop.
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -731,6 +733,26 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	public Map<SymbolicExpression, Expr> expressionMap() {
+		return expressionMap;
+	}
+
+	public Map<Op, SymbolicConstant> opMap() {
+		return opMap;
+	}
+
+	public Map<Expr, SymbolicConstant> varMap() {
+		return varMap;
+	}
+
+	public ValidityChecker validityChecker() {
+		return vc;
+	}
+
+	public PrintStream out() {
+		return out;
+	}
+
 	/**
 	 * Translates the symbolic type to a CVC3 type.
 	 * 
@@ -740,7 +762,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @throws Cvc3Exception
 	 *             if CVC3 throws an exception
 	 */
-	private Type translateType(SymbolicType type) throws Cvc3Exception {
+	public Type translateType(SymbolicType type) throws Cvc3Exception {
 		Type result = typeMap.get(type);
 
 		if (result != null)
@@ -802,7 +824,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	private Expr translate(SymbolicExpression expr) {
+	public Expr translate(SymbolicExpression expr) {
 		Expr result = expressionMap.get(expr);
 		int numArgs;
 
@@ -932,11 +954,19 @@ public class CVC3TheoremProver implements TheoremProver {
 		case OR:
 			result = translateOr(expr);
 			break;
-		case POWER:
-			result = vc.powExpr(
-					translate((SymbolicExpression) expr.argument(0)),
-					translate((SymbolicExpression) expr.argument(1)));
+		case POWER: {
+			SymbolicObject exponent = expr.argument(1);
+
+			if (exponent instanceof IntObject)
+				result = vc.powExpr(
+						translate((SymbolicExpression) expr.argument(0)),
+						vc.ratExpr(((IntObject) exponent).getInt()));
+			else
+				result = vc.powExpr(
+						translate((SymbolicExpression) expr.argument(0)),
+						translate((SymbolicExpression) exponent));
 			break;
+		}
 		case SUBTRACT:
 			result = vc.minusExpr(
 					translate((SymbolicExpression) expr.argument(0)),
@@ -1137,8 +1167,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 		if (cvcResult.equals(QueryResult.INVALID)) {
 			Map<?, ?> cvcModel = vc.getConcreteModel();
-			CVC3ModelFinder finder = new CVC3ModelFinder(universe, vc, varMap,
-					opMap, cvcModel, out);
+			CVC3ModelFinder finder = new CVC3ModelFinder(this, cvcModel);
 			Map<SymbolicConstant, SymbolicExpression> model = finder.getModel();
 
 			result = new ValidityResult(resultType, model);

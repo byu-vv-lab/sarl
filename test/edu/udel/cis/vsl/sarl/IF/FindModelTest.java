@@ -21,7 +21,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -38,6 +37,8 @@ public class FindModelTest {
 
 	private NumericSymbolicConstant x;
 
+	private SymbolicConstant a; // array of int
+
 	private BooleanExpression t;
 
 	private PrintStream out = System.out;
@@ -50,7 +51,10 @@ public class FindModelTest {
 		x = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("X"), realType);
 		prover = universe.prover();
+		prover.setOutput(System.out);
 		t = universe.trueExpression();
+		a = universe.symbolicConstant(universe.stringObject("a"),
+				universe.arrayType(intType));
 	}
 
 	@After
@@ -94,11 +98,6 @@ public class FindModelTest {
 
 	@Test
 	public void array1() {
-		prover.setOutput(System.out);
-
-		SymbolicArrayType type = universe.arrayType(intType);
-		SymbolicConstant a = universe.symbolicConstant(
-				universe.stringObject("a"), type);
 		NumericExpression zero = universe.zeroInt();
 		BooleanExpression p = universe.equals(zero,
 				(NumericExpression) universe.arrayRead(a, zero));
@@ -114,19 +113,16 @@ public class FindModelTest {
 		out.println("array1: value = " + value);
 		out.flush();
 		assertTrue(value != null);
-		// assertEquals(type, value.type());
 		number = universe.extractNumber((NumericExpression) universe.arrayRead(
 				value, zero));
 		assertTrue(number.signum() != 0);
 	}
 
+	/**
+	 * Is "length(a)<5" valid?
+	 */
 	@Test
 	public void array2() {
-		prover.setOutput(System.out);
-
-		SymbolicArrayType type = universe.arrayType(intType);
-		SymbolicConstant a = universe.symbolicConstant(
-				universe.stringObject("a"), type);
 		BooleanExpression p = universe.lessThan(universe.length(a),
 				universe.integer(5));
 		ValidityResult result = prover.validOrModel(t, p);
@@ -149,5 +145,106 @@ public class FindModelTest {
 
 			assertTrue(length >= 5);
 		}
+	}
+
+	/**
+	 * is "a[0]=a[1] || a[0]=0 || a[1]=1" valid? Answer is NO, and a model
+	 * should be found.
+	 */
+	@Test
+	public void array3() {
+		NumericExpression zero = universe.zeroInt(), one = universe.oneInt();
+		NumericExpression a0 = (NumericExpression) universe.arrayRead(a, zero);
+		NumericExpression a1 = (NumericExpression) universe.arrayRead(a, one);
+		BooleanExpression p = universe.or(
+				universe.equals(a0, a1),
+				universe.or(universe.equals(zero, a0),
+						universe.equals(zero, a1)));
+		ValidityResult result = prover.validOrModel(t, p);
+		Map<SymbolicConstant, SymbolicExpression> model;
+		SymbolicExpression value;
+		Number v0, v1;
+
+		assertEquals(ResultType.NO, result.getResultType());
+		model = result.getModel();
+		assertTrue(model != null);
+		value = model.get(a);
+		out.println("array3: value = " + value);
+		out.flush();
+		assertTrue(value != null);
+		v0 = universe.extractNumber((NumericExpression) universe.arrayRead(
+				value, zero));
+		v1 = universe.extractNumber((NumericExpression) universe.arrayRead(
+				value, one));
+		assertTrue(v0.signum() != 0);
+		assertTrue(v1.signum() != 0);
+		assertTrue(!v0.equals(v1));
+	}
+
+	/**
+	 * Is "x^2 != 2" valid? Correct answer is NO, but CVC3 only tells us MAYBE.
+	 */
+	@Test
+	public void sqrt2() {
+		NumericSymbolicConstant x = (NumericSymbolicConstant) universe
+				.symbolicConstant(universe.stringObject("x"),
+						universe.realType());
+		BooleanExpression p = universe.neq(universe.multiply(x, x),
+				universe.rational(2));
+		ValidityResult result = prover.validOrModel(t, p);
+		ResultType resultType = result.getResultType();
+
+		assertTrue(ResultType.NO.equals(resultType)
+				|| ResultType.MAYBE.equals(resultType));
+	}
+
+	/**
+	 * Is "x^2 != 4" valid? Correct answer is NO, with x=2 or x=-2.
+	 */
+	@Test
+	public void sqrt4() {
+		NumericSymbolicConstant x = (NumericSymbolicConstant) universe
+				.symbolicConstant(universe.stringObject("x"),
+						universe.realType());
+		BooleanExpression p = universe.neq(universe.multiply(x, x),
+				universe.rational(4));
+		ValidityResult result = prover.validOrModel(t, p);
+		ResultType resultType = result.getResultType();
+		SymbolicExpression value;
+
+		assertEquals(ResultType.NO, resultType);
+		value = result.getModel().get(x);
+		out.println("sqrt4: value = " + value);
+		assertTrue(universe.rational(2).equals(value)
+				|| universe.rational(-2).equals(value));
+	}
+
+	/**
+	 * Let N be a positive integer and b be an array of length N. Is "b[0]=0"
+	 * valid?
+	 */
+	@Test
+	public void completeArray() {
+		NumericSymbolicConstant N = (NumericSymbolicConstant) universe
+				.symbolicConstant(universe.stringObject("N"), intType);
+		SymbolicConstant b = universe.symbolicConstant(
+				universe.stringObject("b"), universe.arrayType(intType, N));
+		BooleanExpression assumption = universe.lessThan(universe.zeroInt(), N);
+		BooleanExpression predicate = universe.equals(universe.zeroInt(),
+				universe.arrayRead(b, universe.zeroInt()));
+		ValidityResult result = prover.validOrModel(assumption, predicate);
+		ResultType resultType = result.getResultType();
+		NumericExpression N_val, b_val0;
+		SymbolicExpression b_val;
+
+		assertEquals(ResultType.NO, resultType);
+		N_val = (NumericExpression) result.getModel().get(N);
+		b_val = result.getModel().get(b);
+		out.println("completeArray : N_val = " + N_val);
+		out.println("completeArray : b_val = " + b_val);
+		assertTrue(((IntegerNumber) universe.extractNumber(N_val)).signum() > 0);
+		b_val0 = (NumericExpression) universe.arrayRead(b_val,
+				universe.zeroInt());
+		assertTrue(((IntegerNumber) universe.extractNumber(b_val0)).signum() != 0);
 	}
 }

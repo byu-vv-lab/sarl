@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.util.Util;
 
 public class CVC3ModelFinder {
@@ -43,6 +45,8 @@ public class CVC3ModelFinder {
 	private PrintStream out;
 
 	private static Iterable<SymbolicExpression> empty = Util.emptyIterable();
+
+	private CVC3TheoremProver prover;
 
 	/**
 	 * Mapping of CVC3 variables to their corresponding symbolic constants.
@@ -59,17 +63,16 @@ public class CVC3ModelFinder {
 
 	Map<SymbolicConstant, SymbolicExpression> model;
 
-	public CVC3ModelFinder(SymbolicUniverse universe, ValidityChecker vc,
-			Map<Expr, SymbolicConstant> varMap,
-			Map<Op, SymbolicConstant> opMap, Map<?, ?> cvcModel, PrintStream out) {
-		this.universe = universe;
-		this.vc = vc;
-		this.varMap = varMap;
-		this.opMap = opMap;
+	public CVC3ModelFinder(CVC3TheoremProver prover, Map<?, ?> cvcModel) {
+		this.prover = prover;
+		this.universe = prover.universe();
+		this.vc = prover.validityChecker();
+		this.varMap = prover.varMap();
+		this.opMap = prover.opMap();
+		this.out = prover.out();
 		this.cvcModel = cvcModel;
-		this.out = out;
-		preModel = new HashMap<SymbolicConstant, Object>();
-		model = new HashMap<SymbolicConstant, SymbolicExpression>();
+		this.preModel = new HashMap<SymbolicConstant, Object>();
+		this.model = new HashMap<SymbolicConstant, SymbolicExpression>();
 		computeModel();
 	}
 
@@ -129,6 +132,105 @@ public class CVC3ModelFinder {
 		out.print("]");
 	}
 
+	// TODO: find some way to share code with CommonSimpifier
+	// rather than copying the code.
+
+	private Iterable<? extends SymbolicType> simplifyTypeSequenceWork(
+			SymbolicTypeSequence sequence) {
+		int size = sequence.numTypes();
+
+		for (int i = 0; i < size; i++) {
+			SymbolicType type = sequence.getType(i);
+			SymbolicType simplifiedType = simplifyType(type);
+
+			if (type != simplifiedType) {
+				SymbolicType[] newTypes = new SymbolicType[size];
+
+				for (int j = 0; j < i; j++)
+					newTypes[j] = sequence.getType(j);
+				newTypes[i] = simplifiedType;
+				for (int j = i + 1; j < size; j++)
+					newTypes[j] = simplifyType(sequence.getType(j));
+				return Arrays.asList(newTypes);
+			}
+		}
+		return sequence;
+	}
+
+	private SymbolicTypeSequence simplifyTypeSequence(
+			SymbolicTypeSequence sequence) {
+		return new CommonSymbolicTypeSequence(
+				simplifyTypeSequenceWork(sequence));
+	}
+
+	private SymbolicType simplifyType(SymbolicType type) {
+		SymbolicTypeKind kind = type.typeKind();
+
+		switch (kind) {
+		case INTEGER:
+		case REAL:
+		case BOOLEAN:
+			return type;
+		case ARRAY: {
+			SymbolicType oldElementType = ((SymbolicArrayType) type)
+					.elementType();
+			SymbolicType newElementType = simplifyType(oldElementType);
+
+			if (type instanceof SymbolicCompleteArrayType) {
+				NumericExpression oldExtent = ((SymbolicCompleteArrayType) type)
+						.extent();
+
+				if (universe.extractNumber(oldExtent) != null)
+					return oldElementType == newElementType ? type : universe
+							.arrayType(newElementType, oldExtent);
+				else {
+					NumericExpression newExtent = (NumericExpression) backTranslate(
+							vc.simplify(prover.translate(oldExtent)),
+							oldExtent.type());
+
+					return universe.arrayType(newElementType, newExtent);
+				}
+			}
+			return oldElementType == newElementType ? type : universe
+					.arrayType(newElementType);
+		}
+		case FUNCTION: {
+			SymbolicFunctionType functionType = (SymbolicFunctionType) type;
+			SymbolicTypeSequence inputs = functionType.inputTypes();
+			SymbolicTypeSequence simplifiedInputs = simplifyTypeSequence(inputs);
+			SymbolicType output = functionType.outputType();
+			SymbolicType simplifiedOutput = simplifyType(output);
+
+			if (inputs != simplifiedInputs || output != simplifiedOutput)
+				return universe
+						.functionType(simplifiedInputs, simplifiedOutput);
+			return type;
+		}
+		case TUPLE: {
+			SymbolicTypeSequence sequence = ((SymbolicTupleType) type)
+					.sequence();
+			SymbolicTypeSequence simplifiedSequence = simplifyTypeSequence(sequence);
+
+			if (simplifiedSequence != sequence)
+				return universe.tupleType(((SymbolicTupleType) type).name(),
+						simplifiedSequence);
+			return type;
+		}
+		case UNION: {
+			SymbolicTypeSequence sequence = ((SymbolicUnionType) type)
+					.sequence();
+			SymbolicTypeSequence simplifiedSequence = simplifyTypeSequence(sequence);
+
+			if (simplifiedSequence != sequence)
+				return universe.unionType(((SymbolicUnionType) type).name(),
+						simplifiedSequence);
+			return type;
+		}
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+	}
+
 	private SymbolicType typeOf(Expr expr) {
 		if (expr.isVar()) {
 			SymbolicConstant x = varMap.get(expr);
@@ -183,12 +285,12 @@ public class CVC3ModelFinder {
 				"Unable to compute type of CVC3 expression: " + expr);
 	}
 
-	private NumericExpression backTranslateRational(Expr expr) {
+	private NumericExpression backTranslateRational(Expr expr, SymbolicType type) {
 		Rational rational = expr.getRational();
 		NumberFactory numberFactory = universe.numberFactory();
 		NumericExpression result;
 
-		if (rational.isInteger()) {
+		if (type.isInteger()) {
 			try {
 				result = universe.integer(rational.getInteger());
 			} catch (Cvc3Exception e) {
@@ -222,6 +324,84 @@ public class CVC3ModelFinder {
 				+ "Saw: " + expr);
 	}
 
+	private SymbolicExpression backTranslateArrayLiteral(Expr expr, int length,
+			SymbolicType elementType) {
+		LinkedList<SymbolicExpression> elements = new LinkedList<SymbolicExpression>();
+
+		for (int i = 0; i < length; i++) {
+			Expr indexExpr = vc.ratExpr(i);
+			Expr elementExpr = vc.readExpr(expr, indexExpr);
+			SymbolicExpression element;
+
+			elementExpr = vc.simplify(elementExpr);
+			element = backTranslate(elementExpr, elementType);
+			if (element == null)
+				// element = defaultValue(elementType);
+				throw new SARLInternalException("Unable to back translate: "
+						+ elementExpr);
+			elements.add(element);
+		}
+		return universe.array(elementType, elements);
+	}
+
+	private SymbolicExpression backTranslateArrayLiteral(Expr expr,
+			SymbolicType type) {
+		if (type instanceof SymbolicCompleteArrayType) {
+			SymbolicCompleteArrayType arrayType = (SymbolicCompleteArrayType) type;
+			NumericExpression extent = arrayType.extent();
+			IntegerNumber extentNumber = (IntegerNumber) universe
+					.extractNumber(extent);
+			int length;
+
+			// TODO need to get concrete value for extent...
+
+			if (extentNumber == null)
+				throw new SARLInternalException(
+						"Array type extent not concrete:\n" + "Expr: " + expr
+								+ "\nType: " + type);
+			length = extentNumber.intValue();
+			return backTranslateArrayLiteral(expr, length,
+					arrayType.elementType());
+		}
+		throw new SARLInternalException(
+				"Unable to back translate array expression:\n" + "Expr: "
+						+ expr + "\nType: " + type);
+	}
+
+	private SymbolicExpression backTranslateTuple(Expr expr, SymbolicType type) {
+		if (type instanceof SymbolicArrayType) {
+			// component 0 is length, 1 is array
+			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
+			Expr lengthExpr = expr.getChild(0);
+			Expr arrayExpr = expr.getChild(1);
+			int length;
+
+			if (lengthExpr.isRational())
+				length = lengthExpr.getRational().getInteger();
+			else
+				throw new SARLInternalException(
+						"Expected constant in component 0: " + expr);
+			if (arrayExpr.isArrayLiteral())
+				return backTranslateArrayLiteral(arrayExpr, length, elementType);
+			else {
+				SymbolicExpression result = defaultValue(type);
+
+				result = setArrayElement(result, length - 1,
+						defaultValue(elementType));
+				return result;
+			}
+		} else {
+			LinkedList<SymbolicExpression> components = new LinkedList<SymbolicExpression>();
+			SymbolicTupleType tupleType = (SymbolicTupleType) type;
+			SymbolicTypeSequence sequence = tupleType.sequence();
+			Iterator<SymbolicType> typeIter = sequence.iterator();
+
+			for (Object child : expr.getChildren())
+				components.add(backTranslate((Expr) child, typeIter.next()));
+			return universe.tuple(tupleType, components);
+		}
+	}
+
 	/**
 	 * Translates a CVC3 concrete expression to a concrete SARL symbolic
 	 * expression. Useful for obtaining a model when a counterexample is found.
@@ -230,79 +410,20 @@ public class CVC3ModelFinder {
 	 *            a CVC3 concrete expression
 	 * @return translation back to SARL SymbolicExpression
 	 */
-	private SymbolicExpression backTranslate(Expr expr) {
+	// add type here
+	private SymbolicExpression backTranslate(Expr expr, SymbolicType type) {
 		// TODO
 		// concrete element of unions: selectExpr, consExpr
 		// APPLY: application of function symbols to arguments
 		if (expr.isRational())
-			return backTranslateRational(expr);
+			return backTranslateRational(expr, type);
 		if (expr.isBooleanConst())
 			return backTranslateBoolean(expr);
+		if (expr.isArrayLiteral())
+			return backTranslateArrayLiteral(expr, type);
+		if ("_TUPLE".equals(expr.getKind()))
+			return backTranslateTuple(expr, type);
 		return null;
-	}
-
-	private SymbolicExpression backTranslateComposite(Expr expr,
-			SymbolicType type) {
-		if (expr.isArrayLiteral()) {
-			// array as function
-			// create array lambda expression?
-			throw new SARLInternalException(
-					"Array literal back translation not yet implemented");
-		}
-		if ("_TUPLE".equals(expr.getKind())) {
-			if (type instanceof SymbolicArrayType) {
-				// component 0 is length, 1 is array
-				SymbolicType elementType = ((SymbolicArrayType) type)
-						.elementType();
-				Expr lengthExpr = expr.getChild(0);
-				Expr arrayExpr = expr.getChild(1);
-				int length;
-
-				if (lengthExpr.isRational())
-					length = lengthExpr.getRational().getInteger();
-				else
-					throw new SARLInternalException(
-							"Expected constant in component 0: " + expr);
-				if (arrayExpr.isArrayLiteral()) {
-					LinkedList<SymbolicExpression> elements = new LinkedList<SymbolicExpression>();
-
-					for (int i = 0; i < length; i++) {
-						Expr indexExpr = vc.ratExpr(i);
-						Expr elementExpr = vc.readExpr(arrayExpr, indexExpr);
-						SymbolicExpression element;
-
-						elementExpr = vc.simplify(elementExpr);
-						element = backTranslateComposite(elementExpr,
-								elementType);
-						if (element == null)
-							// element = defaultValue(elementType);
-							throw new SARLInternalException(
-									"Unable to back translate: " + elementExpr);
-						elements.add(element);
-					}
-					return universe.array(elementType, elements);
-				} else {
-					SymbolicExpression result = defaultValue(type);
-
-					result = setArrayElement(result, length - 1,
-							defaultValue(elementType));
-					return result;
-				}
-				// throw new SARLInternalException(
-				// "Unable to back translate array: " + arrayExpr);
-			} else {
-				LinkedList<SymbolicExpression> components = new LinkedList<SymbolicExpression>();
-				SymbolicTupleType tupleType = (SymbolicTupleType) type;
-				SymbolicTypeSequence sequence = tupleType.sequence();
-				Iterator<SymbolicType> typeIter = sequence.iterator();
-
-				for (Object child : expr.getChildren())
-					components.add(backTranslateComposite((Expr) child,
-							typeIter.next()));
-				return universe.tuple(tupleType, components);
-			}
-		}
-		return backTranslate(expr);
 	}
 
 	/**
@@ -535,11 +656,6 @@ public class CVC3ModelFinder {
 		} else
 			throw new SARLInternalException(
 					"Function models not yet implemented");
-		// key = Expr[(a).1[0], type=INT, kind=_READ: Expr[(a).1,
-		// type=(ARRAY INT OF INT), kind=_APPLY, op=Op[Op(125 (_TUPLE_SELECT
-		// 1)), kind = _TUPLE_SELECT: Expr[1, type=INT,
-		// kind=_RATIONAL_EXPR]]: Expr[a, type=[INT, (ARRAY INT OF INT)],
-		// kind=_UCONST]], Expr[0, type=INT, kind=_RATIONAL_EXPR]]
 	}
 
 	/**
@@ -562,6 +678,31 @@ public class CVC3ModelFinder {
 					+ expr);
 	}
 
+	/**
+	 * Computes the model map. A big part of the problem is figuring out what a
+	 * CVC3 model is, in the absence of any specification. Here are some
+	 * examples of what can occur in a CVC3 model:
+	 * 
+	 * <pre>
+	 * key = Expr[a, type=[INT, (ARRAY INT OF INT)], kind=_UCONST]
+	 * 
+	 * value = Expr[(-1, (ARRAY (arr_var: INT): -1)), type=[INT, (ARRAY
+	 *   INT OF INT)], kind=_TUPLE: Expr[-1, type=INT,
+	 *   kind=_RATIONAL_EXPR], Expr[(ARRAY (arr_var: INT): -1),
+	 *   type=(ARRAY INT OF INT), kind=_ARRAY_LITERAL]]
+	 *   
+	 * key = Expr[(a).1[0], type=INT, kind=_READ: Expr[(a).1,
+	 * 		 type=(ARRAY INT OF INT), kind=_APPLY, op=Op[Op(125 (_TUPLE_SELECT
+	 * 		 1)), kind = _TUPLE_SELECT: Expr[1, type=INT,
+	 * 		 kind=_RATIONAL_EXPR]]: Expr[a, type=[INT, (ARRAY INT OF INT)],
+	 * 		 kind=_UCONST]], Expr[0, type=INT, kind=_RATIONAL_EXPR]]
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * </pre>
+	 */
 	private void computeModel() {
 		for (Entry<?, ?> entry : cvcModel.entrySet()) {
 			Expr key = (Expr) entry.getKey();
@@ -578,27 +719,7 @@ public class CVC3ModelFinder {
 				out.println();
 				out.flush();
 			}
-			// problems: sarlValue can be any kind of value, not just
-			// constant. Problem CVC3 has no idea about the relation between
-			// length and array references. Need to tell CVC3 that every
-			// array references is within bound?
-
-			// need to translate special case where lhs is array
-			// of incomplete type and rhs is tuple (int, array).
-			// hence need to back translate array expressions which
-			// are like functions of one parameter (arr_var: INT)
-			// and return a value. There is a kind called ARRAY_LITERAL
-
-			// key = Expr[a, type=[INT, (ARRAY INT OF INT)], kind=_UCONST]
-
-			// value = Expr[(-1, (ARRAY (arr_var: INT): -1)), type=[INT, (ARRAY
-			// INT OF INT)], kind=_TUPLE: Expr[-1, type=INT,
-			// kind=_RATIONAL_EXPR], Expr[(ARRAY (arr_var: INT): -1),
-			// type=(ARRAY INT OF INT), kind=_ARRAY_LITERAL]]
-
-			sarlValue = backTranslate(value);
-			if (sarlValue == null)
-				sarlValue = backTranslateComposite(value, typeOf(key));
+			sarlValue = backTranslate(value, simplifyType(typeOf(key)));
 			if (sarlValue == null)
 				throw new SARLInternalException("Unable to back translate "
 						+ value);
@@ -609,5 +730,4 @@ public class CVC3ModelFinder {
 	public Map<SymbolicConstant, SymbolicExpression> getModel() {
 		return model;
 	}
-
 }
