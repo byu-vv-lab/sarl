@@ -18,10 +18,14 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
-// TODO: why not have one prover per assumtion (like Simplifier)?
-// reuse that assumption.  Use push ahd pop.
+// first look in expressionMap, if you find it there, use it.
+// otherwise, look in collisionMap to see if there is already
+// a variable with that name. If there is, use that index
+// to create new cvc name and increment index. If there is not,
+// create entry with index 1. Then add to expression map as usual.
+
 import java.io.PrintStream;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,7 @@ import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -45,9 +50,6 @@ import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
-import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult;
-import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -58,6 +60,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.prove.Prove;
+import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
+import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
@@ -71,10 +76,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * The symbolic universe used for managing symbolic expressions. Initialized
 	 * by constructor and never changes.
 	 */
-	private SymbolicUniverse universe;
-
-	/** The number of calls to the valid method for this object. */
-	private int numValidCalls = 0;
+	private ExtendedUniverse universe;
 
 	/**
 	 * Print the queries and results each time valid is called? Initialized by
@@ -86,36 +88,34 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * The printwriter used to print the queries and results. Initialized by
 	 * constructor.
 	 */
-	private PrintStream out;
+	private PrintStream out = null;
 
 	/** The CVC3 object used to check queries. Set in method reset(). */
-	private ValidityChecker vc = null;
-
-	/**
-	 * Number of bound variables created since last initialization. It seems
-	 * CVC3 wants a String "uid" (unique identifier?) to create a bound
-	 * variable, in addition to the usual name of the variable. This counter is
-	 * used to construct the uid. Set in method reset().
-	 */
-	private int boundVariableCounter;
-
-	/**
-	 * Counter for a pool of auxiliary (ordinary) variables named "_xi". Set in
-	 * method reset().
-	 */
-	private int auxVariableCounter;
+	private ValidityChecker vc = ValidityChecker.create();
 
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC3 type. Set in method
 	 * reset().
 	 */
-	private Map<SymbolicType, Type> typeMap;
+	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
 
 	/**
 	 * Mapping of SARL symbolic expression to corresponding CVC3 expresssion.
 	 * Set in method reset().
 	 */
-	private Map<SymbolicExpression, Expr> expressionMap;
+	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
+
+	/**
+	 * Map from the root name (e.g., name of a symbolic constant) to the number
+	 * of distinct CVC3 variables declared with that root. Since in CVC3 the
+	 * names must be unique, the CVC3 name will be modified by appending the
+	 * string "'n" where n is the value from this map, to all but the first
+	 * instance of the root. I.e., the CVC3 names corresponding to "x" will be:
+	 * x, x'1, x'2, ...
+	 * 
+	 * The names are for symbolic constants of all kinds, including functions.
+	 */
+	private Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
 
 	/**
 	 * Map from SARL expressions of funcional type to corresponding CVC3
@@ -124,20 +124,20 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
 	 * separate map is needed. Set in method reset().
 	 */
-	private Map<SymbolicExpression, Op> functionMap;
+	private Map<SymbolicExpression, Op> functionMap = new HashMap<SymbolicExpression, Op>();
 
 	/**
 	 * Mapping of CVC3 variables to their corresponding symbolic constants.
 	 * Needed in order to construct model when there is a counter example. Set
 	 */
-	private Map<Expr, SymbolicConstant> varMap;
+	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
 
 	/**
 	 * Mapping of CVC3 "Op"s to their corresponding symbolic constants. A CVC3
 	 * "Op" is used to represent a function. In SARL, a function is represented
 	 * by a symbolic constant of function type. This is used for finding models.
 	 */
-	private Map<Op, SymbolicConstant> opMap;
+	private Map<Op, SymbolicConstant> opMap = new HashMap<Op, SymbolicConstant>();
 
 	/**
 	 * Mapping of integer division expressions. Since integer division and
@@ -157,7 +157,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * corresponding to the quotient, the second the CVC3 expression
 	 * corresponding to the modulus.
 	 */
-	private Map<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>> integerDivisionMap;
+	private Map<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>> integerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
+
+	private BooleanExpression context;
+
+	private Expr cvcAssumption;
 
 	/**
 	 * Constructs new CVC3 theorem prover with given symbolic universe.
@@ -169,12 +173,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @param showProverQueries
 	 *            print the queries?
 	 */
-	CVC3TheoremProver(SymbolicUniverse universe) {
-		if (universe == null) {
-			throw new RuntimeException("Null symbolic universe.");
-		} else {
-			this.universe = universe;
-		}
+	CVC3TheoremProver(ExtendedUniverse universe, BooleanExpression context) {
+		assert universe != null;
+		assert context != null;
+		this.universe = universe;
+		this.context = context;
+		cvcAssumption = translate(context);
+		vc.assertFormula(cvcAssumption);
 	}
 
 	private <E> List<E> newSingletonList(E element) {
@@ -184,41 +189,52 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	private Expr newAuxVariable(Type type) {
-		Expr result = vc.varExpr("_x" + auxVariableCounter, type);
+	private String newCvcName(String root) {
+		Integer count = nameCountMap.get(root);
 
-		auxVariableCounter++;
-		return result;
+		if (count == null) {
+			nameCountMap.put(root, 1);
+			return root;
+		} else {
+			String result = root + "'" + count;
+
+			nameCountMap.put(root, nameCountMap.put(root, count + 1));
+			return result;
+		}
+	}
+
+	private Expr newAuxVariable(Type type) {
+		return vc.varExpr(newCvcName("_x"), type);
 	}
 
 	/**
-	 * Returns a new bound variable with given name and type. The "UID" is the
-	 * string representation of the integer boundVariableCounter, which is
-	 * incremented.
+	 * Returns a new bound variable with given root name and type. The name of
+	 * the variable will be the concatenation of root with a string of the form
+	 * "'n".
 	 * 
-	 * @param name
-	 *            name to give to this variable
+	 * @param root
+	 *            root of name to give to this variable
 	 * @param type
 	 *            CVC3 type of this variable
 	 * @return the new bound variable
 	 */
-	private Expr newBoundVariable(String name, Type type) {
-		Expr result = vc.boundVarExpr(name,
-				String.valueOf(this.boundVariableCounter), type);
+	private Expr newBoundVariable(String root, Type type) {
+		String name = newCvcName(root);
+		Expr result = vc.boundVarExpr(name, name, type);
 
-		boundVariableCounter++;
 		return result;
 	}
 
 	/**
-	 * Returns new bound variable with a generic name "_i"+boundVariableCounter.
+	 * Returns new bound variable with a generic name "i" followed by a
+	 * distiguishing sufix.
 	 * 
 	 * @param type
 	 *            the type of the new bound variable
 	 * @return the new bound variable
 	 */
 	private Expr newBoundVariable(Type type) {
-		return newBoundVariable("_i" + boundVariableCounter, type);
+		return newBoundVariable("i", type);
 	}
 
 	/**
@@ -282,6 +298,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates a symbolic expression of functional type. In CVC3, functions
 	 * have type Op; expressions have type Expr.
+	 * 
 	 */
 	private Op translateFunction(SymbolicExpression expr) {
 		Op result = functionMap.get(expr);
@@ -289,11 +306,14 @@ public class CVC3TheoremProver implements TheoremProver {
 		if (result != null)
 			return result;
 		switch (expr.operator()) {
-		case SYMBOLIC_CONSTANT:
-			result = vc.createOp(((SymbolicConstant) expr).name().getString(),
-					this.translateType(expr.type()));
+		case SYMBOLIC_CONSTANT: {
+			String name = newCvcName(((SymbolicConstant) expr).name()
+					.getString());
+
+			result = vc.createOp(name, this.translateType(expr.type()));
 			opMap.put(result, (SymbolicConstant) expr);
 			break;
+		}
 		case LAMBDA:
 			result = vc.lambdaExpr(
 					newSingletonList(translateSymbolicConstant(
@@ -353,15 +373,20 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * Translates a symbolic constant to CVC3 variable. Special handling is
 	 * required if the symbolic constant is used as a bound variable in a
 	 * quantified (forall, exists) expression.
+	 * 
+	 * Precondition: ?
 	 */
 	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
 			boolean isBoundVariable) throws Cvc3Exception {
 		Type type = translateType(symbolicConstant.type());
-		String name = symbolicConstant.name().getString();
-		Expr result = isBoundVariable ? newBoundVariable(name, type) : vc
-				.varExpr(name, type);
+		String root = symbolicConstant.name().getString();
+		Expr result;
 
-		// TODO: only do this if you need a model...
+		if (isBoundVariable) {
+			result = newBoundVariable(root, type);
+		} else {
+			result = vc.varExpr(newCvcName(root), type);
+		}
 		varMap.put(result, symbolicConstant);
 		return result;
 	}
@@ -1006,57 +1031,28 @@ public class CVC3TheoremProver implements TheoremProver {
 		return showProverQueries;
 	}
 
-	/**
-	 * Resets all data structures to initial state. The CVC3 validity checker is
-	 * deleted and a new one created to replace it. All caches are cleared.
-	 */
-	@Override
-	public void reset() {
-		try {
-			if (vc != null)
-				vc.delete();
-			vc = ValidityChecker.create();
-		} catch (Cvc3Exception e) {
-			e.printStackTrace();
-			throw new SARLInternalException(e.toString());
-		}
-		boundVariableCounter = 0;
-		auxVariableCounter = 0;
-		typeMap = new LinkedHashMap<SymbolicType, Type>();
-		expressionMap = new LinkedHashMap<SymbolicExpression, Expr>();
-		functionMap = new LinkedHashMap<SymbolicExpression, Op>();
-		integerDivisionMap = new LinkedHashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
-		varMap = new LinkedHashMap<Expr, SymbolicConstant>();
-		opMap = new LinkedHashMap<Op, SymbolicConstant>();
-	}
-
-	private QueryResult queryCVC3(BooleanExpression symbolicAssumption,
-			BooleanExpression symbolicPredicate) {
+	private QueryResult queryCVC3(BooleanExpression symbolicPredicate) {
 		QueryResult result = null;
+		int numValidCalls = -1;
 
-		numValidCalls++;
-		// Because canonicalization can re-define symbolic
-		// constants with new types, need to start afresh:
-		reset();
+		universe.incrementProverValidCount();
 		if (showProverQueries) {
+			numValidCalls = universe.numValidCalls();
 			out.println();
-			out.print("SARL assumption " + numValidCalls + ": ");
-			out.println(symbolicAssumption);
+			out.print("SARL context " + numValidCalls + ": ");
+			out.println(context);
 			out.print("SARL predicate  " + numValidCalls + ": ");
 			out.println(symbolicPredicate);
 			out.flush();
 		}
 		try {
-			Expr cvcAssumption, cvcPredicate;
+			Expr cvcPredicate;
 
 			this.vc.push();
-			cvcAssumption = translate(symbolicAssumption);
-			vc.assertFormula(cvcAssumption);
 			cvcPredicate = translate(symbolicPredicate);
 			if (showProverQueries) {
 				out.println();
 				out.print("CVC3 assumptions " + numValidCalls + ": ");
-				// getUserAssumptions() is also possible:
 				for (Object o : vc.getUserAssumptions()) {
 					out.println(o);
 				}
@@ -1082,31 +1078,31 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 	}
 
-	private ResultType translateResult(QueryResult result) {
+	private ValidityResult translateResult(QueryResult result) {
 		if (showProverQueries) {
-			out.println("CVC3 result      " + numValidCalls + ": " + result);
+			out.println("CVC3 result      " + universe.numValidCalls() + ": "
+					+ result);
 			out.flush();
 		}
 		// unfortuantely QueryResult is not an enum...
 		if (result.equals(QueryResult.VALID)) {
-			return ResultType.YES;
+			return Prove.RESULT_YES;
 		} else if (result.equals(QueryResult.INVALID)) {
-			return ResultType.NO;
+			return Prove.RESULT_NO;
 		} else if (result.equals(QueryResult.UNKNOWN)) {
-			return ResultType.MAYBE;
+			return Prove.RESULT_MAYBE;
 		} else if (result.equals(QueryResult.ABORT)) {
 			out.println("Warning: Query aborted by CVC3.");
-			return ResultType.MAYBE;
+			return Prove.RESULT_MAYBE;
 		} else {
 			out.println("Warning: Unknown CVC3 query result: " + result);
-			return ResultType.MAYBE;
+			return Prove.RESULT_MAYBE;
 		}
 	}
 
 	@Override
-	public ResultType valid(BooleanExpression symbolicAssumption,
-			BooleanExpression symbolicPredicate) {
-		QueryResult result = queryCVC3(symbolicAssumption, symbolicPredicate);
+	public ValidityResult valid(BooleanExpression symbolicPredicate) {
+		QueryResult result = queryCVC3(symbolicPredicate);
 
 		popCVC3();
 		return translateResult(result);
@@ -1123,34 +1119,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	@Override
-	public void close() {
-		try {
-			if (vc != null)
-				this.vc.delete();
-		} catch (Cvc3Exception e) {
-			throw new SARLInternalException(
-					"CVC3: could not delete validity checker:\n" + e);
-		}
-	}
-
-	@Override
-	public int numInternalValidCalls() {
-		return numValidCalls;
-	}
-
-	@Override
-	public int numValidCalls() {
-		return numValidCalls;
-	}
-
-	@Override
 	public void setOutput(PrintStream out) {
 		this.out = out;
 		showProverQueries = out != null;
 	}
 
 	/**
-	 * In progres. Some notes from comments from CVC3 source for function
+	 * In progress. Some notes from comments from CVC3 source for function
 	 * vc_getConcreteModel:
 	 * 
 	 * "Will assign concrete values to all user created variables. This function
@@ -1159,22 +1134,31 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * when finished with it by calling vc_deleteVector."
 	 */
 	@Override
-	public ValidityResult validOrModel(BooleanExpression assumption,
-			BooleanExpression predicate) {
-		QueryResult cvcResult = queryCVC3(assumption, predicate);
-		ResultType resultType = translateResult(cvcResult);
-		ValidityResult result;
+	public ValidityResult validOrModel(BooleanExpression predicate) {
+		QueryResult cvcResult = queryCVC3(predicate);
 
 		if (cvcResult.equals(QueryResult.INVALID)) {
 			Map<?, ?> cvcModel = vc.getConcreteModel();
 			CVC3ModelFinder finder = new CVC3ModelFinder(this, cvcModel);
 			Map<SymbolicConstant, SymbolicExpression> model = finder.getModel();
 
-			result = new ValidityResult(resultType, model);
-		} else
-			result = new ValidityResult(resultType);
+			return Prove.modelResult(model);
+		}
 		popCVC3();
-		return result;
+		return translateResult(cvcResult);
+	}
+
+	@Override
+	protected void finalize() {
+		// apparently this is necessary before the finalize
+		// method in vc is invoked...
+		try {
+			if (vc != null)
+				this.vc.delete();
+		} catch (Cvc3Exception e) {
+			throw new SARLInternalException(
+					"CVC3: could not delete validity checker:\n" + e);
+		}
 	}
 
 }

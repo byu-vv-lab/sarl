@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
@@ -36,7 +36,6 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -276,19 +275,36 @@ public interface SymbolicUniverse {
 			SymbolicObject[] arguments);
 
 	/**
-	 * Returns a simplifier object for the given assumption. The simplifier
-	 * provides a method that takes a symbolic expression and returns an
-	 * equivalent simplified expression, assuming the assumption holds. The
-	 * assumption is any boolean-valued symbolic expression in this universe.
+	 * Returns a Reasoner for the given context. A Reasoner provides
+	 * simplification and reasoning services. The context is the boolean
+	 * expression assumed to hold by the reasoner. The Reasoner can be used to
+	 * determine if a boolean predicate is valid; it may use an external theorem
+	 * prover to assist in this task.
+	 * 
+	 * @param context
+	 *            the boolean expression assumed to hold by the Reasoner
+	 * @return a Reasoner with the given context
 	 */
-	Simplifier simplifier(BooleanExpression assumption);
+	Reasoner reasoner(BooleanExpression context);
 
 	/**
-	 * Returns the theorem prover associated to this universe.
+	 * The total number of calls made to methods
+	 * {@link Reasoner#valid(BooleanExpression)} and
+	 * {@link Reasoner#validOrModel(BooleanExpression)}.
 	 * 
-	 * @return the theorem prover
+	 * @return the total number of validity calls
 	 */
-	TheoremProver prover();
+	int numValidCalls();
+
+	/**
+	 * The total number of calls made to the validity method in the underlying
+	 * automated theorem prover. This is general smaller than that returned by
+	 * {@link numValidCalls}, not every valid call requires a call to the
+	 * prover.
+	 * 
+	 * @return the total number of theore prover validity calls
+	 */
+	int numProverValidCalls();
 
 	// Symbolic primitive objects: ints, boolean, reals, strings
 	// Note: these are not symbolic expressions, just symbolic objects!

@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.SARL;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -18,9 +20,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
-import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult;
-import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -32,8 +31,6 @@ public class FindModelTest {
 	private SymbolicRealType realType;
 
 	private SymbolicIntegerType intType;
-
-	TheoremProver prover;
 
 	private NumericSymbolicConstant x;
 
@@ -50,8 +47,6 @@ public class FindModelTest {
 		intType = universe.integerType();
 		x = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("X"), realType);
-		prover = universe.prover();
-		prover.setOutput(System.out);
 		t = universe.trueExpression();
 		a = universe.symbolicConstant(universe.stringObject("a"),
 				universe.arrayType(intType));
@@ -64,13 +59,15 @@ public class FindModelTest {
 	@Test
 	public void findX() {
 		BooleanExpression p = universe.lessThanEquals(universe.zeroReal(), x);
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		Map<SymbolicConstant, SymbolicExpression> model;
 		NumericExpression value;
 		Number number;
 
 		assertEquals(ResultType.NO, result.getResultType());
-		model = result.getModel();
+		assertTrue(result instanceof ModelResult);
+		model = ((ModelResult) result).getModel();
 		assertTrue(model != null);
 		assertEquals(1, model.size());
 		value = (NumericExpression) model.get(x);
@@ -88,12 +85,11 @@ public class FindModelTest {
 				.lessThan(x, universe.zeroReal());
 		BooleanExpression predicate = universe.lessThanEquals(x,
 				universe.rational(1));
-		ValidityResult result = prover.validOrModel(assumption, predicate);
-		Map<SymbolicConstant, SymbolicExpression> model;
+		Reasoner reasoner = universe.reasoner(assumption);
+		ValidityResult result = reasoner.validOrModel(predicate);
 
 		assertEquals(ResultType.YES, result.getResultType());
-		model = result.getModel();
-		assertTrue(model == null);
+		assertFalse(result instanceof ModelResult);
 	}
 
 	@Test
@@ -101,13 +97,14 @@ public class FindModelTest {
 		NumericExpression zero = universe.zeroInt();
 		BooleanExpression p = universe.equals(zero,
 				(NumericExpression) universe.arrayRead(a, zero));
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		Map<SymbolicConstant, SymbolicExpression> model;
 		SymbolicExpression value;
 		Number number;
 
 		assertEquals(ResultType.NO, result.getResultType());
-		model = result.getModel();
+		model = ((ModelResult) result).getModel();
 		assertTrue(model != null);
 		value = model.get(a);
 		out.println("array1: value = " + value);
@@ -125,12 +122,13 @@ public class FindModelTest {
 	public void array2() {
 		BooleanExpression p = universe.lessThan(universe.length(a),
 				universe.integer(5));
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		Map<SymbolicConstant, SymbolicExpression> model;
 		SymbolicExpression value;
 
 		assertEquals(ResultType.NO, result.getResultType());
-		model = result.getModel();
+		model = ((ModelResult) result).getModel();
 		assertTrue(model != null);
 		value = model.get(a);
 		out.println("array2: value = " + value);
@@ -160,13 +158,14 @@ public class FindModelTest {
 				universe.equals(a0, a1),
 				universe.or(universe.equals(zero, a0),
 						universe.equals(zero, a1)));
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		Map<SymbolicConstant, SymbolicExpression> model;
 		SymbolicExpression value;
 		Number v0, v1;
 
 		assertEquals(ResultType.NO, result.getResultType());
-		model = result.getModel();
+		model = ((ModelResult) result).getModel();
 		assertTrue(model != null);
 		value = model.get(a);
 		out.println("array3: value = " + value);
@@ -191,7 +190,8 @@ public class FindModelTest {
 						universe.realType());
 		BooleanExpression p = universe.neq(universe.multiply(x, x),
 				universe.rational(2));
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		ResultType resultType = result.getResultType();
 
 		assertTrue(ResultType.NO.equals(resultType)
@@ -208,12 +208,13 @@ public class FindModelTest {
 						universe.realType());
 		BooleanExpression p = universe.neq(universe.multiply(x, x),
 				universe.rational(4));
-		ValidityResult result = prover.validOrModel(t, p);
+		Reasoner reasoner = universe.reasoner(t);
+		ValidityResult result = reasoner.validOrModel(p);
 		ResultType resultType = result.getResultType();
 		SymbolicExpression value;
 
 		assertEquals(ResultType.NO, resultType);
-		value = result.getModel().get(x);
+		value = ((ModelResult) result).getModel().get(x);
 		out.println("sqrt4: value = " + value);
 		assertTrue(universe.rational(2).equals(value)
 				|| universe.rational(-2).equals(value));
@@ -232,7 +233,8 @@ public class FindModelTest {
 		BooleanExpression assumption = universe.lessThan(universe.zeroInt(), N);
 		BooleanExpression predicate = universe.equals(universe.zeroInt(),
 				universe.arrayRead(b, universe.zeroInt()));
-		ValidityResult result = prover.validOrModel(assumption, predicate);
+		Reasoner reasoner = universe.reasoner(assumption);
+		ModelResult result = (ModelResult) reasoner.validOrModel(predicate);
 		ResultType resultType = result.getResultType();
 		NumericExpression N_val, b_val0;
 		SymbolicExpression b_val;

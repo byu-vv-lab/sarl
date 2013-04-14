@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.Simplifier;
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -62,10 +62,10 @@ public class IdealSimplifyTest {
 	 */
 	@Test
 	public void simplifyTrivial() {
-		Simplifier simplifier = universe.simplifier(universe.bool(true));
+		Reasoner reasoner = universe.reasoner(universe.bool(true));
 
-		assertEquals(x, simplifier.apply(x));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(x, reasoner.simplify(x));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -74,10 +74,10 @@ public class IdealSimplifyTest {
 	@Test
 	public void simplifyConstant() {
 		BooleanExpression assumption = universe.equals(x, three);
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(three, simplifier.apply(x));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(three, reasoner.simplify(x));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -88,10 +88,10 @@ public class IdealSimplifyTest {
 		BooleanExpression assumption = universe.and(
 				universe.lessThanEquals(x, three),
 				universe.lessThanEquals(three, x));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(three, simplifier.apply(x));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(three, reasoner.simplify(x));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -102,10 +102,10 @@ public class IdealSimplifyTest {
 		BooleanExpression assumption = universe.and(
 				universe.lessThan(u, universe.integer(3)),
 				universe.lessThanEquals(universe.integer(2), u));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(universe.integer(2), simplifier.apply(u));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(universe.integer(2), reasoner.simplify(u));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -116,10 +116,10 @@ public class IdealSimplifyTest {
 		BooleanExpression assumption = universe.and(
 				universe.lessThan(u, universe.integer(3)),
 				universe.lessThan(universe.integer(1), u));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(universe.integer(2), simplifier.apply(u));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(universe.integer(2), reasoner.simplify(u));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -130,10 +130,10 @@ public class IdealSimplifyTest {
 		BooleanExpression assumption = universe.and(
 				universe.lessThan(u, universe.integer(3)),
 				universe.lessThan(universe.integer(2), u));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(u, simplifier.apply(u));
-		assertEquals(falseExpr, simplifier.newAssumption());
+		assertEquals(u, reasoner.simplify(u));
+		assertEquals(falseExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -143,10 +143,10 @@ public class IdealSimplifyTest {
 	public void noSimplify() {
 		BooleanExpression assumption = universe.and(
 				universe.lessThan(x, three), universe.lessThan(two, x));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(x, simplifier.apply(x));
-		assertEquals(assumption, simplifier.newAssumption());
+		assertEquals(x, reasoner.simplify(x));
+		assertEquals(assumption, reasoner.getReducedContext());
 	}
 
 	/**
@@ -166,10 +166,10 @@ public class IdealSimplifyTest {
 
 		SymbolicExpression read = universe.arrayRead(a, u);
 		BooleanExpression assumption = universe.equals(u, universe.integer(2));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(universe.rational(7.0), simplifier.apply(read));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(universe.rational(7.0), reasoner.simplify(read));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -180,11 +180,11 @@ public class IdealSimplifyTest {
 		BooleanExpression assumption = universe.and(
 				universe.equals(universe.add(x, y), three),
 				universe.equals(universe.subtract(x, y), two));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(universe.rational(5, 2), simplifier.apply(x));
-		assertEquals(universe.rational(1, 2), simplifier.apply(y));
-		assertEquals(trueExpr, simplifier.newAssumption());
+		assertEquals(universe.rational(5, 2), reasoner.simplify(x));
+		assertEquals(universe.rational(1, 2), reasoner.simplify(y));
+		assertEquals(trueExpr, reasoner.getReducedContext());
 	}
 
 	/**
@@ -202,11 +202,11 @@ public class IdealSimplifyTest {
 		SymbolicExpression newAssumption = universe.and(
 				universe.equals(x3, universe.rational(5, 2)),
 				universe.equals(y7, universe.rational(1, 2)));
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
-		assertEquals(universe.rational(5, 2), simplifier.apply(x3));
-		assertEquals(universe.rational(1, 2), simplifier.apply(y7));
-		assertEquals(newAssumption, simplifier.newAssumption());
+		assertEquals(universe.rational(5, 2), reasoner.simplify(x3));
+		assertEquals(universe.rational(1, 2), reasoner.simplify(y7));
+		assertEquals(newAssumption, reasoner.getReducedContext());
 	}
 
 	/**
@@ -217,10 +217,10 @@ public class IdealSimplifyTest {
 		BooleanExpression p0 = universe.lessThan(x, universe.rational(1.0));
 		BooleanExpression p1 = universe.and(p0,
 				universe.lessThan(x, universe.rational(1.5)));
-		Simplifier simplifier = universe.simplifier(p1);
+		Reasoner reasoner = universe.reasoner(p1);
 
-		assertEquals(p0, simplifier.newAssumption());
-		assertEquals(x, simplifier.apply(x));
+		assertEquals(p0, reasoner.getReducedContext());
+		assertEquals(x, reasoner.simplify(x));
 	}
 
 	/**
@@ -230,10 +230,10 @@ public class IdealSimplifyTest {
 	public void simplifyBound1() {
 		NumericExpression one = universe.rational(1.0);
 		BooleanExpression assumption = universe.lessThanEquals(x, one);
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
 		assertEquals(universe.equals(x, one),
-				simplifier.apply(universe.lessThanEquals(one, x)));
+				reasoner.simplify(universe.lessThanEquals(one, x)));
 	}
 
 	/**
@@ -243,10 +243,10 @@ public class IdealSimplifyTest {
 	public void simplifyBound2() {
 		NumericExpression one = universe.rational(1.0);
 		BooleanExpression assumption = universe.lessThanEquals(x, one);
-		Simplifier simplifier = universe.simplifier(assumption);
+		Reasoner reasoner = universe.reasoner(assumption);
 
 		assertEquals(universe.bool(true),
-				simplifier.apply(universe.lessThanEquals(x, one)));
+				reasoner.simplify(universe.lessThanEquals(x, one)));
 	}
 
 	/**
@@ -256,9 +256,9 @@ public class IdealSimplifyTest {
 	public void simplifyIntDivNo() {
 		SymbolicExpression e = universe.multiply(universe.integer(2),
 				universe.divide(u, universe.integer(2)));
-		Simplifier simplifier = universe.simplifier(trueExpr);
+		Reasoner reasoner = universe.reasoner(trueExpr);
 
-		assertEquals(e, simplifier.apply(e));
+		assertEquals(e, reasoner.simplify(e));
 	}
 
 	/**

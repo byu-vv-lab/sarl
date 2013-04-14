@@ -18,17 +18,17 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
+import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class IdealSimplifierFactory implements SimplifierFactory {
 
 	private SimplifierInfo info;
 
 	public IdealSimplifierFactory(IdealFactory idealFactory,
-			SymbolicUniverse universe) {
+			ExtendedUniverse universe) {
 		info = new SimplifierInfo();
 		info.universe = universe;
 		info.affineFactory = new AffineFactory(idealFactory);

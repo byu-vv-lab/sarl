@@ -3,48 +3,46 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.simplify.common;
 
+import java.util.Map;
+
 import edu.udel.cis.vsl.sarl.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
+import edu.udel.cis.vsl.sarl.util.EmptyMap;
 
 public class IdentitySimplifier implements Simplifier {
 
-	private SymbolicUniverse universe;
+	private ExtendedUniverse universe;
 
 	private BooleanExpression assumption;
 
-	public IdentitySimplifier(SymbolicUniverse universe,
+	public IdentitySimplifier(ExtendedUniverse universe,
 			BooleanExpression assumption) {
 		this.universe = universe;
 		this.assumption = assumption;
 	}
 
 	@Override
-	public SymbolicUniverse universe() {
+	public ExtendedUniverse universe() {
 		return universe;
-	}
-
-	@Override
-	public BooleanExpression newAssumption() {
-		return assumption;
 	}
 
 	@Override
@@ -55,6 +53,21 @@ public class IdentitySimplifier implements Simplifier {
 	@Override
 	public Interval assumptionAsInterval(SymbolicConstant symbolicConstant) {
 		return null;
+	}
+
+	@Override
+	public Map<SymbolicConstant, SymbolicExpression> substitutionMap() {
+		return new EmptyMap<SymbolicConstant, SymbolicExpression>();
+	}
+
+	@Override
+	public BooleanExpression getReducedContext() {
+		return assumption;
+	}
+
+	@Override
+	public BooleanExpression getFullContext() {
+		return assumption;
 	}
 
 }

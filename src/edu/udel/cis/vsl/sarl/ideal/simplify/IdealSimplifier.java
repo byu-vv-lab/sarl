@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
@@ -50,19 +50,23 @@ import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
  * @author siegel
  * 
  */
+// TODO: also would like to map symbolic constants that can be solved
+// for in terms of earlier ones to expressions...
 public class IdealSimplifier extends CommonSimplifier {
 
 	private final static boolean debug = false;
 
+	/**
+	 * Object that gathers together references to various objects needed for
+	 * simplification.
+	 */
 	private SimplifierInfo info;
 
 	/**
 	 * The current assumption underlying this simplifier. Initially this is the
 	 * assumption specified at construction, but it can be simplified during
-	 * construction. After construction completes, it does not change. Also, any
-	 * symbolic constant that is determined to have a concrete value is removed
-	 * from this assumption; the concrete value can be obtained from the
-	 * constantMap or booleanMap.
+	 * construction. After construction completes, it does not change. It does
+	 * not include the symbolic constants occurring in the substitutionMap.
 	 */
 	private BooleanExpression assumption;
 
@@ -71,6 +75,18 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * boundMap, booleanMap, and constantMap thrown in.
 	 */
 	private BooleanExpression rawAssumption;
+
+	/**
+	 * Map from symbolic constants to their "solved" values. These symbolic
+	 * constants will be replaced by their corresponding values in all
+	 * expressions simplified by this simplifier.
+	 */
+	private Map<SymbolicConstant, SymbolicExpression> substitutionMap = null;
+
+	/**
+	 * A simplified version of the context, including the substitutions.
+	 */
+	private BooleanExpression fullContext = null;
 
 	/**
 	 * A map that assigns bounds to pseudo primitive factored polynomials.
@@ -90,13 +106,20 @@ public class IdealSimplifier extends CommonSimplifier {
 	 */
 	private Map<Polynomial, Number> constantMap = new HashMap<Polynomial, Number>();
 
-	// TODO: also would like to map symbolic constants that can be solved
-	// for in terms of earlier ones to expressions...
-
+	/**
+	 * Has the interval interpretation of this context been computed?
+	 */
 	private boolean intervalComputed = false;
 
+	/**
+	 * The interpretation of the context as an Interval, or null if it cannot be
+	 * so interpreted.
+	 */
 	private Interval interval = null;
 
+	/**
+	 * The variable bound by the interval.
+	 */
 	private SymbolicConstant intervalVariable = null;
 
 	public IdealSimplifier(SimplifierInfo info, BooleanExpression assumption) {
@@ -125,21 +148,6 @@ public class IdealSimplifier extends CommonSimplifier {
 	private boolean isNumericRelational(SymbolicExpression expression) {
 		return isRelational(expression.operator())
 				&& ((SymbolicExpression) expression.argument(0)).isNumeric();
-	}
-
-	@Override
-	protected SymbolicExpression simplifyExpression(
-			SymbolicExpression expression) {
-		// special handling for:
-		// symbolic constants (booleans, numeric, ...)
-		// numeric expressions (polynomials, ...)
-		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
-		expression = simplifyGenericExpression(expression);
-		if (expression instanceof Polynomial)
-			return simplifyPolynomial((Polynomial) expression);
-		if (isNumericRelational(expression))
-			return simplifyRelational((BooleanExpression) expression);
-		return expression;
 	}
 
 	/**
@@ -413,10 +421,6 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * End of Simplification Routines..................................... *
 	 ***********************************************************************/
 
-	public BooleanExpression newAssumption() {
-		return assumption;
-	}
-
 	/**
 	 * Converts the bound to a boolean expression in canoncial form. Returns
 	 * null if both upper and lower bound are infinite (equivalent to "true").
@@ -487,7 +491,6 @@ public class IdealSimplifier extends CommonSimplifier {
 
 					if (fp instanceof SymbolicConstant) {
 						// symbolic constant: will be entirely eliminated
-						// TODO: also check for cast symbolic constants?
 					} else {
 						BooleanExpression constraint = info.idealFactory
 								.equals(fp, info.idealFactory.constant(entry
@@ -523,21 +526,12 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * be unsatisfiable.
 	 */
 	private boolean extractBounds() {
-		BooleanExpression cnf = assumption;
-
-		if (cnf.operator() == SymbolicOperator.AND) {
-			Iterable<? extends BooleanExpression> clauses = cnf
-					.booleanCollectionArg(0);
-
-			for (BooleanExpression clause : clauses) {
-				if (!extractBoundsOr(clause, boundMap, booleanMap)) {
+		if (assumption.operator() == SymbolicOperator.AND) {
+			for (BooleanExpression clause : assumption.booleanCollectionArg(0))
+				if (!extractBoundsOr(clause, boundMap, booleanMap))
 					return false;
-				}
-			}
-		} else {
-			if (!extractBoundsOr(assumption, boundMap, booleanMap))
-				return false;
-		}
+		} else if (!extractBoundsOr(assumption, boundMap, booleanMap))
+			return false;
 		return updateConstantMap();
 	}
 
@@ -582,7 +576,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		return satisfiable;
 	}
 
-	public void printBoundMap(PrintStream out) {
+	private void printBoundMap(PrintStream out) {
 		out.println("Bounds map:");
 		for (BoundsObject boundObject : boundMap.values()) {
 			out.println(boundObject);
@@ -591,7 +585,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		out.flush();
 	}
 
-	public void printConstantMap(PrintStream out) {
+	private void printConstantMap(PrintStream out) {
 		out.println("Constant map:");
 		for (Entry<Polynomial, Number> entry : constantMap.entrySet()) {
 			out.print(entry.getKey() + " = ");
@@ -601,7 +595,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		out.flush();
 	}
 
-	public void printBooleanMap(PrintStream out) {
+	private void printBooleanMap(PrintStream out) {
 		out.println("Boolean map:");
 		for (Entry<BooleanExpression, Boolean> entry : booleanMap.entrySet()) {
 			out.print(entry.getKey() + " = ");
@@ -876,6 +870,23 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 	}
 
+	// Exported methods.............................................
+
+	@Override
+	protected SymbolicExpression simplifyExpression(
+			SymbolicExpression expression) {
+		// special handling for:
+		// symbolic constants (booleans, numeric, ...)
+		// numeric expressions (polynomials, ...)
+		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
+		expression = simplifyGenericExpression(expression);
+		if (expression instanceof Polynomial)
+			return simplifyPolynomial((Polynomial) expression);
+		if (isNumericRelational(expression))
+			return simplifyRelational((BooleanExpression) expression);
+		return expression;
+	}
+
 	@Override
 	public Interval assumptionAsInterval(SymbolicConstant symbolicConstant) {
 		if (intervalComputed) {
@@ -916,5 +927,51 @@ public class IdealSimplifier extends CommonSimplifier {
 			return interval;
 		}
 		return null;
+	}
+
+	@Override
+	public Map<SymbolicConstant, SymbolicExpression> substitutionMap() {
+		if (substitutionMap == null) {
+			substitutionMap = new HashMap<SymbolicConstant, SymbolicExpression>();
+			for (Entry<Polynomial, Number> entry : constantMap.entrySet()) {
+				Polynomial fp = entry.getKey();
+
+				if (fp instanceof SymbolicConstant)
+					substitutionMap.put((SymbolicConstant) fp,
+							universe.number(entry.getValue()));
+			}
+			for (Entry<BooleanExpression, Boolean> entry : booleanMap
+					.entrySet()) {
+				BooleanExpression primitive = entry.getKey();
+
+				if (primitive instanceof SymbolicConstant)
+					substitutionMap.put((SymbolicConstant) primitive,
+							universe.bool(entry.getValue()));
+			}
+		}
+		return substitutionMap;
+	}
+
+	@Override
+	public BooleanExpression getReducedContext() {
+		return assumption;
+	}
+
+	@Override
+	public BooleanExpression getFullContext() {
+		if (fullContext == null) {
+			Map<SymbolicConstant, SymbolicExpression> map = substitutionMap();
+
+			fullContext = getReducedContext();
+			for (Entry<SymbolicConstant, SymbolicExpression> entry : map
+					.entrySet()) {
+				SymbolicConstant key = entry.getKey();
+				SymbolicExpression value = entry.getValue();
+				BooleanExpression equation = universe.equals(key, value);
+
+				fullContext = universe.and(fullContext, equation);
+			}
+		}
+		return fullContext;
 	}
 }

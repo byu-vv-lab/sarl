@@ -16,12 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.IF.prove;
+package edu.udel.cis.vsl.sarl.prove.common;
 
-import java.util.Map;
-
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 
 /**
  * A ValidityResult represents the result of a validity query.
@@ -35,37 +32,40 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  * leads the assumption to evaluate to true and the predicate to evaluate to
  * false.
  * 
+ * The subclass {@link CommonModelResult} provides a method to get a model
+ * (counterexample). A ModelResult always has result type NO, because only
+ * invalid queries can have models. However, the model returned may be null:
+ * this indicates that the attempt to find a model failed for some reason.
+ * 
+ * An instance of ValidityResult of type "NO" that is not an instance of
+ * ModelResult indicates that there was no attempt to find a model.
+ * 
  * @author siegel
  * 
  */
-public class ValidityResult {
+public class CommonValidityResult implements ValidityResult {
 
-	public enum ResultType {
-		YES, NO, MAYBE
-	};
-
+	/** The type of this validity result */
 	private ResultType resultType;
 
-	private Map<SymbolicConstant, SymbolicExpression> model;
-
-	/** Constructs new ValidityResult with given resultType and model */
-	public ValidityResult(ResultType resultType,
-			Map<SymbolicConstant, SymbolicExpression> model) {
+	/**
+	 * Constructs new ValidityResult with give resultType.
+	 * 
+	 * @param resultType
+	 *            the result type
+	 */
+	public CommonValidityResult(ResultType resultType) {
 		this.resultType = resultType;
-		this.model = model;
 	}
 
-	/** Constructs new ValidityResult with give resultType and null model */
-	public ValidityResult(ResultType resultType) {
-		this(resultType, null);
-	}
-
+	/**
+	 * Returns the result type of this result.
+	 * 
+	 * @return the result type
+	 */
+	@Override
 	public ResultType getResultType() {
 		return resultType;
-	}
-
-	public Map<SymbolicConstant, SymbolicExpression> getModel() {
-		return model;
 	}
 
 }

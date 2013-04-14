@@ -1,0 +1,6 @@
+X : INT;
+PUSH;
+Y : INT;
+QUERY X=Y;
+POP;
+Y : REAL;

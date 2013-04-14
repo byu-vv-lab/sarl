@@ -24,10 +24,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -43,7 +42,6 @@ import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
-import edu.udel.cis.vsl.sarl.IF.prove.TheoremProver;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -62,9 +60,9 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
-import edu.udel.cis.vsl.sarl.prove.Prove;
-import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
+import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
@@ -75,7 +73,7 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  * 
  * @author siegel
  */
-public class CommonSymbolicUniverse implements SymbolicUniverse {
+public class CommonSymbolicUniverse implements ExtendedUniverse {
 
 	// Fields...
 
@@ -139,20 +137,15 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	private NumericExpressionFactory numericFactory;
 
 	/**
-	 * Factory for producing Simplifiers.
+	 * The factory for producing new Reasoner instances.
 	 */
-	private SimplifierFactory simplifierFactory;
+	private ReasonerFactory reasonerFactory;
 
 	/**
 	 * The comparator on all symbolic objects used by this universe to sort such
 	 * objects.
 	 */
 	private ObjectComparator objectComparator;
-
-	/**
-	 * The abstract theorem prover used by this universe.
-	 */
-	private TheoremProver prover;
 
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
@@ -182,6 +175,10 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 */
 	private BooleanExpression trueExpr, falseExpr;
 
+	private int validCount = 0;
+
+	private int proverValidCount = 0;
+
 	/**
 	 * A map from boolean valued symbolic expressions to simplifiers. The
 	 * simplifer corresponding to a key "assumption" will be the simplifier
@@ -190,7 +187,7 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	 * under that assumption, and so on. The assumption is typically the
 	 * "path condition" of symbolic execution.
 	 */
-	private Map<BooleanExpression, Simplifier> simplifierMap = new HashMap<BooleanExpression, Simplifier>();
+	private Map<BooleanExpression, Reasoner> reasonerMap = new HashMap<BooleanExpression, Reasoner>();
 
 	// Constructor...
 
@@ -219,7 +216,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		prover = Prove.newIdealCVC3HybridProver(this);
 		substituter = new Substituter(this, collectionFactory, typeFactory);
 	}
 
@@ -272,11 +268,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	protected SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}
-
-	// TODO...for IdealFactory, these will all make Ideal
-	// expressions. They can have herbrand or ideal type.
-	// How should IdealFactory deal with things of non-ideal type?
-	// treat them all as ideal?
 
 	protected SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {
@@ -946,22 +937,22 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 	}
 
 	@Override
-	public Simplifier simplifier(BooleanExpression assumption) {
-		Simplifier result = simplifierMap.get((BooleanExpression) assumption);
+	public Reasoner reasoner(BooleanExpression context) {
+		Reasoner result = reasonerMap.get(context);
 
 		if (result == null) {
-			BooleanExpression canonicAssumption = (BooleanExpression) canonic(assumption);
+			BooleanExpression canonicContext = (BooleanExpression) canonic(context);
 
-			result = simplifierFactory.newSimplifier(canonicAssumption);
-			simplifierMap.put(canonicAssumption, result);
+			result = reasonerFactory.newReasoner(canonicContext);
+			reasonerMap.put(canonicContext, result);
 		}
 		return result;
 	}
 
-	@Override
-	public TheoremProver prover() {
-		return prover;
-	}
+	// @Override
+	// public TheoremProver prover() {
+	// return prover;
+	// }
 
 	@Override
 	public BooleanObject booleanObject(boolean value) {
@@ -1489,10 +1480,6 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 				arrayType(elementType, integer(count)), sequence(elements));
 	}
 
-	// TODO: if the length of the type ever becomes known through
-	// simplification, the type must change. So you can simplify
-	// array<int> to array <int,5> for example.
-
 	@Override
 	public NumericExpression length(SymbolicExpression array) {
 		if (array == null)
@@ -1800,8 +1787,9 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return objectComparator;
 	}
 
-	public void setSimplifierFactory(SimplifierFactory simplifierFactory) {
-		this.simplifierFactory = simplifierFactory;
+	@Override
+	public void setReasonerFactory(ReasonerFactory reasonerFactory) {
+		this.reasonerFactory = reasonerFactory;
 	}
 
 	@Override
@@ -1861,4 +1849,23 @@ public class CommonSymbolicUniverse implements SymbolicUniverse {
 		return falseExpr;
 	}
 
+	@Override
+	public int numValidCalls() {
+		return validCount;
+	}
+
+	@Override
+	public int numProverValidCalls() {
+		return proverValidCount;
+	}
+
+	@Override
+	public void incrementValidCount() {
+		validCount++;
+	}
+
+	@Override
+	public void incrementProverValidCount() {
+		proverValidCount++;
+	}
 }

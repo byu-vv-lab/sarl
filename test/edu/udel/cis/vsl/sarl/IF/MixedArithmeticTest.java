@@ -86,8 +86,8 @@ public class MixedArithmeticTest {
 				.symbolicConstant(universe.stringObject("X"), herbrandInteger);
 		NumericExpression e1 = universe.add(x, one);
 		BooleanExpression p = universe.equals(x, two);
-		Simplifier simplifier = universe.simplifier(p);
-		NumericExpression e2 = (NumericExpression) simplifier.apply(e1);
+		Reasoner reasoner = universe.reasoner(p);
+		NumericExpression e2 = (NumericExpression) reasoner.simplify(e1);
 		NumericExpression expected = universe.add(two, one);
 
 		out.println("herbrandSimplify: e1 = " + e1);
@@ -105,8 +105,8 @@ public class MixedArithmeticTest {
 		BooleanExpression assumption = universe.and(
 				universe.lessThanEquals(x, one),
 				universe.lessThanEquals(one, x));
-		Simplifier simplifier = universe.simplifier(assumption);
-		BooleanExpression newAssumption = simplifier.newAssumption();
+		Reasoner reasoner = universe.reasoner(assumption);
+		BooleanExpression newAssumption = reasoner.getReducedContext();
 
 		out.println("hrelations: assumption    : " + assumption);
 		out.println("hrelations: newAssumption : " + newAssumption);

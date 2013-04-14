@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.IF.prove;
+package edu.udel.cis.vsl.sarl.prove.IF;
 
 import java.io.PrintStream;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.prove.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 
+/**
+ * Provides an abstract interface for an automated theorem prover.
+ */
 public interface TheoremProver {
 	/**
 	 * Get the symbolic universe associated with the theorem prover.
@@ -51,26 +56,24 @@ public interface TheoremProver {
 	 * satisfiable. If it returns no, then q is satisfiable.
 	 * 
 	 */
-	ResultType valid(BooleanExpression assumption, BooleanExpression predicate);
+	ValidityResult valid(BooleanExpression predicate);
 
 	/**
 	 * Attempts to determine whether p(x)=>q(x) is valid, and, if not, also
 	 * returns a model (counter-example). The specification is exactly the same
 	 * as for {@link valid}, except that a {@link ValidityResult} is returned.
-	 * This provides a method {@link ValidityResult.getResultType} that returns
-	 * the result type, but also a method {@link ValidityResult.getModel} that
-	 * provides the model. That method will return null if the result type is
-	 * YES or MAYBE. It may return null even if the result type is NO, either
-	 * because the assumption is not satisfiable or a model could not be found
-	 * for some reason.
+	 * This provides a method {@link CommonValidityResult.getResultType} that
+	 * returns the result type, but also a method
+	 * {@link CommonValidityResult.getModel} that provides the model. That
+	 * method will return null if the result type is YES or MAYBE. It may return
+	 * null even if the result type is NO, either because the assumption is not
+	 * satisfiable or a model could not be found for some reason.
 	 * 
 	 * If the model is non-null, it will be a map in which the key set consists
 	 * of all the symbolic constants of non-function type that occur in the
 	 * assumption or predicate. The value associated to a key will be a concrete
 	 * symbolic expression.
 	 * 
-	 * @param assumption
-	 *            the assumption p(x)
 	 * @param predicate
 	 *            the predicate q(x)
 	 * @throws TheoremProverException
@@ -78,31 +81,7 @@ public interface TheoremProver {
 	 *             during this call
 	 * @return a validity result as specified above
 	 */
-	ValidityResult validOrModel(BooleanExpression assumption,
-			BooleanExpression predicate);
-
-	/**
-	 * Returns the total number of calls made to the method valid on this
-	 * object.
-	 */
-	int numValidCalls();
-
-	/**
-	 * If this theorem prover uses another prover underneath the hood, this
-	 * method returns the total number of calls to the valid method of that
-	 * prover. Otherwise, returns 0.
-	 */
-	int numInternalValidCalls();
-
-	/**
-	 * Reset the theorem prover, delete all expressions and contexts.
-	 */
-	void reset();
-
-	/**
-	 * Close the theorem prover.
-	 */
-	void close();
+	ValidityResult validOrModel(BooleanExpression predicate);
 
 	/**
 	 * If you want to see the queries and results (e.g., for debugging), set
@@ -113,21 +92,4 @@ public interface TheoremProver {
 	 *            PrintStream to which you want the output sent
 	 */
 	void setOutput(PrintStream out);
-
-	// /**
-	// * Finds a model for a predicate if that predicate is satisfiable, else
-	// * returns null. The model assigns a concrete value to each symbolic
-	// * constant occurring in the predicate.
-	// *
-	// * @param predicate
-	// * a boolean expression (e.g., the path condition)
-	// * @return a map of SymbolicConstants to their (concrete)
-	// SymbolicExpression
-	// * values
-	// * @throws TheoremProverException
-	// * if something goes wrong with the automated theorem prover
-	// * during this call
-	// */
-	// Map<SymbolicConstant, SymbolicExpression> findModel(
-	// BooleanExpression predicate) throws TheoremProverException;
 }
