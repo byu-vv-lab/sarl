@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
@@ -25,7 +25,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
-import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 
 /**
  * A reasoner provides methods to simplify symbolic expressions and prove or
@@ -54,7 +53,7 @@ public interface Reasoner {
 	 * This method returns a map in which the keys are those symbolic constants
 	 * and the value associated to a key is the "solved" value. The solved value
 	 * will be substituted for the symbolic constants in any expression given to
-	 * the {@link simplify} method of this simplifier.
+	 * the {@link #simplify} method of this simplifier.
 	 * 
 	 * @return a mapping from some symbolic constants occurring in original
 	 *         context to their solved values
@@ -67,7 +66,7 @@ public interface Reasoner {
 	 * was simplified or put into a canonical form. Moreover, symbolic constants
 	 * which have been "solved" may be removed from the context. (For the
 	 * context with addtional equations giving those solved values, use method
-	 * {@link getFullContext}). This context will not change after creation.
+	 * {@link #getFullContext}). This context will not change after creation.
 	 * 
 	 * @return the reduced context associated to this Reasoner
 	 * */
@@ -79,7 +78,7 @@ public interface Reasoner {
 	 * simplified or put into a canonical form. The full context includes
 	 * equations where one side is a symbolic constant and the other is the
 	 * solved value. (For the context without those equations, use method
-	 * {@link getReducedContext}). Hence the expression returned is equivalent
+	 * {@link #getReducedContext}). Hence the expression returned is equivalent
 	 * to the original given expression.
 	 * 
 	 * This context will not change after creation.
@@ -129,8 +128,8 @@ public interface Reasoner {
 	 * 
 	 * Etc.
 	 * 
-	 * @param any
-	 *            symbolic expression
+	 * @param expression
+	 *            any symbolic expression
 	 * @return simplified version of the expression
 	 */
 	SymbolicExpression simplify(SymbolicExpression expression);
@@ -161,13 +160,13 @@ public interface Reasoner {
 	/**
 	 * Attempts to determine whether p(x)=>q(x) is valid, and, if not, also
 	 * returns a model (counter-example). The specification is exactly the same
-	 * as for {@link valid}, except that a {@link ValidityResult} is returned.
-	 * This provides a method {@link CommonValidityResult.getResultType} that
-	 * returns the result type, but also a method
-	 * {@link CommonValidityResult.getModel} that provides the model. That
-	 * method will return null if the result type is YES or MAYBE. It may return
-	 * null even if the result type is NO, either because the assumption is not
-	 * satisfiable or a model could not be found for some reason.
+	 * as for {@link #valid}, except that a {@link ValidityResult} is returned.
+	 * This provides a method {@link ValidityResult#getResultType} that returns
+	 * the result type, but also a method {@link ModelResult#getModel} that
+	 * provides the model. That method will return null if the result type is
+	 * YES or MAYBE. It may return null even if the result type is NO, either
+	 * because the assumption is not satisfiable or a model could not be found
+	 * for some reason.
 	 * 
 	 * If the model is non-null, it will be a map in which the key set consists
 	 * of all the symbolic constants of non-function type that occur in the

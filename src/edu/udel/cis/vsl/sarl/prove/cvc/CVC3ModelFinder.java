@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
@@ -445,17 +445,14 @@ public class CVC3ModelFinder {
 	}
 
 	/**
-	 * Given a CVC3 Expr e, return a repressentation of e as follows: if e is a
-	 * concrete scalar (rational number or boolean), return the corresponding
-	 * SymbolicExpression. If e is e'[i].
-	 * 
-	 * read(a[i]):
-	 * 
-	 * read(a.1): if read(a) has type array, then read(a.1)=read(a). if read(a)
-	 * has type tuple, then read(a.1)=read(a).1.
+	 * Translates a CVC3 "read" expression into a SymbolicExpression using the
+	 * variable map. By "read" expression we mean a variable, an array-read,
+	 * tuple read, or function application, or an expression build recursively
+	 * from such operations.
 	 * 
 	 * @param expr
-	 * @return
+	 *            a CVC3 read expression
+	 * @return symbolic expression translation of <code>expr</code>
 	 */
 	private SymbolicExpression read(Expr expr) {
 		if (expr.isVar()) {

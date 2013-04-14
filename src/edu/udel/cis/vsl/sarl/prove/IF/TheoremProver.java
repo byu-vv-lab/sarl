@@ -20,14 +20,15 @@ package edu.udel.cis.vsl.sarl.prove.IF;
 
 import java.io.PrintStream;
 
+import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 
 /**
- * Provides an abstract interface for an automated theorem prover.
+ * Provides an abstract interface for an automated theorem prover operating
+ * under a fixed context (i.e., a boolean expression assumed to hold).
  */
 public interface TheoremProver {
 	/**
@@ -36,46 +37,67 @@ public interface TheoremProver {
 	SymbolicUniverse universe();
 
 	/**
-	 * Attempts to determine whether the statement p(x)=>q(x) is a tautology.
-	 * Here, p is the "assumption", q is the "predicate", and x stands for the
-	 * set of all symbolic constants which occur in p or q.
+	 * <p>
+	 * Attempts to determine whether the statement p(x)=>q(x) is valid, i.e., is
+	 * a tautology. Here, p is the "context", q is the "predicate", and x stands
+	 * for the set of all symbolic constants which occur in p or q.
+	 * </p>
 	 * 
-	 * A result of YES implies forall x.(p(x)=>q(x)). A result of NO implies
-	 * nsat(p)||exists x.(p(x)&&!q(x)). Nothing can be concluded from a result
-	 * of MAYBE.
+	 * <p>
+	 * A result of type YES implies forall x.(p(x)=>q(x)). A result of NO
+	 * implies nsat(p)||exists x.(p(x)&&!q(x)). Nothing can be concluded from a
+	 * result of MAYBE.
+	 * </p>
 	 * 
+	 * <p>
 	 * nsat(p) means p is not satisfiable, i.e., forall x.!p(x), or equivalently
 	 * !exists x.p(x). Note that if p is not satisfiable then any of the three
 	 * possible results could be returned.
+	 * </p>
 	 * 
-	 * Consider a call to valid(true,q). If this returns YES then forall x.q(x)
-	 * (i.e., q is a tautology). If it returns NO then exists x.!q(x) (i.e., q
-	 * is not a tautology).
+	 * <p>
+	 * Note that if the context is unsatisfiable then any of the three types
+	 * could be returned.
+	 * </p>
 	 * 
-	 * Consider a call to valid(true,!q). If this returns YES then q is not
-	 * satisfiable. If it returns no, then q is satisfiable.
+	 * <p>
+	 * Consider the case where the context p is "true". If valid(q) returns YES
+	 * then forall x.q(x) (i.e., q is a tautology); if it returns NO then exists
+	 * x.!q(x) (i.e., q is not a tautology). If valid(!q) returns YES then q is
+	 * not satisfiable; if it returns NO then q is satisfiable.
+	 * </p>
 	 * 
+	 * <p>
+	 * Note that in the case NO is returned, there is no guarantee this method
+	 * will attempt to find a model (and return an instance of
+	 * {@link ModelResult}). If a model is required in the NO case, use method
+	 * {@link #validOrModel} instead.
+	 * </p>
+	 * 
+	 * 
+	 * @param predicate
+	 *            the boolean expression q(x)
+	 * @throws TheoremProverException
+	 *             if something goes wrong with the automated theorem prover
+	 *             during this call
+	 * @return a ValidityResult whose type must satisfy the constraints
+	 *         described above
 	 */
 	ValidityResult valid(BooleanExpression predicate);
 
 	/**
 	 * Attempts to determine whether p(x)=>q(x) is valid, and, if not, also
-	 * returns a model (counter-example). The specification is exactly the same
-	 * as for {@link valid}, except that a {@link ValidityResult} is returned.
-	 * This provides a method {@link CommonValidityResult.getResultType} that
-	 * returns the result type, but also a method
-	 * {@link CommonValidityResult.getModel} that provides the model. That
-	 * method will return null if the result type is YES or MAYBE. It may return
-	 * null even if the result type is NO, either because the assumption is not
-	 * satisfiable or a model could not be found for some reason.
+	 * returns a model (counterexample). The specification is exactly the same
+	 * as for {@link #valid}, except that a {@link ModelResult} is returned in
+	 * the NO case. This provides a method to get the model. Note that the model
+	 * may be null if there was some problem in obtaining or constructing the
+	 * model.
 	 * 
 	 * If the model is non-null, it will be a map in which the key set consists
 	 * of all the symbolic constants of non-function type that occur in the
-	 * assumption or predicate. The value associated to a key will be a concrete
+	 * context or predicate. The value associated to a key will be a concrete
 	 * symbolic expression.
 	 * 
-	 * @param predicate
-	 *            the predicate q(x)
 	 * @throws TheoremProverException
 	 *             if something goes wrong with the automated theorem prover
 	 *             during this call

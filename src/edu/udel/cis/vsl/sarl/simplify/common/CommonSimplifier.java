@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -43,6 +42,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 

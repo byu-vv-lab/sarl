@@ -298,11 +298,11 @@ public interface SymbolicUniverse {
 
 	/**
 	 * The total number of calls made to the validity method in the underlying
-	 * automated theorem prover. This is general smaller than that returned by
-	 * {@link numValidCalls}, not every valid call requires a call to the
+	 * automated theorem prover. This is in general smaller than that returned
+	 * by {@link #numValidCalls}, as not every valid call requires a call to the
 	 * prover.
 	 * 
-	 * @return the total number of theore prover validity calls
+	 * @return the total number of theorem prover validity calls
 	 */
 	int numProverValidCalls();
 

@@ -18,12 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
-// first look in expressionMap, if you find it there, use it.
-// otherwise, look in collisionMap to see if there is already
-// a variable with that name. If there is, use that index
-// to create new cvc name and increment index. If there is not,
-// create entry with index 1. Then add to expression map as usual.
-
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -122,13 +116,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * operators. In SARL, a function is a kind of symbolic expression. In CVC3,
 	 * this concept is represented as an instance of "OpMut" (Operator Mutable),
 	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
-	 * separate map is needed. Set in method reset().
+	 * separate map is needed.
 	 */
 	private Map<SymbolicExpression, Op> functionMap = new HashMap<SymbolicExpression, Op>();
 
 	/**
 	 * Mapping of CVC3 variables to their corresponding symbolic constants.
-	 * Needed in order to construct model when there is a counter example. Set
+	 * Needed in order to construct model when there is a counter example.
 	 */
 	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
 
@@ -159,8 +153,14 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private Map<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>> integerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
 
+	/**
+	 * The assumption under which this prover is operating.
+	 */
 	private BooleanExpression context;
 
+	/**
+	 * The translation of the context to a CVC3 expression.
+	 */
 	private Expr cvcAssumption;
 
 	/**
@@ -227,7 +227,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Returns new bound variable with a generic name "i" followed by a
-	 * distiguishing sufix.
+	 * distiguishing suffix.
 	 * 
 	 * @param type
 	 *            the type of the new bound variable

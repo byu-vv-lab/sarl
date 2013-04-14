@@ -1,9 +1,17 @@
 /**
- * Provides classes to solve the queries from backend during
- * verification process. The package first try to answer the query
- * using lightweight method, if unsuccessful, it will call the CVC3
- * third party theorem prover to solve the query.
+ * This package constitutes the interface between SARL and (possibly external)
+ * theorem provers. It provides an abstract interface
+ * {@link edu.udel.cis.vsl.sarl.prove.IF.TheoremProver} representing an
+ * automated theorem prover as well as implementations for specific provers
+ * (such as CVC3).
  * 
- * @author siegel, yi
+ * The entry-point for using this module is class
+ * {@link edu.udel.cis.vsl.sarl.prove.Prove}. That class provides static methods
+ * for producing instances of
+ * {@link edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory}. Those factories
+ * are used to produce instances of
+ * {@link edu.udel.cis.vsl.sarl.prove.IF.TheoremProver}.
+ * 
+ * @author siegel
  */
 package edu.udel.cis.vsl.sarl.prove;

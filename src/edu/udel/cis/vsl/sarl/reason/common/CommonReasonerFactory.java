@@ -19,10 +19,10 @@
 package edu.udel.cis.vsl.sarl.reason.common;
 
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
-import edu.udel.cis.vsl.sarl.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
 public class CommonReasonerFactory implements ReasonerFactory {
