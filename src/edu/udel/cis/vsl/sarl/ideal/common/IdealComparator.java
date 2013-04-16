@@ -28,6 +28,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Primitive;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 
@@ -212,7 +213,7 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	 * @return a negative integer if p1 precedes p2, 0 if they are equals, else
 	 *         a positive integer
 	 */
-	public int comparePrimitives(NumericPrimitive p1, NumericPrimitive p2) {
+	public int comparePrimitives(Primitive p1, Primitive p2) {
 		int result = p1.operator().compareTo(p2.operator());
 
 		if (result != 0)
