@@ -1,4 +1,55 @@
 
+Design: list which elements of IF they use
+(IF.SymbolicUniverse, IF.Reasoner, IF.expr, IF.number,
+ IF.object, IF.type)
+
+  
+universe
+  uses: reason
+
+herbrand
+  uses:
+  
+ideal
+  uses:
+  
+reason
+  uses: simplify, prove, ....
+
+prove
+  uses: IF, cvc3, expr, 
+    universe : eliminate?  need to build expressions so need
+    universe.  Change to use only IF.universe
+ 
+simplify
+  uses: IF, type, expr, object
+    type (CommonSymbolicTypeSequence--kill)
+    collections (CommonBasicCollection--kill)
+
+collections
+  uses: IF, object
+
+expr
+  uses: IF, object, collections, type
+
+type
+  uses: IF (expr array len),
+        object (CommonObjectFactory, CommonSymbolicObject)
+
+object: symbolic objects
+  uses: IF,
+        collections (SymbolicCollection for comparator): WOULD LIKE
+          TO GET RID OF THIS
+
+number: arbitrary-precision integer and real numbers
+  uses: nothing
+
+util: utility classes
+  uses: nothing
+
+IF: public interface
+  uses: nothing
+
 
 Heaps:
 

@@ -16,9 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.IF.number;
+package edu.udel.cis.vsl.sarl.number.real;
 
 import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 /**
