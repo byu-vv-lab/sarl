@@ -29,8 +29,8 @@ import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
-import edu.udel.cis.vsl.sarl.preuniverse.common.CommonFactorySystem;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.Reason;
@@ -43,44 +43,8 @@ import edu.udel.cis.vsl.sarl.universe.common.CommonSymbolicUniverse;
 
 public class Universes {
 
-	public static FactorySystem newFactorySystem(ObjectFactory objectFactory,
-			SymbolicTypeFactory typeFactory,
-			ExpressionFactory expressionFactory,
-			CollectionFactory collectionFactory) {
-		return new CommonFactorySystem(objectFactory, typeFactory,
-				expressionFactory, collectionFactory);
-	}
-
-	public static FactorySystem newIdealFactorySystem() {
-		NumberFactory numberFactory = Numbers.REAL_FACTORY;
-		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
-		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
-		CollectionFactory collectionFactory = Collections
-				.newCollectionFactory(objectFactory);
-		ExpressionFactory expressionFactory = Expressions
-				.newIdealExpressionFactory(numberFactory, objectFactory,
-						typeFactory, collectionFactory);
-
-		return newFactorySystem(objectFactory, typeFactory, expressionFactory,
-				collectionFactory);
-	}
-
-	public static FactorySystem newHerbrandFactorySystem() {
-		NumberFactory numberFactory = Numbers.REAL_FACTORY;
-		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
-		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
-		CollectionFactory collectionFactory = Collections
-				.newCollectionFactory(objectFactory);
-		ExpressionFactory expressionFactory = Expressions
-				.newHerbrandExpressionFactory(numberFactory, objectFactory,
-						typeFactory, collectionFactory);
-
-		return newFactorySystem(objectFactory, typeFactory, expressionFactory,
-				collectionFactory);
-	}
-
 	public static SymbolicUniverse newIdealUniverse() {
-		FactorySystem system = newIdealFactorySystem();
+		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
 				(IdealFactory) system.numericFactory(), universe);
@@ -94,7 +58,7 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newHerbrandUniverse() {
-		FactorySystem system = newHerbrandFactorySystem();
+		FactorySystem system = PreUniverses.newHerbrandFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Simplify
 				.newIdentitySimplifierFactory(universe);
@@ -116,8 +80,8 @@ public class Universes {
 		ExpressionFactory expressionFactory = Expressions
 				.newStandardExpressionFactory(numberFactory, objectFactory,
 						typeFactory, collectionFactory);
-		FactorySystem system = newFactorySystem(objectFactory, typeFactory,
-				expressionFactory, collectionFactory);
+		FactorySystem system = PreUniverses.newFactorySystem(objectFactory,
+				typeFactory, expressionFactory, collectionFactory);
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Expressions
 				.standardSimplifierFactory(expressionFactory, universe);
