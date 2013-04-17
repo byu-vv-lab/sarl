@@ -26,11 +26,11 @@ import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.common.CommonModelResult;
 import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class Prove {
 
@@ -44,7 +44,7 @@ public class Prove {
 			ResultType.MAYBE);
 
 	public static TheoremProverFactory newCVC3TheoremProverFactory(
-			ExtendedUniverse universe) {
+			PreUniverse universe) {
 		return new CVC3TheoremProverFactory(universe);
 	}
 

@@ -40,12 +40,12 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
  */
 public interface Reasoner {
 
-	/**
-	 * Get the symbolic universe associated with this Reasoner.
-	 * 
-	 * @return the symbolic universe
-	 */
-	SymbolicUniverse universe();
+	// /**
+	// * Get the symbolic universe associated with this Reasoner.
+	// *
+	// * @return the symbolic universe
+	// */
+	// SymbolicUniverse universe();
 
 	/**
 	 * In the process of simplifying the initial context, this simplier may have

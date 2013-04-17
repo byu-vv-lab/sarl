@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.util.Transform;
 
 /**
@@ -70,8 +70,8 @@ import edu.udel.cis.vsl.sarl.util.Transform;
 public interface Simplifier extends
 		Transform<SymbolicExpression, SymbolicExpression> {
 
-	/** Returns the symbolic universe associated to this simplifier */
-	ExtendedUniverse universe();
+	/** Returns the pre-universe associated to this simplifier */
+	PreUniverse universe();
 
 	/**
 	 * In the process of simplifying the initial context, this simplier may have

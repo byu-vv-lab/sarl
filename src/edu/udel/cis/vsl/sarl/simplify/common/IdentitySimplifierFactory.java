@@ -19,15 +19,15 @@
 package edu.udel.cis.vsl.sarl.simplify.common;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class IdentitySimplifierFactory implements SimplifierFactory {
 
-	private ExtendedUniverse universe;
+	private PreUniverse universe;
 
-	public IdentitySimplifierFactory(ExtendedUniverse universe) {
+	public IdentitySimplifierFactory(PreUniverse universe) {
 		this.universe = universe;
 	}
 

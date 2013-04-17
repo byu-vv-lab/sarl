@@ -25,9 +25,9 @@ import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.simplify.IdealSimplifierFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class Ideal {
 
@@ -40,7 +40,7 @@ public class Ideal {
 	}
 
 	public static SimplifierFactory newIdealSimplifierFactory(
-			IdealFactory idealFactory, ExtendedUniverse universe) {
+			IdealFactory idealFactory, PreUniverse universe) {
 		return new IdealSimplifierFactory(idealFactory, universe);
 	}
 

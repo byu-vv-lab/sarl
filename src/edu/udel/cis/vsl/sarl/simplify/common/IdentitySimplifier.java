@@ -24,24 +24,23 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 import edu.udel.cis.vsl.sarl.util.EmptyMap;
 
 public class IdentitySimplifier implements Simplifier {
 
-	private ExtendedUniverse universe;
+	private PreUniverse universe;
 
 	private BooleanExpression assumption;
 
-	public IdentitySimplifier(ExtendedUniverse universe,
-			BooleanExpression assumption) {
+	public IdentitySimplifier(PreUniverse universe, BooleanExpression assumption) {
 		this.universe = universe;
 		this.assumption = assumption;
 	}
 
 	@Override
-	public ExtendedUniverse universe() {
+	public PreUniverse universe() {
 		return universe;
 	}
 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.universe.IF;
+package edu.udel.cis.vsl.sarl.preuniverse.IF;
 
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;

@@ -21,10 +21,10 @@ package edu.udel.cis.vsl.sarl.prove.IF;
 import java.io.PrintStream;
 
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
  * Provides an abstract interface for an automated theorem prover operating
@@ -32,9 +32,9 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
  */
 public interface TheoremProver {
 	/**
-	 * Get the symbolic universe associated with the theorem prover.
+	 * Get the pre-universe associated with the theorem prover.
 	 */
-	SymbolicUniverse universe();
+	PreUniverse universe();
 
 	/**
 	 * <p>

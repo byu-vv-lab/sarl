@@ -29,6 +29,8 @@ import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.common.CommonFactorySystem;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.Reason;
@@ -37,8 +39,6 @@ import edu.udel.cis.vsl.sarl.simplify.Simplify;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.FactorySystem;
-import edu.udel.cis.vsl.sarl.universe.common.CommonFactorySystem;
 import edu.udel.cis.vsl.sarl.universe.common.CommonSymbolicUniverse;
 
 public class Universes {

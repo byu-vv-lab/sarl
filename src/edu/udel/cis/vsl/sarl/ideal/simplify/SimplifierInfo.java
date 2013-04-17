@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
  * An object that gathers together a variety of objects as fields needed to
@@ -45,7 +45,7 @@ public class SimplifierInfo {
 	/**
 	 * Returns the symbolic universe.
 	 */
-	public ExtendedUniverse universe;
+	public PreUniverse universe;
 
 	public IdealFactory idealFactory;
 

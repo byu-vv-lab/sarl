@@ -32,7 +32,6 @@ import cvc3.Rational;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -54,9 +53,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
@@ -70,7 +69,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * The symbolic universe used for managing symbolic expressions. Initialized
 	 * by constructor and never changes.
 	 */
-	private ExtendedUniverse universe;
+	private PreUniverse universe;
 
 	/**
 	 * Print the queries and results each time valid is called? Initialized by
@@ -173,7 +172,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @param showProverQueries
 	 *            print the queries?
 	 */
-	CVC3TheoremProver(ExtendedUniverse universe, BooleanExpression context) {
+	CVC3TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
@@ -1109,7 +1108,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	@Override
-	public SymbolicUniverse universe() {
+	public PreUniverse universe() {
 		return universe;
 	}
 

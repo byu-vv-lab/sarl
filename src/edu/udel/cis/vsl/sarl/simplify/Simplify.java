@@ -19,21 +19,21 @@
 package edu.udel.cis.vsl.sarl.simplify;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class Simplify {
 
-	public static Simplifier identitySimplifier(ExtendedUniverse universe,
+	public static Simplifier identitySimplifier(PreUniverse universe,
 			BooleanExpression assumption) {
 		return new IdentitySimplifier(universe, assumption);
 	}
 
 	public static SimplifierFactory newIdentitySimplifierFactory(
-			ExtendedUniverse universe) {
+			PreUniverse universe) {
 		return new IdentitySimplifierFactory(universe);
 	}
 

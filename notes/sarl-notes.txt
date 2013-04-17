@@ -1,32 +1,31 @@
 
 Design: list which elements of IF they use
-(IF.SymbolicUniverse, IF.Reasoner, IF.expr, IF.number,
+(IF.SymbolicUniverse, IF.Reasoner, IF.ModelResult, IF.ValidityResultIF.expr, IF.number,
  IF.object, IF.type)
   
 universe
-  uses: everything below? 
+  uses: reason, preuniverse
 
 reason
   uses: simplify, prove, ....
 
 herbrand
-  uses:
+  uses: like ideal?
   
 ideal
   uses: simplify, prove, ...
-  ideal.simplify uses universe -- change to preuniverse
+  ideal.simplify uses preuniverse
   
 prove
   uses: IF, cvc3, expr, 
-    universe : eliminate?  need to build expressions so need
-    universe.  Change to use only preuniverse
+    preuniverse (to build expressions)
  
 simplify
-  uses: IF, type, expr, object
-    needs to use preuniverse (CommonSimplifier) instead of universe
+  uses: IF, type, expr, object,
+    preuniverse (by CommonSimplifier)
 
 preuniverse: does most things a universe does, including make, but
-  not reasoner.  maybe ExpressionFactory?
+  not reasoner. 
 
 collections
   uses: IF, object
@@ -44,16 +43,35 @@ object: symbolic objects
           TO GET RID OF THIS
 
 number: arbitrary-precision integer and real numbers
-  uses: nothing
+  uses: IF (IF.number)
 
 util: utility classes
   uses: nothing
 
 IF: public interface
   uses: nothing
+  comprises:
+    IF.SymbolicUniverse
+    IF.Reasoner
+    IF.ValidityResult
+    IF.ModelResult
+    IF.SARLException, IF.SARLInternalException, IF.TheoremProverException
+    IF.expr
+    IF.number
+    IF.object
+    IF.type
 
 --------------------
 
+interface SymbolicUniverse (f1,f2,f3,...)
+interface PreUniverse  (f2,f3,...,g1,g2)
+
+class CommonPreUniverse implements PreUniverse
+class CommonUniverse extends CommonPreUniverse implements SymbolicUniverse
+
+
+
+--------------------
 
 Heaps:
 

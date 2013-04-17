@@ -19,9 +19,9 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 /**
  * A factory for producing new instances of CVC3TheoremProver.
@@ -31,9 +31,9 @@ import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
  */
 public class CVC3TheoremProverFactory implements TheoremProverFactory {
 
-	private ExtendedUniverse universe;
+	private PreUniverse universe;
 
-	public CVC3TheoremProverFactory(ExtendedUniverse universe) {
+	public CVC3TheoremProverFactory(PreUniverse universe) {
 		this.universe = universe;
 	}
 

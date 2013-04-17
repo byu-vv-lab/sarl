@@ -31,9 +31,9 @@ import edu.udel.cis.vsl.sarl.herbrand.Herbrand;
 import edu.udel.cis.vsl.sarl.ideal.Ideal;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 public class Expressions {
 
@@ -90,8 +90,7 @@ public class Expressions {
 	}
 
 	public static SimplifierFactory standardSimplifierFactory(
-			ExpressionFactory standardExpressionFactory,
-			ExtendedUniverse universe) {
+			ExpressionFactory standardExpressionFactory, PreUniverse universe) {
 		NumericExpressionFactory numericFactory = standardExpressionFactory
 				.numericFactory();
 		IdealFactory idealFactory;

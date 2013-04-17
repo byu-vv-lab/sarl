@@ -41,8 +41,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 /**
  * A partial implementation of Simplifer which can be extended.
@@ -52,18 +52,18 @@ import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
  */
 public abstract class CommonSimplifier implements Simplifier {
 
-	protected ExtendedUniverse universe;
+	protected PreUniverse universe;
 
 	/** Cached simplifications. */
 	protected Map<SymbolicObject, SymbolicObject> simplifyMap = new HashMap<SymbolicObject, SymbolicObject>();
 
-	public CommonSimplifier(ExtendedUniverse universe) {
+	public CommonSimplifier(PreUniverse universe) {
 		assert universe != null;
 		this.universe = universe;
 	}
 
 	@Override
-	public ExtendedUniverse universe() {
+	public PreUniverse universe() {
 		return universe;
 	}
 

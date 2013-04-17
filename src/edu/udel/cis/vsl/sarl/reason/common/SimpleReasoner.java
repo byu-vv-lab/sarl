@@ -29,28 +29,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
-// reasoner hierarchy. no real need for simple prover
-
-// Universe needs a ReasonerFactory.
-
-// ReasonerFactory simpleReasonerFactory(SimplifierFactory s);
-// ReasonerFactory commonReasonerFactory(SimplifierFactory s,
-// TheoremProverFactory p);
-
-// TheoremProverFactory cvc3TheoremProverFactory();
-// etc. for other provers
-
-// in class Ideal:
-// SimplifierFactory newIdealSimplifierFactory();
-
-// SimplifierFactory methods:
-// newSimplifier(context);
-// TheoremProverFactory methods:
-// newProver(context);
 
 public class SimpleReasoner implements Reasoner {
 
@@ -62,8 +44,7 @@ public class SimpleReasoner implements Reasoner {
 		this.simplifier = simplifier;
 	}
 
-	@Override
-	public ExtendedUniverse universe() {
+	public PreUniverse universe() {
 		return simplifier.universe();
 	}
 
