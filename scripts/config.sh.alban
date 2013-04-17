@@ -1,0 +1,7 @@
+
+ROOT_DIR=/Users/siegel
+WEB_DIR=$ROOT_DIR/websites/SARL
+WORK_DIR=$ROOT_DIR/tmp/sarl-tmp
+REPO="svn://vsl.cis.udel.edu/sarl/trunk"
+PROPS="build.properties.alban"
+SCRIPTS=$ROOT_DIR/Documents/workspace/SARL/scripts

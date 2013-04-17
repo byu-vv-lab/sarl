@@ -1,8 +1,6 @@
 
-Design: list which elements of IF they use
-(IF.SymbolicUniverse, IF.Reasoner, IF.ModelResult, IF.ValidityResultIF.expr, IF.number,
- IF.object, IF.type)
-  
+Design:
+
 universe
   uses: reason, preuniverse
 
@@ -24,23 +22,26 @@ simplify
   uses: IF, type, expr, object,
     preuniverse (by CommonSimplifier)
 
-preuniverse: does most things a universe does, including make, but
-  not reasoner. 
-
-collections
-  uses: IF, object
+preuniverse: everything in universe except reasoning
+  uses: expr, type, collections, object, number, util, IF
 
 expr
-  uses: IF, object, collections, type
+  uses: IF
+        object
+        collections
+        type
 
 type
   uses: IF (expr array len),
-        object (CommonObjectFactory, CommonSymbolicObject)
+        object
+
+collections
+  uses: IF
+        object
 
 object: symbolic objects
-  uses: IF,
-        collections (SymbolicCollection for comparator): WOULD LIKE
-          TO GET RID OF THIS
+  uses: IF
+        collections (SymbolicCollection for comparator): CHANGE!
 
 number: arbitrary-precision integer and real numbers
   uses: IF (IF.number)
@@ -63,14 +64,11 @@ IF: public interface
 
 --------------------
 
-interface SymbolicUniverse (f1,f2,f3,...)
-interface PreUniverse  (f2,f3,...,g1,g2)
+Design issues:
 
-class CommonPreUniverse implements PreUniverse
-class CommonUniverse extends CommonPreUniverse implements SymbolicUniverse
-
-
-
+  - massive duplication between SymbolicUniverse and PreUniverse
+  - cyclic dependency object<-->collections
+  
 --------------------
 
 Heaps:
