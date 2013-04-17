@@ -18,9 +18,9 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
  * Add c0*m + c1*m, where m is a monic and c0 and c1 are constants. The answer

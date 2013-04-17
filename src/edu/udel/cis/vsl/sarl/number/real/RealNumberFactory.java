@@ -23,11 +23,11 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 public class RealNumberFactory implements NumberFactory {
 

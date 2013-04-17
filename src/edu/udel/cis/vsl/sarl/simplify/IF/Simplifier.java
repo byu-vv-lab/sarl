@@ -20,12 +20,12 @@ package edu.udel.cis.vsl.sarl.simplify.IF;
 
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
+import edu.udel.cis.vsl.sarl.util.Transform;
 
 /**
  * A simplifier is an object for simplifying symbolic expressions. It is created

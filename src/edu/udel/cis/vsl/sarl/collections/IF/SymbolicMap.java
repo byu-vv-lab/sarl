@@ -21,9 +21,9 @@ package edu.udel.cis.vsl.sarl.collections.IF;
 import java.util.Comparator;
 import java.util.Map.Entry;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
+import edu.udel.cis.vsl.sarl.util.UnaryOperator;
 
 /**
  * Map is interpreted as a collection of values. The keys are used for other

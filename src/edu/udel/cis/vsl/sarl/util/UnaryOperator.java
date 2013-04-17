@@ -16,28 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.util;
+
 
 /**
- * A Transform from type S to type T is an object that provides a method "apply"
- * which takes an element of S and returns an element of T.
+ * A UnaryOperator on a type T is an object which provides a method "apply" that
+ * takes an element of T and returns an element of T. It is a Transform<T,T>.
  * 
  * @author siegel
  * 
- * @param <S>
- *            any Java type
- * @param <T>
- *            any Java type
  */
-public interface Transform<S, T> {
-
-	/**
-	 * Apply this Transform to the element x of S.
-	 * 
-	 * @param x
-	 *            an element of S
-	 * @return the result of applying this Transform to x
-	 * */
-	T apply(S x);
-
+public interface UnaryOperator<T> extends Transform<T, T> {
 }

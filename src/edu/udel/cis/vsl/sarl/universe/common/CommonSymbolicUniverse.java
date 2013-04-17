@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.universe.common;
 
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -53,13 +54,13 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
@@ -145,7 +146,7 @@ public class CommonSymbolicUniverse implements ExtendedUniverse {
 	 * The comparator on all symbolic objects used by this universe to sort such
 	 * objects.
 	 */
-	private ObjectComparator objectComparator;
+	private Comparator<SymbolicObject> objectComparator;
 
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
@@ -1783,7 +1784,7 @@ public class CommonSymbolicUniverse implements ExtendedUniverse {
 	}
 
 	@Override
-	public ObjectComparator comparator() {
+	public Comparator<SymbolicObject> comparator() {
 		return objectComparator;
 	}
 
@@ -1867,5 +1868,11 @@ public class CommonSymbolicUniverse implements ExtendedUniverse {
 	@Override
 	public void incrementProverValidCount() {
 		proverValidCount++;
+	}
+
+	@Override
+	public <T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
+			Collection<T> javaCollection) {
+		return collectionFactory.basicCollection(javaCollection);
 	}
 }

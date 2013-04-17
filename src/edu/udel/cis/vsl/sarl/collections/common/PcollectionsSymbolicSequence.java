@@ -24,11 +24,11 @@ import java.util.Iterator;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
-import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.util.Transform;
 
 /**
  * Note TreePVector cannot take null elements!!! Use the symbolic expression

@@ -18,10 +18,10 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
-import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.util.UnaryOperator;
 
 class MonomialMultiplier implements UnaryOperator<Monomial> {
 	private CommonIdealFactory factory;

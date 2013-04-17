@@ -3,67 +3,27 @@
 Think about how to do quick dispatch to right routine for
 numeric operation.
 
-Add Herbrand arithmetic.
+Implement floating point numbers and finite integer numbers.
 
-Add new type: HerbrandReal
-  is numeric
+Support pointers?
+
+Support a type which is a pair (p, e) where p is a boolean expression
+and e is an expression of any time.  This pair represents the set
+{e(x)|p(x)}.  simplify, operations, translation, ...
+
+(int t>0, t^2) = {1,4,9,...}
+
+equality?
+
+y in S(p,e) iff exists x0 s.t. p(x) and y=e(x)
+
+S(p,e) subset of S(q,f):
+  forall x. p(x) => exists y. (q(y) && e(x)=f(y)) 
   
-Add new numeric factory: HerbrandFactory extends NumericFactory
-Add HerbrandExpression extends NumericExpression
-
-The arguments to a HerbranExpression can be any kinds of expression
-(not just Herbrand).  So no cast is necessary.
-
-Relational expressions can also include Herbrand and so cannot
-be simplified.  Must have HerbrandRelational expressions?
-
-In Universe:
-  add(x,y)
-: if at least one argument is Herbrand, use the HerbrandFactory.
-Else use the numericFactory.
-
-How to simplify in presence of mixed:
-
-How to prove things in presence of mixed:
-  translate Herbrand operations (+, -, ...) as uninterpreted functions
-  PLUS, MINUS, ..., on real values?
-
-How to substitute:
-  same as always?
+Example:
+  {(x,y)| x>0 && y>0}
+  {(y,x)| x>0 && y>0}
   
-Create HerbrandFactory implements NumericFactory
-  all operations result in a HerbrandExpression
-
-Create HerbrandIdealFactory implement NumericFactory
-  look at type: if at least one argument is Herbrand,
-  result is Herbrand.
-  add casts?
-  
-Real, HerbrandRealType, Integer, FiniteInteger...
-
-Types:
-  REAL, HERBRAND_REAL, INTEGER, HERBRAND_INTEGER
-methods:
-  isReal(): true iff REAL, HERBRAND_REAL
-  isHerbrand(): true iff HERBRAND_REAL, HERBRAND_INTEGER
-
-Better Idea:
-
-How about creating a SymbolicRealType
-and then within that a RealKind: IDEAL, HERBRAND, FLOAT
-
-Similarly a SymbolicIntegerType:
-IDEAL, HERBRAND, FINITE (cyclic, ...)
-
-Create factories for these things.
-
-Then create a HybridFactory that will look at the types of the arguments
-in detail and choose which factory to delegate the operation too.
-
-Universe:
-
-SymbolicRealType herbrandRealType();
-SymbolicRealType floatingPointType(int ..., int ...);
-SymbolicIntegerType hergrandIntegerType();
-SymbolicIntegerType finiteIntegerType(NumericExpression min, NumericExpression max, boolean cyclic);
-
+Canonicalization of symbolic constant names:
+walk through structures in ordered way and re-name.
+what about unordered structures??

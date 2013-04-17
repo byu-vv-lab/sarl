@@ -41,9 +41,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.universe.IF.ExtendedUniverse;
 
 /**
@@ -181,8 +179,7 @@ public abstract class CommonSimplifier implements Simplifier {
 
 	protected SymbolicTypeSequence simplifyTypeSequence(
 			SymbolicTypeSequence sequence) {
-		return new CommonSymbolicTypeSequence(
-				simplifyTypeSequenceWork(sequence));
+		return universe.typeSequence(simplifyTypeSequenceWork(sequence));
 	}
 
 	protected SymbolicSequence<?> simplifySequenceWork(
@@ -212,7 +209,7 @@ public abstract class CommonSimplifier implements Simplifier {
 				list.add(y);
 				while (iter.hasNext())
 					list.add(apply(iter.next()));
-				return new BasicCollection<SymbolicExpression>(list);
+				return universe.basicCollection(list);
 			}
 			count++;
 		}

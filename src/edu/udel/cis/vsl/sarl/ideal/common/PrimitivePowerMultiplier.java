@@ -18,8 +18,8 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
  * Multiply p^i*p^j, where p is a NumericPrimitive and i and j are positive

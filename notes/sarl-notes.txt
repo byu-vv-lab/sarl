@@ -2,29 +2,31 @@
 Design: list which elements of IF they use
 (IF.SymbolicUniverse, IF.Reasoner, IF.expr, IF.number,
  IF.object, IF.type)
-
   
 universe
-  uses: reason
+  uses: everything below? 
+
+reason
+  uses: simplify, prove, ....
 
 herbrand
   uses:
   
 ideal
-  uses:
+  uses: simplify, prove, ...
+  ideal.simplify uses universe -- change to preuniverse
   
-reason
-  uses: simplify, prove, ....
-
 prove
   uses: IF, cvc3, expr, 
     universe : eliminate?  need to build expressions so need
-    universe.  Change to use only IF.universe
+    universe.  Change to use only preuniverse
  
 simplify
   uses: IF, type, expr, object
-    type (CommonSymbolicTypeSequence--kill)
-    collections (CommonBasicCollection--kill)
+    needs to use preuniverse (CommonSimplifier) instead of universe
+
+preuniverse: does most things a universe does, including make, but
+  not reasoner.  maybe ExpressionFactory?
 
 collections
   uses: IF, object
@@ -49,6 +51,8 @@ util: utility classes
 
 IF: public interface
   uses: nothing
+
+--------------------
 
 
 Heaps:

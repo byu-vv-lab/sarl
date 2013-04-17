@@ -18,10 +18,10 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
-import edu.udel.cis.vsl.sarl.IF.BinaryOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
  * An efficient implementation of raising something to some power. Given an
