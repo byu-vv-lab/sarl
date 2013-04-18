@@ -35,7 +35,7 @@
 	<property name="coverage.dir" location="${basedir}/coverage" />
 
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
-		<classpath path="/VSL/Tools/src/jacoco/lib/jacocoant.jar" />
+		<classpath path="${jacoco.jar}" />
 	</taskdef>
 
 	<!-- Source compilation and JAR construction -->
@@ -125,7 +125,7 @@
 			<executiondata>
 				<file file="jacoco.exec" />
 			</executiondata>
-			<structure name="Example Project">
+			<structure name="SARL Test Coverage Report, Revision ${revision}">
 				<classfiles>
 					<fileset dir="${bin.dir}" />
 				</classfiles>
@@ -133,7 +133,7 @@
 					<fileset dir="${src.dir}" />
 				</sourcefiles>
 			</structure>
-			<html destdir="report" />
+			<html destdir="coverage" />
 		</jacoco:report>
 	</target>
 
