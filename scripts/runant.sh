@@ -88,6 +88,6 @@ cat >> $INDEXHTML <<EOF
 </html>
 EOF
 cd $WORK_DIR
-rm -rf trunk-$1
+# rm -rf trunk-$1
 cd $WEB_DIR/test
 perl $SCRIPTS/update_symlink.pl $1
