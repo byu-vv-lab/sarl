@@ -23,15 +23,25 @@ Eventually everything will be distributed in a single JAR file.
 For now, you have to do a little work.
 First, you need to download and build/install the dependencies:
 
- - Java SE 7 SDK:
+ - Java SE 7 SDK (Java 6 MIGHT work, but I'm not sure):
    http://www.oracle.com/technetwork/java/javase/downloads/index.html
-   (Java 6 MIGHT work, but I'm not sure)
- - Apache Ant: http://ant.apache.org 
- - JUnit: https://github.com/KentBeck/junit/downloads
- - CVC3: http://www.cs.nyu.edu/acsys/cvc3/download.html
- - clj-ds: https://github.com/krukow/clj-ds
- - PCollections: http://code.google.com/p/pcollections/
+ - Apache Ant (build tool):
+   http://ant.apache.org 
+ - CVC3 (automated theorem prover):
+   http://www.cs.nyu.edu/acsys/cvc3/download.html
+ - clj-ds (Clojure's persistent data structures in pure Java):
+   https://github.com/krukow/clj-ds
+ - PCollections (another persistent data structure library):
+   http://code.google.com/p/pcollections/
+ - JUnit (automated testing framework):
+   https://github.com/KentBeck/junit/downloads
+ - JaCoCo (Java code coverage analysis tool):
+   http://www.jacoco.org
 
+Also, apparenty Hamcrest is now needed with JUnit 4.11 and later:
+ - Hamcrest (a library of "matchers"):
+   https://github.com/hamcrest/JavaHamcrest
+   
 See file build.properties.examples for some hints on
 what to download and how to build these packages.
 
@@ -48,6 +58,13 @@ also try "ant test" to run a suite of JUnit tests, and
 "ant javadoc" to generate javadoc documentation in doc/javadoc.
 The documentation can be read using any web browser to open
 doc/javadoc/index.html.
+
+Scripts:
+
+The scripts (in directory "scripts") should not be of interest
+to most developers.  They are used mainly on the server side
+to automate the testing and coverage analysis after each
+commit and to send the data to a web page.
 
 
  
