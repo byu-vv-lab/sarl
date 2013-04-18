@@ -32,11 +32,11 @@ ant -Drevision=$1 all > ant_out.txt 2>ant_err.txt
 WEB_REP=$WEB_DIR/test/r$1
 INDEXHTML=$WEB_REP/index.html
 rm -rf $WEB_REP
-mkdir $WEB_REP
+mkdir -p $WEB_REP
 cp ant_out.txt $WEB_REP
 cp ant_err.txt $WEB_REP
 cp -r junit/reports $WEB_REP/junit
-cp -r cobertura/reports/cobertura-html $WEB_REP/cobertura
+cp -r coverage $WEB_REP/coverage
 cp -r doc/javadoc $WEB_REP/javadoc
 cat > $INDEXHTML <<EOF
 <html>
@@ -48,7 +48,7 @@ cat > $INDEXHTML <<EOF
 <h3>Test Reports and Javadocs</h3>
 <ul>
 <li><a href="junit/index.html">JUnit Report</a></li>
-<li><a href="cobertura/index.html">Cobertura Report</a></li>
+<li><a href="coverage/index.html">Coverage Report</a></li>
 <li><a href="javadoc/index.html">Javadocs</a></li>
 </ul>
 <p></p>
@@ -82,6 +82,8 @@ cat ant_err.txt >> $INDEXHTML
 cat >> $INDEXHTML <<EOF
 </pre>
 </div>
+<br>
+<br>
 </body>
 </html>
 EOF
