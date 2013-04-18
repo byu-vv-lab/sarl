@@ -1,0 +1,8 @@
+PROJECT=SARL
+WORKER=siegel@johann.cis.udel.edu
+WORK_DIR=/tmp/sarl
+BRANCH=trunk
+REPO="svn://vsl.cis.udel.edu/sarl/trunk"
+WEB_DIR=/home/www/vsl/sarl
+SSH="/usr/local/openssh-5.3p1/bin/ssh -i /usa/siegel/.ssh/id_dsa_test"
+SCP="/usr/local/openssh-5.3p1/bin/scp -i /usa/siegel/.ssh/id_dsa_test"

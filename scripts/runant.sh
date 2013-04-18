@@ -1,8 +1,8 @@
 #!/bin/sh
 # runant.sh: simple shell script for automatic build/test/...
 # using Ant.  Takes one command line argument: the revision
-# number to check out and test.  This is script is primarily
-# intended to be called as a post-commit script from a 
+# number to check out and test.  This script is primarily
+# intended to be called as a post-commit hook from a 
 # version control system.
 
 # The following must be defined in config.sh (with sample values shown):
@@ -54,6 +54,7 @@ echo "Running ant -Drevision=$1 all ..."
 ant -Drevision=$1 all > ant_out.txt 2>ant_err.txt
 echo "Done."
 echo "Copying files to web site..."
+
 WEB_REP=$WEB_DIR/test/r$1
 INDEXHTML=$WEB_REP/index.html
 rm -rf $WEB_REP
