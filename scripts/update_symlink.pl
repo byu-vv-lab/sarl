@@ -18,9 +18,11 @@ flock(LOCK, 2) || die "Can not flock $lockFile";
 $lsReturn = `ls -l latest`;
 chomp($lsReturn);
 ($oldRevision) = ($lsReturn =~ /.*r(\d+)$/);
-print "oldRevision=$oldRevision   newRevision=$newRevision\n";
+print "Previous latest is r$oldRevision, new revision is  r$newRevision, ";
 if (!defined($oldRevision) || $oldRevision < $newRevision) {
+  print "changing latest to point to r$newRevision\n";
   system("rm -f latest; ln -s r$newRevision latest");
-}
+} else 
+  print "keeping latest unchanged\n"
 close(LOCK) || die "Could not close $lockFile";
 0;

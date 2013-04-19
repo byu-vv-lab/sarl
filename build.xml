@@ -56,6 +56,9 @@
 	<target name="jar" depends="compile" description="Jar up all class files.">
 		<jar destfile="${jar-path}">
 			<fileset dir="${bin.dir}" />
+			<zipfileset includes="**/*.class" src="${cvc3.lib.jar}" />
+			<zipfileset includes="**/*.class" src="${pcollections.jar}" />
+			<fileset dir="${clj-ds.classes}" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>

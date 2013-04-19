@@ -9,7 +9,9 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.preuniverse.common.CommonFactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -48,6 +50,10 @@ public class PreUniverses {
 
 		return newFactorySystem(objectFactory, typeFactory, expressionFactory,
 				collectionFactory);
+	}
+
+	public static PreUniverse newPreUniverse(FactorySystem system) {
+		return new CommonPreUniverse(system);
 	}
 
 }

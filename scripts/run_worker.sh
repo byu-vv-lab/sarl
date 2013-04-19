@@ -1,12 +1,19 @@
 #!/bin/sh
 
-# PROJECT : name of project
-# WORKER : hostname of worker
+# run_worker.sh: this script is half of the pair of scripts
+# for doing automated build and test.  It is invoked by
+# the manager.  It does the real work: checking out the code,
+# building, testing, and generating reports.
+
+# This script takes one argument: the revision number to check
+# out.
+
+# The following must be defined in config_worker.sh:
+
 # WORK_DIR : project working directory on worker
-# BRANCH : name of branch (e.g., trunk)
-# REPO
-# PROPS
- 
+# BRANCH : name to use for this part of project (e.g., trunk)
+# REPO : what to check out
+# PROPS : name of properties file
 
 if [ $# = 0 ]; then
   echo "No revision number specified\n"
@@ -21,7 +28,7 @@ if ! [ -d $WORK_DIR ]; then
   exit 1
 fi
 cd $WORK_DIR
-REV_NAME=$BRANCH-r#1
+REV_NAME=$BRANCH-r$1
 WORKING_DIR=$WORK_DIR/$REV_NAME
 rm -rf $WORKING_DIR
 echo "Checking out revision $1..."

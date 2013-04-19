@@ -1,27 +1,46 @@
+#!/bin/sh
 
-# TODO: scp this stuff
+# run_manager.sh: this script does automatic build and test
+# in a distributed way.  There is a manager on which the
+# SVN and web servers run, and there is a remote worker that
+# will do the actual testing.  This is the manager's script;
+# the worker has its own script.
 
-# this runs on server vsl.
-# it executes the checkout and ant on test machine 
-#   using ssh and waits for it to complete
-# then this scp's the file over to web
-# then this updates symlink
+# This script takes one argument: the revision number to
+# check out.
 
-# PROJECT : name of project
-# WORKER : hostname of worker
+# The following must be defined in a file name config_manager.sh:
+
+# PROJECT : name of project (used in web page)
+# WORKER : the worker (e.g., siegel@johann.cis.udel.edu)
+# WORKER_SCRIPT_DIR : where worker has his script
 # WORK_DIR : project working directory on worker
 # WEB_DIR : project web directory on manager
-# BRANCH : name of branch (e.g., trunk)
-# SSH : ssh command with all options
-# SCP : scp command with all options
+# BRANCH : name to use for the part that will be tested (e.g., trunk)
+# SSH : ssh command with options
+# SCP : scp command with options
 
-# /usr/local/openssh-5.3p1/bin/ssh -i /usa/siegel/.ssh/id_dsa_test siegel@johann.cis.udel.edu hostname >>/usa/siegel/HOOK
+# Note that the manager must have the ability to ssh to the
+# worker without a password.  This needs to be set up by
+# generating a private-public key pair on the manager
+# and copying the public key to the worker's authorized hosts
+# file.
+
+# TODO: ideally, would like to check if the part of the
+# project you are checking out has changed since last
+# revision.  Need Perl.  Need to do svn info $REV,
+# look for line like "Last Changed Rev: 89", then look
+# up "latest" link for this script and get its revision
+# number, compare the two.  If the latest is greater
+# than or equal to the last changed number, nothing to
+# do.
+
 if [ $# = 0 ]; then
   echo "No revision number specified\n"
   exit 1
 fi
 source config_manager.sh
-REV_NAME=$BRANCH-r#1
+REV_NAME=$BRANCH-r$1
 WORKING_DIR=$WORK_DIR/$REV_NAME
 $SSH $WORKER $WORKER_SCRIPT_DIR/run_worker.sh $1
 WEB_REP=$WEB_DIR/test/$REV_NAME
@@ -88,6 +107,4 @@ cd $WEB_DIR/test
 perl $SCRIPTS/update_symlink.pl $1
 echo "Done."
 
-ssh $WORKER rm -rf $WORKING_DIR
-ssh $WORKER rm -f $WORK_DIR/svn_out-$REV_NAME.txt
-ssh $WORKER rm -f $WORK_DIR/svn_err-$REV_NAME.txt
+ssh $WORKER "rm -rf $WORKING_DIR $WORK_DIR/svn_out-$REV_NAME.txt $WORK_DIR/svn_err-$REV_NAME.txt"
