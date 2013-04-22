@@ -42,7 +42,7 @@ fi
 source config_manager.sh
 REV_NAME=$BRANCH-r$1
 WORKING_DIR=$WORK_DIR/$REV_NAME
-$SSH $WORKER $WORKER_SCRIPT_DIR/run_worker.sh $1
+$SSH $WORKER "cd $WORKER_SCRIPT_DIR ; ./run_worker.sh $1"
 WEB_REP=$WEB_DIR/test/$REV_NAME
 rm -rf $WEB_REP
 mkdir -p $WEB_REP
