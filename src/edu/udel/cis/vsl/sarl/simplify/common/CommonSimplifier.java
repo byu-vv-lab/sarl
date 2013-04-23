@@ -259,50 +259,55 @@ public abstract class CommonSimplifier implements Simplifier {
 
 	protected SymbolicExpression simplifyGenericExpression(
 			SymbolicExpression expression) {
-		SymbolicOperator operator = expression.operator();
+		if (expression.isNull())
+			return expression;
+		else {
+			SymbolicOperator operator = expression.operator();
 
-		if (operator == SymbolicOperator.CONCRETE) {
-			SymbolicObject object = (SymbolicObject) expression.argument(0);
-			SymbolicObjectKind kind = object.symbolicObjectKind();
+			if (operator == SymbolicOperator.CONCRETE) {
+				SymbolicObject object = (SymbolicObject) expression.argument(0);
+				SymbolicObjectKind kind = object.symbolicObjectKind();
 
-			switch (kind) {
-			case BOOLEAN:
-			case INT:
-			case NUMBER:
-			case STRING:
-				return expression;
-			default:
-			}
-		}
-		{
-			SymbolicType type = expression.type();
-			SymbolicType simplifiedType = simplifyType(type);
-			int numArgs = expression.numArguments();
-			SymbolicObject[] simplifiedArgs = null;
-
-			if (type == simplifiedType) {
-				for (int i = 0; i < numArgs; i++) {
-					SymbolicObject arg = expression.argument(i);
-					SymbolicObject simplifiedArg = simplifyObject(arg);
-
-					if (simplifiedArg != arg) {
-						simplifiedArgs = new SymbolicObject[numArgs];
-						for (int j = 0; j < i; j++)
-							simplifiedArgs[j] = expression.argument(j);
-						simplifiedArgs[i] = simplifiedArg;
-						for (int j = i + 1; j < numArgs; j++)
-							simplifiedArgs[j] = simplifyObject(expression
-									.argument(j));
-					}
+				switch (kind) {
+				case BOOLEAN:
+				case INT:
+				case NUMBER:
+				case STRING:
+					return expression;
+				default:
 				}
-			} else {
-				simplifiedArgs = new SymbolicObject[numArgs];
-				for (int i = 0; i < numArgs; i++)
-					simplifiedArgs[i] = simplifyObject(expression.argument(i));
 			}
-			if (simplifiedArgs == null)
-				return expression;
-			return universe.make(operator, simplifiedType, simplifiedArgs);
+			{
+				SymbolicType type = expression.type();
+				SymbolicType simplifiedType = simplifyType(type);
+				int numArgs = expression.numArguments();
+				SymbolicObject[] simplifiedArgs = null;
+
+				if (type == simplifiedType) {
+					for (int i = 0; i < numArgs; i++) {
+						SymbolicObject arg = expression.argument(i);
+						SymbolicObject simplifiedArg = simplifyObject(arg);
+
+						if (simplifiedArg != arg) {
+							simplifiedArgs = new SymbolicObject[numArgs];
+							for (int j = 0; j < i; j++)
+								simplifiedArgs[j] = expression.argument(j);
+							simplifiedArgs[i] = simplifiedArg;
+							for (int j = i + 1; j < numArgs; j++)
+								simplifiedArgs[j] = simplifyObject(expression
+										.argument(j));
+						}
+					}
+				} else {
+					simplifiedArgs = new SymbolicObject[numArgs];
+					for (int i = 0; i < numArgs; i++)
+						simplifiedArgs[i] = simplifyObject(expression
+								.argument(i));
+				}
+				if (simplifiedArgs == null)
+					return expression;
+				return universe.make(operator, simplifiedType, simplifiedArgs);
+			}
 		}
 	}
 
