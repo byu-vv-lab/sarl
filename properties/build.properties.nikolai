@@ -1,0 +1,6 @@
+cvc3.jni.dir=/Users/tester/VSL/Tools/lib/cvc3-dynamic-libs
+cvc3.lib.jar=/Users/tester/VSL/Tools/lib/libcvc3.jar
+clj-ds.classes=/Users/tester/VSL/Tools/src/clj-ds-master/src/main/java
+pcollections.jar=/Users/tester/VSL/Tools/lib/pcollections.jar
+junit.jar=/Users/tester/VSL/Tools/lib/junit.jar
+jacoco.jar=/Users/tester/VSL/Tools/src/jacoco/lib/jacocoant.jar
