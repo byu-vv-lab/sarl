@@ -38,6 +38,7 @@ if ! svn checkout -r $1 $REPO $WORKING_DIR >svn_out-$REV_NAME.txt 2>svn_err-$REV
 fi
 echo "Checkout succeeded"
 cd $WORKING_DIR
+svn info > svn_info-$REV_NAME.txt
 if ! cp properties/$PROPS ./build.properties; then
   echo "Error: could not copy property file $PROPS"
   exit 1

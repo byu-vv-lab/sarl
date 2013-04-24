@@ -15,6 +15,7 @@
 # WORKER : the worker (e.g., siegel@johann.cis.udel.edu)
 # WORKER_SCRIPT_DIR : where worker has his script
 # WORK_DIR : project working directory on worker
+# MANAGER_SCRIPT_DIR : manager's script directory
 # WEB_DIR : project web directory on manager
 # BRANCH : name to use for the part that will be tested (e.g., trunk)
 # SSH : ssh command with options
@@ -49,6 +50,7 @@ mkdir -p $WEB_REP
 cd $WEB_REP
 $SCP $WORKER:$WORKING_DIR/ant_out.txt .
 $SCP $WORKER:$WORKING_DIR/ant_err.txt .
+$SCP $WORKER:$WORKING_DIR/svn_info-r$1.txt .
 $SCP -r $WORKER:$WORKING_DIR/junit/reports junit
 $SCP -r $WORKER:$WORKING_DIR/coverage coverage
 $SCP -r $WORKER:$WORKING_DIR/doc/javadoc javadoc
@@ -72,7 +74,7 @@ cat > $INDEXHTML <<EOF
 border:1px solid #666;background-color:#ffffcc;padding:8px;">
 <pre>
 EOF
-svn info -r $1 >> $INDEXHTML
+cat >> $INDEXHTML svn_info-r$1.txt
 cat >> $INDEXHTML <<EOF
 </pre>
 </div>
@@ -104,7 +106,7 @@ cat >> $INDEXHTML <<EOF
 EOF
 
 cd $WEB_DIR/test
-perl $SCRIPTS/update_symlink.pl $1
+perl $MANAGER_SCRIPT_DIR/update_symlink.pl $1
 echo "Done."
 
 ssh $WORKER "rm -rf $WORKING_DIR $WORK_DIR/svn_out-$REV_NAME.txt $WORK_DIR/svn_err-$REV_NAME.txt"

@@ -20,9 +20,9 @@ chomp($lsReturn);
 ($oldRevision) = ($lsReturn =~ /.*r(\d+)$/);
 print "Previous latest is r$oldRevision, new revision is  r$newRevision, ";
 if (!defined($oldRevision) || $oldRevision < $newRevision) {
-  print "changing latest to point to r$newRevision\n";
-  system("rm -f latest; ln -s r$newRevision latest");
+    print "changing latest to point to r$newRevision\n";
+    system("rm -f latest; ln -s r$newRevision latest");
 } else 
-  print "keeping latest unchanged\n"
+    print "keeping latest unchanged\n";
 close(LOCK) || die "Could not close $lockFile";
 0;
