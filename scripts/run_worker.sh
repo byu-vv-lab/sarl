@@ -44,5 +44,5 @@ if ! cp properties/$PROPS ./build.properties; then
   exit 1
 fi
 echo "Running ant -Drevision=$1 all ..."
-ant -Drevision=$1 all > ant_out.txt 2>ant_err.txt
+$SET_ENV ; ant -Drevision=$1 all > ant_out.txt 2>ant_err.txt
 echo "Done."
