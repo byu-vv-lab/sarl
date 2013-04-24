@@ -11,18 +11,20 @@
 # Must be called from within "test" directory
 
 $lockFile = "SYMLINK_UPDATE_LOCK";
-$newRevision = $ARGV[0];
+$newRevisionName = $ARGV[0];
+($newRevision) = ($newRevisionName =~ /.*r(\d+)$/);
 system("touch $lockFile") unless -e $lockFile;
 open(LOCK, "+< $lockFile") || die "Could not open $lockFile";
 flock(LOCK, 2) || die "Can not flock $lockFile";
 $lsReturn = `ls -l latest`;
 chomp($lsReturn);
 ($oldRevision) = ($lsReturn =~ /.*r(\d+)$/);
-print "Previous latest is r$oldRevision, new revision is  r$newRevision, ";
+print "Previous latest is $lsReturn, new revision is  $newRevisionName\n";
 if (!defined($oldRevision) || $oldRevision < $newRevision) {
-    print "changing latest to point to r$newRevision\n";
-    system("rm -f latest; ln -s r$newRevision latest");
-} else 
+    print "changing latest to point to $newRevisionName\n";
+    system("rm -f latest; ln -s $newRevisionName latest");
+} else {
     print "keeping latest unchanged\n";
+}
 close(LOCK) || die "Could not close $lockFile";
 0;

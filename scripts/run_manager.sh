@@ -50,7 +50,7 @@ mkdir -p $WEB_REP
 cd $WEB_REP
 $SCP $WORKER:$WORKING_DIR/ant_out.txt .
 $SCP $WORKER:$WORKING_DIR/ant_err.txt .
-$SCP $WORKER:$WORKING_DIR/svn_info-r$1.txt .
+$SCP $WORKER:$WORKING_DIR/svn_info-$REV_NAME.txt .
 $SCP -r $WORKER:$WORKING_DIR/junit/reports junit
 $SCP -r $WORKER:$WORKING_DIR/coverage coverage
 $SCP -r $WORKER:$WORKING_DIR/doc/javadoc javadoc
@@ -74,7 +74,7 @@ cat > $INDEXHTML <<EOF
 border:1px solid #666;background-color:#ffffcc;padding:8px;">
 <pre>
 EOF
-cat >> $INDEXHTML svn_info-r$1.txt
+cat >> $INDEXHTML svn_info-$REV_NAME.txt
 cat >> $INDEXHTML <<EOF
 </pre>
 </div>
@@ -106,7 +106,7 @@ cat >> $INDEXHTML <<EOF
 EOF
 
 cd $WEB_DIR/test
-perl $MANAGER_SCRIPT_DIR/update_symlink.pl $1
+perl $MANAGER_SCRIPT_DIR/update_symlink.pl $REV_NAME
 echo "Done."
 
-ssh $WORKER "rm -rf $WORKING_DIR $WORK_DIR/svn_out-$REV_NAME.txt $WORK_DIR/svn_err-$REV_NAME.txt"
+$SSH $WORKER "rm -rf $WORKING_DIR $WORK_DIR/svn_out-$REV_NAME.txt $WORK_DIR/svn_err-$REV_NAME.txt"
