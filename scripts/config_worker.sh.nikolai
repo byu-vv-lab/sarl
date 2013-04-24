@@ -2,3 +2,5 @@ WORK_DIR=/Users/tester/work
 BRANCH=trunk
 REPO="svn://vsl.cis.udel.edu/sarl/trunk"
 PROPS="build.properties.nikolai"
+SET_ENV="export DYLD_LIBRARY_PATH=/Users/tester/VSL/Tools/lib"
+
