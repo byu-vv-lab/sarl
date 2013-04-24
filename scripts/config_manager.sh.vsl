@@ -4,6 +4,7 @@ WORKER_SCRIPT_DIR=/Users/tester/repos/sarl/trunk/scripts
 WORK_DIR=/Users/tester/work
 BRANCH=trunk
 REPO="svn://vsl.cis.udel.edu/sarl/trunk"
+MANAGER_SCRIPT_DIR=/usa/siegel/sarl-scripts
 WEB_DIR=/home/www/vsl/sarl
 SSH="/usr/local/openssh-5.3p1/bin/ssh -i /usa/siegel/.ssh/id_dsa_test"
 SCP="/usr/local/openssh-5.3p1/bin/scp -i /usa/siegel/.ssh/id_dsa_test"
