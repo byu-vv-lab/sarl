@@ -26,6 +26,7 @@ public class CVC3TheoremProverTest {
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
 	
 	
