@@ -40,7 +40,7 @@ if [ $# = 0 ]; then
   echo "No revision number specified\n"
   exit 1
 fi
-source config_manager.sh
+. ./config_manager.sh
 REV_NAME=$BRANCH-r$1
 WORKING_DIR=$WORK_DIR/$REV_NAME
 $SSH $WORKER "cd $WORKER_SCRIPT_DIR ; ./run_worker.sh $1"
@@ -105,8 +105,14 @@ cat >> $INDEXHTML <<EOF
 </html>
 EOF
 
+rm -f svn_info-$REV_NAME.txt ant_out.txt ant_err.txt
 cd $WEB_DIR/test
 perl $MANAGER_SCRIPT_DIR/update_symlink.pl $REV_NAME
+chown -R siegel $REV_NAME
+chgrp -R vsl $REV_NAME
+chmod -R ugo+rx $REV_NAME
+chown siegel latest
+chgrp vsl latest
 echo "Done."
 
 $SSH $WORKER "rm -rf $WORKING_DIR $WORK_DIR/svn_out-$REV_NAME.txt $WORK_DIR/svn_err-$REV_NAME.txt"
