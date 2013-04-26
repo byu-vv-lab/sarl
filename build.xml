@@ -117,7 +117,7 @@
 				<include name="TEST-*.xml" />
 			</fileset>
 			<report format="frames" todir="${junit.reports.dir}">
-				<param name="TITLE" expression="JUnit Report for SARL Project, Revision ${revision}" />
+				<param name="TITLE" expression="JUnit Report for SARL ${revision}" />
 			</report>
 		</junitreport>
 		<fail message="Tests failed. Check log and/or reports." if="test.failed" />
@@ -128,7 +128,7 @@
 			<executiondata>
 				<file file="jacoco.exec" />
 			</executiondata>
-			<structure name="SARL Test Coverage Report, Revision ${revision}">
+			<structure name="Test Coverage Report for SARL ${revision}">
 				<classfiles>
 					<fileset dir="${bin.dir}" />
 				</classfiles>
@@ -146,7 +146,7 @@
 	<target name="javadoc">
 		<delete dir="${javadoc.dir}" quiet="true" />
 		<mkdir dir="${javadoc.dir}" />
-		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="SARL Project API, Revision ${revision}" access="public" classpathref="test.execute.classpath" sourcepath="${src.dir}" failonerror="false">
+		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="API for SARL ${revision}" access="public" classpathref="test.execute.classpath" sourcepath="${src.dir}" failonerror="false">
 			<!--
 			<fileset dir="${src.dir}" defaultexcludes="yes">
 				<include name="**/*.java" />
