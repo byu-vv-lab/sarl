@@ -1,4 +1,0 @@
-WORK_DIR=/tmp/sarl
-BRANCH=trunk
-REPO="svn://vsl.cis.udel.edu/sarl/trunk"
-PROPS="build.properties.johann"
