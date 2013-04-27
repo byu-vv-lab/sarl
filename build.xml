@@ -21,10 +21,6 @@
 	<property name="jar-name" value="sarl.jar" />
 	<property name="jar-path" value="${basedir}/${jar-name}" />
 
-	<!-- No main class for SARL
-	<property name="main-class" value="edu.udel.cis.vsl.sarl.SARL" />
- 	-->
-
 	<!-- Junit and JaCoCo Coverage  -->
 
 	<property name="test.src.dir" location="${basedir}/test" />
@@ -33,7 +29,6 @@
 	<property name="junit.data.dir" location="${junit.dir}/data" />
 	<property name="junit.reports.dir" location="${junit.dir}/reports" />
 	<property name="coverage.dir" location="${basedir}/coverage" />
-
 	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
 		<classpath path="${jacoco.jar}" />
 	</taskdef>
@@ -102,7 +97,7 @@
 
 	<target name="test-run" depends="test-compile">
 		<jacoco:coverage>
-			<junit fork="true" forkmode="once" failureProperty="test.failed" timeout="300000">
+			<junit fork="true" forkmode="once" timeout="300000">
 				<jvmarg value="-ea" />
 				<classpath refid="test.execute.classpath" />
 				<formatter type="brief" usefile="false" />
@@ -120,7 +115,6 @@
 				<param name="TITLE" expression="JUnit Report for SARL ${revision}" />
 			</report>
 		</junitreport>
-		<fail message="Tests failed. Check log and/or reports." if="test.failed" />
 	</target>
 
 	<target name="test" depends="test-run">
@@ -147,11 +141,6 @@
 		<delete dir="${javadoc.dir}" quiet="true" />
 		<mkdir dir="${javadoc.dir}" />
 		<javadoc destdir="${javadoc.dir}" Overview="src/overview.html" author="false" version="true" use="true" windowtitle="API for SARL ${revision}" access="public" classpathref="test.execute.classpath" sourcepath="${src.dir}" failonerror="false">
-			<!--
-			<fileset dir="${src.dir}" defaultexcludes="yes">
-				<include name="**/*.java" />
-			</fileset>
-			-->
 		</javadoc>
 	</target>
 
@@ -163,7 +152,6 @@
 		<delete dir="${junit.dir}" />
 		<delete dir="${javadoc.dir}" />
 		<delete file="${jar-path}" />
-		<delete file="${manifest-file}" />
 		<delete dir="${coverage.dir}" />
 		<delete file="${basedir}/jacoco.exec" />
 	</target>
