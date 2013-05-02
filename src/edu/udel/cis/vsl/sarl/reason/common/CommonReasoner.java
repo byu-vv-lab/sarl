@@ -24,6 +24,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -78,30 +79,36 @@ public class CommonReasoner implements Reasoner {
 
 	@Override
 	public SymbolicExpression simplify(SymbolicExpression expression) {
+		if (expression == null)
+			throw new SARLException("Argument to Reasoner.simplify is null.");
 		return simplifier.apply(expression);
 	}
 
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
-		BooleanExpression simplifiedPredicate = (BooleanExpression) simplifier
-				.apply(predicate);
-		ValidityResult result;
-
-		universe().incrementValidCount();
-		if (simplifiedPredicate.isTrue())
-			result = Prove.RESULT_YES;
-		else if (simplifiedPredicate.isFalse())
-			result = Prove.RESULT_NO;
+		if (predicate == null)
+			throw new SARLException("Argument to Reasoner.valid is null.");
 		else {
-			result = validityCache.get(simplifiedPredicate);
-			if (result != null)
-				return result;
-			if (prover == null)
-				prover = factory.newProver(getReducedContext());
-			result = prover.valid(simplifiedPredicate);
-			validityCache.put(predicate, result);
+			BooleanExpression simplifiedPredicate = (BooleanExpression) simplifier
+					.apply(predicate);
+			ValidityResult result;
+
+			universe().incrementValidCount();
+			if (simplifiedPredicate.isTrue())
+				result = Prove.RESULT_YES;
+			else if (simplifiedPredicate.isFalse())
+				result = Prove.RESULT_NO;
+			else {
+				result = validityCache.get(simplifiedPredicate);
+				if (result != null)
+					return result;
+				if (prover == null)
+					prover = factory.newProver(getReducedContext());
+				result = prover.valid(simplifiedPredicate);
+				validityCache.put(predicate, result);
+			}
+			return result;
 		}
-		return result;
 	}
 
 	@Override
