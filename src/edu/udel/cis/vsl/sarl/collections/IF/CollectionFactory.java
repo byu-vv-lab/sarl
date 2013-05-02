@@ -100,7 +100,7 @@ public interface CollectionFactory {
 			Comparator<? super T> comparator);
 
 	/**
-	 * Returns a SymbolicExpressionSequenceIF comprising the given sequence of
+	 * Returns a SymbolicSequence comprising the given sequence of
 	 * elements.
 	 * 
 	 * @param elements
@@ -112,7 +112,7 @@ public interface CollectionFactory {
 			Iterable<? extends T> elements);
 
 	/**
-	 * Returns a SymbolicExpressionSequenceIF comprising the sequence of
+	 * Returns a SymbolicSequence comprising the sequence of
 	 * elements specified as an array.
 	 * 
 	 * @param elements

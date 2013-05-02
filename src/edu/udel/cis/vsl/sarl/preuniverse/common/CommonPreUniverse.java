@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
@@ -109,7 +110,6 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private NumericExpressionFactory numericFactory;
 
-
 	/**
 	 * The comparator on all symbolic objects used by this universe to sort such
 	 * objects.
@@ -148,7 +148,6 @@ public class CommonPreUniverse implements PreUniverse {
 
 	private int proverValidCount = 0;
 
-	
 	// Constructor...
 
 	/**
@@ -896,7 +895,6 @@ public class CommonPreUniverse implements PreUniverse {
 		return objectFactory.objects();
 	}
 
-
 	@Override
 	public BooleanObject booleanObject(boolean value) {
 		return objectFactory.booleanObject(value);
@@ -1588,6 +1586,62 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
+	/**
+	 * Returns an iterable object equivalent to given one except that any "null"
+	 * values are replaced by the SymbolicExpression NULL. Also, trailing
+	 * nulls/NULLs are removed.
+	 * 
+	 * @param values
+	 *            any iterable of symbolic expressions, which may contain null
+	 *            values
+	 * @return an iterable object with nulls replaced with NULLs
+	 */
+	private <T extends SymbolicExpression> Iterable<? extends SymbolicExpression> replaceNulls(
+			Iterable<T> values) {
+		int count = 0;
+		int lastNonNullIndex = -1;
+
+		for (T value : values) {
+			if (value == null) { // element in position count is null
+				LinkedList<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
+				Iterator<T> iter = values.iterator();
+
+				for (int i = 0; i < count; i++)
+					list.add(iter.next());
+				list.add(nullExpression);
+				iter.next();
+				count++;
+				while (iter.hasNext()) {
+					T element = iter.next();
+
+					list.add(element == null ? nullExpression : element);
+					if (element != null && !element.isNull())
+						lastNonNullIndex = count;
+					count++;
+				}
+				// count is size of list, lastNonNullIndex is index of
+				// last non-null element
+				if (lastNonNullIndex < count - 1) {
+					// remove elements lastNonNullIndex+1,...,count-1
+					list.subList(lastNonNullIndex + 1, count).clear();
+				}
+				return list;
+			}
+			if (!value.isNull())
+				lastNonNullIndex = count;
+			count++;
+		}
+		if (lastNonNullIndex < count - 1) {
+			LinkedList<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
+			Iterator<T> iter = values.iterator();
+
+			for (int i = 0; i <= lastNonNullIndex; i++)
+				list.add(iter.next());
+			return list;
+		}
+		return values;
+	}
+
 	@Override
 	public SymbolicExpression denseArrayWrite(SymbolicExpression array,
 			Iterable<? extends SymbolicExpression> values) {
@@ -1598,14 +1652,11 @@ public class CommonPreUniverse implements PreUniverse {
 		else {
 			SymbolicType elementType = ((SymbolicArrayType) array.type())
 					.elementType();
+			values = replaceNulls(values);
 			int count = 0;
 
 			for (SymbolicExpression value : values) {
-				if (value == null)
-					throw err("Element " + count
-							+ " of values argument to denseArrayWrite is null."
-							+ "\nUse NULL expression instead");
-				if (value.isNull() || incompatible(elementType, value.type()))
+				if (!value.isNull() && incompatible(elementType, value.type()))
 					throw err("Element "
 							+ count
 							+ " of values argument to denseArrayWrite has incompatible type.\n"
@@ -1812,5 +1863,5 @@ public class CommonPreUniverse implements PreUniverse {
 			Collection<T> javaCollection) {
 		return collectionFactory.basicCollection(javaCollection);
 	}
-	
+
 }

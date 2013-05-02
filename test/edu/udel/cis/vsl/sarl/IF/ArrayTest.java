@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
@@ -151,6 +151,23 @@ public class ArrayTest {
 		t1 = (SymbolicArrayType) universe.canonic(t1);
 		t2 = (SymbolicArrayType) universe.canonic(t2);
 		assertSame(t1, t2);
+	}
+
+	@Test
+	public void denseTest() {
+		SymbolicArrayType t = universe.arrayType(integerType);
+		SymbolicExpression a = universe.symbolicConstant(
+				universe.stringObject("a"), t);
+		SymbolicExpression b1 = universe.denseArrayWrite(
+				a,
+				Arrays.asList(new SymbolicExpression[] { null, null, two, null,
+						two, null, null }));
+		SymbolicExpression b2 = universe.arrayWrite(a, two, two);
+
+		b2 = universe.arrayWrite(b2, universe.integer(4), two);
+		out.println("b1 = " + b1);
+		out.println("b2 = " + b2);
+		assertEquals(b2, b1);
 	}
 
 }
