@@ -39,7 +39,7 @@ public class TypeSequenceComparator implements
 	@Override
 	public int compare(SymbolicTypeSequence o1, SymbolicTypeSequence o2) {
 		int size = o1.numTypes();
-		int result = size = o2.numTypes();
+		int result = size - o2.numTypes();
 
 		if (result != 0)
 			return result;
