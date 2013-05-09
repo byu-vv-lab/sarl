@@ -75,7 +75,7 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		this.typeComparator = idealFactory.typeFactory().typeComparator();
 	}
 
-	private static boolean debug = true;
+	private static boolean debug = false;
 
 	@Override
 	public int compare(NumericExpression o1, NumericExpression o2) {
