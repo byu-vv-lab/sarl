@@ -26,10 +26,13 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
@@ -82,6 +85,16 @@ public class CommonReasoner implements Reasoner {
 		if (expression == null)
 			throw new SARLException("Argument to Reasoner.simplify is null.");
 		return simplifier.apply(expression);
+	}
+
+	@Override
+	public BooleanExpression simplify(BooleanExpression expression) {
+		return (BooleanExpression) simplify((SymbolicExpression) expression);
+	}
+
+	@Override
+	public NumericExpression simplify(NumericExpression expression) {
+		return (NumericExpression) simplify((SymbolicExpression) expression);
 	}
 
 	@Override
@@ -140,6 +153,18 @@ public class CommonReasoner implements Reasoner {
 	@Override
 	public Map<SymbolicConstant, SymbolicExpression> substitutionMap() {
 		return simplifier.substitutionMap();
+	}
+
+	@Override
+	public boolean isValid(BooleanExpression predicate) {
+		return valid(predicate).getResultType() == ResultType.YES;
+	}
+
+	@Override
+	public Number extractNumber(NumericExpression expression) {
+		NumericExpression simple = (NumericExpression) simplify(expression);
+
+		return universe().extractNumber(simple);
 	}
 
 }

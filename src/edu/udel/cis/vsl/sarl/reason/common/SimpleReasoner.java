@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.reason.common;
 
@@ -25,14 +25,16 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
-
 
 public class SimpleReasoner implements Reasoner {
 
@@ -69,6 +71,16 @@ public class SimpleReasoner implements Reasoner {
 	}
 
 	@Override
+	public BooleanExpression simplify(BooleanExpression expression) {
+		return (BooleanExpression) simplify((SymbolicExpression) expression);
+	}
+
+	@Override
+	public NumericExpression simplify(NumericExpression expression) {
+		return (NumericExpression) simplify((SymbolicExpression) expression);
+	}
+
+	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		ValidityResult result = validityCache.get(predicate);
 
@@ -102,6 +114,18 @@ public class SimpleReasoner implements Reasoner {
 	@Override
 	public Map<SymbolicConstant, SymbolicExpression> substitutionMap() {
 		return simplifier.substitutionMap();
+	}
+
+	@Override
+	public boolean isValid(BooleanExpression predicate) {
+		return valid(predicate).getResultType() == ResultType.YES;
+	}
+
+	@Override
+	public Number extractNumber(NumericExpression expression) {
+		NumericExpression simple = (NumericExpression) simplify(expression);
+
+		return universe().extractNumber(simple);
 	}
 
 	// TODO: do some more intelligent things:

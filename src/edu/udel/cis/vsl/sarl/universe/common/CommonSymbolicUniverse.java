@@ -24,6 +24,8 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
@@ -83,6 +85,16 @@ public class CommonSymbolicUniverse extends CommonPreUniverse implements
 
 	public void setReasonerFactory(ReasonerFactory reasonerFactory) {
 		this.reasonerFactory = reasonerFactory;
+	}
+
+	@Override
+	public Number extractNumber(BooleanExpression assumption,
+			NumericExpression expression) {
+		Number result = extractNumber(expression);
+
+		if (result != null)
+			return result;
+		return reasoner(assumption).extractNumber(expression);
 	}
 
 }

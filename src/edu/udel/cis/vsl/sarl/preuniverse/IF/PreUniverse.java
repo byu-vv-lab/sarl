@@ -62,6 +62,17 @@ public interface PreUniverse {
 	SymbolicObject canonic(SymbolicObject object);
 
 	/**
+	 * The result is the same as that of canonic on objects, but since the
+	 * result of canonic on a SymbolicExpression must be a SymbolicExpression,
+	 * this method is provided so that users don't have to cast.
+	 * 
+	 * @param expression
+	 *            any symbolic expression belonging to this universe
+	 * @return the canonic representative equal to that expression
+	 */
+	SymbolicExpression canonic(SymbolicExpression expression);
+
+	/**
 	 * Returns the number of canonic symbolic objects controlled by this
 	 * universe.
 	 * 
@@ -87,6 +98,21 @@ public interface PreUniverse {
 	Collection<SymbolicObject> objects();
 
 	// Types...
+
+	/**
+	 * Returns a boolean expression which holds iff the two types are
+	 * compatible. Two types are compatible if it is possible for them to have a
+	 * value in common. For the most part, this is the same as saying they are
+	 * the same type. The exception is that an incomplete array type and a
+	 * complete array type with compatible element types are compatible.
+	 * 
+	 * @param type0
+	 *            a type
+	 * @param type1
+	 *            a type
+	 * @return a boolean expression which holds iff the two types are compatible
+	 */
+	BooleanExpression compatible(SymbolicType type0, SymbolicType type1);
 
 	/**
 	 * The boolean type.
@@ -799,6 +825,18 @@ public interface PreUniverse {
 	BooleanExpression neq(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
+	 * Does the integer a divide the integer b evenly? I.e, does there exist an
+	 * integer n such that b=a*n?
+	 * 
+	 * @param a
+	 *            a symbolic expression of integer type
+	 * @param b
+	 *            a symbolic expression of integer type
+	 * @return a symbolic expression of boolean type holding iff a divides b
+	 */
+	BooleanExpression divides(NumericExpression a, NumericExpression b);
+
+	/**
 	 * Returns the universally quantified expression forall(x).e.
 	 * 
 	 * @param boundVariable
@@ -951,6 +989,15 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression array(SymbolicType elementType,
 			Iterable<? extends SymbolicExpression> elements);
+
+	/**
+	 * Returns array of length 0.
+	 * 
+	 * @param elementType
+	 *            the type of the non-existent elements of this array
+	 * @return array of length 0 of given type
+	 */
+	SymbolicExpression emptyArray(SymbolicType elementType);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a

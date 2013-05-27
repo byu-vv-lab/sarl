@@ -224,7 +224,8 @@ public class CommonPreUniverse implements PreUniverse {
 	 * @return canonic representative of that object's equivalence class under
 	 *         "equals" (a la Flyweight Pattern)
 	 */
-	protected SymbolicExpression canonic(SymbolicExpression expression) {
+	@Override
+	public SymbolicExpression canonic(SymbolicExpression expression) {
 		return objectFactory.canonic(expression);
 	}
 
@@ -369,8 +370,8 @@ public class CommonPreUniverse implements PreUniverse {
 	 *            a type
 	 * @return a boolean expression which holds iff the two types are compatible
 	 */
-	protected BooleanExpression compatible(SymbolicType type0,
-			SymbolicType type1) {
+	@Override
+	public BooleanExpression compatible(SymbolicType type0, SymbolicType type1) {
 		return compatible(type0, type1, 0);
 	}
 
@@ -1263,6 +1264,11 @@ public class CommonPreUniverse implements PreUniverse {
 		return not(equals(arg0, arg1));
 	}
 
+	@Override
+	public BooleanExpression divides(NumericExpression a, NumericExpression b) {
+		return equals(modulo(b, a), zeroInt());
+	}
+
 	private <T extends SymbolicExpression> SymbolicSequence<T> sequence(
 			Iterable<T> elements) {
 		if (elements instanceof SymbolicSequence<?>)
@@ -1419,6 +1425,13 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, integer(count)), sequence(elements));
+	}
+
+	@Override
+	public SymbolicExpression emptyArray(SymbolicType elementType) {
+		return expression(SymbolicOperator.CONCRETE,
+				arrayType(elementType, zeroInt()),
+				collectionFactory.emptySequence());
 	}
 
 	@Override

@@ -22,9 +22,11 @@ import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 /**
  * A reasoner provides methods to simplify symbolic expressions and prove or
@@ -39,13 +41,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
  * 
  */
 public interface Reasoner {
-
-	// /**
-	// * Get the symbolic universe associated with this Reasoner.
-	// *
-	// * @return the symbolic universe
-	// */
-	// SymbolicUniverse universe();
 
 	/**
 	 * In the process of simplifying the initial context, this simplier may have
@@ -135,6 +130,28 @@ public interface Reasoner {
 	SymbolicExpression simplify(SymbolicExpression expression);
 
 	/**
+	 * Simplifies the given boolean expression. Result is same as that of
+	 * {@link #simplify(SymbolicExpression)}, but this saves you the trouble of
+	 * casting to {@link BooleanExpression}.
+	 * 
+	 * @param expression
+	 *            any BooleanExpression
+	 * @return simplified version of the expression
+	 */
+	BooleanExpression simplify(BooleanExpression expression);
+
+	/**
+	 * Simplifies the given numeric expression. Result is same as that of
+	 * {@link #simplify(SymbolicExpression)}, but this saves you the trouble of
+	 * casting to {@link NumericExpression}.
+	 * 
+	 * @param expression
+	 *            any NumericExpression
+	 * @return simplified version of the expression
+	 */
+	NumericExpression simplify(NumericExpression expression);
+
+	/**
 	 * Attempts to determine whether the statement p(x)=>q(x) is a tautology.
 	 * Here, p is the "assumption", q is the "predicate", and x stands for the
 	 * set of all symbolic constants which occur in p or q.
@@ -183,6 +200,17 @@ public interface Reasoner {
 	ValidityResult validOrModel(BooleanExpression predicate);
 
 	/**
+	 * Equivalent to
+	 * <code>valid(predicate).getResultType()==ResultType.YES</code>.
+	 * 
+	 * @param predicate
+	 *            a boolean expression
+	 * @return if <code>true</code> is returned, the predicate is valid; nothing
+	 *         can be concluded if <code>false</code> is returned
+	 */
+	boolean isValid(BooleanExpression predicate);
+
+	/**
 	 * If you want to see the queries and results (e.g., for debugging), set
 	 * this to the appropriate PrintStream. Setting to null turns off that
 	 * output. It is null, be default.
@@ -191,4 +219,15 @@ public interface Reasoner {
 	 *            PrintStream to which you want the output sent
 	 */
 	void setOutput(PrintStream out);
+
+	/**
+	 * If the given expression can be reduced to a concrete numeric value using
+	 * the context, returns that concrete value, else returns null.
+	 * 
+	 * @param expression
+	 *            any numeric expression
+	 * @return the concrete (Number) numeric value of that expression or null
+	 */
+	Number extractNumber(NumericExpression expression);
+
 }

@@ -94,4 +94,27 @@ public class Universes {
 		return universe;
 	}
 
+	// public static TrigonometricUniverse newTrigonometricUniverse() {
+	// NumberFactory numberFactory = Numbers.REAL_FACTORY;
+	// ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
+	// SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
+	// CollectionFactory collectionFactory = Collections
+	// .newCollectionFactory(objectFactory);
+	// ExpressionFactory expressionFactory = Expressions
+	// .newStandardExpressionFactory(numberFactory, objectFactory,
+	// typeFactory, collectionFactory);
+	// FactorySystem system = PreUniverses.newFactorySystem(objectFactory,
+	// typeFactory, expressionFactory, collectionFactory);
+	// TrigonometricUniverse universe = new TrigonometricUniverse(system);
+	// SimplifierFactory simplifierFactory = Expressions
+	// .standardSimplifierFactory(expressionFactory, universe);
+	// TheoremProverFactory proverFactory = Prove
+	// .newCVC3TheoremProverFactory(universe);
+	// ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+	// simplifierFactory, proverFactory);
+	//
+	// universe.setReasonerFactory(reasonerFactory);
+	// return universe;
+	// }
+
 }
