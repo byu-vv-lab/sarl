@@ -119,7 +119,7 @@ public class CommonPreUniverse implements PreUniverse {
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
 	 */
-	private Substituter substituter;
+	private ExpressionSubstituter substituter;
 
 	/** The boolean type. */
 	private SymbolicType booleanType;
@@ -175,7 +175,8 @@ public class CommonPreUniverse implements PreUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		substituter = new Substituter(this, collectionFactory, typeFactory);
+		substituter = new ExpressionSubstituter(this, collectionFactory,
+				typeFactory);
 	}
 
 	// Helper methods...
@@ -927,6 +928,11 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public SymbolicExpression nullExpression() {
+		return nullExpression;
+	}
+
+	@Override
 	public NumericExpression number(NumberObject numberObject) {
 		return numericFactory.number(numberObject);
 	}
@@ -1068,8 +1074,15 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
-	public SymbolicExpression substitute(SymbolicExpression expression,
+	public SymbolicExpression substituteSymbolicConstants(
+			SymbolicExpression expression,
 			Map<SymbolicConstant, SymbolicExpression> map) {
+		return substituter.substitute(expression, new OptimizedMap(map));
+	}
+
+	@Override
+	public SymbolicExpression substitute(SymbolicExpression expression,
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		return substituter.substitute(expression, map);
 	}
 
@@ -1179,7 +1192,7 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression substitute(SymbolicExpression expression,
 			SymbolicConstant variable, SymbolicExpression value) {
-		return substitute(expression,
+		return substituteSymbolicConstants(expression,
 				new SingletonMap<SymbolicConstant, SymbolicExpression>(
 						variable, value));
 	}

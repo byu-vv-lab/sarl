@@ -25,9 +25,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -44,7 +42,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
-public class Substituter {
+public class ExpressionSubstituter {
 
 	private CollectionFactory collectionFactory;
 
@@ -52,7 +50,7 @@ public class Substituter {
 
 	private PreUniverse universe;
 
-	public Substituter(PreUniverse universe,
+	public ExpressionSubstituter(PreUniverse universe,
 			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory) {
 		this.universe = universe;
 		this.collectionFactory = collectionFactory;
@@ -72,13 +70,13 @@ public class Substituter {
 	 * @param set
 	 *            a symbolic collection of any kind
 	 * @param map
-	 *            map of symbolic constants to the expressions that should
+	 *            map of symbolic expressions to the expressions that should
 	 *            replace them
 	 * @return a collection consisting of the substituted expressions
 	 */
 	private SymbolicCollection<?> substituteGenericCollection(
 			SymbolicCollection<?> set,
-			Map<SymbolicConstant, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		Iterator<? extends SymbolicExpression> iter = set.iterator();
 
 		while (iter.hasNext()) {
@@ -109,14 +107,14 @@ public class Substituter {
 	 * @param sequence
 	 *            a SymbolicSequence
 	 * @param map
-	 *            map of symbolic constants to the expressions that should
+	 *            map of symbolic expressions to the expressions that should
 	 *            replace them
 	 * @return sequence consisting of substituted expression, in same order as
 	 *         original sequence
 	 */
 	private SymbolicSequence<?> substituteSequence(
 			SymbolicSequence<?> sequence,
-			Map<SymbolicConstant, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
 		int count = 0;
 
@@ -148,12 +146,13 @@ public class Substituter {
 	 * @param collection
 	 *            any kind of symbolic collection
 	 * @param map
-	 *            a symbolic map from symbolic constants to symbolic expressions
+	 *            a symbolic map from symbolic expressions to symbolic
+	 *            expressions
 	 * @return a collection in which substitution has been applied to each
 	 *         element using the given map
 	 */
 	private SymbolicCollection<?> substitute(SymbolicCollection<?> collection,
-			Map<SymbolicConstant, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		SymbolicCollectionKind kind = collection.collectionKind();
 
 		if (kind == SymbolicCollectionKind.SEQUENCE)
@@ -162,7 +161,7 @@ public class Substituter {
 	}
 
 	private SymbolicType substitute(SymbolicType type,
-			Map<SymbolicConstant, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		switch (type.typeKind()) {
 		case BOOLEAN:
 		case INTEGER:
@@ -223,7 +222,7 @@ public class Substituter {
 	}
 
 	private SymbolicTypeSequence substitute(SymbolicTypeSequence sequence,
-			Map<SymbolicConstant, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		int count = 0;
 
 		for (SymbolicType t : sequence) {
@@ -249,17 +248,12 @@ public class Substituter {
 	 * If no changes takes place, result returned will be == given expression.
 	 */
 	public SymbolicExpression substitute(SymbolicExpression expression,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		SymbolicOperator operator = expression.operator();
+			Map<SymbolicExpression, SymbolicExpression> map) {
+		SymbolicExpression newValue = map.get(expression);
 
-		if (operator == SymbolicOperator.SYMBOLIC_CONSTANT) {
-			SymbolicExpression newValue = map
-					.get((SymbolicConstant) expression);
-
-			if (newValue != null)
-				return newValue;
-		}
-		{
+		if (newValue != null)
+			return newValue;
+		else {
 			int numArgs = expression.numArguments();
 			SymbolicType type = expression.type();
 			SymbolicType newType = substitute(type, map);
@@ -312,5 +306,4 @@ public class Substituter {
 			return universe.make(expression.operator(), newType, newArgs);
 		}
 	}
-
 }

@@ -3,24 +3,25 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.universe;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
@@ -85,7 +87,7 @@ public class IdealUniverseTest {
 		SymbolicExpression expected = universe.multiply(three, y);
 		Map<SymbolicConstant, SymbolicExpression> map = new SingletonMap<SymbolicConstant, SymbolicExpression>(
 				x, y);
-		SymbolicExpression newU = universe.substitute(u, map);
+		SymbolicExpression newU = universe.substituteSymbolicConstants(u, map);
 
 		out.println("sub1:    u = " + u);
 		out.println("sub1:  map = " + map);
@@ -106,7 +108,7 @@ public class IdealUniverseTest {
 
 		map.put(x, y);
 		map.put(y, x);
-		newU = universe.substitute(u, map);
+		newU = universe.substituteSymbolicConstants(u, map);
 		out.println("sub2:    u = " + u);
 		out.println("sub2:  map = " + map);
 		out.println("sub2: newU = " + newU);
@@ -133,12 +135,40 @@ public class IdealUniverseTest {
 			map.put(sc[i], sc[n - 1 - i]);
 		for (int i = 0; i < n; i++)
 			array1 = universe.arrayWrite(array1, universe.integer(i), sc[i]);
-		array2 = universe.substitute(array1, map);
+		array2 = universe.substituteSymbolicConstants(array1, map);
 		out.println("subArray1: array1 = " + array1);
 		out.println("subArray1: array2 = " + array2);
 		for (int i = 0; i < n; i++)
 			assertEquals(sc[n - 1 - i],
 					universe.arrayRead(array2, universe.integer(i)));
+	}
+
+	@Test
+	public void subExpression() {
+		SymbolicTupleType tupleType = universe.tupleType(
+				universe.stringObject("tup"),
+				Arrays.asList(new SymbolicType[] { integerType, realType }));
+		SymbolicExpression tuple1 = universe.tuple(
+				tupleType,
+				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
+						universe.rational(3.14) }));
+		SymbolicExpression tuple2 = universe.tuple(
+				tupleType,
+				Arrays.asList(new SymbolicExpression[] { universe.integer(-2),
+						universe.rational(2.718) }));
+		SymbolicExpression expr = universe.array(tupleType, Arrays
+				.asList(new SymbolicExpression[] { tuple1, tuple1, tuple2 }));
+		SymbolicExpression expected = universe.array(tupleType, Arrays
+				.asList(new SymbolicExpression[] { tuple2, tuple2, tuple2 }));
+		Map<SymbolicExpression, SymbolicExpression> map = new HashMap<SymbolicExpression, SymbolicExpression>();
+		SymbolicExpression actual;
+
+		map.put(tuple1, tuple2);
+		out.println("subExpression:     expr = " + expr);
+		out.println("subExpression:     map  = " + map);
+		out.println("subExpression: expected = " + expected);
+		actual = universe.substitute(expr, map);
+		assertEquals(expected, actual);
 	}
 
 }

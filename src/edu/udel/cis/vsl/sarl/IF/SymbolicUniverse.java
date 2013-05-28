@@ -380,6 +380,17 @@ public interface SymbolicUniverse {
 	 */
 	StringObject stringObject(String string);
 
+	// The "null" expression...
+
+	/**
+	 * Returns the "null" expression. This is a non-null (in the Java sense of
+	 * "null") symbolic expression for which the method "isNull()" returns true.
+	 * Its type is null.
+	 * 
+	 * @return the null expression
+	 */
+	SymbolicExpression nullExpression();
+
 	// Symbolic constants...
 
 	/**
@@ -402,6 +413,9 @@ public interface SymbolicUniverse {
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
 
+	SymbolicExpression substitute(SymbolicExpression expression,
+			Map<SymbolicExpression, SymbolicExpression> map);
+
 	/**
 	 * Substitutes symbolic expressions for symbolic constants in a symbolic
 	 * expression.
@@ -422,7 +436,8 @@ public interface SymbolicUniverse {
 	 * @return a symbolic expression in which the symbolic constants have been
 	 *         replaced by the corresponding expressions
 	 */
-	SymbolicExpression substitute(SymbolicExpression expression,
+	SymbolicExpression substituteSymbolicConstants(
+			SymbolicExpression expression,
 			Map<SymbolicConstant, SymbolicExpression> map);
 
 	/**
