@@ -24,6 +24,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -126,6 +127,16 @@ public class SimpleReasoner implements Reasoner {
 		NumericExpression simple = (NumericExpression) simplify(expression);
 
 		return universe().extractNumber(simple);
+	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> simplifier() {
+		return new UnaryOperator<SymbolicExpression>() {
+			@Override
+			public SymbolicExpression apply(SymbolicExpression x) {
+				return simplify(x);
+			}
+		};
 	}
 
 	// TODO: do some more intelligent things:

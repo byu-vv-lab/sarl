@@ -25,11 +25,11 @@ import java.util.Iterator;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
-import edu.udel.cis.vsl.sarl.util.Transform;
 
 public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> implements SymbolicSet<T> {

@@ -97,6 +97,8 @@ public interface Reasoner {
 	 */
 	Interval assumptionAsInterval(SymbolicConstant symbolicConstant);
 
+	UnaryOperator<SymbolicExpression> simplifier();
+
 	/**
 	 * Simplify the given expression under the context. The simplified
 	 * expression is guaranteed to be equivalent to the given one under the

@@ -18,8 +18,8 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.IF;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.util.Transform;
 
 public interface SymbolicSequence<T extends SymbolicExpression> extends
 		SymbolicCollection<T> {

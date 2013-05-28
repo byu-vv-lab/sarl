@@ -20,10 +20,10 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import java.util.Map.Entry;
 
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
-import edu.udel.cis.vsl.sarl.util.UnaryOperator;
 
 public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicCollection<V> implements SymbolicMap<K, V> {
