@@ -1760,7 +1760,8 @@ public class CommonPreUniverse implements PreUniverse {
 
 			return expression(op, tupleType, arg0.set(indexInt, value));
 		}
-		return expression(SymbolicOperator.TUPLE_WRITE, tupleType, tuple, value);
+		return expression(SymbolicOperator.TUPLE_WRITE, tupleType, tuple,
+				index, value);
 	}
 
 	@Override
