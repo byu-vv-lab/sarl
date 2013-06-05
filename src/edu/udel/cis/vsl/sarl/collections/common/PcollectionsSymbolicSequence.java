@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.common;
 
@@ -49,23 +49,39 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	public PcollectionsSymbolicSequence(Collection<T> elements) {
 		super(SymbolicCollectionKind.SEQUENCE);
+		for (T element : elements) {
+			if (element == null)
+				throw new NullPointerException(
+						"Attempt to place null element in a symbolic sequence");
+		}
 		pvector = TreePVector.from(elements);
 	}
 
 	public PcollectionsSymbolicSequence(Iterable<? extends T> elements) {
 		this();
-		for (T expr : elements)
+		for (T expr : elements) {
+			if (expr == null)
+				throw new NullPointerException(
+						"Attempt to place null element in a symbolic sequence");
 			pvector = pvector.plus(expr);
+		}
 	}
 
 	public PcollectionsSymbolicSequence(T[] elements) {
 		this();
-		for (T expr : elements)
+		for (T expr : elements) {
+			if (expr == null)
+				throw new NullPointerException(
+						"Attempt to place null element in a symbolic sequence");
 			pvector = pvector.plus(expr);
+		}
 	}
 
 	public PcollectionsSymbolicSequence(T element) {
 		this();
+		if (element == null)
+			throw new NullPointerException(
+					"Attempt to place null element in a symbolic sequence");
 		pvector = pvector.plus(element);
 	}
 
@@ -136,10 +152,15 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 			if (!expr.isCanonic()) {
 				PVector<T> newVector = pvector.subList(0, count);
+				T canonic = factory.canonic(expr);
 
-				newVector = newVector.plus(factory.canonic(expr));
-				while (iter.hasNext())
-					newVector = newVector.plus(factory.canonic(iter.next()));
+				assert canonic != null;
+				newVector = newVector.plus(canonic);
+				while (iter.hasNext()) {
+					canonic = factory.canonic(iter.next());
+					assert canonic != null;
+					newVector = newVector.plus(canonic);
+				}
 				pvector = newVector;
 				return;
 			}
@@ -204,7 +225,8 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 				first = false;
 			else
 				result.append(",");
-			result.append(element.toStringBuffer(false));
+			result.append(element == null ? "null" : element
+					.toStringBuffer(false));
 		}
 		result.append(">");
 		return result;

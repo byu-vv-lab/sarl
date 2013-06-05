@@ -3,29 +3,30 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		SymbolicTypeSequence {
@@ -39,6 +40,8 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>();
 		for (SymbolicType type : types) {
+			if (type == null)
+				throw new SARLException("Cannot add null type to type sequence");
 			elements.add(type);
 		}
 	}
@@ -47,6 +50,8 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>(types.length);
 		for (SymbolicType type : types) {
+			if (type == null)
+				throw new SARLException("Cannot add null type to type sequence");
 			elements.add(type);
 		}
 	}
@@ -77,16 +82,6 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 
 	@Override
 	public String toString() {
-		// String result = "<";
-		// int n = numTypes();
-		//
-		// for (int i = 0; i < n; i++) {
-		// if (i > 0)
-		// result += ",";
-		// result += getType(i);
-		// }
-		// result += ">";
-		// return result;
 		return toStringBuffer(false).toString();
 	}
 
