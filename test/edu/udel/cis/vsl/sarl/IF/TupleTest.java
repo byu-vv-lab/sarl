@@ -30,6 +30,7 @@ public class TupleTest {
 	public void setUp() throws Exception {
 		universe = SARL.newStandardUniverse();
 		integerType = universe.integerType();
+		// zero = universe.integer(0);
 		one = universe.integer(1);
 		two = universe.integer(2);
 		three = universe.integer(3);
@@ -62,4 +63,21 @@ public class TupleTest {
 		assertEquals(one, universe.tupleRead(tuple, i1));
 	}
 
+	@Test
+	public void denseTest() {
+		SymbolicTupleType tupleType = universe.tupleType(
+				universe.stringObject("tup"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType }));
+		SymbolicExpression tuple = universe.symbolicConstant(
+				universe.stringObject("X"), tupleType);
+		SymbolicExpression concrete = universe.tuple(tupleType,
+				Arrays.asList(new SymbolicExpression[] { three, two }));
+		IntObject i0 = universe.intObject(0), i1 = universe.intObject(1);
+
+		tuple = universe.tupleWrite(tuple, i0, three);
+		assertEquals(three, universe.tupleRead(tuple, i0));
+		tuple = universe.tupleWrite(tuple, i1, two);
+		assertEquals(two, universe.tupleRead(tuple, i1));
+		assertEquals(concrete, tuple);
+	}
 }

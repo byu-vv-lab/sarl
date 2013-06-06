@@ -653,6 +653,9 @@ public class CommonPreUniverse implements PreUniverse {
 		case DENSE_ARRAY_WRITE:
 			return denseArrayWrite((SymbolicExpression) args[0],
 					(SymbolicSequence<?>) args[1]);
+		case DENSE_TUPLE_WRITE:
+			return denseTupleWrite((SymbolicExpression) args[0],
+					(SymbolicSequence<?>) args[1]);
 		case DIVIDE:
 			return divide((NumericExpression) args[0],
 					(NumericExpression) args[1]);
@@ -1695,6 +1698,19 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
+	public SymbolicExpression denseTupleWrite(SymbolicExpression tuple,
+			Iterable<? extends SymbolicExpression> values) {
+		int count = 0;
+
+		for (SymbolicExpression value : values) {
+			if (value != null && !value.isNull()) {
+				tuple = tupleWrite(tuple, intObject(count), value);
+			}
+			count++;
+		}
+		return tuple;
+	}
+
 	@Override
 	public SymbolicExpression arrayLambda(SymbolicCompleteArrayType arrayType,
 			SymbolicExpression function) {
@@ -1735,6 +1751,15 @@ public class CommonPreUniverse implements PreUniverse {
 
 		if (op == SymbolicOperator.CONCRETE)
 			return ((SymbolicSequence<?>) tuple.argument(0)).get(indexInt);
+		if (op == SymbolicOperator.DENSE_TUPLE_WRITE) {
+			SymbolicExpression value = ((SymbolicSequence<?>) tuple.argument(1))
+					.get(indexInt);
+
+			if (!value.isNull())
+				return value;
+			return tupleRead((SymbolicExpression) tuple.argument(0), index);
+
+		}
 		return expression(
 				SymbolicOperator.TUPLE_READ,
 				((SymbolicTupleType) tuple.type()).sequence().getType(indexInt),
@@ -1744,6 +1769,12 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression tupleWrite(SymbolicExpression tuple,
 			IntObject index, SymbolicExpression value) {
+		// TODO: room for improvement. a sequence of tuple
+		// writes can be put in canonic order, or use origin
+		// format like arrays. once all elements are filled,
+		// get rid of origin and make complete.
+		// Create symbolic expression kind DENSE_TUPLE_WRITE.
+
 		SymbolicOperator op = tuple.operator();
 		int indexInt = index.getInt();
 		SymbolicTupleType tupleType = (SymbolicTupleType) tuple.type();
@@ -1757,11 +1788,43 @@ public class CommonPreUniverse implements PreUniverse {
 			@SuppressWarnings("unchecked")
 			SymbolicSequence<SymbolicExpression> arg0 = (SymbolicSequence<SymbolicExpression>) tuple
 					.argument(0);
+			SymbolicExpression oldValue = arg0.get(indexInt);
 
+			if (value == oldValue)
+				return tuple;
 			return expression(op, tupleType, arg0.set(indexInt, value));
+		} else if (op == SymbolicOperator.DENSE_TUPLE_WRITE) {
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> sequence = (SymbolicSequence<SymbolicExpression>) tuple
+					.argument(1);
+			SymbolicExpression oldValue = sequence.get(indexInt);
+
+			if (value == oldValue)
+				return tuple;
+			sequence = sequence.set(indexInt, value);
+			for (SymbolicExpression x : sequence) {
+				if (x == null || x.isNull())
+					return expression(SymbolicOperator.DENSE_TUPLE_WRITE,
+							tupleType, tuple.argument(0), sequence);
+			}
+			return expression(SymbolicOperator.CONCRETE, tupleType, sequence);
+		} else {
+			int numComponents = tupleType.sequence().numTypes();
+			SymbolicExpression[] elementsArray = new SymbolicExpression[numComponents];
+			SymbolicSequence<SymbolicExpression> sequence;
+
+			for (int i = 0; i < numComponents; i++) {
+				elementsArray[i] = nullExpression;
+			}
+			elementsArray[indexInt] = value;
+			sequence = collectionFactory.sequence(elementsArray);
+			if (numComponents <= 1)
+				return expression(SymbolicOperator.CONCRETE, tupleType,
+						sequence);
+			else
+				return expression(SymbolicOperator.DENSE_TUPLE_WRITE,
+						tupleType, tuple.argument(0), sequence);
 		}
-		return expression(SymbolicOperator.TUPLE_WRITE, tupleType, tuple,
-				index, value);
 	}
 
 	@Override

@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.expr;
 
@@ -104,6 +104,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * positions). It is included here to allow a dense representation of the array,
  * which can have performance benefits, in particular constant-time lookup and
  * modification (just like for regular concrete arrays)</li>
+ * 
+ * <li>DENSE_TUPLE_WRITE: Represents the result of mutiple writes to different
+ * components of a tuple. Similar to DENSE_ARRAY_WRITE. arg0 is an expression of
+ * tuple type. arg1 is an Iterable<? extends SymbolicExpression>. The writes to
+ * the components of the tuple are taken from arg1 in order. Entries which are
+ * NULL are ignored (as with arrays). The number of elements in arg1 may be less
+ * than the number of components in the tuple, in which case only those elements
+ * are used. If the length of arg1 is greater, the extra elements are ignored.</li>
  * 
  * <li>DIVIDE: real division: 2 arguments: arg 0 the numerator, arg 1 the
  * denominator. Both must be symbolic expressions of real type. Has real type.</li>
@@ -206,40 +214,7 @@ public interface SymbolicExpression extends SymbolicObject {
 	 * An enumerated type for the different kinds of symbolic expressions.
 	 */
 	public enum SymbolicOperator {
-		ADD,
-		AND,
-		APPLY,
-		ARRAY_LAMBDA,
-		ARRAY_READ,
-		ARRAY_WRITE,
-		CAST,
-		CONCRETE,
-		COND,
-		DENSE_ARRAY_WRITE,
-		DIVIDE,
-		EQUALS,
-		EXISTS,
-		FORALL,
-		INT_DIVIDE,
-		LAMBDA,
-		LENGTH,
-		LESS_THAN,
-		LESS_THAN_EQUALS,
-		MODULO,
-		MULTIPLY,
-		NEGATIVE,
-		NEQ,
-		NOT,
-		NULL,
-		OR,
-		POWER,
-		SUBTRACT,
-		SYMBOLIC_CONSTANT,
-		TUPLE_READ,
-		TUPLE_WRITE,
-		UNION_EXTRACT,
-		UNION_INJECT,
-		UNION_TEST
+		ADD, AND, APPLY, ARRAY_LAMBDA, ARRAY_READ, ARRAY_WRITE, CAST, CONCRETE, COND, DENSE_ARRAY_WRITE, DENSE_TUPLE_WRITE, DIVIDE, EQUALS, EXISTS, FORALL, INT_DIVIDE, LAMBDA, LENGTH, LESS_THAN, LESS_THAN_EQUALS, MODULO, MULTIPLY, NEGATIVE, NEQ, NOT, NULL, OR, POWER, SUBTRACT, SYMBOLIC_CONSTANT, TUPLE_READ, TUPLE_WRITE, UNION_EXTRACT, UNION_INJECT, UNION_TEST
 	}
 
 	/**
@@ -259,33 +234,29 @@ public interface SymbolicExpression extends SymbolicObject {
 	String atomString();
 
 	/**
-	 * The kind of this symbolic expression, one of the elements of the
-	 * enumerated type SymbolicKind.
-	 * 
-	 * @return the kind of the symbolic expression
-	 */
-	SymbolicOperator operator();
-
-	/**
-	 * The number of arguments (children) of this symbolic expression.
-	 * 
-	 * @return number of arguments
-	 */
-	int numArguments();
-
-	
-	/** Returns the type of this symbolic expression. */
-	SymbolicType type();
-
-	/** Is this the "NULL" symbolic expression? */
-	boolean isNull();
-
-	/**
 	 * Is this the boolean "false" expression?
 	 * 
 	 * @return true iff this is the boolean expression "false".
 	 */
 	boolean isFalse();
+
+	/** Is this the "NULL" symbolic expression? */
+	boolean isNull();
+
+	/**
+	 * Is this a numeric expression, i.e., does this have integer or real type?
+	 * If true, this may be safely cast to NumericExpression.
+	 * 
+	 * @return true iff type is integer or real
+	 */
+	boolean isNumeric();
+
+	/**
+	 * Is this the integer or real 1 expression?
+	 * 
+	 * @return true iff this is the integer 1 or the real 1
+	 */
+	boolean isOne();
 
 	/**
 	 * Is this the boolean "true" expression?
@@ -302,18 +273,21 @@ public interface SymbolicExpression extends SymbolicObject {
 	boolean isZero();
 
 	/**
-	 * Is this the integer or real 1 expression?
+	 * The number of arguments (children) of this symbolic expression.
 	 * 
-	 * @return true iff this is the integer 1 or the real 1
+	 * @return number of arguments
 	 */
-	boolean isOne();
+	int numArguments();
 
 	/**
-	 * Is this a numeric expression, i.e., does this have integer or real type?
-	 * If true, this may be safely cast to NumericExpression.
+	 * The kind of this symbolic expression, one of the elements of the
+	 * enumerated type SymbolicKind.
 	 * 
-	 * @return true iff type is integer or real
+	 * @return the kind of the symbolic expression
 	 */
-	boolean isNumeric();
+	SymbolicOperator operator();
+
+	/** Returns the type of this symbolic expression. */
+	SymbolicType type();
 
 }

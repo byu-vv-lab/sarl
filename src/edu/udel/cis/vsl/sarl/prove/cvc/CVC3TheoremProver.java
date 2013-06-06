@@ -606,6 +606,23 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	private Expr translateDenseTupleWrite(SymbolicExpression expr)
+			throws Cvc3Exception {
+		SymbolicExpression tupleExpression = (SymbolicExpression) expr
+				.argument(0);
+		Expr result = translate(tupleExpression);
+		List<Expr> values = translateCollection((SymbolicSequence<?>) expr
+				.argument(1));
+		int index = 0;
+
+		for (Expr value : values) {
+			if (value != null)
+				result = vc.tupleUpdateExpr(result, index, value);
+			index++;
+		}
+		return result;
+	}
+
 	private Expr translateQuantifier(SymbolicExpression expr)
 			throws Cvc3Exception {
 		Expr variable = this.translateSymbolicConstant(
@@ -926,6 +943,9 @@ public class CVC3TheoremProver implements TheoremProver {
 			break;
 		case DENSE_ARRAY_WRITE:
 			result = translateDenseArrayWrite(expr);
+			break;
+		case DENSE_TUPLE_WRITE:
+			result = translateDenseTupleWrite(expr);
 			break;
 		case DIVIDE: // real division
 			result = vc.divideExpr(
