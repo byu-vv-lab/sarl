@@ -1769,12 +1769,6 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression tupleWrite(SymbolicExpression tuple,
 			IntObject index, SymbolicExpression value) {
-		// TODO: room for improvement. a sequence of tuple
-		// writes can be put in canonic order, or use origin
-		// format like arrays. once all elements are filled,
-		// get rid of origin and make complete.
-		// Create symbolic expression kind DENSE_TUPLE_WRITE.
-
 		SymbolicOperator op = tuple.operator();
 		int indexInt = index.getInt();
 		SymbolicTupleType tupleType = (SymbolicTupleType) tuple.type();
