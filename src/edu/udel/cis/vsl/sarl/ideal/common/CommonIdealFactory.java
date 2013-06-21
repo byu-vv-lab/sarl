@@ -680,8 +680,18 @@ public class CommonIdealFactory implements IdealFactory {
 			return poly1;
 		if (poly1 instanceof Monomial && poly2 instanceof Monomial)
 			return multiply((Monomial) poly1, (Monomial) poly2);
-		return polynomial(multiply(poly1.termMap(this), poly2.termMap(this)),
-				multiply(poly1.factorization(this), poly2.factorization(this)));
+		else {
+			SymbolicMap<Monic, Monomial> termMap1 = poly1.termMap(this);
+			SymbolicMap<Monic, Monomial> termMap2 = poly2.termMap(this);
+			SymbolicMap<Monic, Monomial> newTermMap = multiply(termMap1,
+					termMap2);
+			Monomial fact1 = poly1.factorization(this);
+			Monomial fact2 = poly2.factorization(this);
+			Monomial newFact = multiply(fact1, fact2);
+			Polynomial result = polynomial(newTermMap, newFact);
+
+			return result;
+		}
 	}
 
 	private RationalExpression multiplyRational(RationalExpression r1,

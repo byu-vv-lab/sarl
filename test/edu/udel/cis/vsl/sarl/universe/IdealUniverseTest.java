@@ -48,7 +48,7 @@ public class IdealUniverseTest {
 	private StringObject Yobj; // "Y"
 	private SymbolicType realType, integerType;
 	private NumericSymbolicConstant x; // real symbolic constant "X"
-	private NumericSymbolicConstant y; // resl symbolic constant "Y"
+	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
 

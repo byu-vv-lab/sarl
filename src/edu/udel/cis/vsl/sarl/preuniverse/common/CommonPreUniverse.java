@@ -760,8 +760,11 @@ public class CommonPreUniverse implements PreUniverse {
 		else {
 			NumericExpression result = iter.next();
 
-			while (iter.hasNext())
-				result = add(result, iter.next());
+			while (iter.hasNext()) {
+				NumericExpression next = iter.next();
+				
+				result = add(result, next);
+			}
 			return result;
 		}
 	}

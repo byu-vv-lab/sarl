@@ -120,10 +120,10 @@ public class NTMonic extends IdealExpression implements Monic {
 		return buffer;
 	}
 
-	@Override
-	public String toString() {
-		return toStringBuffer().toString();
-	}
+//	@Override
+//	public String toString() {
+//		return toStringBuffer().toString();
+//	}
 
 	@Override
 	public IdealKind idealKind() {

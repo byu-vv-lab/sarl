@@ -175,6 +175,20 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		buffer.append(arg1.toStringBuffer(atomizeArgs));
 	}
 
+	/**
+	 * Computes string representation of a binary operator expression that may
+	 * take either one argument (a list of expressions) or two arguments.
+	 * 
+	 * @param buffer
+	 *            string buffer to which computed result should be appended
+	 * @param opString
+	 *            the string representation of the operator, e.g. "+"
+	 * @param atomizeArgs
+	 *            should each argument be atomized (surrounded by parens if
+	 *            necessary)?
+	 * @param atomizeResult
+	 *            should the final result be atomized?
+	 */
 	private void processFlexibleBinary(StringBuffer buffer, String opString,
 			boolean atomizeArgs, boolean atomizeResult) {
 		if (arguments.length == 1)
@@ -238,8 +252,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(false));
 			if (type.isHerbrand())
 				result.append('h');
-			if (atomize)
-				atomize(result);
+//			if (atomize)
+//				atomize(result);
 			return result;
 		}
 		case COND:
@@ -353,11 +367,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				atomize(result);
 			return result;
 		case MULTIPLY:
-			result.append(arguments[0].toStringBuffer(true));
-			result.append("*");
-			result.append(arguments[1].toStringBuffer(true));
-			if (atomize)
-				atomize(result);
+			processFlexibleBinary(result, "*", true, false);
 			return result;
 		case NEGATIVE:
 			result.append("-");
@@ -444,7 +454,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	@Override
 	public String atomString() {
-		return toString();
+		return toStringBuffer(true).toString();
 	}
 
 	@Override
