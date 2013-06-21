@@ -59,12 +59,13 @@ also try "ant test" to run a suite of JUnit tests, and
 The documentation can be read using any web browser to open
 doc/javadoc/index.html.
 
-Scripts:
-
-The scripts (in directory "scripts") should not be of interest
-to most developers.  They are used mainly on the server side
-to automate the testing and coverage analysis after each
-commit and to send the data to a web page.
-
-
+Hints on building CVC3:
+ - you need libgmp (GNU Multiple-precision numeric library), so
+   install that
+ - you need to follow the instructions to configure with
+   dynamic libraries and for Java
+ - on Macs, you need to set your DYLD_LIBRARY_PATH environment
+   variable to include the paths containing the .dylib files
+   On other systems there are probably other paths
+ 
  
