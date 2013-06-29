@@ -56,6 +56,8 @@ public interface SymbolicTypeFactory {
 	SymbolicRealType realType();
 
 	SymbolicRealType herbrandRealType();
+	
+	SymbolicType characterType();
 
 	SymbolicTypeSequence sequence(Iterable<? extends SymbolicType> elements);
 

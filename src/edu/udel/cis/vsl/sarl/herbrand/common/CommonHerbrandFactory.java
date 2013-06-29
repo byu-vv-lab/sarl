@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.herbrand.common;
 
@@ -38,6 +38,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -89,6 +90,11 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 				.numberObject(numberFactory.zeroRational())));
 		this.comparator = new HerbrandComparator(objectFactory.comparator(),
 				typeFactory.typeComparator());
+	}
+
+	private SymbolicConstant commonSymbolicConstant(StringObject name,
+			SymbolicType type) {
+		return new CommonSymbolicConstant(name, type);
 	}
 
 	private SymbolicSequence<NumericExpression> sequence(NumericExpression e0,
@@ -151,14 +157,14 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant plusReal() {
 		if (plusReal == null)
-			plusReal = objectFactory.canonic(symbolicConstant(
+			plusReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("PLUS_REAL"), realBinaryOp()));
 		return plusReal;
 	}
 
 	private SymbolicConstant plusInteger() {
 		if (plusInteger == null)
-			plusInteger = objectFactory.canonic(symbolicConstant(
+			plusInteger = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("PLUS_INT"), integerBinaryOp()));
 		return plusInteger;
 	}
@@ -169,7 +175,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant minusReal() {
 		if (minusReal == null)
-			minusReal = objectFactory.canonic(symbolicConstant(
+			minusReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("MINUS_REAL"), realBinaryOp()));
 		return minusReal;
 	}
@@ -177,7 +183,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant minusInteger() {
 		if (minusInteger == null)
 			minusInteger = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("MINUS_INT"),
 							integerBinaryOp()));
 		return minusInteger;
@@ -189,7 +195,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant timesReal() {
 		if (timesReal == null)
-			timesReal = objectFactory.canonic(symbolicConstant(
+			timesReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("TIMES_REAL"), realBinaryOp()));
 		return timesReal;
 	}
@@ -197,7 +203,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant timesInteger() {
 		if (timesInteger == null)
 			timesInteger = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("TIMES_INT"),
 							integerBinaryOp()));
 		return timesInteger;
@@ -209,7 +215,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant divideReal() {
 		if (divideReal == null)
-			divideReal = objectFactory.canonic(symbolicConstant(
+			divideReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("DIVIDE_REAL"), realBinaryOp()));
 		return divideReal;
 	}
@@ -217,7 +223,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant divideInteger() {
 		if (divideInteger == null)
 			divideInteger = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("DIVIDE_INT"),
 							integerBinaryOp()));
 		return divideInteger;
@@ -229,14 +235,14 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant moduloOperator() {
 		if (modulo == null)
-			modulo = objectFactory.canonic(symbolicConstant(
+			modulo = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("MODULO"), integerBinaryOp()));
 		return modulo;
 	}
 
 	private SymbolicConstant negativeInteger() {
 		if (negativeInteger == null)
-			negativeInteger = objectFactory.canonic(symbolicConstant(
+			negativeInteger = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("NEGATIVE_INT"),
 					integerUnaryOp()));
 		return negativeInteger;
@@ -245,7 +251,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant negativeReal() {
 		if (negativeReal == null)
 			negativeReal = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("NEGATIVE_REAL"),
 							realUnaryOp()));
 		return negativeReal;
@@ -257,7 +263,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant powerReal() {
 		if (powerReal == null)
-			powerReal = objectFactory.canonic(symbolicConstant(
+			powerReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("POWER_REAL"), realBinaryOp()));
 		return powerReal;
 	}
@@ -265,7 +271,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant powerInteger() {
 		if (powerInteger == null)
 			powerInteger = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("POWER_INT"),
 							integerBinaryOp()));
 		return powerInteger;
@@ -277,14 +283,14 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant lessThanInteger() {
 		if (lessThanInteger == null)
-			lessThanInteger = objectFactory.canonic(symbolicConstant(
+			lessThanInteger = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("LT_INT"), integerBinaryPred()));
 		return lessThanInteger;
 	}
 
 	private SymbolicConstant lessThanReal() {
 		if (lessThanReal == null)
-			lessThanReal = objectFactory.canonic(symbolicConstant(
+			lessThanReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("LT_REAL"), realBinaryPred()));
 		return lessThanReal;
 	}
@@ -296,7 +302,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	private SymbolicConstant lteInteger() {
 		if (lteInteger == null)
 			lteInteger = objectFactory
-					.canonic(symbolicConstant(
+					.canonic(commonSymbolicConstant(
 							objectFactory.stringObject("LTE_INT"),
 							integerBinaryPred()));
 		return lteInteger;
@@ -304,7 +310,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 
 	private SymbolicConstant lteReal() {
 		if (lteReal == null)
-			lteReal = objectFactory.canonic(symbolicConstant(
+			lteReal = objectFactory.canonic(commonSymbolicConstant(
 					objectFactory.stringObject("LTE_REAL"), realBinaryPred()));
 		return lteReal;
 	}
@@ -357,6 +363,7 @@ public class CommonHerbrandFactory implements NumericExpressionFactory {
 	@Override
 	public NumericSymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type) {
+		assert type.isNumeric();
 		return new HerbrandSymbolicConstant(name, type);
 	}
 

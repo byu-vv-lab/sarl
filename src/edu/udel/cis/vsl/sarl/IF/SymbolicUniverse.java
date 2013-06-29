@@ -223,6 +223,13 @@ public interface SymbolicUniverse {
 	// TODO: floating point types
 
 	/**
+	 * Returns the character type.
+	 * 
+	 * @return the character type
+	 */
+	SymbolicType characterType();
+
+	/**
 	 * Returns the complete array type with the given element type and extent
 	 * (array length). Neither argument can be null.
 	 * 
@@ -595,6 +602,29 @@ public interface SymbolicUniverse {
 	 */
 	Number extractNumber(BooleanExpression assumption,
 			NumericExpression expression);
+
+	// Characters and string expressions:
+
+	/**
+	 * Returns a concrete symbolic expression of character type which wraps the
+	 * given Java char.
+	 * 
+	 * @param theChar
+	 *            the Java char
+	 * @return symbolic expression wrapping theChar
+	 */
+	SymbolicExpression character(char theChar);
+
+	/**
+	 * Returns a symbolic expression of type array of char which is a literal
+	 * array consisting of the sequence of characters in the given string.
+	 * 
+	 * @param theString
+	 *            a Java string
+	 * @return the string represented as a symbolic expression of type
+	 *         array-of-char
+	 */
+	SymbolicExpression stringExpression(String theString);
 
 	// Numeric operations...
 

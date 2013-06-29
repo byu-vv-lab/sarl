@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
@@ -19,6 +20,7 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -306,7 +308,10 @@ public class CommonPreUniverse implements PreUniverse {
 			return falseExpr;
 		switch (kind) {
 		case BOOLEAN:
-			throw ierr("Unreachable: types are not equal but both have BOOLEAN kind");
+		case CHAR:
+			// only one BOOLEAN type; only one CHAR type...
+			throw ierr("Unreachable: types are not equal but both have kind "
+					+ kind);
 		case INTEGER:
 		case REAL:
 			// types are not equal but have same kind. We do not consider
@@ -406,6 +411,17 @@ public class CommonPreUniverse implements PreUniverse {
 		switch (type.typeKind()) {
 		case BOOLEAN:
 			return equiv((BooleanExpression) arg0, (BooleanExpression) arg1);
+		case CHAR: {
+			SymbolicOperator op0 = arg0.operator();
+			SymbolicOperator op1 = arg1.operator();
+
+			if (op0 == SymbolicOperator.CONCRETE
+					&& op1 == SymbolicOperator.CONCRETE) {
+				return bool(arg0.argument(0).equals(arg1.argument(0)));
+			}
+			return booleanFactory.booleanExpression(SymbolicOperator.EQUALS,
+					arg0, arg1);
+		}
 		case INTEGER:
 		case REAL:
 			return numericFactory.equals((NumericExpression) arg0,
@@ -762,7 +778,7 @@ public class CommonPreUniverse implements PreUniverse {
 
 			while (iter.hasNext()) {
 				NumericExpression next = iter.next();
-				
+
 				result = add(result, next);
 			}
 			return result;
@@ -833,6 +849,11 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicRealType herbrandRealType() {
 		return typeFactory.herbrandRealType();
+	}
+
+	@Override
+	public SymbolicType characterType() {
+		return typeFactory.characterType();
 	}
 
 	@Override
@@ -909,6 +930,11 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public CharObject charObject(char value) {
+		return objectFactory.charObject(value);
+	}
+
+	@Override
 	public IntObject intObject(int value) {
 		return objectFactory.intObject(value);
 	}
@@ -979,6 +1005,24 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public NumericExpression oneReal() {
 		return numericFactory.oneReal();
+	}
+
+	@Override
+	public SymbolicExpression character(char theChar) {
+		CharObject charObject = (CharObject) canonic(charObject(theChar));
+
+		return expression(SymbolicOperator.CONCRETE,
+				typeFactory.characterType(), charObject);
+	}
+
+	@Override
+	public SymbolicExpression stringExpression(String theString) {
+		List<SymbolicExpression> charExprList = new LinkedList<SymbolicExpression>();
+		int numChars = theString.length();
+
+		for (int i = 0; i < numChars; i++)
+			charExprList.add(character(theString.charAt(i)));
+		return array(typeFactory.characterType(), charExprList);
 	}
 
 	private void checkSameType(SymbolicExpression arg0,
@@ -1617,6 +1661,17 @@ public class CommonPreUniverse implements PreUniverse {
 			return arrayWrite_noCheck(array, arrayType, index, value);
 		}
 	}
+
+	// TODO: would like a method append, takes an array a and expression v,
+	// returns
+	// an array a' one longer with the expression added.
+	// If a has type array-of-T (whether complete or incomplete), a'
+	// will have type T[length(a)+1].
+	// Implementation:
+	// cases: concrete array, dense array write, other (symbolic
+	// constant, array-write, tuple-read, array-read,...)
+	// first two cases are kind of obvious. Otherwise: need
+	// a way to relate slices. This could be an array lambda.
 
 	/**
 	 * Returns an iterable object equivalent to given one except that any "null"

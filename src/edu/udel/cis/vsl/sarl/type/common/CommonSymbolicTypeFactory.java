@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
@@ -52,6 +52,8 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
 	private SymbolicRealType realType, herbrandRealType;
 
+	private SymbolicType characterType;
+
 	public CommonSymbolicTypeFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
 		typeComparator = new TypeComparator();
@@ -68,6 +70,8 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 				RealKind.IDEAL));
 		herbrandRealType = objectFactory.canonic(new CommonSymbolicRealType(
 				RealKind.HERBRAND));
+		characterType = objectFactory.canonic(new CommonSymbolicPrimitiveType(
+				SymbolicTypeKind.CHAR));
 		objectFactory.setTypeComparator(typeComparator);
 		objectFactory.setTypeSequenceComparator(typeSequenceComparator);
 	}
@@ -108,6 +112,11 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	@Override
 	public SymbolicRealType herbrandRealType() {
 		return herbrandRealType;
+	}
+
+	@Override
+	public SymbolicType characterType() {
+		return characterType;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -186,6 +187,8 @@ public interface PreUniverse {
 
 	// TODO: floating point types
 
+	SymbolicType characterType();
+
 	/**
 	 * Returns the complete array type with the given element type and extent
 	 * (array length). Neither argument can be null.
@@ -318,6 +321,8 @@ public interface PreUniverse {
 	 * @return the NumberObject wrapping that Number
 	 */
 	NumberObject numberObject(Number value);
+
+	CharObject charObject(char value);
 
 	/**
 	 * Returns the StringObject wrapping the given String value. A StringObject
@@ -528,6 +533,12 @@ public interface PreUniverse {
 	 * @return Number value or null
 	 */
 	Number extractNumber(NumericExpression expression);
+
+	// Character and string...
+
+	SymbolicExpression character(char theChar);
+
+	SymbolicExpression stringExpression(String theString);
 
 	// Numeric operations...
 

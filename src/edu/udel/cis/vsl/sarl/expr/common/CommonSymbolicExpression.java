@@ -26,6 +26,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
@@ -39,6 +40,8 @@ import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
  */
 public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		SymbolicExpression {
+
+	public static final boolean debug = false;
 
 	private SymbolicOperator operator;
 
@@ -94,16 +97,18 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	protected boolean intrinsicEquals(SymbolicObject o) {
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;
 
-		return operator == that.operator && type.equals(that.type)
+		return this.getClass().equals(o.getClass())
+				&& operator == that.operator && type.equals(that.type)
 				&& Arrays.equals(arguments, that.arguments);
 	}
 
 	@Override
 	protected int computeHashCode() {
-		int result = type == null ? operator.hashCode() : type.hashCode()
-				^ operator().hashCode();
 		int numArgs = this.numArguments();
+		int result = getClass().hashCode() ^ operator.hashCode();
 
+		if (type != null)
+			result ^= type.hashCode();
 		for (int i = 0; i < numArgs; i++)
 			result ^= this.argument(i).hashCode();
 		return result;
@@ -144,9 +149,11 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBufferLong() {
-		StringBuffer buffer = new StringBuffer(operator.toString());
+		StringBuffer buffer = new StringBuffer(getClass().getSimpleName());
 
 		buffer.append("[");
+		buffer.append(operator.toString());
+		buffer.append("; ");
 		buffer.append(type.toString());
 		buffer.append("; ");
 		buffer.append(toStringBufferLong(arguments));
@@ -205,6 +212,12 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
+		if (debug)
+			return toStringBufferLong();
+		return toStringBuffer1(atomize);
+	}
+
+	public StringBuffer toStringBuffer1(boolean atomize) {
 		StringBuffer result = new StringBuffer();
 
 		switch (operator) {
@@ -244,16 +257,20 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(true));
 			return result;
 		case CONCRETE: {
-			if (!type.isNumeric() && !type.isBoolean()) {
-				result.append('(');
-				result.append(type.toStringBuffer(false));
-				result.append(')');
+			if (type.typeKind() == SymbolicTypeKind.CHAR) {
+				result.append("'");
+				result.append(arguments[0].toStringBuffer(false));
+				result.append("'");
+			} else {
+				if (!type.isNumeric() && !type.isBoolean()) {
+					result.append('(');
+					result.append(type.toStringBuffer(false));
+					result.append(')');
+				}
+				result.append(arguments[0].toStringBuffer(false));
+				if (type.isHerbrand())
+					result.append('h');
 			}
-			result.append(arguments[0].toStringBuffer(false));
-			if (type.isHerbrand())
-				result.append('h');
-//			if (atomize)
-//				atomize(result);
 			return result;
 		}
 		case COND:

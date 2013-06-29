@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.object;
 
@@ -31,36 +31,36 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * 
  * <table>
  * <tr>
- *   <td>SYMBOLIC_EXPRESSION</td>
- *   <td>{@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}</td>
+ * <td>SYMBOLIC_EXPRESSION</td>
+ * <td>{@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}</td>
  * </tr>
  * <tr>
- *   <td>EXPRESSION_COLLECTION</td>
- *   <td>{@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}</td>
+ * <td>EXPRESSION_COLLECTION</td>
+ * <td>{@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}</td>
  * </tr>
  * <tr>
- *   <td>TYPE</td>
- *   <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}</td>
+ * <td>TYPE</td>
+ * <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}</td>
  * </tr>
  * <tr>
- *   <td>TYPE_SEQUENCE</td>
- *   <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence}</td>
+ * <td>TYPE_SEQUENCE</td>
+ * <td>{@link edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence}</td>
  * </tr>
  * <tr>
- *   <td>NUMBER</td>
- *   <td>{@link NumberObject}</td>
+ * <td>NUMBER</td>
+ * <td>{@link NumberObject}</td>
  * </tr>
  * <tr>
- *   <td>INT</td>
- *   <td>{@link IntObject}</td>
+ * <td>INT</td>
+ * <td>{@link IntObject}</td>
  * </tr>
  * <tr>
- *   <td>BOOLEAN</td>
- *   <td>{@link BooleanObject}</td>
+ * <td>BOOLEAN</td>
+ * <td>{@link BooleanObject}</td>
  * </tr>
  * <tr>
- *   <td>STRING</td>
- *   <td>{@link StringObject}</td>
+ * <td>STRING</td>
+ * <td>{@link StringObject}</td>
  * </tr>
  * </table>
  * 
@@ -70,14 +70,7 @@ package edu.udel.cis.vsl.sarl.IF.object;
 public interface SymbolicObject {
 
 	public enum SymbolicObjectKind {
-		BOOLEAN,
-		EXPRESSION,
-		EXPRESSION_COLLECTION,
-		INT,
-		NUMBER,
-		STRING,
-		TYPE,
-		TYPE_SEQUENCE
+		BOOLEAN, CHAR, EXPRESSION, EXPRESSION_COLLECTION, INT, NUMBER, STRING, TYPE, TYPE_SEQUENCE
 	}
 
 	/**

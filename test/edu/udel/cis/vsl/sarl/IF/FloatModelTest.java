@@ -41,7 +41,7 @@ public class FloatModelTest {
 
 	private NumericSymbolicConstant x1, x2, x3, x4;
 
-	private SymbolicFunctionType unaryFunc, binaryFunc;
+	private SymbolicFunctionType unaryFunc;
 
 	private SymbolicConstant err;
 
@@ -138,14 +138,15 @@ public class FloatModelTest {
 
 	@Before
 	public void setUp() throws Exception {
-		List<SymbolicType> listReal, listRealReal;
+		List<SymbolicType> listReal;
+		// listRealReal;
 
 		this.universe = SARL.newStandardUniverse();
 		this.numberFactory = universe.numberFactory();
 		this.real = universe.realType();
 		this.one = universe.oneReal();
 		listReal = Arrays.asList(new SymbolicType[] { real });
-		listRealReal = Arrays.asList(new SymbolicType[] { real, real });
+		//listRealReal = Arrays.asList(new SymbolicType[] { real, real });
 		this.x1 = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x1"), real);
 		this.x2 = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -155,7 +156,7 @@ public class FloatModelTest {
 		this.x4 = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x4"), real);
 		this.unaryFunc = universe.functionType(listReal, real);
-		this.binaryFunc = universe.functionType(listRealReal, real);
+		//this.binaryFunc = universe.functionType(listRealReal, real);
 		this.err = universe.symbolicConstant(universe.stringObject("e"),
 				unaryFunc);
 		this.errBound = (NumericSymbolicConstant) universe.symbolicConstant(

@@ -16,22 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package edu.udel.cis.vsl.sarl.expr.common;
+package edu.udel.cis.vsl.sarl.IF.object;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+/**
+ * A symbolic object wrapping a single char value.
+ * 
+ * @author siegel
+ * 
+ */
+public interface CharObject extends SymbolicObject, Comparable<CharObject> {
 
-public class CommonSymbolicConstant extends CommonSymbolicExpression implements
-		SymbolicConstant {
-
-	public CommonSymbolicConstant(StringObject name, SymbolicType type) {
-		super(SymbolicOperator.SYMBOLIC_CONSTANT, type, name);
-	}
-
-	@Override
-	public StringObject name() {
-		return (StringObject) argument(0);
-	}
+	char getChar();
 
 }

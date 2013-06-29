@@ -58,6 +58,8 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
+// TODO: add support for characters by converting them to integers
+
 /**
  * An implementation of TheoremProverIF using the automated theorem prover CVC3.
  * Transforms a theorem proving query into the language of CVC3, invokes CVC3

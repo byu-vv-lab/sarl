@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.expr.common;
 
@@ -91,8 +91,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, SymbolicObject[] arguments) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.expression(operator, type,
-						arguments);
+				return numericFactory.expression(operator, type, arguments);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arguments);
 		}
@@ -104,8 +103,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, SymbolicObject arg0) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory
-						.expression(operator, type, arg0);
+				return numericFactory.expression(operator, type, arg0);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0);
 		}
@@ -117,8 +115,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.expression(operator, type,
-						arg0, arg1);
+				return numericFactory.expression(operator, type, arg0, arg1);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0, arg1);
 		}
@@ -131,8 +128,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicObject arg2) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory.expression(operator, type,
-						arg0, arg1, arg2);
+				return numericFactory.expression(operator, type, arg0, arg1,
+						arg2);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0, arg1,
 						arg2);
@@ -145,8 +142,7 @@ public class CommonExpressionFactory implements ExpressionFactory {
 			SymbolicType type, Collection<SymbolicObject> args) {
 		if (type != null) {
 			if (type.isNumeric())
-				return numericFactory
-						.expression(operator, type, args);
+				return numericFactory.expression(operator, type, args);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, args);
 		}
@@ -157,6 +153,10 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	@Override
 	public SymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type) {
+		if (type.isNumeric())
+			return numericFactory.symbolicConstant(name, type);
+		if (type.isBoolean())
+			return booleanFactory.booleanSymbolicConstant(name);
 		return new CommonSymbolicConstant(name, type);
 	}
 

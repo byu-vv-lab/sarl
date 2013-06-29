@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.object.common;
 
@@ -28,6 +28,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -76,22 +77,27 @@ public class CommonObjectFactory implements ObjectFactory {
 		return numberFactory;
 	}
 
+	@Override
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		comparator.setExpressionComparator(c);
 	}
 
+	@Override
 	public void setCollectionComparator(Comparator<SymbolicCollection<?>> c) {
 		comparator.setCollectionComparator(c);
 	}
 
+	@Override
 	public void setTypeComparator(Comparator<SymbolicType> c) {
 		comparator.setTypeComparator(c);
 	}
 
+	@Override
 	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		comparator.setTypeSequenceComparator(c);
 	}
 
+	@Override
 	public void init() {
 		assert comparator.expressionComparator() != null;
 		assert comparator.collectionComparator() != null;
@@ -103,10 +109,12 @@ public class CommonObjectFactory implements ObjectFactory {
 		// do this
 	}
 
+	@Override
 	public ObjectComparator comparator() {
 		return comparator;
 	}
 
+	@Override
 	public <T extends SymbolicObject> T canonic(T object) {
 		if (object.isCanonic())
 			return object;
@@ -128,62 +136,82 @@ public class CommonObjectFactory implements ObjectFactory {
 		}
 	}
 
+	@Override
 	public BooleanObject trueObj() {
 		return trueObj;
 	}
 
+	@Override
 	public BooleanObject falseObj() {
 		return falseObj;
 	}
 
+	@Override
 	public IntObject zeroIntObj() {
 		return zeroIntObj;
 	}
 
+	@Override
 	public IntObject oneIntObj() {
 		return oneIntObj;
 	}
 
+	@Override
 	public NumberObject zeroIntegerObj() {
 		return zeroIntegerObj;
 	}
 
+	@Override
 	public NumberObject oneIntegerObj() {
 		return oneIntegerObj;
 	}
 
+	@Override
 	public NumberObject zeroRealObj() {
 		return zeroRealObj;
 	}
 
+	@Override
 	public NumberObject oneRealObj() {
 		return oneRealObj;
 	}
 
+	@Override
 	public NumberObject numberObject(Number value) {
 		return new CommonNumberObject(value);
 	}
 
+	@Override
 	public StringObject stringObject(String string) {
 		return canonic(new CommonStringObject(string));
 	}
 
+	@Override
 	public IntObject intObject(int value) {
 		return new CommonIntObject(value);
 	}
 
+	@Override
+	public CharObject charObject(char value) {
+		return new CommonCharObject(value);
+	}
+
+	@Override
 	public BooleanObject booleanObject(boolean value) {
 		return value ? trueObj : falseObj;
 	}
 
+	@Override
 	public SymbolicObject objectWithId(int index) {
 		return objectList.get(index);
 	}
 
+	@Override
 	public Collection<SymbolicObject> objects() {
 		return objectList;
 	}
 
+	@Override
 	public int numObjects() {
 		return objectList.size();
 	}
