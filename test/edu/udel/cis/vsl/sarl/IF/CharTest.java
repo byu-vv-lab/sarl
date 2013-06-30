@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.IF;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.io.PrintStream;
 
@@ -72,6 +73,18 @@ public class CharTest {
 		assertFalse(s1.equals(s2));
 		assertEquals(s1, s1);
 		assertEquals(s2, s2);
+	}
+
+	@Test
+	public void extract() {
+		SymbolicExpression a = universe.character('a');
+		SymbolicExpression x = universe.symbolicConstant(
+				universe.stringObject("x"), characterType);
+		Character a_char = universe.extractCharacter(a);
+		Character x_char = universe.extractCharacter(x);
+
+		assertEquals(new Character('a'), a_char);
+		assertNull(x_char);
 	}
 
 }

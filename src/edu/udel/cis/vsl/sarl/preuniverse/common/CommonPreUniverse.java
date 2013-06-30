@@ -1016,6 +1016,14 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public Character extractCharacter(SymbolicExpression expression) {
+		if (expression.type().typeKind() == SymbolicTypeKind.CHAR
+				&& expression.operator() == SymbolicOperator.CONCRETE)
+			return ((CharObject) expression.argument(0)).getChar();
+		return null;
+	}
+
+	@Override
 	public SymbolicExpression stringExpression(String theString) {
 		List<SymbolicExpression> charExprList = new LinkedList<SymbolicExpression>();
 		int numChars = theString.length();

@@ -616,6 +616,16 @@ public interface SymbolicUniverse {
 	SymbolicExpression character(char theChar);
 
 	/**
+	 * If the given expression is a concrete character expression, this returns
+	 * the character value, else it returns null.
+	 * 
+	 * @param expression
+	 *            a symbolic expression
+	 * @return the character is wraps or null
+	 */
+	Character extractCharacter(SymbolicExpression expression);
+
+	/**
 	 * Returns a symbolic expression of type array of char which is a literal
 	 * array consisting of the sequence of characters in the given string.
 	 * 

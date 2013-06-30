@@ -539,6 +539,8 @@ public interface PreUniverse {
 	SymbolicExpression character(char theChar);
 
 	SymbolicExpression stringExpression(String theString);
+	
+	Character extractCharacter(SymbolicExpression expression);
 
 	// Numeric operations...
 
