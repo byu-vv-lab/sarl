@@ -1,4 +1,5 @@
             SARL: Symbolic Algebra and Reasoning Library
+                     http://vsl.cis.udel.edu/sarl
             
 =============================== ABOUT =================================
 
@@ -19,11 +20,22 @@ siegel@udel.edu.
             
 ============================ INSTALLATION =============================
 
-Eventually everything will be distributed in a single JAR file.
-For now, you have to do a little work.
-First, you need to download and build/install the dependencies:
+If you only want to use SARL (and not contribute to its development)
+you only need to download and build the automated theorem prover
+CVC3 and then download sarl.jar and place it in the CLASSPATH
+for your application.  See file INSTALL in this directory
+for some hints on building CVC3.   In order for your application
+to find CVC3 you will need to set your DYLD_LIBRARY_PATH (on OS X)
+or LD_LIBRARY_PATH (on linux) to a colon-separated list of directories
+which contain the CVC3 shared libraries and the GMP (GNU Multiple
+Precision arithmetic library) shared library.  You will also need
+a Java 7 SDK.
 
- - Java SE 7 SDK (Java 6 MIGHT work, but I'm not sure):
+If you want to install from source (e.g., because you want to develop
+SARL), it is a bit more complicated, because SARL requires
+all of the following:
+
+ - Java SE 7 SDK
    http://www.oracle.com/technetwork/java/javase/downloads/index.html
  - Apache Ant (build tool):
    http://ant.apache.org 
@@ -38,34 +50,16 @@ First, you need to download and build/install the dependencies:
  - JaCoCo (Java code coverage analysis tool):
    http://www.jacoco.org
 
-Also, apparenty Hamcrest is now needed with JUnit 4.11 and later:
+[Note that Hamcrest is now needed with JUnit 4.11 and later:
  - Hamcrest (a library of "matchers"):
    https://github.com/hamcrest/JavaHamcrest
+]
    
-See file build.properties.examples for some hints on
-what to download and how to build these packages.
+See file INSTALL in this directory for detailed instructions on
+installing SARL from source.
 
-Next, you need to create a file named build.properties by
-copying build.properties.examples and editing it to give
-the paths to the dependencies on your system, as indicated
-in the comments in the file.  This file goes in the main
-SARL directory, i.e., the same directory as
-build.properties.examples.
+============================== LICENSES ===============================
 
-Now you should be able to compile & jar the code
-by just typing "ant" in the main directory.  You can
-also try "ant test" to run a suite of JUnit tests, and
-"ant javadoc" to generate javadoc documentation in doc/javadoc.
-The documentation can be read using any web browser to open
-doc/javadoc/index.html.
-
-Hints on building CVC3:
- - you need libgmp (GNU Multiple-precision numeric library), so
-   install that
- - you need to follow the instructions to configure with
-   dynamic libraries and for Java
- - on Macs, you need to set your DYLD_LIBRARY_PATH environment
-   variable to include the paths containing the .dylib files
-   On other systems there are probably other paths
- 
- 
+SARL is copyright 2013 Stephen F. Siegel, Verified Software Laboratory,
+University of Delaware.  It is distributed under the terms of the GNU
+Lesser General Public License (LGPL).  See the file COPYING.LESSER.
