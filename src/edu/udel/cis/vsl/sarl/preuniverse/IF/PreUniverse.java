@@ -5,12 +5,17 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
+import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -539,7 +544,7 @@ public interface PreUniverse {
 	SymbolicExpression character(char theChar);
 
 	SymbolicExpression stringExpression(String theString);
-	
+
 	Character extractCharacter(SymbolicExpression expression);
 
 	// Numeric operations...
@@ -1164,6 +1169,65 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression cond(BooleanExpression predicate,
 			SymbolicExpression trueCase, SymbolicExpression falseCase);
+
+	// References...
+
+	/** Returns the type of all reference expressions. */
+	SymbolicType referenceType();
+
+	/**
+	 * Returns the "null reference", a symbolic expression of reference type
+	 * which is not equal to a reference value returned by any of the other
+	 * methods, and which cannot be dereferenced.
+	 */
+	ReferenceExpression nullReference();
+
+	/**
+	 * Given a reference and a value, returns the sub-expression of value
+	 * specified by the reference. Throws exception if the reference is not of
+	 * the correct form for the type of value.
+	 */
+	SymbolicExpression dereference(SymbolicExpression value,
+			ReferenceExpression reference);
+
+	/**
+	 * Returns the identity (or "trivial") reference I. This is the reference
+	 * characterized by the property that dereference(I,v) returns v for any
+	 * symbolic expression v.
+	 */
+	ReferenceExpression identityReference();
+
+	/**
+	 * Given a reference to an array and an index (integer), returns a reference
+	 * to the element of the array at that index
+	 */
+	ArrayElementReference arrayElementReference(
+			ReferenceExpression arrayReference, NumericExpression index);
+
+	/**
+	 * Given a reference to a tuple, and a field index, returns a reference to
+	 * that component of the tuple
+	 */
+	TupleComponentReference tupleComponentReference(
+			ReferenceExpression tupleReference, IntObject fieldIndex);
+
+	/**
+	 * Given a reference to a union (expression of union type) and an index of a
+	 * member type of that union, returns a reference to the underlying element
+	 */
+	UnionMemberReference unionMemberReference(
+			ReferenceExpression unionReference, IntObject memberIndex);
+
+	OffsetReference offsetReference(ReferenceExpression reference,
+			NumericExpression offset);
+
+	/**
+	 * Given a symbolic expression value, a reference to a point within that
+	 * value, and a subValue, returns the symbolic expression obtained by
+	 * replacing the referenced part of value with subValue.
+	 */
+	SymbolicExpression assign(SymbolicExpression value,
+			ReferenceExpression reference, SymbolicExpression subValue);
 
 	// Additional methods not part of SymbolicUniverse...
 

@@ -10,12 +10,17 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
+import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -1611,7 +1616,7 @@ public class CommonPreUniverse implements PreUniverse {
 			if (op == SymbolicOperator.CONCRETE) {
 				@SuppressWarnings("unchecked")
 				SymbolicSequence<SymbolicExpression> sequence = (SymbolicSequence<SymbolicExpression>) array
-						.argument(1);
+						.argument(0);
 
 				return expression(op, arrayType, sequence.set(indexInt, value));
 			}
@@ -1812,9 +1817,14 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression tupleRead(SymbolicExpression tuple,
 			IntObject index) {
+		SymbolicType type = tuple.type();
 		SymbolicOperator op = tuple.operator();
 		int indexInt = index.getInt();
 
+		if (type.typeKind() != SymbolicTypeKind.TUPLE)
+			throw new SARLException(
+					"Argument tuple to tupleRead does not have tuple type:\n"
+							+ tuple);
 		if (op == SymbolicOperator.CONCRETE)
 			return ((SymbolicSequence<?>) tuple.argument(0)).get(indexInt);
 		if (op == SymbolicOperator.DENSE_TUPLE_WRITE) {
@@ -2012,6 +2022,157 @@ public class CommonPreUniverse implements PreUniverse {
 	public <T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection) {
 		return collectionFactory.basicCollection(javaCollection);
+	}
+
+	@Override
+	public SymbolicType referenceType() {
+		return expressionFactory.referenceType();
+	}
+
+	@Override
+	public ReferenceExpression nullReference() {
+		return expressionFactory.nullReference();
+	}
+
+	@Override
+	public SymbolicExpression dereference(SymbolicExpression value,
+			ReferenceExpression reference) {
+		if (reference == null)
+			throw new SARLException("dereference given null reference");
+		if (value == null)
+			throw new SARLException("dereference given null value");
+		switch (reference.referenceKind()) {
+		case NULL:
+			throw new SARLException(
+					"Cannot dereference the null reference expression:\n"
+							+ value + "\n" + reference);
+		case IDENTITY:
+			return value;
+		case ARRAY_ELEMENT: {
+			ArrayElementReference ref = (ArrayElementReference) reference;
+
+			return arrayRead(dereference(value, ref.getParent()),
+					ref.getIndex());
+		}
+		case TUPLE_COMPONENT: {
+			TupleComponentReference ref = (TupleComponentReference) reference;
+
+			return tupleRead(dereference(value, ref.getParent()),
+					ref.getIndex());
+		}
+		case UNION_MEMBER: {
+			UnionMemberReference ref = (UnionMemberReference) reference;
+
+			return this.unionExtract(ref.getIndex(),
+					dereference(value, ref.getParent()));
+		}
+		case OFFSET: {
+			OffsetReference ref = (OffsetReference) reference;
+			NumericExpression index = ref.getOffset();
+			IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
+
+			if (indexNumber == null || !indexNumber.isZero())
+				throw new SARLException(
+						"Cannot dereference an offset reference with non-zero offset:\n"
+								+ reference + "\n" + value);
+			return dereference(value, ref.getParent());
+		}
+		default:
+			throw new SARLInternalException("Unknown reference kind: "
+					+ reference);
+		}
+	}
+
+	@Override
+	public ReferenceExpression identityReference() {
+		return expressionFactory.identityReference();
+	}
+
+	@Override
+	public ArrayElementReference arrayElementReference(
+			ReferenceExpression arrayReference, NumericExpression index) {
+		return expressionFactory.arrayElementReference(arrayReference, index);
+	}
+
+	@Override
+	public TupleComponentReference tupleComponentReference(
+			ReferenceExpression tupleReference, IntObject fieldIndex) {
+		return expressionFactory.tupleComponentReference(tupleReference,
+				fieldIndex);
+	}
+
+	@Override
+	public UnionMemberReference unionMemberReference(
+			ReferenceExpression unionReference, IntObject memberIndex) {
+		return expressionFactory.unionMemberReference(unionReference,
+				memberIndex);
+	}
+
+	@Override
+	public OffsetReference offsetReference(ReferenceExpression reference,
+			NumericExpression offset) {
+		return expressionFactory.offsetReference(reference, offset);
+	}
+
+	@Override
+	public SymbolicExpression assign(SymbolicExpression value,
+			ReferenceExpression reference, SymbolicExpression subValue) {
+		if (reference == null)
+			throw new SARLException("assign given null reference");
+		if (value == null)
+			throw new SARLException("assign given null value");
+		if (subValue == null)
+			throw new SARLException("assign given null subValue");
+		switch (reference.referenceKind()) {
+		case NULL:
+			throw new SARLException(
+					"Cannot assign using the null reference expression:\n"
+							+ value + "\n" + reference + "\n" + subValue);
+		case IDENTITY:
+			return subValue;
+		case ARRAY_ELEMENT: {
+			ArrayElementReference ref = (ArrayElementReference) reference;
+			ReferenceExpression arrayReference = ref.getParent();
+			SymbolicExpression array = dereference(value, arrayReference);
+			SymbolicExpression newArray = arrayWrite(array, ref.getIndex(),
+					subValue);
+
+			return assign(value, arrayReference, newArray);
+		}
+		case TUPLE_COMPONENT: {
+			TupleComponentReference ref = (TupleComponentReference) reference;
+			ReferenceExpression tupleReference = ref.getParent();
+			SymbolicExpression tuple = dereference(value, tupleReference);
+			SymbolicExpression newTuple = tupleWrite(tuple, ref.getIndex(),
+					subValue);
+
+			return assign(value, tupleReference, newTuple);
+		}
+		case UNION_MEMBER: {
+			UnionMemberReference ref = (UnionMemberReference) reference;
+			ReferenceExpression unionReference = ref.getParent();
+			SymbolicExpression unionValue = dereference(value, unionReference);
+			SymbolicUnionType unionType = (SymbolicUnionType) unionValue.type();
+			SymbolicExpression newUnionValue = unionInject(unionType,
+					ref.getIndex(), subValue);
+
+			return assign(value, unionReference, newUnionValue);
+		}
+		case OFFSET: {
+			OffsetReference ref = (OffsetReference) reference;
+			NumericExpression index = ref.getOffset();
+			IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
+
+			if (indexNumber == null || !indexNumber.isZero())
+				throw new SARLException(
+						"Cannot assign via an offset reference with non-zero offset:\n"
+								+ reference + "\n" + value);
+			return assign(value, ref.getParent(), subValue);
+		}
+		default:
+			throw new SARLInternalException("Unknown reference kind: "
+					+ reference);
+		}
 	}
 
 }

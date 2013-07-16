@@ -21,13 +21,24 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Collection;
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
+import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
@@ -42,6 +53,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private NumericExpressionFactory numericFactory;
 
+	private NumberFactory numberFactory;
+
 	private BooleanExpressionFactory booleanFactory;
 
 	private SymbolicTypeFactory typeFactory;
@@ -50,8 +63,25 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private SymbolicExpression nullExpression;
 
+	private SymbolicIntegerType integerType;
+
+	private SymbolicType referenceType;
+
+	private SymbolicConstant arrayElementReferenceFunction;
+
+	private SymbolicConstant tupleComponentReferenceFunction;
+
+	private SymbolicConstant unionMemberReferenceFunction;
+
+	private SymbolicConstant offsetReferenceFunction;
+
+	private ReferenceExpression nullReference;
+
+	private ReferenceExpression identityReference;
+
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		this.numericFactory = numericFactory;
+		this.numberFactory = numericFactory.numberFactory();
 		this.objectFactory = numericFactory.objectFactory();
 		this.booleanFactory = numericFactory.booleanFactory();
 		this.typeFactory = numericFactory.typeFactory();
@@ -68,7 +98,38 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	@Override
 	public void init() {
+		SymbolicTypeSequence referenceIndexSeq;
+		SymbolicType referenceFunctionType;
+		NumericExpression zero = numericFactory.zeroInt();
+		NumericExpression one = numericFactory.oneInt();
+
 		numericFactory.init();
+		integerType = objectFactory.canonic(typeFactory.integerType());
+		referenceType = objectFactory.canonic(typeFactory.tupleType(
+				objectFactory.stringObject("Ref"),
+				typeFactory.sequence(new SymbolicType[] { integerType })));
+		referenceIndexSeq = typeFactory.sequence(new SymbolicType[] {
+				referenceType, integerType });
+		referenceFunctionType = objectFactory.canonic(typeFactory.functionType(
+				referenceIndexSeq, referenceType));
+		arrayElementReferenceFunction = objectFactory.canonic(symbolicConstant(
+				objectFactory.stringObject("ArrayElementRef"),
+				referenceFunctionType));
+		tupleComponentReferenceFunction = objectFactory
+				.canonic(symbolicConstant(
+						objectFactory.stringObject("TupleComponentRef"),
+						referenceFunctionType));
+		unionMemberReferenceFunction = objectFactory.canonic(symbolicConstant(
+				objectFactory.stringObject("UnionMemberRef"),
+				referenceFunctionType));
+		offsetReferenceFunction = objectFactory
+				.canonic(symbolicConstant(
+						objectFactory.stringObject("OffsetRef"),
+						referenceFunctionType));
+		nullReference = objectFactory.canonic(new CommonNullReference(
+				referenceType, collectionFactory.singletonSequence(zero)));
+		identityReference = objectFactory.canonic(new CommonIdentityReference(
+				referenceType, collectionFactory.singletonSequence(one)));
 	}
 
 	@Override
@@ -173,6 +234,68 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	@Override
 	public SymbolicTypeFactory typeFactory() {
 		return typeFactory;
+	}
+
+	@Override
+	public ReferenceExpression nullReference() {
+		return nullReference;
+	}
+
+	@Override
+	public ReferenceExpression identityReference() {
+		return identityReference;
+	}
+
+	private SymbolicSequence<SymbolicExpression> parentIndexSequence(
+			ReferenceExpression parent, NumericExpression index) {
+		return collectionFactory.sequence(new SymbolicExpression[] { parent,
+				index });
+	}
+
+	private SymbolicSequence<SymbolicExpression> parentIndexSequence(
+			ReferenceExpression parent, IntObject index) {
+		return collectionFactory.sequence(new SymbolicExpression[] {
+				parent,
+				numericFactory.number(objectFactory.numberObject(numberFactory
+						.integer(index.getInt()))) });
+	}
+
+	@Override
+	public ArrayElementReference arrayElementReference(
+			ReferenceExpression arrayReference, NumericExpression index) {
+		return new CommonArrayElementReference(referenceType,
+				arrayElementReferenceFunction, parentIndexSequence(
+						arrayReference, index));
+	}
+
+	@Override
+	public TupleComponentReference tupleComponentReference(
+			ReferenceExpression tupleReference, IntObject fieldIndex) {
+
+		return new CommonTupleComponentReference(referenceType,
+				tupleComponentReferenceFunction, parentIndexSequence(
+						tupleReference, fieldIndex), fieldIndex);
+	}
+
+	@Override
+	public UnionMemberReference unionMemberReference(
+			ReferenceExpression unionReference, IntObject memberIndex) {
+		return new CommonUnionMemberReference(referenceType,
+				unionMemberReferenceFunction, parentIndexSequence(
+						unionReference, memberIndex), memberIndex);
+	}
+
+	@Override
+	public OffsetReference offsetReference(ReferenceExpression reference,
+			NumericExpression offset) {
+		return new CommonOffsetReference(referenceType,
+				offsetReferenceFunction, parentIndexSequence(reference, offset));
+
+	}
+
+	@Override
+	public SymbolicType referenceType() {
+		return referenceType;
 	}
 
 }
