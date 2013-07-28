@@ -16,6 +16,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression.ReferenceKind;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -2117,19 +2118,22 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression assign(SymbolicExpression value,
 			ReferenceExpression reference, SymbolicExpression subValue) {
+		ReferenceKind kind;
+
 		if (reference == null)
 			throw new SARLException("assign given null reference");
-		if (value == null)
-			throw new SARLException("assign given null value");
 		if (subValue == null)
 			throw new SARLException("assign given null subValue");
-		switch (reference.referenceKind()) {
+		kind = reference.referenceKind();
+		if (kind == ReferenceKind.IDENTITY)
+			return subValue;
+		if (value == null)
+			throw new SARLException("assign given null value");
+		switch (kind) {
 		case NULL:
 			throw new SARLException(
 					"Cannot assign using the null reference expression:\n"
 							+ value + "\n" + reference + "\n" + subValue);
-		case IDENTITY:
-			return subValue;
 		case ARRAY_ELEMENT: {
 			ArrayElementReference ref = (ArrayElementReference) reference;
 			ReferenceExpression arrayReference = ref.getParent();
