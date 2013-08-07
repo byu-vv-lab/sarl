@@ -21,7 +21,9 @@ package edu.udel.cis.vsl.sarl.expr.common;
 import java.util.Collection;
 import java.util.Comparator;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
+import edu.udel.cis.vsl.sarl.IF.expr.NTReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
@@ -30,8 +32,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
 import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
@@ -79,7 +83,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private ReferenceExpression identityReference;
 
+	private SymbolicSequence<NumericExpression> zeroSequence;
+
+	private SymbolicSequence<NumericExpression> oneSequence;
+
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
+		NumericExpression zero = numericFactory.zeroInt();
+		NumericExpression one = numericFactory.oneInt();
+
 		this.numericFactory = numericFactory;
 		this.numberFactory = numericFactory.numberFactory();
 		this.objectFactory = numericFactory.objectFactory();
@@ -94,14 +105,88 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		typeFactory.setExpressionComparator(expressionComparator);
 		collectionFactory.setElementComparator(expressionComparator);
 		objectFactory.setExpressionComparator(expressionComparator);
+		zeroSequence = objectFactory.canonic(collectionFactory
+				.singletonSequence(zero));
+		oneSequence = objectFactory.canonic(collectionFactory
+				.singletonSequence(one));
+	}
+
+	private int extractInt(NumericExpression expr) {
+		int result = ((IntegerNumber) ((NumberObject) expr.argument(0))
+				.getNumber()).intValue();
+
+		return result;
+	}
+
+	private ReferenceExpression concreteReferenceExpression(
+			SymbolicOperator operator, SymbolicObject arg0) {
+		if (operator != SymbolicOperator.CONCRETE)
+			throw new SARLInternalException("Expected CONCRETE operator, not "
+					+ operator);
+		if (zeroSequence.equals(arg0))
+			return nullReference;
+		if (oneSequence.equals(arg0))
+			return identityReference;
+		throw new SARLInternalException(
+				"Unexpected concrete argument to reference: " + arg0);
+	}
+
+	private NTReferenceExpression nonTrivialReferenceExpression(
+			SymbolicOperator operator, SymbolicObject arg0, SymbolicObject arg1) {
+		if (operator != SymbolicOperator.APPLY)
+			throw new SARLInternalException("Expected APPLY operator, not "
+					+ operator);
+		else {
+			SymbolicExpression function = (SymbolicExpression) arg0;
+			SymbolicSequence<?> parentIndexSequence = (SymbolicSequence<?>) arg1;
+			ReferenceExpression parent = (ReferenceExpression) parentIndexSequence
+					.get(0);
+			NumericExpression index = (NumericExpression) parentIndexSequence
+					.get(1);
+
+			if (arrayElementReferenceFunction.equals(function))
+				return arrayElementReference(parent, index);
+			if (tupleComponentReferenceFunction.equals(function))
+				return tupleComponentReference(parent,
+						objectFactory.intObject(extractInt(index)));
+			if (unionMemberReferenceFunction.equals(function))
+				return unionMemberReference(parent,
+						objectFactory.intObject(extractInt(index)));
+			if (offsetReferenceFunction.equals(function))
+				return offsetReference(parent, index);
+			throw new SARLInternalException(
+					"Unknown kind of reference function: " + function);
+		}
+	}
+
+	/**
+	 * Reconstructs a reference expression from operator and arguments.
+	 * Arguments array can have length 1 (for concrete case: null or identity
+	 * reference), or 2 (for non-trivial reference case: arg0 is function and
+	 * arg1 is parent-index sequence).
+	 * 
+	 * @param operator
+	 *            {@link SymbolicOperator.CONCRETE} or
+	 *            {@link SymbolicOperator.APPLY}
+	 * @param arguments
+	 *            array of length 1 or 2 as specified above
+	 * @return instance of ReferenceExpression determined by above parameters
+	 */
+	private ReferenceExpression referenceExpression(SymbolicOperator operator,
+			SymbolicObject[] arguments) {
+		if (operator == SymbolicOperator.CONCRETE)
+			return concreteReferenceExpression(operator, arguments[0]);
+		else if (operator == SymbolicOperator.APPLY)
+			return nonTrivialReferenceExpression(operator, arguments[0],
+					arguments[1]);
+		throw new SARLInternalException(
+				"Unexpected operator in reference expression: " + operator);
 	}
 
 	@Override
 	public void init() {
-		SymbolicTypeSequence referenceIndexSeq;
-		SymbolicType referenceFunctionType;
-		NumericExpression zero = numericFactory.zeroInt();
-		NumericExpression one = numericFactory.oneInt();
+		SymbolicTypeSequence referenceIndexSeq; // Ref x Int
+		SymbolicType referenceFunctionType; // Ref x Int -> Ref
 
 		numericFactory.init();
 		integerType = objectFactory.canonic(typeFactory.integerType());
@@ -127,9 +212,9 @@ public class CommonExpressionFactory implements ExpressionFactory {
 						objectFactory.stringObject("OffsetRef"),
 						referenceFunctionType));
 		nullReference = objectFactory.canonic(new CommonNullReference(
-				referenceType, collectionFactory.singletonSequence(zero)));
+				referenceType, zeroSequence));
 		identityReference = objectFactory.canonic(new CommonIdentityReference(
-				referenceType, collectionFactory.singletonSequence(one)));
+				referenceType, oneSequence));
 	}
 
 	@Override
@@ -147,6 +232,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return expressionComparator;
 	}
 
+	// replace all of these by just one:
+
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {
@@ -155,6 +242,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				return numericFactory.expression(operator, type, arguments);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arguments);
+			if (type.equals(referenceType))
+				return referenceExpression(operator, arguments);
 		}
 		return new CommonSymbolicExpression(operator, type, arguments);
 	}
@@ -167,6 +256,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				return numericFactory.expression(operator, type, arg0);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0);
+			if (type.equals(referenceType))
+				return concreteReferenceExpression(operator, arg0);
 		}
 		return new CommonSymbolicExpression(operator, type, arg0);
 	}
@@ -179,6 +270,8 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				return numericFactory.expression(operator, type, arg0, arg1);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, arg0, arg1);
+			if (type.equals(referenceType))
+				return nonTrivialReferenceExpression(operator, arg0, arg1);
 		}
 		return new CommonSymbolicExpression(operator, type, arg0, arg1);
 	}
@@ -206,6 +299,9 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				return numericFactory.expression(operator, type, args);
 			if (type.isBoolean())
 				return booleanFactory.booleanExpression(operator, args);
+			if (type.equals(referenceType))
+				return referenceExpression(operator,
+						args.toArray(new SymbolicObject[args.size()]));
 		}
 		return new CommonSymbolicExpression(operator, type, args);
 

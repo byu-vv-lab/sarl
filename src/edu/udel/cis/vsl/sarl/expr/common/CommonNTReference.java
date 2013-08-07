@@ -41,7 +41,7 @@ public abstract class CommonNTReference extends CommonReferenceExpression
 	 * offsetReferenceFunction</li>
 	 * </ul>
 	 * 
-	 * The symbolic exprssion has type referenceType, operator APPLY, arg0 is
+	 * The symbolic expression has type referenceType, operator APPLY, arg0 is
 	 * the function, and arg1 is the parentIndexSequence.
 	 * 
 	 * @param referenceType
