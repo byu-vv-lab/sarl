@@ -77,8 +77,6 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private IntegerNumber denseArrayMaxSize, quantifierExpandBound;
 
-	// private FactorySystem system;
-
 	/**
 	 * Factory for producing general symbolic objects, canonicalizing them, etc.
 	 */
@@ -1894,7 +1892,7 @@ public class CommonPreUniverse implements PreUniverse {
 						sequence);
 			else
 				return expression(SymbolicOperator.DENSE_TUPLE_WRITE,
-						tupleType, tuple.argument(0), sequence);
+						tupleType, tuple, sequence);
 		}
 	}
 
