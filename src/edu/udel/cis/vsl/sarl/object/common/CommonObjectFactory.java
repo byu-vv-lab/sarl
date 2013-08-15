@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -116,6 +117,8 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	@Override
 	public <T extends SymbolicObject> T canonic(T object) {
+		if (object == null)
+			throw new SARLException("null object");
 		if (object.isCanonic())
 			return object;
 		else {
@@ -178,11 +181,15 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	@Override
 	public NumberObject numberObject(Number value) {
+		if (value == null)
+			throw new SARLException("null value");
 		return new CommonNumberObject(value);
 	}
 
 	@Override
 	public StringObject stringObject(String string) {
+		if (string == null)
+			throw new SARLException("null string");
 		return canonic(new CommonStringObject(string));
 	}
 
