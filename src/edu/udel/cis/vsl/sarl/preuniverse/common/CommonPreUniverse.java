@@ -1503,6 +1503,37 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public SymbolicExpression append(SymbolicExpression concreteArray,
+			SymbolicExpression element) {
+		SymbolicType type = concreteArray.type();
+
+		if (type.typeKind() != SymbolicTypeKind.ARRAY)
+			throw err("argument concreteArray not array type:\n"
+					+ concreteArray);
+		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
+			throw err("append invoked on non-concrete array:\n" + concreteArray);
+		} else {
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+					.argument(0);
+			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
+			SymbolicExpression result;
+
+			if (element == null || element.isNull())
+				throw err("Element to append has illegal value:\n" + element);
+			if (incompatible(elementType, element.type()))
+				throw err("Element to append has incompatible type:\n"
+						+ "Expected: " + elementType + "\nSaw: "
+						+ element.type());
+			elements = elements.add(element);
+			type = arrayType(elementType, integer(elements.size()));
+			result = expression(SymbolicOperator.CONCRETE, type,
+					sequence(elements));
+			return result;
+		}
+	}
+
+	@Override
 	public SymbolicExpression emptyArray(SymbolicType elementType) {
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, zeroInt()),

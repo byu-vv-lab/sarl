@@ -1024,6 +1024,20 @@ public interface PreUniverse {
 			Iterable<? extends SymbolicExpression> elements);
 
 	/**
+	 * Appends an element to the end of a concrete symbolic array. Returns a new
+	 * array expression which is same as old with new element appended to end.
+	 * 
+	 * @param concreteArray
+	 *            a concrete array
+	 * @param element
+	 *            a symbolic expression whose type is compatible with element
+	 *            type of the array
+	 * @return an array obtained by appending element to given array
+	 */
+	SymbolicExpression append(SymbolicExpression concreteArray,
+			SymbolicExpression element);
+
+	/**
 	 * Returns array of length 0.
 	 * 
 	 * @param elementType

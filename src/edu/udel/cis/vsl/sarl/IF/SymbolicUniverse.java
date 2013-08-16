@@ -1127,6 +1127,20 @@ public interface SymbolicUniverse {
 	SymbolicExpression emptyArray(SymbolicType elementType);
 
 	/**
+	 * Appends an element to the end of a concrete symbolic array. Returns a new
+	 * array expression which is same as old with new element appended to end.
+	 * 
+	 * @param concreteArray
+	 *            a concrete array
+	 * @param element
+	 *            a symbolic expression whose type is compatible with element
+	 *            type of the array
+	 * @return an array obtained by appending element to given array
+	 */
+	SymbolicExpression append(SymbolicExpression concreteArray,
+			SymbolicExpression element);
+
+	/**
 	 * Returns the length of any symbolic expression of array type. This is a
 	 * symbolic expression of integer type.
 	 * 
