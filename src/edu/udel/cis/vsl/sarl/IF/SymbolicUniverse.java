@@ -1299,6 +1299,21 @@ public interface SymbolicUniverse {
 			ReferenceExpression reference);
 
 	/**
+	 * Returns the type referenced by a reference into an object of the given
+	 * type. Example: if type is array-of-int and the reference is an array
+	 * element reference, this method returns int.
+	 * 
+	 * @param type
+	 *            a symbolic type
+	 * @param reference
+	 *            a reference that is compatible with that type, i.e., can
+	 *            reference into a value of that type
+	 * @return the component of the given type which is referenced by the given
+	 *         reference
+	 */
+	SymbolicType referencedType(SymbolicType type, ReferenceExpression reference);
+
+	/**
 	 * Returns the identity (or "trivial") reference I. This is the reference
 	 * characterized by the property that dereference(I,v) returns v for any
 	 * symbolic expression v.

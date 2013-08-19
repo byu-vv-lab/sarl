@@ -1437,7 +1437,7 @@ public class CommonPreUniverse implements PreUniverse {
 					+ "\nExpected: integer in range [0," + (numMembers - 1)
 					+ "]");
 		memberType = unionType.sequence().getType(indexInt);
-		if (!memberType.equals(objectType))
+		if (incompatible(memberType, objectType))
 			throw err("Argument object of unionInject has the wrong type.\n"
 					+ "Its type should agree with the type of member "
 					+ memberIndex + " of the union type.\n" + "Expected: "
@@ -1819,6 +1819,12 @@ public class CommonPreUniverse implements PreUniverse {
 		return null;
 	}
 
+	// public SymbolicExpression arraySlice(SymbolicExpression array,
+	// NumericExpression startIndex, NumericExpression endIndex) {
+	// NumericExpression length = length(array);
+	//
+	// }
+
 	@Override
 	public SymbolicExpression tuple(SymbolicTupleType type,
 			Iterable<? extends SymbolicExpression> components) {
@@ -2106,6 +2112,64 @@ public class CommonPreUniverse implements PreUniverse {
 						"Cannot dereference an offset reference with non-zero offset:\n"
 								+ reference + "\n" + value);
 			return dereference(value, ref.getParent());
+		}
+		default:
+			throw new SARLInternalException("Unknown reference kind: "
+					+ reference);
+		}
+	}
+
+	@Override
+	public SymbolicType referencedType(SymbolicType type,
+			ReferenceExpression reference) {
+		if (reference == null)
+			throw new SARLException("referencedType given null reference");
+		if (type == null)
+			throw new SARLException("referencedType given null type");
+		switch (reference.referenceKind()) {
+		case NULL:
+			throw new SARLException(
+					"Cannot compute referencedType of the null reference expression:\n"
+							+ type + "\n" + reference);
+		case IDENTITY:
+			return type;
+		case ARRAY_ELEMENT: {
+			ArrayElementReference ref = (ArrayElementReference) reference;
+			SymbolicType parentType = referencedType(type, ref.getParent());
+
+			if (parentType instanceof SymbolicArrayType)
+				return ((SymbolicArrayType) parentType).elementType();
+			else
+				throw new SARLException("Incompatible type and reference:\n"
+						+ type + "\n" + reference);
+		}
+		case TUPLE_COMPONENT: {
+			TupleComponentReference ref = (TupleComponentReference) reference;
+			SymbolicType parentType = referencedType(type, ref.getParent());
+
+			if (parentType instanceof SymbolicTupleType)
+				return ((SymbolicTupleType) parentType).sequence().getType(
+						ref.getIndex().getInt());
+			else
+				throw new SARLException("Incompatible type and reference:\n"
+						+ type + "\n" + reference);
+		}
+		case UNION_MEMBER: {
+			UnionMemberReference ref = (UnionMemberReference) reference;
+			SymbolicType parentType = referencedType(type, ref.getParent());
+
+			if (parentType instanceof SymbolicUnionType)
+				return ((SymbolicUnionType) parentType).sequence().getType(
+						ref.getIndex().getInt());
+			else
+				throw new SARLException("Incompatible type and reference:\n"
+						+ type + "\n" + reference);
+		}
+		case OFFSET: {
+			OffsetReference ref = (OffsetReference) reference;
+			SymbolicType parentType = referencedType(type, ref.getParent());
+
+			return parentType;
 		}
 		default:
 			throw new SARLInternalException("Unknown reference kind: "
