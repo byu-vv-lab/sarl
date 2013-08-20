@@ -1,0 +1,6 @@
+cvc3.jni.dir=/usr/local/lib
+cvc3.lib.jar=/usr/local/java/libcvc3-5.0.0.jar
+clj-ds.classes=/tools/clj-ds-master/src/main/java
+pcollections.jar=/tools/pcollections-2.1.2.jar
+junit.jar=/tools/junit-4.10.jar
+jacoco.jar=/tools/jacoco/lib/jacocoant.jar
