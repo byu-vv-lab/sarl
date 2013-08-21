@@ -23,12 +23,12 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
-import edu.udel.cis.vsl.sarl.IF.expr.NTReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression.ReferenceKind;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
 import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
@@ -131,32 +131,43 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				"Unexpected concrete argument to reference: " + arg0);
 	}
 
-	private NTReferenceExpression nonTrivialReferenceExpression(
+	// private NTReferenceExpression nonTrivialReferenceExpression
+
+	private SymbolicExpression nonTrivialReferenceExpression(
 			SymbolicOperator operator, SymbolicObject arg0, SymbolicObject arg1) {
-		if (operator != SymbolicOperator.APPLY)
-			throw new SARLInternalException("Expected APPLY operator, not "
-					+ operator);
-		else {
+		if (operator == SymbolicOperator.APPLY) {
 			SymbolicExpression function = (SymbolicExpression) arg0;
-			SymbolicSequence<?> parentIndexSequence = (SymbolicSequence<?>) arg1;
-			ReferenceExpression parent = (ReferenceExpression) parentIndexSequence
-					.get(0);
-			NumericExpression index = (NumericExpression) parentIndexSequence
-					.get(1);
+			ReferenceKind kind = null;
 
 			if (arrayElementReferenceFunction.equals(function))
-				return arrayElementReference(parent, index);
-			if (tupleComponentReferenceFunction.equals(function))
-				return tupleComponentReference(parent,
-						objectFactory.intObject(extractInt(index)));
-			if (unionMemberReferenceFunction.equals(function))
-				return unionMemberReference(parent,
-						objectFactory.intObject(extractInt(index)));
-			if (offsetReferenceFunction.equals(function))
-				return offsetReference(parent, index);
-			throw new SARLInternalException(
-					"Unknown kind of reference function: " + function);
+				kind = ReferenceKind.ARRAY_ELEMENT;
+			else if (tupleComponentReferenceFunction.equals(function))
+				kind = ReferenceKind.TUPLE_COMPONENT;
+			else if (unionMemberReferenceFunction.equals(function))
+				kind = ReferenceKind.UNION_MEMBER;
+			else if (offsetReferenceFunction.equals(function))
+				kind = ReferenceKind.OFFSET;
+			if (kind != null) {
+				SymbolicSequence<?> parentIndexSequence = (SymbolicSequence<?>) arg1;
+				ReferenceExpression parent = (ReferenceExpression) parentIndexSequence
+						.get(0);
+				NumericExpression index = (NumericExpression) parentIndexSequence
+						.get(1);
+
+				if (kind == ReferenceKind.ARRAY_ELEMENT)
+					return arrayElementReference(parent, index);
+				if (kind == ReferenceKind.TUPLE_COMPONENT)
+					return tupleComponentReference(parent,
+							objectFactory.intObject(extractInt(index)));
+				if (kind == ReferenceKind.UNION_MEMBER)
+					return unionMemberReference(parent,
+							objectFactory.intObject(extractInt(index)));
+				if (kind == ReferenceKind.OFFSET)
+					return offsetReference(parent, index);
+				throw new SARLInternalException("unreachable");
+			}
 		}
+		return new CommonSymbolicExpression(operator, referenceType, arg0, arg1);
 	}
 
 	/**
@@ -172,15 +183,16 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	 *            array of length 1 or 2 as specified above
 	 * @return instance of ReferenceExpression determined by above parameters
 	 */
-	private ReferenceExpression referenceExpression(SymbolicOperator operator,
+	private SymbolicExpression referenceExpression(SymbolicOperator operator,
 			SymbolicObject[] arguments) {
 		if (operator == SymbolicOperator.CONCRETE)
 			return concreteReferenceExpression(operator, arguments[0]);
 		else if (operator == SymbolicOperator.APPLY)
 			return nonTrivialReferenceExpression(operator, arguments[0],
 					arguments[1]);
-		throw new SARLInternalException(
-				"Unexpected operator in reference expression: " + operator);
+		return new CommonSymbolicExpression(operator, referenceType, arguments);
+		// throw new SARLInternalException(
+		// "Unexpected operator in reference expression: " + operator);
 	}
 
 	@Override

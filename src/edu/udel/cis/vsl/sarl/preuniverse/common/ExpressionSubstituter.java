@@ -253,6 +253,8 @@ public class ExpressionSubstituter {
 
 		if (newValue != null)
 			return newValue;
+		if (expression.isNull())
+			return expression;
 		else {
 			int numArgs = expression.numArguments();
 			SymbolicType type = expression.type();
