@@ -156,6 +156,13 @@ public interface SymbolicUniverse {
 	BooleanExpression compatible(SymbolicType type0, SymbolicType type1);
 
 	/**
+	 * Returns the "pure" version of the type, i.e., the type obtained by making
+	 * every array type incomplete. This is applied recusively down all
+	 * components of the type tree.
+	 */
+	SymbolicType pureType(SymbolicType type);
+
+	/**
 	 * The boolean type.
 	 * 
 	 * @return the boolean type

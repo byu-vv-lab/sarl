@@ -1269,4 +1269,6 @@ public interface PreUniverse {
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection);
 
+	SymbolicType pureType(SymbolicType type);
+
 }

@@ -825,6 +825,11 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public SymbolicType pureType(SymbolicType type) {
+		return typeFactory.pureType(type);
+	}
+
+	@Override
 	public SymbolicType booleanType() {
 		return booleanType;
 	}
