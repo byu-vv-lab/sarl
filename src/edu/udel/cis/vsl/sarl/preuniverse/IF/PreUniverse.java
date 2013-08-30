@@ -1037,6 +1037,9 @@ public interface PreUniverse {
 	SymbolicExpression append(SymbolicExpression concreteArray,
 			SymbolicExpression element);
 
+	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
+			int index);
+
 	/**
 	 * Returns array of length 0.
 	 * 
@@ -1257,8 +1260,6 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression assign(SymbolicExpression value,
 			ReferenceExpression reference, SymbolicExpression subValue);
-
-	// Additional methods not part of SymbolicUniverse...
 
 	void incrementValidCount();
 

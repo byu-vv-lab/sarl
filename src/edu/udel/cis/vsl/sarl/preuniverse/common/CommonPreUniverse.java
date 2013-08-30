@@ -1539,6 +1539,36 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
+	public SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
+			int index) {
+		SymbolicType type = concreteArray.type();
+
+		if (type.typeKind() != SymbolicTypeKind.ARRAY)
+			throw err("argument concreteArray not array type:\n"
+					+ concreteArray);
+		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
+			throw err("append invoked on non-concrete array:\n" + concreteArray);
+		} else {
+			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+					.argument(0);
+			int length = elements.size();
+			SymbolicExpression result;
+
+			if (index < 0 || index >= length)
+				throw err("Index in removeElementAt out of range:\narray: "
+						+ concreteArray + "\nlength: " + length + "\nindex: "
+						+ index);
+			elements = elements.remove(index);
+			type = arrayType(elementType, integer(elements.size()));
+			result = expression(SymbolicOperator.CONCRETE, type,
+					sequence(elements));
+			return result;
+		}
+	}
+
+	@Override
 	public SymbolicExpression emptyArray(SymbolicType elementType) {
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, zeroInt()),
