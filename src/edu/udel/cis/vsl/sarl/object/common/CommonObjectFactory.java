@@ -48,6 +48,7 @@ public class CommonObjectFactory implements ObjectFactory {
 	private ArrayList<SymbolicObject> objectList = new ArrayList<SymbolicObject>();
 
 	// TODO: think about this: cache the total order for fast
+	// TODO: First Commit: Anthony Rzizo
 	// comparisons...
 	// private NavigableSet<SymbolicObject> sortedSet;
 
