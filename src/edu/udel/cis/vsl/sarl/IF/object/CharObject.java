@@ -24,10 +24,6 @@ package edu.udel.cis.vsl.sarl.IF.object;
  * @author siegel
  * 
  */
-/**
- * adding a comment for proof of subversioning
- * 
- */
  
 public interface CharObject extends SymbolicObject, Comparable<CharObject> {
 
