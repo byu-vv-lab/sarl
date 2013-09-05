@@ -29,7 +29,7 @@
  * The implementation classes for ideal symbolic expressions and their
  * arithmetic are in the sub-package {@link edu.udel.cis.vsl.sarl.ideal.common}.
  * 
- * The sub-package {edu.udel.cis.vsl.sarl.idea.simplify} contains the classes
+ * The sub-package {edu.udel.cis.vsl.sarl.ideal.simplify} contains the classes
  * implementing a simplifier for ideal expressions.
  */
 package edu.udel.cis.vsl.sarl.ideal;
