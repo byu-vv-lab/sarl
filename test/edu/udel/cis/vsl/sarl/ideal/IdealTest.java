@@ -38,6 +38,9 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
+import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -55,8 +58,10 @@ public class IdealTest {
 	private RationalNumber n1; // 3/2
 	private RationalNumber n2; // -1/4
 	private RationalNumber n3; // 5/4
+	private RationalNumber n4; // -1
 	private Constant c1; // real constant 3/2
 	private Constant c2; // real constant -1/4
+	private Constant c4; // real constant -1/4
 	private Constant c10; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
@@ -74,8 +79,10 @@ public class IdealTest {
 		n1 = numberFactory.rational("1.5");
 		n2 = numberFactory.rational("-.25");
 		n3 = numberFactory.rational("1.25");
+		n4 = numberFactory.rational("-1");
 		c1 = idealFactory.constant(n1);
 		c2 = idealFactory.constant(n2);
+		c4 = idealFactory.constant(n4);
 		c10 = idealFactory.intConstant(10);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
@@ -176,6 +183,16 @@ public class IdealTest {
 		out.println("bigPower: (X+Y)^" + m + " = " + xpyem);
 		out.println("bigPower: quotient : " + quotient);
 		assertEquals(xpy, quotient);
+	}
+	
+	@Test
+	public void rationalMinus() {
+		RationalExpression r = (RationalExpression) idealFactory.divide(x, y);
+		NumericExpression minusr = idealFactory.minus(r);
+		Monomial negativex = idealFactory.monomial(c4, (Monic) x);
+		RationalExpression negativer = (RationalExpression) idealFactory.divide(negativex, y);
+		out.println("minus r: " + minusr);
+		assertEquals(negativer, minusr);
 	}
 
 }
