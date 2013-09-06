@@ -18,6 +18,7 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -33,6 +34,7 @@ public class ExpressionTest {
 	//Kolby's Play Area
 	private SymbolicTypeFactory stf;
 	private CollectionFactory cf;
+	private ObjectFactory of;
 	StringObject string1;
 	StringObject string2;
 	StringObject string3;
@@ -70,10 +72,20 @@ public class ExpressionTest {
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
 		three = (NumericExpression) sUniverse
 				.cast(realType, sUniverse.integer(3));
+		
+		FactorySystem system = PreUniverses.newIdealFactorySystem();
+		
+		stf = system.typeFactory();
+		of = system.objectFactory();
+		cf = system.collectionFactory();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		FactorySystem system = PreUniverses.newIdealFactorySystem();
+		of = system.objectFactory();
+		cf = system.collectionFactory();
+		stf = system.typeFactory();
 	}
 	
 	@Test
@@ -101,7 +113,8 @@ public class ExpressionTest {
 	@Test
 	public void newCnfFactoryTest() {
 		//or here.
-		assertEquals(5,5);
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		assertNotNull(bef);
 	}
 
 }
