@@ -32,8 +32,8 @@ system and untar the Jacoco archives.
 ./configure CXXFLAGS=-m32 --enable-dynamic --enable-java --with-java-home=/usr/lib/jvm/java-7-openjdk-i386
        for 64-bit linux:
 ./configure CXXFLAGS=-m64 --enable-dynamic --enable-java --with-java-home=/usr/lib/jvm/java-7-openjdk-amd64
-       for 64-bit OS X [CHECK THIS]:
-./configure CXXFLAGS=-m64 --enable-dynamic --enable-java --with-java-home=/System/Library/Frameworks/JavaVM.framework/Versions/Current
+       for 64-bit OS X:
+./configure CXXFLAGS=-m64 --enable-dynamic --enable-java --with-java-home=/System/Library/Frameworks/JavaVM.framework/Versions/Current --with-java-includes=/System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers
    4d. make
 
 5. Download and build clj-ds, Clojure's persistent data structures in
