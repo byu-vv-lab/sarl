@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import cvc3.ValidityChecker;
 import cvc3.Type;
-import edu.udel.cis.vsl.sarl.IF.ValidityResult;
-import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
