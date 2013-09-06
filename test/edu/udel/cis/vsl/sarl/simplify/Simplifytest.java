@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class Simplifytest {
@@ -26,6 +27,13 @@ public class Simplifytest {
 	public void identitySimplifier(){
 		
 	}
+	
+//	@Test 
+//	public void testCreation(){
+//		
+//		Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(), PreUniverses.);
+//		fail("not yet implemented");
+//	}
 	
 	
 	/**
