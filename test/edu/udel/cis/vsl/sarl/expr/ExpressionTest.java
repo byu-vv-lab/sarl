@@ -16,14 +16,19 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
@@ -94,6 +99,25 @@ public class ExpressionTest {
 		//out.println(c1.toStringBufferLong());
 		out.println("here");
 		assertEquals(1,1);
+	}
+	
+	@Test
+	public void SimplifierFactoryTest() {
+		//NumericExpressionFactory numericFactory = standardExpressionFactory
+		//		.numericFactory();
+		//ExpressionFactory bef = Expressions.newExpressionFactory(numericFactory)
+		FactorySystem system = null;
+		PreUniverse universe = PreUniverses.newPreUniverse(system);
+		String Result;
+		//Result = Expressions.standardSimplifierFactory(bef, universe)
+	}
+	
+	@Test
+	public void CnfSymbolicConstantTest() {
+		StringObject name = sUniverse.stringObject("Hello");
+		SymbolicRealType mytype = sUniverse.realType();
+		//CnfSymbolicConstant test = new CnfSymbolicConstant(name, mytype);
+		//assertEquals("Hello", test.name());
 	}
 	
 	@Test
