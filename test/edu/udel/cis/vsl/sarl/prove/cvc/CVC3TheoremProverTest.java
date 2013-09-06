@@ -6,11 +6,14 @@ import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import cvc3.Expr;
 import cvc3.ValidityChecker;
 import cvc3.Type;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -27,7 +30,9 @@ public class CVC3TheoremProverTest {
 	BooleanExpression booleanExprTrue;
 	CVC3TheoremProverFactory theoremProver;
 	CVC3TheoremProver cvcProver;
-	private static PrintStream out = System.out;
+	private static PrintStream out;
+	private static NumericExpression two;
+	private static NumericExpression five;
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,6 +42,9 @@ public class CVC3TheoremProverTest {
 		booleanExprTrue = universe.bool(true);
 		theoremProver= (CVC3TheoremProverFactory)proverFactory;
 		cvcProver = (CVC3TheoremProver)theoremProver.newProver(booleanExprTrue);
+		out = System.out;
+		two = universe.rational(2);
+		five = universe.rational(5);
 	}
 
 	@After
@@ -66,5 +74,17 @@ public class CVC3TheoremProverTest {
 		SymbolicExpression expr = universe.divide(
 				universe.rational(1), universe.rational(2));
 		out.println(cvcProver.translate(expr));
+	}
+	
+	@Ignore
+	@Test
+	//Tests SARL vs. CVC on Multiply.  CVC gives 2*5 while SARL gives 10.
+	public void translateMultiplyTest(){		
+		NumericExpression mulExp = universe.multiply(two, five);
+		Expr expr = cvcProver.translate(mulExp);
+		Expr twoExpr = cvcProver.translate(two);
+		Expr fiveExpr = cvcProver.translate(five);
+		Expr expected = cvcProver.validityChecker().multExpr(twoExpr, fiveExpr); 
+		assertEquals(expected, expr);
 	}
 }
