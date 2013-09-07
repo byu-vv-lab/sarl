@@ -7,13 +7,9 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
-import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProver;
-import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 
 public class ProveTest {
 	
@@ -30,20 +26,17 @@ public class ProveTest {
 	}
 
 	@Test
-	public void testValidityResult() {
-		BooleanExpression b = universe.bool(true);
-		Prove p = new Prove();
-		
+	public void testValidityResult() {		
 		ResultType r = ValidityResult.ResultType.YES;
-		ValidityResult v = p.validityResult(r);
-		assertEquals(p.RESULT_YES,v);
+		ValidityResult v = Prove.validityResult(r);
+		assertEquals(Prove.RESULT_YES,v);
 		
 		r = ValidityResult.ResultType.NO;
-		v = p.validityResult(r);
-		assertEquals(p.RESULT_NO,v);
+		v = Prove.validityResult(r);
+		assertEquals(Prove.RESULT_NO,v);
 		
 		r = ValidityResult.ResultType.MAYBE;
-		v = p.validityResult(r);
-		assertEquals(p.RESULT_MAYBE,v);
+		v = Prove.validityResult(r);
+		assertEquals(Prove.RESULT_MAYBE,v);
 	}
 }
