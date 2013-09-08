@@ -25,6 +25,8 @@ public class ObjectComparatorTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/*
 
 	@Test
 	public void testObjectComparator() {
@@ -75,5 +77,5 @@ public class ObjectComparatorTest {
 	public void testCompare() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

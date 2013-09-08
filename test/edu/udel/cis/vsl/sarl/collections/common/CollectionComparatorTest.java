@@ -26,6 +26,7 @@ public class CollectionComparatorTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testCollectionComparator() {
 		fail("Not yet implemented");
@@ -40,5 +41,5 @@ public class CollectionComparatorTest {
 	public void testCompare() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

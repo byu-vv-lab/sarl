@@ -26,6 +26,7 @@ public class CommonSymbolicTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testIntrinsicEquals() {
 		fail("Not yet implemented");
@@ -85,5 +86,5 @@ public class CommonSymbolicTypeTest {
 	public void testGetPureType() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

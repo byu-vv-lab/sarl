@@ -26,6 +26,7 @@ public class PcollectionsSymbolicSetTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -120,5 +121,5 @@ public class PcollectionsSymbolicSetTest {
 	public void testApply() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

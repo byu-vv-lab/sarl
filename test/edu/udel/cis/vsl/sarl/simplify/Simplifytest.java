@@ -10,10 +10,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class Simplifytest {
 
+	/*
 	@Test
 	public void test() {
 		fail("Not yet implemented");
 	}
+	*/
 	
 	/**
 	 * Takes in

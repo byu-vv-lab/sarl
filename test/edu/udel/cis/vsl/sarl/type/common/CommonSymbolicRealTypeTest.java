@@ -26,6 +26,7 @@ public class CommonSymbolicRealTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -70,5 +71,5 @@ public class CommonSymbolicRealTypeTest {
 	public void testToStringBuffer() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

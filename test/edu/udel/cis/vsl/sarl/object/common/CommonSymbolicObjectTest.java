@@ -26,6 +26,7 @@ public class CommonSymbolicObjectTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testHashCode() {
 		fail("Not yet implemented");
@@ -95,5 +96,5 @@ public class CommonSymbolicObjectTest {
 	public void testToString() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

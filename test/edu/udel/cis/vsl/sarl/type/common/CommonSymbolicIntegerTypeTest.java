@@ -25,6 +25,8 @@ public class CommonSymbolicIntegerTypeTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/*
 
 	@Test
 	public void testComputeHashCode() {
@@ -70,5 +72,5 @@ public class CommonSymbolicIntegerTypeTest {
 	public void testToStringBuffer() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

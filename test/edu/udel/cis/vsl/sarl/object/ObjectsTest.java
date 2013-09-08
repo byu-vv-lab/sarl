@@ -26,9 +26,10 @@ public class ObjectsTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testNewObjectFactory() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

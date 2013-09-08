@@ -26,9 +26,10 @@ public class TypesTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testNewTypeFactory() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

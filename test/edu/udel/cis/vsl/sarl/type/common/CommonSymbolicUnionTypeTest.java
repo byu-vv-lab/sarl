@@ -26,6 +26,7 @@ public class CommonSymbolicUnionTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -75,5 +76,5 @@ public class CommonSymbolicUnionTypeTest {
 	public void testSetPureType() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

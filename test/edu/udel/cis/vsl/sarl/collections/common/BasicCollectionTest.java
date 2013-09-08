@@ -26,6 +26,7 @@ public class BasicCollectionTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -65,5 +66,5 @@ public class BasicCollectionTest {
 	public void testToStringBufferLong() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

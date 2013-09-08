@@ -26,6 +26,7 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -55,5 +56,5 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	public void testExtent() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

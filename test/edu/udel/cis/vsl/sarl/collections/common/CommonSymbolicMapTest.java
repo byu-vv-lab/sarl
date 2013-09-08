@@ -26,6 +26,7 @@ public class CommonSymbolicMapTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testToString() {
 		fail("Not yet implemented");
@@ -50,5 +51,5 @@ public class CommonSymbolicMapTest {
 	public void testToStringBuffer() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

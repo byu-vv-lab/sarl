@@ -26,6 +26,7 @@ public class CommonSymbolicTypeFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testCommonSymbolicTypeFactory() {
 		fail("Not yet implemented");
@@ -135,5 +136,5 @@ public class CommonSymbolicTypeFactoryTest {
 	public void testPureType() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

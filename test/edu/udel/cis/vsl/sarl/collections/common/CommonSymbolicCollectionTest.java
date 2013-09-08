@@ -26,6 +26,7 @@ public class CommonSymbolicCollectionTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testIntrinsicEquals() {
 		fail("Not yet implemented");
@@ -55,5 +56,5 @@ public class CommonSymbolicCollectionTest {
 	public void testGetFirst() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

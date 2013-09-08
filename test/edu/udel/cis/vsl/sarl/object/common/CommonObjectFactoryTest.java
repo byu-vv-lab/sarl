@@ -26,6 +26,7 @@ public class CommonObjectFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testCommonObjectFactory() {
 		fail("Not yet implemented");
@@ -150,5 +151,5 @@ public class CommonObjectFactoryTest {
 	public void testNumObjects() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

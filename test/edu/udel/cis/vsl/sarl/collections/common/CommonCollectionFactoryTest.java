@@ -26,6 +26,7 @@ public class CommonCollectionFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testCommonCollectionFactory() {
 		fail("Not yet implemented");
@@ -145,5 +146,5 @@ public class CommonCollectionFactoryTest {
 	public void testSortedMapComparatorOfQsuperKMapOfKV() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

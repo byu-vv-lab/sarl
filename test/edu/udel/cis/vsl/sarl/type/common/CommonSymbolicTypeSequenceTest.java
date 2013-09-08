@@ -25,6 +25,7 @@ public class CommonSymbolicTypeSequenceTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	/*
 
 	@Test
 	public void testComputeHashCode() {
@@ -80,5 +81,5 @@ public class CommonSymbolicTypeSequenceTest {
 	public void testToStringBufferLong() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

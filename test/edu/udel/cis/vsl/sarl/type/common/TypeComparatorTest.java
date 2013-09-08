@@ -26,6 +26,7 @@ public class TypeComparatorTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testTypeComparator() {
 		fail("Not yet implemented");
@@ -50,5 +51,5 @@ public class TypeComparatorTest {
 	public void testCompare() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

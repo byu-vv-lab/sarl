@@ -25,6 +25,8 @@ public class CommonBooleanObjectTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/*
 
 	@Test
 	public void testComputeHashCode() {
@@ -70,5 +72,5 @@ public class CommonBooleanObjectTest {
 	public void testToStringBufferLong() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

@@ -26,6 +26,7 @@ public class CommonCharObjectTest {
 	public void tearDown() throws Exception {
 	}
 
+	/*
 	@Test
 	public void testComputeHashCode() {
 		fail("Not yet implemented");
@@ -70,5 +71,5 @@ public class CommonCharObjectTest {
 	public void testToStringBufferLong() {
 		fail("Not yet implemented");
 	}
-
+*/
 }

@@ -25,6 +25,8 @@ public class CommonSymbolicPrimitiveTypeTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/*
 
 	@Test
 	public void testComputeHashCode() {
@@ -55,5 +57,5 @@ public class CommonSymbolicPrimitiveTypeTest {
 	public void testToStringBuffer() {
 		fail("Not yet implemented");
 	}
-
+*/
 }
