@@ -115,7 +115,7 @@ public class ExpressionTest {
 		String Result;
 		//Result = Expressions.standardSimplifierFactory(bef, universe)
 	}
-	
+	@Ignore
 	@Test
 	public void CnfSymbolicConstantTest() {
 		StringObject name = sUniverse.stringObject("Hello");
