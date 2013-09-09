@@ -8,8 +8,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class CommonSymbolicIntegerTypeTest {
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 
+public class CommonSymbolicIntegerTypeTest {
+	/*Testing SymbolicIntegerType
+	 * 
+	 */
+		SymbolicIntegerType idealIntType, boundedIntType, herbrandIntType;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -20,10 +26,41 @@ public class CommonSymbolicIntegerTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		idealIntType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		boundedIntType = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
+		herbrandIntType = new CommonSymbolicIntegerType(IntegerKind.HERBRAND);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+	}
+	
+	@Test
+	public void testIntegerKind() {
+		assertEquals(idealIntType.integerKind(), IntegerKind.IDEAL);
+		assertEquals(boundedIntType.integerKind(), IntegerKind.BOUNDED);
+		assertEquals(herbrandIntType.integerKind(), IntegerKind.HERBRAND);
+	}
+	
+	/*@Test no need to test the types unless we know they're
+	 * the same type.
+	public void testTypeEquals() {
+		assertFalse(idealIntType.typeEquals(boundedIntType));
+	}
+	*/
+	
+	@Test
+	public void testIsHerbrand() {
+		assertTrue(herbrandIntType.isHerbrand());
+		assertFalse(idealIntType.isHerbrand());
+		assertFalse(boundedIntType.isHerbrand());
+	}
+	
+	@Test
+	public void testIsIdeal() {
+		assertTrue(idealIntType.isIdeal());
+		assertFalse(boundedIntType.isIdeal());
+		assertFalse(herbrandIntType.isIdeal());
 	}
 	
 	/*
@@ -39,32 +76,12 @@ public class CommonSymbolicIntegerTypeTest {
 	}
 
 	@Test
-	public void testTypeEquals() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsHerbrand() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsIdeal() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testGetPureType() {
 		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testCommonSymbolicIntegerType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIntegerKind() {
 		fail("Not yet implemented");
 	}
 
