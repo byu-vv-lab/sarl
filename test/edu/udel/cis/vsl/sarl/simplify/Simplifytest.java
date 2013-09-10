@@ -18,6 +18,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
+import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifier;
 
 public class Simplifytest {
 	//test setup, BeforeClass, Before, After adapted from S.Siegel's Demo475 junit example
@@ -88,7 +89,10 @@ public class Simplifytest {
 	public void testCreation(){
 		BooleanExpression xeq5 = universe.equals(x, universe.rational(5));
 		//Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(), PreUniverses.);
-		Simplifier check = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
+		PreUniverse preUniv = PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem());
+		out.println("tostring of preUbiv is: " + preUniv.toString());
+		//Simplifier check = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
+		Simplifier check = Simplify.identitySimplifier(preUniv, xeq5);
 		BooleanExpression xeq5also = universe.equals(x, universe.rational(5));
 		Simplifier check2 = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5also);
 		Simplifier checkCopy = check;
@@ -100,7 +104,12 @@ public class Simplifytest {
 		assertEquals(check.apply(xeq5), check2.apply(xeq5also));
 		assertEquals(check.equals(checkCopy), true);
 		assertEquals(check.getReducedContext(), xeq5also);
-		//assertEquals(check, universe.rational(5));
+		//out.println("the class for check is: " + check.getClass());
+		assertEquals(check.getClass(), IdentitySimplifier.class);
+		out.println("check is:" + check.toString());
+		out.println("hashcode of check is: " + check.hashCode());
+		out.println("preuniverse for check is: " + check.universe());
+		//asserEquals(check.)
 	}
 	
 	
