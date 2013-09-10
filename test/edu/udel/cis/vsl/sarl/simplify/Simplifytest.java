@@ -90,7 +90,7 @@ public class Simplifytest {
 		//Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(), PreUniverses.);
 		Simplifier check = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
 		BooleanExpression yeq5 = universe.equals(y, universe.rational(5));
-		//assertEquals(check, yeq5);
+		//assertEquals(check, universe.rational(5));
 	}
 	
 	
