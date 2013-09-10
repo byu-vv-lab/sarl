@@ -1,6 +1,75 @@
 <html>
 <body>
-SARL: The Symbolic Algebra and Reasoning Library is a Java-based library for
-creating, manipulating, and reasoning about symbolic expressions.
+
+<p>
+<strong>SARL: The Symbolic Algebra and Reasoning Library</strong> is a Java-based library for
+creating, manipulating, and reasoning about symbolic expressions.  The library
+can be used to support various applications that require symbolic reasoning, such as
+symbolic execution tools for program analysis, verification, or test case generation.
+</p>
+
+<p>
+Some of the features of SARL include:
+
+</ul>
+<li><strong>Symbolic references.</strong>
+There is a "reference type" which has symbolic values such as r1="the i-th element of an array",
+or "the i-th field of the j-th element of an array of tuples".
+There is a method "dereference" that takes a reference value and a symbolic expression of the
+appropriate type and returns the subexpression specified by the reference.
+For example, dereference(r1, a) will return "a[i]".
+This make representing pointer values in a C program really easy.
+There is also a method assign(r, x, y), which returns the symbolic expression obtained by
+starting with x and modifying the component specified by r with y.
+This makes the symbolic execution of C statements like "*p=e" easy.
+</li>
+<li><strong>Union types.</strong>
+Given any sequence of types t1,...,tn, you can form the union type t1+...+tn.
+The domain of this type is the union of the domains of the ti.  This makes
+representing a heap easy, for example, let t1,...,tn be all the types that
+are ever malloced, let the heap type be: array of union_i(array of ti).
+It also useful for message queues, which are arrays that can hold various
+types of elements.
+</li>
+<li><strong>Simplifications.</strong>
+Given a boolean-valued expression (the "context") and another symbolic expression,
+the simplify method returns a simplified version of the expression under the
+assumption that the context holds.  For example, if context is "x>1" and e is
+"x>0" then e is simplified to "true".  If the context contains a bunch of polynomial
+equalities, these are treated as linear expressions in the monomials and Gaussian
+elimination is performed to solve for any/all of those monomials.  And so on.
+This is useful in symbolic execution, where the context is the path condition,
+and you can run over the whole state simplifying it, getting the state to
+(as close as possible to) a canonical form.  This can help you decide if you have
+seen the state before, greatly simplifies the theorem proving queries, etc.
+</li>
+<li><strong>Persistence.</strong>
+Symbolic expressions are immutable, but they are implemented with "persistent"
+data structures.    This is a concept from Clojure and other functional languages.
+These are immutable data structures that provide analogs of all the standard
+mutation methods (like "set the i-th element of the array to x") but return
+a whole new data structure instead of modifying the existing one, i.e.:
+<code>
+ PersistentArray<T> set(int index, T x);
+</code>
+You might think this would have bad (linear in length of array) performance because you
+have to create a whole new copy of the array to change one element.  However, the
+persistent data structures are implemented in a very clever way --- the array
+internally is a tree with a big branching degree, and all the operations are
+log time (actually, log base 32) --- because the "new" array and the "old" array
+share most nodes in the tree.    I believe this has the potential to really speed
+up symbolic execution even while saving all the states you want.
+</li>
+<li><strong>Herbrand versions of the numeric types.</strong>
+In addition to the (ideal) integer and real types, there are
+Herbrand integer and Herbrand real types.    A numerical operation involving
+a Herbrand type is treated as an uninterpreted function (and never simplified).
+Hence in one program you can mix and match: have some Herbrand and some ideal values.
+The Herbrands are useful, for example, for representing floating point values
+when you don't want to assume anything about the floating point operations.
+</li>
+</ul>
+</p>
+
 </body>
 </html>
