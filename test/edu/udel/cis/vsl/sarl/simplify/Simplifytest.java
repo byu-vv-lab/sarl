@@ -89,7 +89,10 @@ public class Simplifytest {
 		BooleanExpression xeq5 = universe.equals(x, universe.rational(5));
 		//Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(), PreUniverses.);
 		Simplifier check = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
-		BooleanExpression yeq5 = universe.equals(y, universe.rational(5));
+		BooleanExpression xeq5also = universe.equals(x, universe.rational(5));
+		//BooleanExpression yeq5 = xeq5;
+		//assertEquals(check.apply(xeq5), universe.rational(5));
+		assertEquals(check.apply(xeq5), xeq5also);
 		//assertEquals(check, universe.rational(5));
 	}
 	
