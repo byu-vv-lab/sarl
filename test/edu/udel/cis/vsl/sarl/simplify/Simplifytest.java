@@ -17,6 +17,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 
 public class Simplifytest {
 	//test setup, BeforeClass, Before, After adapted from S.Siegel's Demo475 junit example
@@ -87,7 +88,9 @@ public class Simplifytest {
 	public void testCreation(){
 		BooleanExpression xeq5 = universe.equals(x, universe.rational(5));
 		//Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(), PreUniverses.);
-		Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
+		Simplifier check = Simplify.identitySimplifier(PreUniverses.newPreUniverse(PreUniverses.newIdealFactorySystem()), xeq5);
+		BooleanExpression yeq5 = universe.equals(y, universe.rational(5));
+		//assertEquals(check, yeq5);
 	}
 	
 	
