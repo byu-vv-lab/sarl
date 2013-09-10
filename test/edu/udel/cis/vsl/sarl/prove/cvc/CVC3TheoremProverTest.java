@@ -11,6 +11,7 @@ import org.junit.Test;
 import cvc3.Expr;
 import cvc3.Type;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -48,6 +49,9 @@ public class CVC3TheoremProverTest {
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 
+	private static BooleanExpression booleanExprFalse = universe
+			.falseExpression();
+	
 	// Instance fields: instantiated before each test is run...
 
 	private TheoremProverFactory proverFactory;
@@ -107,5 +111,29 @@ public class CVC3TheoremProverTest {
 		Expr expected = cvcProver.validityChecker().multExpr(twoExpr, fiveExpr);
 
 		assertEquals(expected, expr);
+	}
+	
+	@Test
+	public void validTest() {
+		// if true, then true (valid)
+		assertEquals(ValidityResult.ResultType.YES, 
+				cvcProver.valid(booleanExprTrue).getResultType());
+		// if true, then false (invalid)
+		assertEquals(ValidityResult.ResultType.NO,
+				cvcProver.valid(booleanExprFalse).getResultType());
+		
+		cvcProver = (CVC3TheoremProver) proverFactory.
+				newProver(booleanExprFalse);
+		
+		// if false, then false (valid)
+		assertEquals(ValidityResult.ResultType.YES,
+				cvcProver.valid(booleanExprFalse).getResultType());
+		// if false, then true (valid)
+		assertEquals(ValidityResult.ResultType.YES,
+				cvcProver.valid(booleanExprTrue).getResultType());
+		
+//		assertEquals(ValidityResult.ResultType.MAYBE,
+//				cvcProver.valid(booleanExprMaybe).getResultType());
+		
 	}
 }
