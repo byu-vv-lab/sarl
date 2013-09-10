@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifier;
 
-public class Simplifytest {
+public class SimplifyTest {
 	// test setup, BeforeClass, Before, After adapted from S.Siegel's Demo475
 	// junit example
 
