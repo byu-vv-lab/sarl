@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.SARL;
@@ -62,7 +63,7 @@ public class AffineExpressiontest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	@Test
+	@Ignore
 	public void tostringtest() {
 		
 		//offset = numberFactory.rational("2");
