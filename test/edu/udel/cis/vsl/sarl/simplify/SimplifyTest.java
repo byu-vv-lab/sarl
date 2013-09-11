@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifier;
+import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
 
 public class SimplifyTest {
 	// test setup, BeforeClass, Before, After adapted from S.Siegel's Demo475
@@ -40,13 +41,31 @@ public class SimplifyTest {
 
 	private static SymbolicType integerType;
 
-	private static NumericExpression one, two;
+	private static NumericExpression one, two, five;
 
 	private static PrintStream out = System.out;
+	
+	private static FactorySystem system;
+	
+	static private PreUniverse preUniv;
+	
+	static private BooleanExpression xeq5;
+	
+	static private IdealFactory idealFactory;
+	
+	static private IdealSimplifierFactory simplifierFactory;
+	
+	static private Simplifier simp1_xeq5;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		system = PreUniverses.newIdealFactorySystem();
+		preUniv = PreUniverses.newPreUniverse(system);
 		universe = SARL.newStandardUniverse();
+		idealFactory = (IdealFactory) system.expressionFactory()
+				.numericFactory();
+		simplifierFactory = (IdealSimplifierFactory) Ideal
+				.newIdealSimplifierFactory(idealFactory, preUniv);
 		realType = universe.realType();
 		integerType = universe.integerType();
 		x = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -56,6 +75,9 @@ public class SimplifyTest {
 		xpy = universe.add(x, y);
 		one = universe.rational(1); // 1.0
 		two = universe.rational(2); // 2.0
+		five = preUniv.rational(5); // 5.0
+		xeq5 = preUniv.equals(x, five);
+		simp1_xeq5 = simplifierFactory.newSimplifier(xeq5);
 	}
 
 	@Before
@@ -66,41 +88,36 @@ public class SimplifyTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*
-	 * @Test public void test() { fail("Not yet implemented"); }
-	 */
+//	/**
+//	 * Takes in -PreUniverse universe, -BooleanExpression assumption
+//	 * 
+//	 * Returns a new IdentitySimplifier
+//	 */
+//	@Ignore
+//	@Test
+//	public void identitySimplifier() {
+//
+//	}
 
 	/**
-	 * Takes in -PreUniverse universe, -BooleanExpression assumption
-	 * 
-	 * Returns a new IdentitySimplifier
-	 */
-
-	@Test
-	public void identitySimplifier() {
-
-	}
-
-	/**
-	 * Written by Daniel Fried Tests function of identitySimplifier method in
-	 * Simplify class
+	 * Written by Daniel Fried 
+	 * Tests functions in Simplify class
 	 */
 	@Test
 	public void testCreation() {
 		// Simplify.identitySimplifier(PreUniverses.newIdealFactorySystem(),
 		// PreUniverses.);
-		FactorySystem system = PreUniverses.newIdealFactorySystem();
-		PreUniverse preUniv = PreUniverses.newPreUniverse(system);
-		BooleanExpression xeq5 = preUniv.equals(x, universe.rational(5));
+		
+		//BooleanExpression xeq5 = preUniv.equals(x, universe.rational(5));
 
-		IdealFactory idealFactory = (IdealFactory) system.expressionFactory()
-				.numericFactory();
-		IdealSimplifierFactory simplifierFactory = (IdealSimplifierFactory) Ideal
-				.newIdealSimplifierFactory(idealFactory, preUniv);
+//		IdealFactory idealFactory = (IdealFactory) system.expressionFactory()
+//				.numericFactory();
+//		IdealSimplifierFactory simplifierFactory = (IdealSimplifierFactory) Ideal
+//				.newIdealSimplifierFactory(idealFactory, preUniv);
 
-		Simplifier simp1 = simplifierFactory.newSimplifier(xeq5);
+//		Simplifier simp1 = simplifierFactory.newSimplifier(xeq5);
 
-		assertEquals(preUniv.rational(5), simp1.apply(x));
+		assertEquals(preUniv.rational(5), simp1_xeq5.apply(x));
 
 		out.println("tostring of preUbiv is: " + preUniv.toString());
 		// Simplifier check =
@@ -129,13 +146,20 @@ public class SimplifyTest {
 		// asserEquals(check.)
 	}
 
-	/**
+	/**Written by Daniel Fried
 	 * Takes in -PreUniverse universe,
 	 * 
 	 * Returns a new IdentitySimplifierFactory
+	 * 
+	 * Aims to test IdentifySimplifierFactory.newSimplifier
 	 */
 	@Test
 	public void newIdentitySimplifierFactory() {
+		IdentitySimplifierFactory identSimplFact = new IdentitySimplifierFactory(preUniv);
+		Simplifier simpl = identSimplFact.newSimplifier(xeq5);
+		Simplifier check = Simplify.identitySimplifier(preUniv, xeq5);
+		
+		assertEquals(check.apply(xeq5), simpl.apply(xeq5));
 
 	}
 
