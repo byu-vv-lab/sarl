@@ -225,6 +225,13 @@ public interface SymbolicExpression extends SymbolicObject {
 	 * @return the i-th argument
 	 */
 	SymbolicObject argument(int index);
+	
+	/**
+	 * Returns arguments array
+	 * 
+	 * @return arguments array
+	 */
+	SymbolicObject[] arguments();
 
 	/**
 	 * A string representation appropriate for nesting in other expressions,

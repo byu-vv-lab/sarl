@@ -89,6 +89,13 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	public SymbolicType type() {
 		return type;
 	}
+	
+	/**
+	 * Returns the arguments of this symbolic expression.
+	 */
+	public SymbolicObject[] arguments() {
+		return arguments;
+	}
 
 	/**
 	 * Know that o has argumentKind SYMBOLIC_EXPRESSION and is not == to this.

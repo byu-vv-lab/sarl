@@ -12,10 +12,13 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -25,6 +28,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -52,9 +56,12 @@ public class ExpressionTest {
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
-
 	
-
+	private BooleanObject trueBoolObj; // True
+	private BooleanObject falseBoolObj; // False
+	private IntObject fiveIntObj; // 5
+	private IntObject zeroIntObj; // 0
+	private IntObject negIntObj; // -10
 	
 	SymbolicOperator addition;
 	SymbolicType type1;
@@ -71,6 +78,11 @@ public class ExpressionTest {
 
 		Xobj = sUniverse.stringObject("X");
 		Yobj = sUniverse.stringObject("Y");
+		trueBoolObj = sUniverse.booleanObject(true);
+		falseBoolObj = sUniverse.booleanObject(false);
+		fiveIntObj = sUniverse.intObject(5);
+		zeroIntObj = sUniverse.intObject(0);
+		negIntObj = sUniverse.intObject(-10);
 		realType = sUniverse.realType();
 		integerType = sUniverse.integerType();
 		x = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, realType);
@@ -94,12 +106,39 @@ public class ExpressionTest {
 		stf = system.typeFactory();
 	}
 	
+	@Ignore
 	@Test
 	public void toStringBufferLongTest() {
+		//SymbolicObject[] symbolicObjs = new SymbolicObject[]{trueBoolObj ,falseBoolObj, fiveIntObj, zeroIntObj, negIntObj, Xobj, null, Yobj};
+		NumericExpression xpy = sUniverse.add(x, y);
 		
-		//out.println(c1.toStringBufferLong());
-		out.println("here");
-		assertEquals(1,1);
+		StringBuffer tstStringBuff = new StringBuffer(xpy.getClass().getSimpleName());
+		tstStringBuff.append("[");
+		tstStringBuff.append(xpy.operator());
+		tstStringBuff.append("; ");
+		tstStringBuff.append(xpy.type());
+		tstStringBuff.append("; ");
+		tstStringBuff.append("{");
+		
+		Boolean first = true;
+		
+		for (SymbolicObject obj : xpy.arguments()) {
+				if (first)
+					first = false;
+				else
+					tstStringBuff.append(",");
+				if (obj == null)
+					tstStringBuff.append("null");
+				else
+					tstStringBuff.append(obj.toStringBufferLong());
+		}
+		tstStringBuff.append("}");	
+		tstStringBuff.append("]");
+			
+		out.println(xpy.toStringBufferLong());
+		out.println(tstStringBuff);
+		assertEquals(xpy.toStringBufferLong(),tstStringBuff);
+		//assertEquals(xpy.toStringBufferLong(),xpy.toStringBufferLong());
 	}
 	
 	
