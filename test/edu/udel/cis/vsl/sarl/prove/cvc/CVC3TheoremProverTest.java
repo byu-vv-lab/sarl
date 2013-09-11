@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
 
@@ -92,6 +93,17 @@ public class CVC3TheoremProverTest {
 
 		// cvcProver.getQuotientRemainderPair(numerator, denominator);
 	}
+	
+	@Test
+	public void toStringTest(){
+		
+		String expected = "CVC3TheoremProver";
+		assertEquals(expected, cvcProver.toString());
+		
+		String notExpected = "This is wrong";
+		assertFalse(notExpected.equals(cvcProver.toString()));
+		
+	}
 
 	@Test
 	public void testTranslate() {
@@ -99,6 +111,18 @@ public class CVC3TheoremProverTest {
 				universe.rational(2));
 
 		out.println(cvcProver.translate(expr));
+	}
+	
+	@Test
+	public void translateIntegerDivisionTest(){
+		NumericExpression divExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.DIVIDE, realType, five, two);
+		Expr expr = cvcProver.translate(divExp);
+		Expr fiveExpr = cvcProver.translate(five);
+		Expr twoExpr = cvcProver.translate(two);
+		Expr expected = cvcProver.validityChecker().divideExpr(fiveExpr, twoExpr);
+		
+		assertEquals(expected, expr);
 	}
 
 	@Test
