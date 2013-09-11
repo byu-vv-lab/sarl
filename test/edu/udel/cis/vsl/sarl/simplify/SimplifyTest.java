@@ -160,6 +160,10 @@ public class SimplifyTest {
 		Simplifier check = Simplify.identitySimplifier(preUniv, xeq5);
 		Simplify trivialClassDeclaration = new Simplify();  //completes coverage of Simplify.java by creating an instance of the class
 		assertEquals(check.apply(xeq5), simpl.apply(xeq5));
+		
+		//provides test coverage for IdentitySimplifier.getFullContext()
+		BooleanExpression boolAssumption = simpl.getFullContext();
+		assertEquals(xeq5, boolAssumption);
 
 	}
 
