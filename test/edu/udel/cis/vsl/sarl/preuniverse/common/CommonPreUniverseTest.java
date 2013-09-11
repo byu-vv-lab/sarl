@@ -299,7 +299,7 @@ public class CommonPreUniverseTest {
 		assertEquals(integerType, sequence.getType(0));
 		assertEquals(realType, sequence.getType(1));
 		assertEquals(2, sequence.numTypes());
-		assertEquals(universe.stringObject("Mynion"), unionType.name());
+		assertEquals(universe.stringObject("MyUnion"), unionType.name());
 	}
 
 	@Test
