@@ -184,7 +184,7 @@ public class IdealTest {
 		out.println("bigPower: quotient : " + quotient);
 		assertEquals(xpy, quotient);
 	}
-	
+	/*
 	@Test
 	public void rationalMinus() {
 		RationalExpression r = (RationalExpression) idealFactory.divide(x, y);
@@ -194,5 +194,5 @@ public class IdealTest {
 		out.println("minus r: " + minusr);
 		assertEquals(negativer, minusr);
 	}
-
+*/
 }
