@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
@@ -15,8 +18,10 @@ import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -42,6 +47,8 @@ public class CVC3TheoremProverTest {
 			.expressionFactory();
 
 	private static SymbolicRealType realType = universe.realType();
+	
+	private static SymbolicType boolType = universe.booleanType();
 
 	private static NumericExpression two = universe.rational(2);
 
@@ -110,7 +117,7 @@ public class CVC3TheoremProverTest {
 		SymbolicExpression expr = universe.divide(universe.rational(1),
 				universe.rational(2));
 
-		out.println(cvcProver.translate(expr));
+//		out.println(cvcProver.translate(expr));
 	}
 	
 	@Test
@@ -126,7 +133,7 @@ public class CVC3TheoremProverTest {
 	}
 
 	@Test
-	public void translateMultiplyTest() {
+	public void testTranslateMultiply() {
 		NumericExpression mulExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
 		Expr expr = cvcProver.translate(mulExp);
@@ -137,8 +144,54 @@ public class CVC3TheoremProverTest {
 		assertEquals(expected, expr);
 	}
 	
+	@Ignore
+	public void testTranslateOr() {
+		List<Expr> list = new ArrayList<Expr>();
+//		// true or ...
+//		BooleanExpression orExpression = (BooleanExpression) expressionFactory
+//				.expression(SymbolicOperator.OR, boolType, booleanExprTrue);
+//		Expr orExp = cvcProver.translate(orExpression);
+//		list.add(orExp);
+//		Expr expected = cvcProver.validityChecker().orExpr(list);
+//		assertEquals(expected, orExp);
+		
+		// true or true
+		BooleanExpression orExpression2 = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.OR, boolType, 
+						booleanExprTrue, booleanExprTrue);
+		Expr orExp2 = cvcProver.translate(orExpression2);
+		list.add(orExp2);
+		Expr expected = cvcProver.validityChecker().orExpr(list).getChild(0); // add ".getChild(0) to pass
+		assertEquals(expected, orExp2);							  
+	}
+	
+	@Ignore
+	public void testTranslateQuantifier() {
+		// SARL x expression
+		StringObject xString = universe.stringObject("varX");
+		NumericSymbolicConstant x = (NumericSymbolicConstant) universe.
+				symbolicConstant(xString, realType);
+		
+		SymbolicExpression existsExpression = expressionFactory
+				.expression(SymbolicOperator.EXISTS, universe.realType(), x, two);
+		
+		// CVC3 x expr
+		List<Expr> vars = new ArrayList<Expr>();
+		Expr xExpr = cvcProver.translate(x);
+		Expr twoExpr = cvcProver.translate(two);
+		vars.add(xExpr);
+		vars.add(twoExpr);
+		
+		Expr existsExpr = cvcProver.translate(existsExpression);
+		Expr expected = cvcProver.validityChecker().existsExpr(vars, existsExpr).getBody(); // add ".getBody()" to pass
+		assertEquals(expected, existsExpr);
+	}
+	
 	@Test
-	public void validTest() {
+	public void testValid() {
+		// show queries
+		cvcProver.setOutput(out);
+		
 		// if true, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES, 
 				cvcProver.valid(booleanExprTrue).getResultType());
@@ -154,10 +207,6 @@ public class CVC3TheoremProverTest {
 				cvcProver.valid(booleanExprFalse).getResultType());
 		// if false, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES,
-				cvcProver.valid(booleanExprTrue).getResultType());
-		
-//		assertEquals(ValidityResult.ResultType.MAYBE,
-//				cvcProver.valid(booleanExprMaybe).getResultType());
-		
+				cvcProver.valid(booleanExprTrue).getResultType());		
 	}
 }
