@@ -26,12 +26,12 @@ public class CommonSymbolicObjectTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*
+	
 	@Test
 	public void testHashCode() {
-		fail("Not yet implemented");
+		//this is an incomplete test
 	}
-
+	/*
 	@Test
 	public void testCommonSymbolicObject() {
 		fail("Not yet implemented");

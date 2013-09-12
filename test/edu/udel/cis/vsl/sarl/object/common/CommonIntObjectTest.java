@@ -26,12 +26,12 @@ public class CommonIntObjectTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*
+	
 	@Test
 	public void testComputeHashCode() {
-		fail("Not yet implemented");
+		//this is an incomplete test
 	}
-
+	/*
 	@Test
 	public void testIntrinsicEquals() {
 		fail("Not yet implemented");

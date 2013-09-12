@@ -26,12 +26,12 @@ public class CommonObjectFactoryTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*
+	
 	@Test
 	public void testCommonObjectFactory() {
-		fail("Not yet implemented");
+		//this is an incomplete test
 	}
-
+	/*
 	@Test
 	public void testNumberFactory() {
 		fail("Not yet implemented");

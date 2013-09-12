@@ -26,13 +26,13 @@ public class ObjectComparatorTest {
 	public void tearDown() throws Exception {
 	}
 	
-	/*
+	
 
 	@Test
 	public void testObjectComparator() {
-		fail("Not yet implemented");
+		//this is an incomplete test
 	}
-
+	/*
 	@Test
 	public void testSetExpressionComparator() {
 		fail("Not yet implemented");
