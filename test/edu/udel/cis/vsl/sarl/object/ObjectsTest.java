@@ -19,9 +19,11 @@ public class ObjectsTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	private ObjectFactory objectFactory;
+
 	@Before
 	public void setUp() throws Exception {
-		ObjectFactory objectFactory = Objects.newObjectFactory(
+		this.objectFactory = Objects.newObjectFactory(
 				Numbers.REAL_FACTORY
 			);
 	}
@@ -32,9 +34,7 @@ public class ObjectsTest {
 
 	@Test
 	public void testNewObjectFactory() {
-		//this test is incomplete
-		//System.out.println(objectFactory.getClass());
-		//assertTrue(objectFactory instanceof ObjectFactory);
+		assertTrue(objectFactory instanceof ObjectFactory);
 	}
 	
 }
