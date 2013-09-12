@@ -26,10 +26,9 @@ public class CollectionsTest {
 	public void tearDown() throws Exception {
 	}
 
-	/*
 	@Test
 	public void testNewCollectionFactory() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
-*/
+
 }
