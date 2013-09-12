@@ -55,22 +55,18 @@ public class ExpressionTest {
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
-	private NumericExpression three; // real 3.0
-	
+
 	private BooleanObject trueBoolObj; // True
 	private BooleanObject falseBoolObj; // False
 	private IntObject fiveIntObj; // 5
 	private IntObject zeroIntObj; // 0
 	private IntObject negIntObj; // -10
 	
-	SymbolicOperator addition;
-	SymbolicType type1;
 	
-	//CommonSymbolicExpression expr1 = new CommonSymbolicExpression(addition,type1,null);
 	
 	SymbolicIntegerType intType;
 	
-	CommonSymbolicConstant c1 = new CommonSymbolicConstant(string1, intType);
+	//CommonSymbolicConstant c1 = new CommonSymbolicConstant(string1, intType);
 	
 	@Before
 	public void setUp() throws Exception {
@@ -88,8 +84,7 @@ public class ExpressionTest {
 		x = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, realType);
 		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
-		three = (NumericExpression) sUniverse
-				.cast(realType, sUniverse.integer(3));
+
 		
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		
