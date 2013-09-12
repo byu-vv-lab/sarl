@@ -25,13 +25,13 @@ public class CommonSymbolicTypeSequenceTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	/*
+
 
 	@Test
 	public void testComputeHashCode() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
-
+/*
 	@Test
 	public void testIntrinsicEquals() {
 		fail("Not yet implemented");

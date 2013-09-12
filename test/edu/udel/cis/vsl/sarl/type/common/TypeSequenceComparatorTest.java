@@ -26,13 +26,12 @@ public class TypeSequenceComparatorTest {
 	public void tearDown() throws Exception {
 	}
 	
-	/*
 
 	@Test
 	public void testTypeSequenceComparator() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
-
+/*
 	@Test
 	public void testSetTypeComparator() {
 		fail("Not yet implemented");
