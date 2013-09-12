@@ -13,15 +13,22 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
+import cvc3.QueryResult;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -36,36 +43,27 @@ public class CVC3TheoremProverTest {
 	// Static fields: instantiated once and used for all tests...
 
 	private static PrintStream out = System.out;
-
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
-
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
-
 	private static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-
 	private static SymbolicRealType realType = universe.realType();
-	
+	private static SymbolicIntegerType intType = universe.integerType();
 	private static SymbolicType boolType = universe.booleanType();
-
-	private static NumericExpression two = universe.rational(2);
-
 	private static NumericExpression five = universe.rational(5);
-
+	private static NumericExpression two = universe.rational(2);
+	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), intType);
+	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), intType);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-
 	private static BooleanExpression booleanExprFalse = universe
 			.falseExpression();
 	
 	// Instance fields: instantiated before each test is run...
-
 	private TheoremProverFactory proverFactory;
-
 	private CVC3TheoremProver cvcProver;
-
 	private ValidityChecker vc;
 
 	/**
@@ -122,14 +120,23 @@ public class CVC3TheoremProverTest {
 	
 	@Test
 	public void translateIntegerDivisionTest(){
-		NumericExpression divExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.DIVIDE, realType, five, two);
-		Expr expr = cvcProver.translate(divExp);
-		Expr fiveExpr = cvcProver.translate(five);
-		Expr twoExpr = cvcProver.translate(two);
-		Expr expected = cvcProver.validityChecker().divideExpr(fiveExpr, twoExpr);
 		
-		assertEquals(expected, expr);
+		NumericExpression q = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
+		NumericExpression r = (NumericExpression) expressionFactory.expression(SymbolicOperator.MODULO, intType, e, f);
+		
+		Expr e2 = cvcProver.translate(e);
+		Expr f2 = cvcProver.translate(f);
+		Expr q2 = cvcProver.translate(q);
+		Expr r2 = cvcProver.translate(r);
+		
+		Expr equationOne = vc.eqExpr(e2, vc.plusExpr(r2, vc.multExpr(f2, q2)));	//e2 = f2*q2+r2
+		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
+		Expr equationThree = vc.ltExpr(r2, f2); // r2 < f2
+		
+		assertEquals(QueryResult.VALID, vc.query(equationOne));
+		assertEquals(QueryResult.VALID, vc.query(equationTwo));
+		assertEquals(QueryResult.VALID, vc.query(equationThree));
+		
 	}
 
 	@Test
@@ -138,8 +145,8 @@ public class CVC3TheoremProverTest {
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
 		Expr expr = cvcProver.translate(mulExp);
 		Expr twoExpr = cvcProver.translate(two);
-		Expr fiveExpr = cvcProver.translate(five);
-		Expr expected = cvcProver.validityChecker().multExpr(twoExpr, fiveExpr);
+		Expr sixExpr = cvcProver.translate(five);
+		Expr expected = vc.multExpr(twoExpr, sixExpr);
 
 		assertEquals(expected, expr);
 	}
@@ -169,7 +176,7 @@ public class CVC3TheoremProverTest {
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
 		list.add(trueExpr);
 		list.add(falseExpr);
-		expected = cvcProver.validityChecker().orExpr(list);
+		expected = vc.orExpr(list);
 		assertEquals(expected, translateOr);					  
 	}
 	
@@ -194,7 +201,7 @@ public class CVC3TheoremProverTest {
 		vars.add(xExpr);
 		
 		Expr existsExpr = cvcProver.translate(xExistsExpression);
-		Expr expected = cvcProver.validityChecker().existsExpr(vars, xGTZero);
+		Expr expected = vc.existsExpr(vars, xGTZero);
 		assertEquals(expected, existsExpr);
 	}
 	
