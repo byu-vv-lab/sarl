@@ -231,6 +231,18 @@ public class IdealTest {
 		out.println("bigPower: quotient : " + quotient);
 		assertEquals(xpy, quotient);
 	}
+	
+	@Test
+	public void xp1xm1(){
+		NumericExpression xp1 = idealFactory
+				.add(x, idealFactory.intConstant(1));
+		NumericExpression xm1 = idealFactory.add(x, idealFactory.minus(idealFactory.intConstant(1)));
+		SymbolicExpression xp1xm1 = idealFactory.multiply(xp1, xm1);
+		out.println("xp1xm1=" + xp1xm1);
+		SymbolicExpression x2m1 = idealFactory.subtract(idealFactory.multiply(x, x), idealFactory.multiply(idealFactory.intConstant(1), idealFactory.intConstant(1)));
+		out.println("x2m1=" + x2m1);
+		assertEquals(x2m1, xp1xm1);
+	}
 	/* Test Fails
  	@Test
 	public void rationalMinus() {
@@ -307,5 +319,6 @@ public class IdealTest {
 		//assertEquals(commonIdealFactory.cast(e7, real), realSubtract);
 		
 	}
+	
 	
 }
