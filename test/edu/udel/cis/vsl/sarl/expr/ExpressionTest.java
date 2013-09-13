@@ -111,10 +111,8 @@ public class ExpressionTest {
 		stf = system.typeFactory();
 	}
 	
-	@Ignore
 	@Test
 	public void toStringBufferLongTest() {
-		//SymbolicObject[] symbolicObjs = new SymbolicObject[]{trueBoolObj ,falseBoolObj, fiveIntObj, zeroIntObj, negIntObj, Xobj, null, Yobj};
 		NumericExpression xpy = sUniverse.add(x, y);
 		
 		StringBuffer tstStringBuff = new StringBuffer(xpy.getClass().getSimpleName());
@@ -142,8 +140,7 @@ public class ExpressionTest {
 			
 		out.println(xpy.toStringBufferLong());
 		out.println(tstStringBuff);
-		assertEquals(xpy.toStringBufferLong(),tstStringBuff);
-		//assertEquals(xpy.toStringBufferLong(),xpy.toStringBufferLong());
+		assertEquals(xpy.toStringBufferLong().toString(),tstStringBuff.toString());
 	}
 	
 	
