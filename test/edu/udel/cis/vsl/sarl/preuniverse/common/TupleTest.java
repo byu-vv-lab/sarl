@@ -89,11 +89,19 @@ public class TupleTest {
 	
 	
 	}
+	@Ignore
 	@Test(expected= SARLException.class)
-	public void tupleTest(){
+	public void tupleTest1(){
 		
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
 		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+	}
+	@Test(expected= SARLException.class)
+	public void tupleTest2(){
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.rational(1),universe.integer(2),universe.integer(2)}));
+
+		
 	}
 		
 	
