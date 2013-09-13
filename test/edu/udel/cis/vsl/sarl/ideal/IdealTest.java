@@ -131,11 +131,17 @@ public class IdealTest {
 		//e2 = numericExpressionFactory.expression(SymbolicOperator.ADD, five.type(), five, three);
 		//e2 = numericExpressionFactory.add(five, three); 		// 5 + 3     Add
 		//e3 = numericExpressionFactory.lessThan(five, three); 	// 3 > 2, 3, 2    COND
-		e4 = commonIdealFactory.multiply(five, three); 	// 5 * 3			MULTIPLY
-		e5 = commonIdealFactory.minus(five); 				// -5				NEGATIVE
-		e6 = commonIdealFactory.power(five, three);		// 5 ^ 3			POWER
-		e7 = commonIdealFactory.subtract(five, three); // 5 - 3			SUBTRACT
+		e3 = commonIdealFactory.expression(SymbolicOperator.COND, typeFactory.integerType(), five, three);
+		//e4 = commonIdealFactory.multiply(five, three); 	// 5 * 3			MULTIPLY
+		e4 = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, typeFactory.integerType(), five, three);
+		//e5 = commonIdealFactory.minus(five); 				// -5				NEGATIVE
+		e5 = commonIdealFactory.expression(SymbolicOperator.NEGATIVE, typeFactory.integerType(), five);
+		//e6 = commonIdealFactory.power(five, three);		// 5 ^ 3			POWER
+		e6 = commonIdealFactory.expression(SymbolicOperator.POWER, typeFactory.integerType(), five, three);
+		//e7 = commonIdealFactory.subtract(five, three); // 5 - 3			SUBTRACT
+		e7 = commonIdealFactory.expression(SymbolicOperator.SUBTRACT, typeFactory.integerType(), five, three);
 		e8 = commonIdealFactory.zeroReal(); //				DEFAULT}
+		//e8 = commonIdealFactory.expression(SymbolicOperator., numericType, arguments)
 	}
 	
 	@After
@@ -258,7 +264,6 @@ public class IdealTest {
 	@Test
 	public void castToReal(){
 		SymbolicType real = typeFactory.realType();
-		SymbolicType real2 = numericExpressionFactory.oneReal().type();
 		NumberObject Five = objectFactory.numberObject(numberFactory.number("5"));
 		RationalNumber n5 = numberFactory.rational("5.5");
 		RealNumber realFive = (RealNumber) realNumberFactory.integer(5); //realNumberFactory.integer(fiveLong);
@@ -266,9 +271,9 @@ public class IdealTest {
 		
 		//NumberObject
 		
-		Constant one = idealFactory.intConstant(1);
-		Constant two = idealFactory.intConstant(2);
-		Constant three = idealFactory.intConstant(3);
+		Constant intone = commonIdealFactory.intConstant(1);
+		Constant inttwo = commonIdealFactory.intConstant(2);
+		Constant intthree = commonIdealFactory.intConstant(3);
 		
 		IntObject int1 = objectFactory.intObject(5);
 		IntObject int2 = objectFactory.intObject(3);
@@ -278,12 +283,12 @@ public class IdealTest {
 		//NumericExpression ints = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), int1, int2, int3);
 		//NumericExpression ints = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), int1, int2);
 		//NumericExpression ints = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), int1);
-		NumericExpression ints3 = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), one, two, three);
-		NumericExpression ints2 = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), one, two);
-		NumericExpression ints1 = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), one);
-		NumericExpression ints = idealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), one, two, three);
-		NumericExpression xp1 = idealFactory.add(x, idealFactory.intConstant(1));
-		NumericExpression lp2 = idealFactory.add(one, idealFactory.intConstant(2));
+		NumericExpression ints3 = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), intone, inttwo, intthree);
+		NumericExpression ints2 = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), intone, inttwo);
+		NumericExpression ints1 = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), intone);
+		NumericExpression ints = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), intone, inttwo, intthree);
+		NumericExpression xp1 = commonIdealFactory.add(x, commonIdealFactory.intConstant(1));
+		NumericExpression lp2 = commonIdealFactory.add(intone, commonIdealFactory.intConstant(2));
 		NumericExpression testn = commonIdealFactory.add(ints3, lp2);
 		out.println("testn: " + testn);
 		commonIdealFactory.cast(testn, real);
@@ -301,23 +306,34 @@ public class IdealTest {
 		out.println("test2: " + test2);
 		//assertEquals(test2, realAdd);
 		
-		numericExpressionFactory.cast(testn, real);
+		
+		//commonIdealFactory.cast(e3, real);
+		//assertEquals(e3,
+		commonIdealFactory.cast(testn, real);
 		long fifteenLong = 15; // e4 = 3 * 5  =  15
-		RealNumber realMulitply = realNumberFactory.integer(fifteenLong);
-		//assertEquals(commonIdealFactory.cast(e4, real), realMulitply);
+		NumericExpression realMulitply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, typeFactory.realType(), five, three);
+		//RealNumber realMulitply = realNumberFactory.integer(fifteenLong);
+		out.println("e4: " + e4);
+		out.println("realMultiply: " + realMulitply);
+		commonIdealFactory.cast(e4, real);
+		out.println("e4: " + e4);
+		//assertEquals(e4, realMulitply);
 		
 		long fiveMinusLong = -5; // e5 = -1 * 5  =  -5
 		RealNumber realMinus = realNumberFactory.integer(fiveMinusLong);
-		//assertEquals(commonIdealFactory.cast(e5, real), realMinus);
+		commonIdealFactory.cast(e5, real);
+		//assertEquals(e5, realMinus);
 		
 		long hundredTwentyLong = 125; // e6 = 5 ^ 3  =  125
 		RealNumber realPower = realNumberFactory.integer(hundredTwentyLong);
-		//assertEquals(commonIdealFactory.cast(e6, real), realPower);
+		commonIdealFactory.cast(e6, real);
+		//assertEquals(e6, realPower);
 		
 		long twoLong = 2; // e7 = 5 - 3  =  2
 		RealNumber realSubtract = realNumberFactory.integer(twoLong);
-		//assertEquals(commonIdealFactory.cast(e7, real), realSubtract);
-		
+		commonIdealFactory.cast(e7, real);
+		//assertEquals(e7, realSubtract);
+
 	}
 	
 	
