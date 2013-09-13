@@ -181,28 +181,81 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Ignore
+	@Test
 	public void testTranslateQuantifier() {
 		// x real
-		StringObject xString = universe.stringObject("varX");
+		StringObject xString = universe.stringObject("x");
 		NumericSymbolicConstant xConstant = (NumericSymbolicConstant) universe.
 				symbolicConstant(xString, realType);
+		// N real
+		StringObject NString = universe.stringObject("N");
+		NumericSymbolicConstant NConstant = (NumericSymbolicConstant) universe.
+				symbolicConstant(NString, realType);
 		// 0 < x, (aka x > 0), no greater_than symbolic operator
 		BooleanExpression xGreaterZero = (BooleanExpression) expressionFactory
 				.expression(SymbolicOperator.LESS_THAN, boolType, 
 						universe.zeroReal(), xConstant);
+		// x < N
+		BooleanExpression xLessN = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.LESS_THAN, boolType, 
+						xConstant, NConstant);
+		// 0 < x < N
+		BooleanExpression zeroLessXLessN = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, xGreaterZero, xLessN);
 		// x exists
 		SymbolicExpression xExistsExpression = expressionFactory
-				.expression(SymbolicOperator.EXISTS, universe.realType(), xConstant, xGreaterZero);
+				.expression(SymbolicOperator.EXISTS, universe.realType(),
+						xConstant, zeroLessXLessN);
 		
-		// CVC3 x expr
+		// CVC3 x expr values
 		List<Expr> vars = new ArrayList<Expr>();
 		Expr xExpr = cvcProver.translate(xConstant);
-		Expr xGTZero = cvcProver.translate(xGreaterZero);
+		Expr xBoundsExpr = cvcProver.translate(zeroLessXLessN);
 		vars.add(xExpr);
 		
 		Expr existsExpr = cvcProver.translate(xExistsExpression);
-		Expr expected = vc.existsExpr(vars, xGTZero);
+		Expr expected = vc.existsExpr(vars, xBoundsExpr);
 		assertEquals(expected, existsExpr);
+		vars.clear();
+		
+		// x'1 real
+		NumericSymbolicConstant x1Constant = (NumericSymbolicConstant) universe.
+				symbolicConstant(xString, realType);
+		// 0 < x'1
+		xGreaterZero = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.LESS_THAN, boolType, 
+						universe.zeroReal(), x1Constant);
+		// x'1 exists
+		SymbolicExpression x1ExistsExpression = expressionFactory
+				.expression(SymbolicOperator.EXISTS, universe.realType(),
+						x1Constant, xGreaterZero);
+		// x'2 real
+		NumericSymbolicConstant x2Constant = (NumericSymbolicConstant) universe.
+				symbolicConstant(xString, realType);
+		// 1 < x'2 
+		BooleanExpression xGreaterOne = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.LESS_THAN, boolType, 
+						universe.oneReal(), x2Constant);
+		// x'2 exists
+		SymbolicExpression x2ExistsExpression = expressionFactory
+				.expression(SymbolicOperator.EXISTS, universe.realType(),
+						x1Constant, xGreaterOne);
+		
+		// 0 < x'1 && 1 < x'2
+		BooleanExpression andExpression = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, 
+						x1ExistsExpression, x2ExistsExpression);
+		// CVC3 Expr values
+		Expr x1Expr = cvcProver.translate(x1Constant);
+		Expr x2Expr = cvcProver.translate(x2Constant);
+		vars.add(x1Expr);
+		vars.add(x2Expr);
+		Expr x1Exists = cvcProver.translate(x1ExistsExpression);
+		Expr x2Exists = cvcProver.translate(x2ExistsExpression);
+		Expr x1and2Exist = cvcProver.validityChecker().andExpr(x1Exists, x2Exists);
+//		Expr x1and2Exist = cvcProver.translate(andExpression);
+		expected = vc.existsExpr(vars, x1and2Exist);
+		assertEquals(expected, x1and2Exist);
 	}
 	
 	@Test
