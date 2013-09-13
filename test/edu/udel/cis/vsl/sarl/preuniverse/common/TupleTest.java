@@ -55,7 +55,7 @@ public class TupleTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	@Ignore
+	
 	@Test
 	public void tupleTypeTest(){
 		
@@ -89,7 +89,7 @@ public class TupleTest {
 	
 	
 	}
-	@Ignore
+	
 	@Test(expected= SARLException.class)
 	public void tupleTest1(){
 		
