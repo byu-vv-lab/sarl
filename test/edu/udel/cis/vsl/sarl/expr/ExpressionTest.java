@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -27,6 +28,10 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
+import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
@@ -153,20 +158,25 @@ public class ExpressionTest {
 		//NumericExpressionFactory numericFactory = standardExpressionFactory
 		//		.numericFactory();
 		//ExpressionFactory bef = Expressions.newExpressionFactory(numericFactory)
-		FactorySystem system = null;
-		PreUniverse universe = PreUniverses.newPreUniverse(system);
-		String Result;
+		//FactorySystem system = null;
+		//PreUniverse universe = PreUniverses.newPreUniverse(system);
+		//String Result;
 		//Result = Expressions.standardSimplifierFactory(bef, universe)
 	}
-	@Ignore
+	
 	@Test
 	public void CnfSymbolicConstantTest() {
 		StringObject name = sUniverse.stringObject("Hello");
-		SymbolicRealType mytype = sUniverse.realType();
-		//CnfSymbolicConstant test = new CnfSymbolicConstant(name, mytype);
-		//assertEquals("Hello", test.name());
+		CnfFactory Test = new CnfFactory(stf, of, cf);
+		CnfSymbolicConstant hellotest = (CnfSymbolicConstant) Test.booleanSymbolicConstant(name);
+		StringObject hellomsg = sUniverse.stringObject("Hello");
+		StringObject hellomsgfalse = sUniverse.stringObject("hello");
+		assertEquals(hellomsg, hellotest.name());
+		assertNotEquals(hellomsgfalse, hellotest.name());
+		assertEquals("Hello", hellotest.toString());
+		assertNotEquals("hello",hellotest.toString());
 	}
-
+	
 	@Test
 	public void toStringPowerTest() {
 		//power test
