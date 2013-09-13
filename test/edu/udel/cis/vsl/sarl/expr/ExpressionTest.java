@@ -56,9 +56,12 @@ public class ExpressionTest {
 	private StringObject Yobj; // "Y"
 	private SymbolicType realType, integerType;
 	private NumericSymbolicConstant x; // real symbolic constant "X"
+	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
+	private NumericExpression twoInt; // int 2.0
+	private NumericExpression threeInt; // int 3.0
 	private BooleanObject trueBoolObj; // True
 	private BooleanObject falseBoolObj; // False
 	private IntObject fiveIntObj; // 5
@@ -85,9 +88,12 @@ public class ExpressionTest {
 		realType = sUniverse.realType();
 		integerType = sUniverse.integerType();
 		x = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, realType);
+		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, integerType);
 		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
 		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
+		twoInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(2));
+		threeInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(3));
 
 		
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -211,6 +217,26 @@ public class ExpressionTest {
 		//Less_than_equals test
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
 		assertEquals(test8.toString(), "0 <= -1*X+3");
+		
+		//Modulo test
+		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
+		assertEquals(test9.toString(), "X%3");
+		
+		//Neq test
+		BooleanExpression test10 = sUniverse.neq(x, y);
+		assertEquals(test10.toString(), "0 != -1*X+Y");
+		
+//		//not test
+//		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
+//		assertEquals(test11.toString(), "0 != -1*X+Y");
+		
+		//null test
+	//	BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
+	//	assertEquals(test12.toStringBuffer(false), "0 != -1*X+Y");
+		
+		//or test
+		//test10.toStringBuffer(true);
+		
 		
 	}
 	
