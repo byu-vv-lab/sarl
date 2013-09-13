@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.expr;
 import static org.junit.Assert.*;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -19,6 +21,7 @@ import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -55,7 +58,7 @@ public class ExpressionTest {
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
-
+	private NumericExpression three; // real 3.0
 	private BooleanObject trueBoolObj; // True
 	private BooleanObject falseBoolObj; // False
 	private IntObject fiveIntObj; // 5
@@ -84,6 +87,7 @@ public class ExpressionTest {
 		x = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, realType);
 		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
+		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
 
 		
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -157,18 +161,57 @@ public class ExpressionTest {
 		//CnfSymbolicConstant test = new CnfSymbolicConstant(name, mytype);
 		//assertEquals("Hello", test.name());
 	}
-	
+
 	@Test
 	public void toStringPowerTest() {
+		//power test
 		int exponent = 4;
 		IntObject n = sUniverse.intObject(exponent);
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression xpyp1 = sUniverse.power(xpy, n);
-		
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
-
+		
+				
+		
+		
+		
 		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
+		
+		//add test
+		NumericExpression test1 = sUniverse.add(xpy, two);
+		assertEquals(test1.toString(), "X+Y+2");
+		
+		//cond test
+		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
+		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
+		
+		//divide test
+		NumericExpression test3 = sUniverse.divide(x, y);
+		assertEquals(test3.toString(), "X/Y");
+		
+		//exists test
+		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
+		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
+		
+		//forall test
+		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
+		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
+		
+//		//length test
+//		SymbolicExpression a = sUniverse.array(realType,
+//				Arrays.asList(new SymbolicExpression[] { x, y }));
+//		NumericExpression test6 = sUniverse.length(a);
+//		assertEquals(test6.toString(), "2");
+		
+		//Less_than test
+		BooleanExpression test7 = sUniverse.lessThan(x, three);
+		assertEquals(test7.toString(), "0 < -1*X+3");
+		
+		//Less_than_equals test
+		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
+		assertEquals(test8.toString(), "0 <= -1*X+3");
+		
 	}
 	
 	
