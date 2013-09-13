@@ -9,8 +9,10 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
@@ -53,7 +55,7 @@ public class TupleTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+	@Ignore
 	@Test
 	public void tupleTypeTest(){
 		
@@ -84,9 +86,19 @@ public class TupleTest {
 		members = null;
 		assertEquals(tupleType1,tupleType3);
 		
-		
+	
 	
 	}
+	@Test(expected= SARLException.class)
+	public void tupleTest(){
+		
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+	}
+		
+	
+	
+	
 
 
 }
