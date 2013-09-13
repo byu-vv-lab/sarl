@@ -113,19 +113,21 @@ public class ExpressionTest {
 	
 	@Test
 	public void toStringBufferLongTest() {
-		NumericExpression xpy = sUniverse.add(x, y);
+		NumericExpression xpy = sUniverse.add(x,y);
+		NumericExpression xty = sUniverse.multiply(x,y);
+		NumericExpression xpyDxty = sUniverse.divide(xpy,xty);
 		
-		StringBuffer tstStringBuff = new StringBuffer(xpy.getClass().getSimpleName());
+		StringBuffer tstStringBuff = new StringBuffer(xpyDxty.getClass().getSimpleName());
 		tstStringBuff.append("[");
-		tstStringBuff.append(xpy.operator());
+		tstStringBuff.append(xpyDxty.operator());
 		tstStringBuff.append("; ");
-		tstStringBuff.append(xpy.type());
+		tstStringBuff.append(xpyDxty.type());
 		tstStringBuff.append("; ");
 		tstStringBuff.append("{");
 		
 		Boolean first = true;
 		
-		for (SymbolicObject obj : xpy.arguments()) {
+		for (SymbolicObject obj : xpyDxty.arguments()) {
 				if (first)
 					first = false;
 				else
@@ -138,9 +140,9 @@ public class ExpressionTest {
 		tstStringBuff.append("}");	
 		tstStringBuff.append("]");
 			
-		out.println(xpy.toStringBufferLong());
+		out.println(xpyDxty.toStringBufferLong());
 		out.println(tstStringBuff);
-		assertEquals(xpy.toStringBufferLong().toString(),tstStringBuff.toString());
+		assertEquals(xpyDxty.toStringBufferLong().toString(),tstStringBuff.toString());
 	}
 	
 	
