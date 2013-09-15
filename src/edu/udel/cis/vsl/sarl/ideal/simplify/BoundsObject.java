@@ -39,7 +39,7 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
  * For an integer type bounds object, a non-null lower or upper 
  * bound must be a non-strict integer.
  * The static constructors guarantee this and take care of any conversions 
- * necessary if the inputs do not satify these constraints.
+ * necessary if the inputs do not satisfy these constraints.
  * 
  * A BoundsObject instance is not immutable.   There are methods for modifying the object.
  * However the symbolic expression (and therefore type) cannot change.
