@@ -107,6 +107,7 @@ public class BoundsObjectTest {
 		assertTrue(boundObj.equals(boundObjEquals));
 		out.println("boundObj = " + boundObj.toString() + " boundObjEquals = " + boundObjEquals.toString());
 		out.println("boundObj(xpy,3) equals? boundObjEquals(xpy, 3): " + boundObj.equals(boundObjEquals));
+		assertEquals(numBound3, boundObj.constant());
 		
 		
 		//test on .equals for unequal objects, on basis of expr
@@ -133,6 +134,12 @@ public class BoundsObjectTest {
 		
 		//test on isConsistent() method 
 		assertEquals(true, boundObj.isConsistent());
+		assertEquals(true, boundObjEquals.isConsistent());
+		
+		//test on isReal and isIntegral methods
+		out.println("is real?:  " + boundObj.isReal());
+		assertEquals(false, boundObj.isIntegral());
+		assertEquals(true, boundObj.isReal());
 		
 		//test on .equals method for a second object that is not an instance of BoundsObject
 		assertFalse(boundObj.equals(numBound3));
@@ -144,10 +151,33 @@ public class BoundsObjectTest {
 		}catch(AssertionError e){
 			//expected error
 			//e.addSuppressed(e);
-			out.println(e.getMessage());
+			out.println("Expected error of null value: " + e.getMessage());
 			gotError = true;
 		}
 		assertEquals(true, gotError); 
+		
+		//further test on Assertions in BoundsObject, when the constructor receives a null expr
+		boolean gotError2 = false;
+		try{
+			boundObjEquals.makeConstant(null);
+		}catch(RuntimeException e){
+			//expected error
+			//e.addSuppressed(e);
+			out.println("Expected error about tight bound wrongly set to null: " + e.getMessage());
+			gotError2 = true;
+		}
+		assertEquals(true, gotError2); 
+		
+		//tests on getter methods for bounds and their respective strictness
+		out.println("lower: " + boundObj.lower());
+		assertEquals(numBound3, boundObj.lower());
+		out.println("lower: " + boundObj.strictLower());
+		assertEquals(false, boundObj.strictLower());
+		out.println("lower: " + boundObj.upper());
+		assertEquals(numBound3, boundObj.upper());
+		out.println("lower: " + boundObj.strictUpper());
+		assertEquals(false, boundObj.strictUpper());
+		
 
 	}
 }
