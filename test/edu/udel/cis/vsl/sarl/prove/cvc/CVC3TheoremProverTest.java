@@ -123,6 +123,7 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testTranslateArrayWrite(){
 		
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>();
