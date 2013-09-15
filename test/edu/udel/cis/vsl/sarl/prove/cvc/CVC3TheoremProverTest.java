@@ -123,7 +123,6 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testTranslateArrayWrite(){
 		
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>();
@@ -134,7 +133,7 @@ public class CVC3TheoremProverTest {
 		SymbolicExpression newArray = universe.array(realType, array);
 		
 		SymbolicExpression translateArray = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, realType, newArray, newArray.argument(0), zero);
-		Expr expr = cvcProver.translate(newArray);
+		Expr expr = cvcProver.translate(translateArray);
 		
 		Expr zeroTest = cvcProver.translate(zero);
 		Expr expected = vc.writeExpr(expr, zeroTest, zeroTest);
