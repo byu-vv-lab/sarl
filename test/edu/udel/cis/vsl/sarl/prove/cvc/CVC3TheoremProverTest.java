@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.After;
@@ -103,7 +104,7 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
-	public void toStringTest(){
+	public void testToString(){
 		
 		String expected = "CVC3TheoremProver";
 		assertEquals(expected, cvcProver.toString());
@@ -123,13 +124,27 @@ public class CVC3TheoremProverTest {
 	
 	@Test
 	@Ignore
-	public void translateDenseArrayWriteTest(){
+	public void testTranslateArrayWrite(){
 		
+		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>();
+		array.add(0, two);
+		array.add(1, five);
+		array.add(2, ten);
+		
+		SymbolicExpression newArray = universe.array(realType, array);
+		
+		SymbolicExpression translateArray = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, realType, newArray, newArray.argument(0), zero);
+		Expr expr = cvcProver.translate(newArray);
+		
+		Expr zeroTest = cvcProver.translate(zero);
+		Expr expected = vc.writeExpr(expr, zeroTest, zeroTest);
+		
+		assertEquals(expected, expr);
 		
 	}
 	
 	@Test
-	public void translateIntegerDivisionTest(){
+	public void testTranslateIntegerDivision(){
 		
 		NumericExpression q = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
 		NumericExpression r = (NumericExpression) expressionFactory.expression(SymbolicOperator.MODULO, intType, e, f);
@@ -142,6 +157,7 @@ public class CVC3TheoremProverTest {
 		Expr equationOne = vc.eqExpr(e2, vc.plusExpr(r2, vc.multExpr(f2, q2)));	//e2 = f2*q2+r2
 		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
 		Expr equationThree = vc.ltExpr(r2, f2); // r2 < f2
+		out.println(equationOne);
 		
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
