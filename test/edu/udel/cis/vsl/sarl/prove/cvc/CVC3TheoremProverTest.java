@@ -52,8 +52,11 @@ public class CVC3TheoremProverTest {
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();
 	private static SymbolicType boolType = universe.booleanType();
+	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
+	private static NumericExpression four = universe.rational(4);
 	private static NumericExpression two = universe.rational(2);
+	private static NumericExpression zero = universe.rational(0);
 	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), intType);
 	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), intType);
 	private static BooleanExpression booleanExprTrue = universe
@@ -119,6 +122,13 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
+	@Ignore
+	public void translateDenseArrayWriteTest(){
+		
+		
+	}
+	
+	@Test
 	public void translateIntegerDivisionTest(){
 		
 		NumericExpression q = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
@@ -141,14 +151,24 @@ public class CVC3TheoremProverTest {
 
 	@Test
 	public void testTranslateMultiply() {
+		
+		Expr twoExpr = cvcProver.translate(two);
+		Expr fiveExpr = cvcProver.translate(five);
+		
 		NumericExpression mulExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
 		Expr expr = cvcProver.translate(mulExp);
-		Expr twoExpr = cvcProver.translate(two);
-		Expr sixExpr = cvcProver.translate(five);
-		Expr expected = vc.multExpr(twoExpr, sixExpr);
-
+		Expr expected = vc.multExpr(twoExpr, fiveExpr);
 		assertEquals(expected, expr);
+		
+		/*NumericExpression mulExp2 = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
+		Expr expr2 = cvcProver.translate(mulExp2);
+		String expected2 = "Wrong number of arguments to multiply: " + expr2;
+		
+		assertEquals(expected2, expr2);
+		*/
+		
 	}
 	
 	@Test
