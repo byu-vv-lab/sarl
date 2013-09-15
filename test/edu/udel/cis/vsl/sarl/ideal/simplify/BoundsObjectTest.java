@@ -24,6 +24,7 @@ public class BoundsObjectTest {
 		fail("Not yet implemented");
 	}
 */
+/*	
 	private static FactorySystem system;
 	
 	private static SymbolicTypeFactory symbFactory;
@@ -52,10 +53,13 @@ public class BoundsObjectTest {
 	
 	private static NumericExpression one, two, five;
 	
-	
+	*/
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		/*
+		
+		
 		preUniv = PreUniverses.newPreUniverse(system);
 		one = preUniv.rational(1); // 1.0
 		two = preUniv.rational(2); // 2.0
@@ -76,11 +80,16 @@ public class BoundsObjectTest {
 //		
 //		boundobj = BoundsObject.newTightBound(symbExpr, bound)
 		numBound = (Number) numFact.rational("3");
+		
+		*/
+		
 	}
 	
 	@Ignore
 	@Test
 	public void equals(){
+		/*
 		BoundsObject boundObjEquals = BoundsObject.newTightBound(symbExpr, (edu.udel.cis.vsl.sarl.IF.number.Number)numBound);
+	*/
 	}
 }
