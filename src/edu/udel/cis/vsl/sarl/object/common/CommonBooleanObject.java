@@ -37,13 +37,19 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	}
 
 	/**
+	 * Compares the boolean values of two boolean objects
 	 * Know that o has kind BOOLEAN and is not == to this.
+	 * @return Boolean
 	 */
 	@Override
 	public boolean intrinsicEquals(SymbolicObject o) {
 		return value == ((BooleanObject) o).getBoolean();
 	}
 
+	/**
+	 * Returns a hash code for the boolean object
+	 * @return Hash Code
+	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ new Boolean(value).hashCode();
@@ -54,10 +60,19 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 		return Boolean.toString(value);
 	}
 
+	/**
+	 * Empty method; does nothing.
+	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
 
+	/**
+	 * Returns 1 when comparing a true BooleanObject to a false one.
+	 * Returns -1 when comparing a false BooleanObject to a true one.
+	 * Returns 0 when comparing false BooleanObject to a false one, or a true BooleanObject to a true one.
+	 * @return 1, -1, or 0
+	 */
 	@Override
 	public int compareTo(BooleanObject o) {
 		return value ? (o.getBoolean() ? 0 : 1) : (o.getBoolean() ? -1 : 0);
@@ -65,7 +80,9 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		return new StringBuffer(Boolean.toString(value));
+		StringBuffer buffer = new StringBuffer(Boolean.toString(value));
+		if (atomize) this.atomize(buffer);
+		return buffer;
 	}
 
 	@Override

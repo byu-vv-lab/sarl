@@ -27,6 +27,10 @@ package edu.udel.cis.vsl.sarl.IF.object;
 public interface BooleanObject extends SymbolicObject,
 		Comparable<BooleanObject> {
 
+	/**
+	 * 
+	 * @return Boolean value of current object
+	 */
 	boolean getBoolean();
 
 }
