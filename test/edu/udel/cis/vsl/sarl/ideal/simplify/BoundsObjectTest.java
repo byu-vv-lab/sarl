@@ -52,6 +52,14 @@ public class BoundsObjectTest {
 	
 	private static BoundsObject boundObj;
 	
+	private static BoundsObject boundObj2;
+	
+	private static BoundsObject boundObj3;
+	
+	private static BoundsObject boundObj4;
+	
+	private static BoundsObject boundObj5;
+	
 	private static NumberFactory numFact;
 	
 	//private static Number numBound;
@@ -112,14 +120,14 @@ public class BoundsObjectTest {
 		
 		//test on .equals for unequal objects, on basis of expr
 		boundObjEquals = BoundsObject.newTightBound(symbExpr_xy, numBound3);
-		//assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
+		assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
 		assertFalse(boundObj.equals(boundObjEquals));
 		out.println("boundObj = " + boundObj.toString() + " boundObjEquals = " + boundObjEquals.toString());
 		out.println("boundObj(xpy,3) equals? boundObjEquals(xy, 3): " + boundObj.equals(boundObjEquals));
 		
 		//test on .equals for unequal objects, on basis of bound
 		boundObjEquals = BoundsObject.newTightBound(symbExpr_xpy, numBound5);
-		//assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
+		assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
 		assertFalse(boundObj.equals(boundObjEquals));
 		assertFalse(boundObjEquals.equals(boundObj));
 		out.println("boundObj = " + boundObj.toString() + " boundObjEquals = " + boundObjEquals.toString());
@@ -128,7 +136,7 @@ public class BoundsObjectTest {
 		
 		//test on .equals for unequal objects, on basis of bound and expr
 		boundObjEquals = BoundsObject.newTightBound(symbExpr_xy, numBound5);
-		//assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
+		assertThat(boundObj, is(not(boundObjEquals))); //expected to pass, as these objects are not equal
 		assertFalse(boundObj.equals(boundObjEquals));
 		assertFalse(boundObjEquals.equals(boundObj));
 		
@@ -144,7 +152,7 @@ public class BoundsObjectTest {
 		//test on .equals method for a second object that is not an instance of BoundsObject
 		assertFalse(boundObj.equals(numBound3));
 		
-		/*//test on Assertions in BoundsObject, when the constructor receives a null expr
+		//test on Assertions in BoundsObject, when the constructor receives a null expr
 		boolean gotError = false;
 		try{
 			boundObjEquals = BoundsObject.newTightBound(null, numBound5);
@@ -166,7 +174,7 @@ public class BoundsObjectTest {
 			out.println("Expected error about tight bound wrongly set to null: " + e.getMessage());
 			gotError2 = true;
 		}
-		assertEquals(true, gotError2); */
+		assertEquals(true, gotError2); 
 		
 		//tests on getter methods for bounds and their respective strictness
 		out.println("lower: " + boundObj.lower());
