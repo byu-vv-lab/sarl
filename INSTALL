@@ -10,7 +10,7 @@ openjdk-7-jdk.
 2. Install Apache ant, if you don't already have it
 (http://ant.apache.org).
 
-3. Download the JUnit jar (v. 4.10) and Jacoco gzipped tar archives from
+3. Download the JUnit jar (v. 4.11) and Jacoco gzipped tar archives from
 http://vsl.cis.udel.edu/tools. Put these files somewhere on your
 system and untar the Jacoco archives.
 
