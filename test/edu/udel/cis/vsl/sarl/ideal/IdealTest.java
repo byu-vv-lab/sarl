@@ -43,12 +43,14 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.number.real.RealNumber;
@@ -343,6 +345,14 @@ public class IdealTest {
 		//assertEquals(e7New, realSubtract);
 
 	}
-	
-	
+	/* not sure how to test private methods
+	@Test
+	public void nonneg(){
+		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
+		Monomial factorization = idealFactory.monomial(c10, (Monic) x);
+		Polynomial poly = commonIdealFactory.polynomial(termMap, factorization);
+		BooleanExpression bool = commonIdealFactory.isNonnegative(poly);
+		assertEquals(bool, commonIdealFactory.booleanFactory().trueExpr());
+	}
+	*/
 }
