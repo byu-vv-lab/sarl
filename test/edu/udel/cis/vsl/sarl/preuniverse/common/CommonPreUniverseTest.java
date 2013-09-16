@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import org.junit.After;
@@ -12,10 +13,14 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -23,10 +28,14 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 public class CommonPreUniverseTest {
 
 	private static PreUniverse universe;
+	
+	private static ObjectFactory objectFactory;
+	private static ExpressionFactory expressionFactory;
 
 	private static SymbolicType integerType;
-
 	private static SymbolicType realType;
+	private static Comparator<SymbolicObject> objectComparator;
+	private static SymbolicExpression nullExpression;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -35,7 +44,12 @@ public class CommonPreUniverseTest {
 		universe = PreUniverses.newPreUniverse(system);
 		integerType = universe.integerType();
 		realType = universe.realType();
-
+		
+		objectFactory = system.objectFactory();
+		objectComparator = objectFactory.comparator();
+		
+		expressionFactory = system.expressionFactory();
+		nullExpression = expressionFactory.nullExpression();
 	}
 
 	@AfterClass
@@ -365,7 +379,6 @@ public class CommonPreUniverseTest {
 	@Test
 	@Ignore
 	public void testNullExpression() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -741,9 +754,9 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testComparator() {
-		fail("Not yet implemented");
+		Comparator<SymbolicObject> result = universe.comparator();
+		assertEquals(objectComparator, result);
 	}
 
 	@Test
