@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -28,12 +29,13 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 public class CommonPreUniverseTest {
 
 	private static PreUniverse universe;
-	
-	private static ObjectFactory objectFactory;
-	private static ExpressionFactory expressionFactory;
-
+	// Types
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
+	// Factories
+	private static ObjectFactory objectFactory;
+	private static ExpressionFactory expressionFactory;
+	// Objects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
 
@@ -45,11 +47,13 @@ public class CommonPreUniverseTest {
 		integerType = universe.integerType();
 		realType = universe.realType();
 		
+		//for testing comparator() method
 		objectFactory = system.objectFactory();
 		objectComparator = objectFactory.comparator();
 		
+		//for testing nullExpression() method
 		expressionFactory = system.expressionFactory();
-		nullExpression = expressionFactory.nullExpression();
+		nullExpression = expressionFactory.nullExpression();	
 	}
 
 	@AfterClass
@@ -377,6 +381,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	// Written by Jordan Saints on 9/16/13
 	public void testNullExpression() {
 		SymbolicExpression result = universe.nullExpression();
 		assertEquals(nullExpression, result);
@@ -755,6 +760,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	// Written by Jordan Saints on 9/16/13
 	public void testComparator() {
 		Comparator<SymbolicObject> result = universe.comparator();
 		assertEquals(objectComparator, result);
@@ -857,9 +863,18 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Written by Jordan Saints on 9/16/13
 	public void testReferenceType() {
-		fail("Not yet implemented");
+		// Setup
+		SymbolicType refType = expressionFactory.referenceType(); //call referenceType() method
+		SymbolicTupleType refTuple = (SymbolicTupleType) refType; //cast to TUPLE SymbolicType
+		SymbolicTypeSequence refTupleSequence = refTuple.sequence(); //pull out the tuple's SymbolicTypeSequence
+		
+		// Tests
+		assertEquals(SymbolicTypeKind.TUPLE, refType.typeKind()); //test that the refType is a TUPLE kind
+		assertEquals("Ref", refTuple.name().getString()); //test the name of the tuple
+		assertEquals(1, refTupleSequence.numTypes()); //test the number of types available in this tuple's sequence
+		assertEquals(integerType, refTupleSequence.getType(0)); //test sequence type
 	}
 
 	@Test
