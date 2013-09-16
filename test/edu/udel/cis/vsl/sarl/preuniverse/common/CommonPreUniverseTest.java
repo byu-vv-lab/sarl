@@ -866,7 +866,7 @@ public class CommonPreUniverseTest {
 	// Written by Jordan Saints on 9/16/13
 	public void testReferenceType() {
 		// Setup
-		SymbolicType refType = expressionFactory.referenceType(); //call referenceType() method
+		SymbolicType refType = universe.referenceType(); //call referenceType() method
 		SymbolicTupleType refTuple = (SymbolicTupleType) refType; //cast to TUPLE SymbolicType
 		SymbolicTypeSequence refTupleSequence = refTuple.sequence(); //pull out the tuple's SymbolicTypeSequence
 		
