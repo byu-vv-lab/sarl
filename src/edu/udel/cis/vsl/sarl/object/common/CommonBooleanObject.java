@@ -31,6 +31,11 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 		this.value = value;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Returns the field {@link #value}.
+	 */
 	@Override
 	public boolean getBoolean() {
 		return value;
