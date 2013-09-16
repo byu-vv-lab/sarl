@@ -27,6 +27,9 @@ package edu.udel.cis.vsl.sarl.IF.object;
  
 public interface CharObject extends SymbolicObject, Comparable<CharObject> {
 
+	/**
+	 * @return The value (char) or the object 
+	 */
 	char getChar();
 
 }
