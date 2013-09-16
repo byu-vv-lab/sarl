@@ -377,7 +377,6 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testNullExpression() {
 		SymbolicExpression result = universe.nullExpression();
 		assertEquals(nullExpression, result);
