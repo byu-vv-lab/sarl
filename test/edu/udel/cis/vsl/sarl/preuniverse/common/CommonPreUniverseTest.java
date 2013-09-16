@@ -17,6 +17,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
@@ -27,6 +28,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class CommonPreUniverseTest {
+	CommonPreUniverse testUniverse;
 
 	private static PreUniverse universe;
 	// Types
@@ -83,7 +85,7 @@ public class CommonPreUniverseTest {
 	@Test
 	@Ignore
 	public void testIerr() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
@@ -724,9 +726,8 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testArrayLambda() {
-		fail("Not yet implemented");
+		assertEquals(null, universe.arrayLambda((SymbolicCompleteArrayType)integerType, nullExpression)); //Simple test for coverage.
 	}
 
 	@Test
@@ -839,9 +840,8 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testNumProverValidCalls() {
-		fail("Not yet implemented");
+		assertEquals(universe.numProverValidCalls(), 0); //at the time of tests, universe.proverValidCount should be 0;
 	}
 
 	@Test
