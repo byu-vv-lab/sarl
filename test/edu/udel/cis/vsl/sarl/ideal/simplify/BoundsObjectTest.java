@@ -177,6 +177,7 @@ public class BoundsObjectTest {
 		assertEquals(numBound3, boundObj.upper());
 		out.println("lower: " + boundObj.strictUpper());
 		assertEquals(false, boundObj.strictUpper());
+		//trivial to force new report of coverage
 		
 
 	}
