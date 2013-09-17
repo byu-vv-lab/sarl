@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -14,9 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
-import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -26,22 +24,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
-public class PureTypeTest {
-	
-	private static SymbolicUniverse universe;
-
-	private static NumericSymbolicConstant x;
-
-	private static NumericSymbolicConstant y;
-
-	private static SymbolicType realType;
-
-	private static SymbolicType integerType;
-
-	private static NumericExpression one, two, three;
-
-	private static PrintStream out = System.out; 
-	
+public class ObjectWithIdTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -63,7 +46,7 @@ public class PureTypeTest {
 	
 	@Ignore
 	@Test
-	public void PureTypeTest(){
+	public void objectWithIdTest(){
 		
 	}
 }

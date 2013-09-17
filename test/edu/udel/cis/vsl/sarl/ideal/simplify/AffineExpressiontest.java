@@ -107,6 +107,7 @@ public class AffineExpressiontest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	/*
 	@Test
 	public void tostringtest() {
 		//SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
@@ -126,5 +127,5 @@ public class AffineExpressiontest {
 		System.out.println();
 		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());
 	}
-
+	*/
 }
