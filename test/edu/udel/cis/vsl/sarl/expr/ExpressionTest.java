@@ -117,7 +117,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongPowerTest() {
+	public void toStringBuffer1PowerTest() {
 		int exponent = 4;
 		IntObject n = sUniverse.intObject(exponent);
 		NumericExpression xpy = sUniverse.add(x, y);
@@ -134,7 +134,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongAddTest() {
+	public void toStringBuffer1AddTest() {
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression test1 = sUniverse.add(xpy, two);
 		assertEquals(test1.toString(), "X+Y+2");
@@ -144,7 +144,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferCondLongTest() {
+	public void toStringBuffer1CondTest() {
 		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
 		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
 		
@@ -153,7 +153,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongDivideTest() {
+	public void toStringBuffer1DivideTest() {
 		NumericExpression test3 = sUniverse.divide(x, y);
 		assertEquals(test3.toString(), "X/Y");
 		
@@ -162,7 +162,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongExistsTest() {
+	public void toStringBuffer1ExistsTest() {
 		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
 		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
 		
@@ -171,7 +171,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongForAllTest() {
+	public void toStringBuffer1ForAllTest() {
 		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
 		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
 		
@@ -180,7 +180,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongLengthTest() {
+	public void toStringBuffer1LengthTest() {
 //		SymbolicExpression a = sUniverse.array(realType,
 //		Arrays.asList(new SymbolicExpression[] { x, y }));
 //NumericExpression test6 = sUniverse.length(a);
@@ -188,7 +188,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongLessThanTest() {
+	public void toStringBuffer1LessThanTest() {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
 		assertEquals(test7.toString(), "0 < -1*X+3");
 		
@@ -197,7 +197,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongLessThanEqualTest() {
+	public void toStringBuffer1LessThanEqualTest() {
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
 		assertEquals(test8.toString(), "0 <= -1*X+3");
 		
@@ -206,7 +206,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongModuloTest() {
+	public void toStringBuffer1ModuloTest() {
 		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
 		assertEquals(test9.toString(), "X%3");
 		
@@ -215,7 +215,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongNegTest() {
+	public void toStringBuffer1NegTest() {
 		BooleanExpression test10 = sUniverse.neq(x, y);
 		assertEquals(test10.toString(), "0 != -1*X+Y");
 		
@@ -224,7 +224,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongNotTest() {
+	public void toStringBuffer1NotTest() {
 		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
 		assertEquals(test11.toString(), "0 != -1*X+Y");
 		
@@ -233,7 +233,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongNullTest() {
+	public void toStringBuffer1NullTest() {
 		//BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
 		SymbolicExpression test12 = sUniverse.nullExpression();
 		assertEquals(test12.toStringBuffer(false).toString(), "NULL");
@@ -245,7 +245,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongOrTest() {
+	public void toStringBuffer1OrTest() {
 		// THESE 2 EXPRESSIONS ARE NOT ALWAYS ON SAME SIDE OF ||. THEY CAN BE ON EITHER SIDE. 
 		// NEED TO FIGURE OUT HOW TO ASSERT FOR TEST.
 		//out.println(test13.toString());
@@ -257,7 +257,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongSubtractTest() {
+	public void toStringBuffer1SubtractTest() {
 		SymbolicExpression test14 = sUniverse.subtract(x,y);
 		assertEquals(test14.toStringBuffer(false).toString(), "X+-1*Y");
 		
