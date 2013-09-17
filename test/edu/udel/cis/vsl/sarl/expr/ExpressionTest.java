@@ -150,7 +150,6 @@ public class ExpressionTest {
 		assertEquals(xpyDxty.toStringBufferLong().toString(),tstStringBuff.toString());
 	}
 	
-	
 	//added an ignore here because it counted as a failure and was committed for some reason
 	@Ignore
 	@Test
@@ -188,6 +187,10 @@ public class ExpressionTest {
 		
 		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
+		
+		//power test atomize
+		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
+		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
 		
 		//add test
 		NumericExpression test1 = sUniverse.add(xpy, two);
@@ -258,17 +261,40 @@ public class ExpressionTest {
 		//Neg test atomize
 		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
 		
+		//not test
+		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
+		assertEquals(test11.toString(), "0 != -1*X+Y");
 		
-//		//not test
-//		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
-//		assertEquals(test11.toString(), "0 != -1*X+Y");
+		//not test atomize
+		assertEquals(test11.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
 		
 		//null test
-	//	BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
-	//	assertEquals(test12.toStringBuffer(false), "0 != -1*X+Y");
+		//BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
+		SymbolicExpression test12 = sUniverse.nullExpression();
+		assertEquals(test12.toStringBuffer(false).toString(), "NULL");
 		
+		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
+		//null test atomize
+		//out.println(test12.toStringBuffer(true).toString());
+		//assertEquals(test12.toStringBuffer(true).toString(), "(NULL)");
+		
+		// THESE 2 EXPRESSIONS ARE NOT ALWAYS ON SAME SIDE OF ||. THEY CAN BE ON EITHER SIDE. 
+		// NEED TO FIGURE OUT HOW TO ASSERT FOR TEST.
 		//or test
-		//test10.toStringBuffer(true);
+		BooleanExpression test13 = sUniverse.or(test11, test8);
+		//out.println(test13.toString());
+		//assertEquals(test13.toStringBuffer(false).toString(),"0 <= -1*X+3 || 0 != -1*X+Y");
+		
+		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
+		//or test atomize
+		//assertEquals(test13.toStringBuffer(true).toString(),"(0 != -1*X+Y || 0 <= -1*X+3)");
+		
+		//subtract test
+		SymbolicExpression test14 = sUniverse.subtract(x,y);
+		assertEquals(test14.toStringBuffer(false).toString(), "X+-1*Y");
+		
+		//subtract test atomize
+		assertEquals(test14.toStringBuffer(true).toString(), "(X+-1*Y)");
 	}
 	
 	
