@@ -120,12 +120,13 @@ public class AffineExpressionTest {
 
 
 		//	coefficient =  numberFactory.rational("3");
-		AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
+		/*AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
 		AffineExpression test2 = new AffineExpression(poly,numberFactory.rational("10"),numberFactory.rational("50"));
 		assertEquals(test.toString(), test.coefficient().toString());
 		System.out.println(test2.toString());
 		System.out.println();
 		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());
+		*/
 	}
 
 
