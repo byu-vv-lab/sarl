@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -54,6 +55,8 @@ public class CommonPreUniverseTest {
 	private static SymbolicExpression nullExpression;
 	private static NumericExpression two, four;
 	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
+	// Collections
+	private static Collection<SymbolicObject> objectCollection;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -78,6 +81,9 @@ public class CommonPreUniverseTest {
 		nullExpression = expressionFactory.nullExpression();
 		
 		booleanFactory = system.booleanFactory();
+		
+		// For testing objects() method
+		objectCollection = objectFactory.objects();
 		
 	}
 
@@ -366,9 +372,11 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Written by Marlin Blue
 	public void testObjects() {
-		fail("Not yet implemented");
+		Collection<SymbolicObject> testArray = 
+				universe.objects();
+		assertEquals(objectCollection, testArray);
 	}
 
 	@Test
