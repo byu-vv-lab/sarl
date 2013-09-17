@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+
 import static org.junit.Assert.assertEquals;
 
 import java.io.PrintStream;
@@ -13,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.SARL;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -28,24 +30,24 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class PureTypeTest {
 	
-	private static SymbolicUniverse universe;
+	private static PreUniverse universe;
 
-	private static NumericSymbolicConstant x;
+	private static SymbolicType realType, integerType;
 
-	private static NumericSymbolicConstant y;
+	private static SymbolicType pureType;
 
-	private static SymbolicType realType;
-
-	private static SymbolicType integerType;
-
-	private static NumericExpression one, two, three;
+	SymbolicTypeKind three;
 
 	private static PrintStream out = System.out; 
 	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
+		FactorySystem test = PreUniverses.newIdealFactorySystem();
+		universe = new CommonPreUniverse(test);
+		integerType = universe.integerType();
+		realType = universe.realType();
+
 
 	}
 
@@ -61,9 +63,12 @@ public class PureTypeTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Ignore
 	@Test
-	public void PureTypeTest(){
+	public void PureTypeTest1(){
+		
+		SymbolicType pureType1 = universe.pureType(integerType);
+		SymbolicType pureType2 = universe.pureType(integerType);
+		assertEquals(pureType1.typeKind(), pureType2.typeKind());
 		
 	}
 }
