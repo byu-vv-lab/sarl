@@ -124,6 +124,7 @@ public class CVC3TheoremProverTest {
 	@Test
 	public void testTranslateArrayWrite(){
 		
+		//Array of a fixed size
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>(3);
 		array.add(0, two);
 		array.add(1, five);
@@ -140,6 +141,23 @@ public class CVC3TheoremProverTest {
 		Expr expected = vc.writeExpr(expr2, zeroModifier, zeroModifier);
 		
 		assertEquals(expected, expr);
+		
+		//Array of unfixed size
+		List<SymbolicExpression> unfixedArray = new ArrayList<SymbolicExpression>();
+		array.add(0, two);
+		array.add(1, five);
+		array.add(2, ten);
+		
+		SymbolicExpression newArray2 = universe.array(realType, unfixedArray);
+		
+		SymbolicExpression translateArray2 = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, newArray2.type(), newArray2, universe.integer(0), zero);
+		Expr expr3 = cvcProver.translate(translateArray2);
+		
+		Expr expr4 = cvcProver.translate(newArray2);
+		
+		Expr expected2 = vc.writeExpr(expr4, zeroModifier, zeroModifier);
+		
+		assertEquals(expected2, expr3);
 		
 	}
 	
