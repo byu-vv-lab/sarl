@@ -15,7 +15,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -378,9 +381,14 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	//written by Chris Heider
 	public void testSymbolicConstant() {
-		fail("Not yet implemented");
+		//create two symbolicConstants to see if they are equal
+		StringObject name = universe.stringObject("name");
+		SymbolicConstant scA = universe.symbolicConstant(name,integerType);
+		SymbolicConstant scB = universe.symbolicConstant(name,integerType);
+		
+		assertEquals(scA,scB);
 	}
 
 	@Test
@@ -568,15 +576,37 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	//Test written by Chris Heider 9/16/13
 	public void testImplies() {
-		fail("Not yet implemented");
+		//setup BooleanExpressions for running in equiv()
+		BooleanExpression boolA = universe.bool(true);
+		BooleanExpression boolB = universe.bool(true);
+		BooleanExpression boolC = universe.bool(false);
+		BooleanExpression boolD = universe.bool(false);
+		BooleanExpression testTrue = universe.bool(true);
+		BooleanExpression testFalse = universe.bool(false);
+		
+		assertEquals(universe.implies(boolA, boolB), testTrue); //test for 2 true
+		assertEquals(universe.implies(boolA, boolC), testFalse); //test for a failure
+		assertEquals(universe.implies(boolC, boolD), testTrue); //test for 2 false
+		assertEquals(universe.implies(boolA, boolA), testTrue); //test for identical
 	}
 
 	@Test
-	@Ignore
+	//Test written by Chris Heider 9/16/13
 	public void testEquiv() {
-		fail("Not yet implemented");
+		//setup BooleanExpressions for running in equiv()
+		BooleanExpression boolA = universe.bool(true);
+		BooleanExpression boolB = universe.bool(true);
+		BooleanExpression boolC = universe.bool(false);
+		BooleanExpression boolD = universe.bool(false);
+		BooleanExpression testTrue = universe.bool(true);
+		BooleanExpression testFalse = universe.bool(false);
+		
+		assertEquals(universe.equiv(boolA, boolB), testTrue); //test for 2 true
+		assertEquals(universe.equiv(boolA, boolC), testFalse); //test for a failure
+		assertEquals(universe.equiv(boolC, boolD), testTrue); //test for 2 false
+		assertEquals(universe.equiv(boolA, boolA), testTrue); //test for identical
 	}
 
 	@Test
