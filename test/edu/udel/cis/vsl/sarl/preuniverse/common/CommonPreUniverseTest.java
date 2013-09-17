@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -57,6 +58,7 @@ public class CommonPreUniverseTest {
 	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
 	// Collections
 	private static Collection<SymbolicObject> objectCollection;
+	private static ArrayList<NumericExpression> emptyNumericList;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -84,6 +86,8 @@ public class CommonPreUniverseTest {
 		
 		// For testing objects() method
 		objectCollection = objectFactory.objects();
+		
+		emptyNumericList = new ArrayList<NumericExpression>();
 		
 	}
 
@@ -516,10 +520,10 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	@Ignore
-	public void testMultiplyIterableOfQextendsNumericExpression() {
-		fail("Not yet implemented");
+	@Test(expected=SARLException.class)	
+	public void testEmptyMultiply() {
+		universe.multiply(emptyNumericList);
+			
 	}
 
 	@Test
