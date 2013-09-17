@@ -374,9 +374,9 @@ public class CommonPreUniverseTest {
 	@Test
 	// Written by Marlin Blue
 	public void testObjects() {
-		Collection<SymbolicObject> testArray = 
+		Collection<SymbolicObject> testCollection = 
 				universe.objects();
-		assertEquals(objectCollection, testArray);
+		assertEquals(objectCollection, testCollection);
 	}
 
 	@Test
