@@ -277,6 +277,44 @@ public class IdealTest {
 	}
 	*/
 	@Test
+	public void intModulusPolynomials(){
+		SymbolicMap<Monic, Monomial> termMap0 = commonIdealFactory.emptyMap();
+		Monic monic0 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
+		Monomial monomial0 = idealFactory.monomial(idealFactory.intConstant(0), monic0);
+		termMap0.put(monic0, monomial0);
+		//new SymbolicMap<Monic, Monomial>() {idealFactory.};
+		Polynomial numeratorIsZero = commonIdealFactory.polynomial(termMap0, monomial0);
+		Polynomial modulousIsZero = numeratorIsZero.factorization(commonIdealFactory);//commonIdealFactory.m
+		SymbolicMap<Monic, Monomial> termMap1 = commonIdealFactory.emptyMap();
+		Monic monic1 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
+		Monomial monomial1 = idealFactory.monomial(idealFactory.intConstant(1), monic1);
+		termMap1.put(monic1, monomial1);
+		Polynomial denominatorIsOne = commonIdealFactory.polynomial(termMap1, monomial1);
+		Polynomial modulousIsOne = denominatorIsOne.factorization(commonIdealFactory);
+		
+		
+		SymbolicMap<Monic, Monomial> termMap2 = commonIdealFactory.emptyMap();
+		Monic monic2 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
+		Monomial monomial2 = idealFactory.monomial(idealFactory.intConstant(2), monic1);
+		Monic monic3 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
+		Monomial monomial3 = idealFactory.monomial(idealFactory.intConstant(3), monic1);
+		
+		termMap2.put(monic2, monomial2);
+		termMap2.put(monic3, monomial3);
+		Polynomial numeratorIsFive = commonIdealFactory.polynomial(termMap2, monomial0);
+		Polynomial modulousIsFive = numeratorIsFive.factorization(commonIdealFactory);
+		
+		//Numerator is Zero
+		Polynomial zeroOverOne = (Polynomial) commonIdealFactory.modulo(numeratorIsZero, denominatorIsOne);idealFactory.divide(numeratorIsZero, idealFactory.intConstant(5));
+		Polynomial zeroOverTwo  = numeratorIsZero.denominator(commonIdealFactory);//commonIdealFactory.divide(numeratorIsZero, denominatorIsOne);
+		Polynomial zeroOverThree = numeratorIsZero.numerator(commonIdealFactory);
+	
+		//Denominator is One
+		Polynomial oneOverOne = (Polynomial) commonIdealFactory.modulo(denominatorIsOne, denominatorIsOne);
+		Polynomial fiveOverOne = (Polynomial) commonIdealFactory.modulo(numeratorIsFive, denominatorIsOne);
+		SymbolicMap<Monic, Monomial> map01 = numeratorIsFive.termMap(commonIdealFactory); //numerator(commonIdealFactory);
+	}
+	@Test
 	public void castToReal(){
 		RationalNumber n5 = numberFactory.rational("5.5");
 		RealNumber realFive = (RealNumber) realNumberFactory.integer(5); //realNumberFactory.integer(fiveLong);
@@ -318,7 +356,7 @@ public class IdealTest {
 		NumericExpression multiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, real, five, three);
 		NumericExpression e4New = commonIdealFactory.cast(e4, real);
 		NumericExpression realMultiply = commonIdealFactory.cast(multiply, real);
-		NumericExpression multiMultiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer, e4, multiply);
+		NumericExpression multiMultiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer, e4, e4, e4);
 		NumericExpression realMultiMultiply = commonIdealFactory.cast(multiMultiply, real);
 		//out.println("e4New: " + e4New);
 		out.println("realMultiMultiply: " + realMultiMultiply);
