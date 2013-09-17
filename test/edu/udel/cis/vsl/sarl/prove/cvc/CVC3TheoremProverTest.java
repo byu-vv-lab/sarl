@@ -56,6 +56,7 @@ public class CVC3TheoremProverTest {
 	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
 	private static NumericExpression two = universe.rational(2);
+	private static NumericExpression one = universe.rational(1);
 	private static NumericExpression zero = universe.zeroReal();
 	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), intType);
 	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), intType);
@@ -115,10 +116,21 @@ public class CVC3TheoremProverTest {
 
 	@Test
 	public void testTranslate() {
-		SymbolicExpression expr = universe.divide(universe.rational(1),
-				universe.rational(2));
-
-//		out.println(cvcProver.translate(expr));
+		
+		NumericExpression divExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.DIVIDE, realType, one, two);
+		Expr expr = cvcProver.translate(divExp);
+		Expr oneExpr = cvcProver.translate(one);
+		Expr twoExpr = cvcProver.translate(two);
+		Expr expected = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected, expr);
+		
+	}
+	
+	@Test
+	public void testTranslateFunction(){
+		
+		
+		
 	}
 	
 	@Test
@@ -198,11 +210,9 @@ public class CVC3TheoremProverTest {
 		/*NumericExpression mulExp2 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
 		Expr expr2 = cvcProver.translate(mulExp2);
-		String expected2 = "Wrong number of arguments to multiply: " + expr2;
 		
-		assertEquals(expected2, expr2);
+		String expected2 = "Wrong number of arguments to multiply: " + mulExp2.argument(0) + "*" + mulExp2.argument(1);
 		*/
-		
 	}
 	
 	@Test
