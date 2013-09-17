@@ -414,8 +414,9 @@ public class CommonPreUniverseTest {
 	public void testSymbolicConstant() {
 		//create two symbolicConstants to see if they are equal
 		StringObject name = universe.stringObject("name");
-		SymbolicConstant scA = universe.symbolicConstant(name,integerType);
-		SymbolicConstant scB = universe.symbolicConstant(name,integerType);
+		SymbolicType type = universe.booleanType();  //need to test for bool type. the other has been done.
+		SymbolicConstant scA = universe.symbolicConstant(name, type);
+		SymbolicConstant scB = universe.symbolicConstant(name, type);
 		
 		assertEquals(scA,scB);
 	}
