@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -938,5 +939,32 @@ public class CommonPreUniverseTest {
 	public void testAssign() {
 		fail("Not yet implemented");
 	}
-
+	
+	@Test
+	@Ignore
+	public void testRational(long numerator,long denominator) {
+		fail("Not yet implemented");
+//		numerator = 50;
+//		denominator = 49;
+//		N1= number(numberFactory.rational(numerator, denominator));
+//		assertEquals(N1,(50/49));
+	}
+	
+	@Test
+	@Ignore
+	public void testInteger(BigInteger value) {
+		fail("Not yet implemented");
+//		value = 50;
+//		BigInteger N1= number(numberFactory.integer(value));
+//		assertEquals(N1,50);
+	}
+	
+	@Test
+	@Ignore
+	public void testInteger(long value) {		
+		fail("Not yet implemented");
+//		value = 50;
+//		long N1= number(numberFactory.integer(value));
+//		assertEquals(N1,50);
+	}
 }
