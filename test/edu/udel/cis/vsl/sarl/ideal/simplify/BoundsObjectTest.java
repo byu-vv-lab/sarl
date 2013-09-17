@@ -52,13 +52,21 @@ public class BoundsObjectTest {
 	
 	private static BoundsObject boundObj;
 	
-	private static BoundsObject boundObj2;
+	private static BoundsObject boundObj2; //strict upper and lower bounds
 	
-	private static BoundsObject boundObj3;
+	private static BoundsObject boundObj3; //strict upper bound, non-strict lower
 	
-	private static BoundsObject boundObj4;
+	private static BoundsObject boundObj4; //non-strict upper bound, strict lower
 	
-	private static BoundsObject boundObj5;
+	private static BoundsObject boundObj5; //non-strict upper and lower bounds
+	
+	private static BoundsObject boundObj6; //strict upper bound, no lower
+	
+	private static BoundsObject boundObj7; //non-strict upper bound, no lower
+	
+	private static BoundsObject boundObj8; //no upper bound, strict lower
+	
+	private static BoundsObject boundObj9; //no upper bound, non-strict lower
 	
 	private static NumberFactory numFact;
 	
