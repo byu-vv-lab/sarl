@@ -63,6 +63,10 @@ public class CVC3ModelFinderTest {
 		vc = cvcProver.validityChecker();
 	}
 	
+	/* Tests the constructor for CVC3ModelFinder which calls the 
+	 * computeModel() method and with the case given calls 
+	 * assign(Expr, SymbolicExpression) */
+	
 	@Test(expected=SARLInternalException.class)
 	public void testCreateCVC3ModelFinder() {
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
