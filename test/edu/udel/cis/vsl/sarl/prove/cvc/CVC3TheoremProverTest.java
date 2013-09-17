@@ -59,9 +59,8 @@ public class CVC3TheoremProverTest {
 	// expressions
 	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
-	private static NumericExpression four = universe.rational(4);
 	private static NumericExpression two = universe.rational(2);
-	private static NumericExpression zero = universe.rational(0);
+	private static NumericExpression zero = universe.zeroReal();
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	private static BooleanExpression booleanExprFalse = universe
@@ -130,7 +129,6 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testTranslateArrayWrite(){
 		
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>();
@@ -140,11 +138,12 @@ public class CVC3TheoremProverTest {
 		
 		SymbolicExpression newArray = universe.array(realType, array);
 		
-		SymbolicExpression translateArray = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, realType, newArray, newArray.argument(0), zero);
+		SymbolicExpression translateArray = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, newArray.type(), newArray, universe.integer(0), zero);
 		Expr expr = cvcProver.translate(translateArray);
 		
-		Expr zeroTest = cvcProver.translate(zero);
-		Expr expected = vc.writeExpr(expr, zeroTest, zeroTest);
+		Expr expr2 = cvcProver.translate(newArray);
+		Expr zeroModifier = cvcProver.translate(zero);
+		Expr expected = vc.writeExpr(expr2, zeroModifier, zeroModifier);
 		
 		assertEquals(expected, expr);
 		
