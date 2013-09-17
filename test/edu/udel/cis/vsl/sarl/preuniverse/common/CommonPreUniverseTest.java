@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -15,6 +16,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -26,6 +29,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -34,32 +38,40 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class CommonPreUniverseTest {
 
-	// Types
+	private static PreUniverse universe;
+	// SymbolicTypes
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
+	private static SymbolicType arrayType;
 	// Factories
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
-	// Objects
-	private static PreUniverse universe;
+	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
+	private static NumericExpression two, four;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
-
 		universe = PreUniverses.newPreUniverse(system);
+		
+		// Types
 		integerType = universe.integerType();
 		realType = universe.realType();
+		arrayType = universe.arrayType(integerType);
 		
-		//for testing comparator() method
+		// NumberExpressions
+		two = universe.integer(2);
+		four = universe.integer(4);
+		
+		// For testing comparator() method
 		objectFactory = system.objectFactory();
 		objectComparator = objectFactory.comparator();
 		
-		//for testing nullExpression() method
+		// For testing nullExpression() method
 		expressionFactory = system.expressionFactory();
-		nullExpression = expressionFactory.nullExpression();	
+		nullExpression = expressionFactory.nullExpression();
 	}
 
 	@AfterClass
@@ -79,7 +91,7 @@ public class CommonPreUniverseTest {
 	public void testCommonPreUniverse() {
 		fail("Not yet implemented");
 	}
-
+	
 	@Test
 	@Ignore
 	public void testErr() {
@@ -399,6 +411,7 @@ public class CommonPreUniverseTest {
 		assertEquals(nullExpression, resultNullExpression); //generic test for equality
 		assertTrue(resultNullExpression.equals(nullExpression)); //test if same attributes
 		assertTrue(resultNullExpression == nullExpression); //test if same instance
+		assertTrue(universe.equals(resultNullExpression, nullExpression).isTrue()); //use the PreUniverse method to test for equality
 	}
 
 	@Test
@@ -746,11 +759,98 @@ public class CommonPreUniverseTest {
 	public void testArrayWrite() {
 		fail("Not yet implemented");
 	}
-
+	
 	@Test
-	@Ignore
+	// Written by Jordan Saints on 9/16/13
 	public void testDenseArrayWrite() {
-		fail("Not yet implemented");
+		testDenseArrayWriteSuccess(); //test method for success of usual functionality
+		testDenseArrayWriteIntTypeFailure(); //trigger failure exception 1 of 2
+		testDenseArrayWriteArrayTypeFailure(); //trigger failure exception 2 of 2
+	}
+	
+	/*
+	 * Auxiliary function to testDenseArrayWrite()
+	 * Tests for NORMAL operation of denseArrayWrite()
+	 * Written by Jordan Saints on 9/16/13
+	 */
+	private void testDenseArrayWriteSuccess() {
+		SymbolicExpression symExpression = universe.symbolicConstant(universe.stringObject("symExpression"), arrayType);
+		SymbolicExpression denseResult = universe.denseArrayWrite(
+				symExpression,
+				Arrays.asList(new SymbolicExpression[] { null, null, two, null, two, null, null }));
+
+		// Test by comparing to normal write operation in arrayWrite()
+		//universe.arrayWrite(array to write to, index in array to write at, value to write @ that index)
+		SymbolicExpression writeResult = universe.arrayWrite(symExpression, two, two); //adds a 2 at index 2 in symExpression array
+		writeResult = universe.arrayWrite(writeResult, four, two); //replace writeResult's entry at index 4 (NumExpr four) with a 2 (NumExpr two) 
+		assertEquals(writeResult, denseResult); //ensure arrays are the same
+		assertTrue(universe.equals(writeResult, denseResult).isTrue()); //use PreUniverse's SymbolicExpression equals() method
+		
+		// Test types
+		assertEquals(universe.arrayType(integerType), arrayType); //test that arrayType is correct
+		assertEquals(arrayType, denseResult.type()); //check that denseResult is of arrayType
+
+		// Test arguments
+		assertEquals(2, denseResult.numArguments()); //test numArguments
+		@SuppressWarnings("unchecked")
+		SymbolicSequence<SymbolicExpression> expressions = (SymbolicSequence<SymbolicExpression>) denseResult.argument(1);
+		assertEquals(5, expressions.size()); //the 2 trailing null SymExprs will be chopped off ("made dense")
+		assertTrue(universe.equals(nullExpression, expressions.get(0)).isTrue());
+		assertTrue(universe.equals(nullExpression, expressions.get(1)).isTrue());
+		assertTrue(universe.equals(two, expressions.get(2)).isTrue());
+		assertTrue(universe.equals(nullExpression, expressions.get(3)).isTrue());
+		assertTrue(universe.equals(two, expressions.get(4)).isTrue());
+	}
+	
+	/*
+	 * Auxiliary function to testDenseArrayWrite()
+	 * Trigger failure branch 1 of 2; throws SARLException
+	 * Written by Jordan Saints on 9/16/13
+	 */
+	private void testDenseArrayWriteIntTypeFailure() {
+		SymbolicExpression integerTypeExpression = universe.symbolicConstant(universe.stringObject("notInstanceOfSymbolicArrayType"), integerType);
+		SymbolicExpression exception1Result = null;
+		String exception1Message = "Argument 0 of denseArrayWrite must have array type but had type int";
+		try {
+			exception1Result = universe.denseArrayWrite(
+					integerTypeExpression,
+					Arrays.asList(new SymbolicExpression[] { null, null, two, null, two, null, null }));
+			
+			// Test for universe.denseArrayWrite(x,x) success
+			if (exception1Result != null) { //if no exception is thrown...
+				assertTrue(false); //this test has failed (an exception SHOULD be thrown!)
+			}
+		} catch (Exception e) {
+			assertEquals(e.getClass(), SARLException.class);
+			assertEquals(e.getMessage(), exception1Message);
+			assertTrue(e.getMessage().equals(exception1Message)); //double check
+		}
+	}
+	
+	/*
+	 * Auxiliary function to testDenseArrayWrite()
+	 * Trigger failure branch 2 of 2; throws SARLException
+	 * Written by Jordan Saints on 9/16/13
+	 */
+	private void testDenseArrayWriteArrayTypeFailure() {
+		SymbolicType doubleArrayType = universe.arrayType(arrayType); //int[]
+		SymbolicExpression arrayTypeExpression = universe.symbolicConstant(universe.stringObject("arrayTypeExpression"), doubleArrayType);
+		SymbolicExpression exception2Result = null;
+		String exception2Message = "Element 2 of values argument to denseArrayWrite has incompatible type.\nExpected: int[]\nSaw: int";
+		try {
+			exception2Result = universe.denseArrayWrite(
+					arrayTypeExpression,
+					Arrays.asList(new SymbolicExpression[] { null, null, two, null, two, null, null }));
+			
+			// Test for universe.denseArrayWrite(x,x) success
+			if (exception2Result != null) { //if no exception is thrown...
+				assertTrue(false); //this test has failed (an exception SHOULD be thrown!)
+			}
+		} catch (Exception e) {
+			assertEquals(e.getClass(), SARLException.class);
+			assertEquals(e.getMessage(), exception2Message);
+			assertTrue(e.getMessage().equals(exception2Message)); //double check
+		}
 	}
 
 	@Test
@@ -972,7 +1072,7 @@ public class CommonPreUniverseTest {
 	
 	@Test
 	@Ignore
-	public void testRational(long numerator,long denominator) {
+	public void testRational() { //tests cannot have any parameters
 		fail("Not yet implemented");
 //		numerator = 50;
 //		denominator = 49;
@@ -982,19 +1082,10 @@ public class CommonPreUniverseTest {
 	
 	@Test
 	@Ignore
-	public void testInteger(BigInteger value) {
+	public void testInteger() { //tests cannot have any parameters
 		fail("Not yet implemented");
 //		value = 50;
 //		BigInteger N1= number(numberFactory.integer(value));
-//		assertEquals(N1,50);
-	}
-	
-	@Test
-	@Ignore
-	public void testInteger(long value) {		
-		fail("Not yet implemented");
-//		value = 50;
-//		long N1= number(numberFactory.integer(value));
 //		assertEquals(N1,50);
 	}
 }
