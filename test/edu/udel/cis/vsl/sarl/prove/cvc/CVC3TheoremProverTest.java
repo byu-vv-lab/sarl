@@ -32,7 +32,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -51,25 +50,19 @@ public class CVC3TheoremProverTest {
 			.newPreUniverse(factorySystem);
 	private static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-	// types
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();
 	private static SymbolicType boolType = universe.booleanType();
-	private static SymbolicType intArrayType = universe.arrayType(intType);
-	// expressions
 	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression zero = universe.zeroReal();
+	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), intType);
+	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), intType);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	private static BooleanExpression booleanExprFalse = universe
 			.falseExpression();
-	// constants
-	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), intType);
-	
-
 	
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
@@ -119,11 +112,19 @@ public class CVC3TheoremProverTest {
 		assertFalse(notExpected.equals(cvcProver.toString()));
 		
 	}
+
+	@Test
+	public void testTranslate() {
+		SymbolicExpression expr = universe.divide(universe.rational(1),
+				universe.rational(2));
+
+//		out.println(cvcProver.translate(expr));
+	}
 	
 	@Test
 	public void testTranslateArrayWrite(){
 		
-		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>();
+		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>(3);
 		array.add(0, two);
 		array.add(1, five);
 		array.add(2, ten);
@@ -134,6 +135,7 @@ public class CVC3TheoremProverTest {
 		Expr expr = cvcProver.translate(translateArray);
 		
 		Expr expr2 = cvcProver.translate(newArray);
+		
 		Expr zeroModifier = cvcProver.translate(zero);
 		Expr expected = vc.writeExpr(expr2, zeroModifier, zeroModifier);
 		
@@ -214,6 +216,7 @@ public class CVC3TheoremProverTest {
 		assertEquals(expected, translateOr);					  
 	}
 	
+	@Ignore
 	@Test
 	public void testTranslateQuantifier() {
 		// x real
@@ -289,34 +292,6 @@ public class CVC3TheoremProverTest {
 //		Expr x1and2Exist = cvcProver.translate(andExpression);
 		expected = vc.existsExpr(vars, x1and2Exist);
 		assertEquals(expected, x1and2Exist);
-	}
-	
-	@Ignore
-	@Test
-	public void testTranslateType() {
-		cvcProver = (CVC3TheoremProver) proverFactory
-				.newProver(booleanExprTrue);
-		
-		// cvc3 int array (with int index type)
-		Type expected = vc.arrayType(vc.intType(), vc.intType());
-		Type translateResult = cvcProver.translateType(intArrayType);
-//		assertEquals(expected, translateResult);
-		
-		// cvc3 tuple
-		List<SymbolicType> typesList = new ArrayList<SymbolicType>();
-		typesList.add(intType);
-		typesList.add(intType);
-		SymbolicTypeSequence types = universe.typeSequence(typesList);
-		StringObject name = universe.stringObject("twoIntTuple");
-		SymbolicType twoIntTupleType = universe.tupleType(name, types);
-		
-		expected = vc.tupleType(vc.intType(), vc.intType());
-		translateResult = cvcProver.translateType(twoIntTupleType);
-		assertEquals(expected.toString(), translateResult.toString()); 
-		// need .toString() to show translation success. equality is determined
-		// by name and type sequence, but there is no name parameter for the 
-		// cvc3 tuple
-				
 	}
 	
 	@Test
