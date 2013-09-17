@@ -145,8 +145,8 @@ public class ExpressionTest {
 		tstStringBuff.append("}");	
 		tstStringBuff.append("]");
 			
-		out.println(xpyDxty.toStringBufferLong());
-		out.println(tstStringBuff);
+		//out.println(xpyDxty.toStringBufferLong());
+		//out.println(tstStringBuff);
 		assertEquals(xpyDxty.toStringBufferLong().toString(),tstStringBuff.toString());
 	}
 	
@@ -186,10 +186,6 @@ public class ExpressionTest {
 		NumericExpression xpyp1 = sUniverse.power(xpy, n);
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
 		
-				
-		
-		
-		
 		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
 		
@@ -197,21 +193,36 @@ public class ExpressionTest {
 		NumericExpression test1 = sUniverse.add(xpy, two);
 		assertEquals(test1.toString(), "X+Y+2");
 		
+		//add test atomize
+		assertEquals(test1.toStringBuffer(true).toString(), "(X+Y+2)");
+		
 		//cond test
 		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
 		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
+		
+		//cond test atomize
+		assertEquals(test2.toStringBuffer(true).toString(), "((0 == -1*X+2) ? 3 : 3)");
 		
 		//divide test
 		NumericExpression test3 = sUniverse.divide(x, y);
 		assertEquals(test3.toString(), "X/Y");
 		
+		//divide test atomize
+		assertEquals(test3.toStringBuffer(true).toString(), "(X/Y)");
+		
 		//exists test
 		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
 		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
 		
+		//exists test atomize
+		assertEquals(test4.toStringBuffer(true).toString(), "(exists X : real . (0 == -1*X+Y))");
+		
 		//forall test
 		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
 		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
+		
+		//forall test atomize
+		assertEquals(test5.toStringBuffer(true).toString(), "(forall X : real . (0 == -1*X+Y))");
 		
 //		//length test
 //		SymbolicExpression a = sUniverse.array(realType,
@@ -223,17 +234,30 @@ public class ExpressionTest {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
 		assertEquals(test7.toString(), "0 < -1*X+3");
 		
+		//Less_than test atomize
+		assertEquals(test7.toStringBuffer(true).toString(), "(0 < -1*X+3)");
+		
 		//Less_than_equals test
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
-		assertEquals(test8.toString(), "0 <= -1*X+3");
+		assertEquals(test8.toString().toString(), "0 <= -1*X+3");
+		
+		//Less_than_equals test atomize
+		assertEquals(test8.toStringBuffer(true).toString(),"(0 <= -1*X+3)");
 		
 		//Modulo test
 		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
 		assertEquals(test9.toString(), "X%3");
 		
+		//Modulo test atomize
+		assertEquals(test9.toStringBuffer(true).toString(), "(X%3)");
+		
 		//Neq test
 		BooleanExpression test10 = sUniverse.neq(x, y);
 		assertEquals(test10.toString(), "0 != -1*X+Y");
+		
+		//Neg test atomize
+		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
+		
 		
 //		//not test
 //		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
@@ -245,8 +269,6 @@ public class ExpressionTest {
 		
 		//or test
 		//test10.toStringBuffer(true);
-		
-		
 	}
 	
 	
