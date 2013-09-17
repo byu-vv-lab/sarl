@@ -727,6 +727,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	@Ignore
 	public void testArrayLambda() {
 		assertEquals(null, universe.arrayLambda((SymbolicCompleteArrayType)integerType, nullExpression)); //Simple test for coverage.
 	}
