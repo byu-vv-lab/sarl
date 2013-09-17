@@ -29,9 +29,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class CommonPreUniverseTest {
-	CommonPreUniverse testUniverse;
 
-	private static PreUniverse universe;
 	// Types
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
@@ -39,6 +37,7 @@ public class CommonPreUniverseTest {
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
 	// Objects
+	private static PreUniverse universe;
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
 
