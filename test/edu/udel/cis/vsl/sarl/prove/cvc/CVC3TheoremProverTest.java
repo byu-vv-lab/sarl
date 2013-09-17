@@ -223,7 +223,6 @@ public class CVC3TheoremProverTest {
 		assertEquals(expected, translateOr);					  
 	}
 	
-	@Ignore
 	@Test
 	public void testTranslateQuantifier() {
 		// x real
