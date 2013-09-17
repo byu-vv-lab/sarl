@@ -72,6 +72,7 @@ public class CommonPreUniverseTest {
 		// For testing nullExpression() method
 		expressionFactory = system.expressionFactory();
 		nullExpression = expressionFactory.nullExpression();
+		
 	}
 
 	@AfterClass
@@ -345,9 +346,11 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Written by Marlin Blue
 	public void testNumObjects() {
-		fail("Not yet implemented");
+		// Testing universe against factory
+		int object = universe.numObjects();		
+		assertEquals(object, objectFactory.numObjects());
 	}
 
 	@Test
