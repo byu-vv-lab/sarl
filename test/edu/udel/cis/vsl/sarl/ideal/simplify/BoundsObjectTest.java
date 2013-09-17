@@ -75,6 +75,12 @@ public class BoundsObjectTest {
 	
 	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound5;
 	
+	private static edu.udel.cis.vsl.sarl.IF.number.Number numBoundNeg2000;
+	
+	private static edu.udel.cis.vsl.sarl.IF.number.Number numBoundPos10000;
+	
+	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound0;
+	
 	private static NumericExpression one, two, five;
 	
 	
@@ -104,6 +110,9 @@ public class BoundsObjectTest {
 //		numbBound = preUniv.  //numbFact.rational("three");
 		numBound3 = numFact.rational("3");
 		numBound5 = numFact.rational("5");
+		numBoundNeg2000 = numFact.rational("-2000");
+		numBoundPos10000 = numFact.rational("10000");
+		numBound0 = numFact.rational("0");
 		boundObj = BoundsObject.newTightBound(symbExpr_xpy, numBound3);
 	}
 	
@@ -124,7 +133,6 @@ public class BoundsObjectTest {
 		out.println("boundObj = " + boundObj.toString() + " boundObjEquals = " + boundObjEquals.toString());
 		out.println("boundObj(xpy,3) equals? boundObjEquals(xpy, 3): " + boundObj.equals(boundObjEquals));
 		assertEquals(numBound3, boundObj.constant());
-		
 		
 		//test on .equals for unequal objects, on basis of expr
 		boundObjEquals = BoundsObject.newTightBound(symbExpr_xy, numBound3);
@@ -197,4 +205,11 @@ public class BoundsObjectTest {
 		
 
 	}
+	@Ignore
+	@Test
+	public void broadBoundTest(){
+		
+	}
+	
 }
+
