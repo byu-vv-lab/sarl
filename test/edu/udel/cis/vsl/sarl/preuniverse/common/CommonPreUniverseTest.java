@@ -53,6 +53,7 @@ public class CommonPreUniverseTest {
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
 	private static NumericExpression two, four;
+	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -876,9 +877,8 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testArrayLambda() {
-		assertEquals(null, universe.arrayLambda((SymbolicCompleteArrayType)integerType, nullExpression)); //Simple test for coverage.
+		assertEquals(null, universe.arrayLambda(symbolicCompleteArrayType, nullExpression)); //Simple test for coverage.
 	}
 
 	@Test
