@@ -40,6 +40,9 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value == ((IntObject) o).getInt();
 	}
 
+	/**
+	 * @return Hash code based on object
+	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ new Integer(value).hashCode();
@@ -111,8 +114,11 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		return new StringBuffer(Integer.toString(value));
-
+		StringBuffer buffer = new StringBuffer(Integer.toString(value));
+		if (atomize)
+			this.atomize(buffer);
+		return buffer;
+			
 	}
 
 	@Override
