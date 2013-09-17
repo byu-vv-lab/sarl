@@ -20,6 +20,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
@@ -29,6 +30,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -46,6 +48,7 @@ public class CommonPreUniverseTest {
 	// Factories
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
+	private static BooleanExpressionFactory booleanFactory;
 	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
@@ -72,6 +75,8 @@ public class CommonPreUniverseTest {
 		// For testing nullExpression() method
 		expressionFactory = system.expressionFactory();
 		nullExpression = expressionFactory.nullExpression();
+		
+		booleanFactory = system.booleanFactory();
 		
 	}
 
@@ -520,9 +525,12 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testMinus() {
-		fail("Not yet implemented");
+		NumericExpression seventeen = universe.integer(17);
+		NumericExpression negativeSeventeen = universe.integer(-17);
+		assertEquals(universe.minus(seventeen), negativeSeventeen); // test -( 17) = -17
+		assertEquals(universe.minus(negativeSeventeen), seventeen); // test -(-17) =  17
 	}
 
 	@Test
@@ -562,9 +570,11 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testBoolBooleanObject() {
-		fail("Not yet implemented");
+		BooleanObject booleanObj = universe.booleanObject(true);
+		BooleanExpression booleanExpr = booleanFactory.symbolic(booleanObj);
+		assertEquals(universe.bool(booleanObj), booleanExpr); // trivial check of return type
 	}
 
 	@Test
