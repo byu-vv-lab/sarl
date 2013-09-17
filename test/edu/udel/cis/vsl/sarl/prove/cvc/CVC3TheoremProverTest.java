@@ -119,14 +119,6 @@ public class CVC3TheoremProverTest {
 		assertFalse(notExpected.equals(cvcProver.toString()));
 		
 	}
-
-	@Test
-	public void testTranslate() {
-		SymbolicExpression expr = universe.divide(universe.rational(1),
-				universe.rational(2));
-
-//		out.println(cvcProver.translate(expr));
-	}
 	
 	@Test
 	public void testTranslateArrayWrite(){
