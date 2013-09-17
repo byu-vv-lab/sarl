@@ -117,6 +117,155 @@ public class ExpressionTest {
 	}
 	
 	@Test
+	public void toStringBufferLongPowerTest() {
+		int exponent = 4;
+		IntObject n = sUniverse.intObject(exponent);
+		NumericExpression xpy = sUniverse.add(x, y);
+		NumericExpression xpyp1 = sUniverse.power(xpy, n);
+		NumericExpression xpyp2 = sUniverse.power(xpy, two);
+		
+		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
+		assertEquals(xpyp2.toString(), "(X+Y)^2");
+		
+		//power test atomize
+		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
+		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
+		
+	}
+	
+	@Test
+	public void toStringBufferLongAddTest() {
+		NumericExpression xpy = sUniverse.add(x, y);
+		NumericExpression test1 = sUniverse.add(xpy, two);
+		assertEquals(test1.toString(), "X+Y+2");
+		
+		//add test atomize
+		assertEquals(test1.toStringBuffer(true).toString(), "(X+Y+2)");
+	}
+	
+	@Test
+	public void toStringBufferCondLongTest() {
+		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
+		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
+		
+		//cond test atomize
+		assertEquals(test2.toStringBuffer(true).toString(), "((0 == -1*X+2) ? 3 : 3)");
+	}
+	
+	@Test
+	public void toStringBufferLongDivideTest() {
+		NumericExpression test3 = sUniverse.divide(x, y);
+		assertEquals(test3.toString(), "X/Y");
+		
+		//divide test atomize
+		assertEquals(test3.toStringBuffer(true).toString(), "(X/Y)");
+	}
+	
+	@Test
+	public void toStringBufferLongExistsTest() {
+		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
+		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
+		
+		//exists test atomize
+		assertEquals(test4.toStringBuffer(true).toString(), "(exists X : real . (0 == -1*X+Y))");
+	}
+	
+	@Test
+	public void toStringBufferLongForAllTest() {
+		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
+		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
+		
+		//forall test atomize
+		assertEquals(test5.toStringBuffer(true).toString(), "(forall X : real . (0 == -1*X+Y))");
+	}
+	
+	@Test
+	public void toStringBufferLongLengthTest() {
+//		SymbolicExpression a = sUniverse.array(realType,
+//		Arrays.asList(new SymbolicExpression[] { x, y }));
+//NumericExpression test6 = sUniverse.length(a);
+//assertEquals(test6.toString(), "2");
+	}
+	
+	@Test
+	public void toStringBufferLongLessThanTest() {
+		BooleanExpression test7 = sUniverse.lessThan(x, three);
+		assertEquals(test7.toString(), "0 < -1*X+3");
+		
+		//Less_than test atomize
+		assertEquals(test7.toStringBuffer(true).toString(), "(0 < -1*X+3)");
+	}
+	
+	@Test
+	public void toStringBufferLongLessThanEqualTest() {
+		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
+		assertEquals(test8.toString(), "0 <= -1*X+3");
+		
+		//Less_than_equals test atomize
+		assertEquals(test8.toStringBuffer(true).toString(),"(0 <= -1*X+3)");
+	}
+	
+	@Test
+	public void toStringBufferLongModuloTest() {
+		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
+		assertEquals(test9.toString(), "X%3");
+		
+		//Modulo test atomize
+		assertEquals(test9.toStringBuffer(true).toString(), "(X%3)");
+	}
+	
+	@Test
+	public void toStringBufferLongNegTest() {
+		BooleanExpression test10 = sUniverse.neq(x, y);
+		assertEquals(test10.toString(), "0 != -1*X+Y");
+		
+		//Neg test atomize
+		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
+	}
+	
+	@Test
+	public void toStringBufferLongNotTest() {
+		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
+		assertEquals(test11.toString(), "0 != -1*X+Y");
+		
+		//not test atomize
+		assertEquals(test11.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
+	}
+	
+	@Test
+	public void toStringBufferLongNullTest() {
+		//BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
+		SymbolicExpression test12 = sUniverse.nullExpression();
+		assertEquals(test12.toStringBuffer(false).toString(), "NULL");
+		
+		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
+		//null test atomize
+		//out.println(test12.toStringBuffer(true).toString());
+		//assertEquals(test12.toStringBuffer(true).toString(), "(NULL)");
+	}
+	
+	@Test
+	public void toStringBufferLongOrTest() {
+		// THESE 2 EXPRESSIONS ARE NOT ALWAYS ON SAME SIDE OF ||. THEY CAN BE ON EITHER SIDE. 
+		// NEED TO FIGURE OUT HOW TO ASSERT FOR TEST.
+		//out.println(test13.toString());
+		//assertEquals(test13.toStringBuffer(false).toString(),"0 <= -1*X+3 || 0 != -1*X+Y");
+		
+		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
+		//or test atomize
+		//assertEquals(test13.toStringBuffer(true).toString(),"(0 != -1*X+Y || 0 <= -1*X+3)");
+	}
+	
+	@Test
+	public void toStringBufferLongSubtractTest() {
+		SymbolicExpression test14 = sUniverse.subtract(x,y);
+		assertEquals(test14.toStringBuffer(false).toString(), "X+-1*Y");
+		
+		//subtract test atomize
+		assertEquals(test14.toStringBuffer(true).toString(), "(X+-1*Y)");
+	}
+	
+	@Test
 	public void toStringBufferLongTest() {
 		NumericExpression xpy = sUniverse.add(x,y);
 		NumericExpression xty = sUniverse.multiply(x,y);
@@ -176,126 +325,7 @@ public class ExpressionTest {
 		assertNotEquals("hello",hellotest.toString());
 	}
 	
-	@Test
-	public void toStringPowerTest() {
-		//power test
-		int exponent = 4;
-		IntObject n = sUniverse.intObject(exponent);
-		NumericExpression xpy = sUniverse.add(x, y);
-		NumericExpression xpyp1 = sUniverse.power(xpy, n);
-		NumericExpression xpyp2 = sUniverse.power(xpy, two);
-		
-		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
-		assertEquals(xpyp2.toString(), "(X+Y)^2");
-		
-		//power test atomize
-		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
-		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
-		
-		//add test
-		NumericExpression test1 = sUniverse.add(xpy, two);
-		assertEquals(test1.toString(), "X+Y+2");
-		
-		//add test atomize
-		assertEquals(test1.toStringBuffer(true).toString(), "(X+Y+2)");
-		
-		//cond test
-		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
-		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
-		
-		//cond test atomize
-		assertEquals(test2.toStringBuffer(true).toString(), "((0 == -1*X+2) ? 3 : 3)");
-		
-		//divide test
-		NumericExpression test3 = sUniverse.divide(x, y);
-		assertEquals(test3.toString(), "X/Y");
-		
-		//divide test atomize
-		assertEquals(test3.toStringBuffer(true).toString(), "(X/Y)");
-		
-		//exists test
-		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
-		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
-		
-		//exists test atomize
-		assertEquals(test4.toStringBuffer(true).toString(), "(exists X : real . (0 == -1*X+Y))");
-		
-		//forall test
-		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
-		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
-		
-		//forall test atomize
-		assertEquals(test5.toStringBuffer(true).toString(), "(forall X : real . (0 == -1*X+Y))");
-		
-//		//length test
-//		SymbolicExpression a = sUniverse.array(realType,
-//				Arrays.asList(new SymbolicExpression[] { x, y }));
-//		NumericExpression test6 = sUniverse.length(a);
-//		assertEquals(test6.toString(), "2");
-		
-		//Less_than test
-		BooleanExpression test7 = sUniverse.lessThan(x, three);
-		assertEquals(test7.toString(), "0 < -1*X+3");
-		
-		//Less_than test atomize
-		assertEquals(test7.toStringBuffer(true).toString(), "(0 < -1*X+3)");
-		
-		//Less_than_equals test
-		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
-		assertEquals(test8.toString().toString(), "0 <= -1*X+3");
-		
-		//Less_than_equals test atomize
-		assertEquals(test8.toStringBuffer(true).toString(),"(0 <= -1*X+3)");
-		
-		//Modulo test
-		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
-		assertEquals(test9.toString(), "X%3");
-		
-		//Modulo test atomize
-		assertEquals(test9.toStringBuffer(true).toString(), "(X%3)");
-		
-		//Neq test
-		BooleanExpression test10 = sUniverse.neq(x, y);
-		assertEquals(test10.toString(), "0 != -1*X+Y");
-		
-		//Neg test atomize
-		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
-		
-		//not test
-		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
-		assertEquals(test11.toString(), "0 != -1*X+Y");
-		
-		//not test atomize
-		assertEquals(test11.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
-		
-		//null test
-		//BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
-		SymbolicExpression test12 = sUniverse.nullExpression();
-		assertEquals(test12.toStringBuffer(false).toString(), "NULL");
-		
-		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
-		//null test atomize
-		//out.println(test12.toStringBuffer(true).toString());
-		//assertEquals(test12.toStringBuffer(true).toString(), "(NULL)");
-		
-		// THESE 2 EXPRESSIONS ARE NOT ALWAYS ON SAME SIDE OF ||. THEY CAN BE ON EITHER SIDE. 
-		// NEED TO FIGURE OUT HOW TO ASSERT FOR TEST.
-		//or test
-		BooleanExpression test13 = sUniverse.or(test11, test8);
-		//out.println(test13.toString());
-		//assertEquals(test13.toStringBuffer(false).toString(),"0 <= -1*X+3 || 0 != -1*X+Y");
-		
-		// WHY DOES THIS FAIL? WHY NO PARANTHESES?
-		//or test atomize
-		//assertEquals(test13.toStringBuffer(true).toString(),"(0 != -1*X+Y || 0 <= -1*X+3)");
-		
-		//subtract test
-		SymbolicExpression test14 = sUniverse.subtract(x,y);
-		assertEquals(test14.toStringBuffer(false).toString(), "X+-1*Y");
-		
-		//subtract test atomize
-		assertEquals(test14.toStringBuffer(true).toString(), "(X+-1*Y)");
-	}
+
 	
 	
 	@Test
