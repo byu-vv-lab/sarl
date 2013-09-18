@@ -127,6 +127,7 @@ public class CVC3TheoremProverTest {
 		
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
+		Expr fiveExpr = cvcProver.translate(five);
 		Expr oneIntExpr = cvcProver.translate(oneInt);
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
@@ -177,11 +178,17 @@ public class CVC3TheoremProverTest {
 		Expr expected8 = vc.notExpr(cvcProver.translate((SymbolicExpression) notExp.argument(0)));
 		assertEquals(expected8, expr8);
 		
+		//Power
+		NumericExpression powerExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.POWER, realType, two, five);
+		Expr expr9 = cvcProver.translate(powerExp);
+		Expr expected9 = vc.powExpr(twoExpr, fiveExpr);
+		assertEquals(expected9, expr9);
+		
 		//Subtract
 		NumericExpression subExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.SUBTRACT, realType, two, one);
-		Expr expr9 = cvcProver.translate(subExp);
-		Expr expected9 = vc.minusExpr(twoExpr, oneExpr);
-		assertEquals(expected9, expr9);
+		Expr expr10 = cvcProver.translate(subExp);
+		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
+		assertEquals(expected10, expr10);
 		
 	}
 	
