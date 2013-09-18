@@ -61,6 +61,7 @@ public class CVC3TheoremProverTest {
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
 	private static NumericExpression zero = universe.zeroReal();
+	private static NumericExpression oneInt = universe.integer(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	private static BooleanExpression booleanExprFalse = universe
@@ -124,18 +125,39 @@ public class CVC3TheoremProverTest {
 	@Test
 	public void testTranslate() {
 		
-		NumericExpression divExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.DIVIDE, realType, one, two);
-		Expr expr = cvcProver.translate(divExp);
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
-		Expr expected = vc.divideExpr(oneExpr, twoExpr);
+		Expr oneIntExpr = cvcProver.translate(oneInt);
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr falseExpr = cvcProver.translate(booleanExprFalse);
+		
+		//Addition
+		NumericExpression addExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.ADD, realType, one, two);
+		Expr expr = cvcProver.translate(addExp);
+		Expr expected = vc.plusExpr(oneExpr, twoExpr);
 		assertEquals(expected, expr);
 		
-	}
-	
-	@Test
-	public void testTranslateFunction(){
+		//And
+		BooleanExpression andExp = (BooleanExpression) expressionFactory.expression(SymbolicOperator.AND, boolType, booleanExprTrue, booleanExprTrue);
+		Expr expr2 = cvcProver.translate(andExp);
+		Expr expected2 = vc.andExpr(trueExpr, trueExpr);
+		assertEquals(expected2, expr2);
+		BooleanExpression andExp2 = (BooleanExpression) expressionFactory.expression(SymbolicOperator.AND, boolType, booleanExprTrue, booleanExprFalse);
+		Expr expr3 = cvcProver.translate(andExp2);
+		Expr expected3 = vc.andExpr(trueExpr, falseExpr);
+		assertEquals(expected3, expr3);
 		
+		//Cast
+		SymbolicExpression castExp = expressionFactory.expression(SymbolicOperator.CAST, intType, one);
+		Expr expr4 = cvcProver.translate(castExp);
+		Expr expected4 = oneIntExpr;
+		assertEquals(expected4, expr4);
+		
+		//Division
+		NumericExpression divExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.DIVIDE, realType, one, two);
+		Expr expr5 = cvcProver.translate(divExp);
+		Expr expected5 = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected5, expr5);
 		
 		
 	}
