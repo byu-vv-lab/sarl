@@ -1179,9 +1179,40 @@ public class CommonPreUniverseTest {
 		// exception
 		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
 		
-		
-		
+			
 	}
+	@Test
+	public void emptyArrayTest(){
+		// get an empty array with size 0
+		SymbolicExpression array = universe.emptyArray(integerType);
+		NumericExpression zero = universe.integer(0);
+		assertEquals(zero,universe.length(array));
+	}
+	@Test(expected= SARLException.class)
+	public void testModuloWithExceptions(){
+		NumericExpression fiveInt, threeInt;
+		NumericExpression fiveReal, threeReal;
+		NumericExpression fiveModthree;
+		
+		fiveInt = universe.integer(5);
+		threeInt = universe.integer(3);
+		fiveModthree = universe.modulo(fiveInt, threeInt);
+		assertEquals(universe.integer(2),fiveModthree);
+		
+		//exception first arg is realtype
+		
+		fiveReal = universe.rational(5.0);
+		threeReal = universe.rational(3.0);
+		fiveModthree = universe.modulo(fiveReal, threeInt);
+		
+		//exception second arg is realtype
+		
+		fiveModthree = universe.modulo(fiveInt, threeReal);
+
+
+
+	}
+
 
 
 }
