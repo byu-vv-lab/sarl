@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
@@ -1125,4 +1126,62 @@ public class CommonPreUniverseTest {
 //		BigInteger N1= number(numberFactory.integer(value));
 //		assertEquals(N1,50);
 	}
+	
+	
+	@Test(expected= SARLException.class)
+	public void tupleExceptionTest1(){
+		
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+	}
+	@Test(expected= SARLException.class)
+	public void tupleExceptionTest2(){
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.rational(1),universe.integer(2),universe.integer(2)}));
+
+		
+	}
+	@Test(expected= SARLException.class)
+	public void testLengthExceptions(){
+		
+		NumericExpression[] arrayMembers = new NumericExpression[2] ;
+		SymbolicExpression array;
+		NumericExpression length;
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple;
+		arrayMembers[0] = universe.integer(1);
+		arrayMembers[1] = universe.integer(2);
+		array = universe .array(integerType, Arrays.asList(arrayMembers));
+		array = null;
+		// exception for null array
+		length = universe.length(array);
+
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		// exception for non array type
+		length = universe.length(tuple);	
+
+	}
+	@Test(expected= SARLException.class)
+	public void tupleWriteTest(){
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedTuple;
+		IntObject i1;
+		i1 = universe.intObject(1);
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+
+		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
+		assertEquals(tuple, resultedTuple);
+		
+		
+		// exception
+		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
+		
+		
+		
+	}
+
+
 }
