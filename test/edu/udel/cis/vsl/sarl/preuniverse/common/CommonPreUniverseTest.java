@@ -760,12 +760,6 @@ public class CommonPreUniverseTest {
 
 	@Test
 	@Ignore
-	public void testRemoveElementAt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
 	public void testEmptyArray() {
 		fail("Not yet implemented");
 	}
@@ -782,11 +776,6 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	@Ignore
-	public void testArrayWrite() {
-		fail("Not yet implemented");
-	}
 	
 	@Test
 	/*
@@ -1127,13 +1116,14 @@ public class CommonPreUniverseTest {
 //		assertEquals(N1,50);
 	}
 	
-	
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void tupleExceptionTest1(){
 		
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
 		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
 	}
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void tupleExceptionTest2(){
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
@@ -1142,6 +1132,7 @@ public class CommonPreUniverseTest {
 
 		
 	}
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testLengthExceptions(){
 		
@@ -1158,6 +1149,7 @@ public class CommonPreUniverseTest {
 
 		
 	}
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testLengthExceptions2(){
 		// exception for non array type
@@ -1170,7 +1162,7 @@ public class CommonPreUniverseTest {
 
 
 	}
-	
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void tupleWriteTest(){
 		SymbolicTupleType tupleType1;
@@ -1189,6 +1181,7 @@ public class CommonPreUniverseTest {
 		
 			
 	}
+	// written by Mohammad Alsulmi
 	@Test
 	public void emptyArrayTest(){
 		// get an empty array with size 0
@@ -1216,6 +1209,7 @@ public class CommonPreUniverseTest {
 
 
 	}
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testModuloWithExceptions2(){
 		NumericExpression fiveInt, threeInt;
@@ -1233,7 +1227,7 @@ public class CommonPreUniverseTest {
 		fiveModthree = universe.modulo(fiveInt, threeReal);
 
 	}
-
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testPowerException(){
 		NumericExpression base = universe.integer(3);
@@ -1244,6 +1238,174 @@ public class CommonPreUniverseTest {
 		
 		result = universe.power(base, -2);
 	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testRemoveElementAt(){
+		SymbolicExpression array, expected, resultedArray;
+		NumericExpression one,two, three;
+		
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,three}));
+		resultedArray = universe.removeElementAt(array, 1);
+		
+		assertEquals(expected, resultedArray);
+		
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testRemoveElementAtException(){
+		
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedArray;
+		
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		// passing an argument from type other than array
+		resultedArray = universe.removeElementAt(tuple, 0);
+				
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testRemoveElementAtException2(){
+		SymbolicExpression array, expected, resultedArray;
+		NumericExpression one,two, three;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,three}));
+		// index out of range exception
+		resultedArray = universe.removeElementAt(array, 3);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testArrayWrite()
+	{
+		SymbolicExpression array, resultedArray, expected;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,two,five}));
+		
+		resultedArray = universe.arrayWrite(array, one, two);
+		assertEquals(expected, resultedArray);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException()
+	{
+		// testing the fail when pass a null array to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		array = null;
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException2()
+	{
+		// testing the fail when pass a null index to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		one = null;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException3()
+	{
+		// testing the fail when pass a null value to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		two = null;
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException4()
+	{
+		// testing the fail when pass a non array type to arrayWrite()
+		// here we use a tuple instead of array
+		SymbolicExpression  resultedArray,tuple;
+		NumericExpression one,two,five;
+		SymbolicTupleType tupleType1;
+		
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		
+		resultedArray = universe.arrayWrite(tuple, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException5()
+	{
+		// testing the fail when pass a non integer index to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.rational(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException6()
+	{
+		// testing the fail when passing an incompatible value to arrayWrite()
+		// here the array has integer type, so we pass real type instead of integer
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.rational(2.0);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+
 
 
 
