@@ -93,7 +93,6 @@ public class IdealTest {
 	private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
-	NumericExpression e0;
 	NumericExpression e1; 					// 5         		IsReal
 	NumericExpression e2;					// 5 + 3     		Add
 	NumericExpression e3;				 	// 5 > 3, 5, 3    COND
@@ -325,6 +324,7 @@ public class IdealTest {
 		Polynomial fiveOverOne = (Polynomial) commonIdealFactory.modulo(numeratorIsFive, denominatorIsOne);
 		SymbolicMap<Monic, Monomial> map01 = numeratorIsFive.termMap(commonIdealFactory); //numerator(commonIdealFactory);
 	}
+	
 	@Test
 	public void castToReal(){
 		RationalNumber n5 = numberFactory.rational("5.5");
@@ -367,7 +367,7 @@ public class IdealTest {
 		NumericExpression multiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, real, five, three);
 		NumericExpression e4New = commonIdealFactory.cast(e4, real);
 		NumericExpression realMultiply = commonIdealFactory.cast(multiply, real);
-		NumericExpression multiMultiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer, e4, e4, e4);
+		NumericExpression multiMultiply = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer, e4, multiply);
 		NumericExpression realMultiMultiply = commonIdealFactory.cast(multiMultiply, real);
 		//out.println("e4New: " + e4New);
 		out.println("realMultiMultiply: " + realMultiMultiply);
@@ -427,8 +427,8 @@ public class IdealTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
-		Polynomial b = commonIdealFactory.add(poly1, poly2);
-		//out.println("ADD_Polynomial=" + b);
+		SymbolicExpression b = commonIdealFactory.add(poly1, poly2);
+		out.println("ADD_Polynomial=" + b);
 		
 	}
 	
@@ -439,11 +439,10 @@ public class IdealTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
-		Polynomial b = commonIdealFactory.multiply(poly1, poly2);
-		//out.println("Multiply_Polynomial=" + b);
+		SymbolicExpression b = commonIdealFactory.multiply(poly1, poly2);
+		out.println("Multiply_Polynomial=" + b);
 		
 	}
-	
 	@Test
 	public void constanttermsubtraction(){
 		//Monomial monomial1 = idealFactory.monomial(c10, (Monic) x);
@@ -461,6 +460,4 @@ public class IdealTest {
 	public void minus(){
 		NumericExpression ne = commonIdealFactory.minus(zero);
 	}
-	
-	
 }
