@@ -1212,6 +1212,17 @@ public class CommonPreUniverseTest {
 
 
 	}
+	@Test(expected= SARLException.class)
+	public void testPowerException(){
+		NumericExpression base = universe.integer(3);
+		NumericExpression result = universe.power(base, 2);
+		assertEquals(universe.integer(9), result);
+		
+		// exception when the exponent is negative
+		
+		result = universe.power(base, -2);
+	}
+
 
 
 
