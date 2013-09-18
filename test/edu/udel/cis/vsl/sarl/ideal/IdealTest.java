@@ -85,12 +85,15 @@ public class IdealTest {
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression five; 		// 5
+	private NumericExpression zero;
+	private RationalNumber realZero;
 	private RationalNumber realFive; 			// 5
 	private NumericExpression three;		// 3
 	private RationalNumber realThree;			// 3
 	private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
+	NumericExpression e0;
 	NumericExpression e1; 					// 5         		IsReal
 	NumericExpression e2;					// 5 + 3     		Add
 	NumericExpression e3;				 	// 5 > 3, 5, 3    COND
@@ -132,7 +135,9 @@ public class IdealTest {
 		
 		real = typeFactory.realType();
 		integer = typeFactory.integerType();
+		realZero = numberFactory.integerToRational(numberFactory.integer(0));
 		realFive = numberFactory.integerToRational(numberFactory.integer(5));
+		zero = commonIdealFactory.constant(realZero);
 		five = commonIdealFactory.constant(realFive); 
 		realThree = numberFactory.integerToRational(numberFactory.integer(3)); 
 		three = commonIdealFactory.constant(realThree);
@@ -450,6 +455,11 @@ public class IdealTest {
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
 		//out.println("b=" + b);
 		
+	}
+	
+	@Test
+	public void minus(){
+		NumericExpression ne = commonIdealFactory.minus(zero);
 	}
 	
 	
