@@ -1148,8 +1148,7 @@ public class CommonPreUniverseTest {
 		NumericExpression[] arrayMembers = new NumericExpression[2] ;
 		SymbolicExpression array;
 		NumericExpression length;
-		SymbolicTupleType tupleType1;
-		SymbolicExpression tuple;
+		
 		arrayMembers[0] = universe.integer(1);
 		arrayMembers[1] = universe.integer(2);
 		array = universe .array(integerType, Arrays.asList(arrayMembers));
@@ -1157,12 +1156,21 @@ public class CommonPreUniverseTest {
 		// exception for null array
 		length = universe.length(array);
 
+		
+	}
+	@Test(expected= SARLException.class)
+	public void testLengthExceptions2(){
+		// exception for non array type
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple;
+		NumericExpression length;
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
 		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
-		// exception for non array type
 		length = universe.length(tuple);	
 
+
 	}
+	
 	@Test(expected= SARLException.class)
 	public void tupleWriteTest(){
 		SymbolicTupleType tupleType1;
@@ -1191,7 +1199,7 @@ public class CommonPreUniverseTest {
 	@Test(expected= SARLException.class)
 	public void testModuloWithExceptions(){
 		NumericExpression fiveInt, threeInt;
-		NumericExpression fiveReal, threeReal;
+		NumericExpression fiveReal;
 		NumericExpression fiveModthree;
 		
 		fiveInt = universe.integer(5);
@@ -1202,16 +1210,30 @@ public class CommonPreUniverseTest {
 		//exception first arg is realtype
 		
 		fiveReal = universe.rational(5.0);
-		threeReal = universe.rational(3.0);
 		fiveModthree = universe.modulo(fiveReal, threeInt);
+		
+		
+
+
+	}
+	@Test(expected= SARLException.class)
+	public void testModuloWithExceptions2(){
+		NumericExpression fiveInt, threeInt;
+		NumericExpression threeReal;
+		NumericExpression fiveModthree;
+		
+		fiveInt = universe.integer(5);
+		threeInt = universe.integer(3);
+		fiveModthree = universe.modulo(fiveInt, threeInt);
+		assertEquals(universe.integer(2),fiveModthree);
+		threeReal = universe.rational(3.0);
 		
 		//exception second arg is realtype
 		
 		fiveModthree = universe.modulo(fiveInt, threeReal);
 
-
-
 	}
+
 	@Test(expected= SARLException.class)
 	public void testPowerException(){
 		NumericExpression base = universe.integer(3);
