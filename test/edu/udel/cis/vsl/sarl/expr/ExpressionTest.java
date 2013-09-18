@@ -124,11 +124,11 @@ public class ExpressionTest {
 		NumericExpression xpyp1 = sUniverse.power(xpy, n);
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
 		
-		assertEquals(xpyp1.toString(), "X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
+		assertEquals(xpyp1.toString(), "X^4+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
 		
 		//power test atomize
-		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
+		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^(4)+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^(4))");
 		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
 		
 	}
@@ -232,6 +232,7 @@ public class ExpressionTest {
 		assertEquals(test11.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
 	}
 	
+	@Ignore
 	@Test
 	public void toStringBuffer1NullTest() {
 		//BooleanExpression test12 = sUniverse.not(sUniverse.equals(x,y));
@@ -244,6 +245,7 @@ public class ExpressionTest {
 		//assertEquals(test12.toStringBuffer(true).toString(), "(NULL)");
 	}
 	
+	@Ignore
 	@Test
 	public void toStringBuffer1OrTest() {
 		// THESE 2 EXPRESSIONS ARE NOT ALWAYS ON SAME SIDE OF ||. THEY CAN BE ON EITHER SIDE. 
