@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CommonSymbolicTypeTest {
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -87,4 +86,6 @@ public class CommonSymbolicTypeTest {
 		fail("Not yet implemented");
 	}
 */
+
+
 }
