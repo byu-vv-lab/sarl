@@ -320,9 +320,9 @@ public class ExpressionTest {
 		StringObject hellomsg = sUniverse.stringObject("Hello");
 		StringObject hellomsgfalse = sUniverse.stringObject("hello");
 		assertEquals(hellomsg, hellotest.name());
-		//assertNotEquals(hellomsgfalse, hellotest.name());
+		assertNotEquals(hellomsgfalse, hellotest.name());
 		assertEquals("Hello", hellotest.toString());
-		//assertNotEquals("hello",hellotest.toString());
+		assertNotEquals("hello",hellotest.toString());
 	}
 	
 
