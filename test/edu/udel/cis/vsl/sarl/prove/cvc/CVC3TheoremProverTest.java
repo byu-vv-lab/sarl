@@ -131,7 +131,7 @@ public class CVC3TheoremProverTest {
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
 		
-		//Addition
+		//Add
 		NumericExpression addExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.ADD, realType, one, two);
 		Expr expr = cvcProver.translate(addExp);
 		Expr expected = vc.plusExpr(oneExpr, twoExpr);
@@ -153,12 +153,35 @@ public class CVC3TheoremProverTest {
 		Expr expected4 = oneIntExpr;
 		assertEquals(expected4, expr4);
 		
-		//Division
-		NumericExpression divExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.DIVIDE, realType, one, two);
-		Expr expr5 = cvcProver.translate(divExp);
-		Expr expected5 = vc.divideExpr(oneExpr, twoExpr);
+		//Cond
+		SymbolicExpression condExp = expressionFactory.expression(SymbolicOperator.COND, boolType, booleanExprTrue, one, two);
+		Expr expr5 = cvcProver.translate(condExp);
+		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
 		assertEquals(expected5, expr5);
 		
+		//Division
+		NumericExpression divExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.DIVIDE, realType, one, two);
+		Expr expr6 = cvcProver.translate(divExp);
+		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected6, expr6);
+		
+		//Negative
+		NumericExpression negExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.NEGATIVE, intType, one);
+		Expr expr7 = cvcProver.translate(negExp);
+		Expr expected7 = vc.uminusExpr(cvcProver.translate((SymbolicExpression) negExp.argument(0)));
+		assertEquals(expected7, expr7);
+		
+		//Not
+		BooleanExpression notExp = (BooleanExpression) expressionFactory.expression(SymbolicOperator.NOT, boolType, booleanExprTrue);
+		Expr expr8 = cvcProver.translate(notExp);
+		Expr expected8 = vc.notExpr(cvcProver.translate((SymbolicExpression) notExp.argument(0)));
+		assertEquals(expected8, expr8);
+		
+		//Subtract
+		NumericExpression subExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.SUBTRACT, realType, two, one);
+		Expr expr9 = cvcProver.translate(subExp);
+		Expr expected9 = vc.minusExpr(twoExpr, oneExpr);
+		assertEquals(expected9, expr9);
 		
 	}
 	
