@@ -88,6 +88,8 @@ public class IdealTest {
 	private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
+	NumericExpression a1;
+	NumericExpression a2;
 	NumericExpression e1; 					// 5         		IsReal
 	NumericExpression e2;					// 5 + 3     		Add
 	NumericExpression e3;				 	// 5 > 3, 5, 3    COND
@@ -136,6 +138,8 @@ public class IdealTest {
 		three = commonIdealFactory.constant(realThree);
 		//intThree = commonIdealFactory.multiply(commonIdealFactory.oneInt(), three);
 		intThree = commonIdealFactory.expression(SymbolicOperator.CAST, integer, three);
+		a1 = idealFactory.intConstant(100);
+		a2 = idealFactory.intConstant(20);
 		e1 = commonIdealFactory.constant(realFive);						// 1         IsReal
 		//e1 = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), five);
 		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five, three);  // 5 + 3     Add
@@ -451,5 +455,15 @@ public class IdealTest {
 		NumericExpression ne = commonIdealFactory.minus(zero);
 		//out.println("ne=" +ne);
 	}
+	@Test
+	public void divide(){
+		Monomial b1 = idealFactory.monomial(c4, (Monic) x);
+		Monomial b2 = idealFactory.monomial(c10, (Monic) x);
+		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
+		Polynomial poly1 = commonIdealFactory.polynomial(termMap, b1);
+		Polynomial poly2 = commonIdealFactory.polynomial(termMap, b2);
+		NumericExpression b = commonIdealFactory.divide(b1, b2);
+	}
+	
 	
 }
