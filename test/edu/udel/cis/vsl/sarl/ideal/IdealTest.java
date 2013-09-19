@@ -215,7 +215,7 @@ public class IdealTest {
 	@Test
 	public void realone(){
 		NumericExpression ne = idealFactory.oneReal();
-		out.println("ne=" +ne);
+		//out.println("ne=" +ne);
 		Monic monic0 = (Monic) idealFactory.intConstant(1);
 		//assertEquals(monic0, ne);
 	}
@@ -442,7 +442,7 @@ public class IdealTest {
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
 		//SymbolicExpression b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
-		//out.println("b=" + b);
+		out.println("b2=" + b2);
 		
 	}
 	
