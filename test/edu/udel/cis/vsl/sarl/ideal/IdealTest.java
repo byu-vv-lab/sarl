@@ -125,8 +125,7 @@ public class IdealTest {
 				typeFactory.integerType()));
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
-		
-		
+				
 		real = typeFactory.realType();
 		integer = typeFactory.integerType();
 		realZero = numberFactory.integerToRational(numberFactory.integer(0));
@@ -216,6 +215,9 @@ public class IdealTest {
 	@Test
 	public void realone(){
 		NumericExpression ne = idealFactory.oneReal();
+		out.println("ne=" +ne);
+		Monic monic0 = (Monic) idealFactory.intConstant(1);
+		//assertEquals(monic0, ne);
 	}
 
 	@Test
