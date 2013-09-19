@@ -15,6 +15,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -58,12 +59,15 @@ public class ExpressionTest {
 	StringObject string2;
 	StringObject string3;
 	
+	private SymbolicConstant zz;
+	
 	private StringObject Xobj; // "X"
 	private StringObject Yobj; // "Y"
-	private SymbolicType realType, integerType;
+	private SymbolicType realType, integerType, arrayType, booleanType;
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
+	private BooleanSymbolicConstant b;
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
 	private NumericExpression twoInt; // int 2.0
@@ -73,7 +77,13 @@ public class ExpressionTest {
 	private IntObject fiveIntObj; // 5
 	private IntObject zeroIntObj; // 0
 	private IntObject negIntObj; // -10
-	
+
+	private static  FactorySystem factorySystem = PreUniverses
+			.newIdealFactorySystem();
+	private static PreUniverse universe = PreUniverses
+			.newPreUniverse(factorySystem);
+	private ExpressionFactory expressionFactory = factorySystem
+			.expressionFactory();
 	
 	
 	SymbolicIntegerType intType;
@@ -84,6 +94,8 @@ public class ExpressionTest {
 	public void setUp() throws Exception {
 		sUniverse = Universes.newIdealUniverse();
 
+		
+		
 		Xobj = sUniverse.stringObject("X");
 		Yobj = sUniverse.stringObject("Y");
 		trueBoolObj = sUniverse.booleanObject(true);
@@ -92,8 +104,12 @@ public class ExpressionTest {
 		zeroIntObj = sUniverse.intObject(0);
 		negIntObj = sUniverse.intObject(-10);
 		realType = sUniverse.realType();
+		booleanType = sUniverse.booleanType();
 		integerType = sUniverse.integerType();
-		x = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, realType);
+		arrayType = sUniverse.arrayType(integerType);
+		zz =  sUniverse.symbolicConstant(Xobj, arrayType);
+		b = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,booleanType );
+		x = (NumericSymbolicConstant)  sUniverse.symbolicConstant(Xobj, realType);
 		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, integerType);
 		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
@@ -180,12 +196,13 @@ public class ExpressionTest {
 		assertEquals(test5.toStringBuffer(true).toString(), "(forall X : real . (0 == -1*X+Y))");
 	}
 	
+	
+
 	@Test
-	public void toStringBuffer1LengthTest() {
-//		SymbolicExpression a = sUniverse.array(realType,
-//		Arrays.asList(new SymbolicExpression[] { x, y }));
-//NumericExpression test6 = sUniverse.length(a);
-//assertEquals(test6.toString(), "2");
+	public void toStringBuffer1LengthTest() {	
+NumericExpression test6 = sUniverse.length(zz);
+System.out.println(test6);
+assertEquals(test6.toString(), "length(X)");
 	}
 	
 	@Test
@@ -216,7 +233,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBuffer1NegTest() {
+	public void toStringBuffer1NeqTest() {
 		BooleanExpression test10 = sUniverse.neq(x, y);
 		assertEquals(test10.toString(), "0 != -1*X+Y");
 		
@@ -225,12 +242,35 @@ public class ExpressionTest {
 	}
 	
 	@Test
+	public void toStringBuffer1NegativeTest() {
+		
+		NumericExpression negExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.NEGATIVE, integerType, two);
+		
+
+		assertEquals(negExp.toString(), "-2");
+
+		//Neg test atomize
+		assertEquals(negExp.toStringBuffer(true).toString(), "(-2)");
+	}
+	
+	@Test
 	public void toStringBuffer1NotTest() {
-		BooleanExpression test11 = sUniverse.not(sUniverse.equals(x, y));
-		assertEquals(test11.toString(), "0 != -1*X+Y");
+		
+		BooleanExpression test11 = sUniverse.not(b);
+		assertEquals(test11.toString(), "!X");
 		
 		//not test atomize
-		assertEquals(test11.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
+		assertEquals(test11.toStringBuffer(true).toString(), "(!X)");
+	}
+	
+	@Test
+	public void toStringBuffer1LambdaTest() {
+		BooleanExpression a = sUniverse.not(b);
+		SymbolicExpression test11 = sUniverse.lambda(x, a);
+		assertEquals(test11.toString(), "lambda X : real . (!X)");
+		
+		//atomize
+		assertEquals(test11.toStringBuffer(true).toString(), "(lambda X : real . (!X))");
 	}
 	
 	@Ignore
