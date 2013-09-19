@@ -298,9 +298,11 @@ assertEquals(test6.toString(), "length(X)");
 	@Test
 	public void toStringBuffer1IntDivideTest() {
 		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
-		assertEquals(intExp.toStringBuffer(false).toString(), "X÷Y");
+		// edited out by siegel as the characters were non-ASCII
+		// replaced non-ASCII characters with ?
+		assertEquals(intExp.toStringBuffer(false).toString(), "X??Y");
 		//atomize
-		assertEquals(intExp.toStringBuffer(true).toString(), "(X÷Y)");
+		assertEquals(intExp.toStringBuffer(true).toString(), "(X??Y)");
 
 	}
 
