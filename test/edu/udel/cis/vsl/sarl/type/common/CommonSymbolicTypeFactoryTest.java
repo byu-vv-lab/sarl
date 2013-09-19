@@ -9,6 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CommonSymbolicTypeFactoryTest {
+	
+	//creating a new typeFactory in order to create concrete type objects.
+	CommonSymbolicTypeFactory typeFactory;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -20,6 +23,7 @@ public class CommonSymbolicTypeFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		//typeFactory = new CommonSymbolicTypeFactory()
 	}
 
 	@After

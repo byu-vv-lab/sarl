@@ -8,7 +8,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.ideal.common.NTConstant;
+import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.object.common.CommonIntObject;
+
 public class CommonSymbolicCompleteArrayTypeTest {
+	
+	CommonSymbolicCompleteArrayType completeArray;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -20,6 +29,8 @@ public class CommonSymbolicCompleteArrayTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		//NumericExpression number = new NumericPrimitive(SymbolicOperator.CONCRETE, SymbolicType.SymbolicTypeKind.INTEGER, new CommonIntObject(2));
+		//completeArray = new CommonSymbolicCompleteArrayType(SymbolicType.SymbolicTypeKind.ARRAY,)
 	}
 
 	@After

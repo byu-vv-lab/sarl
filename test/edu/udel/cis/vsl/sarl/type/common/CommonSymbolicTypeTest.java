@@ -8,7 +8,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 public class CommonSymbolicTypeTest {
+	/*Testing CommonSymbolicType
+	 * A SymbolicType could be of different kinds: 
+	 * 				Real, Array, Tuple, Boolean, Char, Function,
+	 *   						Union, or Integer.
+	 */
+		CommonSymbolicType realType, integerType, arrayType, functionType, tupleType, booleanType;
+		
+		ObjectFactory objectFactory;
+		SymbolicTypeFactory typeFactory;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -19,6 +34,9 @@ public class CommonSymbolicTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		realType = new CommonSymbolicRealType(RealKind.IDEAL);
+		integerType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		objectFactory = Objects.newObjectFactory(Numbers.REAL_FACTORY);
 	}
 
 	@After
