@@ -414,8 +414,10 @@ public class IdealTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
-		SymbolicExpression b = commonIdealFactory.add(poly1, poly2);
-		out.println("ADD_Polynomial=" + b);
+		Polynomial b = commonIdealFactory.add(poly1, poly2);
+		//out.println("ADD_Polynomial=" + b);
+		Polynomial c = (Polynomial) idealFactory.intConstant(0);
+		assertEquals(c, b);
 		
 	}
 	
@@ -426,9 +428,10 @@ public class IdealTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
-		SymbolicExpression b = commonIdealFactory.multiply(poly1, poly2);
-		out.println("Multiply_Polynomial=" + b);
-		
+		Polynomial b = commonIdealFactory.multiply(poly1, poly2);
+		//out.println("Multiply_Polynomial=" + b);
+		Polynomial c = (Polynomial) idealFactory.intConstant(0);
+		assertEquals(c, b);
 	}
 	@Test
 	public void constanttermsubtraction(){
