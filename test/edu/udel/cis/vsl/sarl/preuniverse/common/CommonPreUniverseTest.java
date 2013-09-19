@@ -1370,8 +1370,9 @@ public class CommonPreUniverseTest {
 		three = universe.integer(3);
 		five = universe.integer(5);
 		
-		two = null;
+		
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		two = null;
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
 	// written by Mohammad Alsulmi
@@ -1418,11 +1419,12 @@ public class CommonPreUniverseTest {
 		NumericExpression one,two, three, five;
 		
 		one = universe.integer(1);
-		two = universe.rational(2.0);
+		two = universe.integer(2);
 		three = universe.integer(3);
 		five = universe.integer(5);
 		
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		two = universe.rational(2.0);
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
 
