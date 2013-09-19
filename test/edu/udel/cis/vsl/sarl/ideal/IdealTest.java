@@ -26,7 +26,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -35,12 +34,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
@@ -264,7 +259,7 @@ public class IdealTest {
 		out.println("x2m1=" + x2m1);
 		assertEquals(x2m1, xp1xm1);
 	}
-	/* Test Fails
+	
  	@Test
 	public void rationalMinus() {
 		RationalExpression r = (RationalExpression) idealFactory.divide(x, y);
@@ -274,7 +269,7 @@ public class IdealTest {
 		out.println("minus r: " + minusr +"vs. " + negativer);
 		assertEquals(negativer, minusr);
  	}
- 	*/
+ 	
 	/*
 	@Test
 	public void positivenumber(){
@@ -409,16 +404,6 @@ public class IdealTest {
 		//assertEquals(e7New, realSubtract);
 
 	}
-	/* not sure how to test private methods
-	@Test
-	public void nonneg(){
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Monomial factorization = idealFactory.monomial(c10, (Monic) x);
-		Polynomial poly = commonIdealFactory.polynomial(termMap, factorization);
-		BooleanExpression bool = commonIdealFactory.isNonnegative(poly);
-		assertEquals(bool, commonIdealFactory.booleanFactory().trueExpr());
-	}
-	*/
 	
 	@Test
 	public void addpolynomial(){
