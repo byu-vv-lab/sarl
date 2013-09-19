@@ -1425,6 +1425,7 @@ public class CommonPreUniverseTest {
 		
 	}
 	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)	
 	public void TestArrayReadException(){
 		// testing the fail when pass a null array to arrayRead()
 		SymbolicExpression array, resultedArray;
