@@ -449,7 +449,7 @@ public class IdealTest {
 	@Test
 	public void minus(){
 		NumericExpression ne = commonIdealFactory.minus(zero);
-		out.println("ne=" +ne);
+		//out.println("ne=" +ne);
 	}
 	
 }
