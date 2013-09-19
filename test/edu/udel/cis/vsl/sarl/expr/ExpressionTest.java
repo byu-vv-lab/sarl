@@ -30,6 +30,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.cnf.CnfExpression;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -327,6 +328,24 @@ public class ExpressionTest {
 		assertNotEquals("hello",hellotest.toString());
 	}
 	
+	@Test
+	public void CnfFactoryorTest(){
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression testingfalse = sUniverse.bool(false);
+		BooleanExpression falseExpr= bef.falseExpr();
+		BooleanExpression trueExpr= bef.trueExpr();
+		assertEquals(testingtrue, bef.and(testingtrue, testingtrue));
+		assertEquals(testingtrue, bef.and(trueExpr, testingtrue));
+		assertEquals(testingfalse, bef.and(trueExpr, testingfalse));
+		assertEquals(testingfalse, bef.and(falseExpr, testingtrue));
+		assertEquals(testingfalse, bef.and(testingtrue, falseExpr));
+		assertEquals(testingtrue, bef.or(testingtrue, testingtrue));
+		assertEquals(testingtrue, bef.or(trueExpr, testingtrue));
+		assertEquals(testingtrue, bef.or(trueExpr, testingfalse));
+		assertEquals(testingtrue, bef.or(falseExpr, testingtrue));
+		assertEquals(testingfalse, bef.or(testingfalse, falseExpr));
+	}
 
 	
 	
