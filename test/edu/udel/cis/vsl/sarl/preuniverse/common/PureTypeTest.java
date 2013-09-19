@@ -47,8 +47,6 @@ public class PureTypeTest {
 		universe = new CommonPreUniverse(test);
 		integerType = universe.integerType();
 		realType = universe.realType();
-
-
 	}
 
 	@AfterClass
@@ -71,4 +69,5 @@ public class PureTypeTest {
 		assertEquals(pureType1.typeKind(), pureType2.typeKind());
 		
 	}
+	
 }
