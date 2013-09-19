@@ -122,22 +122,20 @@ public class AffineExpressionTest {
 
 		//	coefficient =  numberFactory.rational("3");
 		
-		try{
-			AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
-			AffineExpression test2 = new AffineExpression(poly,numberFactory.rational("10"),numberFactory.rational("50"));
-			assertEquals(test.toString(), test.coefficient().toString());
+		AffineExpression test2 = new AffineExpression(poly,numberFactory.rational("10"),numberFactory.rational("50"));
+		
 		System.out.println(test2.toString());
 		System.out.println();
 		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());
+		boolean nullError = false;
+		try{
+			AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
+			assertEquals(test.toString(), test.coefficient().toString());
 		}catch(AssertionError e){
-			System.out.println(e.getMessage());
+			System.out.println("Epic fail!:" + e.getMessage());
+			nullError = true;
 		}
-		/*
-		
-		
-		
-		 
-		*/
+		assertEquals(nullError, true);
 	}
 
 
