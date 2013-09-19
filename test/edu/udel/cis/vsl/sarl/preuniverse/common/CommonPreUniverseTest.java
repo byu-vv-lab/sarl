@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1101,16 +1102,6 @@ public class CommonPreUniverseTest {
 	
 	@Test
 	@Ignore
-	public void testRational() { //tests cannot have any parameters
-		fail("Not yet implemented");
-//		numerator = 50;
-//		denominator = 49;
-//		N1= number(numberFactory.rational(numerator, denominator));
-//		assertEquals(N1,(50/49));
-	}
-	
-	@Test
-	@Ignore
 	public void testInteger() { //tests cannot have any parameters
 		fail("Not yet implemented");
 //		value = 50;
@@ -1409,6 +1400,31 @@ public class CommonPreUniverseTest {
 		two = universe.rational(2.0);
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testRational(){
+		// here we cover the remaining cases of using rational()
+		long value1, num1,den1 ;
+		float value2;
+		NumericExpression result;
+
+		num1 = 3;
+		den1 = 2;
+		value1 = 5;
+		value2 = 5;
+		result = universe.rational(value1); // long case
+		assertEquals(universe.rational(5), result);
+		result = universe.rational(value2); // float case
+		assertEquals(universe.rational(5), result); 
+		result = universe.rational(BigInteger.TEN); // BigInteger case
+		assertEquals(universe.rational(10), result);
+		result = universe.rational(num1, den1); // long numerator and denominator
+		assertEquals(universe.rational(1.5), result);
+		result = universe.rational(BigInteger.ONE, BigInteger.TEN); // BigInteger numerator and denominator
+		assertEquals(universe.rational(.1), result);
+		
+	}
+
 
 
 
