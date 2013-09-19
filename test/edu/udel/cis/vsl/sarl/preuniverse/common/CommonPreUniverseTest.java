@@ -798,7 +798,7 @@ public class CommonPreUniverseTest {
 		SymbolicExpression denseResult = universe.denseArrayWrite(
 				symExpression,
 				Arrays.asList(new SymbolicExpression[] { null, null, two, null, two, null, null }));
-
+		
 		// Test by comparing to normal write operation in arrayWrite()
 		//universe.arrayWrite(array to write to, index in array to write at, value to write @ that index)
 		SymbolicExpression writeResult = universe.arrayWrite(symExpression, two, two); //adds a 2 at index 2 in symExpression array
@@ -1050,9 +1050,29 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testDereference() {
-		fail("Not yet implemented");
+		SymbolicType doubleArrayType = universe.arrayType(arrayType); //int[]
+		SymbolicExpression arrayTypeExpression = universe.symbolicConstant(universe.stringObject("arrayTypeExpression"), doubleArrayType);
+		
+		try
+		{
+			universe.dereference(arrayTypeExpression, null);
+		}
+		catch(Exception e)
+		{
+			assertEquals(e.getClass(), SARLException.class); //test class name of thrown exception	
+			assertEquals(e.getMessage(), "dereference given null reference");
+		}
+		
+		try
+		{
+			universe.dereference(null, null);
+		}
+		catch(Exception e)
+		{
+			assertEquals(e.getClass(), SARLException.class); //test class name of thrown exception	
+			assertEquals(e.getMessage(), "dereference given null value");
+		}
 	}
 
 	@Test

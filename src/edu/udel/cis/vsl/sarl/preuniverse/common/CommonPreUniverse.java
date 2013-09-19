@@ -2108,10 +2108,10 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference) {
-		if (reference == null)
-			throw new SARLException("dereference given null reference");
 		if (value == null)
 			throw new SARLException("dereference given null value");
+		if (reference == null)
+			throw new SARLException("dereference given null reference");
 		switch (reference.referenceKind()) {
 		case NULL:
 			throw new SARLException(
