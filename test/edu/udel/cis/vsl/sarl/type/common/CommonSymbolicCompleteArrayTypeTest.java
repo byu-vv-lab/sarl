@@ -10,15 +10,24 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.ideal.common.NTConstant;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonIntObject;
 
 public class CommonSymbolicCompleteArrayTypeTest {
 	
-	CommonSymbolicCompleteArrayType completeArray;
-
+	CommonSymbolicCompleteArrayType completeArray2, completeArray3, completeArray33;
+	NumberFactory numberFactory;
+	ObjectFactory objectFactory;
+	SymbolicObject symbolicObject2, symbolicObject3;
+	NumericPrimitive number2, number3;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -29,8 +38,18 @@ public class CommonSymbolicCompleteArrayTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		//NumericExpression number = new NumericPrimitive(SymbolicOperator.CONCRETE, SymbolicType.SymbolicTypeKind.INTEGER, new CommonIntObject(2));
-		//completeArray = new CommonSymbolicCompleteArrayType(SymbolicType.SymbolicTypeKind.ARRAY,)
+		numberFactory = Numbers.REAL_FACTORY;
+		objectFactory = Objects.newObjectFactory(numberFactory);
+		symbolicObject3 = objectFactory.numberObject(numberFactory.integer(3));
+		symbolicObject2 = objectFactory.numberObject(numberFactory.integer(2));
+		SymbolicType intType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		SymbolicType arrayType = new CommonSymbolicArrayType(intType);
+		//number = new NumericPrimitive(SymbolicOperator.CONCRETE, SymbolicType.SymbolicTypeKind.INTEGER, symbolicObject3);
+		number3 = new NumericPrimitive(SymbolicOperator.CONCRETE, intType, symbolicObject3);
+		number2 = new NumericPrimitive(SymbolicOperator.CONCRETE, intType, symbolicObject3);
+		completeArray2 = new CommonSymbolicCompleteArrayType(arrayType, number2);
+		completeArray3 = new CommonSymbolicCompleteArrayType(arrayType, number3);
+		completeArray33 = new CommonSymbolicCompleteArrayType(arrayType, number3);
 	}
 
 	@After
@@ -40,31 +59,35 @@ public class CommonSymbolicCompleteArrayTypeTest {
 
 	@Test
 	public void testComputeHashCode() {
-		//fail("Not yet implemented");
+		assertEquals("The two completeArrays aren't equal", completeArray3.computeHashCode(), completeArray33.computeHashCode());
+		
 	}
-/*
+	
+	/*
+	 * Testing if the compelteArrays are complete
+	 */
 	@Test
-	public void testCanonizeChildren() {
-		fail("Not yet implemented");
+	public void testIsComplete() {
+		assertTrue("The completeArray isn't complete", completeArray3.isComplete());
+		assertTrue("The completeArray2 isn't complete", completeArray33.isComplete());
+		
 	}
+	
+	@Test
+	public void testTypeEquals(){
+		assertTrue(completeArray3.typeEquals(completeArray33));
+		assertTrue(completeArray2.typeEquals(completeArray3));
+	}
+
 
 	@Test
 	public void testExtentString() {
-		fail("Not yet implemented");
+		assertEquals(completeArray2.extentString(), "[" + completeArray2.extent() + "]");
 	}
-
-	@Test
-	public void testIsComplete() {
-		fail("Not yet implemented");
-	}
-
+	
+	/*
 	@Test
 	public void testCommonSymbolicCompleteArrayType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testExtent() {
 		fail("Not yet implemented");
 	}
 */
