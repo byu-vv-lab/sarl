@@ -413,6 +413,16 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 	}
 	
 	@Test
+	public void CnfFactoryBooleanNotTest() {
+		CnfFactory test = new CnfFactory(stf, of, cf);
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		BooleanExpression trueEx = bef.falseExpr();
+		assertEquals(false, test.not(trueEx).isFalse());
+	
+		
+	}
+	
+	@Test
 	public void CnfFactoryorTest(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression testingtrue = sUniverse.bool(true);
@@ -439,5 +449,7 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		assertNotNull(bef);
 	}
+	
+	
 
 }
