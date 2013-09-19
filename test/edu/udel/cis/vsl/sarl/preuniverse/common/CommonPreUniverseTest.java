@@ -1424,6 +1424,70 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.rational(.1), result);
 		
 	}
+	// written by Mohammad Alsulmi
+	public void TestArrayReadException(){
+		// testing the fail when pass a null array to arrayRead()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+				
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		array = null;	// null array
+		resultedArray = universe.arrayRead(array, one);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException2(){
+		// testing the fail when pass a null index to arrayRead()
+				
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+
+		two = null; // null index
+		resultedArray = universe.arrayRead(array, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException3(){
+		// testing the fail when pass a non array type to arrayRead()
+		// here we use a tuple instead of array
+		SymbolicExpression  resultedArray,tuple;
+		NumericExpression one,two,five;
+		SymbolicTupleType tupleType1;
+
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		one = universe.integer(1);
+		two = universe.integer(2);
+		
+		resultedArray = universe.arrayRead(tuple, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException4(){
+		// testing the fail when pass a negative index to arrayRead()
+		SymbolicExpression array, resultedArray;
+		NumericExpression negativeOne,two, three, five;
+		
+		negativeOne = universe.integer(-1); // negative number
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayRead(array, negativeOne);
+	}
+
+
 
 
 
