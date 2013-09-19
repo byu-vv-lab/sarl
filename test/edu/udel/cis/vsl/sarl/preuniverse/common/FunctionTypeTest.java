@@ -62,12 +62,15 @@ public class FunctionTypeTest {
 	
 	@Test
 	public void FunctionTypeTest1(){
-		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
-		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("tupleType2"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
+		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
 		sequence1 = tupleType1.sequence();
 		sequence2 = tupleType2.sequence();
 		functionType1 = universe.functionType(sequence1, realType);
-		functionType2 = universe.functionType(sequence1, realType);
+		functionType2 = universe.functionType(sequence2, realType);
 		assertEquals(functionType1.typeKind(),functionType2.typeKind());
+		assertEquals(functionType1.isReal(), false);
+		assertEquals(functionType1.isCanonic(), false);
+		assertEquals(functionType1.isInteger(), false);
 	}
 }
