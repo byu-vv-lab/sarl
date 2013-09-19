@@ -443,6 +443,7 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(testingtrue, bef.and(testingtrue, testingtrue));
 		assertEquals(testingtrue, bef.and(trueExpr, testingtrue));
 		assertEquals(testingfalse, bef.and(trueExpr, testingfalse));
+		assertEquals(testingfalse, bef.and(testingfalse, trueExpr));
 		assertEquals(testingfalse, bef.and(falseExpr, testingtrue));
 		assertEquals(testingfalse, bef.and(testingtrue, falseExpr));
 		assertEquals(testingtrue, bef.or(testingtrue, testingtrue));
@@ -452,6 +453,17 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(testingfalse, bef.or(testingfalse, falseExpr));
 	}
 
+	@Ignore
+	@Test
+	public void CnFFactoryNotTest(){
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		CnfExpression cnf;
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression testingfalse = sUniverse.bool(false);
+		BooleanExpression falseExpr= bef.falseExpr();
+		BooleanExpression trueExpr= bef.trueExpr();
+		//assertEquals(testingfalse, bef.not(trueExpr1));
+	}
 	
 	
 	@Test
