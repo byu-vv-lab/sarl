@@ -311,6 +311,7 @@ assertEquals(test6.toString(), "length(X)");
 		BooleanExpression a = sUniverse.not(b);
 		BooleanExpression test13 = sUniverse.or(a,b);
 		
+		//If statement is needed because X and !X are sometimes flipped
 		if(test13.toStringBuffer(true).toString().equals("!X || X" ) || test13.toStringBuffer(true).toString().equals( "((!X || X))")){
 			assertEquals(test13.toStringBuffer(false).toString(),"!X || X");
 			assertEquals(test13.toStringBuffer(true).toString(),"((!X || X))");
