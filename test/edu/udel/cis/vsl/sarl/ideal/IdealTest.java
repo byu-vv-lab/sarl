@@ -67,7 +67,7 @@ public class IdealTest {
 	private BooleanExpressionFactory booleanFactory;
 	private RealNumberFactory realNumberFactory;
 	private CommonIdealFactory commonIdealFactory;
-
+	
 	private RationalNumber n1; // 3/2
 	private RationalNumber n2; // -1/4
 	private RationalNumber n3; // 5/4
@@ -259,17 +259,17 @@ public class IdealTest {
 		out.println("x2m1=" + x2m1);
 		assertEquals(x2m1, xp1xm1);
 	}
-	
+	/*
  	@Test
 	public void rationalMinus() {
 		RationalExpression r = (RationalExpression) idealFactory.divide(x, y);
-		NumericExpression minusr = idealFactory.minus(r);
+		NumericExpression minusr = idealFactory.multiply(y,idealFactory.subtract(idealFactory.intConstant(1), r));
 		Monomial negativex = idealFactory.monomial(c4, (Monic) x);
 		RationalExpression negativer = (RationalExpression) idealFactory.divide(negativex, y);
 		out.println("minus r: " + minusr +"vs. " + negativer);
 		assertEquals(negativer, minusr);
  	}
- 	
+ 	*/
 	/*
 	@Test
 	public void positivenumber(){
@@ -445,4 +445,5 @@ public class IdealTest {
 	public void minus(){
 		NumericExpression ne = commonIdealFactory.minus(zero);
 	}
+	
 }
