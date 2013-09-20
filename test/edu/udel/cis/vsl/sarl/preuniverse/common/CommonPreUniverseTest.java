@@ -1585,9 +1585,11 @@ public class CommonPreUniverseTest {
 	public void testCompatibleWithTuple(){
 		
 		// here we test compatible with tuple types 
-		SymbolicTupleType type1, type2, type3,type5, type6;
+		SymbolicTupleType type1, type2, type3,type5, type6,type7;
 		SymbolicType type4;
 		BooleanExpression result, expected;
+		SymbolicTypeSequence sequence;
+		LinkedList<SymbolicType> members = new LinkedList<>();
 		
 		
 		type1 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
@@ -1595,6 +1597,7 @@ public class CommonPreUniverseTest {
 		type3 = universe.tupleType(universe.stringObject("type2"),Arrays.asList(new SymbolicType[]{realType, integerType}));
 		type5 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
 		type6 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType, integerType}));
+		type7 = universe.tupleType(universe.stringObject("Type1"), members);
 		type4 = universe.integerType();
 		
 		// here we compare two identical tuple types (type1, type2)
@@ -1627,6 +1630,12 @@ public class CommonPreUniverseTest {
 		result  = universe.compatible(type1, type6);
 		assertEquals(expected, result);
 		
+		// here we compare two different tuple types (type7, type6), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type7, type6);
+		assertEquals(expected, result);
+				
 
 	}
 	// written by Mohammad Alsulmi
