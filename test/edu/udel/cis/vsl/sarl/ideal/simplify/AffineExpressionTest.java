@@ -144,7 +144,9 @@ public class AffineExpressionTest {
 		System.out.println(test2.hashCode());
 		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());
 		assertEquals(test2.equals(poly2),false);
-		
+		assertEquals(test2.equals(test3),true);
+		assertEquals(test3.equals(test4),false);
+		assertEquals(test3.equals(test5),false);
 		boolean nullError = false;
 		try{
 		AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
