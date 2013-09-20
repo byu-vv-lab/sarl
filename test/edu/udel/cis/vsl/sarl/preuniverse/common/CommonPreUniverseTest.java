@@ -41,6 +41,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CommonPreUniverseTest {
 
@@ -55,6 +56,7 @@ public class CommonPreUniverseTest {
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
 	private static BooleanExpressionFactory booleanFactory;
+	private static SymbolicTypeFactory typeFactory;
 	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
@@ -93,6 +95,8 @@ public class CommonPreUniverseTest {
 		objectCollection = objectFactory.objects();
 		
 		emptyNumericList = new ArrayList<NumericExpression>();
+		
+		typeFactory = system.typeFactory();
 		
 	}
 
@@ -337,9 +341,26 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Written by Jeff DiMarco(jdimarco) 9/20/13
 	public void testUnionTypeStringObjectSymbolicTypeSequence() {
-		fail("Not yet implemented");
+		LinkedList<SymbolicType> memberTypes = new LinkedList<SymbolicType>();
+		SymbolicUnionType unionType;
+		SymbolicTypeSequence sequence;
+		CommonPreUniverse commonUniverse = (CommonPreUniverse)universe;
+
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		sequence = universe.typeSequence(memberTypes);
+		
+		unionType = commonUniverse.unionType(universe.stringObject("MyUnion"),
+				sequence);
+		
+		assertEquals(SymbolicTypeKind.UNION, unionType.typeKind());
+		sequence = unionType.sequence();
+		assertEquals(integerType, sequence.getType(0));
+		assertEquals(realType, sequence.getType(1));
+		assertEquals(2, sequence.numTypes());
+		assertEquals(universe.stringObject("MyUnion"), unionType.name());
 	}
 
 	@Test
