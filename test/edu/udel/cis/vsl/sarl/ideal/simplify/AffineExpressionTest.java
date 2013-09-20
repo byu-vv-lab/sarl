@@ -160,7 +160,7 @@ public class AffineExpressionTest {
 			System.out.println("Epic fail!:" + e.getMessage());
 			nullError = true;
 		}
-		assertEquals(nullError, true);
+		assertEquals(nullError, false);
 	}
 
 
