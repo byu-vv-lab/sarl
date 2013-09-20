@@ -443,11 +443,27 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression falseEx = bef.falseExpr();
 		BooleanExpression trueEx = bef.trueExpr();
+		BooleanExpression b = bef.or(trueEx, falseEx);
+		System.out.println(b.operator());
 
+		assertEquals(true, test.exists(x, b).isTrue());
 		assertEquals(true, test.exists(x, falseEx).isFalse());
 		assertEquals(false, test.exists(x, falseEx).isTrue());
 		assertEquals(true, test.exists(x, trueEx).isTrue());
 		assertEquals(false,test.exists(x, trueEx).isFalse());
+	}
+	
+	@Test
+	public void CnfFactoryEquivTest() {
+		CnfFactory test = new CnfFactory(stf, of, cf);
+		
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		BooleanExpression falseEx = bef.falseExpr();
+		BooleanExpression trueEx = bef.trueExpr();
+		BooleanExpression thisIsTrue = bef.trueExpr();
+
+		assertEquals(false, test.equiv(trueEx, falseEx).isTrue());
+		assertEquals(true, test.equiv(trueEx, thisIsTrue).isTrue());
 	}
 	
 	@Test
