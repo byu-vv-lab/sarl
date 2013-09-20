@@ -103,6 +103,9 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value == 1;
 	}
 
+	/**
+	 * Purposely empty method. Basic objects should not be able to be canonized.
+	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}

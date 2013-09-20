@@ -41,6 +41,9 @@ public class CommonStringObject extends CommonSymbolicObject implements
 		return value.equals(((StringObject) o).getString());
 	}
 
+	/**
+	 * @return Hash code for the object
+	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ value.hashCode();
@@ -51,6 +54,9 @@ public class CommonStringObject extends CommonSymbolicObject implements
 		return value.toString();
 	}
 
+	/**
+	 * Intentionally empty method
+	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
@@ -62,7 +68,9 @@ public class CommonStringObject extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		return new StringBuffer(value);
+		StringBuffer buffer = new StringBuffer(value);
+		if (atomize) this.atomize(buffer);
+		return buffer;
 	}
 
 	@Override
