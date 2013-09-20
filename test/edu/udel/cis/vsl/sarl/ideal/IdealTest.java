@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -287,6 +288,13 @@ public class IdealTest {
 		
 	}
 	*/
+	
+	@Test
+	public void lessThan() {
+		BooleanExpression result = commonIdealFactory.lessThan(zero, five);
+		assertEquals(result, commonIdealFactory.booleanFactory().trueExpr());
+	}
+	
 	@Test
 	public void intModulusPolynomials(){
 		SymbolicMap<Monic, Monomial> termMap0 = commonIdealFactory.emptyMap();
