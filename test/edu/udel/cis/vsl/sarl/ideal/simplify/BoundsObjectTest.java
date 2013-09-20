@@ -39,9 +39,21 @@ public class BoundsObjectTest {
 	
 	private static SymbolicExpression symbExpr_xyy;
 	
+	private static SymbolicExpression symbExpr_xpyInt;
+	
+	private static SymbolicExpression symbExpr_xyInt;
+	
+	private static SymbolicExpression symbExpr_xxyInt;
+	
+	private static SymbolicExpression symbExpr_xyyInt;
+	
 	private static NumericSymbolicConstant x;
 
 	private static NumericSymbolicConstant y;
+	
+	private static NumericSymbolicConstant xInt;
+
+	private static NumericSymbolicConstant yInt;
 	
 	private static NumericExpressionFactory numExprFact;
 	
@@ -58,6 +70,14 @@ public class BoundsObjectTest {
 	private static NumericExpression xyy;
 	
 	private static NumericExpression xxy;
+	
+	private static NumericExpression xpyInt;
+	
+	private static NumericExpression xyInt;
+	
+	private static NumericExpression xyyInt;
+	
+	private static NumericExpression xxyInt;
 	
 	private static BoundsObject boundObj;
 	
@@ -132,6 +152,10 @@ public class BoundsObjectTest {
 				preUniv.stringObject("x"), realType);
 		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("y"), realType);
+		xInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("x"), integerType);
+		yInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("y"), integerType);
 		xpy = preUniv.add(x, y);
 		symbExpr_xpy = xpy;
 		xy = preUniv.multiply(x, y);
@@ -140,6 +164,15 @@ public class BoundsObjectTest {
 		symbExpr_xxy = xxy;
 		xyy = preUniv.multiply(xy, y);
 		symbExpr_xyy = xyy;
+		//same set as above, but integers
+		xpyInt = preUniv.add(xInt, yInt);
+		symbExpr_xpyInt = xpyInt;
+		xyInt = preUniv.multiply(xInt, yInt);
+		symbExpr_xyInt = xyInt;
+		xxyInt = preUniv.multiply(xyInt, xInt);
+		symbExpr_xxyInt = xxyInt;
+		xyyInt = preUniv.multiply(xyInt, yInt);
+		symbExpr_xyyInt = xyyInt;
 		
 		numFact = preUniv.numberFactory();
 		//numBound = preUniv.
