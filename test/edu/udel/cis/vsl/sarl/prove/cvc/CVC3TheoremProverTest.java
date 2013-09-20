@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.After;
@@ -127,7 +128,6 @@ public class CVC3TheoremProverTest {
 		
 		String notExpected = "This is wrong";
 		assertFalse(notExpected.equals(cvcProver.toString()));
-		
 	}
 	
 	@Test(expected = SARLInternalException.class)
@@ -234,14 +234,12 @@ public class CVC3TheoremProverTest {
 		Expr expr10 = cvcProver.translate(subExp);
 		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
 		assertEquals(expected10, expr10);
-		
 	}
 	
-	@Test(expected = SARLInternalException.class)
+	@Test
 	@Ignore
 	public void testTranslateTupleRead() {
 		
-		/*
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
 		tupleList.add(oneInt);
 		tupleList.add(twoInt);
@@ -250,62 +248,82 @@ public class CVC3TheoremProverTest {
 		tupleType.add(intType);
 		tupleType.add(intType);
 		tupleType.add(intType);
-	
-		SymbolicExpression newTuple = universe.tuple(universe.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
-		out.println(newTuple);
-		Expr expr11 = cvcProver.translate(newTuple);
-		out.println(expr11);
-		Expr expected11 = vc.tupleSelectExpr(cvcProver.translate((SymbolicExpression) newTuple.argument(0)), ((IntObject) newTuple.argument(1)).getInt());
-		assertEquals(expected11, expr11);
-		*/
 		
+		List<Expr> result = new LinkedList<Expr>();
+			
+		SymbolicExpression newTuple = universe.tuple(universe
+				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
+		
+		SymbolicExpression newTupleRead = universe.tupleRead(newTuple, universe.intObject(1));
+		Expr expr1 = cvcProver.translate(newTupleRead);
+
+		SymbolicCollection <?> arg0 = (SymbolicCollection<?>) newTuple.argument(0);
+
+		for (SymbolicExpression expr : arg0){
+			result.add(cvcProver.translate(expr));
+		}
+		
+		Expr expr2 = vc.tupleExpr(result);
+		Expr expected = vc.tupleSelectExpr(expr2, 1);
+		assertEquals(expected, expr1);
 	}
 	
 	@Test
-	public void testTranslateArrayWrite(){
+	public void testTranslateArrayWriteComplete(){
 		
-		//Array of a fixed size, needs big array?
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>(3);
 		array.add(0, two);
 		array.add(1, five);
 		array.add(2, ten);
 		
 		SymbolicExpression newArray = universe.array(realType, array);
-		
 		SymbolicExpression translateArray = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, newArray.type(), newArray, universe.integer(0), zero);
 		Expr expr = cvcProver.translate(translateArray);
 		
 		Expr expr2 = cvcProver.translate(newArray);
-		
 		Expr zeroModifier = cvcProver.translate(zero);
 		Expr expected = vc.writeExpr(expr2, zeroModifier, zeroModifier);
 		
 		assertEquals(expected, expr);
 		
-		//Array of unfixed size, does not need big array?
-		List<SymbolicExpression> unfixedArray = new ArrayList<SymbolicExpression>();
-		unfixedArray.add(0, two);
-		unfixedArray.add(1, five);
-		unfixedArray.add(2, ten);
+	}
+	
+	@Test
+	public void testTranslateArrayWriteIncomplete(){
 		
-		SymbolicExpression newArray2 = universe.array(realType, unfixedArray);
+		SymbolicType incompleteArrayType = universe.arrayType(realType);
+		SymbolicExpression a = universe.symbolicConstant(universe.stringObject("a"), incompleteArrayType);
+		SymbolicConstant v = universe.symbolicConstant(universe.stringObject("v"), realType);
 		
-		SymbolicExpression translateArray2 = expressionFactory.expression(SymbolicOperator.ARRAY_WRITE, newArray2.type(), newArray2, universe.integer(0), zero);
-		Expr expr3 = cvcProver.translate(translateArray2);
+		//lengthExp == expr1 
+		//How to show this through an assertEquals?
+		NumericExpression lengthExp = universe.length(a);
+		Expr expr1 = cvcProver.translate(lengthExp);
 		
-		Expr expr4 = cvcProver.translate(newArray2);
+		SymbolicExpression w = expressionFactory
+				.expression(SymbolicOperator.ARRAY_WRITE, a.type(), a, e, v);
+		Expr expr3 = cvcProver.translate(w);
+		out.println(expr3);
 		
-		Expr expected2 = vc.writeExpr(expr4, zeroModifier, zeroModifier);
+		Expr aExpr = cvcProver.translate(a);
+		Expr eExpr = cvcProver.translate(e);
+		Expr vExpr = cvcProver.translate(v);
 		
-		assertEquals(expected2, expr3);
+		//How would you get the (a).1 out of the Expr?  
+		//Is it even necessary?
+		Expr expected = vc.writeExpr(aExpr, eExpr, vExpr);
+		out.println(expected);
 		
+		//assertEquals(expected, expr);
 	}
 	
 	@Test
 	public void testTranslateIntegerDivision(){
 		
-		NumericExpression q = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
-		NumericExpression r = (NumericExpression) expressionFactory.expression(SymbolicOperator.MODULO, intType, e, f);
+		NumericExpression q = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
+		NumericExpression r = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.MODULO, intType, e, f);
 		
 		Expr e2 = cvcProver.translate(e);
 		Expr f2 = cvcProver.translate(f);
