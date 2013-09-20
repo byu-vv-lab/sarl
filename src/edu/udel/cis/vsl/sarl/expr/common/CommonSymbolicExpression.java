@@ -347,7 +347,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case INT_DIVIDE: {
 			result.append(arguments[0].toStringBuffer(true));
-			result.append("\u00F7");
+			//result.append("\u00F7");
+			result.append(" div ");
 			result.append(arguments[1].toStringBuffer(true));
 			if (atomize)
 				atomize(result);
