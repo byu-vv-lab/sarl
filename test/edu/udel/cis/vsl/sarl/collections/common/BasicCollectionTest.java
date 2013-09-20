@@ -1,5 +1,8 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
+import static org.junit.Assert.*;
+
+import java.util.Collection;
 import java.util.LinkedList;
 
 import org.junit.After;
@@ -19,7 +22,6 @@ import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -32,8 +34,8 @@ import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 public class BasicCollectionTest {
 	
-	BasicCollection<SymbolicExpression> someCollection;
-	LinkedList<Integer> intList;
+	BasicCollection<SymbolicExpression> someCollection, someOtherCollection, someThirdCollection, someEmptyCollection;
+	Collection<SymbolicExpression> collectionList1, collectionList2, emptyList;
 	SymbolicExpression expr5, expr2, expr100;
 	NumberFactory numFact;
 	ObjectFactory objectFactory;
@@ -50,7 +52,6 @@ public class BasicCollectionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		intList.add(5);
 		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		numFact = Numbers.REAL_FACTORY;
 		IntegerNumber FIVE = numFact.integer(5);
@@ -62,7 +63,18 @@ public class BasicCollectionTest {
 		expr5 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
 		expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(2)));
 		expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(100)));
-		
+		collectionList1 = new LinkedList<SymbolicExpression>();
+		collectionList1.add(expr5);
+		collectionList1.add(expr2);
+		collectionList1.add(expr100);
+		collectionList2 = new LinkedList<SymbolicExpression>();
+		collectionList2.add(expr5);
+		collectionList2.add(expr2);
+		emptyList = new LinkedList<SymbolicExpression>();
+		someCollection = new BasicCollection<SymbolicExpression>(collectionList1);
+		someOtherCollection = new BasicCollection<SymbolicExpression>(collectionList1);
+		someThirdCollection = new BasicCollection<SymbolicExpression>(collectionList2);
+		someEmptyCollection = new BasicCollection<SymbolicExpression>(emptyList);
 	}
 
 	@After
@@ -70,44 +82,37 @@ public class BasicCollectionTest {
 	}
 
 
-	/*@Test
-	public void testComputeHashCode() {
-		
-	}*/
-/*
 	@Test
-	public void testCanonizeChildren() {
-		fail("Not yet implemented");
+	public void testComputeHashCode() {
+		assertTrue(someCollection.hashCode()==someOtherCollection.hashCode());
 	}
-
+	
 	@Test
 	public void testCollectionEquals() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBasicCollection() {
-		fail("Not yet implemented");
+		assertTrue(someCollection.collectionEquals(someOtherCollection));
+		assertFalse(someCollection.collectionEquals(someThirdCollection));
 	}
 
 	@Test
 	public void testSize() {
-		fail("Not yet implemented");
+		assertTrue(someCollection.size()==3);
+		assertFalse(someThirdCollection.size()==3);
 	}
-
+	
 	@Test
 	public void testIterator() {
-		fail("Not yet implemented");
+		assertTrue(someCollection.iterator().hasNext());
+		assertFalse(someEmptyCollection.iterator().hasNext());
 	}
-
+	
 	@Test
-	public void testToStringBuffer() {
-		fail("Not yet implemented");
+	public void testToStringBuffer() {	
+		assertEquals(someCollection.toStringBuffer(true).toString(),"{5, 2, 100}");
 	}
-
+	
 	@Test
 	public void testToStringBufferLong() {
-		fail("Not yet implemented");
+		assertEquals(someCollection.toStringBufferLong().toString(),"Collection{5, 2, 100}");
 	}
-*/
+
 }
