@@ -1592,9 +1592,9 @@ public class CommonPreUniverseTest {
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithUnion(){
-	
+		
 		// here we test compatible with tuple types 
-		SymbolicUnionType type1, type2, type3;
+		SymbolicUnionType type1, type2, type3, type5;
 		SymbolicType type4;
 		BooleanExpression result, expected;
 		
@@ -1602,6 +1602,7 @@ public class CommonPreUniverseTest {
 		type1 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
 		type2 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));		
 		type3 = universe.unionType(universe.stringObject("type3"),Arrays.asList(new SymbolicType[]{realType, integerType}));
+		type5 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,universe.booleanType()}));
 		type4 = universe.booleanType();
 		
 		// here we compare two identical unions types (type1, type2)
@@ -1621,13 +1622,14 @@ public class CommonPreUniverseTest {
 		expected = universe.bool(false);
 		result  = universe.compatible(type1, type4);
 		assertEquals(expected, result);
-
+		
+		// here we compare two different tuple types (type1, type5), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type5);
+		assertEquals(expected, result);
 
 	}
-
-
-
-
 
 
 
