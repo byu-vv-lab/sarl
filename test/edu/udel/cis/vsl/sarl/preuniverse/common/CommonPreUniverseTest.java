@@ -20,28 +20,29 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
-import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CommonPreUniverseTest {
 
@@ -56,7 +57,7 @@ public class CommonPreUniverseTest {
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
 	private static BooleanExpressionFactory booleanFactory;
-	private static SymbolicTypeFactory typeFactory;
+	private static NumericExpressionFactory numericFactory;
 	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
@@ -96,7 +97,7 @@ public class CommonPreUniverseTest {
 		
 		emptyNumericList = new ArrayList<NumericExpression>();
 		
-		typeFactory = system.typeFactory();
+		numericFactory = system.numericFactory();
 		
 	}
 
@@ -161,9 +162,35 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testZero() {
-		fail("Not yet implemented");
+		SymbolicType intType;
+		SymbolicType realType;
+		CommonPreUniverse commonUniverse;
+		
+		intType = universe.integerType();
+		realType = universe.realType();
+		commonUniverse = (CommonPreUniverse)universe;
+		
+		assertEquals(commonUniverse.zero(intType), numericFactory.zeroInt());
+		assertEquals(commonUniverse.zero(realType), numericFactory.zeroReal());
+	}
+	
+	@Test(expected = SARLInternalException.class)
+	public void testZeroErr(){
+		SymbolicUnionType unionType;
+		LinkedList<SymbolicType> memberTypes;
+		CommonPreUniverse commonUniverse;
+		
+		commonUniverse = (CommonPreUniverse)universe;
+		
+		memberTypes = new LinkedList<SymbolicType>();
+		
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		
+		unionType = universe.unionType(universe.stringObject("MyUnion"), memberTypes);
+		
+		commonUniverse.zero(unionType);
 	}
 
 	@Test
