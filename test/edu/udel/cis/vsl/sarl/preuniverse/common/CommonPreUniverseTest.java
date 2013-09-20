@@ -628,9 +628,40 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testOrIterableOfQextendsBooleanExpression() {
-		fail("Not yet implemented");
+		LinkedList<BooleanExpression> booleanList1;
+		LinkedList<BooleanExpression> booleanList2;
+		LinkedList<BooleanExpression> booleanList3;
+		BooleanExpression trueExpr;
+		BooleanExpression falseExpr;
+		
+		trueExpr = universe.bool(true);
+		falseExpr = universe.bool(false);
+		
+		booleanList1 = new LinkedList<BooleanExpression>();
+		booleanList2 = new LinkedList<BooleanExpression>();
+		booleanList3 = new LinkedList<BooleanExpression>();
+		
+		booleanList1.add(universe.bool(false));
+		booleanList1.add(universe.bool(false));
+		booleanList1.add(universe.bool(true));
+		booleanList1.add(universe.bool(false));
+		
+		booleanList2.add(universe.bool(false));
+		booleanList2.add(universe.bool(false));
+		booleanList2.add(universe.bool(false));
+		booleanList2.add(universe.bool(false));
+		
+		booleanList3.add(universe.bool(true));
+		booleanList3.add(universe.bool(true));
+		booleanList3.add(universe.bool(true));
+		booleanList3.add(universe.bool(true));
+		
+		assertEquals(universe.or(booleanList1), trueExpr);
+		assertEquals(universe.or(booleanList2), falseExpr);
+		assertEquals(universe.or(booleanList3), trueExpr);
+			
 	}
 
 	@Test
