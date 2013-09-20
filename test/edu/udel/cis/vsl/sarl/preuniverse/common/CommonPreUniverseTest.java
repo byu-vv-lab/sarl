@@ -734,9 +734,20 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco(jdimarco) 9/20/13
 	public void testExtractBoolean() {
-		fail("Not yet implemented");
+		BooleanExpression trueExpr;
+		BooleanExpression falseExpr;
+		BooleanExpression nullExpr;
+		
+		trueExpr = universe.bool(true);
+		falseExpr = universe.bool(false);
+		nullExpr = null;
+		
+		assertEquals(universe.extractBoolean(trueExpr), true);
+		assertEquals(universe.extractBoolean(falseExpr), false);
+		assertEquals(universe.extractBoolean(nullExpr), null);
+			
 	}
 
 	@Test
