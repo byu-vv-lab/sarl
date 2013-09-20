@@ -162,6 +162,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testZero() {
 		SymbolicType intType;
 		SymbolicType realType;
@@ -176,6 +177,7 @@ public class CommonPreUniverseTest {
 	}
 	
 	@Test(expected = SARLInternalException.class)
+	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testZeroErr(){
 		SymbolicUnionType unionType;
 		LinkedList<SymbolicType> memberTypes;
@@ -423,9 +425,13 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testObjectWithId() {
-		fail("Not yet implemented");
+		SymbolicObject obj1;
+		
+		obj1 = objectFactory.objectWithId(3);
+		
+		assertEquals(obj1.id(), 3);
 	}
 
 	@Test
