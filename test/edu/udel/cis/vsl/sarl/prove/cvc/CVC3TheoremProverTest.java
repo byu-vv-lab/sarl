@@ -251,12 +251,17 @@ public class CVC3TheoremProverTest {
 			
 		SymbolicExpression s1 = universe.tuple(universe
 				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
-		SymbolicExpression s2 = universe.tupleRead(s1, universe.intObject(1));
+		SymbolicExpression s2 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s1.type(), s1, universe.intObject(1));
 		Expr expr1 = cvcProver.translate(s2);
 		Expr expr2 = cvcProver.translate(twoInt);
 		Expr expr3 = vc.eqExpr(expr1, expr2);
 		
 		assertEquals(QueryResult.VALID, vc.query(expr3));
+	}
+	
+	public void testTranslateTupleWrite(){
+		
+		
 	}
 	
 	@Test
