@@ -20,6 +20,7 @@ import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -237,7 +238,6 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testTranslateTupleRead() {
 		
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
@@ -248,24 +248,15 @@ public class CVC3TheoremProverTest {
 		tupleType.add(intType);
 		tupleType.add(intType);
 		tupleType.add(intType);
-		
-		List<Expr> result = new LinkedList<Expr>();
 			
-		SymbolicExpression newTuple = universe.tuple(universe
+		SymbolicExpression s1 = universe.tuple(universe
 				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
+		SymbolicExpression s2 = universe.tupleRead(s1, universe.intObject(1));
+		Expr expr1 = cvcProver.translate(s2);
+		Expr expr2 = cvcProver.translate(twoInt);
+		Expr expr3 = vc.eqExpr(expr1, expr2);
 		
-		SymbolicExpression newTupleRead = universe.tupleRead(newTuple, universe.intObject(1));
-		Expr expr1 = cvcProver.translate(newTupleRead);
-
-		SymbolicCollection <?> arg0 = (SymbolicCollection<?>) newTuple.argument(0);
-
-		for (SymbolicExpression expr : arg0){
-			result.add(cvcProver.translate(expr));
-		}
-		
-		Expr expr2 = vc.tupleExpr(result);
-		Expr expected = vc.tupleSelectExpr(expr2, 1);
-		assertEquals(expected, expr1);
+		assertEquals(QueryResult.VALID, vc.query(expr3));
 	}
 	
 	@Test
@@ -293,28 +284,16 @@ public class CVC3TheoremProverTest {
 		
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
 		SymbolicExpression a = universe.symbolicConstant(universe.stringObject("a"), incompleteArrayType);
-		SymbolicConstant v = universe.symbolicConstant(universe.stringObject("v"), realType);
+
+		SymbolicExpression s1 = expressionFactory
+				.expression(SymbolicOperator.ARRAY_WRITE, a.type(), a, twoInt, five);
+		SymbolicExpression s2 = expressionFactory
+				.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, twoInt);
+		Expr expr1 = cvcProver.translate(s2);
+		Expr expr2 = cvcProver.translate(five);
+		Expr equation1 = vc.eqExpr(expr1, expr2);
 		
-		//lengthExp == expr1 
-		//How to show this through an assertEquals?
-		NumericExpression lengthExp = universe.length(a);
-		Expr expr1 = cvcProver.translate(lengthExp);
-		
-		SymbolicExpression w = expressionFactory
-				.expression(SymbolicOperator.ARRAY_WRITE, a.type(), a, e, v);
-		Expr expr3 = cvcProver.translate(w);
-		out.println(expr3);
-		
-		Expr aExpr = cvcProver.translate(a);
-		Expr eExpr = cvcProver.translate(e);
-		Expr vExpr = cvcProver.translate(v);
-		
-		//How would you get the (a).1 out of the Expr?  
-		//Is it even necessary?
-		Expr expected = vc.writeExpr(aExpr, eExpr, vExpr);
-		out.println(expected);
-		
-		//assertEquals(expected, expr);
+		assertEquals(QueryResult.VALID, vc.query(equation1));
 	}
 	
 	@Test
@@ -333,7 +312,6 @@ public class CVC3TheoremProverTest {
 		Expr equationOne = vc.eqExpr(e2, vc.plusExpr(r2, vc.multExpr(f2, q2)));	//e2 = f2*q2+r2
 		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
 		Expr equationThree = vc.ltExpr(r2, f2); // r2 < f2
-		out.println(equationOne);
 		
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
