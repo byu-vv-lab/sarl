@@ -6,6 +6,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -48,6 +51,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
+
 import java.util.List;
 
 public class ExpressionTest {
@@ -444,7 +448,6 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanExpression falseEx = bef.falseExpr();
 		BooleanExpression trueEx = bef.trueExpr();
 		BooleanExpression b = bef.or(trueEx, falseEx);
-		System.out.println(b.operator());
 
 		assertEquals(true, test.exists(x, b).isTrue());
 		assertEquals(true, test.exists(x, falseEx).isFalse());
@@ -464,6 +467,13 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanObject bot = sUniverse.booleanObject(true);
 		BooleanObject bof = sUniverse.booleanObject(false);
 		
+		SymbolicObject[] arg = sUniverse.and(trueEx, trueEx).arguments();
+		Set<SymbolicObject> argSet = new HashSet<SymbolicObject>(Arrays.asList(arg));
+		BooleanExpression b = test.booleanExpression(SymbolicOperator.AND, arg);
+		BooleanExpression b2 = test.booleanExpression(SymbolicOperator.AND, argSet);
+		
+		assertEquals(false, b2.isTrue());
+		assertEquals(false, b.isTrue());
 		assertEquals(true, test.symbolic(bot).isTrue());
 		assertEquals(false, test.symbolic(bof).isTrue());
 		assertEquals(false, test.equiv(trueEx, falseEx).isTrue());
