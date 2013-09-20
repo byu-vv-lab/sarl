@@ -461,7 +461,11 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanExpression falseEx = bef.falseExpr();
 		BooleanExpression trueEx = bef.trueExpr();
 		BooleanExpression thisIsTrue = bef.trueExpr();
-
+		BooleanObject bot = sUniverse.booleanObject(true);
+		BooleanObject bof = sUniverse.booleanObject(false);
+		
+		assertEquals(true, test.symbolic(bot).isTrue());
+		assertEquals(false, test.symbolic(bof).isTrue());
 		assertEquals(false, test.equiv(trueEx, falseEx).isTrue());
 		assertEquals(true, test.equiv(trueEx, thisIsTrue).isTrue());
 	}
