@@ -53,13 +53,14 @@ public class AffineExpressionTest {
 	private static CommonIdealFactory commonIdealFactory;
 
 	private static IdealFactory idealFactory;
+	private static IdealFactory polyconstant;
 
 	private static SymbolicType realType;
 	private static SymbolicType integerType;
 
 	private static NumericExpression one, two;
 	private static Constant c10;
-
+	private static SymbolicType real;
 
 	private static edu.udel.cis.vsl.sarl.IF.number.Number offset;
 	private static edu.udel.cis.vsl.sarl.IF.number.Number coefficient;
@@ -87,6 +88,7 @@ public class AffineExpressionTest {
 		collectionFactory = system.collectionFactory();
 		numericExpressionFactory = system.numericFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
+		polyconstant = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
 		realNumberFactory = (RealNumberFactory) system.numberFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
@@ -98,7 +100,8 @@ public class AffineExpressionTest {
 				objectFactory, typeFactory,
 				collectionFactory,
 				booleanFactory); 
-		c10 = idealFactory.intConstant(10);
+		c10 = idealFactory.intConstant(3);
+		real = typeFactory.realType();
 	}
 
 	@Before
@@ -111,31 +114,51 @@ public class AffineExpressionTest {
 
 	@Test/*(expected=java.lang.AssertionError.class)*/
 	public void tostringtest() {
-		//SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		//Monomial factorization = idealFactory.monomial(c10, (Monic) x);
+		////////
+		////
 		offset = numberFactory.rational("3");
 		coefficient = numberFactory.rational("3");
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Monomial factorization = idealFactory.monomial(c10, (Monic) x);
+		
+		Monic monic = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("Y"), real);
+		Monomial factorization = idealFactory.monomial(c10, monic);
+		termMap.put(monic, factorization);
 		Polynomial poly = commonIdealFactory.polynomial(termMap, factorization);
-
+		Polynomial poly2 = commonIdealFactory.polynomial(termMap, factorization);
+		poly = idealFactory.polynomial(termMap, factorization);
+         out.println(factorization.toString());
+         SymbolicMap<Monic, Monomial> termMap0 = commonIdealFactory.emptyMap();
+ 		Monic monic0 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
+ 		Monomial monomial0 = idealFactory.monomial(idealFactory.intConstant(10), monic0);
+ 		termMap0.put(monic0, monomial0);
+ 	//	out.println(monomial0.toString());
+ 		//out.println(monic0.isNumeric());
 
 		//	coefficient =  numberFactory.rational("3");
 		
-		AffineExpression test2 = new AffineExpression(poly,numberFactory.rational("10"),numberFactory.rational("50"));
-		
+		AffineExpression test2 = new AffineExpression(poly,numberFactory.rational("6"),numberFactory.rational("6"));
+		AffineExpression test3 = new AffineExpression(poly,numberFactory.rational("6"),numberFactory.rational("6"));
+		AffineExpression test4 = new AffineExpression(poly,numberFactory.rational("3"),numberFactory.rational("6"));
+		AffineExpression test5 = new AffineExpression(poly,numberFactory.rational("6"),numberFactory.rational("15"));
 		System.out.println(test2.toString());
-		System.out.println();
+		System.out.println(test2.hashCode());
 		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());
+		assertEquals(test2.equals(poly2),false);
+		
 		boolean nullError = false;
 		try{
-			AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
-			assertEquals(test.toString(), test.coefficient().toString());
+		AffineExpression test = new AffineExpression(pseudo, offset,coefficient);
+		assertEquals(test2.toString(),test2.coefficient().toString()+"*"+test2.pseudo().toString()+"+"+test2.offset().toString());	
+		assertEquals(test.toString(), test.coefficient().toString());
+			assertEquals(test2.equals(test3),true);
+			assertEquals(test3.equals(test4),false);
+			assertEquals(test3.equals(test5),false);
+			assertEquals(test.equals(test),true);
 		}catch(AssertionError e){
 			System.out.println("Epic fail!:" + e.getMessage());
 			nullError = true;
 		}
-		assertEquals(nullError, true);
+		assertEquals(nullError, false);
 	}
 
 
