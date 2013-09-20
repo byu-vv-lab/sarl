@@ -292,7 +292,11 @@ public class IdealTest {
 	@Test
 	public void lessThan() {
 		BooleanExpression result = commonIdealFactory.lessThan(zero, five);
-		assertEquals(result, commonIdealFactory.booleanFactory().trueExpr());
+		assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result);
+		RationalExpression r1 = (RationalExpression) x;
+		RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(x, x);
+		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);
+		//assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result2);
 	}
 	
 	@Test
