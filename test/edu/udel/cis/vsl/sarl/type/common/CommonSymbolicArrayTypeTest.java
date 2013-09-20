@@ -12,14 +12,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 
 public class CommonSymbolicArrayTypeTest {
-	
-	
-	//private List<CommonSymbolicArrayType> listArrayType;
+		
 	CommonSymbolicArrayType intArrayType1, intArrayType11, intArrayType2, realArrayType1, realArrayType2;
 	CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind;
 	CommonSymbolicRealType idealRealKind, floatRealKind;
@@ -55,70 +54,40 @@ public class CommonSymbolicArrayTypeTest {
 
 	@Test
 	public void testComputeHashCode() {
-		//fail("Not yet implemented");
+		assertEquals(intArrayType1.computeHashCode(), intArrayType11.computeHashCode());
+		assertNotEquals(intArrayType1.computeHashCode(), intArrayType2.computeHashCode());
 	}
 	
 	@Test
 	public void testTypeEquals() {
-		//System.out.println("intType1: " + intType1.elementType().toString());
-		//System.out.println("intType11: " + intType11.elementType().toString());
-		//System.out.println("intType1: " + listArrayType.get(0).elementType().toString());
-
-		//assertTrue(listArrayType.get(0).typeEquals(listArrayType.get(1)));
+		
+		assertTrue(intArrayType1.typeEquals(intArrayType11));
+		assertFalse(intArrayType1.typeEquals(intArrayType2));
 	}
 	
 	@Test
 	public void testElementType() {
-		/* SymbolicType.SymbolicTypeKind.INTEGER = "INTEGER"
-		 * elementType() = "int"
-		 */
 		
-		//System.out.println(SymbolicType.SymbolicTypeKind.INTEGER);
-		//System.out.println(listArrayType.get(2).elementType().toString());
-		//assertEquals(listArrayType.get(0).elementType(), SymbolicType.SymbolicTypeKind.INTEGER);
-		//assertEquals(listArrayType.get(1).elementType(), IntegerKind.BOUNDED);
-		//assertEquals(listArrayType.get(2).elementType(), RealKind.IDEAL);
-		//assertEquals(listArrayType.get(3).elementType(), RealKind.FLOAT);
-	}
-	
-	@Test
-	public void testGetPureType() {
-		//assertEqual(listArrayType.get(0).getPureType(),)
-		
-		//assertEquals(listArrayType.get(0).typeKind(), SymbolicTypeKind.ARRAY);
-		//assertEquals(listArrayType.get(0).typeKind(), Null);
-	}
-	
-	
-	
-	/*
-	@Test
-	public void testCanonizeChildren() {
-		fail("Not yet implemented");
+		//assertEquals(intArrayType1.elementType(), new CommonSymbolicIntegerType(IntegerKind.IDEAL));
+		assertTrue(intArrayType2.elementType() instanceof SymbolicType);
+		//assertEquals(realArrayType1.elementType(), new CommonSymbolicRealType(RealKind.IDEAL));
+		assertEquals(((CommonSymbolicIntegerType)intArrayType11.elementType()).integerKind(), IntegerKind.IDEAL);
+		assertEquals(((CommonSymbolicIntegerType)intArrayType1.elementType()).integerKind(), IntegerKind.IDEAL);
+		assertEquals(((CommonSymbolicIntegerType)intArrayType2.elementType()).integerKind(), IntegerKind.BOUNDED);
+		assertEquals(((CommonSymbolicRealType)realArrayType1.elementType()).realKind(), RealKind.IDEAL);
+		assertEquals(((CommonSymbolicRealType)realArrayType2.elementType()).realKind(), RealKind.FLOAT);
 	}
 	
 	@Test
 	public void testToStringBuffer() {
-		
+		assertEquals(intArrayType1.toStringBuffer(true).toString(), intArrayType11.toStringBuffer(true).toString());
 	}
 	
-
-	@Test
-	public void testExtentString() {
-		fail("Not yet implemented");
-	}
-
-
 	@Test
 	public void testIsComplete() {
-		fail("Not yet implemented");
+		assertFalse(intArrayType1.isComplete());
+		//assertTrue(intArrayType1.isIdeal());
+		
 	}
 
-	
-
-	@Test
-	public void testSetPureType() {
-		fail("Not yet implemented");
-	}
-*/
 }
