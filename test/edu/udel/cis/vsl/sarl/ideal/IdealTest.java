@@ -466,9 +466,12 @@ public class IdealTest {
 	public void constanttermsubtraction(){
 		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), idealFactory.intConstant(1));
 		Polynomial poly = (Polynomial) n;
-		Polynomial b = commonIdealFactory.subtractConstantTerm(poly);
-		out.println("Constant Term Subtraction=" + b);
-		assertEquals(x, b);
+		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly);
+		Polynomial b2 = commonIdealFactory.subtractConstantTerm(c);
+		//out.println("Constant Term Subtraction1=" + b2);
+		//out.println("Constant Term Subtraction=" + b1);
+		assertEquals(x, b1);
+		assertEquals(c, b2);
 	}
 	
 	@Test
