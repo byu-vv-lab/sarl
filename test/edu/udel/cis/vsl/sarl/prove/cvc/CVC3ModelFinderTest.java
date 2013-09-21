@@ -6,16 +6,15 @@ import static org.junit.Assert.assertFalse;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
+import cvc3.ExprMut;
+import cvc3.Op;
 import cvc3.ValidityChecker;
-import edu.udel.cis.vsl.sarl.IF.number.Number;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
@@ -24,6 +23,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
@@ -138,6 +139,27 @@ public class CVC3ModelFinderTest {
 		}
 		//Verify that the result (counterExample) does not equal zero.
 		assertFalse(n.equals(numFactory.integer(0)));		
+	}
+	
+	@Test
+	public void testCVC3ModelFinderApply() {
+		//Give the prover the assumption that y = 0.
+		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
+				.newProver(universe.equals(
+						universe.symbolicConstant(universe.stringObject("y"),universe.integerType()), 
+						universe.integer(0)));
+		vc = cvcProverYIs0.validityChecker();
+		
+		StringObject strX = universe.stringObject("x");
+		StringObject strY = universe.stringObject("y");
+		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,universe.integerType());
+		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,universe.integerType());
+		//Predicate is that "x = x + y" given the assumption that "y = 0".
+		BooleanExpression predicate = universe.equals(symConstXInt, universe.append(symConstXInt, symConstYInt));
+		ValidityResult result = cvcProverYIs0.validOrModel(predicate);
+		
+		ResultType resultType = result.getResultType();
+		assertEquals(ResultType.YES, resultType);
 	}
 }
 
