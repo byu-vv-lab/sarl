@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,6 @@ import cvc3.Cvc3Exception;
 import cvc3.Expr;
 import cvc3.Op;
 import cvc3.QueryResult;
-import cvc3.Rational;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -43,6 +43,7 @@ import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -61,7 +62,7 @@ import edu.udel.cis.vsl.sarl.util.Pair;
 // TODO: add support for characters by converting them to integers
 
 /**
- * An implementation of TheoremProverIF using the automated theorem prover CVC3.
+ * An implementation of TheoremProver using the automated theorem prover CVC3.
  * Transforms a theorem proving query into the language of CVC3, invokes CVC3
  * through its JNI interface, and interprets the output.
  */
@@ -85,7 +86,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private PrintStream out = null;
 
-	/** The CVC3 object used to check queries. Set in method reset(). */
+	/** The CVC3 object used to check queries. */
 	private ValidityChecker vc = ValidityChecker.create();
 
 	/**
@@ -135,16 +136,10 @@ public class CVC3TheoremProver implements TheoremProver {
 	private Map<Op, SymbolicConstant> opMap = new HashMap<Op, SymbolicConstant>();
 
 	/**
-	 * Mapping of integer division expressions. Since integer division and
-	 * modulus operations are not supported by CVC3, this is dealt with by
-	 * adding auxialliary variables and constraints to the CVC3 representation
-	 * of the query. Given any integer division or modulus operations occuring
-	 * in the query, A OP B, we create auxiallary inter variables Q and R on the
-	 * CVC3 side and add constraints A=QB+R, |R|<|B|, sgn(R)=sgn(A).
-	 * 
-	 * Specifically: introduce integer variables Q and R. Introduce constraint
-	 * A=QB+R. If we assume A and B are non-negative: 0<=R<B. Otherwise, little
-	 * more work. FOR NOW, assume A and B are non-negative.
+	 * Stack of Map giving integer division info objects in the current CVC3
+	 * scope. This map is discarded when the CVC3 validity checker is popped,
+	 * and a new one is created when the validity checker is pushed. Hence a
+	 * unique map is created and used for checking each query.
 	 * 
 	 * A key is a numerator-denominator pair of symbolic expressions (in tree
 	 * form). The value associated to that key is a pair of CVC3 expressions:
@@ -152,7 +147,14 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * corresponding to the quotient, the second the CVC3 expression
 	 * corresponding to the modulus.
 	 */
-	private Map<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>> integerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, Pair<Expr, Expr>>();
+	private LinkedList<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>> intDivisionStack = new LinkedList<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>>();
+
+	/**
+	 * Like above, but remains persistent from query to query.
+	 */
+	private Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo> permanentIntegerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>();
+
+	private LinkedList<Map<SymbolicExpression, Expr>> translationStack = new LinkedList<Map<SymbolicExpression, Expr>>();
 
 	/**
 	 * The assumption under which this prover is operating.
@@ -179,9 +181,14 @@ public class CVC3TheoremProver implements TheoremProver {
 		assert context != null;
 		this.universe = universe;
 		this.context = context;
+		intDivisionStack
+				.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
+		translationStack.add(new HashMap<SymbolicExpression, Expr>());
 		cvcAssumption = translate(context);
 		vc.assertFormula(cvcAssumption);
 	}
+
+	// Helper methods...
 
 	private <E> List<E> newSingletonList(E element) {
 		List<E> result = new LinkedList<E>();
@@ -429,53 +436,52 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Looks to see if pair has already been created. If so, returns old. If
-	 * not, creates new quotient and remainder variables, adds constraints
-	 * (assumptions) to vc, adds new pair to map, and returns pair.
+	 * Looks for the existing IntDivisionInfo for the given
+	 * numerator-denominator pair of symbolic expressions, or creates new one if
+	 * not found.
 	 * 
-	 * FOR NOW, we assume all quantities are non-negative.
+	 * Protocol: first, look in the currentIntegerDivisionMap. These are the
+	 * ones that have already been processed in the current query processing. If
+	 * found, return it.
+	 * 
+	 * Next, look in the permanentIntegerDivisionMap. If found, the quotient and
+	 * remainder variables and constraints were created in a previous query.
+	 * Only the constraints need to be re-asserted. Do that, and return the
+	 * object.
+	 * 
+	 * Otherwise, create a new one, and enter it into both maps.
 	 **/
-	private Pair<Expr, Expr> getQuotientRemainderPair(
+	private IntDivisionInfo getIntDivisionInfo(
 			SymbolicExpression numeratorExpression,
 			SymbolicExpression denominatorExpression) throws Cvc3Exception {
 		Pair<SymbolicExpression, SymbolicExpression> key = new Pair<SymbolicExpression, SymbolicExpression>(
 				numeratorExpression, denominatorExpression);
-		Pair<Expr, Expr> value = integerDivisionMap.get(key);
+		Iterator<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>> iter = intDivisionStack
+				.descendingIterator();
+		IntDivisionInfo value = null;
 
+		while (iter.hasNext()) {
+			Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo> map = iter
+					.next();
+
+			value = map.get(key);
+		}
 		if (value == null) {
-			int counter = integerDivisionMap.size();
-			Expr quotientVariable = vc.varExpr("q_" + counter, vc.intType());
-			Expr remainderVariable = vc.varExpr("r_" + counter, vc.intType());
-			Expr numerator = translate(numeratorExpression);
-			Expr denominator = translate(denominatorExpression);
-			// numerator=quotient*denominator+remainder
-			Expr constraint1 = vc.eqExpr(numerator, vc.plusExpr(
-					vc.multExpr(quotientVariable, denominator),
-					remainderVariable));
-			Expr constraint2 = null; // 0<=R<B
+			value = permanentIntegerDivisionMap.get(key);
 
-			if (denominator.isRational()) {
-				Rational rationalDenominator = denominator.getRational();
+			if (value == null) {
+				int counter = permanentIntegerDivisionMap.size();
+				Expr quotient = vc.varExpr("q_" + counter, vc.intType());
+				Expr remainder = vc.varExpr("r_" + counter, vc.intType());
+				Expr numerator = translate(numeratorExpression);
+				Expr denominator = translate(denominatorExpression);
 
-				if (rationalDenominator.isInteger()) {
-					int denominatorInt = rationalDenominator.getInteger();
-
-					if (denominatorInt == 2) {
-						constraint2 = vc.orExpr(
-								vc.eqExpr(vc.ratExpr(0), remainderVariable),
-								vc.eqExpr(vc.ratExpr(1), remainderVariable));
-					}
-				}
+				value = new IntDivisionInfo(vc, numerator, denominator,
+						quotient, remainder);
+				permanentIntegerDivisionMap.put(key, value);
 			}
-			if (constraint2 == null) {
-				constraint2 = vc.andExpr(
-						vc.leExpr(vc.ratExpr(0), remainderVariable),
-						vc.ltExpr(remainderVariable, denominator));
-			}
-			vc.assertFormula(constraint1);
-			vc.assertFormula(constraint2);
-			value = new Pair<Expr, Expr>(quotientVariable, remainderVariable);
-			integerDivisionMap.put(key, value);
+			value.addConstraints(vc);
+			intDivisionStack.getLast().put(key, value);
 		}
 		return value;
 	}
@@ -493,11 +499,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private Expr translateIntegerModulo(SymbolicExpression modExpression)
 			throws Cvc3Exception {
-		Pair<Expr, Expr> value = getQuotientRemainderPair(
+		IntDivisionInfo info = getIntDivisionInfo(
 				(SymbolicExpression) modExpression.argument(0),
 				(SymbolicExpression) modExpression.argument(1));
 
-		return value.right;
+		return info.remainder;
 	}
 
 	/**
@@ -513,11 +519,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private Expr translateIntegerDivision(SymbolicExpression quotientExpression)
 			throws Cvc3Exception {
-		Pair<Expr, Expr> value = getQuotientRemainderPair(
+		IntDivisionInfo info = getIntDivisionInfo(
 				(SymbolicExpression) quotientExpression.argument(0),
 				(SymbolicExpression) quotientExpression.argument(1));
 
-		return value.left;
+		return info.quotient;
 	}
 
 	private void assertIndexInBounds(SymbolicExpression arrayExpression,
@@ -776,104 +782,118 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	public Map<SymbolicExpression, Expr> expressionMap() {
-		return expressionMap;
-	}
-
-	public Map<Op, SymbolicConstant> opMap() {
-		return opMap;
-	}
-
-	public Map<Expr, SymbolicConstant> varMap() {
-		return varMap;
-	}
-
-	public ValidityChecker validityChecker() {
-		return vc;
-	}
-
-	public PrintStream out() {
-		return out;
-	}
-
 	/**
-	 * Translates the symbolic type to a CVC3 type.
+	 * Processes side-effects resulting from an integer division or modulus
+	 * expression. Given an expr which has been previously translated, this
+	 * finds its side effect constraints and adds them to the vc assumptions.
+	 * Also recursively processes side effects on the arguments.
 	 * 
-	 * @param type
-	 *            a SARL symbolic expression type
-	 * @return the equivalent CVC3 type
-	 * @throws Cvc3Exception
-	 *             if CVC3 throws an exception
+	 * @param expr
+	 *            an integer division or modulus expression which has been
+	 *            translated
 	 */
-	public Type translateType(SymbolicType type) throws Cvc3Exception {
-		Type result = typeMap.get(type);
+	private void sideEffectIntDiv(SymbolicExpression expr) {
+		SymbolicExpression numerator = (SymbolicExpression) expr.argument(0);
+		SymbolicExpression denominator = (SymbolicExpression) expr.argument(1);
+		Pair<SymbolicExpression, SymbolicExpression> key = new Pair<SymbolicExpression, SymbolicExpression>(
+				numerator, denominator);
+		IntDivisionInfo info = permanentIntegerDivisionMap.get(key);
 
-		if (result != null)
-			return result;
+		if (info == null)
+			throw new SARLInternalException(
+					"sideEffectIntDiv should only be called after expression has been translated: "
+							+ expr);
+		info.addConstraints(vc);
+		sideEffect(numerator);
+		sideEffect(denominator);
+	}
 
+	private void sideEffectTypeSequence(SymbolicTypeSequence sequence) {
+		for (SymbolicType t : sequence)
+			sideEffectType(t);
+	}
+
+	private void sideEffectCollection(SymbolicCollection<?> collection) {
+		for (SymbolicExpression expr : collection)
+			sideEffect(expr);
+	}
+
+	private void sideEffectType(SymbolicType type) throws Cvc3Exception {
 		SymbolicTypeKind kind = type.typeKind();
 
 		switch (kind) {
-
 		case BOOLEAN:
-			result = vc.boolType();
-			break;
 		case INTEGER:
-			result = vc.intType();
-			break;
 		case REAL:
-			result = vc.realType();
 			break;
 		case ARRAY:
-			result = vc.arrayType(vc.intType(),
-					translateType(((SymbolicArrayType) type).elementType()));
-			if (!(type instanceof SymbolicCompleteArrayType))
-				// tuple:<extent,array>
-				result = vc.tupleType(vc.intType(), result);
+			sideEffectType(((SymbolicArrayType) type).elementType());
 			break;
 		case TUPLE:
-			result = vc
-					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
-							.sequence()));
+			sideEffectTypeSequence(((SymbolicTupleType) type).sequence());
 			break;
 		case FUNCTION:
-			result = vc.funType(
-					translateTypeSequence(((SymbolicFunctionType) type)
-							.inputTypes()),
-					translateType(((SymbolicFunctionType) type).outputType()));
+			sideEffectTypeSequence(((SymbolicFunctionType) type).inputTypes());
+			sideEffectType(((SymbolicFunctionType) type).outputType());
 			break;
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
-			List<String> constructors = new LinkedList<String>();
-			List<String> selectors = new LinkedList<String>();
-			List<Type> types = new LinkedList<Type>();
 			SymbolicTypeSequence sequence = unionType.sequence();
-			int index = 0;
 
-			for (SymbolicType t : sequence) {
-				constructors.add(constructor(unionType, index));
-				selectors.add(selector(unionType, index));
-				types.add(translateType(t));
-				index++;
-			}
-			result = vc.dataType(unionType.name().getString(), constructors,
-					selectors, types);
+			for (SymbolicType t : sequence)
+				sideEffectType(t);
 			break;
 		}
 		default:
-			throw new RuntimeException("Unknown type: " + type);
+			throw new SARLInternalException("Unknown type: " + type);
 		}
-		typeMap.put(type, result);
-		return result;
 	}
 
-	public Expr translate(SymbolicExpression expr) {
-		Expr result = expressionMap.get(expr);
-		int numArgs;
+	private void sideEffectObject(SymbolicObject object) {
+		SymbolicObjectKind kind = object.symbolicObjectKind();
 
-		if (result != null)
-			return result;
-		numArgs = expr.numArguments();
+		switch (kind) {
+		case BOOLEAN:
+		case CHAR:
+		case INT:
+		case NUMBER:
+		case STRING:
+			break;
+		case EXPRESSION:
+			sideEffect((SymbolicExpression) object);
+			break;
+		case EXPRESSION_COLLECTION:
+			sideEffectCollection((SymbolicCollection<?>) object);
+			break;
+		case TYPE:
+			sideEffectType((SymbolicType) object);
+			break;
+		case TYPE_SEQUENCE:
+			sideEffectTypeSequence((SymbolicTypeSequence) object);
+			break;
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+	}
+
+	private void sideEffect(SymbolicExpression expr) {
+		SymbolicOperator operator = expr.operator();
+
+		if (operator == SymbolicOperator.INT_DIVIDE
+				|| operator == SymbolicOperator.MODULO)
+			sideEffectIntDiv(expr);
+		else {
+			int numArgs = expr.numArguments();
+
+			for (int i = 0; i < numArgs; i++)
+				sideEffectObject(expr.argument(i));
+		}
+	}
+
+	private Expr translateWork(SymbolicExpression expr) {
+		int numArgs = expr.numArguments();
+		Expr result;
+
 		switch (expr.operator()) {
 		case ADD:
 			if (numArgs == 2)
@@ -1044,12 +1064,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		default:
 			throw new SARLInternalException("unreachable");
 		}
-		this.expressionMap.put(expr, result);
 		return result;
-	}
-
-	public boolean showProverQueries() {
-		return showProverQueries;
 	}
 
 	private QueryResult queryCVC3(BooleanExpression symbolicPredicate) {
@@ -1070,6 +1085,9 @@ public class CVC3TheoremProver implements TheoremProver {
 			Expr cvcPredicate;
 
 			this.vc.push();
+			intDivisionStack
+					.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
+			translationStack.add(new HashMap<SymbolicExpression, Expr>());
 			cvcPredicate = translate(symbolicPredicate);
 			if (showProverQueries) {
 				out.println();
@@ -1091,12 +1109,18 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	/**
+	 * Pops the CVC3 stack. This means all the assertions made between the last
+	 * push and now will go away.
+	 */
 	private void popCVC3() {
 		try {
 			vc.pop();
 		} catch (Cvc3Exception e) {
 			throw new SARLInternalException("CVC3 error: " + e);
 		}
+		intDivisionStack.removeLast();
+		translationStack.removeLast();
 	}
 
 	private ValidityResult translateResult(QueryResult result) {
@@ -1119,6 +1143,152 @@ public class CVC3TheoremProver implements TheoremProver {
 			out.println("Warning: Unknown CVC3 query result: " + result);
 			return Prove.RESULT_MAYBE;
 		}
+	}
+
+	// Public methods...
+
+	public Map<SymbolicExpression, Expr> expressionMap() {
+		return expressionMap;
+	}
+
+	public Map<Op, SymbolicConstant> opMap() {
+		return opMap;
+	}
+
+	public Map<Expr, SymbolicConstant> varMap() {
+		return varMap;
+	}
+
+	public ValidityChecker validityChecker() {
+		return vc;
+	}
+
+	public PrintStream out() {
+		return out;
+	}
+
+	/**
+	 * Translates the symbolic type to a CVC3 type.
+	 * 
+	 * @param type
+	 *            a SARL symbolic expression type
+	 * @return the equivalent CVC3 type
+	 * @throws Cvc3Exception
+	 *             if CVC3 throws an exception
+	 */
+	public Type translateType(SymbolicType type) throws Cvc3Exception {
+		Type result = typeMap.get(type);
+
+		if (result != null)
+			return result;
+
+		SymbolicTypeKind kind = type.typeKind();
+
+		switch (kind) {
+
+		case BOOLEAN:
+			result = vc.boolType();
+			break;
+		case INTEGER:
+			result = vc.intType();
+			break;
+		case REAL:
+			result = vc.realType();
+			break;
+		case ARRAY:
+			result = vc.arrayType(vc.intType(),
+					translateType(((SymbolicArrayType) type).elementType()));
+			if (!(type instanceof SymbolicCompleteArrayType))
+				// tuple:<extent,array>
+				result = vc.tupleType(vc.intType(), result);
+			break;
+		case TUPLE:
+			result = vc
+					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
+							.sequence()));
+			break;
+		case FUNCTION:
+			result = vc.funType(
+					translateTypeSequence(((SymbolicFunctionType) type)
+							.inputTypes()),
+					translateType(((SymbolicFunctionType) type).outputType()));
+			break;
+		case UNION: {
+			SymbolicUnionType unionType = (SymbolicUnionType) type;
+			List<String> constructors = new LinkedList<String>();
+			List<String> selectors = new LinkedList<String>();
+			List<Type> types = new LinkedList<Type>();
+			SymbolicTypeSequence sequence = unionType.sequence();
+			int index = 0;
+
+			for (SymbolicType t : sequence) {
+				constructors.add(constructor(unionType, index));
+				selectors.add(selector(unionType, index));
+				types.add(translateType(t));
+				index++;
+			}
+			result = vc.dataType(unionType.name().getString(), constructors,
+					selectors, types);
+			break;
+		}
+		default:
+			throw new RuntimeException("Unknown type: " + type);
+		}
+		typeMap.put(type, result);
+		return result;
+	}
+
+	/**
+	 * Translate expr from SARL to CVC3. This results in two things: a CVC3
+	 * expression (which is returned) and also side-effects: constraints added
+	 * to the CVC3 assumption set, possibly involving auxiliary variables.
+	 * 
+	 * Attempts to re-use previous cached translation results.
+	 * 
+	 * Protocol: look through the translationStack. If you find an entry for
+	 * expr, return it.
+	 * 
+	 * Otherwise, look in the (permanent) expressionMap. If you find an entry
+	 * for expr there, that means it was translated while processesing some
+	 * previous query. You can re-use the result, but you still have to process
+	 * expr for side effects. Side effects arise while translating integer
+	 * division or modulus expressions. A side effect adds some constraint(s) to
+	 * the CVC3 assumption set, and these constraints need to be added to the
+	 * current assumption set.
+	 * 
+	 * If not found in expressionMap, then go through and translate the expr
+	 * recursively, carrying out side-effects as you go along.
+	 * 
+	 * @param expr
+	 *            any SARL expression
+	 * @return the CVC3 expression resulting from translation
+	 */
+	public Expr translate(SymbolicExpression expr) {
+		Expr result;
+		Iterator<Map<SymbolicExpression, Expr>> iter = translationStack
+				.descendingIterator();
+
+		while (iter.hasNext()) {
+			Map<SymbolicExpression, Expr> map = iter.next();
+
+			result = map.get(expr);
+			if (result != null)
+				return result;
+		}
+		result = expressionMap.get(expr);
+		if (result != null) {
+			sideEffect(expr);
+			translationStack.getLast().put(expr, result);
+			return result;
+		}
+		result = translateWork(expr);
+		translationStack.getLast().put(expr, result);
+		this.expressionMap.put(expr, result);
+		return result;
+	}
+
+	public boolean showProverQueries() {
+		return showProverQueries;
 	}
 
 	@Override
@@ -1171,6 +1341,8 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	@Override
 	protected void finalize() {
+		intDivisionStack.removeLast();
+		translationStack.removeLast();
 		// apparently this is necessary before the finalize
 		// method in vc is invoked...
 		try {

@@ -254,7 +254,8 @@ public class CVC3ModelFinder {
 			SymbolicConstant x = varMap.get(expr);
 
 			if (x == null)
-				throw new SARLInternalException("Unknown CVC3 variable: " + x);
+				throw new SARLInternalException("Unknown CVC3 variable: "
+						+ expr);
 			return x.type();
 		}
 		if (expr.isRational()) {
@@ -733,6 +734,13 @@ public class CVC3ModelFinder {
 				printExpr(value, out);
 				out.println();
 				out.flush();
+			}
+			if (key.isVar()) {
+				// ignore the aux. variables introduced for integer div.
+				String name = key.getName();
+
+				if (name.startsWith("q_") || name.startsWith("r_"))
+					continue;
 			}
 			sarlValue = backTranslate(value, simplifyType(typeOf(key)));
 			if (sarlValue == null)
