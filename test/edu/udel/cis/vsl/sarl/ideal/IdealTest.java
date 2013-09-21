@@ -483,12 +483,13 @@ public class IdealTest {
 		NumericExpression n1 = idealFactory.divide(n, m);
 		assertEquals(n1, p);
 	}
+	
 	@Test
-	public void lessthanequals(){
+	public void notlessthan(){
 		NumericExpression n1 = idealFactory.subtract(x, y);
 		NumericExpression n2 = idealFactory.add(x, y);
-		BooleanExpression n = commonIdealFactory.lessThanEquals(n1, n2);
-		out.println("Less Than Equals=" +n);
+		BooleanExpression n = commonIdealFactory.notLessThan(n1, n2);
+		out.println("Not Less Than=" +n);
 	}
 	
 }
