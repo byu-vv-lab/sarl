@@ -83,7 +83,9 @@ public class IdealTest {
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression five; 		// 5
 	private NumericExpression zero;
+	private NumericExpression one;
 	private RationalNumber realZero;
+	private RationalNumber realOne;
 	private RationalNumber realFive; 			// 5
 	private NumericExpression three;		// 3
 	private RationalNumber realThree;			// 3
@@ -133,8 +135,10 @@ public class IdealTest {
 		real = typeFactory.realType();
 		integer = typeFactory.integerType();
 		realZero = numberFactory.integerToRational(numberFactory.integer(0));
+		realOne = numberFactory.integerToRational(numberFactory.integer(1));
 		realFive = numberFactory.integerToRational(numberFactory.integer(5));
 		zero = commonIdealFactory.constant(realZero);
+		one = commonIdealFactory.constant(realOne);
 		five = commonIdealFactory.constant(realFive); 
 		realThree = numberFactory.integerToRational(numberFactory.integer(3)); 
 		three = commonIdealFactory.constant(realThree);
@@ -218,12 +222,13 @@ public class IdealTest {
 		out.println("commutativity1: " + xpy + " vs. " + ypx);
 		assertEquals(xpy, ypx);
 	}
+	
 	@Test
 	public void realone(){
-		NumericExpression ne = idealFactory.oneReal();
+		//NumericExpression n1 = idealFactory.intConstant(1);
+		NumericExpression n2 = idealFactory.oneReal();
 		//out.println("ne=" +ne);
-		Monic monic0 = (Monic) idealFactory.intConstant(1);
-		//assertEquals(monic0, ne);
+		assertEquals(one, n2);
 	}
 
 	@Test
