@@ -70,6 +70,7 @@ public class IdealTest {
 	private RealNumberFactory realNumberFactory;
 	private CommonIdealFactory commonIdealFactory;
 		
+	private RationalNumber n03; //3
 	private RationalNumber n0;
 	private RationalNumber n1; // 3/2
 	private RationalNumber n2; // -1/4
@@ -78,7 +79,9 @@ public class IdealTest {
 	private Constant c0;
 	private Constant c1; // real constant 3/2
 	private Constant c2; // real constant -1/4
+	private Constant c3;
 	private Constant c4; // int constant -1
+	private Constant c5; //int constant 1
 	private Constant c10; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
@@ -126,11 +129,14 @@ public class IdealTest {
 		n1 = numberFactory.rational("1.5");
 		n2 = numberFactory.rational("-.25");
 		n3 = numberFactory.rational("1.25");
+		n03 = numberFactory.rational("3");
 		c = idealFactory.constant(n0);
 		c0 = idealFactory.intConstant(0);
 		c1 = idealFactory.constant(n1);
 		c2 = idealFactory.constant(n2);
+		c3 = idealFactory.constant(n03);
 		c4 = idealFactory.intConstant(-1);
+		c5 = idealFactory.intConstant(1);
 		c10 = idealFactory.intConstant(10);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
@@ -475,23 +481,26 @@ public class IdealTest {
 	@Test
 	public void constanttermsubtraction(){
 		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), idealFactory.intConstant(1));
-		Polynomial poly = (Polynomial) n;
-		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly);
-		Polynomial b2 = commonIdealFactory.subtractConstantTerm(c);
-		//out.println("Constant Term Subtraction1=" + b2);
-		//out.println("Constant Term Subtraction=" + b1);
+		NumericExpression m = idealFactory.add(idealFactory.multiply(one, x), idealFactory.intConstant(0));
+		Polynomial poly1 = (Polynomial) n;
+		Polynomial poly2 = (Polynomial) m;
+		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
+		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
+		Polynomial b3 = commonIdealFactory.subtractConstantTerm(c);
+		out.println("Constant Term Subtraction1=" + b3);
+		out.println("Constant Term Subtraction=" + b1);
 		assertEquals(x, b1);
-		assertEquals(c, b2);
+		assertEquals(c, b3);
 	}
 	
 	@Test
 	public void minus(){
 		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
-		NumericExpression ne = commonIdealFactory.minus(p1);
+		NumericExpression n1 = commonIdealFactory.minus(p1);
 		NumericExpression n = idealFactory.minus(p1);
 		//out.println("n=" +n);
 		//out.println("ne=" +ne);
-		assertEquals(n, ne);
+		assertEquals(n, n1);
 	}
 		
 	@Test
@@ -528,11 +537,14 @@ public class IdealTest {
 	}
 	@Test
 	public void divide(){
-		NumericExpression n = idealFactory.add(x, y);
+        NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
-		NumericExpression p = commonIdealFactory.divide(n, m);
+		RationalExpression r1 = (RationalExpression) n;
+		RationalExpression r2 = (RationalExpression) m;
+		NumericExpression p1 = commonIdealFactory.divide(n, m);
+		NumericExpression p2 = commonIdealFactory.divide(r1, r2);
 		NumericExpression n1 = idealFactory.divide(n, m);
-		assertEquals(n1, p);
+		assertEquals(n1, p1);
 	}
 	@Test
 	public void neq(){
@@ -567,10 +579,11 @@ public class IdealTest {
 	/*
 	@Test
 	public void polynomialdividedbyconstant(){
-		NumericExpression n = idealFactory.multiply(x, c1);
+		NumericExpression n = idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x,x));
 		Polynomial poly = (Polynomial) n;
-		Polynomial p = commonIdealFactory.divide(poly, c1);
+		Polynomial p = commonIdealFactory.divide(poly, c3);
 		out.println("poly divided by const.=" +p);
 	}
-	*/
+*/	
+	
 }
