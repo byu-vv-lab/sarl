@@ -491,5 +491,12 @@ public class IdealTest {
 		BooleanExpression n = commonIdealFactory.notLessThan(n1, n2);
 		out.println("Not Less Than=" +n);
 	}
+	@Test
+	public void notlessthanequals(){
+		NumericExpression n1 = idealFactory.subtract(x, idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
+		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
+		out.println("Not Less Than Equals=" +n);
+	}
 	
 }
