@@ -304,7 +304,7 @@ public class IdealTest {
 		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);
 		//assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result2);
 	}
-	
+	/*
 	@Test
 	public void intModulusPolynomials(){
 		SymbolicMap<Monic, Monomial> termMap0 = commonIdealFactory.emptyMap();
@@ -343,6 +343,7 @@ public class IdealTest {
 		Polynomial fiveOverOne = (Polynomial) commonIdealFactory.modulo(numeratorIsFive, denominatorIsOne);
 		SymbolicMap<Monic, Monomial> map01 = numeratorIsFive.termMap(commonIdealFactory); //numerator(commonIdealFactory);
 	}
+	*/
 	
 	@Test
 	public void castToReal(){
@@ -512,5 +513,17 @@ public class IdealTest {
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
 		out.println("neq=" +n);
 	}
+	@Test
+	public void intmoduluspolynomials(){
+		NumericExpression n1 = idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
+		NumericExpression n3 = idealFactory.intConstant(0);
+		NumericExpression n4 = idealFactory.intConstant(1);
+		NumericExpression n = commonIdealFactory.modulo(n1, n2);
+		NumericExpression m = commonIdealFactory.modulo(n3, n2);
+		NumericExpression p = commonIdealFactory.modulo(n1, n4);
+		out.println("modulo=" +n);
+	}
+	
 	
 }
