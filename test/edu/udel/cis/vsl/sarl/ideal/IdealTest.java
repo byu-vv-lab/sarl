@@ -512,6 +512,17 @@ public class IdealTest {
 		out.println("Equals=" +n);
 	}
 	@Test
+	public void intmoduluspolynomials(){
+		NumericExpression n1 = idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
+		NumericExpression n3 = idealFactory.intConstant(0);
+		NumericExpression n4 = idealFactory.intConstant(1);
+		NumericExpression n = commonIdealFactory.modulo(n1, n2);
+		NumericExpression m = commonIdealFactory.modulo(n3, n2);
+		NumericExpression p = commonIdealFactory.modulo(n1, n4);
+		out.println("modulo=" +n);
+	}
+	@Test
 	public void divide(){
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
@@ -527,17 +538,7 @@ public class IdealTest {
 		out.println("neq=" +n);
 	    //assertEquals(true, n);
 	}
-	@Test
-	public void intmoduluspolynomials(){
-		NumericExpression n1 = idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
-		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
-		NumericExpression n3 = idealFactory.intConstant(0);
-		NumericExpression n4 = idealFactory.intConstant(1);
-		NumericExpression n = commonIdealFactory.modulo(n1, n2);
-		NumericExpression m = commonIdealFactory.modulo(n3, n2);
-		NumericExpression p = commonIdealFactory.modulo(n1, n4);
-		out.println("modulo=" +n);
-	}
+	
 	@Test
 	public void zero(){
 		Constant c1 = commonIdealFactory.zero(real);
