@@ -49,6 +49,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.common.IdealComparator;
 import edu.udel.cis.vsl.sarl.number.real.RealNumber;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -68,7 +69,7 @@ public class IdealTest {
 	private BooleanExpressionFactory booleanFactory;
 	private RealNumberFactory realNumberFactory;
 	private CommonIdealFactory commonIdealFactory;
-	
+		
 	private RationalNumber n1; // 3/2
 	private RationalNumber n2; // -1/4
 	private RationalNumber n3; // 5/4
@@ -425,29 +426,31 @@ public class IdealTest {
 	
 	@Test
 	public void addpolynomial(){
-		Monomial monomial1 = idealFactory.monomial(c4, (Monic) x);
-		Monomial monomial2 = idealFactory.monomial(c10, (Monic) x);
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
-		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
+		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression p2 =idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		Polynomial b = commonIdealFactory.add(poly1, poly2);
-		//out.println("ADD_Polynomial=" + b);
-		Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		assertEquals(c, b);
+		out.println("ADD_Polynomial=" + b);
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(2));
+		//Polynomial c = (Polynomial) idealFactory.intConstant(0);
+		assertEquals(p3, b);
 		
 	}
 	
 	@Test
 	public void multiplypolynomial(){
-		Monomial monomial1 = idealFactory.monomial(c4, (Monic) x);
-		Monomial monomial2 = idealFactory.monomial(c10, (Monic) x);
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
-		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
+		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression p2 =idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		Polynomial b = commonIdealFactory.multiply(poly1, poly2);
-		//out.println("Multiply_Polynomial=" + b);
-		Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		assertEquals(c, b);
+		out.println("Multiply_Polynomial=" + b);
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression x4 = idealFactory.multiply(x2, x2);
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2),x4), p3);
+		assertEquals(p4, b);
 	}
 	@Test
 	public void constanttermsubtraction(){
@@ -474,8 +477,9 @@ public class IdealTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial poly1 = commonIdealFactory.polynomial(termMap, b1);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, b2);
-		NumericExpression b = commonIdealFactory.divide(b1, b2);
+		NumericExpression b = commonIdealFactory.divide(poly1, poly2);
 	}
+	
 	
 	
 }
