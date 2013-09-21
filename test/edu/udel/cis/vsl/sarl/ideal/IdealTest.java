@@ -83,11 +83,13 @@ public class IdealTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
+	private NumericExpression fifteen;
 	private NumericExpression five; 		// 5
 	private NumericExpression zero;
 	private NumericExpression one;
 	private RationalNumber realZero;
 	private RationalNumber realOne;
+	private RationalNumber realFifteen;
 	private RationalNumber realFive; 			// 5
 	private NumericExpression three;		// 3
 	private RationalNumber realThree;			// 3
@@ -140,9 +142,11 @@ public class IdealTest {
 		integer = typeFactory.integerType();
 		realZero = numberFactory.integerToRational(numberFactory.integer(0));
 		realOne = numberFactory.integerToRational(numberFactory.integer(1));
+		realFifteen = numberFactory.integerToRational(numberFactory.integer(15));
 		realFive = numberFactory.integerToRational(numberFactory.integer(5));
 		zero = commonIdealFactory.constant(realZero);
 		one = commonIdealFactory.constant(realOne);
+		fifteen = commonIdealFactory.constant(realFifteen); 
 		five = commonIdealFactory.constant(realFive); 
 		realThree = numberFactory.integerToRational(numberFactory.integer(3)); 
 		three = commonIdealFactory.constant(realThree);
@@ -558,6 +562,7 @@ public class IdealTest {
 		NumericExpression n2 = commonIdealFactory.multiply(three, zero);
 		NumericExpression n3 = commonIdealFactory.multiply(zero, five);
 		NumericExpression n4 = commonIdealFactory.multiply(three, one);
+		assertEquals(fifteen, n1);
 	}
 	
 }
