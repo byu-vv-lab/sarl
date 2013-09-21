@@ -498,5 +498,19 @@ public class IdealTest {
 		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
 		out.println("Not Less Than Equals=" +n);
 	}
+	@Test
+	public void equals(){
+		NumericExpression n1 = idealFactory.power(idealFactory.add(x,idealFactory.intConstant(1)), idealFactory.intConstant(2));
+		NumericExpression n2 = idealFactory.subtract(idealFactory.multiply(x,x), idealFactory.intConstant(1));
+		BooleanExpression n = commonIdealFactory.equals(n1, n2);
+		out.println("Equals=" +n);
+	}
+	@Test
+	public void neq(){
+		NumericExpression n1 = idealFactory.add(x, idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(2));
+		BooleanExpression n = commonIdealFactory.neq(n1, n2);
+		out.println("neq=" +n);
+	}
 	
 }
