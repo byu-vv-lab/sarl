@@ -205,7 +205,7 @@ public class BoundsObjectTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void equals(){
 		//test on .equals for equal objects
@@ -369,7 +369,7 @@ public class BoundsObjectTest {
 		
 
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void isIntegralTest(){
 		BoundsObject tempBndObjLS = boundObj_xxy_L_S_int.clone();
