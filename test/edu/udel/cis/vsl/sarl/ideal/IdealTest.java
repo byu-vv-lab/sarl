@@ -468,8 +468,12 @@ public class IdealTest {
 	
 	@Test
 	public void minus(){
-		NumericExpression ne = commonIdealFactory.minus(zero);
+		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression ne = commonIdealFactory.minus(p1);
+		NumericExpression n = idealFactory.minus(p1);
+		//out.println("n=" +n);
 		//out.println("ne=" +ne);
+		assertEquals(n, ne);
 	}
 	@Test
 	public void divide(){
