@@ -564,5 +564,13 @@ public class IdealTest {
 		NumericExpression n4 = commonIdealFactory.multiply(three, one);
 		assertEquals(fifteen, n1);
 	}
-	
+	/*
+	@Test
+	public void polynomialdividedbyconstant(){
+		NumericExpression n = idealFactory.multiply(x, c1);
+		Polynomial poly = (Polynomial) n;
+		Polynomial p = commonIdealFactory.divide(poly, c1);
+		out.println("poly divided by const.=" +p);
+	}
+	*/
 }
