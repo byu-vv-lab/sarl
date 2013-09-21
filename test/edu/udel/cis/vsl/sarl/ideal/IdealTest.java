@@ -70,9 +70,11 @@ public class IdealTest {
 	private RealNumberFactory realNumberFactory;
 	private CommonIdealFactory commonIdealFactory;
 		
+	private RationalNumber n0;
 	private RationalNumber n1; // 3/2
 	private RationalNumber n2; // -1/4
 	private RationalNumber n3; // 5/4
+	private Constant c;
 	private Constant c0;
 	private Constant c1; // real constant 3/2
 	private Constant c2; // real constant -1/4
@@ -118,9 +120,11 @@ public class IdealTest {
 				objectFactory, typeFactory,
 				collectionFactory,
 				booleanFactory); 
+		n0 = numberFactory.rational("0");
 		n1 = numberFactory.rational("1.5");
 		n2 = numberFactory.rational("-.25");
 		n3 = numberFactory.rational("1.25");
+		c = idealFactory.constant(n0);
 		c0 = idealFactory.intConstant(0);
 		c1 = idealFactory.constant(n1);
 		c2 = idealFactory.constant(n2);
@@ -512,6 +516,7 @@ public class IdealTest {
 		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(2));
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
 		out.println("neq=" +n);
+	    //assertEquals(true, n);
 	}
 	@Test
 	public void intmoduluspolynomials(){
@@ -524,6 +529,11 @@ public class IdealTest {
 		NumericExpression p = commonIdealFactory.modulo(n1, n4);
 		out.println("modulo=" +n);
 	}
-	
+	@Test
+	public void zero(){
+		Constant c1 = commonIdealFactory.zero(real);
+		assertEquals(c, c1);
+		//out.println("zero=" +c);
+	}
 	
 }
