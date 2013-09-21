@@ -1590,6 +1590,60 @@ public class CommonPreUniverseTest {
 
 	}
 
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayException(){
+		// testing the fail when passing a null elements reference to array()
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		
+		elements = null; // null reference
+		array = universe.array(integerType, elements);
+		
+	}
+	@Test (expected= SARLException.class)
+	public void testArrayException2(){
+		// testing the fail when passing a null elements type to array()
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		SymbolicType realType;
+
+		elements = new LinkedList<>(); 
+		elements.add(universe.integer(1));
+		elements.add(universe.integer(4));
+		
+		realType = null;
+		
+		array = universe.array(realType, elements);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testArrayException3(){
+		// testing the fail when passing an array with null elements to array()
+		NumericExpression elements[]; // array of elements
+		SymbolicExpression array;
+
+		elements = new NumericExpression[4]; 
+		// here each one of the elements need to be intialized
+		
+		array = universe.array(integerType, Arrays.asList(elements));
+
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testArrayException4(){
+		// testing the fail when passing non compatible type to array
+		NumericExpression elements[]; // array of elements
+		SymbolicExpression array;
+
+		elements = new NumericExpression[2];
+		elements[0] = universe.integer(1); // integer
+		elements[1] = universe.integer(10);// integer
+		
+		array = universe.array(realType, Arrays.asList(elements)); // non compatible type
+
+	}
+
 
 
 
