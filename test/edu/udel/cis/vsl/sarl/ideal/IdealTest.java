@@ -459,18 +459,11 @@ public class IdealTest {
 	}
 	@Test
 	public void constanttermsubtraction(){
-		/*Monomial monomial1 = idealFactory.monomial(c10, (Monic) x);
-		Monomial monomial2 = idealFactory.monomial(c0, (Monic) x);
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		//Polynomial poly1 = commonIdealFactory.polynomial(termMap, monomial1);
-		Polynomial poly2 = commonIdealFactory.polynomial(termMap, monomial2);
-		//SymbolicExpression b1 = commonIdealFactory.subtractConstantTerm(poly1);
-		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
-		out.println("b2=" + b2);*/
-		NumericExpression n = idealFactory.multiply(one, x);
+		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), idealFactory.intConstant(1));
 		Polynomial poly = (Polynomial) n;
 		Polynomial b = commonIdealFactory.subtractConstantTerm(poly);
 		out.println("Constant Term Subtraction=" + b);
+		assertEquals(x, b);
 	}
 	
 	@Test
