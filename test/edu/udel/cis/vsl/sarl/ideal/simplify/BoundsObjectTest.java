@@ -95,27 +95,19 @@ public class BoundsObjectTest {
 	
 	private static BoundsObject boundObj_xxy_L_S_0; //boundOBject used to set another's upper and then be expanded on downward
 	
+	private static BoundsObject boundObj_xxy_L_S_int; //boundObject to be set with integer bound, strict, on lower
 	
-	/*private static BoundsObject boundObj2; //strict upper and lower bounds
+	private static BoundsObject boundObj_xxy_L_NS_int; //boundObject to be set with integer bound, non- strict, on lower
 	
-	private static BoundsObject boundObj3; //strict upper bound, non-strict lower
+	private static BoundsObject boundObj_xxy_U_S_int; //boundObject to be set with integer bound, strict, on upper
 	
-	private static BoundsObject boundObj4; //non-strict upper bound, strict lower
+	private static BoundsObject boundObj_xxy_U_NS_int; //boundObject to be set with integer bound, non-strict, on upper
 	
-	private static BoundsObject boundObj5; //non-strict upper and lower bounds
-	
-	private static BoundsObject boundObj6; //strict upper bound, no lower
-	
-	private static BoundsObject boundObj7; //non-strict upper bound, no lower
-	
-	private static BoundsObject boundObj8; //no upper bound, strict lower
-	
-	private static BoundsObject boundObj9; //no upper bound, non-strict lower
-*/	
 	private static NumberFactory numFact;
 	
-	//private static Number numBound;
 	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound3;
+	
+	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound3Int;
 	
 	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound5;
 	
@@ -133,17 +125,20 @@ public class BoundsObjectTest {
 	
 	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound10pt5;
 	
-	private static NumericExpression one, two, five;
+	private static NumericExpression ratOne, ratTwo, ratFive;
 	
-	
+	private static NumericExpression intOne, intTwo, intFive;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
-		one = preUniv.rational(1); // 1.0
-		two = preUniv.rational(2); // 2.0
-		five = preUniv.rational(5); // 5.0
+		ratOne = preUniv.rational(1); // 1.0
+		ratTwo = preUniv.rational(2); // 2.0
+		ratFive = preUniv.rational(5); // 5.0
+		intOne = preUniv.integer(1); // 1
+		intTwo = preUniv.integer(2); // 2
+		intFive = preUniv.integer(5); //5
 		//system = PreUniverses.newIdealFactorySystem();
 		symbFactory = system.expressionFactory().typeFactory();
 		realType = preUniv.realType();
@@ -153,9 +148,9 @@ public class BoundsObjectTest {
 		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("y"), realType);
 		xInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
-				preUniv.stringObject("x"), integerType);
+				preUniv.stringObject("xInt"), integerType);
 		yInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
-				preUniv.stringObject("y"), integerType);
+				preUniv.stringObject("yInt"), integerType);
 		xpy = preUniv.add(x, y);
 		symbExpr_xpy = xpy;
 		xy = preUniv.multiply(x, y);
@@ -175,18 +170,17 @@ public class BoundsObjectTest {
 		symbExpr_xyyInt = xyyInt;
 		
 		numFact = preUniv.numberFactory();
-		//numBound = preUniv.
-//		numbFact = preUniv.  //numExprFact.numberFactory();
-//		numbBound = preUniv.  //numbFact.rational("three");
-		numBound3 = numFact.rational("3");
-		numBound5 = numFact.rational("5");
-		numBoundNeg2000 = numFact.rational("-2000");
-		numBoundPos10000 = numFact.rational("10000");
-		numBound0 = numFact.rational("0");
-		numBound0_int = numFact.integer("0");
-		numBound_neg2000_int = numFact.integer("-2000");
-		numBound10000_int = numFact.integer("10000");
-		numBound10pt5 =numFact.rational("10.5");
+		
+		numBound3 = numFact.rational("3"); // 3.0
+		numBound3Int = numFact.integer("3"); // 3
+		numBound5 = numFact.rational("5"); // 5.0
+		numBoundNeg2000 = numFact.rational("-2000"); // -2000.0
+		numBoundPos10000 = numFact.rational("10000"); // 10000.0
+		numBound0 = numFact.rational("0");  // 0.0
+		numBound0_int = numFact.integer("0"); // 0
+		numBound_neg2000_int = numFact.integer("-2000"); // -2000
+		numBound10000_int = numFact.integer("10000"); // 10000
+		numBound10pt5 =numFact.rational("10.5"); // 10.5
 		boundObj = BoundsObject.newTightBound(symbExpr_xpy, numBound3);
 		boundObj_xxy_L_S = BoundsObject.newLowerBound(symbExpr_xxy, numBoundNeg2000, true);
 		boundObj_xxy_L_NS = BoundsObject.newLowerBound(symbExpr_xxy, numBoundNeg2000, false);
@@ -195,6 +189,12 @@ public class BoundsObjectTest {
 		boundObj_Integral= BoundsObject.newLowerBound(symbExpr_xxy, numBoundNeg2000, true); //begins with strict lower
 		boundObj_xxy_U_S_0 = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, true);
 		boundObj_xxy_L_S_0 = BoundsObject.newLowerBound(symbExpr_xxy, numBound0, true);
+		//integer boundsObjects
+		//  x*x*y > 0
+		boundObj_xxy_L_S_int = BoundsObject.newLowerBound(symbExpr_xxyInt, numBound0_int, true);
+		// x*x*y >= 0
+		boundObj_xxy_L_NS_int = BoundsObject.newLowerBound(symbExpr_xxyInt, numBound0_int, false);
+		
 	}
 	
 	@Before
@@ -205,6 +205,7 @@ public class BoundsObjectTest {
 	public void tearDown() throws Exception {
 	}
 	
+	@Ignore
 	@Test
 	public void equals(){
 		//test on .equals for equal objects
@@ -370,9 +371,60 @@ public class BoundsObjectTest {
 	}
 	@Ignore
 	@Test
-	public void broadBoundTest(){
-		
+	public void isIntegralTest(){
+		BoundsObject tempBndObjLS = boundObj_xxy_L_S_int.clone();
+		BoundsObject tempBndObjLNS = boundObj_xxy_L_NS_int.clone();
+		assertTrue(tempBndObjLS.isIntegral());
+		assertFalse(tempBndObjLS.isReal());
+		assertTrue(tempBndObjLNS.isIntegral());
+		assertFalse(tempBndObjLNS.isReal());
 	}
 	
+	/**
+	 * helper method for printing the toString and results of isIntegral, isReal, and isConsistent
+	 * @param bO BoundsObject
+	 */
+	public static void printIs(BoundsObject bO){
+		out.println(bO.toString() + "  real? : " + bO.isReal() + "  integral? : " + bO.isIntegral() + "  consistent? : " + bO.isConsistent());
+	}
+	
+	@Test//(expected=java.lang.AssertionError.class)
+	public void mixedTypeTest(){
+		BoundsObject bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, true);
+		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, false);
+		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, true);
+		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, false);
+		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0_int, true);
+		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0_int, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0_int, false);
+		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0_int, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0_int, true);
+		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0_int, bO_mixed.upper);
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0_int, false);
+		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound0_int, bO_mixed.upper);
+		//bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, false);
+		
+		//BoundsObject boundObjTightMixed = BoundsObject.newTightBound(symbExpr_xpyInt, numBound3);
+	}
 }
 
