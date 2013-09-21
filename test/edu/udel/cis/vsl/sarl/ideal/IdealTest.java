@@ -489,15 +489,7 @@ public class IdealTest {
 		//out.println("ne=" +ne);
 		assertEquals(n, ne);
 	}
-	@Test
-	public void divide(){
-		NumericExpression n = idealFactory.add(x, y);
-		NumericExpression m = idealFactory.subtract(x, y);
-		NumericExpression p = commonIdealFactory.divide(n, m);
-		NumericExpression n1 = idealFactory.divide(n, m);
-		assertEquals(n1, p);
-	}
-	
+		
 	@Test
 	public void notlessthan(){
 		NumericExpression n1 = idealFactory.subtract(x, y);
@@ -518,6 +510,14 @@ public class IdealTest {
 		NumericExpression n2 = idealFactory.subtract(idealFactory.multiply(x,x), idealFactory.intConstant(1));
 		BooleanExpression n = commonIdealFactory.equals(n1, n2);
 		out.println("Equals=" +n);
+	}
+	@Test
+	public void divide(){
+		NumericExpression n = idealFactory.add(x, y);
+		NumericExpression m = idealFactory.subtract(x, y);
+		NumericExpression p = commonIdealFactory.divide(n, m);
+		NumericExpression n1 = idealFactory.divide(n, m);
+		assertEquals(n1, p);
 	}
 	@Test
 	public void neq(){
