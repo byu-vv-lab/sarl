@@ -473,12 +473,11 @@ public class IdealTest {
 	}
 	@Test
 	public void divide(){
-		Monomial b1 = idealFactory.monomial(c4, (Monic) x);
-		Monomial b2 = idealFactory.monomial(c10, (Monic) x);
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Polynomial poly1 = commonIdealFactory.polynomial(termMap, b1);
-		Polynomial poly2 = commonIdealFactory.polynomial(termMap, b2);
-		NumericExpression b = commonIdealFactory.divide(poly1, poly2);
+		NumericExpression n = idealFactory.add(x, y);
+		NumericExpression m = idealFactory.subtract(x, y);
+		NumericExpression p = commonIdealFactory.divide(n, m);
+		NumericExpression n1 = idealFactory.divide(n, m);
+		assertEquals(n1, p);
 	}
 	
 	
