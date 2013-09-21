@@ -535,5 +535,12 @@ public class IdealTest {
 		assertEquals(c, c1);
 		//out.println("zero=" +c);
 	}
+	@Test
+	public void monomial(){
+		Monic monic = (Monic) idealFactory.multiply(x, x);
+		Monomial m = commonIdealFactory.monomial(c, monic);
+		//out.println("monomial=" +m);
+		assertEquals(c, m);
+	}
 	
 }
