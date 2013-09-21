@@ -438,13 +438,16 @@ public class IdealTest {
 	public void addpolynomial(){
 		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
 		NumericExpression p2 =idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		NumericExpression p3 = idealFactory.multiply(c0, x);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
-		Polynomial b = commonIdealFactory.add(poly1, poly2);
-		out.println("ADD_Polynomial=" + b);
-		NumericExpression p3 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(2));
+		Polynomial poly3 = (Polynomial) p3;
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		out.println("ADD_Polynomial=" + b1);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(2));
 		//Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		assertEquals(p3, b);
+		assertEquals(p4, b1);
 		
 	}
 	
@@ -452,15 +455,18 @@ public class IdealTest {
 	public void multiplypolynomial(){
 		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
 		NumericExpression p2 =idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		NumericExpression p3 = idealFactory.multiply(c0, x);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
-		Polynomial b = commonIdealFactory.multiply(poly1, poly2);
-		out.println("Multiply_Polynomial=" + b);
+		Polynomial poly3 = (Polynomial) p3;
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
+		out.println("Multiply_Polynomial=" + b1);
 		NumericExpression x2 = idealFactory.multiply(x, x);
 		NumericExpression x4 = idealFactory.multiply(x2, x2);
-		NumericExpression p3 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2),x4), p3);
-		assertEquals(p4, b);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
+		NumericExpression p5 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2),x4), p4);
+		assertEquals(p5, b1);
 	}
 	@Test
 	public void constanttermsubtraction(){
@@ -544,6 +550,13 @@ public class IdealTest {
 		Monomial m = commonIdealFactory.monomial(c, monic);
 		//out.println("monomial=" +m);
 		assertEquals(c, m);
+	}
+	@Test
+	public void rationalmultiply(){
+		NumericExpression n1 = commonIdealFactory.multiply(three, five);
+		NumericExpression n2 = commonIdealFactory.multiply(three, zero);
+		NumericExpression n3 = commonIdealFactory.multiply(zero, five);
+		NumericExpression n4 = commonIdealFactory.multiply(three, one);
 	}
 	
 }
