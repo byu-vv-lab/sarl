@@ -4,13 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
+import cvc3.Op;
+import cvc3.OpMut;
 import cvc3.QueryResult;
 import cvc3.Type;
 import cvc3.ValidityChecker;
@@ -23,16 +27,20 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CVC3TranslateTest {
 	
@@ -57,6 +65,7 @@ public class CVC3TranslateTest {
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
 	private static NumericExpression zero = universe.zeroReal();
+	private static NumericExpression zeroInt = universe.zeroInt();
 	private static NumericExpression oneInt = universe.integer(1);
 	private static NumericExpression twoInt = universe.integer(2);
 	private static NumericExpression fiveInt = universe.integer(5);
@@ -245,8 +254,6 @@ public class CVC3TranslateTest {
 	@Test
 	public void testTranslateTupleWrite(){
 		
-		Expr tenIntExpr = cvcProver.translate(tenInt);
-		
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
 		tupleList.add(oneInt);
 		tupleList.add(twoInt);
@@ -308,6 +315,66 @@ public class CVC3TranslateTest {
 		Expr equation1 = vc.eqExpr(expr1, expr2);
 		
 		assertEquals(QueryResult.VALID, vc.query(equation1));
+	}
+	
+	@Test
+	public void testTranslateDenseArrayWriteComplete(){
+		
+		Expr zeroExpr = cvcProver.translate(zero);
+		Expr oneExpr = cvcProver.translate(one);
+		Expr fiveExpr = cvcProver.translate(five);
+		Expr tenExpr = cvcProver.translate(ten);
+		
+		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>(3);
+		array.add(0, two);
+		array.add(1, five);
+		array.add(2, ten);
+		
+		List<SymbolicExpression> newArray = new ArrayList<SymbolicExpression>(2);
+		newArray.add(0, five);
+		newArray.add(1, ten);
+		
+		SymbolicExpression regularArray = universe.array(realType, array);
+		SymbolicExpression s1 = universe.denseArrayWrite(regularArray, newArray);
+		Expr cvcArray = cvcProver.translate(s1);
+		
+		Expr cvcArray2 = cvcProver.translate(regularArray);
+		Expr cvcArray3 = vc.writeExpr(cvcArray2, zeroExpr, fiveExpr);
+		Expr expected = vc.writeExpr(cvcArray3, oneExpr, tenExpr);
+		assertEquals(expected, cvcArray);
+	}
+	
+	@Test
+	public void translateDenseArrayWriteIncomplete(){
+		
+		SymbolicType incompleteArrayType = universe.arrayType(realType);
+		SymbolicExpression a = universe.symbolicConstant(universe
+				.stringObject("a"), incompleteArrayType);
+		
+		List<SymbolicExpression> newArray = new ArrayList<SymbolicExpression>();
+		newArray.add(0, five);
+		newArray.add(1, ten);
+		newArray.add(2, two);
+
+		SymbolicExpression s1 = universe.denseArrayWrite(a, newArray);
+		SymbolicExpression s2 = expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, zeroInt);
+		SymbolicExpression s3 = expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, oneInt);
+		SymbolicExpression s4 =	expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, twoInt);
+		
+		Expr expr1 = cvcProver.translate(s2);
+		Expr expr2 = cvcProver.translate(s3);
+		Expr expr3 = cvcProver.translate(s4);
+		Expr expr4 = cvcProver.translate(five);
+		Expr expr5 = cvcProver.translate(ten);
+		Expr expr6 = cvcProver.translate(two);
+		
+		Expr equation1 = vc.eqExpr(expr1, expr4);
+		Expr equation2 = vc.eqExpr(expr2, expr5);
+		Expr equation3 = vc.eqExpr(expr3, expr6);
+		
+		assertEquals(QueryResult.VALID, vc.query(equation1));
+		assertEquals(QueryResult.VALID, vc.query(equation2));
+		assertEquals(QueryResult.VALID, vc.query(equation3));
 	}
 	
 	@Test
