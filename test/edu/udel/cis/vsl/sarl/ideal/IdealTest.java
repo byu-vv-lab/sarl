@@ -535,7 +535,11 @@ public class IdealTest {
 	@Test
 	public void minus(){
 		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
+		NumericExpression p2 = idealFactory.intConstant(0);
+		//NumericExpression p3 = three;
+		NumericExpression n0 = commonIdealFactory.minus(p2);
 		NumericExpression n1 = commonIdealFactory.minus(p1);
+		//NumericExpression n2 = commonIdealFactory.minus(p3);
 		NumericExpression n = idealFactory.minus(p1);
 		//out.println("n=" +n);
 		//out.println("ne=" +ne);
@@ -608,12 +612,14 @@ public class IdealTest {
 		NumericExpression n4 = idealFactory.multiply(idealFactory.intConstant(1), idealFactory.intConstant(1));
 		NumericExpression n5 = idealFactory.multiply(fifteen, three);
 		NumericExpression n6 = idealFactory.multiply(five, three);
+		NumericExpression n7 = idealFactory.multiply(zero, three);
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
 		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
 		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
 		NumericExpression b3 = commonIdealFactory.divide(n1, n4);
 		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
+		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
 		NumericExpression p1 = commonIdealFactory.divide(n, m);
 		NumericExpression np = idealFactory.divide(n, m);
 		out.println("b1=" +b1);
