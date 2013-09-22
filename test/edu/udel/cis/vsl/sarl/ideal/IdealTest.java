@@ -169,7 +169,7 @@ public class IdealTest {
 		//e1 = commonIdealFactory.expression(SymbolicOperator.ADD, typeFactory.integerType(), five);
 		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five, three);  // 5 + 3     Add
 		//e3 = commonIdealFactory.expression(SymbolicOperator.COND, integer, five, three);  // 3 > 2, 3, 2    COND
-		e3 = commonIdealFactory.expression(SymbolicOperator.COND, typeFactory.booleanType(), booleanFactory.falseExpr(),booleanFactory.falseExpr());
+		e3 = commonIdealFactory.expression(SymbolicOperator.COND, typeFactory.booleanType(), booleanFactory.trueExpr(),booleanFactory.falseExpr());
 		e4 = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer, five, three);  // 5 * 3			MULTIPLY
 		e5 = commonIdealFactory.expression(SymbolicOperator.NEGATIVE, integer, five); 		  // -5				NEGATIVE
 		e6 = commonIdealFactory.expression(SymbolicOperator.POWER, integer, five, three);     // 5 ^ 3			POWER
@@ -454,15 +454,20 @@ public class IdealTest {
 		NumericExpression p1 =idealFactory.add(idealFactory.multiply(x, x), idealFactory.intConstant(1));
 		NumericExpression p2 =idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), idealFactory.multiply(x, x)), idealFactory.intConstant(1));
 		NumericExpression p3 = idealFactory.multiply(c0, x);
+		//NumericExpression p4 = idealFactory.add(idealFactory.multiply(three, x), idealFactory.intConstant(5));
+		//NumericExpression p5 = idealFactory.add(idealFactory.multiply(five, x), idealFactory.intConstant(3));
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
+		//Polynomial poly4 = (Polynomial) p4;
+		//Polynomial poly5 = (Polynomial) p5;
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		//Polynomial b3 = commonIdealFactory.add(poly4, poly5);
 		out.println("ADD_Polynomial=" + b1);
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(2));
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(idealFactory.intConstant(3), idealFactory.multiply(x, x)), idealFactory.intConstant(2));
 		//Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		assertEquals(p4, b1);
+		assertEquals(p6, b1);
 		
 	}
 	
@@ -599,10 +604,11 @@ public class IdealTest {
 		NumericExpression o = commonIdealFactory.cast(e5, real); //MINUS
 		NumericExpression p = commonIdealFactory.cast(e6, real); //POWER
 		NumericExpression q = commonIdealFactory.cast(e7, real); //SUBTRACT
+		NumericExpression r = commonIdealFactory.cast(e3, real);
+		SymbolicOperator s = r.operator();
+		out.println("operator=" +s);
 		NumericExpression n11 = idealFactory.subtract(idealFactory.multiply(c4, x), c10);
 		NumericExpression n22 = commonIdealFactory.cast(n11, real);
-		SymbolicOperator s = q.operator();
-		out.println("operator=" +s);
 		out.println("ADD=" +m);
 		out.println("MULTIPLY=" +n);
 		out.println("MINUS=" +o);
