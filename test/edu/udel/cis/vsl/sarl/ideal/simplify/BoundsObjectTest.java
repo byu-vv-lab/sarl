@@ -390,14 +390,31 @@ public class BoundsObjectTest {
 	
 	@Test//(expected=java.lang.AssertionError.class)
 	public void mixedTypeTest(){
+//Trac Ticket 32:
+		//case of rational symbExpr and a rational, strict bound
+		BoundsObject ratMixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, true);
+		printIs(ratMixed);
+		assertEquals(numBound0, ratMixed.upper());
+		//same as above, but an integral basis for the bound and symbExpr
 		BoundsObject bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, true);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
-		assertEquals(numBound0, bO_mixed.upper);
+	    assertEquals(numBound0, bO_mixed.upper);
+		//confirmation of above issue with a bound !=0
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt,  numBound3, true);
+		printIs(bO_mixed);
+//Trac Ticket 34:		
+		//issue of mixed-type conversions internally to boundsObject when a non-strict bound is specified
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, false);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
 		assertEquals(numBound0, bO_mixed.upper);
+		//recreation of above issue, using an explicit rational that has no integral equivalence
+		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound10pt5, false);
+		out.println("\n provided bound: " + numBound10pt5 + "  resultant bound: " + bO_mixed.upper());
+		printIs(bO_mixed);
+		assertEquals(numBound10pt5, bO_mixed.upper);
+		//various other mixed-type testing continues
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, true);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
