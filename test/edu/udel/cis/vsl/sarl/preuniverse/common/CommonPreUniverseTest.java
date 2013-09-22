@@ -1788,19 +1788,35 @@ public class CommonPreUniverseTest {
 		SymbolicExpression exp1,exp2;
 		BooleanExpression result;
 		
+		// case 1 when exp1 is boolean and exp2 is integer
 		exp1 = universe.bool(false);
 		exp2 = universe.integer(11);
 		
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
 		
+		// case 2 when exp1 and exp2 are booleans but with different values
 		exp1 = universe.bool(false);
 		exp2 = universe.bool(true);
+		
+		
+		result = universe.equals(exp1, exp2);
+		assertEquals(universe.bool(false), result);
+
+		
+		// case 3 when exp1 and exp2 are integers but with different values
+		exp1 = universe.integer(100);
+		exp2 = universe.integer(60);
 		
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
 		
-		
+		// case 4 when exp1 and exp2 are arrays but with different values	
+		exp1 = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(20),universe.integer(40)}));
+		exp2 = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(2),universe.integer(4)}));
+		result = universe.equals(exp1, exp2);
+		assertEquals(universe.bool(false), result);
+				
 	}
 
 
