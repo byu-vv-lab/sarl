@@ -89,7 +89,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	public SymbolicType type() {
 		return type;
 	}
-	
+
 	/**
 	 * Returns the arguments of this symbolic expression.
 	 */
@@ -161,7 +161,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		buffer.append("[");
 		buffer.append(operator.toString());
 		buffer.append("; ");
-		buffer.append(type.toString());
+		buffer.append(type != null ? type.toString() : "no type");
 		buffer.append("; ");
 		buffer.append(toStringBufferLong(arguments));
 		buffer.append("]");
@@ -347,7 +347,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case INT_DIVIDE: {
 			result.append(arguments[0].toStringBuffer(true));
-			//result.append("\u00F7");
+			// result.append("\u00F7");
 			result.append(" div ");
 			result.append(arguments[1].toStringBuffer(true));
 			if (atomize)
