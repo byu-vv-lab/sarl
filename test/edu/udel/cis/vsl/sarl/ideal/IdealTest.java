@@ -321,12 +321,13 @@ public class IdealTest {
 		BooleanExpression m2 = booleanFactory.symbolic(false);
 		assertEquals(m1, n);
 		assertEquals(m2, n0);
-		/*BooleanExpression result = commonIdealFactory.lessThan(zero, five);
+		/*
+		BooleanExpression result = commonIdealFactory.lessThan(zero, five);
 		assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result);
 		RationalExpression r1 = (RationalExpression) x;
 		RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(x, x);
-		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);*/
-		//assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result2);
+		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);
+		//assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result2);*/
 	}
 	/*
 	@Test
@@ -546,10 +547,17 @@ public class IdealTest {
 	}
 	@Test
 	public void equals(){
-		NumericExpression n1 = idealFactory.power(idealFactory.add(x,idealFactory.intConstant(1)), idealFactory.intConstant(2));
-		NumericExpression n2 = idealFactory.subtract(idealFactory.multiply(x,x), idealFactory.intConstant(1));
+		NumericExpression n11 = idealFactory.add(x, y);
+		NumericExpression n22 = idealFactory.subtract(x, y);
+		NumericExpression n1 = idealFactory.add(y, idealFactory.intConstant(2));
+		NumericExpression n2 = idealFactory.subtract(y, idealFactory.intConstant(2));
+		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));
 		BooleanExpression n = commonIdealFactory.equals(n1, n2);
-		out.println("Equals=" +n);
+		BooleanExpression n0 = commonIdealFactory.equals(n1, n3);
+		BooleanExpression n1122 = commonIdealFactory.equals(n11, n22);
+		out.println("Equals=" +n0);
+		out.println("Equals1=" +n);
+		out.println("Equals2=" +n1122);
 	}
 	
 	@Test
