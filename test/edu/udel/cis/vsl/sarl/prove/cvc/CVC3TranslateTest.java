@@ -22,6 +22,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -317,30 +318,23 @@ public class CVC3TranslateTest {
 		Expr twoExpr = cvcProver.translate(two);
 		Expr fiveExpr = cvcProver.translate(five);
 		
-		/*
-		List<SymbolicExpression> collect = new ArrayList<SymbolicExpression>();
-		collect.add(0, two);
-		collect.add(1, five);
+		SymbolicObject[] collect = new SymbolicObject[2];
+		collect[0] = two;
+		collect[1] = five;
 		
-		SymbolicExpression newCollect = universe.array(realType, collect);
 		NumericExpression mulExp1 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, realType, newCollect);
+				.expression(SymbolicOperator.MULTIPLY, realType, collect);
+		out.println(mulExp1);
 		Expr expr1 = cvcProver.translate(mulExp1);
-		
-		Expr expr2;
-		expr2 = vc.ratExpr(1);
-		for (SymbolicExpression operand : (SymbolicCollection<?>) newCollect.argument(0)){
-			expr2 = vc.multExpr(expr2, cvcProver.translate(operand));
-		}
-		
-		assertEquals(expr2, expr1);
-		*/
+		out.println(expr1);
+		Expr expected1 = vc.multExpr(twoExpr, fiveExpr);
+		assertEquals(expected1, expr1);
 		
 		NumericExpression mulExp2 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
-		Expr expr3 = cvcProver.translate(mulExp2);
-		Expr expected = vc.multExpr(twoExpr, fiveExpr);
-		assertEquals(expected, expr3);
+		Expr expr2 = cvcProver.translate(mulExp2);
+		Expr expected2 = vc.multExpr(twoExpr, fiveExpr);
+		assertEquals(expected2, expr2);
 		
 		NumericExpression mulExp3 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
