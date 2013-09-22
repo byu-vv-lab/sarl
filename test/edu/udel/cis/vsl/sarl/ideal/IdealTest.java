@@ -558,6 +558,10 @@ public class IdealTest {
 		out.println("Equals=" +n0);
 		out.println("Equals1=" +n);
 		out.println("Equals2=" +n1122);
+		BooleanExpression m1 = booleanFactory.symbolic(false);
+		BooleanExpression m2 = booleanFactory.symbolic(true);
+		assertEquals(m1, n);
+		assertEquals(m2, n0);
 	}
 	
 	@Test
@@ -586,12 +590,21 @@ public class IdealTest {
 	}
 	@Test
 	public void neq(){
-		NumericExpression n1 = idealFactory.add(x, idealFactory.intConstant(1));
-		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(2));
+		NumericExpression n11 = idealFactory.add(x, y);
+		NumericExpression n22 = idealFactory.subtract(x, y);
+		NumericExpression n1 = idealFactory.add(y, idealFactory.intConstant(2));
+		NumericExpression n2 = idealFactory.subtract(y, idealFactory.intConstant(2));
+		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
-		//out.println("neq=" +n);
-		BooleanExpression m = booleanFactory.symbolic(true);
-	    assertEquals(m, n);
+		BooleanExpression n0 = commonIdealFactory.neq(n1, n3);
+		BooleanExpression n1122 = commonIdealFactory.neq(n11, n22);
+		out.println("neq=" +n0);
+		out.println("neq1=" +n);
+		out.println("neq2=" +n1122);
+		BooleanExpression m1 = booleanFactory.symbolic(false);
+		BooleanExpression m2 = booleanFactory.symbolic(true);
+		assertEquals(m1, n0);
+		assertEquals(m2, n);
 	}
 	
 	@Test
