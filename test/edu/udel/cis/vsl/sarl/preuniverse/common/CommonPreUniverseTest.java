@@ -689,12 +689,7 @@ public class CommonPreUniverseTest {
 			
 	}
 
-	@Test
-	@Ignore
-	public void testNot() {
-		fail("Not yet implemented");
-	}
-
+	
 	@Test
 	//Test written by Chris Heider 9/16/13
 	public void testImplies() {
@@ -1714,8 +1709,34 @@ public class CommonPreUniverseTest {
 		res = universe.divides(num3, num1);
 		assertEquals(universe.bool(false), res);
 
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testNot(){
+		
+		// testing and covering two cases of not (LESSTHAN and LESSTHANEQUAL)
+		NumericExpression num1,num2;
+		NumericSymbolicConstant x_var,y_var;
+		BooleanExpression exp, notExp;
+		
+		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+					universe.stringObject("x"), integerType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+					universe.stringObject("y"), integerType);
+		
+		num1 = universe.add(x_var, universe.integer(1));
+		num2 = universe.add(y_var, universe.integer(1));
+		
+		// case: less than
+		exp = universe.lessThan(num1, num2);
+		notExp = universe.not(exp);
+		
+		// case: less than equal
+		exp = universe.lessThanEquals(num1, num2);
+		notExp = universe.not(exp);		
 		
 	}
+
 
 
 
