@@ -22,6 +22,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -761,18 +762,6 @@ public class CommonPreUniverseTest {
 	@Test
 	@Ignore
 	public void testEqualsSymbolicExpressionSymbolicExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNeq() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testDivides() {
 		fail("Not yet implemented");
 	}
 
@@ -1681,6 +1670,53 @@ public class CommonPreUniverseTest {
 		sum = universe.add(numbers);
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test 
+	public void testNeq(){
+		
+		 NumericSymbolicConstant x_var,y_var,z_var;
+		 SymbolicExpression x_plus_y, one_plus_z;
+		 BooleanExpression expression;
+		 
+		 x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+					universe.stringObject("x"), realType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+					universe.stringObject("y"), realType);
+		z_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("z"), realType);
+	
+			
+		x_plus_y = universe.add(x_var,y_var);
+		one_plus_z = universe.add(z_var, universe.rational(1));
+		
+		expression = universe.neq(x_plus_y, one_plus_z);
+		
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test 
+	public void testDivides(){
+		// test if one integer a divides another integer b
+		NumericExpression num1, num2, num3;
+		BooleanExpression res;
+		
+		num1 = universe.integer(10);
+		num2 = universe.integer(5);
+		num3 = universe.integer(3);
+		
+		// check if num2 divides num1
+		// here the result should be true since 5 divides 10
+		res = universe.divides(num2, num1);
+		assertEquals(universe.bool(true), res);
+		
+		// check if num3 divides num1
+		// here the result should be false since 3 doesn't divide 10
+		res = universe.divides(num3, num1);
+		assertEquals(universe.bool(false), res);
+
+		
+	}
+
 
 
 
