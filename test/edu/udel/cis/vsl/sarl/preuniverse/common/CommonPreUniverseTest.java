@@ -835,11 +835,8 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	@Ignore
-	public void testArray() {
-		fail("Not yet implemented");
-	}
+	
+	
 
 	@Test
 	@Ignore
@@ -1590,6 +1587,20 @@ public class CommonPreUniverseTest {
 
 	}
 
+	@Test
+	public void testArray(){
+		// testing array() when passing with no exceptions
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		
+		elements = new LinkedList<>();
+		elements.add(universe.integer(5));
+		elements.add(universe.integer(10));
+		elements.add(universe.integer(0));
+		elements.add(universe.integer(20));
+		array = universe.array(integerType, elements);
+		
+	}
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testArrayException(){
