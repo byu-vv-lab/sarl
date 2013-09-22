@@ -1565,6 +1565,51 @@ public class CommonPreUniverseTest {
 	}
 	// written by Mohammad Alsulmi
 	@Test
+	public void testCompatibleWithReal(){
+	
+		// here we test different types 
+		SymbolicType type1, type2;
+		BooleanExpression result, expected;
+		
+		type1 = universe.realType(); // real 
+		type2 = universe.herbrandRealType(); //herbrand
+		
+		// here we compare two different types (type1, type2)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithArray(){
+	
+		// here we test two array types 
+		SymbolicCompleteArrayType type1, type2;
+		BooleanExpression result, expected;
+		
+		type1 = universe.arrayType(integerType, universe.integer(3)); 
+		type2 = universe.arrayType(integerType, universe.integer(3)); 
+		
+		// here we compare two identical types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		type2 = universe.arrayType(integerType, universe.integer(5)); 
+		
+		// here we compare two different types (type1, type2)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+	}
+
+	// written by Mohammad Alsulmi
+	@Test
 	public void testArray(){
 		// testing array() when passing with no exceptions
 		LinkedList<SymbolicExpression> elements; // list of elements
