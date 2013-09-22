@@ -526,6 +526,8 @@ public class IdealTest {
 		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
 		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
 		out.println("Not Less Than Equals=" +n);
+		BooleanExpression m = booleanFactory.symbolic(false);
+		assertEquals(m, n);
 	}
 	@Test
 	public void equals(){
@@ -545,6 +547,8 @@ public class IdealTest {
 		NumericExpression m = commonIdealFactory.modulo(n3, n2);
 		NumericExpression p = commonIdealFactory.modulo(n1, n4);
 		out.println("modulo=" +n);
+		NumericExpression ne = idealFactory.modulo(n1, n2);
+		assertEquals(ne, n);
 	}
 	@Test
 	public void divide(){
@@ -563,7 +567,8 @@ public class IdealTest {
 		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(2));
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
 		out.println("neq=" +n);
-	    //assertEquals(true, n);
+		BooleanExpression m = booleanFactory.symbolic(true);
+	    assertEquals(m, n);
 	}
 	
 	@Test
