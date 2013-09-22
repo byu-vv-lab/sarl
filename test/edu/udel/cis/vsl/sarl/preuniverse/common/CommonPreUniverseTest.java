@@ -1568,7 +1568,7 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 
 	}
-
+	// written by Mohammad Alsulmi
 	@Test
 	public void testArray(){
 		// testing array() when passing with no exceptions
