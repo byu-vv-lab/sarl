@@ -497,8 +497,8 @@ public class IdealTest {
 		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
 		Polynomial b3 = commonIdealFactory.subtractConstantTerm(c);
-		out.println("Constant Term Subtraction1=" + b3);
-		out.println("Constant Term Subtraction=" + b1);
+		//out.println("Constant Term Subtraction1=" + b3);
+		//out.println("Constant Term Subtraction=" + b1);
 		assertEquals(x, b1);
 		assertEquals(c, b3);
 	}
@@ -515,17 +515,27 @@ public class IdealTest {
 		
 	@Test
 	public void notlessthan(){
-		NumericExpression n1 = idealFactory.subtract(x, y);
-		NumericExpression n2 = idealFactory.add(x, y);
+		NumericExpression n11 = idealFactory.add(x, y);
+		NumericExpression n22 = idealFactory.subtract(x, y);
+		NumericExpression n1 = idealFactory.subtract(x, idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
+		NumericExpression n3 = idealFactory.add(x, idealFactory.intConstant(1));
+		BooleanExpression n1122 = commonIdealFactory.notLessThan(n11, n22);
 		BooleanExpression n = commonIdealFactory.notLessThan(n1, n2);
-		out.println("Not Less Than=" +n);
+		BooleanExpression n0 = commonIdealFactory.notLessThan(n2, n3);
+		//out.println("Not Less Than=" +n0);
+		BooleanExpression m1 = booleanFactory.symbolic(false);
+		BooleanExpression m2 = booleanFactory.symbolic(true);
+		//out.println("Not Less Than=" +n);
+		assertEquals(m1, n);
+		assertEquals(m2, n0);
 	}
 	@Test
 	public void notlessthanequals(){
 		NumericExpression n1 = idealFactory.subtract(x, idealFactory.intConstant(1));
 		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
 		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
-		out.println("Not Less Than Equals=" +n);
+		//out.println("Not Less Than Equals=" +n);
 		BooleanExpression m = booleanFactory.symbolic(false);
 		assertEquals(m, n);
 	}
@@ -566,7 +576,7 @@ public class IdealTest {
 		NumericExpression n1 = idealFactory.add(x, idealFactory.intConstant(1));
 		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(2));
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
-		out.println("neq=" +n);
+		//out.println("neq=" +n);
 		BooleanExpression m = booleanFactory.symbolic(true);
 	    assertEquals(m, n);
 	}
