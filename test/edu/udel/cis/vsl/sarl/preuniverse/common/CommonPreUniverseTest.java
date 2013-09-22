@@ -1100,14 +1100,7 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 	
-	@Test
-	@Ignore
-	public void testInteger() { //tests cannot have any parameters
-		fail("Not yet implemented");
-//		value = 50;
-//		BigInteger N1= number(numberFactory.integer(value));
-//		assertEquals(N1,50);
-	}
+	
 	
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
@@ -1654,6 +1647,41 @@ public class CommonPreUniverseTest {
 		array = universe.array(realType, Arrays.asList(elements)); // non compatible type
 
 	}
+	// written by Mohammad Alsulmi	
+	@Test
+	public void testInteger(){
+		// covering the other cases of integers
+		NumericExpression num1,num2;
+		long n1;
+		n1 = 100;
+		BigInteger n2 = BigInteger.ONE;
+		
+		num1 = universe.integer(n1);
+		num2 = universe.integer(n2);	
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAddException(){
+		// testing the fail when passing a null list to add()
+		LinkedList<NumericExpression> numbers;
+		NumericExpression sum;
+		
+		numbers = null;
+		sum = universe.add(numbers);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAddException2(){
+		// testing the fail when passing an empty list to add()
+		LinkedList<NumericExpression> numbers;
+		NumericExpression sum;
+		
+		numbers = new LinkedList<>();
+		sum = universe.add(numbers);
+		
+	}
+
 
 
 
