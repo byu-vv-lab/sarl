@@ -302,25 +302,30 @@ public class IdealTest {
 		assertEquals(negativer, minusr);
  	}
  	*/
-	/*
-	@Test
-	public void positivenumber(){
-		Monomial monomial = idealFactory.monomial(c10, (Monic) x);
-		SymbolicMap<Monic, Monomial> termMap = null;
-		Polynomial poly = idealFactory.polynomial(termMap, monomial);
-		BooleanExpression b = idealFactory.isPositive(poly);
-		assertEquals(b, commonIdealFactory.booleanFactory().trueExpr());
-		
-	}
-	*/
+	
 	
 	@Test
 	public void lessThan() {
-		BooleanExpression result = commonIdealFactory.lessThan(zero, five);
+		NumericExpression n1 = idealFactory.subtract(x, idealFactory.intConstant(1));
+		NumericExpression n2 = idealFactory.add(x, idealFactory.intConstant(1));
+		BooleanExpression n = commonIdealFactory.lessThan(n1, n2);
+		NumericExpression n3 = idealFactory.add(x, idealFactory.intConstant(1));
+		BooleanExpression n0 = commonIdealFactory.lessThan(n2, n3);
+		NumericExpression n11 = idealFactory.add(x, y);
+		NumericExpression n22 = idealFactory.subtract(x, y);
+		BooleanExpression n1122 = commonIdealFactory.lessThan(n11, n22);
+		//out.println("less than=" +n);
+		//out.println("less than1=" +n0);
+		//out.println("less than2=" +n1122);
+		BooleanExpression m1 = booleanFactory.symbolic(true);
+		BooleanExpression m2 = booleanFactory.symbolic(false);
+		assertEquals(m1, n);
+		assertEquals(m2, n0);
+		/*BooleanExpression result = commonIdealFactory.lessThan(zero, five);
 		assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result);
 		RationalExpression r1 = (RationalExpression) x;
 		RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(x, x);
-		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);
+		BooleanExpression result2 = commonIdealFactory.lessThan(r1, r2);*/
 		//assertEquals(commonIdealFactory.booleanFactory().trueExpr(), result2);
 	}
 	/*
@@ -640,5 +645,6 @@ public class IdealTest {
 		assertEquals(p1, p);
 		assertEquals(q1, q);
 	}
+	
 	
 }
