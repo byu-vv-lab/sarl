@@ -1782,6 +1782,27 @@ public class CommonPreUniverseTest {
 		
 	}
 
+	@Test
+	public void testEqual(){
+		// testing some cases of equals
+		SymbolicExpression exp1,exp2;
+		BooleanExpression result;
+		
+		exp1 = universe.bool(false);
+		exp2 = universe.integer(11);
+		
+		result = universe.equals(exp1, exp2);
+		assertEquals(universe.bool(false), result);
+		
+		exp1 = universe.bool(false);
+		exp2 = universe.bool(true);
+		
+		result = universe.equals(exp1, exp2);
+		assertEquals(universe.bool(false), result);
+		
+		
+	}
+
 
 
 
