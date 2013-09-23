@@ -755,9 +755,78 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/23/13
 	public void testEqualsSymbolicExpressionSymbolicExpression() {
-		fail("Not yet implemented");
+		SymbolicExpression symbolicExpr1;
+		SymbolicExpression symbolicExpr2;
+		SymbolicExpression symbolicExpr3;
+		SymbolicExpression symbolicExpr4;
+		SymbolicExpression symbolicExpr5;
+		SymbolicExpression symbolicExpr6;
+		SymbolicExpression symbolicExpr7;
+		LinkedList<SymbolicType> memberTypes;
+		LinkedList<SymbolicType> oneType;
+		LinkedList<SymbolicType> zeroTypes;
+		SymbolicUnionType unionType1;
+		SymbolicUnionType unionType2;
+		SymbolicUnionType unionType3;
+		SymbolicUnionType unionType4;
+		SymbolicUnionType unionType5;
+		SymbolicUnionType unionType6;
+		SymbolicUnionType unionType7;
+		SymbolicObject x1;
+		BooleanExpression trueExpr = universe.bool(true);
+		BooleanExpression falseExpr = universe.bool(false);
+		
+		x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
+
+		memberTypes = new LinkedList<SymbolicType>();
+		zeroTypes = new LinkedList<SymbolicType>();
+		oneType = new LinkedList<SymbolicType>();
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		oneType.add(integerType);
+		unionType1 = universe.unionType(universe.stringObject("MyUnion1"),
+				memberTypes);
+		unionType2 = universe.unionType(universe.stringObject("MyUnion1"),
+				memberTypes);
+		unionType3 = universe.unionType(universe.stringObject("MyUnion1"),
+				oneType);
+		unionType4 = universe.unionType(universe.stringObject("MyUnion1"),
+				oneType);
+		unionType5 = universe.unionType(universe.stringObject("MyUnion1"),
+				zeroTypes);
+		unionType6 = universe.unionType(universe.stringObject("MyUnion1"),
+				zeroTypes);
+		unionType7 = universe.unionType(universe.stringObject("MyUnion1"),
+				memberTypes);
+		
+		symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
+				unionType1, universe.intObject(1), x1);
+		symbolicExpr2 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
+				unionType2, universe.intObject(2), x1);
+		symbolicExpr3 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_TEST, 
+				unionType3, universe.intObject(1), x1);
+		symbolicExpr4 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_TEST, 
+				unionType4, universe.intObject(4), x1);
+		symbolicExpr5 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_TEST, 
+				unionType5, universe.intObject(5), x1);
+		symbolicExpr6 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_TEST, 
+				unionType6, universe.intObject(6), x1);
+		symbolicExpr7 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_TEST, 
+				unionType7, universe.intObject(1), x1);
+		
+		// Test that unions with different values are not equal
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr2), falseExpr);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr3), falseExpr);
+		assertEquals(universe.equals(symbolicExpr3, symbolicExpr1), falseExpr);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr7), falseExpr);
+		assertEquals(universe.equals(symbolicExpr7, symbolicExpr1), falseExpr);
+		// Test UNION_INJECT, UNION_TEST
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr4), falseExpr);
+		assertEquals(universe.equals(symbolicExpr5, symbolicExpr1), falseExpr);
+		// Test that empty unions with different expressions are not equal
+		assertEquals(universe.equals(symbolicExpr5, symbolicExpr6), falseExpr);
 	}
 
 	@Test
