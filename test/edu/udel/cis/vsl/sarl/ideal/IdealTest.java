@@ -117,6 +117,7 @@ public class IdealTest {
 	NumericExpression e6; // 5 ^ 3			POWER
 	NumericExpression e7; // 5 - 3			SUBTRACT
 	NumericExpression e8; //				DEFAULT
+	NumericExpression e9;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -184,6 +185,7 @@ public class IdealTest {
 		e7 = commonIdealFactory.expression(SymbolicOperator.SUBTRACT, integer, five, three);  // 5 - 3			SUBTRACT
 		e8 = commonIdealFactory.zeroReal(); //				DEFAULT}
 		//e8 = commonIdealFactory.expression(SymbolicOperator., numericType, arguments)
+		
 	}
 	
 	@After
@@ -716,6 +718,15 @@ public class IdealTest {
 	public void expression(){
 		NumericExpression n1 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five, three, one);
 		out.println("Exp=" +n1);
+	}
+	@Test
+	public void poynomial(){
+		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
+		Monomial monomial = idealFactory.monomial(c10, (Monic) x);
+		//Polynomial poly = idealFactory.polynomial(termMap, monomial);
+		Polynomial b = commonIdealFactory.polynomial(termMap, monomial);
+		//assertEquals(b, commonIdealFactory.booleanFactory().trueExpr());
+		
 	}
 	
 }
