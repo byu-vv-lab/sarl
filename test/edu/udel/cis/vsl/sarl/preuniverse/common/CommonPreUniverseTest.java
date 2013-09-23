@@ -1717,6 +1717,7 @@ public class CommonPreUniverseTest {
 		 NumericSymbolicConstant x_var,y_var,z_var;
 		 SymbolicExpression x_plus_y, one_plus_z;
 		 BooleanExpression expression;
+		 BooleanExpression expression2, result;
 		 
 		 x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 					universe.stringObject("x"), realType);
@@ -1728,12 +1729,13 @@ public class CommonPreUniverseTest {
 			
 		x_plus_y = universe.add(x_var,y_var);
 		one_plus_z = universe.add(z_var, universe.rational(1));
-		
 		expression = universe.neq(x_plus_y, one_plus_z);
+		expression2 = universe.neq(x_plus_y, one_plus_z);
+		result = universe.neq(expression, expression2);
 		
 		
 	}
-	// written by Mohammad Alsulmi
+		// written by Mohammad Alsulmi
 	@Test 
 	public void testDivides(){
 		// test if one integer a divides another integer b
