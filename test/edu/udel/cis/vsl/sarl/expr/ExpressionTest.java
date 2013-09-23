@@ -63,6 +63,8 @@ public class ExpressionTest {
 	private SymbolicTypeFactory stf;
 	private CollectionFactory cf;
 	private ObjectFactory of;
+	private NumberFactory nf;
+	private SymbolicType herbrandType;
 	StringObject string1;
 	StringObject string2;
 	StringObject string3;
@@ -144,6 +146,9 @@ public class ExpressionTest {
 		stf = system.typeFactory();
 		of = system.objectFactory();
 		cf = system.collectionFactory();
+		nf = system.numberFactory();
+		
+		herbrandType = stf.herbrandRealType();
 	}
 
 	@After
@@ -535,8 +540,10 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		NumericExpression xpy = sUniverse.add(x,y);
 		NumericExpression xty = sUniverse.multiply(x,y);
 		NumericExpression xpyDxty = sUniverse.divide(xpy,xty);
+		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
-		assertEquals(cnef.divide(xpy, xty),xpyDxty);
+		assertEquals(cnef.divide(xpy, xty), xpyDxty);
+		assertEquals(cnef.divide(cnef.cast(xpy, herbrandType),  cnef.cast(xty, herbrandType)), xpyDxtyH);
 		assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(), "((X+Y)/X*Y)");
 	}
 	
@@ -550,9 +557,11 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 	@Test
 	public void cnefMinusTest() {
 		NumericExpression xpy = sUniverse.add(x,y);
+		NumericExpression xpyH = cnef.cast(xpy, herbrandType);
 		NumericExpression minus = cnef.minus(xpy);
 		
 		assertEquals(minus, idealFactory.minus(xpy));
+		assertEquals(cnef.cast(minus, herbrandType), cnef.cast(idealFactory.minus(xpy), herbrandType));
 	}
 	
 	
