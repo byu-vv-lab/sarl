@@ -1781,13 +1781,13 @@ public class CommonPreUniverseTest {
 		notExp = universe.not(exp);		
 		
 	}
-
+	// written by Mohammad Alsulmi
 	@Test
 	public void testEqual(){
 		// testing some cases of equals
 		SymbolicExpression exp1,exp2;
 		BooleanExpression result;
-		
+		SymbolicTupleType tupleType;
 		// case 1 when exp1 is boolean and exp2 is integer
 		exp1 = universe.bool(false);
 		exp2 = universe.integer(11);
@@ -1816,7 +1816,16 @@ public class CommonPreUniverseTest {
 		exp2 = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(2),universe.integer(4)}));
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
-				
+		
+		// case 5 when exp1 and exp2 are tuples but with different values	
+		tupleType = universe.tupleType(universe.stringObject("type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		exp1 = universe.tuple(tupleType, Arrays.asList(new NumericExpression[]{universe.integer(6),universe.integer(8)}));
+		exp2 = universe.tuple(tupleType, Arrays.asList(new NumericExpression[]{universe.integer(6),universe.integer(9)}));
+		result = universe.equals(exp1, exp2);
+		assertEquals(universe.bool(false), result);
+		
+
+		
 	}
 
 
