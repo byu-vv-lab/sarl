@@ -712,5 +712,10 @@ public class IdealTest {
 		NumericExpression s1 = commonIdealFactory.number(s);
 		out.println("s1=" +s1);
 	}*/
+	@Test
+	public void expression(){
+		NumericExpression n1 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five, three, one);
+		out.println("Exp=" +n1);
+	}
 	
 }
