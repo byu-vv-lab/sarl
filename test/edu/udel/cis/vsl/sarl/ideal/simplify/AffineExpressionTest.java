@@ -100,7 +100,7 @@ public class AffineExpressionTest {
 				objectFactory, typeFactory,
 				collectionFactory,
 				booleanFactory); 
-		c10 = idealFactory.intConstant(3);
+		c10 = idealFactory.intConstant(10);
 		real = typeFactory.realType();
 	}
 
@@ -121,12 +121,13 @@ public class AffineExpressionTest {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		
 		Monic monic = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("Y"), real);
+		
 		Monomial factorization = idealFactory.monomial(c10, monic);
 		termMap.put(monic, factorization);
+		out.println(factorization.toString());
 		Polynomial poly = commonIdealFactory.polynomial(termMap, factorization);
 		Polynomial poly2 = commonIdealFactory.polynomial(termMap, factorization);
-		poly = idealFactory.polynomial(termMap, factorization);
-         out.println(factorization.toString());
+		poly = idealFactory.polynomial(termMap, factorization.factorization(idealFactory));
          SymbolicMap<Monic, Monomial> termMap0 = commonIdealFactory.emptyMap();
  		Monic monic0 = (Monic) idealFactory.symbolicConstant(objectFactory.stringObject("X"), real);
  		Monomial monomial0 = idealFactory.monomial(idealFactory.intConstant(10), monic0);
