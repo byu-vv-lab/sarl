@@ -42,6 +42,7 @@ import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.cnf.CnfSymbolicConstant;
+import edu.udel.cis.vsl.sarl.expr.common.CommonNumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
@@ -92,6 +93,9 @@ public class ExpressionTest {
 			.newPreUniverse(factorySystem);
 	private ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
+	private static NumericExpressionFactory idealFactory = factorySystem.numericFactory();
+	private static NumericExpressionFactory herbrandFactory = factorySystem.numericFactory();
+	CommonNumericExpressionFactory cnef = new CommonNumericExpressionFactory(idealFactory, herbrandFactory);
 	
 	
 	SymbolicIntegerType intType;
@@ -225,6 +229,10 @@ assertEquals(test6.toString(), "length(X)");
 	@Test
 	public void toStringBuffer1LessThanTest() {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
+		out.println(x);
+		out.println(three);
+		for (SymbolicObject expr : test7.arguments())
+			out.println(expr.toString());
 		assertEquals(test7.toString(), "0 < -1*X+3");
 		
 		//Less_than test atomize
@@ -299,6 +307,8 @@ assertEquals(test6.toString(), "length(X)");
 		assertEquals(nullexp.toStringBuffer(false).toString(), "NULL");
 
 	}
+	
+	@Ignore
 	@Test
 	public void toStringBuffer1IntDivideTest() {
 		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
@@ -518,6 +528,31 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		//or here.
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		assertNotNull(bef);
+	}
+	
+	@Test
+	public void cnefDivideTest() {
+		NumericExpression xpy = sUniverse.add(x,y);
+		NumericExpression xty = sUniverse.multiply(x,y);
+		NumericExpression xpyDxty = sUniverse.divide(xpy,xty);
+		
+		assertEquals(cnef.divide(xpy, xty),xpyDxty);
+		assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(), "((X+Y)/X*Y)");
+	}
+	
+	@Test
+	public void cnefHerbrandFactoryTest() {
+		NumericExpressionFactory hf = cnef.herbrandFactory();
+		
+		assertEquals(hf, herbrandFactory);
+	}
+	
+	@Test
+	public void cnefMinusTest() {
+		NumericExpression xpy = sUniverse.add(x,y);
+		NumericExpression minus = cnef.minus(xpy);
+		
+		assertEquals(minus, idealFactory.minus(xpy));
 	}
 	
 	
