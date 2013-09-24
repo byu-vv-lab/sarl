@@ -1068,7 +1068,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type
+	 *            symbolic expression of integer type representing the position of the element within the array
 	 * @return expression representing value of index-th element of the array
 	 */
 	SymbolicExpression arrayRead(SymbolicExpression array,
@@ -1082,7 +1082,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type
+	 *            symbolic expression of integer type representing the position of the element within the array
 	 * @param value
 	 *            the new value for the element at position index
 	 * @return expression representing the result of changing the index-th
