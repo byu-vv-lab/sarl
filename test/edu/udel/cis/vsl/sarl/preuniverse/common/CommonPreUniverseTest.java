@@ -31,6 +31,7 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -1645,6 +1646,27 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 
 	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithFunction(){
+	
+		// here we test compatible with tuple types 
+		SymbolicFunctionType functionType1, functionType2;
+		BooleanExpression result, expected;
+		
+		functionType1 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,integerType}), realType);
+		functionType2 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,realType}), integerType);
+		
+		
+		// here we compare two different function types (functionType1, functionType2)
+		// the expected compatible call should return true
+		
+		expected = universe.bool(false);
+		result = universe.compatible(functionType1, functionType2);
+		assertEquals(expected, result);
+		
+	}
+
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithReal(){
