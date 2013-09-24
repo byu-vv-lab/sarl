@@ -558,7 +558,7 @@ public interface PreUniverse {
 	 *            a symbolic expression of a numeric type
 	 * @param arg1
 	 *            a symbolic expression of the same numeric type
-	 * @return arg0+arg1
+	 * @return expression representing the sum
 	 */
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
