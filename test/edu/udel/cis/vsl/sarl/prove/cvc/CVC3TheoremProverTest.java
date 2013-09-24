@@ -155,4 +155,27 @@ public class CVC3TheoremProverTest {
 		assertEquals(ValidityResult.ResultType.YES,
 				cvcProver.valid(booleanExprTrue).getResultType());		
 	}
+	
+	@Test
+	public void testNewCVCName() {
+		//use expression factory to get APPLY expression in order to use translate to hit switch case
+		//in order to publicly get to translateFunction which uses newCvcName
+		
+		SymbolicExpression x = universe
+				.symbolicConstant(universe.stringObject("x"),
+						universe.booleanType());
+		
+		SymbolicExpression x2 = universe
+				.symbolicConstant(universe.stringObject("x"),
+						universe.booleanType());
+		
+		Expr xTranslateSym = cvcProver.translate(x);
+		Expr xTranslateSym2 = cvcProver.translate(x2);
+		
+		assertEquals(xTranslateSym.toString(), "x");
+		assertEquals(xTranslateSym2.toString(), "x'1");
+
+	}
+	
+	
 }
