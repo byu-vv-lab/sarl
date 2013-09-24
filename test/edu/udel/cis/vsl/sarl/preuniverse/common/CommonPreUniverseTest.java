@@ -901,12 +901,7 @@ public class CommonPreUniverseTest {
 	
 	
 
-	@Test
-	@Ignore
-	public void testAppend() {
-		fail("Not yet implemented");
-	}
-
+	
 	@Test
 	@Ignore
 	public void testEmptyArray() {
@@ -1930,9 +1925,67 @@ public class CommonPreUniverseTest {
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
 		
-
+	}
+	// written by Mohammad Alsulmi
+	@Test 
+	public void testAppend(){
+	
+		// here we test the regular case of array append when it passes
+		SymbolicExpression array, expected;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		value = universe.integer(5);
+		// expected array after append
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10),universe.integer(5)}));
+		// appending here
+		array = universe.append(array, value);
+		
+		assertEquals(expected, array);
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException(){
+	
+		// testing the fail when passing tuple to array append
+		SymbolicTupleType tupleType;
+		SymbolicExpression tuple;
+		SymbolicExpression value;
+		
+		tupleType = universe.tupleType(universe.stringObject("type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		tuple = universe.tuple(tupleType, Arrays.asList(new NumericExpression[]{universe.integer(10), universe.rational(6)}));
+		value = universe.integer(100);
+		// we expect exception since append() cannot accept other than arrays
+		tuple = universe.append(tuple, value);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException2(){
+	
+		// testing the fail when passing a null value to array append
+		SymbolicExpression array;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		value = null;
+		// we expect exception since append() cannot accept null values 
+		array = universe.append(array, value);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException3(){
+	
+		// testing the fail when passing a value with incompatible to array append
+		SymbolicExpression array;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		// the value is real but the array is integer
+		value = universe.rational(6.0);
+		array = universe.append(array, value);
+	}
+
 	
 	@Test
 	@Ignore
