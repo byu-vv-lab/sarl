@@ -88,6 +88,9 @@ public class ExpressionTest {
 	private IntObject fiveIntObj; // 5
 	private IntObject zeroIntObj; // 0
 	private IntObject negIntObj; // -10
+	private NumericExpression xpy;
+	private NumericExpression xty;
+	private NumericExpression xpyDxty;
 
 	private static  FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
@@ -139,7 +142,9 @@ public class ExpressionTest {
 		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
 		twoInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(2));
 		threeInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(3));
-
+		xpy = sUniverse.add(x,y);
+		xty = sUniverse.multiply(x,y);
+		xpyDxty = sUniverse.divide(xpy,xty);
 		
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		
@@ -375,10 +380,6 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 	
 	@Test
 	public void toStringBufferLongTest() {
-		NumericExpression xpy = sUniverse.add(x,y);
-		NumericExpression xty = sUniverse.multiply(x,y);
-		NumericExpression xpyDxty = sUniverse.divide(xpy,xty);
-		
 		StringBuffer tstStringBuff = new StringBuffer(xpyDxty.getClass().getSimpleName());
 		tstStringBuff.append("[");
 		tstStringBuff.append(xpyDxty.operator());
@@ -402,8 +403,6 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		tstStringBuff.append("}");	
 		tstStringBuff.append("]");
 			
-		//out.println(xpyDxty.toStringBufferLong());
-		//out.println(tstStringBuff);
 		assertEquals(xpyDxty.toStringBufferLong().toString(),tstStringBuff.toString());
 	}
 	
@@ -537,9 +536,6 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 	
 	@Test
 	public void cnefDivideTest() {
-		NumericExpression xpy = sUniverse.add(x,y);
-		NumericExpression xty = sUniverse.multiply(x,y);
-		NumericExpression xpyDxty = sUniverse.divide(xpy,xty);
 		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		assertEquals(cnef.divide(xpy, xty), xpyDxty);
@@ -556,14 +552,91 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 	
 	@Test
 	public void cnefMinusTest() {
-		NumericExpression xpy = sUniverse.add(x,y);
-		NumericExpression xpyH = cnef.cast(xpy, herbrandType);
 		NumericExpression minus = cnef.minus(xpy);
 		
+		assertEquals(minus, sUniverse.minus(xpy));
 		assertEquals(minus, idealFactory.minus(xpy));
+		assertEquals(cnef.cast(minus, herbrandType), cnef.cast(sUniverse.minus(xpy), herbrandType));
 		assertEquals(cnef.cast(minus, herbrandType), cnef.cast(idealFactory.minus(xpy), herbrandType));
 	}
 	
+	@Test
+	public void cnefModuloTest() {
+		NumericExpression expr1 = sUniverse.multiply(xInt, threeInt);
+		NumericExpression expr2 = sUniverse.divide(twoInt, xInt);
+		NumericExpression moduloExpression = cnef.modulo(expr1, expr2);
+		
+		assertEquals(moduloExpression, sUniverse.modulo(expr1, expr2));
+		assertEquals(moduloExpression,idealFactory.modulo(expr1, expr2));
+		assertEquals(cnef.cast(moduloExpression, herbrandType), cnef.cast(sUniverse.modulo(expr1, expr2), herbrandType));
+		assertEquals(cnef.cast(moduloExpression, herbrandType), cnef.cast(idealFactory.modulo(expr1, expr2), herbrandType));
+	}
 	
-
+	@Test
+	public void cnefPowerTest() {
+		NumericExpression expr1 = sUniverse.multiply(xInt, threeInt);
+		NumericExpression expr2 = sUniverse.divide(twoInt, xInt);
+		NumericExpression powerExpression = cnef.power(expr1, expr2);
+		NumericExpression powerExpression2 = cnef.power(expr1, fiveIntObj);
+		
+		assertEquals(powerExpression, sUniverse.power(expr1, expr2));
+		assertEquals(powerExpression, idealFactory.power(expr1, expr2));
+		assertEquals(powerExpression2, sUniverse.power(expr1, fiveIntObj));
+		assertEquals(powerExpression2, idealFactory.power(expr1, fiveIntObj));
+		assertEquals(cnef.cast(powerExpression, herbrandType), cnef.cast(sUniverse.power(expr1, expr2), herbrandType));
+		assertEquals(cnef.cast(powerExpression, herbrandType), cnef.cast(idealFactory.power(expr1, expr2), herbrandType));
+		assertEquals(cnef.cast(powerExpression2, herbrandType), cnef.cast(sUniverse.power(expr1, fiveIntObj), herbrandType));
+		assertEquals(cnef.cast(powerExpression2, herbrandType), cnef.cast(idealFactory.power(expr1, fiveIntObj), herbrandType));
+	}
+	
+	@Test
+	public void cnefExtractNumberTest() {
+		NumericExpression expr1 = sUniverse.multiply(xInt,threeInt);
+		NumericExpression expr1H = cnef.cast(expr1, herbrandType);
+		
+		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum = cnef.extractNumber(expr1);
+		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum2 = cnef.extractNumber(expr1H);
+		
+		assertEquals(extractedNum, sUniverse.extractNumber(expr1));
+		assertEquals(extractedNum, idealFactory.extractNumber(expr1));
+		assertEquals(extractedNum2, sUniverse.extractNumber(expr1H));
+		assertEquals(extractedNum2, idealFactory.extractNumber(expr1H));
+	}
+	
+	@Test
+	public void cneflessThanTest() {
+		BooleanExpression lessThan = cnef.lessThan(xpy, xty);
+		BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		assertEquals(lessThan, sUniverse.lessThan(xpy, xty));
+		assertEquals(lessThan, idealFactory.lessThan(xpy, xty));
+		assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		assertEquals(lessThanH, idealFactory.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+	}
+	
+	@Test
+	public void cnefNotLessThanTest() {
+		BooleanExpression notLessThan = cnef.notLessThan(xpy, xty);
+		BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		// No notLessThan method for sUniverse?
+		//assertEquals(notLessThan, sUniverse.notLessThan(xpy, xty));
+		assertEquals(notLessThan, idealFactory.notLessThan(xpy, xty));
+		//assertEquals(notLessThanH, sUniverse.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		assertEquals(notLessThanH, idealFactory.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+	}
+	
+	@Test
+	public void cnefNotLessThanEqualsTest() {
+		BooleanExpression notLessThanEquals = cnef.notLessThanEquals(xpy, xty);
+		BooleanExpression notLessThanEqualsH = cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		// No notLessThanEquals method for sUniverse?
+		//assertEquals(notLessThanEquals, sUniverse.notLessThanEquals(xpy, xty));
+		assertEquals(notLessThanEquals, idealFactory.notLessThanEquals(xpy, xty));
+		//assertEquals(notLessThanEqualsH, sUniverse.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		assertEquals(notLessThanEqualsH, idealFactory.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+	}
+	
+	
 }
