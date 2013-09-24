@@ -1,8 +1,6 @@
-/* Author: Gunjan Majmudar */
-
+/*Author: Gunjan Majmudar */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
-
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,22 +23,22 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
-public class FunctionTypeTest {
+public class FunctionCaseEqualsTest {
 	
 	private static PreUniverse universe;
-	
-	private static CommonPreUniverse nuniverse;
 
 	private static SymbolicType realType, integerType;
 
-	private static SymbolicType functionType1, functionType2;
+	private static SymbolicType functionType1, functionType2, functionType3;
 	
-	private static SymbolicTypeSequence sequence1, sequence2;
+	private static SymbolicTypeSequence sequence1, sequence2, sequence3;
 	
+	private static BooleanExpression value1, value2, trueExpr, falseExpr;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -48,6 +46,9 @@ public class FunctionTypeTest {
 		universe = new CommonPreUniverse(test);
 		integerType = universe.integerType();
 		realType = universe.realType();
+		trueExpr = universe.trueExpression();
+		falseExpr = universe.falseExpression();
+		
 	}
 
 	@AfterClass
@@ -64,20 +65,22 @@ public class FunctionTypeTest {
 	
 	
 	@Test
-	public void FunctionTypeTest1(){
+	public void FunctionCaseEqualsTest1(){
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
 		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
+		SymbolicTupleType tupleType3 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
 		sequence1 = tupleType1.sequence();
 		sequence2 = tupleType2.sequence();
+		sequence2 = tupleType3.sequence();
 		functionType1 = universe.functionType(sequence1, realType);
 		functionType2 = universe.functionType(sequence2, realType);
+		functionType3 = universe.functionType(sequence3, realType);
 		
-		//functionType3 = nuniverse.functionType(inputTypes, outputType)
+		value1 = universe.compatible(functionType1, functionType2);
+		value2 = universe.compatible(functionType1, functionType2);
 		
-		assertEquals(functionType1.typeKind(),functionType2.typeKind());
-		assertEquals(functionType1.isReal(), false);
-		assertEquals(functionType1.isCanonic(), false);
-		assertEquals(functionType1.isInteger(), false);
-		
+		assertEquals(falseExpr, value1);
+		assertEquals(trueExpr, value2);
 	}
 }
+
