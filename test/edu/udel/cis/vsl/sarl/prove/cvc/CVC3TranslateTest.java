@@ -458,149 +458,7 @@ public class CVC3TranslateTest {
 		list.add(trueExpr);
 		list.add(falseExpr);
 		expected = vc.orExpr(list);
-		assertEquals(expected, translateOr);					  
-	}
-	
-	@Test
-	public void testTranslateQuantifier() {
-		// x real
-		NumericSymbolicConstant xConstant = (NumericSymbolicConstant) universe.
-				symbolicConstant(xString, realType);
-		// N real
-		StringObject NString = universe.stringObject("N");
-		NumericSymbolicConstant NConstant = (NumericSymbolicConstant) universe.
-				symbolicConstant(NString, realType);
-		// 0 < x, (aka x > 0), no greater_than symbolic operator
-		BooleanExpression xGreaterZero = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						universe.zeroReal(), xConstant);
-		// x < N
-		BooleanExpression xLessN = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						xConstant, NConstant);
-		// 0 < x < N
-		BooleanExpression zeroLessXLessN = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.AND, boolType, xGreaterZero, xLessN);
-		// x exists
-		SymbolicExpression xExistsExpression = expressionFactory
-				.expression(SymbolicOperator.EXISTS, universe.realType(),
-						xConstant, zeroLessXLessN);
-		
-		// CVC3 x expr values
-		List<Expr> vars = new ArrayList<Expr>();
-		Expr xExpr = cvcProver.translate(xConstant);
-		Expr xBoundsExpr = cvcProver.translate(zeroLessXLessN);
-		vars.add(xExpr);
-		
-		Expr existsExpr = cvcProver.translate(xExistsExpression);
-		Expr expected = vc.existsExpr(vars, xBoundsExpr);
-		assertEquals(expected, existsExpr);
-		vars.clear();
-		
-		// x'1 real
-		NumericSymbolicConstant x1Constant = (NumericSymbolicConstant) universe.
-				symbolicConstant(xString, realType);
-		// 0 < x'1
-		xGreaterZero = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						universe.zeroReal(), x1Constant);
-		// x'1 exists
-		SymbolicExpression x1ExistsExpression = expressionFactory
-				.expression(SymbolicOperator.EXISTS, universe.realType(),
-						x1Constant, xGreaterZero);
-		// x'2 real
-		NumericSymbolicConstant x2Constant = (NumericSymbolicConstant) universe.
-				symbolicConstant(xString, realType);
-		// 1 < x'2 
-		BooleanExpression xGreaterOne = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						universe.oneReal(), x2Constant);
-		// x'2 exists
-		SymbolicExpression x2ExistsExpression = expressionFactory
-				.expression(SymbolicOperator.EXISTS, universe.realType(),
-						x1Constant, xGreaterOne);
-		
-		// 0 < x'1 && 1 < x'2
-		BooleanExpression andExpression = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.AND, boolType, 
-						x1ExistsExpression, x2ExistsExpression);
-		// CVC3 Expr values
-		Expr x1Expr = cvcProver.translate(x1Constant);
-		Expr x2Expr = cvcProver.translate(x2Constant);
-		vars.add(x1Expr);
-		vars.add(x2Expr);
-		Expr x1Exists = cvcProver.translate(x1ExistsExpression);
-		Expr x2Exists = cvcProver.translate(x2ExistsExpression);
-		Expr x1and2Exist = vc.andExpr(x1Exists, x2Exists);
-//		Expr x1and2Exist = cvcProver.translate(andExpression);
-		expected = vc.existsExpr(vars, x1and2Exist);
-		assertEquals(expected, x1and2Exist);
-	}
-	
-	@Test
-	public void testTranslateExistsAnd() {
-		// set up pieces
-		// 0 < x
-		SymbolicExpression xGreaterZero =  expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						universe.zeroReal(), xReal);
-		// (E x . x > 0) ^ (E x . x < 10)
-	    // (E x1 . x1 > 0) ^ (E x2 . x2 < 10)
-		
-		// sarl
-		// (E x . x > 0)
-		SymbolicExpression xExists = expressionFactory
-				.expression(SymbolicOperator.EXISTS, realType, 
-						xReal, xGreaterZero);
-		// x2 real
-		SymbolicConstant x2Real = universe.
-				symbolicConstant(xString, realType);
-		// x < 10
-		SymbolicExpression x2LessTen = expressionFactory
-				.expression(SymbolicOperator.LESS_THAN, boolType, 
-						x2Real, ten);
-		// (E x . x < 10)
-		SymbolicExpression x2Exists = expressionFactory
-				.expression(SymbolicOperator.EXISTS, realType, 
-						x2Real, x2LessTen);
-		// (E x . x > 0) ^ (E x . x < 10)
-		SymbolicExpression x1andx2Exist = expressionFactory
-				.expression(SymbolicOperator.AND, boolType, 
-						xExists, x2Exists);
-		
-		// cvc3 translation
-		List<Expr> vars = new ArrayList<Expr>();
-		Expr x1Expr = cvcProver.translate(xReal);
-		Expr x2Expr = cvcProver.translate(x2Real);
-		Expr x1GreaterZeroExpr = cvcProver.translate(xGreaterZero);
-		Expr x2LessTenExpr = cvcProver.translate(x2LessTen);
-		Expr x1ExistsExpr = cvcProver.translate(xExists);
-		Expr x2ExistsExpr = cvcProver.translate(x2Exists);
-		Expr translateResult = cvcProver.translate(x1andx2Exist);
-		out.println(translateResult);
-		vars.add(x1Expr);
-		vars.clear();
-		vars.add(x2Expr);
-		Expr expected = vc.andExpr(x1ExistsExpr, x2ExistsExpr);
-		out.println(expected);
-		assertEquals(expected, translateResult); // misleading results
-		// expected: ((EXISTS (x'1: REAL) : (0 < x)) 
-		// AND (EXISTS (x'1: REAL) : (x < 10)))
-		
-		// translateResult: ((EXISTS (x'1: REAL) : (0 < x)) 
-		// AND (EXISTS (x'1: REAL) : (x < 10)))
-		
-		// should be: ((EXISTS (x'1: REAL) : (0 < x'1))
-		// AND (EXISTS (x'2: REAL) : (x'2 < 10)))
-		
-
-	}
-	
-	@Test
-	public void testTranslateExistsNested() {
-		// TODO
-		// (E x . x > 0 ^ (E x . x < 10 ^ (...)))
-		// (E x1 . x1 > 0 ^ (E x2 . x2 < 10 ^ (...)))
+		assertEquals(expected, translateOr);
 	}
 	
 	@Test
@@ -609,18 +467,38 @@ public class CVC3TranslateTest {
 		Type intArrayDataType = vc.arrayType(vc.intType(), vc.intType());
 		// give extent, along with array type in a tuple
 		Type expected = vc.tupleType(vc.intType(), intArrayDataType);
+		out.println("expected: " + expected);
 		Type translateResult = cvcProver.translateType(intArrayType);
-		
-		// TODO make comparisons that aren't don't assert equality
-		// between the translated types directly
+		out.println("translateResult: " + translateResult);
+		int eType = expected.arity();
+		out.println("expected Type: " + eType);
+		int trType = translateResult.arity();
+		out.println("translateResult Type: " + trType);
+		assertEquals(eType, trType);
 		
 		// cvc3 tuple
 		List<SymbolicType> typesList = new ArrayList<SymbolicType>();
 		typesList.add(intType);
 		typesList.add(intType);
+		typesList.add(realType);
 		SymbolicTypeSequence types = universe.typeSequence(typesList);
-		StringObject name = universe.stringObject("twoIntTuple");
-		SymbolicType twoIntTupleType = universe.tupleType(name, types);
+		StringObject name = universe.stringObject("twoIntRealTuple");
+		SymbolicType twoIntRealTupleType = universe.tupleType(name, types);
+		translateResult = cvcProver.translateType(twoIntRealTupleType);
+		
+		List<Type> cvc3Types = new ArrayList<Type>();
+		cvc3Types.add(vc.intType());
+		cvc3Types.add(vc.intType());
+		cvc3Types.add(vc.realType());
+		expected = vc.tupleType(cvc3Types);
+		out.println("expected: " + expected);
+		out.println("translateResult: " + translateResult);
+		
+		eType = expected.arity();
+		trType = translateResult.arity();
+		out.println("expected type: " + eType);
+		out.println("translateResult type: " + trType);
+		assertEquals(eType, trType);
 	}
 	
 }
