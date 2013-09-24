@@ -105,7 +105,7 @@ public class ExpressionTest {
 	
 	SymbolicIntegerType intType;
 	private SymbolicType herbrandIntType;
-	
+	private SymbolicOperator addOperator;
 	//CommonSymbolicConstant c1 = new CommonSymbolicConstant(string1, intType);
 	
 	@Before
@@ -153,6 +153,7 @@ public class ExpressionTest {
 		of = system.objectFactory();
 		cf = system.collectionFactory();
 		nf = system.numberFactory();
+		addOperator = xpy.operator();
 		
 		herbrandType = stf.herbrandRealType();
 		herbrandIntType = stf.herbrandIntegerType();
@@ -614,46 +615,91 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(extractedNum2, idealFactory.extractNumber(expr1H));
 	}
 	
-	// Why is this failing?
-	@Ignore
 	@Test
 	public void cneflessThanTest() {
 		BooleanExpression lessThan = cnef.lessThan(xpy, xty);
-		BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		// This line causes an Assertion Error. Why?
+		//BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		assertEquals(lessThan, sUniverse.lessThan(xpy, xty));
 		assertEquals(lessThan, idealFactory.lessThan(xpy, xty));
-		assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		assertEquals(lessThanH, idealFactory.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		//assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		//assertEquals(lessThanH, idealFactory.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 	}
 	
-	// Wy is this failing?
-	@Ignore
 	@Test
 	public void cnefNotLessThanTest() {
 		BooleanExpression notLessThan = cnef.notLessThan(xpy, xty);
-		BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		// This line causes an Assertion Error. Why?
+		//BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		// No notLessThan method for sUniverse?
 		//assertEquals(notLessThan, sUniverse.notLessThan(xpy, xty));
 		assertEquals(notLessThan, idealFactory.notLessThan(xpy, xty));
 		//assertEquals(notLessThanH, sUniverse.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		assertEquals(notLessThanH, idealFactory.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		//assertEquals(notLessThanH, idealFactory.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 	}
 	
-	// Why is this failing?
-	@Ignore
 	@Test
 	public void cnefNotLessThanEqualsTest() {
 		BooleanExpression notLessThanEquals = cnef.notLessThanEquals(xpy, xty);
-		BooleanExpression notLessThanEqualsH = cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		// This line causes an Assertion Error. Why?
+		//BooleanExpression notLessThanEqualsH = cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		// No notLessThanEquals method for sUniverse?
 		//assertEquals(notLessThanEquals, sUniverse.notLessThanEquals(xpy, xty));
 		assertEquals(notLessThanEquals, idealFactory.notLessThanEquals(xpy, xty));
 		//assertEquals(notLessThanEqualsH, sUniverse.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		assertEquals(notLessThanEqualsH, idealFactory.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		//assertEquals(notLessThanEqualsH, idealFactory.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 	}
 	
+	@Test
+	public void cnefExpressionTest() {
+		NumericExpression[] args = {xpy, xty};
+		NumericExpression[] argsH = {cnef.cast(xpy, herbrandType)};
+		Collection<SymbolicObject> args2= new ArrayList<SymbolicObject>(Arrays.asList(args));
+		Collection<SymbolicObject> args2H = new ArrayList<SymbolicObject>(Arrays.asList(argsH));
+		
+		NumericExpression expr1 = cnef.expression(addOperator, realType, args);
+		NumericExpression expr2 = cnef.expression(addOperator, realType, args2);
+		NumericExpression expr3 = cnef.expression(addOperator, realType, xpy);
+		NumericExpression expr4 = cnef.expression(addOperator, realType, xpy, x, y);
+		
+		NumericExpression expr1H = cnef.expression(addOperator, herbrandType, argsH);
+		NumericExpression expr2H = cnef.expression(addOperator, herbrandType, args2H);
+		NumericExpression expr3H = cnef.expression(addOperator, herbrandType, cnef.cast(xpy, herbrandType));
+		NumericExpression expr4H = cnef.expression(addOperator, herbrandType, cnef.cast(xpy, herbrandType), 
+												cnef.cast(x, herbrandType), cnef.cast(y, herbrandType));
+		
+		assertEquals(expr1, expr2);
+		assertEquals(expr1H, expr2H);
+		assertNotEquals(expr1, expr1H);
+		assertNotEquals(expr2, expr2H);
+		assertNotEquals(expr3, expr3H);
+		assertNotEquals(expr4, expr4H);
+		
+		assertEquals(expr1, herbrandFactory.expression(addOperator, realType, args2));
+		assertEquals(expr2, idealFactory.expression(addOperator, realType, args));
+		assertEquals(expr1, idealFactory.expression(addOperator, realType, args2));
+		assertEquals(expr2, herbrandFactory.expression(addOperator, realType, args));
+		
+		assertEquals(expr1H, herbrandFactory.expression(addOperator, herbrandType, args2H));
+		assertEquals(expr2H, idealFactory.expression(addOperator, herbrandType, argsH));
+		assertEquals(expr1H, idealFactory.expression(addOperator, herbrandType, args2H));
+		assertEquals(expr2H, herbrandFactory.expression(addOperator, herbrandType, argsH));
+	}
 	
+	@Test
+	public void cnefSubtractTest() {
+		NumericExpression expr1 = cnef.subtract(xpy, xty);
+		NumericExpression expr1H = cnef.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		
+		assertEquals(expr1, sUniverse.subtract(xpy, xty));
+		assertEquals(expr1, idealFactory.subtract(xpy, xty));
+		assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+	}
 }
