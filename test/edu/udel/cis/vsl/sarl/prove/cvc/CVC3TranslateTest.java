@@ -35,7 +35,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -358,9 +360,12 @@ public class CVC3TranslateTest {
 		newArray.add(2, two);
 
 		SymbolicExpression s1 = universe.denseArrayWrite(a, newArray);
-		SymbolicExpression s2 = expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, zeroInt);
-		SymbolicExpression s3 = expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, oneInt);
-		SymbolicExpression s4 =	expressionFactory.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, twoInt);
+		SymbolicExpression s2 = expressionFactory
+				.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, zeroInt);
+		SymbolicExpression s3 = expressionFactory
+				.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, oneInt);
+		SymbolicExpression s4 =	expressionFactory
+				.expression(SymbolicOperator.ARRAY_READ, a.type(), s1, twoInt);
 		
 		Expr expr1 = cvcProver.translate(s2);
 		Expr expr2 = cvcProver.translate(s3);
@@ -394,19 +399,30 @@ public class CVC3TranslateTest {
 		tupleType.add(intType);
 		tupleType.add(intType);
 		
-		List<SymbolicExpression> tupleWriteList = new ArrayList<SymbolicExpression>();
-		tupleWriteList.add(fiveInt);
-		tupleWriteList.add(oneInt);
-		tupleWriteList.add(twoInt);
+		//Sequence not adding numbers
+		SymbolicSequence<SymbolicExpression> tupleSequenceWrite = 
+				new PcollectionsSymbolicSequence<SymbolicExpression>();
+		tupleSequenceWrite.add(fiveInt);
+		tupleSequenceWrite.add(oneInt);
+		tupleSequenceWrite.add(twoInt);
+		
+		out.println(tupleSequenceWrite.size());
 		
 		SymbolicExpression s1 = universe.tuple(universe
 				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
-		SymbolicExpression s2 = universe.tuple(universe
-				.tupleType(universe.stringObject("tuple"), tupleType), tupleWriteList);
-		SymbolicExpression s3 = expressionFactory.expression(SymbolicOperator.DENSE_TUPLE_WRITE, s1.type(), s1, s2);
-		SymbolicExpression s4 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(0));
-		SymbolicExpression s5 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(1));
-		SymbolicExpression s6 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(2));
+		SymbolicExpression s3 = expressionFactory
+				.expression(SymbolicOperator.DENSE_TUPLE_WRITE, s1.type(), s1, tupleSequenceWrite);
+		SymbolicExpression s4 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(0));
+		SymbolicExpression s5 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(1));
+		SymbolicExpression s6 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(2));
+		
+		out.println(s3);
+		out.println(s4);
+		out.println(s5);
+		out.println(s6);
 		
 		Expr tupleNumber1 = cvcProver.translate(s4);
 		Expr tupleNumber2 = cvcProver.translate(s5);
