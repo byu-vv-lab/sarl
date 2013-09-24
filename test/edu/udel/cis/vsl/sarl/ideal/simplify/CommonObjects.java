@@ -16,6 +16,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
+import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CommonObjects {
@@ -34,7 +35,9 @@ public class CommonObjects {
 	
 	static IdealFactory idealFactory;
 	
-	static IdealSimplifierFactory simplifierFactory;
+	static IdealSimplifierFactory idealSimplifierFactory;
+	
+	static IdentitySimplifierFactory identitySimplifierFactory;
 	
 	static Simplifier simp1ifier_xeq5;
 	
@@ -92,13 +95,13 @@ public class CommonObjects {
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3Int,
 	num5Int, num0Int, numNeg2000Int, num10000Int;
 
-	public static void setUp() {
+	 static void setUp() {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
 		out = System.out;
 		idealFactory = (IdealFactory) system.expressionFactory()
 				.numericFactory();
-		simplifierFactory = (IdealSimplifierFactory) Ideal
+		idealSimplifierFactory = (IdealSimplifierFactory) Ideal
 				.newIdealSimplifierFactory(idealFactory, preUniv);
 		ratNeg1 = preUniv.rational(-1);
 		ratNeg2 = preUniv.rational(-2);
@@ -128,7 +131,7 @@ public class CommonObjects {
 		yInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("yInt"), integerType);
 		xeq5 = preUniv.equals(x, rat5);
-		simp1ifier_xeq5 = simplifierFactory.newSimplifier(xeq5);
+		simp1ifier_xeq5 = idealSimplifierFactory.newSimplifier(xeq5);
 		//not sure if xsqd is necessary
 		//xsqd = preUniv.multiply(x, x);
 		xpy = preUniv.add(x, y);
