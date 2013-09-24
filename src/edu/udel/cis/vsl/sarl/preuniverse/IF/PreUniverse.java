@@ -471,12 +471,50 @@ public interface PreUniverse {
 
 	/** The symbolic expression representing the real number 1. */
 	NumericExpression oneReal();
+	/**
+	 * Creates a concrete expression from the given integer.
+	 * 
+	 * @param value
+	 *            a Java integer type
+	 * @return a concrete symbolic expression of real type representing the
+	 *         integer
+	 */
+
 
 	NumericExpression rational(int value);
+	/**
+	 * Creates a concrete expression from the given long.
+	 * 
+	 * @param value
+	 *            a Java long type
+	 * @return a concrete symbolic expression of real type representing the
+	 *         long
+	 */
+
 
 	NumericExpression rational(long value);
+	
+	/**
+	 * Creates a concrete expression from the given BigInteger.
+	 * 
+	 * @param value
+	 *            a Java.Math BigInteger type
+	 * @return a concrete symbolic expression of real type representing the
+	 *         BigInteger
+	 */
+
 
 	NumericExpression rational(BigInteger value);
+	
+	/**
+	 * Creates a concrete expression from the given float.
+	 * 
+	 * @param value
+	 *            a Java float type
+	 * @return a concrete symbolic expression of real type representing the
+	 *         float
+	 */
+
 
 	NumericExpression rational(float value);
 
