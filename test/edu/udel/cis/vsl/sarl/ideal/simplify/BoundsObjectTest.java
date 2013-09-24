@@ -528,7 +528,7 @@ public class BoundsObjectTest {
 	}
 	
 	//aiming to make  1+x+x^2+3x^4
-	@Ignore
+	//@Ignore
 	@Test
 	public void myFirstPoly(){
 		Polynomial first = (Polynomial)onePxPxsqPthreexquad;
@@ -536,5 +536,50 @@ public class BoundsObjectTest {
 		assertEquals(edu.udel.cis.vsl.sarl.ideal.common.NTPolynomial.class, first.getClass());
 		//out.println(first.getClass());
 	}
+	/**
+	 * testing of branches for first if statement in setLower()
+	 */
+	@Test
+	public void setLowerTest(){
+		BoundsObject lower = BoundsObject.newLowerBound(xxyInt, numBound10000_int, true);
+		assertTrue(lower.isIntegral());
+		lower.newLowerBound(xxyInt, numBound0_int, true);
+		assertTrue(lower.isIntegral());
+		try{
+			lower.newLowerBound(xxyInt, null, false);
+		}catch(RuntimeException e){
+			out.print("caught expected exception from setLower and "
+					+ "nowLowerBound of a null bound: " + e.getMessage());
+			out.flush();
+		}
+	}
+	
+	/**
+	 * Testing of branches on second if-statement in setLower()
+	 */
+	@Test
+	public void setLowerB2Test(){
+		BoundsObject lower = BoundsObject.newLowerBound(xxyInt, numBound10000_int, true);
+		//testing of four branches for "isIntegral() && bound != null"
+		//true, true
+		lower.newLowerBound(xxyInt, numBound0_int, true);
+		assertTrue(lower.isIntegral());
+		assertNotNull(lower.lower());
+		//false, true
+		BoundsObject lower2 = BoundsObject.newLowerBound(x, numBound0, true);
+		lower2.newLowerBound(x, numBound10pt5, false);
+		assertFalse(lower2.isIntegral());
+		assertNotNull(lower2.lower());
+		//true, false
+		BoundsObject lower3 = BoundsObject.newLowerBound(xInt, null, true);
+		assertTrue(lower3.isIntegral());
+		assertNull(lower3.lower());
+		
+		//out.flush();
+		//out.println("numBound0_int is an instance of: " + numBound0_int.getClass());
+
+		//lower.newLowerBound(xxyInt, numBound0_int, false);
+	}
+	
 }
 
