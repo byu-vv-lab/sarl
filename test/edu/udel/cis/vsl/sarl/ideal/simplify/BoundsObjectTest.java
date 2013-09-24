@@ -18,6 +18,7 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -467,6 +468,8 @@ public class BoundsObjectTest {
 	 */
 	@Test(expected = AssertionError.class)
 	public void nullExpressionTest(){
+		Polynomial first = (Polynomial)onePxPxsqPthreexquad;
+		out.println("poly: " + first.toString());
 		BoundsObject nullExpr = BoundsObject.newTightBound(null, numBound0);
 		//out.println(nullExpr.constant().toString());
 		assertEquals(null, nullExpr.constant());
