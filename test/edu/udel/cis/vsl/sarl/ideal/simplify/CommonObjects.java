@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
+
 import java.io.PrintStream;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
