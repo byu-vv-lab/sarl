@@ -1897,16 +1897,21 @@ public class CommonPreUniverseTest {
 
 		
 	}
+	
+	@Test
+	@Ignore
 	public void testMake(){
 		NumericExpression one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative;
+		SymbolicExpression array = null,resultArray;
+		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative,Array_Write;
 //		SymbolicOperator Add1=ADD;
 //		SymbolicOperator And1=AND;
 //		SymbolicOperator Negative1=NEGATIVE;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
-		SymbolicType Integer;
+		SymbolicType Integer,Array;
+		
 		
 		one = universe.integer(1);
 		two = universe.integer(2);
@@ -1914,10 +1919,19 @@ public class CommonPreUniverseTest {
 		five = universe.integer(5);
 		N_one=universe.integer(-1);
 		universe.minus(N_one);
-//		assertEquals(universe.add(one,two),universe.make(Add1,Integer,one,two));
+		//case ADD;
+//		assertEquals(universe.add(one,two),universe.make(Add,Integer,"one"));
+		//case AND;
 //		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
 //		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
+		//case ARRAY_LAMBDA
+//		assertEquals(null,universe.make(ARRAY_LAMBDA,NumericExpression,array));
+		//case ARRAY_WRITE
+//		resultArray=universe.arrayWrite(array, one, two);
+//		assertEquals(null,universe.make(Array_Write,Array,array,one,two));
+		//case NEGATIVE;
 //		assertEquals(N_one,universe.make(Negative,NumericExpression,one));
+		
 		
 	}
 
