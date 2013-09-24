@@ -111,11 +111,24 @@ public class CVC3TranslateTest {
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 		
+		List<NumericExpression> addList = new ArrayList<NumericExpression>();
+		addList.add(one);
+		addList.add(two);
+		addList.add(five);
+		
+		SymbolicExpression addArrayList = universe.array(realType, addList);
+		
 		NumericExpression addExp1 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, one, two);
+				.expression(SymbolicOperator.ADD, realType, addArrayList);
 		Expr addExpr1 = cvcProver.translate(addExp1);
-		Expr addExpected1 = vc.plusExpr(oneExpr, twoExpr);
+		Expr addExpected1 = vc.plusExpr(addList);
 		assertEquals(addExpected1, addExpr1);
+		
+		NumericExpression addExp2 = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.ADD, realType, one, two);
+		Expr addExpr2 = cvcProver.translate(addExp2);
+		Expr addExpected2 = vc.plusExpr(oneExpr, twoExpr);
+		assertEquals(addExpected2, addExpr2);
 				
 		NumericExpression addExp3 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.ADD, realType, one, two, five);
@@ -402,11 +415,9 @@ public class CVC3TranslateTest {
 		//Sequence not adding numbers
 		SymbolicSequence<SymbolicExpression> tupleSequenceWrite = 
 				new PcollectionsSymbolicSequence<SymbolicExpression>();
-		tupleSequenceWrite.add(fiveInt);
-		tupleSequenceWrite.add(oneInt);
-		tupleSequenceWrite.add(twoInt);
-		
-		out.println(tupleSequenceWrite.size());
+		tupleSequenceWrite = tupleSequenceWrite.add(fiveInt);
+		tupleSequenceWrite = tupleSequenceWrite.add(oneInt);
+		tupleSequenceWrite = tupleSequenceWrite.add(twoInt);
 		
 		SymbolicExpression s1 = universe.tuple(universe
 				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
@@ -418,11 +429,6 @@ public class CVC3TranslateTest {
 				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(1));
 		SymbolicExpression s6 = expressionFactory
 				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(2));
-		
-		out.println(s3);
-		out.println(s4);
-		out.println(s5);
-		out.println(s6);
 		
 		Expr tupleNumber1 = cvcProver.translate(s4);
 		Expr tupleNumber2 = cvcProver.translate(s5);
