@@ -43,6 +43,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CommonPreUniverseTest {
 
@@ -57,6 +58,7 @@ public class CommonPreUniverseTest {
 	private static ExpressionFactory expressionFactory;
 	private static BooleanExpressionFactory booleanFactory;
 	private static NumericExpressionFactory numericFactory;
+	private static SymbolicTypeFactory typeFactory;
 	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
@@ -91,6 +93,8 @@ public class CommonPreUniverseTest {
 		emptyNumericList = new ArrayList<NumericExpression>();
 		
 		numericFactory = system.numericFactory();
+		
+		typeFactory = system.typeFactory();
 		
 	}
 
@@ -321,9 +325,19 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/24/13
 	public void testTypeSequenceSymbolicTypeArray() {
-		fail("Not yet implemented");
+		SymbolicType[] typeArray = {typeFactory.booleanType(), typeFactory.integerType()};
+		SymbolicTypeSequence typeSequence;
+		SymbolicTypeSequence expectedTypeSequence;
+		
+		CommonPreUniverse commonUniverse = (CommonPreUniverse)universe;
+		typeSequence = commonUniverse.typeSequence(typeArray);
+		expectedTypeSequence = typeFactory.sequence(typeArray);
+		
+		assertEquals(expectedTypeSequence.numTypes(), typeSequence.numTypes());
+		assertEquals(expectedTypeSequence.getType(0), typeSequence.getType(0));
+		assertEquals(expectedTypeSequence.getType(1), typeSequence.getType(1));
 	}
 
 	@Test
