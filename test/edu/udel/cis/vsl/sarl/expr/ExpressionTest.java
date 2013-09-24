@@ -33,6 +33,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
@@ -185,6 +186,8 @@ public class ExpressionTest {
 				referenceIndexSeq, referenceType));
 		
 		
+		//arrayelementref
+		
 		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
 		
 		SymbolicSequence s,s1,s2;
@@ -199,6 +202,10 @@ public class ExpressionTest {
 		SymbolicExpression test =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test2, s2);
 		
 		  test.isNull();
+		  
+		  
+		  
+		  //
 		
 	}
 	
@@ -356,15 +363,15 @@ assertEquals(test6.toString(), "length(X)");
 
 	}
 	
-	@Ignore
+	
 	@Test
 	public void toStringBuffer1IntDivideTest() {
 		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
 		// edited out by siegel as the characters were non-ASCII
 		// replaced non-ASCII characters with ?
-		assertEquals(intExp.toStringBuffer(false).toString(), "X??Y");
+		assertEquals(intExp.toStringBuffer(false).toString(), "X div Y");
 		//atomize
-		assertEquals(intExp.toStringBuffer(true).toString(), "(X??Y)");
+		assertEquals(intExp.toStringBuffer(true).toString(), "(X div Y)");
 
 	}
 
@@ -394,6 +401,49 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		
 		assertEquals(test.toStringBuffer(true).toString(), "(X.0)");
 	}
+	
+	
+	//not working yet, come back to it -schivi
+	@Ignore
+	@Test
+	public void toStringBufferUnionTest(){
+ SymbolicUnionType intRealBoolUnion;
+ 
+ SymbolicExpression tenAndHalf = universe.rational(10.5);
+
+ SymbolicType unionArrayType;
+ SymbolicExpression unionArray;
+//make a union to test
+		// union of int, real, bool
+		intRealBoolUnion = universe.unionType(universe
+				.stringObject("union1"), Arrays.asList(new SymbolicType[]
+						{integerType, realType, booleanType}));
+		// union array type
+		unionArrayType = universe.arrayType(intRealBoolUnion);
+		
+		// union array expression to write values to
+		unionArray = universe
+				.symbolicConstant(universe.stringObject("unionArray"),
+						unionArrayType);
+		// add true bool
+		unionArray = universe.arrayWrite(unionArray, 
+				universe.integer(0), // index of array
+				universe.unionInject(intRealBoolUnion,
+						universe.intObject(2), // 2 is index of type (bool)
+						sUniverse.trueExpression()));
+ 
+ 
+// 
+//	//	SymbolicExpression injectBoolFalse = universe
+//		//		.unionExtract(universe.intObject(1), intRealBoolUnion);
+//		
+//		assertEquals(injectBoolFalse, "wat");
+//		
+//		SymbolicExpression injectBoolFalse2 = expressionFactory
+//				.expression(SymbolicOperator.UNION_TEST, intRealBoolUnion,
+//						universe.intObject(1), tenAndHalf);
+		
+}
 	
 	
 	//NOT FINISHEd yet, leave this alone for now
