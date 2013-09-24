@@ -87,7 +87,7 @@ public class BoundsObjectTest {
 	
 	private static NumericExpression xxyInt;
 	
-	private static NumericExpression onePxPxsqPxquad;
+	private static NumericExpression onePxPxsqPthreexquad;
 	
 	private static BoundsObject boundObj;
 	
@@ -145,7 +145,7 @@ public class BoundsObjectTest {
 		preUniv = PreUniverses.newPreUniverse(system);
 		ratOne = preUniv.rational(1); // 1.0
 		ratTwo = preUniv.rational(2); // 2.0
-		//ratThree = 
+		ratThree = preUniv.rational(3); //3.0
 		ratFive = preUniv.rational(5); // 5.0
 		intOne = preUniv.integer(1); // 1
 		intTwo = preUniv.integer(2); // 2
@@ -173,9 +173,9 @@ public class BoundsObjectTest {
 		symbExpr_xyy = xyy;
 		xx = preUniv.power(x, 2); //x^2
 		xxxx = preUniv.power(x, 4); //x^4
-		threexxxx = preUniv.multiply(intThree, xxxx);
+		threexxxx = preUniv.multiply(ratThree, xxxx);
 		//magical polynomial:
-		onePxPxsqPxquad = preUniv.add(intOne, preUniv.add(x, preUniv.add(xx, threexxxx)));
+		onePxPxsqPthreexquad = preUniv.add(ratOne, preUniv.add(x, preUniv.add(xx, threexxxx)));
 		//same set as above, but integers
 		xpyInt = preUniv.add(xInt, yInt);
 		symbExpr_xpyInt = xpyInt;
@@ -476,7 +476,7 @@ public class BoundsObjectTest {
 	//aiming to make  1+x+x^2+3x^4
 	@Ignore
 	public void myPoly(){
-		
+		out.println(onePxPxsqPthreexquad);
 	}
 }
 
