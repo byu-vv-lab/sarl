@@ -48,6 +48,8 @@ public class BoundsObjectTest {
 	private static SymbolicExpression symbExpr_xyyInt;
 	
 	private static NumericSymbolicConstant x;
+	
+	private static NumericSymbolicConstant xsq;
 
 	private static NumericSymbolicConstant y;
 	
@@ -67,6 +69,12 @@ public class BoundsObjectTest {
 	
 	private static NumericExpression xy;
 	
+	private static NumericExpression xx;
+	
+	private static NumericExpression xxxx;
+	
+	private static NumericExpression threexxxx;
+	
 	private static NumericExpression xyy;
 	
 	private static NumericExpression xxy;
@@ -78,6 +86,8 @@ public class BoundsObjectTest {
 	private static NumericExpression xyyInt;
 	
 	private static NumericExpression xxyInt;
+	
+	private static NumericExpression onePxPxsqPxquad;
 	
 	private static BoundsObject boundObj;
 	
@@ -125,9 +135,9 @@ public class BoundsObjectTest {
 	
 	private static edu.udel.cis.vsl.sarl.IF.number.Number numBound10pt5;
 	
-	private static NumericExpression ratOne, ratTwo, ratFive;
+	private static NumericExpression ratOne, ratTwo, ratThree, ratFive;
 	
-	private static NumericExpression intOne, intTwo, intFive;
+	private static NumericExpression intOne, intTwo, intThree, intFive;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -135,9 +145,11 @@ public class BoundsObjectTest {
 		preUniv = PreUniverses.newPreUniverse(system);
 		ratOne = preUniv.rational(1); // 1.0
 		ratTwo = preUniv.rational(2); // 2.0
+		//ratThree = 
 		ratFive = preUniv.rational(5); // 5.0
 		intOne = preUniv.integer(1); // 1
 		intTwo = preUniv.integer(2); // 2
+		intThree = preUniv.integer(3);
 		intFive = preUniv.integer(5); //5
 		//system = PreUniverses.newIdealFactorySystem();
 		symbFactory = system.expressionFactory().typeFactory();
@@ -159,6 +171,11 @@ public class BoundsObjectTest {
 		symbExpr_xxy = xxy;
 		xyy = preUniv.multiply(xy, y);
 		symbExpr_xyy = xyy;
+		xx = preUniv.power(x, 2); //x^2
+		xxxx = preUniv.power(x, 4); //x^4
+		threexxxx = preUniv.multiply(intThree, xxxx);
+		//magical polynomial:
+		onePxPxsqPxquad = preUniv.add(intOne, preUniv.add(x, preUniv.add(xx, threexxxx)));
 		//same set as above, but integers
 		xpyInt = preUniv.add(xInt, yInt);
 		symbExpr_xpyInt = xpyInt;
@@ -205,7 +222,7 @@ public class BoundsObjectTest {
 	public void tearDown() throws Exception {
 	}
 	
-	//@Ignore
+	@Ignore
 	@Test
 	public void equals(){
 		//test on .equals for equal objects
@@ -369,7 +386,7 @@ public class BoundsObjectTest {
 		
 
 	}
-	//@Ignore
+	@Ignore
 	@Test
 	public void isIntegralTest(){
 		BoundsObject tempBndObjLS = boundObj_xxy_L_S_int.clone();
@@ -387,7 +404,7 @@ public class BoundsObjectTest {
 	public static void printIs(BoundsObject bO){
 		out.println(bO.toString() + "  real? : " + bO.isReal() + "  integral? : " + bO.isIntegral() + "  consistent? : " + bO.isConsistent());
 	}
-	
+	@Ignore
 	@Test//(expected=java.lang.AssertionError.class)
 	public void mixedTypeTest(){
 //Trac Ticket 32:
@@ -442,6 +459,24 @@ public class BoundsObjectTest {
 		//bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, false);
 		
 		//BoundsObject boundObjTightMixed = BoundsObject.newTightBound(symbExpr_xpyInt, numBound3);
+	}
+	
+	/**
+	 * Targeted test of "assert symbolicConstant != null;" in private BoundsObject(SymbolicExpression symbolicConstant, Number upper,
+			boolean strictUpper, Number lower, boolean strictLower)
+	 */
+	@Test(expected = AssertionError.class)
+	public void nullExpressionTest(){
+		BoundsObject nullExpr = BoundsObject.newTightBound(null, numBound0);
+		//out.println(nullExpr.constant().toString());
+		assertEquals(null, nullExpr.constant());
+		BoundsObject notNullExpr = BoundsObject.newTightBound(xxy, numBound0);
+	}
+	
+	//aiming to make  1+x+x^2+3x^4
+	@Ignore
+	public void myPoly(){
+		
 	}
 }
 
