@@ -1898,12 +1898,26 @@ public class CommonPreUniverseTest {
 
 		
 	}
-
-
-
-
-
-
-
+	public void testMake(){
+		NumbericExpression one,two,three,five;
+		BooleanExpression resultTrue, resultFalse;
+		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative;
+		SymbolicOperator Add="ADD";
+		SymbolicOperator And="AND";
+		SymbolicOperator Negative="NEGATIVE";
+		resultTrue=universe.bool(true);
+		resultFalse=universe.bool(false);
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		N_one=universe.integer(-1);
+		assertEquals(universe.add(one,two),universe.make(Add,NumbericExpression,[one,two]));
+		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
+		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
+		assertEquals(universe.negative(one),universe.make(Negative))
+		
+	}
 
 }
