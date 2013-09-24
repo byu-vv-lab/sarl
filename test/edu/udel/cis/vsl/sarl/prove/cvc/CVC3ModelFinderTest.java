@@ -17,6 +17,7 @@ import cvc3.Expr;
 import cvc3.ExprMut;
 import cvc3.Op;
 import cvc3.QueryResult;
+import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -27,12 +28,17 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -161,19 +167,21 @@ public class CVC3ModelFinderTest {
 		tupleType.add(intType);
 		tupleType.add(intType);
 		
-		NumericExpression ten = universe.rational(10);
 		SymbolicExpression s1 = universe.tuple(universe
 				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
 		SymbolicExpression s2 = expressionFactory
 				.expression(SymbolicOperator.TUPLE_WRITE, s1.type(), s1, universe.intObject(1), eightInt);
-		SymbolicExpression s3 = universe.tupleRead(s2, universe.intObject(1));
+
+		BooleanExpression predicate = universe.equals(s1, s2);	
 		
-		Expr expr1 = cvcProver.translate(s3);
-		Expr expr2 = cvcProver.translate(ten);
-		Expr expr3 = vc.eqExpr(expr2, expr1);
-		assertEquals(QueryResult.VALID, vc.query(expr3));
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		
+		ResultType resultType = result.getResultType();
+		
+		assertEquals(ResultType.NO, resultType);
 	}
 	
+	@Test
 	public void testCVC3ModelFinderWithContext() {
 		//Give the prover the assumption that y = 0.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
@@ -186,12 +194,40 @@ public class CVC3ModelFinderTest {
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,universe.integerType());
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,universe.integerType());
+		SymbolicExpression xPlusY = expressionFactory.expression(SymbolicOperator.ADD, universe.integerType(), symConstXInt, symConstYInt);
 		//Predicate is that "x = x + y" given the assumption that "y = 0".
-		BooleanExpression predicate = universe.equals(symConstXInt, universe.append(symConstXInt, symConstYInt));
+		BooleanExpression predicate = universe.equals(symConstXInt, xPlusY);
 		ValidityResult result = cvcProverYIs0.validOrModel(predicate);
 		
 		ResultType resultType = result.getResultType();
 		assertEquals(ResultType.YES, resultType);
+	}
+	
+	@Test
+	public void testCVC3ModelFinderRational() {
+		//Create the assumption y = 0.
+		StringObject strY = universe.stringObject("y");
+		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,universe.integerType());
+		BooleanExpression assumption =universe.equals(symConstYInt,universe.integer(0)); 
+		//Give the prover the assumption that y = 0.
+		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
+				.newProver(assumption);
+		
+		vc = cvcProverYIs0.validityChecker();
+		StringObject strX = universe.stringObject("x");
+		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,universe.integerType());
+		//Any X Int divided by zero (since y is zero) should return invalid.
+		SymbolicExpression xDivideByY = expressionFactory.expression(
+				SymbolicOperator.DIVIDE, universe.integerType(), symConstXInt,symConstYInt);
+		// 6 divided by 0 should return invalid
+		SymbolicExpression sixDivideByZero = expressionFactory.expression(
+				SymbolicOperator.DIVIDE, universe.integerType(), universe.integer(6), universe.integer(0));
+		// These 2 expressions should be equivalent in what they return.
+		BooleanExpression predicate = universe.equals(xDivideByY, sixDivideByZero);
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		
+		ResultType resultType = result.getResultType();
+		assertEquals(ResultType.NO, resultType);
 	}
 }
 
