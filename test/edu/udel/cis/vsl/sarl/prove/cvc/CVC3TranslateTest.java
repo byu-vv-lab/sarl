@@ -34,6 +34,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -107,7 +108,7 @@ public class CVC3TranslateTest {
 	public void testTranslateAdd(){
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
-
+		
 		NumericExpression addExp1 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.ADD, realType, one, two);
 		Expr addExpr1 = cvcProver.translate(addExp1);
@@ -378,6 +379,49 @@ public class CVC3TranslateTest {
 	}
 	
 	@Test
+	public void testTranslateDenseTupleWrite(){
+		
+		Expr oneIntExpr = cvcProver.translate(oneInt);
+		Expr twoIntExpr = cvcProver.translate(twoInt);
+		Expr fiveIntExpr = cvcProver.translate(fiveInt);
+		
+		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
+		tupleList.add(oneInt);
+		tupleList.add(twoInt);
+		tupleList.add(fiveInt);
+		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
+		tupleType.add(intType);
+		tupleType.add(intType);
+		tupleType.add(intType);
+		
+		List<SymbolicExpression> tupleWriteList = new ArrayList<SymbolicExpression>();
+		tupleWriteList.add(fiveInt);
+		tupleWriteList.add(oneInt);
+		tupleWriteList.add(twoInt);
+		
+		SymbolicExpression s1 = universe.tuple(universe
+				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
+		SymbolicExpression s2 = universe.tuple(universe
+				.tupleType(universe.stringObject("tuple"), tupleType), tupleWriteList);
+		SymbolicExpression s3 = expressionFactory.expression(SymbolicOperator.DENSE_TUPLE_WRITE, s1.type(), s1, s2);
+		SymbolicExpression s4 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(0));
+		SymbolicExpression s5 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(1));
+		SymbolicExpression s6 = expressionFactory.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(2));
+		
+		Expr tupleNumber1 = cvcProver.translate(s4);
+		Expr tupleNumber2 = cvcProver.translate(s5);
+		Expr tupleNumber3 = cvcProver.translate(s6);
+		
+		Expr equation1 = vc.eqExpr(tupleNumber1, fiveIntExpr);
+		Expr equation2 = vc.eqExpr(tupleNumber2, oneIntExpr);
+		Expr equation3 = vc.eqExpr(tupleNumber3, twoIntExpr);
+	
+		assertEquals(QueryResult.VALID, vc.query(equation1));
+		assertEquals(QueryResult.VALID, vc.query(equation2));
+		assertEquals(QueryResult.VALID, vc.query(equation3));
+	}
+	
+	@Test
 	public void testTranslateIntegerDivision(){
 		
 		NumericExpression q = (NumericExpression) expressionFactory
@@ -408,25 +452,27 @@ public class CVC3TranslateTest {
 		Expr fiveExpr = cvcProver.translate(five);
 		Expr tenExpr = cvcProver.translate(ten);
 		
-		List<NumericExpression> collect = new ArrayList<NumericExpression>();
-		collect.add(two);
-		collect.add(five);
-		collect.add(ten);
-
-		NumericExpression mulExp1 = universe.multiply(collect);
-		out.println(mulExp1);
+		SymbolicObject[] arguments = new SymbolicObject[3];
+		arguments[0] = two;
+		arguments[1] = five;
+		arguments[2] = ten;
+		
+		//One argument
+		NumericExpression mulExp1 = (NumericExpression)expressionFactory
+				.expression(SymbolicOperator.MULTIPLY, realType, arguments);
 		Expr expr1 = cvcProver.translate(mulExp1);
-		out.println(expr1);
 		Expr expr2 = vc.multExpr(twoExpr, vc.multExpr(fiveExpr, tenExpr));
 		Expr expected1 = vc.simplify(expr2);
 		assertEquals(expected1, expr1);
 		
+		//Two arguments
 		NumericExpression mulExp2 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
 		Expr expr3 = cvcProver.translate(mulExp2);
 		Expr expected2 = vc.multExpr(twoExpr, fiveExpr);
 		assertEquals(expected2, expr3);
 		
+		//More than two arguments
 		NumericExpression mulExp3 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
 		cvcProver.translate(mulExp3);
