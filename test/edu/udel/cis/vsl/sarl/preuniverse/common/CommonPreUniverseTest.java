@@ -25,6 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -1899,19 +1900,21 @@ public class CommonPreUniverseTest {
 	public void testMake(){
 		NumericExpression one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicObject Add, And, Apply, Array_Lambda, Not, Negative;
-//		SymbolicObject Add="ADD";
-//		SymbolicObject And="AND";
-//		SymbolicObject Negative="NEGATIVE";
+		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative;
+//		SymbolicOperator Add1=ADD;
+//		SymbolicOperator And1=AND;
+//		SymbolicOperator Negative1=NEGATIVE;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
+		SymbolicType Integer;
 		
 		one = universe.integer(1);
 		two = universe.integer(2);
 		three = universe.integer(3);
 		five = universe.integer(5);
 		N_one=universe.integer(-1);
-//		assertEquals(universe.add(one,two),universe.make(Add,boolean,[one,two]));
+		universe.minus(N_one);
+//		assertEquals(universe.add(one,two),universe.make(Add1,Integer,one,two));
 //		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
 //		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
 //		assertEquals(N_one,universe.make(Negative,NumericExpression,one));
