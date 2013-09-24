@@ -20,6 +20,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -125,6 +127,52 @@ public class CVC3TranslateReadWriteTest {
 		Expr expr2 = cvcProver.translate(ten);
 		Expr expr3 = vc.eqExpr(expr2, expr1);
 		assertEquals(QueryResult.VALID, vc.query(expr3));
+	}
+	
+	@Test
+	public void testTranslateDenseTupleWrite(){
+		
+		Expr oneIntExpr = cvcProver.translate(oneInt);
+		Expr twoIntExpr = cvcProver.translate(twoInt);
+		Expr fiveIntExpr = cvcProver.translate(fiveInt);
+		
+		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
+		tupleList.add(oneInt);
+		tupleList.add(twoInt);
+		tupleList.add(fiveInt);
+		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
+		tupleType.add(intType);
+		tupleType.add(intType);
+		tupleType.add(intType);
+		
+		SymbolicSequence<SymbolicExpression> tupleSequenceWrite = 
+				new PcollectionsSymbolicSequence<SymbolicExpression>();
+		tupleSequenceWrite = tupleSequenceWrite.add(fiveInt);
+		tupleSequenceWrite = tupleSequenceWrite.add(oneInt);
+		tupleSequenceWrite = tupleSequenceWrite.add(twoInt);
+		
+		SymbolicExpression s1 = universe.tuple(universe
+				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
+		SymbolicExpression s3 = expressionFactory
+				.expression(SymbolicOperator.DENSE_TUPLE_WRITE, s1.type(), s1, tupleSequenceWrite);
+		SymbolicExpression s4 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(0));
+		SymbolicExpression s5 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(1));
+		SymbolicExpression s6 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_READ, s3.type(), s3, universe.intObject(2));
+		
+		Expr tupleNumber1 = cvcProver.translate(s4);
+		Expr tupleNumber2 = cvcProver.translate(s5);
+		Expr tupleNumber3 = cvcProver.translate(s6);
+		
+		Expr equation1 = vc.eqExpr(tupleNumber1, fiveIntExpr);
+		Expr equation2 = vc.eqExpr(tupleNumber2, oneIntExpr);
+		Expr equation3 = vc.eqExpr(tupleNumber3, twoIntExpr);
+	
+		assertEquals(QueryResult.VALID, vc.query(equation1));
+		assertEquals(QueryResult.VALID, vc.query(equation2));
+		assertEquals(QueryResult.VALID, vc.query(equation3));
 	}
 	
 	@Test
