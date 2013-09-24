@@ -176,5 +176,19 @@ public class CommonObjects {
 	public static PreUniverse getPreUniv() {
 		return preUniv;
 	}
+	
+	/**
+	 * @return the xeq5
+	 */
+	public static BooleanExpression getXeq5() {
+		return xeq5;
+	}
+	
+	/**
+	 * @return the identitySimplifierFactory
+	 */
+	public static IdentitySimplifierFactory getIdentitySimplifierFactory() {
+		return identitySimplifierFactory;
+	}
 
 }
