@@ -2044,13 +2044,12 @@ public class CommonPreUniverseTest {
 		NumericExpression one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
 		SymbolicExpression array = null,resultArray;
-		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative,Array_Write;
-//		SymbolicOperator Add1=ADD;
-//		SymbolicOperator And1=AND;
-//		SymbolicOperator Negative1=NEGATIVE;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
-		SymbolicType Integer,Array;
+		SymbolicType Integer,Bool,Real;
+		Integer = universe.integerType();
+		Bool = universe.booleanType();
+		Real = universe.realType();
 		
 		
 		one = universe.integer(1);
@@ -2059,18 +2058,34 @@ public class CommonPreUniverseTest {
 		five = universe.integer(5);
 		N_one=universe.integer(-1);
 		universe.minus(N_one);
+
 		//case ADD;
-//		assertEquals(universe.add(one,two),universe.make(Add,Integer,"one"));
+		SymbolicObject[] Args_ADD={one,two};
+		assertEquals(universe.add(one,two),universe.make(SymbolicOperator.ADD,Integer,Args_ADD));
 		//case AND;
-//		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
-//		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
+		SymbolicObject[] Args_AND1={resultTrue,resultTrue};
+		SymbolicObject[] Args_AND2={resultTrue,resultFalse};
+		assertEquals(universe.and(resultTrue,resultTrue),universe.make(SymbolicOperator.AND,Bool,Args_AND2));
+		assertEquals(universe.make(SymbolicOperator.AND,Bool,Args_AND1),false);
 		//case ARRAY_LAMBDA
-//		assertEquals(null,universe.make(ARRAY_LAMBDA,NumericExpression,array));
+		SymbolicObject[] Args_Array_Lambda={nullExpression};
+		assertEquals(null,universe.make(SymbolicOperator.ARRAY_LAMBDA,symbolicCompleteArrayType,Args_Array_Lambda));
 		//case ARRAY_WRITE
-//		resultArray=universe.arrayWrite(array, one, two);
-//		assertEquals(null,universe.make(Array_Write,Array,array,one,two));
+		SymbolicObject[] Args_Array_Write={two,two,five};
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,two,five}));
+		assertEquals(array,universe.make(SymbolicOperator.ARRAY_WRITE,symbolicCompleteArrayType,Args_Array_Write));
+		//case CONCRETE
+		SymbolicObject[] Args_Concrete={one};
+		assertEquals(universe.make(SymbolicOperator.CONCRETE, Real, Args_Concrete),one);
+		//case COND
+		SymbolicObject[] Args_COND={resultTrue,resultTrue,resultTrue};
+		assertEquals(universe.make(SymbolicOperator.COND,Bool,Args_COND),resultTrue);
+		//case DIVIDE:
+		SymbolicObject[] Args_Divide={one,two};
+		assertEquals(universe.make(SymbolicOperator.DIVIDE,Integer,Args_Divide),two);
 		//case NEGATIVE;
-//		assertEquals(N_one,universe.make(Negative,NumericExpression,one));
+		SymbolicObject[] Args_Negative={one};
+		assertEquals(N_one,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
 		
 		
 	}
