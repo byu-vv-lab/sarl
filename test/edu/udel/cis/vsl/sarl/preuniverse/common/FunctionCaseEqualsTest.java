@@ -73,11 +73,11 @@ public class FunctionCaseEqualsTest {
 		sequence2 = tupleType2.sequence();
 		sequence2 = tupleType3.sequence();
 		functionType1 = universe.functionType(sequence1, realType);
-		functionType2 = universe.functionType(sequence2, realType);
+		functionType2 = universe.functionType(sequence2, integerType);
 		functionType3 = universe.functionType(sequence3, realType);
 		
 		value1 = universe.compatible(functionType1, functionType2);
-		value2 = universe.compatible(functionType1, functionType2);
+		value2 = universe.compatible(functionType1, functionType3);
 		
 		assertEquals(falseExpr, value1);
 		assertEquals(trueExpr, value2);
