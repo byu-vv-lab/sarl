@@ -91,7 +91,7 @@ public class CommonObjects {
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3Int,
 	num5Int, num0Int, numNeg2000Int, num10000Int;
 
-	static void setUp() {
+	public static void setUp() {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
 		out = System.out;
