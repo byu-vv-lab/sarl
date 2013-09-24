@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import cvc3.Expr;
 import cvc3.ExprMut;
 import cvc3.Op;
+import cvc3.QueryResult;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -23,11 +26,13 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -143,6 +148,33 @@ public class CVC3ModelFinderTest {
 	
 	@Test
 	public void testCVC3ModelFinderApply() {
+		NumericExpression sevenInt = universe.integer(7);
+		NumericExpression fourInt = universe.integer(4);
+		NumericExpression eightInt = universe.integer(8);
+		SymbolicType intType = universe.integerType();
+		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
+		tupleList.add(sevenInt);
+		tupleList.add(fourInt);
+		tupleList.add(eightInt);
+		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
+		tupleType.add(intType);
+		tupleType.add(intType);
+		tupleType.add(intType);
+		
+		NumericExpression ten = universe.rational(10);
+		SymbolicExpression s1 = universe.tuple(universe
+				.tupleType(universe.stringObject("tuple"), tupleType), tupleList);
+		SymbolicExpression s2 = expressionFactory
+				.expression(SymbolicOperator.TUPLE_WRITE, s1.type(), s1, universe.intObject(1), eightInt);
+		SymbolicExpression s3 = universe.tupleRead(s2, universe.intObject(1));
+		
+		Expr expr1 = cvcProver.translate(s3);
+		Expr expr2 = cvcProver.translate(ten);
+		Expr expr3 = vc.eqExpr(expr2, expr1);
+		assertEquals(QueryResult.VALID, vc.query(expr3));
+	}
+	
+	public void testCVC3ModelFinderWithContext() {
 		//Give the prover the assumption that y = 0.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
 				.newProver(universe.equals(
