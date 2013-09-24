@@ -67,6 +67,7 @@ public class CommonPreUniverseTest {
 	// Collections
 	private static Collection<SymbolicObject> objectCollection;
 	private static ArrayList<NumericExpression> emptyNumericList;
+	private static ArrayList<NumericExpression> numericList;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -91,7 +92,9 @@ public class CommonPreUniverseTest {
 		// For testing objects() method
 		objectCollection = objectFactory.objects();
 		
+		// For testing multipl(Iterable) method
 		emptyNumericList = new ArrayList<NumericExpression>();
+		numericList = new ArrayList<NumericExpression>();
 		
 		numericFactory = system.numericFactory();
 		
@@ -614,6 +617,23 @@ public class CommonPreUniverseTest {
 		universe.multiply(emptyNumericList);
 			
 	}
+	
+	@Test 
+	public void testMultiply() {
+		ArrayList<NumericExpression> testList =
+				new ArrayList<NumericExpression>();
+		NumericExpression one, three;
+		one = universe.integer(1);
+		three = universe.integer(3);
+		
+		testList.add(one);
+		testList.add(three);
+		numericList.add(one);
+		numericList.add(three);
+		NumericExpression testResult = universe.multiply(testList);
+		
+		assertEquals(universe.multiply(numericList), testResult);
+	}
 
 	@Test
 	@Ignore
@@ -1125,6 +1145,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	@Ignore
 	public void testDereference() {
 		SymbolicType doubleArrayType = universe.arrayType(arrayType); //int[]
 		SymbolicExpression arrayTypeExpression = universe.symbolicConstant(universe.stringObject("arrayTypeExpression"), doubleArrayType);
