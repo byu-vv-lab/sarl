@@ -223,7 +223,7 @@ public class BoundsObjectTest {
 	public void tearDown() throws Exception {
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void equals(){
 		//test on .equals for equal objects
@@ -387,7 +387,7 @@ public class BoundsObjectTest {
 		
 
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void isIntegralTest(){
 		BoundsObject tempBndObjLS = boundObj_xxy_L_S_int.clone();
@@ -405,7 +405,7 @@ public class BoundsObjectTest {
 	public static void printIs(BoundsObject bO){
 		out.println(bO.toString() + "  real? : " + bO.isReal() + "  integral? : " + bO.isIntegral() + "  consistent? : " + bO.isConsistent());
 	}
-	@Ignore
+	//@Ignore
 	@Test//(expected=java.lang.AssertionError.class)
 	public void mixedTypeTest(){
 //Trac Ticket 32:
@@ -417,7 +417,7 @@ public class BoundsObjectTest {
 		BoundsObject bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, true);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
-	    assertEquals(numBound0, bO_mixed.upper);
+	    assertNotEquals(numBound0, bO_mixed.upper);  //changed to notEquals when informed this is expected behavior
 		//confirmation of above issue with a bound !=0
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt,  numBound3, true);
 		printIs(bO_mixed);
@@ -426,12 +426,12 @@ public class BoundsObjectTest {
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0, false);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
-		assertEquals(numBound0, bO_mixed.upper);
+		assertNotEquals(numBound0, bO_mixed.upper);  //changed to notEquals when informed this is expected behavior
 		//recreation of above issue, using an explicit rational that has no integral equivalence
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound10pt5, false);
 		out.println("\n provided bound: " + numBound10pt5 + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
-		assertEquals(numBound10pt5, bO_mixed.upper);
+		assertNotEquals(numBound10pt5, bO_mixed.upper); //changed to notEquals when informed this is expected behavior
 		//various other mixed-type testing continues
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxy, numBound0, true);
 		out.println("\n provided bound: " + numBound0 + "  resultant bound: " + bO_mixed.upper());
@@ -444,7 +444,7 @@ public class BoundsObjectTest {
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0_int, true);
 		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
-		assertEquals(numBound0_int, bO_mixed.upper);
+		assertNotEquals(numBound0_int, bO_mixed.upper); //changed to notEquals when informed this is expected behavior
 		bO_mixed = BoundsObject.newUpperBound(symbExpr_xxyInt, numBound0_int, false);
 		out.println("\n provided bound: " + numBound0_int + "  resultant bound: " + bO_mixed.upper());
 		printIs(bO_mixed);
@@ -466,20 +466,75 @@ public class BoundsObjectTest {
 	 * Targeted test of "assert symbolicConstant != null;" in private BoundsObject(SymbolicExpression symbolicConstant, Number upper,
 			boolean strictUpper, Number lower, boolean strictLower)
 	 */
-	@Test(expected = AssertionError.class)
-	public void nullExpressionTest(){
-		Polynomial first = (Polynomial)onePxPxsqPthreexquad;
-		out.println("poly: " + first.toString());
-		BoundsObject nullExpr = BoundsObject.newTightBound(null, numBound0);
-		//out.println(nullExpr.constant().toString());
-		assertEquals(null, nullExpr.constant());
+	@Test//(expected = AssertionError.class)
+	public void nullExpressionTightTest(){
+		// 1 for a tight bound
 		BoundsObject notNullExpr = BoundsObject.newTightBound(xxy, numBound0);
+		assertEquals(true, notNullExpr.constant() != null);
+		BoundsObject nullExpr;
+		//assertNull(nullExpr = BoundsObject.newTightBound(null, numBound0));
+		try{
+			nullExpr = BoundsObject.newTightBound(null, numBound0);
+		}catch(AssertionError e){
+			out.println("expected + received error for a null expr with tight bound: " + e.getMessage());
+		}
+		
+		// 2 for a lower, strict bound
+		notNullExpr = BoundsObject.newLowerBound(xyy, numBound0, true);
+		assertNotNull(notNullExpr.symbolicConstant());
+		assertNull(notNullExpr.constant()); //non-tight BoundsObjects return null on .constant() method call
+		try{
+			nullExpr = BoundsObject.newLowerBound(null, numBound0, true);
+		}catch(AssertionError e){
+			out.println("expected + received error for a null expr with strict lower bound: " + e.getMessage());
+		}
+		
+		// 3 for a lower, non-strict bound
+		notNullExpr = BoundsObject.newLowerBound(xyy, numBound0, false);
+		assertNotNull(notNullExpr.symbolicConstant());
+		assertNull(notNullExpr.constant()); //non-tight BoundsObjects return null on .constant() method call
+		try{
+			nullExpr = BoundsObject.newLowerBound(null, numBound0, false);
+		}catch(AssertionError e){
+			out.println("expected + received error for a null expr with non-strict lower bound: " + e.getMessage());
+		}
+		
+		// 4 for an upper, strict bound
+		notNullExpr = BoundsObject.newUpperBound(xyy, numBound0, true);
+		assertNotNull(notNullExpr.symbolicConstant());
+		assertNull(notNullExpr.constant()); //non-tight BoundsObjects return null on .constant() method call
+		try{
+			nullExpr = BoundsObject.newUpperBound(null, numBound0, true);
+		}catch(AssertionError e){
+			out.println("expected + received error for a null expr with strict upper bound: " + e.getMessage());
+		}
+
+		// 5 for an upper, non-strict bound
+		notNullExpr = BoundsObject.newUpperBound(xyy, numBound0, false);
+		assertNotNull(notNullExpr.symbolicConstant());
+		assertNull(notNullExpr.constant()); //non-tight BoundsObjects return null on .constant() method call
+		try{
+			nullExpr = BoundsObject.newUpperBound(null, numBound0, false);
+		}catch(AssertionError e){
+			out.println("expected + received error for a null expr with non-strict upper bound: " + e.getMessage());
+		}
+		
+		//cloning null/not-null BoundsObjects
+		BoundsObject notNullExpr2 = notNullExpr.clone();
+		assertNotNull(notNullExpr2.symbolicConstant());
+		assertNull(notNullExpr2.constant()); //non-tight BoundsObjects return null on .constant() method call
+		assertEquals(notNullExpr, notNullExpr2);
+		BoundsObject nullExpr2 = null;
 	}
 	
 	//aiming to make  1+x+x^2+3x^4
 	@Ignore
-	public void myPoly(){
-		out.println(onePxPxsqPthreexquad);
+	@Test
+	public void myFirstPoly(){
+		Polynomial first = (Polynomial)onePxPxsqPthreexquad;
+		//out.println("poly: " + first.toString());
+		assertEquals(edu.udel.cis.vsl.sarl.ideal.common.NTPolynomial.class, first.getClass());
+		//out.println(first.getClass());
 	}
 }
 
