@@ -237,12 +237,6 @@ public class CommonPreUniverseTest {
 
 	@Test
 	@Ignore
-	public void testMake() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
 	public void testNumberFactory() {
 		fail("Not yet implemented");
 	}
@@ -980,6 +974,10 @@ public class CommonPreUniverseTest {
 	@Test
 	@Ignore
 	public void testIntegerBigInteger() {
+//		NumericExpression BigInt1, BigInt2;
+//		long x = 2;
+//		BigInt1=universe.integer((int) Math.pow(x,10));
+		
 		fail("Not yet implemented");
 	}
 
@@ -1899,12 +1897,12 @@ public class CommonPreUniverseTest {
 		
 	}
 	public void testMake(){
-		NumbericExpression one,two,three,five;
+		NumericExpression one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicOperator Add, And, Apply, Array_Lambda, Not, Negative;
-		SymbolicOperator Add="ADD";
-		SymbolicOperator And="AND";
-		SymbolicOperator Negative="NEGATIVE";
+		SymbolicObject Add, And, Apply, Array_Lambda, Not, Negative;
+//		SymbolicObject Add="ADD";
+//		SymbolicObject And="AND";
+//		SymbolicObject Negative="NEGATIVE";
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
 		
@@ -1913,10 +1911,10 @@ public class CommonPreUniverseTest {
 		three = universe.integer(3);
 		five = universe.integer(5);
 		N_one=universe.integer(-1);
-		assertEquals(universe.add(one,two),universe.make(Add,NumbericExpression,[one,two]));
-		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
-		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
-		assertEquals(universe.negative(one),universe.make(Negative))
+//		assertEquals(universe.add(one,two),universe.make(Add,boolean,[one,two]));
+//		assertEquals(universe.and(resultTrue,resultTrue),universe.make(And,BooleanExpression,[resultTrue,resultTrue]));
+//		assertEquals(universe.make(And,BooleanExpression,[resultFalse,resultTrue]),false);
+//		assertEquals(N_one,universe.make(Negative,NumericExpression,one));
 		
 	}
 
