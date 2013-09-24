@@ -70,16 +70,16 @@ public class AffineExpressionTest {
 	public static void setUpBeforeClass() throws Exception {
 		CommonObjects.setUp();
 
-		realType = preUniv.realType();
-		integerType = preUniv.integerType();
-		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
-				preUniv.stringObject("x"), realType);
-		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
-				preUniv.stringObject("y"), realType);
-		xpy = preUniv.add(x, y);
-		one = preUniv.rational(1); // 1.0
-		two = preUniv.rational(2); // 2.0
-		three = preUniv.rational(3);
+		realType = getPreUniv().realType();
+		integerType = getPreUniv().integerType();
+		x = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
+				getPreUniv().stringObject("x"), realType);
+		y = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
+				getPreUniv().stringObject("y"), realType);
+		xpy = getPreUniv().add(x, y);
+		one = getPreUniv().rational(1); // 1.0
+		two = getPreUniv().rational(2); // 2.0
+		three = getPreUniv().rational(3);
 		// //////////
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
@@ -167,11 +167,11 @@ public class AffineExpressionTest {
 			assertEquals(test3.equals(test5), false);
 			assertEquals(test.equals(test), true);
 			// /////////////////////
-			xx = preUniv.power(x, 2); // x^2
-			xxxx = preUniv.power(x, 4); // x^4
-			threexxxx = preUniv.multiply(three, xxxx);
-			onePxPxsqPthreexquad = preUniv.add(one,
-					preUniv.add(x, preUniv.add(xx, threexxxx)));
+			xx = getPreUniv().power(x, 2); // x^2
+			xxxx = getPreUniv().power(x, 4); // x^4
+			threexxxx = getPreUniv().multiply(three, xxxx);
+			onePxPxsqPthreexquad = getPreUniv().add(one,
+					getPreUniv().add(x, getPreUniv().add(xx, threexxxx)));
 			AffineExpression working = new AffineExpression(
 					(Polynomial) onePxPxsqPthreexquad, offset, coefficient);
 			out.println(onePxPxsqPthreexquad.toString());
