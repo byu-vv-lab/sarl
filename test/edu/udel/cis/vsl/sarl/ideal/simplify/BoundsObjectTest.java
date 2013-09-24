@@ -463,6 +463,7 @@ public class BoundsObjectTest {
 	}
 	
 	/**
+	 * 
 	 * Targeted test of "assert symbolicConstant != null;" in private BoundsObject(SymbolicExpression symbolicConstant, Number upper,
 			boolean strictUpper, Number lower, boolean strictLower)
 	 */
