@@ -1305,7 +1305,82 @@ public class CommonPreUniverseTest {
 		
 		universe.assign(u_ten, null, u_ten); // test for SARLException
 	}
+	
+	
+	
 	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void tupleExceptionTest1(){
+		
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void tupleExceptionTest2(){
+		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
+		
+		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.rational(1),universe.integer(2),universe.integer(2)}));
+
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testLengthExceptions(){
+		
+		NumericExpression[] arrayMembers = new NumericExpression[2] ;
+		SymbolicExpression array;
+		NumericExpression length;
+		
+		arrayMembers[0] = universe.integer(1);
+		arrayMembers[1] = universe.integer(2);
+		array = universe .array(integerType, Arrays.asList(arrayMembers));
+		array = null;
+		// exception for null array
+		length = universe.length(array);
+
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testLengthExceptions2(){
+		// exception for non array type
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple;
+		NumericExpression length;
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		length = universe.length(tuple);	
+
+
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void tupleWriteTest(){
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedTuple;
+		IntObject i1;
+		i1 = universe.intObject(1);
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+
+		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
+		assertEquals(tuple, resultedTuple);
+		
+		
+		// exception
+		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
+		
+			
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void emptyArrayTest(){
+		// get an empty array with size 0
+		SymbolicExpression array = universe.emptyArray(integerType);
+		NumericExpression zero = universe.integer(0);
+		assertEquals(zero,universe.length(array));
+	}
 	@Test(expected= SARLException.class)
 	public void testModuloWithExceptions(){
 		NumericExpression fiveInt, threeInt;
@@ -1322,7 +1397,9 @@ public class CommonPreUniverseTest {
 		fiveReal = universe.rational(5.0);
 		fiveModthree = universe.modulo(fiveReal, threeInt);
 		
-	
+		
+
+
 	}
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
@@ -1353,7 +1430,176 @@ public class CommonPreUniverseTest {
 		
 		result = universe.power(base, -2);
 	}
-		// written by Mohammad Alsulmi
+	// written by Mohammad Alsulmi
+	@Test
+	public void testRemoveElementAt(){
+		SymbolicExpression array, expected, resultedArray;
+		NumericExpression one,two, three;
+		
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,three}));
+		resultedArray = universe.removeElementAt(array, 1);
+		
+		assertEquals(expected, resultedArray);
+		
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testRemoveElementAtException(){
+		
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedArray;
+		
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		// passing an argument from type other than array
+		resultedArray = universe.removeElementAt(tuple, 0);
+				
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testRemoveElementAtException2(){
+		SymbolicExpression array, expected, resultedArray;
+		NumericExpression one,two, three;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,three}));
+		// index out of range exception
+		resultedArray = universe.removeElementAt(array, 3);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testArrayWrite()
+	{
+		SymbolicExpression array, resultedArray, expected;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,two,five}));
+		
+		resultedArray = universe.arrayWrite(array, one, two);
+		assertEquals(expected, resultedArray);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException()
+	{
+		// testing the fail when pass a null array to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		array = null;
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException2()
+	{
+		// testing the fail when pass a null index to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		one = null;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException3()
+	{
+		// testing the fail when pass a null value to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		two = null;
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException4()
+	{
+		// testing the fail when pass a non array type to arrayWrite()
+		// here we use a tuple instead of array
+		SymbolicExpression  resultedArray,tuple;
+		NumericExpression one,two,five;
+		SymbolicTupleType tupleType1;
+		
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		
+		resultedArray = universe.arrayWrite(tuple, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException5()
+	{
+		// testing the fail when pass a non integer index to arrayWrite()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.rational(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayWriteException6()
+	{
+		// testing the fail when passing an incompatible value to arrayWrite()
+		// here the array has integer type, so we pass real type instead of integer
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+		
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		two = universe.rational(2.0);
+		resultedArray = universe.arrayWrite(array, one, two);
+	}
+	// written by Mohammad Alsulmi
 	@Test
 	public void testRational(){
 		// here we cover the remaining cases of using rational()
@@ -1377,6 +1623,188 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.rational(.1), result);
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)	
+	public void TestArrayReadException(){
+		// testing the fail when pass a null array to arrayRead()
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+				
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		array = null;	// null array
+		resultedArray = universe.arrayRead(array, one);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException2(){
+		// testing the fail when pass a null index to arrayRead()
+				
+		SymbolicExpression array, resultedArray;
+		NumericExpression one,two, three, five;
+
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+
+		two = null; // null index
+		resultedArray = universe.arrayRead(array, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException3(){
+		// testing the fail when pass a non array type to arrayRead()
+		// here we use a tuple instead of array
+		SymbolicExpression  resultedArray,tuple;
+		NumericExpression one,two,five;
+		SymbolicTupleType tupleType1;
+
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		one = universe.integer(1);
+		two = universe.integer(2);
+		
+		resultedArray = universe.arrayRead(tuple, two);
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void TestArrayReadException4(){
+		// testing the fail when pass a negative index to arrayRead()
+		SymbolicExpression array, resultedArray;
+		NumericExpression negativeOne,two, three, five;
+		
+		negativeOne = universe.integer(-1); // negative number
+		two = universe.integer(2);
+		three = universe.integer(3);
+		five = universe.integer(5);
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
+		resultedArray = universe.arrayRead(array, negativeOne);
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithTuple(){
+		
+		// here we test compatible with tuple types 
+		SymbolicTupleType type1, type2, type3,type5, type6,type7;
+		SymbolicType type4;
+		BooleanExpression result, expected;
+		SymbolicTypeSequence sequence;
+		LinkedList<SymbolicType> members = new LinkedList<>();
+		
+		
+		type1 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		type2 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));		
+		type3 = universe.tupleType(universe.stringObject("type2"),Arrays.asList(new SymbolicType[]{realType, integerType}));
+		type5 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		type6 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType, integerType}));
+		type7 = universe.tupleType(universe.stringObject("Type1"), members);
+		type4 = universe.integerType();
+		
+		// here we compare two identical tuple types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type3)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type3);
+		assertEquals(expected, result);
+		
+		// here we compare a tuple type with integer type (type1, type4)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type4);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type5), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type5);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type6), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type6);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type7, type6), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type7, type6);
+		assertEquals(expected, result);
+				
+
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithUnion(){
+		
+		// here we test compatible with tuple types 
+		SymbolicUnionType type1, type2, type3, type5;
+		SymbolicType type4;
+		BooleanExpression result, expected;
+		
+		
+		type1 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		type2 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));		
+		type3 = universe.unionType(universe.stringObject("type3"),Arrays.asList(new SymbolicType[]{realType, integerType}));
+		type5 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,universe.booleanType()}));
+		type4 = universe.booleanType();
+		
+		// here we compare two identical unions types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		// here we compare two different unions types (type1, type3)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type3);
+		assertEquals(expected, result);
+		
+		// here we compare a union type with boolean type (type1, type4)
+		// the expected compatible call should return true
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type4);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type5), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type5);
+		assertEquals(expected, result);
+
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithFunction(){
+	
+		// here we test compatible with tuple types 
+		SymbolicFunctionType functionType1, functionType2;
+		BooleanExpression result, expected;
+		
+		functionType1 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,integerType}), realType);
+		functionType2 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,realType}), integerType);
+		
+		
+		// here we compare two different function types (functionType1, functionType2)
+		// the expected compatible call should return true
+		
+		expected = universe.bool(false);
+		result = universe.compatible(functionType1, functionType2);
+		assertEquals(expected, result);
+		
+	}
 
 	// written by Mohammad Alsulmi
 	@Test
@@ -1396,7 +1824,102 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 		
 	}
-		// written by Mohammad Alsulmi	
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithArray(){
+	
+		// here we test two array types 
+		SymbolicCompleteArrayType type1, type2;
+		BooleanExpression result, expected;
+		
+		type1 = universe.arrayType(integerType, universe.integer(3)); 
+		type2 = universe.arrayType(integerType, universe.integer(3)); 
+		
+		// here we compare two identical types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		type2 = universe.arrayType(integerType, universe.integer(5)); 
+		
+		// here we compare two different types (type1, type2)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+	}
+
+	// written by Mohammad Alsulmi
+	@Test
+	public void testArray(){
+		// testing array() when passing with no exceptions
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		
+		elements = new LinkedList<>();
+		elements.add(universe.integer(5));
+		elements.add(universe.integer(10));
+		elements.add(universe.integer(0));
+		elements.add(universe.integer(20));
+		array = universe.array(integerType, elements);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void testArrayException(){
+		// testing the fail when passing a null elements reference to array()
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		
+		elements = null; // null reference
+		array = universe.array(integerType, elements);
+		
+	}
+	@Test (expected= SARLException.class)
+	public void testArrayException2(){
+		// testing the fail when passing a null elements type to array()
+		LinkedList<SymbolicExpression> elements; // list of elements
+		SymbolicExpression array;
+		SymbolicType realType;
+
+		elements = new LinkedList<>(); 
+		elements.add(universe.integer(1));
+		elements.add(universe.integer(4));
+		
+		realType = null;
+		
+		array = universe.array(realType, elements);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testArrayException3(){
+		// testing the fail when passing an array with null elements to array()
+		NumericExpression elements[]; // array of elements
+		SymbolicExpression array;
+
+		elements = new NumericExpression[4]; 
+		// here each one of the elements need to be intialized
+		
+		array = universe.array(integerType, Arrays.asList(elements));
+
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testArrayException4(){
+		// testing the fail when passing non compatible type to array
+		NumericExpression elements[]; // array of elements
+		SymbolicExpression array;
+
+		elements = new NumericExpression[2];
+		elements[0] = universe.integer(1); // integer
+		elements[1] = universe.integer(10);// integer
+		
+		array = universe.array(realType, Arrays.asList(elements)); // non compatible type
+
+	}
+	// written by Mohammad Alsulmi	
 	@Test
 	public void testInteger(){
 		// covering the other cases of integers
@@ -1547,7 +2070,66 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.bool(false), result);
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test 
+	public void testAppend(){
 	
+		// here we test the regular case of array append when it passes
+		SymbolicExpression array, expected;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		value = universe.integer(5);
+		// expected array after append
+		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10),universe.integer(5)}));
+		// appending here
+		array = universe.append(array, value);
+		
+		assertEquals(expected, array);
+		
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException(){
+	
+		// testing the fail when passing tuple to array append
+		SymbolicTupleType tupleType;
+		SymbolicExpression tuple;
+		SymbolicExpression value;
+		
+		tupleType = universe.tupleType(universe.stringObject("type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		tuple = universe.tuple(tupleType, Arrays.asList(new NumericExpression[]{universe.integer(10), universe.rational(6)}));
+		value = universe.integer(100);
+		// we expect exception since append() cannot accept other than arrays
+		tuple = universe.append(tuple, value);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException2(){
+	
+		// testing the fail when passing a null value to array append
+		SymbolicExpression array;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		value = null;
+		// we expect exception since append() cannot accept null values 
+		array = universe.append(array, value);
+	}
+	// written by Mohammad Alsulmi
+	@Test (expected= SARLException.class)
+	public void testAppendException3(){
+	
+		// testing the fail when passing a value with incompatible to array append
+		SymbolicExpression array;
+		SymbolicExpression value;
+		
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(7),universe.integer(10)}));
+		// the value is real but the array is integer
+		value = universe.rational(6.0);
+		array = universe.append(array, value);
+	}
+
 	
 	@Test
 	@Ignore
