@@ -232,7 +232,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			processFlexibleBinary(result, "+", false, atomize);
 			return result;
 		case AND:
-			processFlexibleBinary(result, " && ", false, atomize);
+			processFlexibleBinary(result, " && ", true, atomize);
 			return result;
 		case APPLY: {
 			result.append(arguments[0].toStringBuffer(true));
@@ -418,8 +418,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case OR:
 			processFlexibleBinary(result, " || ", false, atomize);
-			if (atomize)
-				atomize(result);
+//			if (atomize)
+//				atomize(result);
 			return result;
 		case POWER:
 			result.append(arguments[0].toStringBuffer(true));
