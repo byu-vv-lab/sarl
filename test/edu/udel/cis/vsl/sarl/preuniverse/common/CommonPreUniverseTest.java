@@ -831,9 +831,38 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Written by Marlin Blue 9/25
 	public void testExistsInt() {
-		fail("Not yet implemented");
+		StringObject name = universe.stringObject("branch1");
+		SymbolicType type = universe.integerType(); 
+		
+		SymbolicConstant index = universe.symbolicConstant(name, type);
+		NumericExpression low1, high1, low2, high2;
+		low1 = universe.integer(1350);
+		high1 = universe.integer(1200);
+		low2 = universe.integer(1200);
+		high2 = universe.integer(2350);
+		BooleanExpression falseExp = universe.bool(false);
+		BooleanExpression trueExp = universe.bool(true);
+		
+		BooleanExpression testResult1 = 
+				universe.existsInt((NumericSymbolicConstant)index,
+						low1, high1, falseExp);
+		BooleanExpression testResult2 = 
+				universe.existsInt((NumericSymbolicConstant)index,
+						low2, high2, trueExp);
+		
+		
+		assertEquals(universe.existsInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("branch1"), integerType),
+				universe.integer(1350), universe.integer(1200), 
+				universe.bool(false)), testResult1);
+		assertEquals(universe.existsInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("branch1"), integerType),
+				universe.integer(1200), universe.integer(2350), 
+				universe.bool(true)), testResult2);
 	}
 
 	@Test
