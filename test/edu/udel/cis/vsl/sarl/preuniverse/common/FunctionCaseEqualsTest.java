@@ -33,6 +33,8 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 public class FunctionCaseEqualsTest {
 	
 	private static PreUniverse universe;
+	
+	private static CommonPreUniverse nuniverse;
 
 	private static SymbolicType realType, integerType;
 	
@@ -40,11 +42,12 @@ public class FunctionCaseEqualsTest {
 	
 	private static NumericSymbolicConstant x, y, z;
 
-	private static SymbolicType functionType1, functionType2, functionType3;
+	private static SymbolicType functionType1, functionType2, functionType3,functionType4, functionType5;
 	
 	private static SymbolicTypeSequence sequence1, sequence2, sequence3;
 	
 	private static BooleanExpression value1, value2, value, trueExpr, falseExpr;
+	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -54,10 +57,6 @@ public class FunctionCaseEqualsTest {
 		realType = universe.realType();
 		trueExpr = universe.trueExpression();
 		falseExpr = universe.falseExpression();
-		addition1 = universe.add(universe.add(x,y),z);
-		addition2 = universe.add(universe.add(y,z), x);
-		
-		
 		
 	}
 
@@ -76,18 +75,18 @@ public class FunctionCaseEqualsTest {
 	
 	@Test
 	public void FunctionCaseEqualsTest1(){
-		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
-		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
-		SymbolicTupleType tupleType3 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
+		SymbolicTupleType tupleType1 = nuniverse.tupleType(nuniverse.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
+		SymbolicTupleType tupleType2 = nuniverse.tupleType(nuniverse.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
+		SymbolicTupleType tupleType3 = nuniverse.tupleType(nuniverse.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
 		sequence1 = tupleType1.sequence();
 		sequence2 = tupleType2.sequence();
 		sequence2 = tupleType3.sequence();
 		
-		functionType1 = universe.functionType(sequence1, realType);
-		functionType2 = universe.functionType(sequence2, integerType);
-		functionType3 = universe.functionType(sequence3, realType);
-		value1 = universe.compatible(functionType1, functionType2);
-		value2 = universe.compatible(functionType1, functionType3);
+		functionType1 = nuniverse.functionType(sequence1, realType);
+		functionType2 = nuniverse.functionType(sequence2, integerType);
+		functionType3 = nuniverse.functionType(sequence3, realType);
+		value1 = nuniverse.compatible(functionType1, functionType2);
+		value2 = nuniverse.compatible(functionType1, functionType3);
 		
 		assertEquals(falseExpr, value1);
 		assertEquals(trueExpr, value2);
@@ -99,9 +98,14 @@ public class FunctionCaseEqualsTest {
 		addition1 = universe.add(universe.add(x,y),z);
 		addition2 = universe.add(universe.add(y,z),x);
 		value = universe.equals(addition1, addition2);
+		
 		assertEquals (trueExpr, value);
 		
+		//SymbolicFunctionType function1 = (SymbolicFunctionType) nuniverse.add(x,y);
+		//SymbolicFunctionType function2 = (SymbolicFunctionType) nuniverse.add(y,z);
+		
 	}
+	
 }
 
 
