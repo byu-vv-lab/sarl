@@ -2,14 +2,19 @@
  */
 package edu.udel.cis.vsl.sarl.simplify;
 
-import edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
@@ -19,15 +24,32 @@ import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
  *
  */
 public class SimplifyCreationTest {
+	
+	static FactorySystem system;
+	
+	private static PreUniverse preUniv;
+	
+	static BooleanExpression xeq5;
+	
+	static NumericExpression rat5;
+	
+	static SymbolicType realType;
+	
+	static NumericSymbolicConstant x;
 
 	/**
-	 * Calls the setup() methed of CommonObjects under the 
+	 * Calls the setup() method of CommonObjects under the 
 	 * test...ideal.simplify package
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		CommonObjects.setUp();
+		system = PreUniverses.newIdealFactorySystem();
+		preUniv = PreUniverses.newPreUniverse(system);
+		rat5 = preUniv.rational(5);
+		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("x"), realType);
+		xeq5 = preUniv.equals(x, rat5);
 	}
 
 	/**
@@ -64,7 +86,7 @@ public class SimplifyCreationTest {
 	 */
 	@Test
 	public void testIdentitySimplifier(){
-		Simplifier simplifier = Simplify.identitySimplifier(getPreUniv(), CommonObjects.getXeq5());
+		Simplifier simplifier = Simplify.identitySimplifier(preUniv, xeq5);
 	}
 	
 	/**
@@ -72,7 +94,7 @@ public class SimplifyCreationTest {
 	 */
 	@Test
 	public void simplifierFactoryTest(){
-		SimplifierFactory simplifierFactory = Simplify.newIdentitySimplifierFactory(getPreUniv());
+		SimplifierFactory simplifierFactory = Simplify.newIdentitySimplifierFactory(preUniv);
 	}
 
 }
