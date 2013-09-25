@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -54,7 +55,8 @@ public class CommonPreUniverseTest {
 	// SymbolicTypes
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
-	private static SymbolicType arrayType;
+	private static SymbolicType booleanType;
+	private static SymbolicType arrayType, realArray;
 	// Factories
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
@@ -73,6 +75,8 @@ public class CommonPreUniverseTest {
 	private static Collection<SymbolicObject> objectCollection;
 	private static ArrayList<NumericExpression> emptyNumericList;
 	private static ArrayList<NumericExpression> numericList;
+	
+	private static SymbolicUnionType union1;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -81,8 +85,10 @@ public class CommonPreUniverseTest {
 		
 		// Types
 		integerType = universe.integerType();
+		booleanType = universe.booleanType();
 		realType = universe.realType();
 		arrayType = universe.arrayType(integerType); //creates an array of ints
+		realArray = universe.arrayType(realType);
 		
 		// For testing comparator() method
 		objectFactory = system.objectFactory();
@@ -104,6 +110,11 @@ public class CommonPreUniverseTest {
 		numericFactory = system.numericFactory();
 		
 		typeFactory = system.typeFactory();
+		
+		union1 = universe.unionType(
+				universe.stringObject("union1"),
+				Arrays.asList(new SymbolicType[] { integerType, realType,
+						booleanType, realArray }));
 		
 		
 		
@@ -1231,9 +1242,68 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssign() {
-		fail("Not yet implemented");
+		SymbolicExpression ten = universe.integer(10);
+		SymbolicExpression u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		
+		ReferenceExpression iref = expressionFactory.identityReference();
+		ReferenceExpression nref = expressionFactory.nullReference();
+		
+		assertEquals(universe.assign(u_ten, iref, u_ten), u_ten); // test for subvalue
+	}
+	
+	@Test (expected = SARLException.class)
+	// Test written by Jeff DiMarco (jdimarco) 9/25/13
+	public void testAssignException1() {
+		SymbolicExpression ten = universe.integer(10);
+		SymbolicExpression u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		
+		ReferenceExpression iref = expressionFactory.identityReference();
+		ReferenceExpression nref = expressionFactory.nullReference();
+		
+		universe.assign(u_ten, nref, u_ten); // test for SARLException
+	}
+	
+	@Test (expected = SARLException.class)
+	// Test written by Jeff DiMarco (jdimarco) 9/25/13
+	public void testAssignException2() {
+		SymbolicExpression ten = universe.integer(10);
+		SymbolicExpression u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		
+		ReferenceExpression iref = expressionFactory.identityReference();
+		ReferenceExpression nref = expressionFactory.nullReference();
+		
+		universe.assign(u_ten, iref, null); // test for SARLException
+	}
+	
+	@Test (expected = SARLException.class)
+	// Test written by Jeff DiMarco (jdimarco) 9/25/13
+	public void testAssignException3() {
+		SymbolicExpression ten = universe.integer(10);
+		SymbolicExpression u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		
+		ReferenceExpression iref = expressionFactory.identityReference();
+		ReferenceExpression nref = expressionFactory.nullReference();
+		
+		universe.assign(null, nref, u_ten); // test for SARLException
+	}
+	
+	@Test (expected = SARLException.class)
+	// Test written by Jeff DiMarco (jdimarco) 9/25/13
+	public void testAssignException4() {
+		SymbolicExpression ten = universe.integer(10);
+		SymbolicExpression u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		
+		ReferenceExpression iref = expressionFactory.identityReference();
+		ReferenceExpression nref = expressionFactory.nullReference();
+		
+		universe.assign(u_ten, null, u_ten); // test for SARLException
 	}
 	
 	
