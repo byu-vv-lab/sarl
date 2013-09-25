@@ -11,9 +11,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -120,66 +117,6 @@ public class CommonPreUniverseTest {
 		
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	@Test
-	@Ignore
-	public void testCommonPreUniverse() {
-		fail("Not yet implemented");
-	}
-	
-	@Test
-	@Ignore
-	public void testErr() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIerr() {
-		
-	}
-
-	@Test
-	@Ignore
-	public void testCanonicSymbolicExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExpressionSymbolicOperatorSymbolicTypeSymbolicObjectArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExpressionSymbolicOperatorSymbolicTypeSymbolicObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExpressionSymbolicOperatorSymbolicTypeSymbolicObjectSymbolicObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExpressionSymbolicOperatorSymbolicTypeSymbolicObjectSymbolicObjectSymbolicObject() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testZero() {
@@ -212,66 +149,6 @@ public class CommonPreUniverseTest {
 		unionType = universe.unionType(universe.stringObject("MyUnion"), memberTypes);
 		
 		commonUniverse.zero(unionType);
-	}
-
-	@Test
-	@Ignore
-	public void testHashSet() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCompatible() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIncompatible() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testForallIntConcrete() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExistsIntConcrete() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleUnsafe() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNumericExpressionFactory() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCanonicSymbolicObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNumberFactory() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testAddIterableOfQextendsNumericExpression() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -309,73 +186,6 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.and(booleanEmptyList), trueExpr); // test empty is true
 	}	
 	
-
-	@Test
-	@Ignore
-	public void testAndBooleanExpressionBooleanExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testPureType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testBooleanType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIntegerType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testHerbrandIntegerType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRealType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testBoundedIntegerType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testHerbrandRealType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCharacterType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testArrayTypeSymbolicTypeNumericExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testArrayTypeSymbolicType() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/24/13
 	public void testTypeSequenceSymbolicTypeArray() {
@@ -390,36 +200,6 @@ public class CommonPreUniverseTest {
 		assertEquals(expectedTypeSequence.numTypes(), typeSequence.numTypes());
 		assertEquals(expectedTypeSequence.getType(0), typeSequence.getType(0));
 		assertEquals(expectedTypeSequence.getType(1), typeSequence.getType(1));
-	}
-
-	@Test
-	@Ignore
-	public void testTypeSequenceIterableOfQextendsSymbolicType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleTypeStringObjectSymbolicTypeSequence() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleTypeStringObjectIterableOfQextendsSymbolicType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testFunctionTypeSymbolicTypeSequenceSymbolicType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testFunctionTypeIterableOfQextendsSymbolicTypeSymbolicType() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -496,36 +276,6 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testBooleanObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCharObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIntObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNumberObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testStringObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	//written by Chris Heider
 	public void testSymbolicConstant() {
 		//create two symbolicConstants to see if they are equal
@@ -542,92 +292,7 @@ public class CommonPreUniverseTest {
 	// These nullExpression objects will be the same because they were generated by a factory
 	public void testNullExpression() {
 		SymbolicExpression resultNullExpression = universe.nullExpression();
-		
 		assertEquals(nullExpression, resultNullExpression); //test for equality
-	}
-
-	@Test
-	@Ignore
-	public void testNumberNumberObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIntegerInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalDouble() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalIntInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testZeroInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testZeroReal() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testOneInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testOneReal() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCharacter() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExtractCharacter() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testStringExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testAddNumericExpressionNumericExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testSubtract() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testMultiplyNumericExpressionNumericExpression() {
-		fail("Not yet implemented");
 	}
 
 	@Test(expected=SARLException.class)	
@@ -654,18 +319,6 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testDivide() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testModulo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testMinus() {
 		NumericExpression seventeen = universe.integer(17);
@@ -675,59 +328,11 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testPowerNumericExpressionIntObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testPowerNumericExpressionInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testPowerNumericExpressionNumericExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExtractNumber() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testSubstituteSymbolicConstants() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testSubstituteSymbolicExpressionMapOfSymbolicExpressionSymbolicExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testBoolBooleanObject() {
 		BooleanObject booleanObj = universe.booleanObject(true);
 		BooleanExpression booleanExpr = booleanFactory.symbolic(booleanObj);
 		assertEquals(universe.bool(booleanObj), booleanExpr); // trivial check of return type
-	}
-
-	@Test
-	@Ignore
-	public void testBoolBoolean() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testOrBooleanExpressionBooleanExpression() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -866,18 +471,6 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testLessThan() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testLessThanEquals() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/23/13
 	public void testEqualsSymbolicExpressionSymbolicExpression() {
 		SymbolicExpression symbolicExpr1;
@@ -953,18 +546,6 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testForall() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testExists() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	// Test written by Jeff DiMarco(jdimarco) 9/20/13
 	public void testExtractBoolean() {
 		BooleanExpression trueExpr;
@@ -982,96 +563,8 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testLambda() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testApply() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testUnionInject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testUnionTest() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testUnionExtract() {
-		fail("Not yet implemented");
-	}
-
-	
-	
-
-	
-	@Test
-	@Ignore
-	public void testEmptyArray() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testLength() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testArrayRead() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testDenseTupleWrite() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testArrayLambda() {
 		assertEquals(null, universe.arrayLambda(symbolicCompleteArrayType, nullExpression)); //Simple test for coverage.
-	}
-
-	@Test
-	@Ignore
-	public void testTuple() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleRead() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleWrite() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCast() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testCond() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -1091,12 +584,6 @@ public class CommonPreUniverseTest {
 
 	@Test
 	@Ignore
-	public void testIntegerLong() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
 	public void testIntegerBigInteger() {
 //		NumericExpression BigInt1, BigInt2;
 //		long x = 2;
@@ -1106,86 +593,8 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
-	public void testRationalInt() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalLong() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalBigInteger() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalFloat() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalLongLong() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testRationalBigIntegerBigInteger() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNumberNumber() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTrueExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testFalseExpression() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testNumValidCalls() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testNumProverValidCalls() {
 		assertEquals(universe.numProverValidCalls(), 0); //at the time of tests, universe.proverValidCount should be 0;
-	}
-
-	@Test
-	@Ignore
-	public void testIncrementValidCount() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIncrementProverValidCount() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testBasicCollection() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -1232,42 +641,6 @@ public class CommonPreUniverseTest {
 			assertEquals(e.getClass(), SARLException.class); //test class name of thrown exception	
 			assertEquals(e.getMessage(), "dereference given null value");
 		}
-	}
-
-	@Test
-	@Ignore
-	public void testReferencedType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testIdentityReference() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testArrayElementReference() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testTupleComponentReference() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testUnionMemberReference() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	@Ignore
-	public void testOffsetReference() {
-		fail("Not yet implemented");
 	}
 
 	@Test
