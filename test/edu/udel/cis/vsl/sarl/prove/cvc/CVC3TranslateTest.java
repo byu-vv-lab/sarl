@@ -34,12 +34,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -109,22 +104,6 @@ public class CVC3TranslateTest {
 	}
 	
 	@Test(expected = SARLInternalException.class)
-	public void testTranslateAdd(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-		
-		NumericExpression addExp2 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, one, two);
-		Expr addExpr2 = cvcProver.translate(addExp2);
-		Expr addExpected2 = vc.plusExpr(oneExpr, twoExpr);
-		assertEquals(addExpected2, addExpr2);
-				
-		NumericExpression addExp3 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, one, two, five);
-		cvcProver.translate(addExp3);
-	}
-	
-	@Test(expected = SARLInternalException.class)
 	public void testTranslateAnd(){
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
@@ -173,120 +152,14 @@ public class CVC3TranslateTest {
 		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
 		assertEquals(expected5, expr5);
 	}
-	
-	@Test
-	public void testTranslateDivision(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
 
-		NumericExpression divExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.DIVIDE, realType, one, two);
-		Expr expr6 = cvcProver.translate(divExp);
-		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
-		assertEquals(expected6, expr6);
-	}
-	
-	@Test
-	public void testTranslateNegative(){
-
-		NumericExpression negExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.NEGATIVE, intType, one);
-		Expr expr7 = cvcProver.translate(negExp);
-		Expr expected7 = vc.uminusExpr(cvcProver
-				.translate((SymbolicExpression) negExp.argument(0)));
-		assertEquals(expected7, expr7);
-	}
-	
 	@Test
 	public void testTranslateNot(){
-
-		BooleanExpression notExp = (BooleanExpression) expressionFactory
+		SymbolicExpression notExp = expressionFactory
 				.expression(SymbolicOperator.NOT, boolType, booleanExprTrue);
-		Expr expr8 = cvcProver.translate(notExp);
-		Expr expected8 = vc.notExpr(cvcProver
-				.translate((SymbolicExpression) notExp.argument(0)));
-		assertEquals(expected8, expr8);
-	}
-	
-	@Test
-	public void testTranslatePower(){
-		Expr twoExpr = cvcProver.translate(two);	
-		Expr fiveExpr = cvcProver.translate(five);
-
-		NumericExpression powerExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.POWER, realType, two, five);
-		Expr expr9 = cvcProver.translate(powerExp);
-		Expr expected9 = vc.powExpr(twoExpr, fiveExpr);
-		assertEquals(expected9, expr9);
-	}
-	
-	@Test
-	public void testTranslateSubtract(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-
-		NumericExpression subExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.SUBTRACT, realType, two, one);
-		Expr expr10 = cvcProver.translate(subExp);
-		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
-		assertEquals(expected10, expr10);
-	}
-	
-	@Test
-	public void testTranslateIntegerDivision(){
-		
-		NumericExpression q = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
-		NumericExpression r = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MODULO, intType, e, f);
-		
-		Expr e2 = cvcProver.translate(e);
-		Expr f2 = cvcProver.translate(f);
-		Expr q2 = cvcProver.translate(q);
-		Expr r2 = cvcProver.translate(r);
-		
-		Expr equationOne = vc.eqExpr(e2, 
-				vc.plusExpr(r2, vc.multExpr(f2, q2)));	//e2 = f2*q2+r2
-		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
-		Expr equationThree = vc.ltExpr(r2, f2); // r2 < f2
-		
-		assertEquals(QueryResult.VALID, vc.query(equationOne));
-		assertEquals(QueryResult.VALID, vc.query(equationTwo));
-		assertEquals(QueryResult.VALID, vc.query(equationThree));
-		
-	}
-
-	@Test(expected=SARLInternalException.class)
-	public void testTranslateMultiply() {
-		
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-		Expr fiveExpr = cvcProver.translate(five);
-		Expr tenExpr = cvcProver.translate(ten);
-		
-		List<NumericExpression> mulList = new ArrayList<NumericExpression>();
-		mulList.add(five);
-		mulList.add(ten);
-		SymbolicCollection<NumericExpression> mulCollection = universe.basicCollection(mulList);
-		
-		//One argument
-		NumericExpression mulExp1 = (NumericExpression)expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, realType, mulCollection);
-		Expr expr1 = cvcProver.translate(mulExp1);
-		Expr expr2 = vc.multExpr(vc.multExpr(oneExpr, fiveExpr), tenExpr);
-		assertEquals(expr2, expr1);
-		
-		//Two arguments
-		NumericExpression mulExp2 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
-		Expr expr3 = cvcProver.translate(mulExp2);
-		Expr expected2 = vc.multExpr(twoExpr, fiveExpr);
-		assertEquals(expected2, expr3);
-		
-		//More than two arguments
-		NumericExpression mulExp3 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
-		cvcProver.translate(mulExp3);
+		Expr translateResult = cvcProver.translate(notExp);
+		Expr expected = vc.notExpr(vc.trueExpr());
+		assertEquals(expected, translateResult);
 	}
 	
 	@Test
@@ -295,67 +168,39 @@ public class CVC3TranslateTest {
 		List<Expr> list = new ArrayList<Expr>();
 		
 		// true or true
-		BooleanExpression orExpression = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.OR, boolType, 
+		SymbolicExpression orExpression = expressionFactory
+				.expression(SymbolicOperator.OR, boolType,
 						booleanExprTrue, booleanExprTrue);
-		Expr translateOr = cvcProver.translate(orExpression);
+		Expr translateResult = cvcProver.translate(orExpression);
+		
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		list.add(trueExpr);
 		list.add(trueExpr);
-		Expr expected = cvcProver.validityChecker().orExpr(list);
-		assertEquals(expected, translateOr);
+		Expr expected = vc.orExpr(list);
+		
+		// diagnostics
+		out.println("expected: " + expected);
+		out.println("translateResult: " + translateResult);
+		out.println();
+		assertEquals(expected, translateResult);
 		list.clear();
 		
 		// true or false
-		BooleanExpression orExpression2 = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.OR, boolType, 
+		SymbolicExpression orExpression2 = expressionFactory
+				.expression(SymbolicOperator.OR, boolType,
 						booleanExprTrue, booleanExprFalse);
-		translateOr = cvcProver.translate(orExpression2);
+		translateResult = cvcProver.translate(orExpression2);
+		
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
 		list.add(trueExpr);
 		list.add(falseExpr);
 		expected = vc.orExpr(list);
-		assertEquals(expected, translateOr);
-	}
-	
-	@Test
-	public void testTranslateType() {
-		// cvc3 int array (with int index type)
-		Type intArrayDataType = vc.arrayType(vc.intType(), vc.intType());
-		// give extent, along with array type in a tuple
-		Type expected = vc.tupleType(vc.intType(), intArrayDataType);
-		out.println("expected: " + expected);
-		Type translateResult = cvcProver.translateType(intArrayType);
-		out.println("translateResult: " + translateResult);
-		int eType = expected.arity();
-		out.println("expected Type: " + eType);
-		int trType = translateResult.arity();
-		out.println("translateResult Type: " + trType);
-		assertEquals(eType, trType);
 		
-		// cvc3 tuple
-		List<SymbolicType> typesList = new ArrayList<SymbolicType>();
-		typesList.add(intType);
-		typesList.add(intType);
-		typesList.add(realType);
-		SymbolicTypeSequence types = universe.typeSequence(typesList);
-		StringObject name = universe.stringObject("twoIntRealTuple");
-		SymbolicType twoIntRealTupleType = universe.tupleType(name, types);
-		translateResult = cvcProver.translateType(twoIntRealTupleType);
-		
-		List<Type> cvc3Types = new ArrayList<Type>();
-		cvc3Types.add(vc.intType());
-		cvc3Types.add(vc.intType());
-		cvc3Types.add(vc.realType());
-		expected = vc.tupleType(cvc3Types);
+		// diagnostics
 		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
-		
-		eType = expected.arity();
-		trType = translateResult.arity();
-		out.println("expected type: " + eType);
-		out.println("translateResult type: " + trType);
-		assertEquals(eType, trType);
+		out.println();
+		assertEquals(expected, translateResult);
 	}
-	
+
 }
