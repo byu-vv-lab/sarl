@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -13,12 +14,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -89,25 +99,109 @@ public class TupleTest {
 	
 	
 	}
-	
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
-	public void tupleTest1(){
+	public void tupleExceptionTest1(){
 		
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
 		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
 	}
+	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
-	public void tupleTest2(){
+	public void tupleExceptionTest2(){
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
 		
 		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.rational(1),universe.integer(2),universe.integer(2)}));
 
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test(expected= SARLException.class)
+	public void tupleWriteTest(){
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedTuple;
+		IntObject i1;
+		i1 = universe.intObject(1);
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+
+		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
+		assertEquals(tuple, resultedTuple);
+		
+		
+		// exception
+		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
+		
+			
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithTuple(){
+		
+		// here we test compatible with tuple types 
+		SymbolicTupleType type1, type2, type3,type5, type6,type7;
+		SymbolicType type4;
+		BooleanExpression result, expected;
+		SymbolicTypeSequence sequence;
+		LinkedList<SymbolicType> members = new LinkedList<>();
+		
+		
+		type1 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		type2 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));		
+		type3 = universe.tupleType(universe.stringObject("type2"),Arrays.asList(new SymbolicType[]{realType, integerType}));
+		type5 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		type6 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType, integerType}));
+		type7 = universe.tupleType(universe.stringObject("Type1"), members);
+		type4 = universe.integerType();
+		
+		// here we compare two identical tuple types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type3)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type3);
+		assertEquals(expected, result);
+		
+		// here we compare a tuple type with integer type (type1, type4)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type4);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type5), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type5);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type6), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type6);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type7, type6), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type7, type6);
+		assertEquals(expected, result);
+				
+
+	}
+
+
+
+
+		
+	
+}
 		
 	
 	
 	
 
 
-}

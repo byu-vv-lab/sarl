@@ -1310,22 +1310,6 @@ public class CommonPreUniverseTest {
 	
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
-	public void tupleExceptionTest1(){
-		
-		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
-		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
-	}
-	// written by Mohammad Alsulmi
-	@Test(expected= SARLException.class)
-	public void tupleExceptionTest2(){
-		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType,realType}));
-		
-		SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.rational(1),universe.integer(2),universe.integer(2)}));
-
-		
-	}
-	// written by Mohammad Alsulmi
-	@Test(expected= SARLException.class)
 	public void testLengthExceptions(){
 		
 		NumericExpression[] arrayMembers = new NumericExpression[2] ;
@@ -1353,25 +1337,6 @@ public class CommonPreUniverseTest {
 		length = universe.length(tuple);	
 
 
-	}
-	// written by Mohammad Alsulmi
-	@Test(expected= SARLException.class)
-	public void tupleWriteTest(){
-		SymbolicTupleType tupleType1;
-		SymbolicExpression tuple, resultedTuple;
-		IntObject i1;
-		i1 = universe.intObject(1);
-		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
-		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
-
-		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
-		assertEquals(tuple, resultedTuple);
-		
-		
-		// exception
-		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
-		
-			
 	}
 	// written by Mohammad Alsulmi
 	@Test
@@ -1685,64 +1650,6 @@ public class CommonPreUniverseTest {
 		
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
 		resultedArray = universe.arrayRead(array, negativeOne);
-	}
-	// written by Mohammad Alsulmi
-	@Test
-	public void testCompatibleWithTuple(){
-		
-		// here we test compatible with tuple types 
-		SymbolicTupleType type1, type2, type3,type5, type6,type7;
-		SymbolicType type4;
-		BooleanExpression result, expected;
-		SymbolicTypeSequence sequence;
-		LinkedList<SymbolicType> members = new LinkedList<>();
-		
-		
-		type1 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
-		type2 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));		
-		type3 = universe.tupleType(universe.stringObject("type2"),Arrays.asList(new SymbolicType[]{realType, integerType}));
-		type5 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
-		type6 = universe.tupleType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType, integerType}));
-		type7 = universe.tupleType(universe.stringObject("Type1"), members);
-		type4 = universe.integerType();
-		
-		// here we compare two identical tuple types (type1, type2)
-		// the expected compatible call should return true
-		expected = universe.bool(true);
-		result = universe.compatible(type1, type2);
-		assertEquals(expected, result);
-		
-		// here we compare two different tuple types (type1, type3)
-		// the expected compatible call should return false
-		expected = universe.bool(false);
-		result  = universe.compatible(type1, type3);
-		assertEquals(expected, result);
-		
-		// here we compare a tuple type with integer type (type1, type4)
-		// the expected compatible call should return false
-		expected = universe.bool(false);
-		result  = universe.compatible(type1, type4);
-		assertEquals(expected, result);
-		
-		// here we compare two different tuple types (type1, type5), but they have the same name
-		// the expected compatible call should return false
-		expected = universe.bool(false);
-		result  = universe.compatible(type1, type5);
-		assertEquals(expected, result);
-		
-		// here we compare two different tuple types (type1, type6), but they have the same name
-		// the expected compatible call should return false
-		expected = universe.bool(false);
-		result  = universe.compatible(type1, type6);
-		assertEquals(expected, result);
-		
-		// here we compare two different tuple types (type7, type6), but they have the same name
-		// the expected compatible call should return false
-		expected = universe.bool(false);
-		result  = universe.compatible(type7, type6);
-		assertEquals(expected, result);
-				
-
 	}
 	// written by Mohammad Alsulmi
 	@Test
