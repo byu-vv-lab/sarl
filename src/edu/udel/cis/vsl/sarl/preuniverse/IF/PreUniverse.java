@@ -718,31 +718,40 @@ public interface PreUniverse {
 	 * necessarily return an expression with operator POWER.
 	 * 
 	 * @param base
-	 *            the base expression in the power expression
+	 *            the base expression
 	 * @param exponent
-	 *            a non-negative concrete integer exponent
+	 *            a non-negative concrete IntObject exponent
+	 * @return
+	 * 			 the expression after applying power operation
 	 */
 	NumericExpression power(NumericExpression base, IntObject exponent);
 
 	/**
-	 * Shorthand for power(base, intObject(exponent)).
+	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
+	 * This method might actually multiply out the expression, i.e., it does not
+	 * necessarily return an expression with operator POWER.
 	 * 
 	 * @param base
-	 *            he base expression in the power expression
-	 * 
+	 *            the base expression
 	 * @param exponent
 	 *            a non-negative concrete integer exponent
-	 * @return power(base, intObject(exponent))
+	 * @return
+	 * 			 the expression after applying power operation
+	 * 
 	 */
 	NumericExpression power(NumericExpression base, int exponent);
 
 	/**
-	 * General power operator: e^b. Both e and b are numeric expressions.
+	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
+	 * This method might actually multiply out the expression, i.e., it does not
+	 * necessarily return an expression with operator POWER.
 	 * 
 	 * @param base
-	 *            the base expression in the power expression
+	 *            the base expression
 	 * @param exponent
-	 *            the exponent in the power expression
+	 *            the exponent expression
+	 * @return
+	 * 			 the expression after applying power operation
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
