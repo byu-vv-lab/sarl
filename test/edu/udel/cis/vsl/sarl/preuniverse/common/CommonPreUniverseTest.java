@@ -1560,27 +1560,59 @@ public class CommonPreUniverseTest {
 		//case AND;
 		SymbolicObject[] Args_AND1={resultTrue,resultTrue};
 		SymbolicObject[] Args_AND2={resultTrue,resultFalse};
-//		assertEquals(universe.and(resultTrue,resultTrue),universe.make(SymbolicOperator.AND,Bool,Args_AND2));
-//		assertEquals(universe.make(SymbolicOperator.AND,Bool,Args_AND1),false);
-//		//case ARRAY_LAMBDA
-//		SymbolicObject[] Args_Array_Lambda={nullExpression};
-//		assertEquals(null,universe.make(SymbolicOperator.ARRAY_LAMBDA,symbolicCompleteArrayType,Args_Array_Lambda));
-//		//case ARRAY_WRITE
-//		SymbolicObject[] Args_Array_Write={two,two,five};
-//		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,two,five}));
-//		assertEquals(array,universe.make(SymbolicOperator.ARRAY_WRITE,symbolicCompleteArrayType,Args_Array_Write));
-//		//case CONCRETE
-//		SymbolicObject[] Args_Concrete={one};
-//		assertEquals(universe.make(SymbolicOperator.CONCRETE, Real, Args_Concrete),one);
-//		//case COND
-//		SymbolicObject[] Args_COND={resultTrue,resultTrue,resultTrue};
-//		assertEquals(universe.make(SymbolicOperator.COND,Bool,Args_COND),resultTrue);
-//		//case DIVIDE:
-//		SymbolicObject[] Args_Divide={one,two};
-//		assertEquals(universe.make(SymbolicOperator.DIVIDE,Integer,Args_Divide),two);
-//		//case NEGATIVE;
-//		SymbolicObject[] Args_Negative={one};
-//		assertEquals(N_one,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
+		SymbolicObject[] Args_AND3={resultTrue};
+		assertEquals(universe.make(SymbolicOperator.AND,Bool,Args_AND2),resultFalse);
+		assertEquals((universe.make(SymbolicOperator.AND,Bool,Args_AND1)),resultTrue);
+		//assertEquals((universe.make(SymbolicOperator.AND,Bool,Args_AND3)),resultTrue);
+		//case ARRAY_LAMBDA
+		SymbolicObject[] Args_Array_Lambda={nullExpression};
+		assertEquals(null,universe.make(SymbolicOperator.ARRAY_LAMBDA,symbolicCompleteArrayType,Args_Array_Lambda));
+		//case ARRAY_WRITE
+		SymbolicObject[] Args_Array_Write={two,two,five};
+		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,two,five}));
+		//do not implement yet
+		//assertEquals(array,universe.make(SymbolicOperator.ARRAY_WRITE,symbolicCompleteArrayType,Args_Array_Write));
+		//case CONCRETE
+		SymbolicObject[] Args_Concrete={one};
+		//do not implement yet
+		//assertEquals(universe.make(SymbolicOperator.CONCRETE, Real, Args_Concrete),one);
+		//case COND
+		SymbolicObject[] Args_COND={resultTrue,resultTrue,resultTrue};
+		assertEquals(universe.make(SymbolicOperator.COND,Bool,Args_COND),resultTrue);
+		//case DIVIDE:
+		SymbolicObject[] Args_Divide={two,one};
+		assertEquals(universe.make(SymbolicOperator.DIVIDE,Integer,Args_Divide),two);
+		//case MULTIPLY
+		SymbolicObject[] testList =new SymbolicObject[] {one};
+		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();
+		Args_MULTIPLY.add(one);
+		//assertEquals(universe.make(SymbolicOperator.MULTIPLY,Integer,testList),testList);
+		//case NEGATIVE;
+		SymbolicObject[] Args_Negative={one};
+		assertEquals(N_one,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
+		//case NEQ
+		SymbolicObject[] Args_NEQ={resultTrue,resultTrue};
+		assertEquals(universe.make(SymbolicOperator.OR,Bool,Args_NEQ),resultTrue);
+		//case NOT:
+		SymbolicObject[] Args_NOT={resultTrue};
+		assertEquals(universe.make(SymbolicOperator.NOT,Bool,Args_NOT),resultFalse);
+		//case OR;
+		SymbolicObject[] Args_OR1={resultTrue,resultTrue};
+		SymbolicObject[] Args_OR2={resultFalse,resultFalse};
+		SymbolicObject[] Args_OR3={resultTrue};
+		assertEquals(universe.make(SymbolicOperator.OR,Bool,Args_OR2),resultFalse);
+		assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR1)),resultTrue);
+		//assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR3)),resultTrue);
+	 	//case POWER:
+		SymbolicObject[] Args_Power= {one, one};
+		SymbolicExpression result = universe.make(SymbolicOperator.POWER,Integer,Args_Power);		
+		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power), result);
+		//case SUBTRACT:
+		SymbolicObject[] Args_Substract= {three, one};
+		assertEquals(universe.make(SymbolicOperator.SUBTRACT,Integer,Args_Substract), two);
+		
+		
+		
 		
 		
 	}
