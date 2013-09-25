@@ -153,7 +153,6 @@ public class CVC3TranslateTypeTest {
 //		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
-//		assertEquals(expected, translateResult);
 	}
 	
 }

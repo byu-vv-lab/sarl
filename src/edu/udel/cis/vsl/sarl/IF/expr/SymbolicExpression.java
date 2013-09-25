@@ -184,7 +184,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * </li>
  * 
  * <li>UNION_INJECT: injects an element of a member type into a union type that
- * inclues that member type. 2 arguments: arg0 is an IntObject giving the index
+ * includes that member type. 2 arguments: arg0 is an IntObject giving the index
  * of the member type of the union type; arg1 is a symbolic expression whose
  * type is the member type. The union type itself is the type of the
  * UNION_INJECT expression.</li>
