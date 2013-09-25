@@ -21,6 +21,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -80,4 +81,25 @@ public class FunctionTypeTest {
 		assertEquals(functionType1.isInteger(), false);
 		
 	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithFunction(){
+
+		// here we test compatible with tuple types 
+		SymbolicFunctionType functionType1, functionType2;
+		BooleanExpression result, expected;
+	
+		functionType1 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,integerType}), realType);
+		functionType2 = universe.functionType(Arrays.asList(new SymbolicType[]{integerType,realType}), integerType);
+	
+	
+		// here we compare two different function types (functionType1, functionType2)
+		// the expected compatible call should return true
+	
+		expected = universe.bool(false);
+		result = universe.compatible(functionType1, functionType2);
+		assertEquals(expected, result);
+	
+	}
+
 }

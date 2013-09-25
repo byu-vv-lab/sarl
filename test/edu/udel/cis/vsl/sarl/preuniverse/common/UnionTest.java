@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -42,7 +43,7 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
 public class UnionTest {
 
 	private SymbolicUniverse universe;
-	private SymbolicType intType, realType, booleanType;
+	private SymbolicType intType, realType, booleanType, integerType;
 	private SymbolicArrayType realArray, unionArray;
 
 	/**
@@ -65,6 +66,7 @@ public class UnionTest {
 		
 		booleanFactory = system.booleanFactory();
 		intType = universe.integerType();
+		integerType = universe.integerType();
 		realType = universe.realType();
 		booleanType = universe.booleanType();
 		realArray = universe.arrayType(realType);
@@ -209,4 +211,46 @@ public class UnionTest {
 		// union1 has type intType for index 0, try injecct booleanType
 		universe.unionInject(union1, universe.intObject(0), trueExpr);
 	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompatibleWithUnion(){
+		
+		// here we test compatible with tuple types 
+		SymbolicUnionType type1, type2, type3, type5;
+		SymbolicType type4;
+		BooleanExpression result, expected;
+		
+		
+		type1 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+		type2 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,realType}));		
+		type3 = universe.unionType(universe.stringObject("type3"),Arrays.asList(new SymbolicType[]{realType, integerType}));
+		type5 = universe.unionType(universe.stringObject("Type1"), Arrays.asList(new SymbolicType[]{integerType,universe.booleanType()}));
+		type4 = universe.booleanType();
+		
+		// here we compare two identical unions types (type1, type2)
+		// the expected compatible call should return true
+		expected = universe.bool(true);
+		result = universe.compatible(type1, type2);
+		assertEquals(expected, result);
+		
+		// here we compare two different unions types (type1, type3)
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type3);
+		assertEquals(expected, result);
+		
+		// here we compare a union type with boolean type (type1, type4)
+		// the expected compatible call should return true
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type4);
+		assertEquals(expected, result);
+		
+		// here we compare two different tuple types (type1, type5), but they have the same name
+		// the expected compatible call should return false
+		expected = universe.bool(false);
+		result  = universe.compatible(type1, type5);
+		assertEquals(expected, result);
+
+	}
+
 }
