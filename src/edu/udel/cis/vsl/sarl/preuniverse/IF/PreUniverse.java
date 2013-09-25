@@ -532,8 +532,8 @@ public interface PreUniverse {
 	NumericExpression rational(double value);
 
 	/**
-	 * Returns the symbolic concrete real number numerator/denominator (real
-	 * division).
+	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
+	 * division.
 	 * 
 	 * @param numerator
 	 *            a Java int
@@ -543,8 +543,34 @@ public interface PreUniverse {
 	 *         symbolic expression
 	 */
 	NumericExpression rational(int numerator, int denominator);
+	
+	/**
+	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
+	 * division.
+	 * 
+	 * @param numerator
+	 *            a Java long
+	 * @param denominator
+	 *            a Java long
+	 * @return the real number formed by dividing numerator by denominator, as a
+	 *         symbolic expression
+	 */
+
 
 	NumericExpression rational(long numerator, long denominator);
+	
+	/**
+	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
+	 * division.
+	 * 
+	 * @param numerator
+	 *            a Java.Math.BigInteger
+	 * @param denominator
+	 *            a Java.Math.BigInteger
+	 * @return the real number formed by dividing numerator by denominator, as a
+	 *         symbolic expression
+	 */
+
 
 	NumericExpression rational(BigInteger numerator, BigInteger denominator);
 
