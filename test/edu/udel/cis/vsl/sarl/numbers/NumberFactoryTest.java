@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -38,12 +39,11 @@ public class NumberFactoryTest {
 	}
 
 	@Test
-	public void addRat() {
-		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
-		RationalNumber b = factory.rational(bigTen, bigFifteen);
-		RationalNumber c = factory.add(a, b);
-		RationalNumber expected = factory.rational(new BigInteger("152"),
-				new BigInteger("93"));
+	public void multiplyIntegers() {
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(bigTen);
+		IntegerNumber c = factory.multiply(a, b);
+		IntegerNumber expected = factory.integer(new BigInteger("3"));
 
 		out.println(c);
 		assertEquals(expected, c);
@@ -62,4 +62,29 @@ public class NumberFactoryTest {
 		factory.rational(bigOne, BigInteger.ZERO);
 	}
 
+	@Test
+	public void addRat() {
+		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
+		RationalNumber b = factory.rational(bigTen, bigFifteen);
+		RationalNumber c = factory.add(a, b);
+		RationalNumber expected = factory.rational(new BigInteger("152"),
+				new BigInteger("93"));
+
+		out.println(c);
+		assertEquals(expected, c);
+	}
+	
+	public void rationalCeiling() {
+		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
+		RationalNumber b = factory.rational(bigTen, bigOne);
+		IntegerNumber c = factory.ceil(a);
+		IntegerNumber d = factory.ceil(b);
+		IntegerNumber expectedC = factory.integer(bigOne);
+		IntegerNumber expectedD = factory.integer(bigTen);
+		out.println(c);
+		out.println(d);
+		assertEquals(expectedC, c);
+		assertEquals(expectedD, d);
+	}
+	
 }
