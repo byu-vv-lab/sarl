@@ -603,23 +603,107 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(testingtrue, bef.or(falseExpr, testingtrue));
 		assertEquals(testingfalse, bef.or(testingfalse, falseExpr));
 	}
+	
+	@Test
+	public void CnfSymbolicAsserts(){
+		BooleanExpressionFactory frst = Expressions.newCnfFactory(stf, of, cf);
+		SymbolicObject obj1 = sUniverse.booleanObject(true);
+		SymbolicObject obj2 = sUniverse.booleanObject(false);
+		SymbolicObject[] ExpressionList = {obj1,obj2};
+		CnfExpression testingtrue = (CnfExpression) sUniverse.bool(true);
+		SymbolicType newtype = sUniverse.booleanType();
+		SymbolicOperator Soperator = SymbolicOperator.AND;
+		CnfExpression cnf = (CnfExpression) frst.booleanExpression(Soperator, ExpressionList);
+		assertFalse(cnf.isCanonic());
+	}
+	
+	@Test
+	public void cnfFactoryForallTest(){
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		StringObject pobject = sUniverse.stringObject("a");
+		StringObject qobject = sUniverse.stringObject("b");
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		BooleanExpression andtrue = bef.and(p, q);
+		BooleanExpression foralltrue = bef.forall(b, q);
+		BooleanExpression foralltrue2 = bef.forall(b, p);
+		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
+		BooleanExpression FORALL2 = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue2);
+		CnfExpression cnf = (CnfExpression) FORALL;
+		CnfExpression cnf2 = (CnfExpression) FORALL2;
+		assertEquals(bef.and((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.forall(b, andtrue));
+	}
+	
+	@Test
+	public void cnfFactoryExistsTest(){
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		StringObject pobject = sUniverse.stringObject("a");
+		StringObject qobject = sUniverse.stringObject("b");
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		BooleanExpression ortrue = bef.or(p, q);
+		BooleanExpression existstrue = bef.exists(b, q);
+		BooleanExpression existstrue2 = bef.exists(b, p);
+		BooleanExpression EXISTS = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue);
+		BooleanExpression EXISTS2 = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue2);
+		CnfExpression cnf = (CnfExpression) EXISTS;
+		CnfExpression cnf2 = (CnfExpression) EXISTS2;
+		System.out.println(cnf.argument(0));
+		//BooleanExpression foralltrue2 = bef.forall(boundVariable, a);
+		assertEquals(bef.or((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.exists(b, ortrue));
+		}
 
 	@Test
 	public void CnFFactoryNotTest(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression testingfalse = sUniverse.bool(false);
+		StringObject pobject = sUniverse.stringObject("a");
+		StringObject qobject = sUniverse.stringObject("b");
+		StringObject robject = sUniverse.stringObject("c");
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		SymbolicConstant r = sUniverse.symbolicConstant(robject, booleanType);
 		BooleanExpression falseExpr= bef.falseExpr();
 		BooleanExpression trueExpr= bef.trueExpr();
 		BooleanExpression testingtrue = sUniverse.bool(true);
 		BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
-		BooleanExpression andtrue =  bef.and(trueExpr, testingtrue);
+		BooleanExpression andtrue =  bef.and(p, q);
+		BooleanExpression ortrue = bef.or(p, q);
 		BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, andtrue);
+		//BooleanExpression OR = bef.booleanExpression(SymbolicOperator.OR, ortrue);
+		BooleanExpression nottrue = bef.not(q);
+		//BooleanExpression NOT = bef.booleanExpression(SymbolicOperator.NOT, nottrue);
+		BooleanExpression neqtrue = bef.equiv(q, p);
+		//BooleanExpression NEQ = bef.booleanExpression(SymbolicOperator.EQUALS, neqtrue);
+		BooleanExpression foralltrue = bef.forall(b, testingtrue);
+		//BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
+		BooleanExpression existstrue = bef.exists(b, testingfalse);
 
 		//BooleanExpression FORALLTEST = bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
 		CnfExpression cnf = (CnfExpression) AND;
-		assertEquals(testingfalse, bef.not(andtrue));
-		System.out.println(andtrue.operator());
+		
+		assertEquals(bef.or(bef.not(p), bef.not(q)), bef.not(andtrue));
+		assertEquals(bef.and(bef.not(p), bef.not(q)), bef.not(ortrue));
+		assertEquals(q, bef.not(nottrue));
+		
+		BooleanExpression foralltruechk = bef.exists(b, testingfalse);
+		BooleanExpression EXISTS = bef.booleanExpression(SymbolicOperator.EXISTS, foralltruechk);
+		CnfExpression cnf2 = (CnfExpression) EXISTS;
+		
+		BooleanExpression existschk = bef.forall(b, testingtrue);
+		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, existschk);
+		CnfExpression cnf3 = (CnfExpression) FORALL;
+		
+		//for not(forall) since it is not, check with reverse(i.e. exists)
+		assertEquals(cnf2.argument(0), bef.not(foralltrue));
+		
+		//for not(exists)
+		assertEquals(cnf3.argument(0), bef.not(existstrue));
+		//assertEquals(false, bef.not(FORALL));
+		//assertEquals(testingfalse, bef.not(NEQ));
+		//System.out.println(andtrue.operator());
 		//System.out.println(cnf.arguments()[0]);
+		//System.out.println(cnf.argument(0));
 		//System.out.println(cnf.booleanArg(0));
 		
 		//A or A AND B or B? is that what it is?
