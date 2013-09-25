@@ -35,6 +35,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -362,8 +364,8 @@ assertEquals(test6.toString(), "length(X)");
 		assertEquals(nullexp.toStringBuffer(false).toString(), "NULL");
 
 	}
-	
-	
+
+	@Ignore
 	@Test
 	public void toStringBuffer1IntDivideTest() {
 		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
@@ -602,16 +604,27 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(testingfalse, bef.or(testingfalse, falseExpr));
 	}
 
-	@Ignore
 	@Test
 	public void CnFFactoryNotTest(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
-		CnfExpression cnf;
-		BooleanExpression testingtrue = sUniverse.bool(true);
 		BooleanExpression testingfalse = sUniverse.bool(false);
 		BooleanExpression falseExpr= bef.falseExpr();
 		BooleanExpression trueExpr= bef.trueExpr();
-		//assertEquals(testingfalse, bef.not(trueExpr1));
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
+		BooleanExpression andtrue =  bef.and(trueExpr, testingtrue);
+		BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, andtrue);
+
+		//BooleanExpression FORALLTEST = bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
+		CnfExpression cnf = (CnfExpression) AND;
+		assertEquals(testingfalse, bef.not(andtrue));
+		System.out.println(andtrue.operator());
+		//System.out.println(cnf.arguments()[0]);
+		//System.out.println(cnf.booleanArg(0));
+		
+		//A or A AND B or B? is that what it is?
+		//assertEquals(testingtrue, bef.not(AND));
+		//assertEquals(testingtrue, bef.not(FORALLTEST));
 	}
 	
 	
