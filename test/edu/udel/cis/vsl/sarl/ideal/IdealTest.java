@@ -811,8 +811,12 @@ public class IdealTest {
 
 	@Test
 	public void comparingRationalExpressions() {
-		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(
-				x, y);
+		NumericSymbolicConstant x2 = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
+				typeFactory.realType()));
+		NumericSymbolicConstant y2 = objectFactory.canonic(idealFactory.symbolicConstant(objectFactory.
+				stringObject("Y"), typeFactory.realType()));
+		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide
+				(x2, y2);
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
 				commonIdealFactory.zeroReal());
