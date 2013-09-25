@@ -34,6 +34,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -151,6 +152,76 @@ public class CVC3TranslateTest {
 		Expr expr5 = cvcProver.translate(condExp);
 		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
 		assertEquals(expected5, expr5);
+	}
+	
+	@Test
+	public void testTranslateFunctionSymbolicConstant(){
+	
+		List <SymbolicType> types = new ArrayList<SymbolicType>();
+		types.add(intType);
+		
+		SymbolicType type = universe.functionType(types, intType);
+		SymbolicConstant symFunction = universe.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
+		
+		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
+		funList.add(oneInt); 
+		SymbolicCollection<SymbolicExpression> collect = universe.basicCollection(funList);
+		
+		SymbolicExpression e = expressionFactory
+				.expression(SymbolicOperator.APPLY, symFunction.type(), symFunction, collect);
+
+		Expr expr = cvcProver.translate(e);
+		Expr expr1 = expr.getOpExpr();
+		Expr expr2 = expr.getChild(0);
+
+		Expr oneIntExpr = cvcProver.translate(oneInt);
+		
+		Expr equationOne = vc.eqExpr(expr1, vc.exprFromString("SymbolicConstant"));
+		Expr equationTwo = vc.eqExpr(expr2, oneIntExpr);
+
+		assertEquals(QueryResult.VALID, vc.query(equationOne));
+		assertEquals(QueryResult.VALID, vc.query(equationTwo));
+	}
+	
+	@Test
+	public void testTranslateFunctionLambda(){
+		
+		List <SymbolicType> types = new ArrayList<SymbolicType>();
+		types.add(intType);
+		
+		SymbolicType type = universe.functionType(types, intType);
+		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
+		funList.add(oneInt); 
+		SymbolicCollection<SymbolicExpression> collect = universe.basicCollection(funList);
+		
+		SymbolicExpression lamFunction = universe.lambda(e, f);
+		SymbolicExpression e = expressionFactory
+				.expression(SymbolicOperator.APPLY, type, lamFunction, collect);
+		
+		Expr expr = cvcProver.translate(e);
+		Expr equationOne = vc.eqExpr(expr, vc.exprFromString("(LAMBDA (e: INT): f)(1)"));
+		
+		assertEquals(QueryResult.VALID, vc.query(equationOne));
+	}
+	
+	@Test(expected = SARLInternalException.class)
+	public void testTranslateFunctionUnexpected(){
+	
+		List <SymbolicType> types = new ArrayList<SymbolicType>();
+		types.add(intType);
+		
+		SymbolicType type = universe.functionType(types, intType);
+		SymbolicExpression symFunction = universe
+				.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
+		
+		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
+		funList.add(symFunction);
+		
+		SymbolicExpression d = universe.array(symFunction.type(), funList);
+		SymbolicExpression e = expressionFactory
+				.expression(SymbolicOperator.APPLY, d.type(), d);
+		
+		cvcProver.translate(e);
 	}
 
 	@Test
