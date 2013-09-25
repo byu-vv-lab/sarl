@@ -697,18 +697,21 @@ public interface PreUniverse {
 	 *            a symbolic expression of integer type
 	 * @param arg1
 	 *            a symbolic expression of integer type
-	 * @return arg0 % arg1
+	 * @return an expression representing arg0 % arg1
 	 */
 	NumericExpression modulo(NumericExpression arg0, NumericExpression arg1);
 
 	/**
-	 * Returns a symbolic expression which is the negative of the given
-	 * numerical expression. The given expression must be non-null and have
+	 * Returns a symbolic expression which is the result of subtracting the given
+	 * two numerical expressions. The given expression must be non-null and have
 	 * either integer or real type.
 	 * 
-	 * @param arg
+	 * @param arg0
 	 *            a symbolic expression of integer or real type
-	 * @return -arg
+	 * @param arg1
+	 * 			  a symbolic expression of integer or real type
+	 * @return 
+	 * 			  an expression representing ar0 - arg1
 	 */
 	NumericExpression minus(NumericExpression arg);
 
@@ -1128,11 +1131,11 @@ public interface PreUniverse {
 			int index);
 
 	/**
-	 * Returns array of length 0.
+	 * Returns an array of length 0.
 	 * 
 	 * @param elementType
 	 *            the type of the non-existent elements of this array
-	 * @return array of length 0 of given type
+	 * @return an empty array with length 0 of given type
 	 */
 	SymbolicExpression emptyArray(SymbolicType elementType);
 
