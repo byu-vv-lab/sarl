@@ -2,6 +2,8 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -37,10 +39,13 @@ public class BoundsObjectNewLowerTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Test of BoundsObject.newLowerBound(SymbolicExpression expression, 
+	 * Number bound, boolean strict)
+	 */
 	@Test
-	public void test() {
-		//out.println("help!");
-		assertEquals(true, true);
+	public void newLowerTest() {
+		boundObj = BoundsObject.newLowerBound(x, num0, true);
 	}
 
 }
