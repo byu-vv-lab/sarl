@@ -748,10 +748,8 @@ public class IdealTest {
 	@Test
 	public void comparingRationalExpressions() {
 		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x, y);
-		RationalExpression[] args1 = {r1,(RationalExpression)zero};
-		RationalExpression[] args2 = {(RationalExpression)zero, r1,};
-		BooleanExpression b1 = booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN_EQUALS, args1);
-		BooleanExpression b2 = booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN, args2);
+		BooleanExpression b1 = booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN_EQUALS, r1, commonIdealFactory.zeroReal());
+		BooleanExpression b2 = booleanFactory.booleanExpression(SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
 		assertEquals(b1, booleanFactory.not(b2));
 	}
 }
