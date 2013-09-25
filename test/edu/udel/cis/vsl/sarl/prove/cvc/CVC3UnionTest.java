@@ -124,19 +124,21 @@ public class CVC3UnionTest {
 	@Test
 	public void testTranslateUnionExtract() {
 		// inject statement
-//		SymbolicExpression injectedTenandHalf = universe
-//				.unionInject(intRealBoolUnion, universe.intObject(1), tenAndHalf);
-		
+		SymbolicExpression injectedTenAndHalf = universe.unionInject(
+				intRealBoolUnion, universe.intObject(1), tenAndHalf);
+
 		// extract 10.5 real
 		
 		// this version translates as concrete, so no coverage for union extract
 //		SymbolicExpression extractReal = universe
 //				.unionExtract(universe.intObject(1), injectedTenandHalf);
 		
+		cvcProver.translateType(intRealBoolUnion);
+		
 		// this version gives an error in translateUnionExtract
 		SymbolicExpression extractReal2 = expressionFactory
 				.expression(SymbolicOperator.UNION_EXTRACT, realType,
-						universe.intObject(1), tenAndHalf);
+						universe.intObject(1), injectedTenAndHalf);
 		
 		Expr translateResult = cvcProver.translate(extractReal2);
 		out.println("translateResult: " + translateResult);
