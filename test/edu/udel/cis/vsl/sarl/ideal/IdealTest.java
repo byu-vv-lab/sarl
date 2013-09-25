@@ -729,7 +729,7 @@ public class IdealTest {
 	}
 	
 	@Test //no clue why this is failing.
-	public void PrimitiveSubtract() {
+	public void primitiveSubtract() {
 		NumericExpression subNine = commonIdealFactory.subtract(c10, c5);
 		Constant nine = commonIdealFactory.constant(numberFactory.rational("9"));
 		out.println("EXPECTED NINE:"+nine);
@@ -739,14 +739,14 @@ public class IdealTest {
 	}
 	
 	@Test //nor this one.
-	public void PrimitiveNegSubtract() {
+	public void primitiveNegSubtract() {
 		NumericExpression subEleven = commonIdealFactory.subtract(c10, c4);
 		Constant eleven = commonIdealFactory.constant(numberFactory.rational("11"));
 		assertEquals(subEleven, eleven);
 	}
 	
 	@Test
-	public void ComparingRationalExpressions() {
+	public void comparingRationalExpressions() {
 		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x, y);
 		RationalExpression[] args1 = {r1,(RationalExpression)zero};
 		RationalExpression[] args2 = {(RationalExpression)zero, r1,};
