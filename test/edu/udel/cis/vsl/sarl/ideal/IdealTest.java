@@ -726,7 +726,24 @@ public class IdealTest {
 		//Polynomial poly = idealFactory.polynomial(termMap, monomial);
 		Polynomial b = commonIdealFactory.polynomial(termMap, monomial);
 		//assertEquals(b, commonIdealFactory.booleanFactory().trueExpr());
-		
 	}
+	
+	@Test //no clue why this is failing.
+	public void PrimitiveSubtract() {
+		NumericExpression subNine = commonIdealFactory.subtract(c10, c5);
+		Constant nine = commonIdealFactory.constant(numberFactory.rational("9"));
+		out.println("EXPECTED NINE:"+nine);
+		out.println("NINE:"+subNine);
+		assertEquals(subNine, nine);
+
+	}
+	
+	@Test //nor this one.
+	public void PrimitiveNegSubtract() {
+		NumericExpression subEleven = commonIdealFactory.subtract(c10, c4);
+		Constant eleven = commonIdealFactory.constant(numberFactory.rational("11"));
+		assertEquals(subEleven, eleven);
+	}
+	
 	
 }
