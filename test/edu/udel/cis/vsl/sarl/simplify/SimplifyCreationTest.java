@@ -6,8 +6,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,17 +25,17 @@ import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
  */
 public class SimplifyCreationTest {
 	
-	static FactorySystem system;
+	private static FactorySystem system;
 	
 	private static PreUniverse preUniv;
 	
-	static BooleanExpression xeq5;
+	private static SymbolicType realType;
 	
-	static NumericExpression rat5;
+	private static NumericSymbolicConstant x;
 	
-	static SymbolicType realType;
+	private static BooleanExpression xeq5;
 	
-	static NumericSymbolicConstant x;
+	private static NumericExpression rat5;
 
 	/**
 	 * Calls the setup() method of CommonObjects under the 
@@ -46,17 +46,11 @@ public class SimplifyCreationTest {
 	public static void setUpBeforeClass() throws Exception {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
+		realType = preUniv.realType();
 		rat5 = preUniv.rational(5);
-		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
+		x = (NumericSymbolicConstant)preUniv.symbolicConstant(
 				preUniv.stringObject("x"), realType);
 		xeq5 = preUniv.equals(x, rat5);
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
 	}
 
 	/**
@@ -78,7 +72,8 @@ public class SimplifyCreationTest {
 	 */
 	@Test
 	public void testCreation() {
-		Simplify simplifier = new Simplify();
+		@SuppressWarnings("unused")
+		Simplify simplify = new Simplify();
 	}
 	
 	/**
@@ -86,6 +81,7 @@ public class SimplifyCreationTest {
 	 */
 	@Test
 	public void testIdentitySimplifier(){
+		@SuppressWarnings("unused")
 		Simplifier simplifier = Simplify.identitySimplifier(preUniv, xeq5);
 	}
 	
@@ -94,6 +90,7 @@ public class SimplifyCreationTest {
 	 */
 	@Test
 	public void simplifierFactoryTest(){
+		@SuppressWarnings("unused")
 		SimplifierFactory simplifierFactory = Simplify.newIdentitySimplifierFactory(preUniv);
 	}
 
