@@ -663,22 +663,22 @@ public class CommonPreUniverseTest {
 		identityReference = universe.identityReference();
 		arrayReference = universe.arrayElementReference(identityReference, zero);
 		twoDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
-		tupleInArrayReference = universe.arrayElementReference(universe.tupleComponentReference(identityReference, zeroInt), zero);
-		arrayInTupleReference = universe.tupleComponentReference(universe.arrayElementReference(identityReference, zero), zeroInt);
+		tupleInArrayReference = universe.arrayElementReference(identityReference, zero);
+		arrayInTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
 
 		//Tuple containing array
-		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{arrayType}));
+		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleOfArrayType"), Arrays.asList(new SymbolicType[]{arrayType}));
 		//SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}))}));
 		
 		//Tuple containing array test
-		//assertEquals(universe.referencedType(tupleOfArrayType, arrayInTupleReference), arrayType);
+		assertEquals(universe.referencedType(tupleOfArrayType, arrayInTupleReference), arrayType);
 		
 		//Array containing Tuple
 		SymbolicArrayType arrayOfTupleType = universe.arrayType(tupleOfArrayType);
 		//SymbolicExpression arrayOfTuple = universe.array(arrayType, Arrays.asList(new SymbolicExpression[]{universe.tuple(tupleTypleInt, Arrays.asList(new NumericExpression[]{one,two,three}))}));
 		
 		//Array containing Tuple test
-		//assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
+		assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
 		
 		//Two Dimensional Array
 		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
@@ -689,22 +689,18 @@ public class CommonPreUniverseTest {
 		
 		
 		//ERROR TESTS
-		try
-		{
-			universe.referencedType(arrayOfTupleType, tupleInArrayReference);
-		}
-		catch(Exception e)
-		{
-			assertEquals(e.getClass(), SARLException.class);
-		}
-		try
-		{
-			universe.referencedType(arrayOfTupleType, nullReference);
-		}
-		catch(Exception e)
-		{
-			assertEquals(e.getClass(), SARLException.class);
-		}
+		try{universe.referencedType(arrayOfTupleType, arrayInTupleReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{universe.referencedType(arrayOfTupleType, nullReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{universe.referencedType(null, nullReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{universe.referencedType(arrayOfTupleType, null);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{universe.referencedType(twoDimensionalArrayType, arrayReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{universe.referencedType(tupleOfArrayType, tupleInArrayReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 	}
 
 	@Test

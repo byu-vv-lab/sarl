@@ -2207,7 +2207,7 @@ public class CommonPreUniverse implements PreUniverse {
 			return parentType;
 		}
 		default:
-			throw new SARLInternalException("Unknown reference kind: "
+			throw new SARLInternalException("Unknown reference kind: " //unreachable
 					+ reference);
 		}
 	}
