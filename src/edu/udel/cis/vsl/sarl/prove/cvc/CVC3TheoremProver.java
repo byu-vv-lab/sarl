@@ -1216,15 +1216,20 @@ public class CVC3TheoremProver implements TheoremProver {
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
 			List<String> constructors = new LinkedList<String>();
-			List<String> selectors = new LinkedList<String>();
-			List<Type> types = new LinkedList<Type>();
+			List<List<String>> selectors = new LinkedList<List<String>>();
+			List<List<Expr>> types = new LinkedList<List<Expr>>();
 			SymbolicTypeSequence sequence = unionType.sequence();
 			int index = 0;
 
 			for (SymbolicType t : sequence) {
+				List<String> selectorList = new LinkedList<String>();
+				List<Expr> typeList = new LinkedList<Expr>();
+
+				selectorList.add(selector(unionType, index));
+				typeList.add(translateType(t).getExpr());
+				selectors.add(selectorList);
+				types.add(typeList);
 				constructors.add(constructor(unionType, index));
-				selectors.add(selector(unionType, index));
-				types.add(translateType(t));
 				index++;
 			}
 			result = vc.dataType(unionType.name().getString(), constructors,
