@@ -693,6 +693,7 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		BooleanExpression existschk = bef.forall(b, testingtrue);
 		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, existschk);
 		CnfExpression cnf3 = (CnfExpression) FORALL;
+		//checked tests
 		
 		//for not(forall) since it is not, check with reverse(i.e. exists)
 		assertEquals(cnf2.argument(0), bef.not(foralltrue));
