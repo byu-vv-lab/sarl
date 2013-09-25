@@ -3,8 +3,6 @@ package edu.udel.cis.vsl.sarl;
 import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -16,42 +14,23 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
 /**
- * Benchmark test which computes the polynomial (x+y)^N for a big integer N.
+ * Benchmark test which runs unionInject() on unions of scaling sizes
  * 
  * @author jdimarco
  * 
  */
 public class UnionBenchmark {
 
-	public final static int N = 250;
-
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses.newIdealFactorySystem();
 
-	public final static SymbolicType integerType = universe.integerType();
 	public final static SymbolicType realType = universe.realType();
-	public final static SymbolicType booleanType = universe.booleanType();
 	public final static SymbolicArrayType realArray = universe.arrayType(realType);
 	
 	public final static ExpressionFactory expressionFactory = system.expressionFactory();
-
-	public final static NumericSymbolicConstant x = (NumericSymbolicConstant) universe
-			.symbolicConstant(universe.stringObject("x"), realType);
-
-	public final static NumericSymbolicConstant y = (NumericSymbolicConstant) universe
-			.symbolicConstant(universe.stringObject("y"), realType);
-
-	public final static NumericExpression xpy = universe.add(x, y);
 	
-
-	
-	public static SymbolicUnionType myUnion;// = universe.unionType(
-			//universe.stringObject("myUnion"),
-			//Arrays.asList(new SymbolicType[] { integerType, realType,
-			//		booleanType, realArray }));
+	public static SymbolicUnionType myUnion;
 					
-			
-
 	/**
 	 * Runs the test, prints the total time, takes no arguments.
 	 * 
@@ -79,6 +58,7 @@ public class UnionBenchmark {
 			for(int i = 0; i < ARRAYSIZE; ++i){
 					SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(i));
 					SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
+					@SuppressWarnings("unused")
 					SymbolicExpression tempInject = universe.unionInject(myUnion, universe.intObject(i), tempExpr);
 			}
 			
