@@ -2,6 +2,8 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
+
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -21,6 +23,7 @@ public class BoundsObjectNewUpperTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		CommonObjects.setUp();
 	}
 
 	/**
@@ -37,10 +40,13 @@ public class BoundsObjectNewUpperTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Ignore
+	/**
+	 * Test of BoundsObject.newUpperBound(SymbolicExpression expression, 
+	 * Number bound, boolean strict)
+	 */
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void newUpperTest() {
+		boundObj = BoundsObject.newUpperBound(x, num0, true);
 	}
 
 }
