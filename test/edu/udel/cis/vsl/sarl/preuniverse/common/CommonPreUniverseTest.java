@@ -29,6 +29,7 @@ import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
@@ -641,6 +642,99 @@ public class CommonPreUniverseTest {
 			assertEquals(e.getClass(), SARLException.class); //test class name of thrown exception	
 			assertEquals(e.getMessage(), "dereference given null value");
 		}
+	}
+
+	@Test
+	//ReferencedType test. Written by Julian Piane 9/22/13
+	public void testReferencedType() {
+		//instantiate our types 
+		NumericExpression zero, one,two, three;
+		
+		IntObject zeroInt = universe.intObject(0);
+
+		zero = universe.integer(0);
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		
+		//Reference Expressions
+		ReferenceExpression nullReference, identityReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
+		nullReference = universe.nullReference();
+		identityReference = universe.identityReference();
+		arrayReference = universe.arrayElementReference(identityReference, zero);
+		twoDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
+		tupleInArrayReference = universe.arrayElementReference(universe.tupleComponentReference(identityReference, zeroInt), zero);
+		arrayInTupleReference = universe.tupleComponentReference(universe.arrayElementReference(identityReference, zero), zeroInt);
+
+		//Tuple containing array
+		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{arrayType}));
+		//SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}))}));
+		
+		//Tuple containing array test
+		//assertEquals(universe.referencedType(tupleOfArrayType, arrayInTupleReference), arrayType);
+		
+		//Array containing Tuple
+		SymbolicArrayType arrayOfTupleType = universe.arrayType(tupleOfArrayType);
+		//SymbolicExpression arrayOfTuple = universe.array(arrayType, Arrays.asList(new SymbolicExpression[]{universe.tuple(tupleTypleInt, Arrays.asList(new NumericExpression[]{one,two,three}))}));
+		
+		//Array containing Tuple test
+		//assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
+		
+		//Two Dimensional Array
+		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
+		//SymbolicExpression twoDimensionalArray = universe.array(arrayType, Arrays.asList(new SymbolicExpression[]{universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}))}));
+		
+		//Two Dimensional Array test
+		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
+		
+		
+		//ERROR TESTS
+		try
+		{
+			universe.referencedType(arrayOfTupleType, tupleInArrayReference);
+		}
+		catch(Exception e)
+		{
+			assertEquals(e.getClass(), SARLException.class);
+		}
+		try
+		{
+			universe.referencedType(arrayOfTupleType, nullReference);
+		}
+		catch(Exception e)
+		{
+			assertEquals(e.getClass(), SARLException.class);
+		}
+	}
+
+	@Test
+	@Ignore
+	public void testIdentityReference() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	@Ignore
+	public void testArrayElementReference() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	@Ignore
+	public void testTupleComponentReference() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	@Ignore
+	public void testUnionMemberReference() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	@Ignore
+	public void testOffsetReference() {
+		fail("Not yet implemented");
 	}
 
 	@Test
