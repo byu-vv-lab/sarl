@@ -23,7 +23,7 @@ public class CommonObjects {
 
 	static FactorySystem system;
 
-	private static PreUniverse preUniv;
+	static PreUniverse preUniv;
 	
 	static PrintStream out;
 	
@@ -66,7 +66,6 @@ public class CommonObjects {
 	static NumericSymbolicConstant x, xsqd, y, xInt, yInt;
 	
 	
-	
 	/*static SymbolicExpression symbExpr
 	
 	static SymbolicExpression symbExpr
@@ -95,68 +94,68 @@ public class CommonObjects {
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3Int,
 	num5Int, num0Int, numNeg2000Int, num10000Int;
 
-	public static void setUp() {
+	static void setUp() {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
 		out = System.out;
 		idealFactory = (IdealFactory) system.expressionFactory()
 				.numericFactory();
 		idealSimplifierFactory = (IdealSimplifierFactory) Ideal
-				.newIdealSimplifierFactory(idealFactory, getPreUniv());
-		ratNeg1 = getPreUniv().rational(-1);
-		ratNeg2 = getPreUniv().rational(-2);
-		ratNeg3 = getPreUniv().rational(-3);
-		ratNeg5 = getPreUniv().rational(-5);
-		rat1 = getPreUniv().rational(1);
-		rat2 = getPreUniv().rational(2);
-		rat3 = getPreUniv().rational(3);
-		rat5 = getPreUniv().rational(5);
-		intNeg1 = getPreUniv().integer(-1);
-		intNeg2 = getPreUniv().integer(-2);
-		intNeg3 = getPreUniv().integer(-3);
-		intNeg5 = getPreUniv().integer(-5);
-		int1 = getPreUniv().integer(1);
-		int2 = getPreUniv().integer(2);
-		int3 = getPreUniv().integer(3);
-		int5 = getPreUniv().integer(5);
+				.newIdealSimplifierFactory(idealFactory, preUniv);
+		ratNeg1 = preUniv.rational(-1);
+		ratNeg2 = preUniv.rational(-2);
+		ratNeg3 = preUniv.rational(-3);
+		ratNeg5 = preUniv.rational(-5);
+		rat1 = preUniv.rational(1);
+		rat2 = preUniv.rational(2);
+		rat3 = preUniv.rational(3);
+		rat5 = preUniv.rational(5);
+		intNeg1 = preUniv.integer(-1);
+		intNeg2 = preUniv.integer(-2);
+		intNeg3 = preUniv.integer(-3);
+		intNeg5 = preUniv.integer(-5);
+		int1 = preUniv.integer(1);
+		int2 = preUniv.integer(2);
+		int3 = preUniv.integer(3);
+		int5 = preUniv.integer(5);
 		symbFactory = system.expressionFactory().typeFactory();
-		realType = getPreUniv().realType();
-		integerType = getPreUniv().integerType();
-		x = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
-				getPreUniv().stringObject("x"), realType);
-		y = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
-				getPreUniv().stringObject("y"), realType);
-		xInt = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
-				getPreUniv().stringObject("xInt"), integerType);
-		yInt = (NumericSymbolicConstant) getPreUniv().symbolicConstant(
-				getPreUniv().stringObject("yInt"), integerType);
-		xeq5 = getPreUniv().equals(x, rat5);
+		realType = preUniv.realType();
+		integerType = preUniv.integerType();
+		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("x"), realType);
+		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("y"), realType);
+		xInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("xInt"), integerType);
+		yInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("yInt"), integerType);
+		xeq5 = preUniv.equals(x, rat5);
 		simp1ifier_xeq5 = idealSimplifierFactory.newSimplifier(xeq5);
 		//not sure if xsqd is necessary
 		//xsqd = preUniv.multiply(x, x);
-		xpy = getPreUniv().add(x, y);
+		xpy = preUniv.add(x, y);
 		symbExpr_xpy = xpy;
-		xy = getPreUniv().multiply(x, y);
+		xy = preUniv.multiply(x, y);
 		symbExpr_xy = xy;
-		xx = getPreUniv().power(x, 2);
-		x4th = getPreUniv().power(xx, 2);
-		threeX4th = getPreUniv().multiply(rat3, x4th);
-		xxy = getPreUniv().multiply(xy, x);
+		xx = preUniv.power(x, 2);
+		x4th = preUniv.power(xx, 2);
+		threeX4th = preUniv.multiply(rat3, x4th);
+		xxy = preUniv.multiply(xy, x);
 		symbExpr_xxy = xxy;
-		xyy = getPreUniv().multiply(xy, y);
+		xyy = preUniv.multiply(xy, y);
 		symbExpr_xyy = xyy;
-		onePxPxSqdP3x4th = getPreUniv().add(rat1, getPreUniv().add(x, getPreUniv().add(xx, threeX4th)));
-		xpyInt = getPreUniv().add(xInt, yInt);
+		onePxPxSqdP3x4th = preUniv.add(rat1, preUniv.add(x, preUniv.add(xx, threeX4th)));
+		xpyInt = preUniv.add(xInt, yInt);
 		symbExpr_xpyInt = xpyInt;
-		xxInt = getPreUniv().multiply(xInt, xInt);
+		xxInt = preUniv.multiply(xInt, xInt);
 		symbExpr_xxInt = xxInt;
-		xyInt = getPreUniv().multiply(xInt, yInt);
+		xyInt = preUniv.multiply(xInt, yInt);
 		symbExpr_xyInt = xyInt;
-		xxyInt = getPreUniv().multiply(xyInt, xInt);
+		xxyInt = preUniv.multiply(xyInt, xInt);
 		symbExpr_xxyInt = xxyInt;
-		xyyInt = getPreUniv().multiply(xyInt, yInt);
+		xyyInt = preUniv.multiply(xyInt, yInt);
 		symbExpr_xyyInt = xyyInt;
-		numFact = getPreUniv().numberFactory();
+		numFact = preUniv.numberFactory();
 		num3 = numFact.rational("3");
 		num5 = numFact.rational("5");
 		numNeg2000 = numFact.rational("-2000");
@@ -168,27 +167,6 @@ public class CommonObjects {
 		num5Int = numFact.integer("5");
 		numNeg2000Int = numFact.integer("-2000");
 		num10000Int = numFact.integer("10000");
-	}
-
-	/**
-	 * @return the preUniv
-	 */
-	public static PreUniverse getPreUniv() {
-		return preUniv;
-	}
-	
-	/**
-	 * @return the xeq5
-	 */
-	public static BooleanExpression getXeq5() {
-		return xeq5;
-	}
-	
-	/**
-	 * @return the identitySimplifierFactory
-	 */
-	public static IdentitySimplifierFactory getIdentitySimplifierFactory() {
-		return identitySimplifierFactory;
 	}
 
 }
