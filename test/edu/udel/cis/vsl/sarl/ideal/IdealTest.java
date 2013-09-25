@@ -808,6 +808,36 @@ public class IdealTest {
 				.rational("11"));
 		assertEquals(subEleven, eleven);
 	}
+	
+	@Test
+	//(21x^3 - 35x^2) / (7x) -------> 3x^2 – 5x
+	public void complexRational() {
+		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
+				typeFactory.realType()));
+		IntObject exp3 = objectFactory.intObject(3);
+		IntObject exp2 = objectFactory.intObject(2);
+		NumericExpression three = commonIdealFactory.constant(
+				numberFactory.integerToRational(numberFactory.integer(3)));
+		NumericExpression five = commonIdealFactory.constant(
+				numberFactory.integerToRational(numberFactory.integer(5)));
+		NumericExpression seven = commonIdealFactory.constant(
+				numberFactory.integerToRational(numberFactory.integer(7)));
+		NumericExpression twentyOne = commonIdealFactory.constant(
+				numberFactory.integerToRational(numberFactory.integer(21)));
+		NumericExpression thirtyFive = commonIdealFactory.constant(
+				numberFactory.integerToRational(numberFactory.integer(35)));
+		NumericExpression complex1 = idealFactory.power(x, exp3);
+		complex1 = idealFactory.multiply(complex1, twentyOne);
+		NumericExpression complex2 = idealFactory.power(x, exp2);
+		complex2 = idealFactory.multiply(complex2, thirtyFive);
+		NumericExpression numer = idealFactory.subtract(complex1, complex2);		
+		NumericExpression denom = idealFactory.multiply(x, seven);
+		NumericExpression complex = idealFactory.divide(numer, denom);
+		NumericExpression result1 = idealFactory.multiply(idealFactory.power(x, exp2), three);
+		NumericExpression result2 = idealFactory.multiply(x, five);
+		NumericExpression result = idealFactory.subtract(result1, result2);
+		assertEquals(result, complex);
+	}
 
 	@Test
 	public void comparingRationalExpressions() {
