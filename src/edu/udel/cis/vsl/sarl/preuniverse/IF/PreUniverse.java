@@ -1100,6 +1100,20 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression append(SymbolicExpression concreteArray,
 			SymbolicExpression element);
+	/**
+	 * Remove an element from array at the given position. Returns a new array expression which is same as old 
+	 * except the removed element won't be included
+	 * 
+	 * @param concreteArray
+	 *            the given concrete array
+	 * @param index
+	 * 			the position where the element will be deleted
+	 * 
+	 * 
+	 * @return an array obtained by removing element from given array
+	 */
+
+	
 
 	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index);
