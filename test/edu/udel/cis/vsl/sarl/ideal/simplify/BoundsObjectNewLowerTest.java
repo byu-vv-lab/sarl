@@ -2,7 +2,7 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +20,7 @@ public class BoundsObjectNewLowerTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		//CommonObjects.setUp();
+		CommonObjects.setUp();
 	}
 
 	/**
