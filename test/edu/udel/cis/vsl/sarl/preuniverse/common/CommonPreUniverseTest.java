@@ -26,6 +26,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -60,10 +61,14 @@ public class CommonPreUniverseTest {
 	private static BooleanExpressionFactory booleanFactory;
 	private static NumericExpressionFactory numericFactory;
 	private static SymbolicTypeFactory typeFactory;
+	private static NumberFactory numberFactory;
 	// SymbolicObjects
 	private static Comparator<SymbolicObject> objectComparator;
 	private static SymbolicExpression nullExpression;
 	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
+	// SymbolicExpressions
+	private static SymbolicConstant symbolicConstant;
+	private static NumericExpression numericExpression;
 	// Collections
 	private static Collection<SymbolicObject> objectCollection;
 	private static ArrayList<NumericExpression> emptyNumericList;
@@ -99,6 +104,8 @@ public class CommonPreUniverseTest {
 		numericFactory = system.numericFactory();
 		
 		typeFactory = system.typeFactory();
+		
+		
 		
 	}
 
@@ -791,9 +798,24 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
 	public void testForallInt() {
-		fail("Not yet implemented");
+		StringObject name = universe.stringObject("name");
+		SymbolicType type = universe.integerType(); 
+		SymbolicConstant index = universe.symbolicConstant(name, type);
+		NumericExpression low, high;
+		low = universe.integer(999);
+		high = universe.integer(2000);
+		BooleanExpression trueExp = universe.bool(true);
+		
+		BooleanExpression testResult = 
+				universe.forallInt((NumericSymbolicConstant)index, low, high, trueExp);
+		
+		
+		assertEquals(universe.forallInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("name"), integerType),
+				universe.integer(999), universe.integer(2000), 
+				universe.bool(true)), testResult);
 	}
 
 	@Test
