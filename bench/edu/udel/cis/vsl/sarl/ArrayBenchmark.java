@@ -11,20 +11,18 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
-public class ArrayBenchmark {
-	
-	/*
-	 * 
-	 * written by Mohammad Alsulmi
-	 * 
-	 */
+/**
+ * 
+ * @author malsulmi
+ *
+ * The main goal of the benchmark is to provide a performance comparison
+ * between array() and append() methods that are used in creating arrays
+ * 
+ * Here, our comparison will be a time comparison
+ */
 
-	/* 
-	 * The main goal of the benchmark is to provide a performance comparison 
-	 * between array() and append() methods that are used in creating arrays 
-	 * 
-	 * Here, our comparison will be a time comparison
-	 */
+public class ArrayBenchmark {
+
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses.newIdealFactorySystem();
 
