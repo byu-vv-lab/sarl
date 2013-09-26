@@ -78,7 +78,7 @@ public class CommonObjects {
 	rat1, rat2, rat3, rat5; // -1.0, -2.0, -3.0, -5.0, 1.0, 2.0, 3.0, 5.0
 	
 	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5,
-	int1, int2, int3, int5; // -1, -2, -3, -5, 1, 2, 3, 5
+	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xpy, xy, xx, x4th, threeX4th, xxy,
 	xyy, onePxPxSqdP3x4th;
@@ -119,6 +119,7 @@ public class CommonObjects {
 		int1 = preUniv.integer(1);
 		int2 = preUniv.integer(2);
 		int3 = preUniv.integer(3);
+		int4 = preUniv.integer(4);
 		int5 = preUniv.integer(5);
 		symbFactory = system.expressionFactory().typeFactory();
 		realType = preUniv.realType();
