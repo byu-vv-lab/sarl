@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ BoundsObjectNewLowerTest.class, BoundsObjectNewUpperTest.class })
+@SuiteClasses({ BoundsObjectSetLowerTest.class, BoundsObjectNewLowerTest.class, BoundsObjectNewUpperTest.class })
 public class BoundsObjectSuite {
 
 }
