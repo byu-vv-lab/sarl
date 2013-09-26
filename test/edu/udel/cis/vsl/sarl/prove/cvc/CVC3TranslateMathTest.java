@@ -16,7 +16,6 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
@@ -71,85 +70,6 @@ public class CVC3TranslateMathTest {
 
 	@After
 	public void tearDown() throws Exception {
-	}
-	
-	@Test(expected = SARLInternalException.class)
-	public void testTranslateAdd(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-		Expr fiveExpr = cvcProver.translate(five);
-
-		List<NumericExpression> s1 = new ArrayList<NumericExpression>();
-		s1.add(one);
-		s1.add(two);
-		s1.add(five);
-		
-		SymbolicCollection<NumericExpression> addList = universe.basicCollection(s1);
-		
-		NumericExpression addExp1 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, one, two);
-		Expr addExpr1 = cvcProver.translate(addExp1);
-		Expr addExpected1 = vc.plusExpr(oneExpr, twoExpr);
-		assertEquals(addExpected1, addExpr1);
-		
-		NumericExpression addExp2 = universe.add(addList);
-		Expr addExpr2 = cvcProver.translate(addExp2);
-		
-		Expr addExpected2 = vc.plusExpr(oneExpr, twoExpr);
-		Expr addExpected3 = vc.plusExpr(addExpected2, fiveExpr);
-		Expr addExpected4 = vc.simplify(addExpected3);
-		assertEquals(addExpected4, addExpr2);
-		
-		NumericExpression addExp3 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, one, two, five);
-		cvcProver.translate(addExp3);
-	}
-	
-	@Test
-	public void testTranslateDivision(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-
-		NumericExpression divExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.DIVIDE, realType, one, two);
-		Expr expr6 = cvcProver.translate(divExp);
-		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
-		assertEquals(expected6, expr6);
-	}
-	
-	@Test
-	public void testTranslateNegative(){
-
-		NumericExpression negExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.NEGATIVE, intType, one);
-		Expr expr7 = cvcProver.translate(negExp);
-		Expr expected7 = vc.uminusExpr(cvcProver
-				.translate((SymbolicExpression) negExp.argument(0)));
-		assertEquals(expected7, expr7);
-	}
-	
-	@Test
-	public void testTranslatePower(){
-		Expr twoExpr = cvcProver.translate(two);	
-		Expr fiveExpr = cvcProver.translate(five);
-
-		NumericExpression powerExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.POWER, realType, two, five);
-		Expr expr9 = cvcProver.translate(powerExp);
-		Expr expected9 = vc.powExpr(twoExpr, fiveExpr);
-		assertEquals(expected9, expr9);
-	}
-	
-	@Test
-	public void testTranslateSubtract(){
-		Expr oneExpr = cvcProver.translate(one);
-		Expr twoExpr = cvcProver.translate(two);
-
-		NumericExpression subExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.SUBTRACT, realType, two, one);
-		Expr expr10 = cvcProver.translate(subExp);
-		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
-		assertEquals(expected10, expr10);
 	}
 	
 	@Test

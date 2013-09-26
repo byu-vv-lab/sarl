@@ -10,10 +10,8 @@ import cvc3.Expr;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -21,8 +19,8 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
-public class CVC3TranslateTest {
-	
+public class CVC3TranslateDivisionTest {
+
 	// Static fields: instantiated once and used for all tests...
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
@@ -30,12 +28,11 @@ public class CVC3TranslateTest {
 			.newPreUniverse(factorySystem);
 	private static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-	private static SymbolicIntegerType intType = universe.integerType();
-	private static SymbolicType boolType = universe.booleanType();
+	// types
+	private static SymbolicRealType realType = universe.realType();
 	// expressions
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
-	private static NumericExpression oneInt = universe.integer(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	// Instance fields: instantiated before each test is run...
@@ -59,38 +56,16 @@ public class CVC3TranslateTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void testTranslateCast(){
-		Expr oneIntExpr = cvcProver.translate(oneInt);
-
-		SymbolicExpression castExp = expressionFactory
-				.expression(SymbolicOperator.CAST, intType, one);
-		Expr expr4 = cvcProver.translate(castExp);
-		Expr expected4 = oneIntExpr;
-		assertEquals(expected4, expr4);
-	}
 	
 	@Test
-	public void testTranslateCond(){	
-		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+	public void testTranslateDivision(){
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 
-		SymbolicExpression condExp = expressionFactory
-				.expression(SymbolicOperator.COND, boolType, booleanExprTrue, 
-						one, two);
-		Expr expr5 = cvcProver.translate(condExp);
-		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
-		assertEquals(expected5, expr5);
-	}
-	
-	@Test
-	public void testTranslateNot(){
-		SymbolicExpression notExp = expressionFactory
-				.expression(SymbolicOperator.NOT, boolType, booleanExprTrue);
-		Expr translateResult = cvcProver.translate(notExp);
-		Expr expected = vc.notExpr(vc.trueExpr());
-		assertEquals(expected, translateResult);
+		NumericExpression divExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.DIVIDE, realType, one, two);
+		Expr expr6 = cvcProver.translate(divExp);
+		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected6, expr6);
 	}
 }
