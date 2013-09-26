@@ -28,7 +28,15 @@ public class NumberFactoryTest {
 
 	private static BigInteger bigTen = new BigInteger("10");
 
-	private static BigInteger bigFifteen = new BigInteger("15");
+	private static BigInteger bigFifteen = new BigInteger("15"); 
+	
+	private static BigInteger bigFive = new BigInteger("5"); 
+	
+	private static BigInteger bigTwo = new BigInteger("2");  
+	
+	private static BigInteger bigZero = new BigInteger("0"); 
+	
+	private static BigInteger bigTwenty = new BigInteger("20");
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -85,6 +93,70 @@ public class NumberFactoryTest {
 		out.println(d);
 		assertEquals(expectedC, c);
 		assertEquals(expectedD, d);
+	} 
+	
+	public void GCD() { 
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(bigTwenty);
+		IntegerNumbler c = factory.gcd(a, b);
+		IntegerNumber expected = factory.integer(new BigInteger("10"));
+
+		out.println(c);
+		assertEquals(expected, c);
+	} 
+	
+	
+	public void LCM() { 
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(bigThirtyOne);
+		IntegerNumber c = factory.lcm(a, b);
+		IntegerNumber expected = factory.integer(new BigInteger("930")); 
+		
+
+		out.println(c);
+		assertEquals(expected, c);
+	} 
+	
+	public void() subInteger() { 
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(bigTen);
+		IntegerNumber c = factory.subtract(a, b);
+		IntegerNumber  expected = factory.integer(new BigInteger("20"));
+
+		out.println(c);
+		assertEquals(expected, c);
+	} 
+	
+	public void IntegerNumberDecrement() { 
+		IntegerNumber a = factory.integer(bigThirty); 
+		IntegerNumber c = factory.decrement(a); 
+		IntegerNumber expected = factory.integer(new BigInteger("29")); 
+		
+		out.println(c); 
+		assertEquals(expected, c);
+	} 
+	
+	public void IntegerNumberIncrement() { 
+		IntegerNumber a = factory.integer(bigThirty); 
+		IntegerNumber c = factory.decrement(a); 
+		IntegerNumber expected = factory.integer(new BigInteger("31")); 
+		
+		out.println(c); 
+		assertEquals(expected, c);
+	}  
+	
+	
+	@Test
+	public void subRat() {
+		RationalNumber a = factory.rational(bigFive, bigTwo);
+		RationalNumber b = factory.rational(bigTen, bigFifteen);
+		RationalNumber c = factory.subtract(a, b);
+		RationalNumber expected = factory.rational(new BigInteger("11"),
+				new BigInteger("6"));
+
+		out.println(c);
+		assertEquals(expected, c);
 	}
+	
 	
 }
