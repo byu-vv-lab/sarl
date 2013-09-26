@@ -20,6 +20,14 @@ public class TupleBenchmark {
 	 * written by Mohammad Alsulmi
 	 * 
 	 */
+	/* 
+	 * The main goal of the benchmark is to show which is better to be used in creating tuples
+	 * the linked lists or the arrays?
+	 * 
+	 * Here, we mean by better the one takes less time
+	 * 
+	 */
+
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses.newIdealFactorySystem();
 
