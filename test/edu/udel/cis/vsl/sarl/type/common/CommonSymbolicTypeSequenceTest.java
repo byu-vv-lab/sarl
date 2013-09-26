@@ -16,7 +16,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 public class CommonSymbolicTypeSequenceTest {
 
 	CommonSymbolicTypeSequence typeSequence, typeSequence2;
-	CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind;
+	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
 	CommonSymbolicRealType idealRealKind, floatRealKind;
 	TypeComparator typeComparator;
 	ArrayList<CommonSymbolicType> types;

@@ -2,16 +2,38 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+
 public class CommonSymbolicTypeFactoryTest {
 	
 	//creating a new typeFactory in order to create concrete type objects.
 	CommonSymbolicTypeFactory typeFactory;
+	ObjectFactory objectFactory;
+	NumberFactory numberFactory;
+	
+	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
+	CommonSymbolicRealType idealRealKind, floatRealKind;
+	ArrayList<CommonSymbolicType> types;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -23,58 +45,93 @@ public class CommonSymbolicTypeFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		//typeFactory = new CommonSymbolicTypeFactory()
+		numberFactory = Numbers.REAL_FACTORY;
+		objectFactory = Objects.newObjectFactory(numberFactory);
+		typeFactory = new CommonSymbolicTypeFactory(objectFactory);
+		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
+		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
+		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
+		types = new ArrayList<CommonSymbolicType>();
+		types.add(idealRealKind);
+		types.add(floatRealKind);
+		types.add(idealIntKind);
+		types.add(boundedIntKind);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
 
 
-	@Test
-	public void testCommonSymbolicTypeFactory() {
-		//fail("Not yet implemented");
-	}
-/*
+
 	@Test
 	public void testObjectFactory() {
-		fail("Not yet implemented");
+		assertTrue(typeFactory.objectFactory() instanceof ObjectFactory);
 	}
-
-	@Test
-	public void testBooleanType() {
-		fail("Not yet implemented");
-	}
-
+	
 	@Test
 	public void testIntegerType() {
-		fail("Not yet implemented");
+		assertTrue(typeFactory.integerType() instanceof SymbolicIntegerType);
 	}
-
+	
 	@Test
 	public void testHerbrandIntegerType() {
-		fail("Not yet implemented");
+		assertEquals(typeFactory.herbrandIntegerType().integerKind(), SymbolicIntegerType.IntegerKind.HERBRAND);
 	}
-
-	@Test
-	public void testBoundedIntegerType() {
-		fail("Not yet implemented");
-	}
-
+	
 	@Test
 	public void testRealType() {
-		fail("Not yet implemented");
+		assertTrue(typeFactory.realType() instanceof SymbolicRealType);
 	}
 
 	@Test
 	public void testHerbrandRealType() {
-		fail("Not yet implemented");
+		assertEquals(typeFactory.herbrandRealType().realKind(), SymbolicRealType.RealKind.HERBRAND);
 	}
-
+	
 	@Test
 	public void testCharacterType() {
-		fail("Not yet implemented");
+		assertTrue(typeFactory.characterType() instanceof SymbolicType);
 	}
+	
+	@Test
+	public void testSequence(){
+		//System.out.println(types.toString());
+		assertTrue(typeFactory.sequence(types) instanceof SymbolicTypeSequence);
+	}
+	
+	
+	@Test
+	public void testSequence2(){
+		List<CommonSymbolicType> a = Arrays.asList(idealIntKind, boundedIntKind, idealRealKind, floatRealKind);
+		assertTrue(
+				typeFactory.sequence(a) instanceof SymbolicTypeSequence);
+	}
+	
+	@Test
+	public void testsingletonSequence(){
+		assertEquals(typeFactory.singletonSequence(idealIntKind).numTypes(), 1);
+	}
+	
+	
+	@Test
+	public void testBooleanType() {
+		assertTrue(typeFactory.booleanType() instanceof CommonSymbolicPrimitiveType);
+	}
+	
+	@Test
+	public void testArrayType() {
+		assertTrue(typeFactory.arrayType(idealIntKind) instanceof SymbolicArrayType);
+	}
+	
+	@Test
+	public void testTypeComparator(){
+		assertNotEquals(typeFactory.typeComparator().compare(idealIntKind, idealRealKind), 0);
+	}
+
+	/*
 
 	@Test
 	public void testSequenceIterableOfQextendsSymbolicType() {
@@ -91,10 +148,7 @@ public class CommonSymbolicTypeFactoryTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testArrayTypeSymbolicType() {
-		fail("Not yet implemented");
-	}
+	
 
 	@Test
 	public void testArrayTypeSymbolicTypeNumericExpression() {
