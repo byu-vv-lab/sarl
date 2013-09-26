@@ -13,6 +13,8 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.real.RealInteger;
+import edu.udel.cis.vsl.sarl.number.real.RealRational;
 
 public class NumberFactoryTest {
 
@@ -20,8 +22,9 @@ public class NumberFactoryTest {
 
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 
+	private static BigInteger bigNegativeOne = new BigInteger("-1");
 	private static BigInteger bigOne = BigInteger.ONE;
-
+	private static BigInteger bigNegativeThirty = BigInteger("-30");
 	private static BigInteger bigThirty = new BigInteger("30");
 
 	private static BigInteger bigThirtyOne = new BigInteger("31");
@@ -38,6 +41,8 @@ public class NumberFactoryTest {
 	
 	private static BigInteger bigTwenty = new BigInteger("20");
 
+	private static BigInteger bigThree = new BigInteger("3");
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -161,4 +166,29 @@ public class NumberFactoryTest {
 		//out.println(c);
 		assertEquals(expected, c);
 	}		
+	@Test
+	public void longInt(){
+		long a = 30;
+		RealInteger b = (RealInteger) factory.integer(a);
+		assertEquals(bigThirty, b);
+		
+	}
+	/*@Test
+	public void intApply() {
+		IntegerNumber a = factory.integer(bigTen);
+		IntegerNumber b = factory.integer(bigThree);
+		IntegerNumber expectedC = factory.integer(bigThirty);
+		IntegerNumber c = factory.apply(a,b);
+		assertEquals(expectedC, c);
+	}*/
+	
+	@Test
+	public void realRatRat(){
+		RealRational a = (RealRational) factory.rational(bigThirty, bigNegativeOne);
+		RealRational expectedA = (RealRational) factory.rational(bigNegativeThirty, bigOne);
+		assertEquals(expectedA, a);
+	}
+	
+	
+	
 }
