@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * This class tests type functionality in the PreUniverse package.
  * @author jsaints
  */
-public class TypeTests {
+public class TypeTest {
 
 	// Universe
 	private static PreUniverse universe;

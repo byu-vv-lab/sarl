@@ -26,7 +26,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * This class tests array functionality in the PreUniverse package.
  * @author jsaints
  */
-public class ArrayTests {
+public class ArrayTest {
 
 	// Universe
 	private static PreUniverse universe;
