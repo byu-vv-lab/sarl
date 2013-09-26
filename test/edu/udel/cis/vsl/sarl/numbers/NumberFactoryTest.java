@@ -38,6 +38,8 @@ public class NumberFactoryTest {
 	
 	private static BigInteger bigZero = new BigInteger("0"); 
 	
+	private static BigInteger bigSix = new BigInteger("6");
+	
 	private static BigInteger bigTwenty = new BigInteger("20");
 	private static BigInteger bigNegativeThree = new BigInteger("-3");
 	private static BigInteger bigThree = new BigInteger("3");
@@ -273,6 +275,48 @@ public class NumberFactoryTest {
 		IntegerNumber expectedC = factory.integer(bigOne);
 		assertEquals(expectedC, c);
 	}
+	@Test
+	public void ratNumFloor(){
+		RationalNumber a = factory.rational(bigTwenty, bigThree);
+		IntegerNumber expectedB = factory.integer(bigSix);
+		IntegerNumber b = factory.floor(a);
+		assertEquals(expectedB, b);
+		RationalNumber c = factory.rational(bigNegativeOne, bigThree);
+		IntegerNumber expectedD = factory.integer(bigZero);
+		IntegerNumber d = factory.floor(c);
+		assertEquals(expectedD, d);
+		RationalNumber e = factory.rational(bigTen, bigOne);
+		IntegerNumber expectedF = factory.integer(bigTen);
+		IntegerNumber f = factory.floor(e);
+		assertEquals(expectedF, f);	
+	}
+	@Test
+	public void intInt(){
+		String a = "30";
+		IntegerNumber b = factory.integer(a);
+		IntegerNumber expectedB = factory.integer(bigThirty);
+		assertEquals(expectedB, b);
+	}
 	
+	@Test
+	public void intNumIntToRat(){
+		IntegerNumber a = factory.integer(bigThirty);
+		RationalNumber expectedB = factory.rational(bigThirty, bigOne);
+		RationalNumber b = factory.integerToRational(a);
+		assertEquals(expectedB, b);
+				
+	}
 	
+	@Test(expected=ArithmeticException.class)
+	public void ratNumIntValueNotIntegral(){
+		RationalNumber a = factory.rational(bigTen, bigThree);
+		factory.integerValue(a);
+	}
+	@Test
+	public void ratNumIntValue(){
+		RationalNumber a = factory.rational(bigTen, bigOne);
+		IntegerNumber expectedB = factory.integer(bigTen);
+		IntegerNumber b = factory.integerValue(a);
+		assertEquals(expectedB, b);
+	}
 }
