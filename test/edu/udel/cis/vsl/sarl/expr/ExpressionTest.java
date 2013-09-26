@@ -16,10 +16,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
+import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -35,7 +37,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
@@ -187,28 +188,38 @@ public class ExpressionTest {
 		referenceFunctionType = of.canonic(stf.functionType(
 				referenceIndexSeq, referenceType));
 		
-		
-		//arrayelementref
+	//---------------------------------------------------
 		
 		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
-		
 		SymbolicSequence s,s1,s2;
-
 		s = cf.emptySequence();
 		s1= s.add(sUniverse.identityReference());
 		s2 = s1.add(sUniverse.integer(1));
-		
-		//sUniverse.apply(function, argumentSequence);
-		SymbolicExpression testEquation = sUniverse.equals(x,three);
-		
 		SymbolicExpression test =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test2, s2);
-		
-		  test.isNull();
+		ArrayElementReference testRef = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(test,testRef);
+	//---------------------------------------------------
+		SymbolicExpression test3 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("TupleComponentRef"), referenceFunctionType));
+		SymbolicExpression testtuple =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test3, s2);
+		ArrayElementReference testTuple = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(test,testTuple);
+	//---------------------------------------------------
+		SymbolicExpression test5 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("UnionMemberRef"), referenceFunctionType));
+		SymbolicExpression testunion =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test5, s2);
+		ArrayElementReference testUnion = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(test,testUnion);
+	//---------------------------------------------------
+		SymbolicExpression test6 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("OffsetRef"), referenceFunctionType));
+		SymbolicExpression testoffset =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test6, s2);
+		ArrayElementReference testOffset = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(test,testOffset);
+			
 		  
 		  
 		  
 		  //
 		
+		  
 	}
 	
 	@Test
@@ -385,12 +396,12 @@ assertEquals(test6.toString(), "length(X)");
 		BooleanExpression test13 = sUniverse.or(a,b);
 		
 		//If statement is needed because X and !X are sometimes flipped
-		if(test13.toStringBuffer(true).toString().equals("!X || X" ) || test13.toStringBuffer(true).toString().equals( "((!X || X))")){
+		if(test13.toStringBuffer(false).toString().equals("!X || X" ) || test13.toStringBuffer(true).toString().equals( "(!X || X)")){
 			assertEquals(test13.toStringBuffer(false).toString(),"!X || X");
-			assertEquals(test13.toStringBuffer(true).toString(),"((!X || X))");
+			assertEquals(test13.toStringBuffer(true).toString(),"(!X || X)");
 		}else{
 			assertEquals(test13.toStringBuffer(false).toString(),"X || !X");
-			assertEquals(test13.toStringBuffer(true).toString(),"((X || !X))");
+			assertEquals(test13.toStringBuffer(true).toString(),"(X || !X)");
 		}
 		
 
