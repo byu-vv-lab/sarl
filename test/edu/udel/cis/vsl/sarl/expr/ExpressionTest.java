@@ -56,6 +56,7 @@ import edu.udel.cis.vsl.sarl.expr.common.CommonNumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicConstant;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -878,5 +879,20 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(expr1, idealFactory.subtract(xpy, xty));
 		//assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 		//assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+	}
+	
+	@Test
+	public void standardSimplifierFactoryTest() {
+		//This test fails with a Null Pointer Exception.
+		//Professor is going to look into the issue.
+		
+		//NumberFactory n = Numbers.REAL_FACTORY;
+		BooleanExpressionFactory bf = Expressions.newCnfFactory(stf, of, cf);
+		//NumericExpressionFactory i = ((CommonNumericExpressionFactory) n).idealFactory();
+		IdealFactory idf = new CommonIdealFactory(nf, of, stf, cf, bf );
+		NumberFactory n2 = idf.numberFactory();
+		ExpressionFactory sef = Expressions.newStandardExpressionFactory(n2, of, stf, cf);
+		SimplifierFactory sf = Expressions.standardSimplifierFactory(sef, universe);
+		assertNotNull(sf);
 	}
 }
