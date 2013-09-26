@@ -442,12 +442,13 @@ public class CommonPreUniverseTest {
 				universe.forallInt((NumericSymbolicConstant)index, 
 						low, (NumericExpression)nullConstant, trueExp);
 		
-		
+		// Testing non-null values
 		assertEquals(universe.forallInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("name"), integerType),
 				universe.integer(999), universe.integer(2000), 
 				universe.bool(true)), testResult1);
+		// Testing null values
 		assertEquals(universe.forallInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("name"), integerType),
@@ -493,7 +494,7 @@ public class CommonPreUniverseTest {
 				universe.existsInt((NumericSymbolicConstant)index, 
 						low2, (NumericExpression)nullConstant, trueExp);
 		
-		
+		// Testing non-null values
 		assertEquals(universe.existsInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("branch1"), integerType),
@@ -504,6 +505,7 @@ public class CommonPreUniverseTest {
 						universe.stringObject("branch1"), integerType),
 						universe.integer(1200), universe.integer(2350), 
 						universe.bool(true)), testResult2);
+		// Testing null values
 		assertEquals(universe.existsInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("branch1"), integerType),
@@ -1620,6 +1622,18 @@ public class CommonPreUniverseTest {
 		exp2 = universe.tuple(tupleType, Arrays.asList(new NumericExpression[]{universe.integer(6),universe.integer(9)}));
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
+		
+		// Written by Marlin Blue 9/26
+		ArrayList<SymbolicType> test1 = new ArrayList<SymbolicType>();
+		SymbolicType test2 = universe.booleanType();
+		SymbolicConstant symFunc1 = universe.symbolicConstant(
+				universe.stringObject("function"), universe.functionType(test1, test2));
+		SymbolicConstant symFunc2 = universe.symbolicConstant(
+				universe.stringObject("function"), universe.functionType(test1, test2));
+		result = universe.equals(symFunc1, symFunc2);
+		// Testing case 6
+		assertEquals(universe.bool(true), result);
+		
 		
 	}
 	// written by Mohammad Alsulmi
