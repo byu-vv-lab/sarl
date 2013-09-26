@@ -94,7 +94,6 @@ public class CVC3TranslateMathTest {
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
 		assertEquals(QueryResult.VALID, vc.query(equationThree));
-		
 	}
 	
 
