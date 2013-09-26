@@ -787,7 +787,8 @@ public class IdealTest {
 	}
 	
 	@Test
-	//(21x^3 - 35x^2) / (7x) -------> 3x^2 – 5x
+	// Non-ASCII characters replaced with ?????? below
+	//(21x^3 - 35x^2) / (7x) -------> 3x^2 ????????? 5x
 	public void complexRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.realType()));
