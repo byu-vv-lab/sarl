@@ -1700,7 +1700,7 @@ public class CommonPreUniverseTest {
 	@Test
 
 	public void testMake(){
-		NumericExpression one,two,three,five, N_one;
+		NumericExpression zero,one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
 		SymbolicExpression array = null,resultArray,symbolicExpr1,symbolicExpr2,symbolicExpr3;
 		resultTrue=universe.bool(true);
@@ -1712,6 +1712,7 @@ public class CommonPreUniverseTest {
 		Real = universe.realType();
 		
 		
+		zero=universe.integer(0);
 		one = universe.integer(1);
 		two = universe.integer(2);
 		three = universe.integer(3);
@@ -1752,6 +1753,9 @@ public class CommonPreUniverseTest {
 		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();
 		Args_MULTIPLY.add(one);
 		//assertEquals(universe.make(SymbolicOperator.MULTIPLY,Integer,testList),testList);
+		//case MODULO
+		SymbolicObject[] Args_Modulo= {three, one};
+		assertEquals(universe.make(SymbolicOperator.MODULO,Integer,Args_Modulo), zero);
 		//case NEGATIVE;
 		SymbolicObject[] Args_Negative={one};
 		assertEquals(N_one,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
@@ -1776,8 +1780,7 @@ public class CommonPreUniverseTest {
 		SymbolicExpression result = universe.make(SymbolicOperator.POWER,Integer,Args_Power1);		
 		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power1), result);
 		SymbolicExpression result1 = universe.make(SymbolicOperator.POWER,Integer,Args_Power2);		
-		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power2), result1);
-		
+		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power2), result1);		
 		//case SUBTRACT:
 		SymbolicObject[] Args_Substract= {three, one};
 		assertEquals(universe.make(SymbolicOperator.SUBTRACT,Integer,Args_Substract), two);
@@ -1806,16 +1809,7 @@ public class CommonPreUniverseTest {
 //						memberTypes), universe.intObject(1), x1);
 //		symbolicExpr2 = universe.unionInject(union1, I1, symbolicExpr1);
 //		SymbolicObject[] Args_Union_Inject={I1,symbolicExpr1};
-//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);
-
-
-
-
-
-		
-		
-		
-		
+//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);	
 	}
 
 }
