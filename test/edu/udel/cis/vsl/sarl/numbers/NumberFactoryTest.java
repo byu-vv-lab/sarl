@@ -24,7 +24,7 @@ public class NumberFactoryTest {
 
 	private static BigInteger bigNegativeOne = new BigInteger("-1");
 	private static BigInteger bigOne = BigInteger.ONE;
-	private static BigInteger bigNegativeThirty = BigInteger("-30");
+	private static BigInteger bigNegativeThirty = new BigInteger("-30");
 	private static BigInteger bigThirty = new BigInteger("30");
 
 	private static BigInteger bigThirtyOne = new BigInteger("31");
