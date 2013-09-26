@@ -13,9 +13,9 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
 /**
  * 
- * @author malsulmi
+ * @author Mohammad Alsulmi (malsulmi)
  *
- * The main goal of the benchmark is to provide a performance comparison
+ * The main purpose of the benchmark is to provide a performance comparison
  * between array() and append() methods that are used in creating arrays
  * 
  * Here, our comparison will be a time comparison
@@ -41,9 +41,10 @@ public class ArrayBenchmark {
 		long startingTime, endingTime;
 		double totalTime;
 		System.out.println("Testing of array creation using array method");
-
+		// the case of array creation
 		for(int i = 1;i<= maxSize; i = i*2){
 			size = i;
+			// starting the time
 			startingTime = System.nanoTime();
 			elementsArray = new NumericExpression[size];
 			for(int j = 0;j<size; j++ ){
@@ -51,13 +52,19 @@ public class ArrayBenchmark {
 			}
 			array = universe.array(integerType, Arrays.asList(elementsArray));
 			endingTime = System.nanoTime();
+			
+			// total time calculation
 			totalTime = ((double)(endingTime-startingTime))/1000000000.0;
 			System.out.println("Total Time in seconds: " + totalTime + " for size: "+size);
 
 		}
 		System.out.println("Testing of array creation using append method");
+		
+		// the case of append to an empty array
+		
 		for(int i = 1;i<= maxSize; i = i*2){
 			size = i;
+			// starting the time
 			startingTime = System.nanoTime();
 			elementsArray = new NumericExpression[0];
 			array = universe.array(integerType, Arrays.asList(elementsArray));
@@ -65,8 +72,10 @@ public class ArrayBenchmark {
 			for(int j = 0;j<size; j++ ){
 				array = universe.append(array, universe.integer(j));
 			}
-			
+			// stopping the time
 			endingTime = System.nanoTime();
+			
+			// total time calculation
 			totalTime = ((double)(endingTime-startingTime))/1000000000.0;
 			System.out.println("Total Time in seconds: " + totalTime + " for size: "+size);
 
