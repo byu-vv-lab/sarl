@@ -1,6 +1,5 @@
 package edu.udel.cis.vsl.sarl.ideal;
 
-
 import edu.udel.cis.vsl.sarl.SARL;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -13,7 +12,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  * @author aepstein
  * 
  */
-public class idealAddBenchmark {
+public class IdealAddBenchmark {
 	
 	/** The number of times to add X */
 	public final static int N = 100000;
