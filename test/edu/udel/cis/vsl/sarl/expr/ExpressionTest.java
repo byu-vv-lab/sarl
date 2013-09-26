@@ -25,6 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
@@ -172,10 +173,9 @@ public class ExpressionTest {
 		cf = system.collectionFactory();
 		stf = system.typeFactory();
 	}
-	
-	//Test currently does not actually test anything, just trying to figure out how to cover some code at the moment
+
 	@Test
-	public void CommonExpressionFactoryTest(){
+	public void CommonExpressionFactoryNonTrivialTest(){
 		SymbolicType referenceType;
 		SymbolicTypeSequence referenceIndexSeq; // Ref x Int
 		SymbolicType referenceFunctionType; // Ref x Int -> Ref
@@ -213,14 +213,73 @@ public class ExpressionTest {
 		SymbolicExpression testoffset =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test6, s2);
 		ArrayElementReference testOffset = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
 		assertEquals(test,testOffset);
-			
-		  
-		  
-		  
-		  //
-		
-		  
+  
 	}
+	@Ignore
+	@Test
+	public void CommonExpressionFactoryConcreteTest(){
+		
+
+  
+	}
+	
+	
+	@Test
+	public void CommonExpressionFactoryExpressionTest(){
+		
+		SymbolicType referenceType;
+		referenceType = of.canonic(stf.tupleType(
+				of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
+
+		BooleanExpression b1 = sUniverse.trueExpression();
+		BooleanExpression b2 = sUniverse.falseExpression();
+		ReferenceExpression r1 = sUniverse.identityReference();
+		ReferenceExpression r2 = sUniverse.identityReference();
+		SymbolicObject[] ExpressionList = {two,three};
+		SymbolicObject[] ExpressionList2 = {b1,b2};
+		SymbolicObject[] ExpressionList3 = {r1,r2};
+		
+		Collection<SymbolicObject> args1= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList));
+		Collection<SymbolicObject> args2= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList2));
+		Collection<SymbolicObject> args3= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList3));
+		
+		SymbolicExpression test1 =  expressionFactory.expression(SymbolicOperator.ADD, integerType, args1);
+		SymbolicExpression test2 =  expressionFactory.expression(SymbolicOperator.ADD, booleanType, args2);
+		SymbolicExpression test3 =  expressionFactory.expression(SymbolicOperator.ADD, referenceType, args3);
+		assertEquals(test1.toString(), "2+3");
+		assertEquals(test2.toString(), "true+false");
+		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
+  
+	}
+	
+	@Test
+	public void CommonExpressionFactoryExpressionTest2(){
+		
+		SymbolicType referenceType;
+		referenceType = of.canonic(stf.tupleType(
+				of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
+
+		BooleanExpression b1 = sUniverse.trueExpression();
+		BooleanExpression b2 = sUniverse.falseExpression();
+		ReferenceExpression r1 = sUniverse.identityReference();
+		ReferenceExpression r2 = sUniverse.identityReference();
+		SymbolicObject[] ExpressionList = {two,three};
+		SymbolicObject[] ExpressionList2 = {b1,b2};
+		SymbolicObject[] ExpressionList3 = {r1,r2};
+		
+	
+		
+		SymbolicExpression test1 =  expressionFactory.expression(SymbolicOperator.ADD, integerType, ExpressionList);
+		SymbolicExpression test2 =  expressionFactory.expression(SymbolicOperator.ADD, booleanType, ExpressionList2);
+		SymbolicExpression test3 =  expressionFactory.expression(SymbolicOperator.ADD, referenceType, ExpressionList3);
+		assertEquals(test1.toString(), "2+3");
+		assertEquals(test2.toString(), "true+false");
+		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
+  
+	}
+	
 	
 	@Test
 	public void toStringBuffer1PowerTest() {
