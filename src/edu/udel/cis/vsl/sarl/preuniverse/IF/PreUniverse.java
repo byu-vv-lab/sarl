@@ -1355,6 +1355,12 @@ public interface PreUniverse {
 
 	void incrementProverValidCount();
 
+	/**
+	 * Given an iterable collection of SymbolicTypes, returns a SymbolicTypeSequence
+	 * conatining those SymbolicTypes
+	 * @param SymbolicType - types
+	 * @return SymbolicTypeSequence of SymbolicType - types
+	 */
 	SymbolicTypeSequence typeSequence(Iterable<? extends SymbolicType> types);
 
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
