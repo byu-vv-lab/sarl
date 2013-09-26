@@ -36,6 +36,8 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 
 public interface ObjectFactory {
+	
+    NumberFactory numberFactory(); 
 
 	void setExpressionComparator(Comparator<SymbolicExpression> c);
 
