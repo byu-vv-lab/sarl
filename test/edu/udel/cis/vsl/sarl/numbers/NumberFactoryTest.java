@@ -98,7 +98,7 @@ public class NumberFactoryTest {
 	public void GCD() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTwenty);
-		IntegerNumbler c = factory.gcd(a, b);
+		IntegerNumber c = factory.gcd(a, b);
 		IntegerNumber expected = factory.integer(new BigInteger("10"));
 
 		out.println(c);
@@ -117,7 +117,7 @@ public class NumberFactoryTest {
 		assertEquals(expected, c);
 	} 
 	
-	public void() subInteger() { 
+	public void subInteger() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTen);
 		IntegerNumber c = factory.subtract(a, b);
