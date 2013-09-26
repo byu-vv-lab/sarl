@@ -1643,7 +1643,7 @@ public class CommonPreUniverseTest {
 	public void testMake(){
 		NumericExpression one,two,three,five, N_one;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicExpression array = null,resultArray;
+		SymbolicExpression array = null,resultArray,symbolicExpr1,symbolicExpr2,symbolicExpr3;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
 		SymbolicType Integer,Bool,Real;
@@ -1709,13 +1709,49 @@ public class CommonPreUniverseTest {
 		assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR1)),resultTrue);
 		//assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR3)),resultTrue);
 	 	//case POWER:
-		SymbolicObject[] Args_Power= {one, one};
-		SymbolicExpression result = universe.make(SymbolicOperator.POWER,Integer,Args_Power);		
-		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power), result);
+		IntObject I1;
+		I1 = universe.intObject(1);
+		SymbolicObject[] Args_Power1= {one, one};
+		SymbolicObject[] Args_Power2= {one, I1};
+		SymbolicExpression result = universe.make(SymbolicOperator.POWER,Integer,Args_Power1);		
+		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power1), result);
+		SymbolicExpression result1 = universe.make(SymbolicOperator.POWER,Integer,Args_Power2);		
+		assertEquals(universe.make(SymbolicOperator.POWER,Integer,Args_Power2), result1);
+		
 		//case SUBTRACT:
 		SymbolicObject[] Args_Substract= {three, one};
 		assertEquals(universe.make(SymbolicOperator.SUBTRACT,Integer,Args_Substract), two);
-		
+		//case TUPLE_WRITE
+		SymbolicTupleType tupleType1;
+		SymbolicExpression tuple, resultedTuple;
+		IntObject i1;
+		i1 = universe.intObject(1);
+		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
+		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
+		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
+		SymbolicObject[] Args_TupleWrite={tuple,i1,two};
+		assertEquals(universe.make(SymbolicOperator.TUPLE_WRITE,Integer,Args_TupleWrite),resultedTuple);
+		//case UNION_INJECT
+//		LinkedList<SymbolicType> memberTypes;
+//		memberTypes = new LinkedList<SymbolicType>();
+//		memberTypes.add(integerType);
+//		memberTypes.add(realType);
+//		union1 = universe.unionType(
+//				universe.stringObject("union1"),
+//				Arrays.asList(new SymbolicType[] { integerType, realType,
+//						booleanType, realArray }));
+//		SymbolicObject x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
+//		symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
+//				universe.unionType(universe.stringObject("MyUnion1"),
+//						memberTypes), universe.intObject(1), x1);
+//		symbolicExpr2 = universe.unionInject(union1, I1, symbolicExpr1);
+//		SymbolicObject[] Args_Union_Inject={I1,symbolicExpr1};
+//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);
+
+
+
+
+
 		
 		
 		
