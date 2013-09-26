@@ -60,37 +60,84 @@ public interface ObjectFactory {
 	 */
 	<T extends SymbolicObject> T canonic(T object);
 
+	/**
+	 * @return Returns a new canonic CommonBooleanObject of value true
+	 */
 	BooleanObject trueObj();
 
+	/**
+	 * @return Returns a new canonic CommonBooleanObject of value false
+	 */
 	BooleanObject falseObj();
 
+	/**
+	 * @return Returns a canonic intObject of value 0
+	 */
 	IntObject zeroIntObj();
 
+	/**
+	 * @return Returns a canonic intObject of value 1
+	 */
 	IntObject oneIntObj();
 
+	/**
+	 * @return Returns a canonic NumberObject (IntegerNumber) of value 0
+	 */
 	NumberObject zeroIntegerObj();
 
+	/**
+	 * @return Returns a canonic NumberObject (IntegerNumber) of value 1
+	 */
 	NumberObject oneIntegerObj();
 
+	/**
+	 * @return Returns a canonic NumberObject (RationalNumber) of value 0
+	 */
 	NumberObject zeroRealObj();
 
+	/**
+	 * @return Returns a canonic NumberObject (RationalNumber) of value 1
+	 */
 	NumberObject oneRealObj();
 
+	/**
+	 * @return Returns a NumberObject of specified value
+	 */
 	NumberObject numberObject(Number value);
 
+	/**
+	 * @return Returns a CharObject of specified value
+	 */
 	CharObject charObject(char value);
 
+	/**
+	 * @return Returns a canonic StringObject of specified value
+	 */
 	StringObject stringObject(String string);
 
+	/**
+	 * @return Returns a IntObject of specified value
+	 */
 	IntObject intObject(int value);
 
+	/**
+	 * @return Returns a BooleanObject of specified value
+	 */
 	BooleanObject booleanObject(boolean value);
 
+	/**
+	 * @return Returns an object from the objectList at specified index
+	 */
 	SymbolicObject objectWithId(int index);
 
+	/**
+	 * @return Returns the entire objectList
+	 */
 	Collection<SymbolicObject> objects();
 
+	/**
+	 * @return Returns the length of the objectList
+	 */
 	int numObjects();
 
-	NumberFactory numberFactory();
 }

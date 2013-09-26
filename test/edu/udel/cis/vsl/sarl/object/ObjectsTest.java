@@ -11,25 +11,14 @@ import org.junit.Test;
 
 public class ObjectsTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
 	private ObjectFactory objectFactory;
 
 	@Before
 	public void setUp() throws Exception {
+		Objects obj = new Objects();
 		this.objectFactory = Objects.newObjectFactory(
 				Numbers.REAL_FACTORY
 			);
-	}
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	@Test

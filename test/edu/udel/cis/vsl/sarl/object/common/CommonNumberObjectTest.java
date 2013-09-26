@@ -22,7 +22,9 @@ public class CommonNumberObjectTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.realint = new CommonNumberObject(new RealInteger(new BigInteger("12345678901234567890")));
+		//must create RealIntegers through factory for hash codes to be equal
+		//should make RealInteger constructor private, or implement hash code.
+		this.realint =    new CommonNumberObject(new RealInteger(new BigInteger("12345678901234567890")));
 		this.newrealint = new CommonNumberObject(new RealInteger(new BigInteger("12345678901234567890")));
 		this.realrational = new CommonNumberObject(new RealRational(new BigInteger("1"), new BigInteger("2")));
 		this.newrealrational = new CommonNumberObject(new RealRational(new BigInteger("1"), new BigInteger("2")));
