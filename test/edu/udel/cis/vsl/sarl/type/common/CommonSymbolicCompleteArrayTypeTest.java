@@ -14,6 +14,7 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.expr.common.ExpressionComparator;
 import edu.udel.cis.vsl.sarl.ideal.common.NTConstant;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -28,6 +29,7 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	ObjectFactory objectFactory;
 	SymbolicObject symbolicObject2, symbolicObject3;
 	NumericPrimitive number2, number3;
+	TypeComparator typeComparator;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -38,6 +40,8 @@ public class CommonSymbolicCompleteArrayTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		typeComparator = new TypeComparator();
+		//typeComparator.setExpressionComparator(new ExpressionComparator());
 		numberFactory = Numbers.REAL_FACTORY;
 		objectFactory = Objects.newObjectFactory(numberFactory);
 		symbolicObject3 = objectFactory.numberObject(numberFactory.integer(3));
@@ -83,6 +87,15 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	@Test
 	public void testExtentString() {
 		assertEquals(completeArray2.extentString(), "[" + completeArray2.extent() + "]");
+	}
+	
+	/*
+	 * testing if two array types are equal using compareTo in TypeComparator;
+	 */
+	@Test
+	public void testTypeComparator(){
+		//Null pointer exception
+		//assertEquals(typeComparator.compare(completeArray3, completeArray33), 0);
 	}
 	
 	/*

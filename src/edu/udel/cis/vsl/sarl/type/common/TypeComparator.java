@@ -38,19 +38,45 @@ public class TypeComparator implements Comparator<SymbolicType> {
 
 	}
 
+	
+	/**
+	 * @param c Comparator of type SymbolicTypeSequence
+	 */
 	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		typeSequenceComparator = c;
 	}
 
+	
+	/**
+	 * @param c , a comparator of type symbolic expressions
+	 * sets expressionComparator to be used in comparison
+	 */
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		expressionComparator = c;
+		
 	}
 
+	
+	/**
+	 * @return expressionComparator that has the way to compare two expressions 
+	 * and also used when comparing two complete array types
+	 */
 	public Comparator<SymbolicExpression> expressionComparator() {
 		return expressionComparator;
 	}
 
-	@Override
+	
+	/* (non-Javadoc)
+	 * comparing two types according to their types.
+	 * if the two types aren't equal
+	 * @return 0
+	 * 
+	 * otherwise, it checks if the two similar types are of the same kinds
+	 * @returns 0 if similar kind. Otherwise, returns -1, 1.
+	 * 
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
+	 @Override
 	public int compare(SymbolicType o1, SymbolicType o2) {
 		SymbolicTypeKind kind = o1.typeKind();
 		int result = kind.compareTo(o2.typeKind());

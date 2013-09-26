@@ -17,7 +17,7 @@ public class CommonSymbolicRealTypeTest {
 	 * Three realKinds: ideal, herbrand, and float;
 	 */
 		CommonSymbolicRealType idealRealKind, idealRealKind2, herbrandRealKind, floatRealKind;
-
+		TypeComparator typeComparator;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -28,6 +28,7 @@ public class CommonSymbolicRealTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		typeComparator = new TypeComparator();
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		idealRealKind2 = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
@@ -68,6 +69,14 @@ public class CommonSymbolicRealTypeTest {
 	public void testIsIdeal() {
 		assertTrue(idealRealKind.isIdeal());
 		assertTrue(idealRealKind2.isIdeal());
+	}
+	
+	/*
+	 * testing if two realTypes are equal using the compareTo in TypeComparator;
+	 */
+	@Test
+	public void testTypeComparator(){
+		assertEquals(typeComparator.compare(idealRealKind, idealRealKind2), 0);
 	}
 /*
 	@Test

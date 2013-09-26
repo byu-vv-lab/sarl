@@ -22,7 +22,7 @@ public class CommonSymbolicArrayTypeTest {
 	CommonSymbolicArrayType intArrayType1, intArrayType11, intArrayType2, realArrayType1, realArrayType2;
 	CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind;
 	CommonSymbolicRealType idealRealKind, floatRealKind;
-	
+	TypeComparator typeComparator;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -34,7 +34,7 @@ public class CommonSymbolicArrayTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		
+		typeComparator = new TypeComparator();
 		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		idealIntKind2 = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
@@ -87,7 +87,14 @@ public class CommonSymbolicArrayTypeTest {
 	public void testIsComplete() {
 		assertFalse(intArrayType1.isComplete());
 		//assertTrue(intArrayType1.isIdeal());
-		
 	}
-
+	
+	/*
+	 * testing if two array types are equal using
+	 * compareTo in TypeComparator
+	 */
+	@Test
+	public void testTypeComparator(){
+		assertEquals(typeComparator.compare(intArrayType1, intArrayType11), 0);
+	}
 }

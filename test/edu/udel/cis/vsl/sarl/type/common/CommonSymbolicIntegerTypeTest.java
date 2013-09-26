@@ -17,7 +17,8 @@ public class CommonSymbolicIntegerTypeTest {
 	 */
 	
 		CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind, herbrandIntKind;
-	@BeforeClass
+		TypeComparator typeComparator;
+		@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
 
@@ -27,6 +28,7 @@ public class CommonSymbolicIntegerTypeTest {
 
 	@Before
 	public void setUp() throws Exception {
+		typeComparator = new TypeComparator();
 		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		idealIntKind2 = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
@@ -76,6 +78,12 @@ public class CommonSymbolicIntegerTypeTest {
 		assertEquals(idealIntKind2.toStringBuffer(true).toString(), "int");
 		assertEquals(herbrandIntKind.toStringBuffer(true).toString(), "hint");
 		assertEquals(boundedIntKind.toStringBuffer(true).toString(), "bounded");
+	}
+	
+	@Test
+	public void testTypeComparator(){
+		//System.out.println(typeComparator.compare(idealIntKind, idealIntKind2));
+		assertEquals(typeComparator.compare(idealIntKind, idealIntKind2), 0);
 	}
 	
 	/*
