@@ -206,23 +206,23 @@ public class ExpressionTest {
 		s1= s.add(sUniverse.identityReference());
 		s2 = s1.add(sUniverse.integer(1));
 		
-	//---------------------------------------------------
+	
 		
 		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
 		SymbolicExpression test =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test2, s2);
 		ArrayElementReference testRef = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
 		assertEquals(test,testRef);
-	//---------------------------------------------------
+	
 		SymbolicExpression test3 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("TupleComponentRef"), referenceFunctionType));
 		SymbolicExpression testtuple =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test3, s2);
 		TupleComponentReference testTuple = expressionFactory.tupleComponentReference((ReferenceExpression) s1.get(0), oneIntObj);
 		assertEquals(testtuple,testTuple);
-	//---------------------------------------------------
+	
 		SymbolicExpression test5 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("UnionMemberRef"), referenceFunctionType));
 		SymbolicExpression testunion =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test5, s2);
 		UnionMemberReference testUnion = expressionFactory.unionMemberReference((ReferenceExpression) s1.get(0), oneIntObj);
 		assertEquals(testunion,testUnion);
-	//---------------------------------------------------
+	
 		SymbolicExpression test6 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("OffsetRef"), referenceFunctionType));
 		SymbolicExpression testoffset =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test6, s2);
 		OffsetReference testOffset = expressionFactory.offsetReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
@@ -469,7 +469,7 @@ assertEquals(test6.toString(), "length(X)");
 
 	}
 
-	@Ignore
+	
 	@Test
 	public void toStringBuffer1IntDivideTest() {
 		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
@@ -482,7 +482,7 @@ assertEquals(test6.toString(), "length(X)");
 	}
 
 	
-
+	//possible bug? sometimes wants two parens instead of 1
 	@Test
 	public void toStringBuffer1OrTest() {
 		BooleanExpression a = sUniverse.not(b);
