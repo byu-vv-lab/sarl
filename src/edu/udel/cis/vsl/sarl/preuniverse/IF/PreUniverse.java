@@ -1299,7 +1299,9 @@ public interface PreUniverse {
 
 	/**
 	 * Returns the type referenced by a reference into an object of the given
-	 * type. Example: if type is array-of-int and the reference is an array
+	 * type. You can only use this method to get the type referenced into a
+	 * SymbolicType, not a SymbolicExpression.
+	 * Example: if type is array-of-int and the reference is an array
 	 * element reference, this method returns int.
 	 * 
 	 * @param type
