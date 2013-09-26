@@ -10,7 +10,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
- * This class tests array functionality in the PreUniverse package.
+ * This class tests type functionality in the PreUniverse package.
  * @author jsaints
  */
 public class TypeTests {
