@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import static org.junit.Assert.*;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
 
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -37,28 +38,15 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealSimplifierTest {
 
-	private BooleanExpression assumption;
-
-	private BooleanExpression rawAssumption;
-
+	private static Map<SymbolicConstant, SymbolicExpression> substitutionMap = null;
 	
-	private Map<SymbolicConstant, SymbolicExpression> substitutionMap = null;
-
+	private static Map<Polynomial, BoundsObject> boundMap = new HashMap<Polynomial, BoundsObject>();
 	
-	private BooleanExpression fullContext = null;
-
+	private static Map<BooleanExpression, Boolean> booleanMap = new HashMap<BooleanExpression, Boolean>();
 	
-	private Map<Polynomial, BoundsObject> boundMap = new HashMap<Polynomial, BoundsObject>();
-
+	private static Map<Polynomial, Number> constantMap = new HashMap<Polynomial, Number>();
 	
-	private Map<BooleanExpression, Boolean> booleanMap = new HashMap<BooleanExpression, Boolean>();
-
-	
-	private Map<Polynomial, Number> constantMap = new HashMap<Polynomial, Number>();
-
-	
-	private boolean intervalComputed = false;
-	
+	private static boolean intervalComputed = false;	
 	
 	private static SimplifierInfo simplifierInfo;
 	
@@ -84,7 +72,7 @@ public class IdealSimplifierTest {
 	
 	private static CollectionFactory collectionFactory;
 
-	private static BooleanExpression trueExpr, falseExpr, xeq5;
+	private static BooleanExpression trueExpr, falseExpr, xeq5, assumption, boolArg1, boolArg2;
 	
 	private static PrintStream out = System.out;
 	
@@ -97,6 +85,9 @@ public class IdealSimplifierTest {
 	private static NumericExpression five;
 	
 	private static IdealSimplifier idealSimplifier;
+	
+	private static SymbolicConstant symConstant;
+	
 	
 	//private static SymbolicType _booleanType;
 	
@@ -113,14 +104,21 @@ public class IdealSimplifierTest {
 		symTypeFact = PreUniverses.newIdealFactorySystem().typeFactory();
 		boolExprFact = PreUniverses.newIdealFactorySystem().booleanFactory();
 		commonExprFact = PreUniverses.newIdealFactorySystem().expressionFactory();
-		affineFact = (AffineFactory)system.expressionFactory().numericFactory();
+		//affineFact = (AffineFactory)system.expressionFactory().numericFactory();
 		realType = preUniv.realType();
 		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
 			 preUniv.stringObject("x"), realType);	
 		five = preUniv.rational(5); // 5.0
+		
 		xeq5 = preUniv.equals(x, five);
 		trueExpr = preUniv.bool(true);
-		falseExpr = preUniv.bool(false);
+		//falseExpr = preUniv.bool(false);
+		//simplifierFactory = PreUniverses
+		idealSimplifierFactory = (IdealSimplifierFactory) Ideal
+				.newIdealSimplifierFactory(idealFactory, preUniv);
+		
+		//idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
+		
 		
 
 	}
@@ -131,6 +129,30 @@ public class IdealSimplifierTest {
 	
 	@Test
 	public void getFullContextText(){
+		
+		idealSimplifier = idealSimplifierFactory.newSimplifier(xeq5);
+		BooleanExpression boolXEq5 = idealSimplifier.getFullContext();
+		assertEquals(xeq5,boolXEq5);
+		
+		/*
+		 * Creating a large complex equation, not finished
+		 * 
+		 * // x^2 * y
+		xxy = getPreUniv().multiply(xy, x);
+		symbExpr_xxy = xxy;
 	
+		
+		boolArg1 = preUniv.equals(symbExpr_xxy, arg1);
+		assumption = boolExprFact.and(boolArg1, boolArg2);
+		IdealSimplifier simpEq1 =idealSimplifierFactory.newSimplifier(assumption);
+		
+		*/
+	
+	}
+	@Test
+	public void getReducedContext(){
+		idealSimplifier = idealSimplifierFactory.newSimplifier(trueExpr);
+		BooleanExpression boolTrue = idealSimplifier.getReducedContext();
+		assertEquals(trueExpr,boolTrue);
 	}
 }
