@@ -28,6 +28,7 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3TranslateMathTest {
+	
 	// Static fields: instantiated once and used for all tests...
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();

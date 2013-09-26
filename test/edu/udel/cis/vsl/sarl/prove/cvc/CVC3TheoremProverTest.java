@@ -46,6 +46,7 @@ public class CVC3TheoremProverTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		
 		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
@@ -58,6 +59,7 @@ public class CVC3TheoremProverTest {
 
 	@Test
 	public void testBoolean() {
+		
 		SymbolicType boolType = universe.booleanType();
 		Type t = cvcProver.translateType(boolType);
 
@@ -100,9 +102,9 @@ public class CVC3TheoremProverTest {
 	@Test
 	@Ignore
 	public void testNewCVCName() {
+		
 		//use expression factory to get APPLY expression in order to use translate to hit switch case
 		//in order to publicly get to translateFunction which uses newCvcName
-		
 		SymbolicExpression x = universe
 				.symbolicConstant(universe.stringObject("x"),
 						universe.booleanType());

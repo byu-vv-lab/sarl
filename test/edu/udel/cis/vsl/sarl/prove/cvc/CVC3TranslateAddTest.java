@@ -53,6 +53,7 @@ public class CVC3TranslateAddTest {
 		 */
 		@Before
 		public void setUp() throws Exception {
+			
 			proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 			cvcProver = (CVC3TheoremProver) proverFactory
 					.newProver(booleanExprTrue);
@@ -66,6 +67,7 @@ public class CVC3TranslateAddTest {
 	
 	@Test
 	public void testTranslateAddOneArg(){
+		
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 		Expr fiveExpr = cvcProver.translate(five);
@@ -84,7 +86,6 @@ public class CVC3TranslateAddTest {
 		Expr addExpected3 = vc.plusExpr(addExpected2, fiveExpr);
 		Expr addExpected4 = vc.simplify(addExpected3);
 		assertEquals(addExpected4, addExpr2);
-
 	}
 	
 	@Test

@@ -25,39 +25,39 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TranslateOrTest {
 
 	// Static fields: instantiated once and used for all tests...
-		private static FactorySystem factorySystem = PreUniverses
-				.newIdealFactorySystem();
-		private static PreUniverse universe = PreUniverses
-				.newPreUniverse(factorySystem);
-		private static ExpressionFactory expressionFactory = factorySystem
-				.expressionFactory();
-		private static SymbolicType boolType = universe.booleanType();
-		// expressions
-		private static BooleanExpression booleanExprTrue = universe
-				.trueExpression();
-		private static BooleanExpression booleanExprFalse = universe
-				.falseExpression();
-		// Instance fields: instantiated before each test is run...
-		private TheoremProverFactory proverFactory;
-		private CVC3TheoremProver cvcProver;
-		private ValidityChecker vc;
-		
-		/**
-		 * Set up each test. This method is run before each test.
-		 * 
-		 * @throws Exception
-		 */
-		@Before
-		public void setUp() throws Exception {
-			proverFactory = Prove.newCVC3TheoremProverFactory(universe);
-			cvcProver = (CVC3TheoremProver) proverFactory
-					.newProver(booleanExprTrue);
-			vc = cvcProver.validityChecker();
-		}
+	private static FactorySystem factorySystem = PreUniverses
+			.newIdealFactorySystem();
+	private static PreUniverse universe = PreUniverses
+			.newPreUniverse(factorySystem);
+	private static ExpressionFactory expressionFactory = factorySystem
+			.expressionFactory();
+	private static SymbolicType boolType = universe.booleanType();
+	// expressions
+	private static BooleanExpression booleanExprTrue = universe
+			.trueExpression();
+	private static BooleanExpression booleanExprFalse = universe
+			.falseExpression();
+	// Instance fields: instantiated before each test is run...
+	private TheoremProverFactory proverFactory;
+	private CVC3TheoremProver cvcProver;
+	private ValidityChecker vc;
+	
+	/**
+	 * Set up each test. This method is run before each test.
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		cvcProver = (CVC3TheoremProver) proverFactory
+				.newProver(booleanExprTrue);
+		vc = cvcProver.validityChecker();
+	}
 
-		@After
-		public void tearDown() throws Exception {
-		}
+	@After
+	public void tearDown() throws Exception {
+	}
 		
 	@Test
 	public void testTranslateOr() {

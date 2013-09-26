@@ -28,46 +28,46 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TranslateReadWriteArrayTest {
 
 	// Static fields: instantiated once and used for all tests...
-		private static FactorySystem factorySystem = PreUniverses
-				.newIdealFactorySystem();
-		private static PreUniverse universe = PreUniverses
-				.newPreUniverse(factorySystem);
-		private static ExpressionFactory expressionFactory = factorySystem
-				.expressionFactory();
-		// types
-		private static SymbolicRealType realType = universe.realType();
-		// expressions
-		private static NumericExpression ten = universe.rational(10);
-		private static NumericExpression five = universe.rational(5);
-		private static NumericExpression two = universe.rational(2);
-		private static NumericExpression one = universe.rational(1);
-		private static NumericExpression zero = universe.zeroReal();
-		private static NumericExpression zeroInt = universe.zeroInt();
-		private static NumericExpression oneInt = universe.integer(1);
-		private static NumericExpression twoInt = universe.integer(2);
-		private static BooleanExpression booleanExprTrue = universe
-				.trueExpression();
-		// Instance fields: instantiated before each test is run...
-		private TheoremProverFactory proverFactory;
-		private CVC3TheoremProver cvcProver;
-		private ValidityChecker vc;
-		
-		/**
-		 * Set up each test. This method is run before each test.
-		 * 
-		 * @throws Exception
-		 */
-		@Before
-		public void setUp() throws Exception {
-			proverFactory = Prove.newCVC3TheoremProverFactory(universe);
-			cvcProver = (CVC3TheoremProver) proverFactory
-					.newProver(booleanExprTrue);
-			vc = cvcProver.validityChecker();
-		}
+	private static FactorySystem factorySystem = PreUniverses
+			.newIdealFactorySystem();
+	private static PreUniverse universe = PreUniverses
+			.newPreUniverse(factorySystem);
+	private static ExpressionFactory expressionFactory = factorySystem
+			.expressionFactory();
+	// types
+	private static SymbolicRealType realType = universe.realType();
+	// expressions
+	private static NumericExpression ten = universe.rational(10);
+	private static NumericExpression five = universe.rational(5);
+	private static NumericExpression two = universe.rational(2);
+	private static NumericExpression one = universe.rational(1);
+	private static NumericExpression zero = universe.zeroReal();
+	private static NumericExpression zeroInt = universe.zeroInt();
+	private static NumericExpression oneInt = universe.integer(1);
+	private static NumericExpression twoInt = universe.integer(2);
+	private static BooleanExpression booleanExprTrue = universe
+			.trueExpression();
+	// Instance fields: instantiated before each test is run...
+	private TheoremProverFactory proverFactory;
+	private CVC3TheoremProver cvcProver;
+	private ValidityChecker vc;
+	
+	/**
+	 * Set up each test. This method is run before each test.
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		cvcProver = (CVC3TheoremProver) proverFactory
+				.newProver(booleanExprTrue);
+		vc = cvcProver.validityChecker();
+	}
 
-		@After
-		public void tearDown() throws Exception {
-		}
+	@After
+	public void tearDown() throws Exception {
+	}
 
 	@Test
 	public void testTranslateArrayWriteComplete(){
