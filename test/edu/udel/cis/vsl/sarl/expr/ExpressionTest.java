@@ -743,8 +743,10 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		
 		assertEquals(minus, sUniverse.minus(xpy));
 		assertEquals(minus, idealFactory.minus(xpy));
+		assertEquals(minus.toStringBuffer(true).toString(), "(-1*X+-1*Y)");
 		assertEquals(minusH, sUniverse.minus(cnef.cast(xpy, herbrandType)));
 		assertEquals(minusH, idealFactory.minus(cnef.cast(xpy, herbrandType)));
+		assertEquals(minusH.toStringBuffer(true).toString(), "-1*(hreal)(hreal)(X+Y)");
 	}
 	
 	@Test
@@ -758,8 +760,10 @@ SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		
 		assertEquals(moduloExpression, sUniverse.modulo(expr1, expr2));
 		assertEquals(moduloExpression,idealFactory.modulo(expr1, expr2));
+		assertEquals(moduloExpression.toStringBuffer(true).toString(), "(9%(2 div X))");
 		assertEquals(moduloExpressionH, sUniverse.modulo(expr1H, expr2H));
 		assertEquals(moduloExpressionH, idealFactory.modulo(expr1H, expr2H));
+		assertEquals(moduloExpressionH.toStringBuffer(true).toString(), "(9%(hint)(hint)(2 div X))");
 	}
 	
 	@Test
