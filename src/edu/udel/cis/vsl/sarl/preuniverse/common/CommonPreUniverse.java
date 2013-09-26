@@ -2294,13 +2294,13 @@ public class CommonPreUniverse implements PreUniverse {
 			NumericExpression index = ref.getOffset();
 			IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
 
-			if (indexNumber == null || !indexNumber.isZero())
+			if (indexNumber == null || !indexNumber.isZero()) //first case unreachable
 				throw new SARLException(
 						"Cannot assign via an offset reference with non-zero offset:\n"
 								+ reference + "\n" + value);
 			return assign(value, ref.getParent(), subValue);
 		}
-		default:
+		default: //unreachable
 			throw new SARLInternalException("Unknown reference kind: "
 					+ reference);
 		}

@@ -740,7 +740,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	// Test written by Jeff DiMarco (jdimarco) 9/25/13
+	// Test written by Jeff DiMarco/Julian Piane (jdimarco) 9/25/13
 	public void testAssign() {
 		SymbolicExpression ten = universe.integer(10);
 		SymbolicExpression u_ten = universe.unionInject(union1,
@@ -750,6 +750,15 @@ public class CommonPreUniverseTest {
 		ReferenceExpression nref = expressionFactory.nullReference();
 		
 		assertEquals(universe.assign(u_ten, iref, u_ten), u_ten); // test for subvalue
+		
+		ReferenceExpression offsetReference5 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(5));
+		ReferenceExpression offsetReference0 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(0));
+		
+		assertEquals(universe.assign(u_ten, offsetReference0, u_ten), u_ten);
+		
+		//Test exception case
+		try{universe.assign(u_ten, offsetReference5, u_ten);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 	}
 	
 	@Test (expected = SARLException.class)
