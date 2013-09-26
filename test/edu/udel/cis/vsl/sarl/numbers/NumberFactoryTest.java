@@ -319,4 +319,8 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.integerValue(a);
 		assertEquals(expectedB, b);
 	}
+	
+	
+	
+	
 }
