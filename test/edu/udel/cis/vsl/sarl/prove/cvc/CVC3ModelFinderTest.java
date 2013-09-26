@@ -326,7 +326,7 @@ public class CVC3ModelFinderTest {
 				SymbolicOperator.APPLY, universe.referenceType(), args);
 	}
 
-	@Test
+	@Test(expected = SARLInternalException.class)
 	public void testAssignApplyElseStatement() {
 		SymbolicType arrayIntType = universe.arrayType(universe.integerType());
 		SymbolicExpression a = universe.symbolicConstant(
@@ -341,6 +341,5 @@ public class CVC3ModelFinderTest {
 		ModelResult model = (ModelResult) result;
 		
 		System.out.println(model.getModel());
-
 	}
 }
