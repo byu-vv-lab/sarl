@@ -787,6 +787,7 @@ public class IdealTest {
 		Constant eleven = commonIdealFactory.intConstant(11);
 		assertEquals(subEleven, eleven);
 	}
+	/*
 	@Test
 	public void nonneg(){
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
@@ -798,6 +799,7 @@ public class IdealTest {
 		out.println("bool="  +poly);
 		assertEquals(bool, commonIdealFactory.booleanFactory().trueExpr());
 	}
+	*/
 	@Test
 	// Non-ASCII characters replaced with ?????? below
 	//(21x^3 - 35x^2) / (7x) -------> 3x^2 ????????? 5x
