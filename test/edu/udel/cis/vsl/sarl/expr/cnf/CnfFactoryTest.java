@@ -166,7 +166,7 @@ public class CnfFactoryTest {
 		BooleanExpression e1 = factory.not(factory.and(p, q));
 		BooleanExpression e2 = factory.or(factory.not(p), factory.not(q));
 
-		out.println("!(p&&q) = " + e1);
+		//out.println("!(p&&q) = " + e1);
 		assertEquals(e1, e2);
 	}
 	
@@ -254,7 +254,7 @@ public class CnfFactoryTest {
 		BooleanExpression pandfalse = bef.and(p, falseExpr);
 
 		BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, qandtrue);
-		assertEquals(q, bef.or(AND, pandfalse));
+		assertEquals(q, bef.or(qandtrue, pandfalse));
 	}
 	
 	
@@ -348,7 +348,7 @@ public class CnfFactoryTest {
 		BooleanExpression EXISTS2 = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue2);
 		CnfExpression cnf = (CnfExpression) EXISTS;
 		CnfExpression cnf2 = (CnfExpression) EXISTS2;
-		System.out.println(cnf.argument(0));
+		//System.out.println(cnf.argument(0));
 		assertEquals(bef.or((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.exists(b, ortrue));
 		}
 	
