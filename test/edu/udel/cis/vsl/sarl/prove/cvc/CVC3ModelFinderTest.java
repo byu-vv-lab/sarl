@@ -182,6 +182,9 @@ public class CVC3ModelFinderTest {
 		ResultType resultType = result.getResultType();
 		
 		assertEquals(ResultType.NO, resultType);
+
+		ModelResult model = (ModelResult) result;
+		
 	}
 	
 	@Test
@@ -231,22 +234,24 @@ public class CVC3ModelFinderTest {
 		
 		ResultType resultType = result.getResultType();
 		assertEquals(ResultType.NO, resultType);
+		
+		ModelResult model = (ModelResult) result;		
 	}
 	
 	@Test
 	public void testCVC3ModelFinderTestDivideByOne() {
-		//Create the assumption y = 1.
+		//Create the assumption y = 2.
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,universe.integerType());
-		BooleanExpression assumption =universe.equals(symConstYInt,universe.integer(1)); 
-		//Give the prover the assumption that y = 1.
+		BooleanExpression assumption =universe.equals(symConstYInt,universe.integer(2)); 
+		//Give the prover the assumption that y = 2.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
 				.newProver(assumption);
 		vc = cvcProverYIs0.validityChecker();
 		
 		StringObject strX = universe.stringObject("x");
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,universe.integerType());
-		//Any X divided by y should return x.
+		//Any X divided by y should return x (false).
 		SymbolicExpression xDivideByY = expressionFactory.expression(
 				SymbolicOperator.DIVIDE, universe.integerType(), symConstXInt,symConstYInt);
 		
@@ -259,7 +264,7 @@ public class CVC3ModelFinderTest {
 	
 	@Test
 	public void testCVC3ModelFinderApplyBoolean() {
-		CollectionFactory collectionFactory= factorySystem.collectionFactory();
+		
 		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
 		NumberFactory numFactory = factorySystem.numberFactory();
 		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
@@ -280,7 +285,7 @@ public class CVC3ModelFinderTest {
 
 	@Test
 	public void testCVC3ModelFinderApplyReferenced() {
-		CollectionFactory collectionFactory= factorySystem.collectionFactory();
+		CollectionFactory collectionFactory = factorySystem.collectionFactory();
 		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
 		NumberFactory numFactory = factorySystem.numberFactory();
 		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
