@@ -658,34 +658,34 @@ public class CommonPreUniverseTest {
 		three = universe.integer(3);
 		
 		//Reference Expressions
-		ReferenceExpression nullReference, identityReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
+		ReferenceExpression nullReference, offsetReference, identityReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
 		nullReference = universe.nullReference();
 		identityReference = universe.identityReference();
 		arrayReference = universe.arrayElementReference(identityReference, zero);
 		twoDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
 		tupleInArrayReference = universe.arrayElementReference(identityReference, zero);
 		arrayInTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
+		offsetReference = universe.offsetReference(identityReference, zero);
 
 		//Tuple containing array
 		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleOfArrayType"), Arrays.asList(new SymbolicType[]{arrayType}));
-		//SymbolicExpression tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}))}));
-		
-		//Tuple containing array test
+
+		//Tuple containing array test and offset test
 		assertEquals(universe.referencedType(tupleOfArrayType, arrayInTupleReference), arrayType);
+		assertEquals(universe.referencedType(tupleOfArrayType, offsetReference).typeKind(), tupleOfArrayType.typeKind());
 		
 		//Array containing Tuple
 		SymbolicArrayType arrayOfTupleType = universe.arrayType(tupleOfArrayType);
-		//SymbolicExpression arrayOfTuple = universe.array(arrayType, Arrays.asList(new SymbolicExpression[]{universe.tuple(tupleTypleInt, Arrays.asList(new NumericExpression[]{one,two,three}))}));
-		
+
 		//Array containing Tuple test
 		assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
 		
 		//Two Dimensional Array
 		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
-		//SymbolicExpression twoDimensionalArray = universe.array(arrayType, Arrays.asList(new SymbolicExpression[]{universe.array(integerType, Arrays.asList(new NumericExpression[]{one,two,three}))}));
-		
+
 		//Two Dimensional Array test
 		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
+		
 		
 		
 		//ERROR TESTS
