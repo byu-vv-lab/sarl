@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TranslateReadWriteTest {
 	
 	// Static fields: instantiated once and used for all tests...
-	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
@@ -42,8 +40,6 @@ public class CVC3TranslateReadWriteTest {
 	// types
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();
-	private static SymbolicType boolType = universe.booleanType();
-	private static SymbolicType intArrayType = universe.arrayType(intType);
 	// expressions
 	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
@@ -57,8 +53,6 @@ public class CVC3TranslateReadWriteTest {
 	private static NumericExpression tenInt = universe.integer(10);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	private static BooleanExpression booleanExprFalse = universe
-			.falseExpression();
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
