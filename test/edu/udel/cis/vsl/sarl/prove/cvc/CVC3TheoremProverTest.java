@@ -68,9 +68,9 @@ public class CVC3TheoremProverTest {
 	public void testToString(){
 		
 		String expected = "CVC3TheoremProver";
-		assertEquals(expected, cvcProver.toString());
-		
 		String notExpected = "This is wrong";
+		
+		assertEquals(expected, cvcProver.toString());
 		assertFalse(notExpected.equals(cvcProver.toString()));
 	}
 	

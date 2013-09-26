@@ -78,6 +78,8 @@ public class CVC3TranslateReadWriteTest {
 	@Test
 	public void testTranslateTupleRead() {
 		
+		Expr expr2 = cvcProver.translate(twoInt);
+		
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
 		tupleList.add(oneInt);
 		tupleList.add(twoInt);
@@ -92,8 +94,8 @@ public class CVC3TranslateReadWriteTest {
 		SymbolicExpression s2 = expressionFactory
 				.expression(SymbolicOperator.TUPLE_READ, s1.type(), 
 						s1, universe.intObject(1));
+		
 		Expr expr1 = cvcProver.translate(s2);
-		Expr expr2 = cvcProver.translate(twoInt);
 		Expr expr3 = vc.eqExpr(expr1, expr2);
 		
 		assertEquals(QueryResult.VALID, vc.query(expr3));
@@ -101,6 +103,8 @@ public class CVC3TranslateReadWriteTest {
 	
 	@Test
 	public void testTranslateTupleWrite(){
+		
+		Expr expr2 = cvcProver.translate(ten);
 		
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>(); 
 		tupleList.add(oneInt);
@@ -118,8 +122,9 @@ public class CVC3TranslateReadWriteTest {
 		SymbolicExpression s3 = universe.tupleRead(s2, universe.intObject(1));
 		
 		Expr expr1 = cvcProver.translate(s3);
-		Expr expr2 = cvcProver.translate(ten);
+		
 		Expr expr3 = vc.eqExpr(expr2, expr1);
+		
 		assertEquals(QueryResult.VALID, vc.query(expr3));
 	}
 	
@@ -171,6 +176,8 @@ public class CVC3TranslateReadWriteTest {
 	
 	@Test
 	public void testTranslateArrayWriteComplete(){
+
+		Expr zeroModifier = cvcProver.translate(zero);
 		
 		List<SymbolicExpression> array = new ArrayList<SymbolicExpression>(3);
 		array.add(0, two);
@@ -181,10 +188,10 @@ public class CVC3TranslateReadWriteTest {
 		SymbolicExpression translateArray = expressionFactory
 				.expression(SymbolicOperator.ARRAY_WRITE, newArray.type(), 
 						newArray, universe.integer(0), zero);
-		Expr expr = cvcProver.translate(translateArray);
 		
+		Expr expr = cvcProver.translate(translateArray);
 		Expr expr2 = cvcProver.translate(newArray);
-		Expr zeroModifier = cvcProver.translate(zero);
+
 		Expr expected = vc.writeExpr(expr2, zeroModifier, zeroModifier);
 		
 		assertEquals(expected, expr);
@@ -193,6 +200,8 @@ public class CVC3TranslateReadWriteTest {
 	
 	@Test
 	public void testTranslateArrayWriteIncomplete(){
+		
+		Expr expr2 = cvcProver.translate(five);
 		
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
 		SymbolicExpression a = universe.symbolicConstant(universe
@@ -204,8 +213,9 @@ public class CVC3TranslateReadWriteTest {
 		SymbolicExpression s2 = expressionFactory
 				.expression(SymbolicOperator.ARRAY_READ, a.type(), 
 						s1, twoInt);
+		
 		Expr expr1 = cvcProver.translate(s2);
-		Expr expr2 = cvcProver.translate(five);
+		
 		Expr equation1 = vc.eqExpr(expr1, expr2);
 		
 		assertEquals(QueryResult.VALID, vc.query(equation1));
@@ -230,16 +240,22 @@ public class CVC3TranslateReadWriteTest {
 		
 		SymbolicExpression regularArray = universe.array(realType, array);
 		SymbolicExpression s1 = universe.denseArrayWrite(regularArray, newArray);
-		Expr cvcArray = cvcProver.translate(s1);
 		
+		Expr cvcArray = cvcProver.translate(s1);
 		Expr cvcArray2 = cvcProver.translate(regularArray);
+		
 		Expr cvcArray3 = vc.writeExpr(cvcArray2, zeroExpr, fiveExpr);
 		Expr expected = vc.writeExpr(cvcArray3, oneExpr, tenExpr);
+		
 		assertEquals(expected, cvcArray);
 	}
 	
 	@Test
 	public void translateDenseArrayWriteIncomplete(){
+		
+		Expr expr4 = cvcProver.translate(five);
+		Expr expr5 = cvcProver.translate(ten);
+		Expr expr6 = cvcProver.translate(two);
 		
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
 		SymbolicExpression a = universe.symbolicConstant(universe
@@ -258,9 +274,6 @@ public class CVC3TranslateReadWriteTest {
 		Expr expr1 = cvcProver.translate(s2);
 		Expr expr2 = cvcProver.translate(s3);
 		Expr expr3 = cvcProver.translate(s4);
-		Expr expr4 = cvcProver.translate(five);
-		Expr expr5 = cvcProver.translate(ten);
-		Expr expr6 = cvcProver.translate(two);
 		
 		Expr equation1 = vc.eqExpr(expr1, expr4);
 		Expr equation2 = vc.eqExpr(expr2, expr5);
