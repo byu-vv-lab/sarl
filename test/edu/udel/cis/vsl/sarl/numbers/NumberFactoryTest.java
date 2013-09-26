@@ -240,8 +240,38 @@ public class NumberFactoryTest {
 		int i = factory.compare(g, h);
 		int expectedI = 1;
 		assertEquals(expectedI, i);
-		
-		
+	}
+	
+	@Test
+	public void ratNumDenominator(){
+		RationalNumber a = factory.rational(bigTen, bigThree);
+		IntegerNumber b = factory.denominator(a);
+		IntegerNumber expectedB = factory.integer(bigThree);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void ratNumDivide(){
+		RationalNumber a = factory.rational(bigTen, bigThree);
+		RationalNumber b = factory.rational(bigTwo, bigOne);
+		RationalNumber c = factory.divide(a, b);
+		RationalNumber expectedC = factory.rational(bigFive, bigThree);
+		assertEquals(expectedC, c);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void intNumModNegArg(){
+		IntegerNumber a = factory.integer(bigTen);
+		IntegerNumber b = factory.integer(bigNegativeOne);
+		factory.mod(a, b);		
+	}
+	@Test
+	public void intNumMod(){
+		IntegerNumber a = factory.integer(bigTen);
+		IntegerNumber b = factory.integer(bigThree);
+		IntegerNumber c = factory.mod(a, b);
+		IntegerNumber expectedC = factory.integer(bigOne);
+		assertEquals(expectedC, c);
 	}
 	
 	
