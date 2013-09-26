@@ -20,6 +20,7 @@ public class ObjectBenchmark {
 		totalTime = ((double) (stopTime - startTime)) / 1000000000.0;
 		System.out.println("Time (s): " + totalTime);
 		
+		// Benchmark for objects()
 		System.out.println("\nBenchmark for 'objects()");
 		universe.objects();
 		stopTime = System.nanoTime();
