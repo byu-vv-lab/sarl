@@ -18,6 +18,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -82,11 +83,12 @@ public class IdealSimplifierTest {
 	
 	private static SymbolicType realType;
 	
-	private static NumericExpression zero,two,five, twenty_five, neg_twenty_five,eq;
+	private static NumericExpression eq, zero,two,five, twenty_five, neg_twenty_five,two_hund;
 	
 	private static IdealSimplifier idealSimplifier;
 	
 	private static SymbolicConstant symConstant;
+
 	
 	
 	//private static SymbolicType _booleanType;
@@ -96,6 +98,7 @@ public class IdealSimplifierTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		CommonObjects.setUp();
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
 		idealFactory = (IdealFactory) system.expressionFactory().numericFactory();
@@ -114,6 +117,7 @@ public class IdealSimplifierTest {
 		two = preUniv.rational(2); //2.0
 		five = preUniv.rational(5); // 5.0
 		twenty_five = preUniv.rational(25); //25.0
+		two_hund = preUniv.rational(200);
 		neg_twenty_five = preUniv.rational(-25);
 		xeq5 = preUniv.equals(x, five);
 		eq = preUniv.multiply(two, preUniv.multiply(x, x));
@@ -134,7 +138,7 @@ public class IdealSimplifierTest {
 	}
 	
 	@Test
-	public void getFullContextText(){
+	public void getFullContextTextTest(){
 		
 		idealSimplifier = idealSimplifierFactory.newSimplifier(xeq5);
 		BooleanExpression boolXEq5 = idealSimplifier.getFullContext();
@@ -145,26 +149,39 @@ public class IdealSimplifierTest {
 		BooleanExpression boolSimpEq1 = simpEq1.getFullContext();
 		assertEquals(preUniv.lessThanEquals(zero, preUniv.add(neg_twenty_five, preUniv.multiply(x, x))), boolSimpEq1);
 		
-		/*NumericExpression xSqr = preUniv.multiply(xInt, xInt);
-		NumericExpression two_xSqr = preUniv.multiply(xSqr, int2);*/
+		
 		boolArg2 = preUniv.lessThanEquals(two, preUniv.multiply(x,x));
 		IdealSimplifier simpEq2 =idealSimplifierFactory.newSimplifier(boolArg2);
 		BooleanExpression boolSimpEq2 = simpEq2.getFullContext();
 		assertEquals(boolArg2, boolSimpEq2);
-		 // x^2 * y
-
-		
-		/*//SymbolicExpression three_xy = preUniv.multiply(int3,xy);
-		
-		//boolArg2 = preUniv.equals(three_xy, symbExpr_xpy);
-		//assumption = boolExprFact.and(boolArg1, boolArg2);
-		*/
-		
-		
 	
 	}
+	
+	
+	
+	/*@Test
+	public void getFullReducedQuadTest(){
+		boolArg1 = preUniv.lessThanEquals(twenty_five, xpyInt);
+		boolArg2 = preUniv.lessThan(five, yInt);
+		
+		//IdealSimplifier idealSimp1 = idealSimplifierFactory.newSimplifier(boolArg1);
+		//IdealSimplifier idealSimp2 = idealSimplifierFactory.newSimplifier(boolArg2);
+		
+		
+		//BooleanExpression boolExpr1 = idealSimp1.getReducedContext();
+		//BooleanExpression boolExpr2 = idealSimp2.getReducedContext();
+		
+		assumption = preUniv.equals(boolArg1, boolArg2);
+		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
+		BooleanExpression boolExpr = idealSimplifier.getFullContext();
+		
+		assertEquals(boolArg1,boolExpr);
+		
+	}*/
+	
 	@Test
-	public void getReducedContext(){
+	public void getReducedContextTest(){
+		CommonObjects.setUp();
 		idealSimplifier = idealSimplifierFactory.newSimplifier(trueExpr);
 		BooleanExpression boolTrue = idealSimplifier.getReducedContext();
 		assertEquals(trueExpr,boolTrue);
@@ -176,4 +193,17 @@ public class IdealSimplifierTest {
 		
 		
 	}
+	
+/*	@Test
+	public void assumptionAsIntervalTest(){
+		boolArg1 = preUniv.lessThanEquals(twenty_five, preUniv.multiply(x, x));
+		boolArg2 = preUniv.lessThan(x, two_hund);
+		assumption = preUniv.and(boolArg1, boolArg2);
+		
+		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
+		Interval interval = idealSimplifier.assumptionAsInterval(xsqd);
+		
+		assertEquals(x,interval);
+		
+	}*/
 }
