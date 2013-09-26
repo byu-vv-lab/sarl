@@ -112,7 +112,7 @@ public class UnionBenchmark {
 			long startTime, stopTime;
 			double totalTime = 0.0;
 			
-			// Perform currSize unionInject() operations to show scalability
+			// Create each union, but only time the unionTest() time
 			for(int i = 0; i < currSize; ++i){
 					SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(i));
 					SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
