@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,31 +11,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
-import cvc3.QueryResult;
 import cvc3.Type;
 import cvc3.ValidityChecker;
-import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
-import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -55,32 +32,11 @@ public class CVC3TheoremProverTest {
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
-	private static ExpressionFactory expressionFactory = factorySystem
-			.expressionFactory();
-	// types
-	private static SymbolicRealType realType = universe.realType();
-	private static SymbolicIntegerType intType = universe.integerType();
-	private static SymbolicType boolType = universe.booleanType();
-	private static SymbolicType intArrayType = universe.arrayType(intType);
 	// expressions
-	private static NumericExpression ten = universe.rational(10);
-	private static NumericExpression five = universe.rational(5);
-	private static NumericExpression two = universe.rational(2);
-	private static NumericExpression one = universe.rational(1);
-	private static NumericExpression zero = universe.zeroReal();
-	private static NumericExpression oneInt = universe.integer(1);
-	private static NumericExpression twoInt = universe.integer(2);
-	private static NumericExpression fiveInt = universe.integer(5);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	private static BooleanExpression booleanExprFalse = universe
 			.falseExpression();
-	// constants
-	private static SymbolicConstant e = universe
-			.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe
-			.symbolicConstant(universe.stringObject("f"), intType);
-
 	
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
@@ -157,6 +113,7 @@ public class CVC3TheoremProverTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testNewCVCName() {
 		//use expression factory to get APPLY expression in order to use translate to hit switch case
 		//in order to publicly get to translateFunction which uses newCvcName

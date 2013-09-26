@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +18,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -33,42 +30,27 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3TranslateMathTest {
 	// Static fields: instantiated once and used for all tests...
-	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
 	private static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-	// objects
-	private static StringObject xString = universe.stringObject("x");
 	// types
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();
-	private static SymbolicType boolType = universe.booleanType();
-	private static SymbolicType intArrayType = universe.arrayType(intType);
 	// expressions
 	private static NumericExpression ten = universe.rational(10);
 	private static NumericExpression five = universe.rational(5);
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
-	private static NumericExpression zero = universe.zeroReal();
-	private static NumericExpression zeroInt = universe.zeroInt();
-	private static NumericExpression oneInt = universe.integer(1);
-	private static NumericExpression twoInt = universe.integer(2);
-	private static NumericExpression fiveInt = universe.integer(5);
-	private static NumericExpression tenInt = universe.integer(10);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	private static BooleanExpression booleanExprFalse = universe
-			.falseExpression();
 	// constants
 	private static SymbolicConstant e = universe
 			.symbolicConstant(universe.stringObject("e"), intType);
 	private static SymbolicConstant f = universe
 			.symbolicConstant(universe.stringObject("f"), intType);
-	private static SymbolicConstant xReal = universe
-			.symbolicConstant(xString, realType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
