@@ -40,7 +40,7 @@ public class NumberFactoryTest {
 	private static BigInteger bigZero = new BigInteger("0"); 
 	
 	private static BigInteger bigTwenty = new BigInteger("20");
-
+	private static BigInteger bigNegativeThree = new BigInteger("-3");
 	private static BigInteger bigThree = new BigInteger("3");
 	
 	@BeforeClass
@@ -187,6 +187,32 @@ public class NumberFactoryTest {
 		RealRational a = (RealRational) factory.rational(bigThirty, bigNegativeOne);
 		RealRational expectedA = (RealRational) factory.rational(bigNegativeThirty, bigOne);
 		assertEquals(expectedA, a);
+	}
+	
+	@Test
+	public void realRatIsIntegral(){
+		RealRational a = (RealRational) factory.rational(bigThirty, bigOne);
+		boolean expected = true;
+		boolean actual = factory.isIntegral(a); 
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void ceilingRatNumNegNum(){
+		RationalNumber a = factory.rational(bigNegativeThree, bigOne);
+		IntegerNumber b = factory.ceil(a);
+		IntegerNumber expectedB = factory.integer(bigNegativeThree);
+		assertEquals(expectedB, b);
+		
+	}
+	
+	@Test
+	public void ratNumCompare(){
+		RationalNumber a = factory.rational(bigThirty, bigTen);
+		RationalNumber b = factory.rational(bigTwenty, bigTen);
+		int c = factory.compare(a, b);
+		int expectedC = 1;
+		assertEquals(expectedC, c);
 	}
 	
 	
