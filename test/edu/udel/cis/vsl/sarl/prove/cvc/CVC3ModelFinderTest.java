@@ -14,9 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
-import cvc3.ExprMut;
-import cvc3.Op;
-import cvc3.QueryResult;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
@@ -33,18 +30,24 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class CVC3ModelFinderTest {
 	
@@ -153,7 +156,7 @@ public class CVC3ModelFinderTest {
 	}
 	
 	@Test
-	public void testCVC3ModelFinderApply() {
+	public void testCVC3ModelFinderTuple() {
 		NumericExpression sevenInt = universe.integer(7);
 		NumericExpression fourInt = universe.integer(4);
 		NumericExpression eightInt = universe.integer(8);
@@ -228,6 +231,69 @@ public class CVC3ModelFinderTest {
 		
 		ResultType resultType = result.getResultType();
 		assertEquals(ResultType.NO, resultType);
+	}
+	
+	@Test
+	public void testCVC3ModelFinderTestDivideByOne() {
+		//Create the assumption y = 1.
+		StringObject strY = universe.stringObject("y");
+		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,universe.integerType());
+		BooleanExpression assumption =universe.equals(symConstYInt,universe.integer(1)); 
+		//Give the prover the assumption that y = 1.
+		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
+				.newProver(assumption);
+		vc = cvcProverYIs0.validityChecker();
+		
+		StringObject strX = universe.stringObject("x");
+		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,universe.integerType());
+		//Any X divided by y should return x.
+		SymbolicExpression xDivideByY = expressionFactory.expression(
+				SymbolicOperator.DIVIDE, universe.integerType(), symConstXInt,symConstYInt);
+		
+		BooleanExpression predicate = universe.equals(xDivideByY, symConstXInt);
+		ValidityResult result = cvcProver.validOrModel(predicate);
+
+		ResultType resultType = result.getResultType();
+		assertEquals(ResultType.NO, resultType);
+	}
+	
+	@Test
+	public void testCVC3ModelFinderApplyBoolean() {
+		CollectionFactory collectionFactory= factorySystem.collectionFactory();
+		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
+		NumberFactory numFactory = factorySystem.numberFactory();
+		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
+		NumericExpressionFactory numericFactory = factorySystem.numericFactory();
+		ObjectFactory objectFactory = factorySystem.objectFactory();
+		
+		SymbolicObject[] args = new SymbolicObject[5];
+		args[1] = objectFactory.booleanObject(true);
+		args[2] = objectFactory.booleanObject(true);
+		args[3] = objectFactory.booleanObject(false);
+		args[4] = objectFactory.booleanObject(true);
+		args[5] = objectFactory.booleanObject(true);
+		
+		SymbolicExpression applyExpr = expressionFactory.expression(
+				SymbolicOperator.APPLY,typeFactory.booleanType(),args);
+	}
+	
+
+	@Test
+	public void testCVC3ModelFinderApplyReferenced() {
+		CollectionFactory collectionFactory= factorySystem.collectionFactory();
+		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
+		NumberFactory numFactory = factorySystem.numberFactory();
+		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
+		NumericExpressionFactory numericFactory = factorySystem.numericFactory();
+		ObjectFactory objectFactory = factorySystem.objectFactory();
+		
+		SymbolicObject[] args = new SymbolicObject[3];
+		args[0] = objectFactory.stringObject("x");
+		args[1] = objectFactory.stringObject("y");
+		args[2] = objectFactory.stringObject("z");
+		
+		SymbolicExpression applyExpr = expressionFactory.expression(
+				SymbolicOperator.APPLY,universe.referenceType(),args);
 	}
 }
 
