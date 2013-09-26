@@ -51,9 +51,9 @@ public class NumberFactoryTest {
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTen);
 		IntegerNumber c = factory.multiply(a, b);
-		IntegerNumber expected = factory.integer(new BigInteger("3"));
+		IntegerNumber expected = factory.integer(new BigInteger("300"));
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
 	}
 
@@ -78,10 +78,11 @@ public class NumberFactoryTest {
 		RationalNumber expected = factory.rational(new BigInteger("152"),
 				new BigInteger("93"));
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
 	}
 	
+	@Test
 	public void rationalCeiling() {
 		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
 		RationalNumber b = factory.rational(bigTen, bigOne);
@@ -89,23 +90,24 @@ public class NumberFactoryTest {
 		IntegerNumber d = factory.ceil(b);
 		IntegerNumber expectedC = factory.integer(bigOne);
 		IntegerNumber expectedD = factory.integer(bigTen);
-		out.println(c);
-		out.println(d);
+		//out.println(c);
+		//out.println(d);
 		assertEquals(expectedC, c);
 		assertEquals(expectedD, d);
 	} 
 	
+	@Test
 	public void GCD() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTwenty);
 		IntegerNumber c = factory.gcd(a, b);
 		IntegerNumber expected = factory.integer(new BigInteger("10"));
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
 	} 
 	
-	
+	@Test
 	public void LCM() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigThirtyOne);
@@ -113,38 +115,40 @@ public class NumberFactoryTest {
 		IntegerNumber expected = factory.integer(new BigInteger("930")); 
 		
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
 	} 
 	
+	@Test
 	public void subInteger() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTen);
 		IntegerNumber c = factory.subtract(a, b);
 		IntegerNumber  expected = factory.integer(new BigInteger("20"));
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
 	} 
 	
+	@Test
 	public void IntegerNumberDecrement() { 
 		IntegerNumber a = factory.integer(bigThirty); 
 		IntegerNumber c = factory.decrement(a); 
 		IntegerNumber expected = factory.integer(new BigInteger("29")); 
 		
-		out.println(c); 
+		//out.println(c); 
 		assertEquals(expected, c);
 	} 
 	
+	@Test
 	public void IntegerNumberIncrement() { 
 		IntegerNumber a = factory.integer(bigThirty); 
-		IntegerNumber c = factory.decrement(a); 
-		IntegerNumber expected = factory.integer(new BigInteger("31")); 
+		IntegerNumber c = factory.increment(a); 
+		IntegerNumber expected = factory.integer(new BigInteger("31")); 		
 		
-		out.println(c); 
+		//out.println(c); 
 		assertEquals(expected, c);
-	}  
-	
+	}  	
 	
 	@Test
 	public void subRat() {
@@ -154,9 +158,7 @@ public class NumberFactoryTest {
 		RationalNumber expected = factory.rational(new BigInteger("11"),
 				new BigInteger("6"));
 
-		out.println(c);
+		//out.println(c);
 		assertEquals(expected, c);
-	}
-	
-	
+	}		
 }
