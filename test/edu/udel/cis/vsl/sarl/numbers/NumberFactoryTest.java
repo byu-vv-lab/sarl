@@ -312,6 +312,7 @@ public class NumberFactoryTest {
 		RationalNumber a = factory.rational(bigTen, bigThree);
 		factory.integerValue(a);
 	}
+	
 	@Test
 	public void ratNumIntValue(){
 		RationalNumber a = factory.rational(bigTen, bigOne);
@@ -320,7 +321,52 @@ public class NumberFactoryTest {
 		assertEquals(expectedB, b);
 	}
 	
+	@Test
+	public void ratNumMultiply(){
+		RationalNumber a = factory.rational(bigTen, bigOne);
+		RationalNumber b = factory.rational(bigTwo, bigOne);
+		RationalNumber expectedC = factory.rational(bigTwenty, bigOne);
+		RationalNumber c = factory.multiply(a, b);
+		assertEquals(expectedC, c);
+	}
+	@Test
+	public void intNegate(){
+		IntegerNumber a = factory.integer(bigOne);
+		IntegerNumber expectedB = factory.integer(bigNegativeOne);
+		IntegerNumber b = factory.negate(a);
+		assertEquals(expectedB, b);
+	}
+	@Test
+	public void stringToIntOrRat(){
+		String a = "30";
+		String b = "0.1";
+		Number expectedC = factory.integer(bigThirty);
+		Number c = factory.number(a);
+		Number expectedD = factory.rational(bigOne, bigTen);
+		Number d = factory.number(b);
+	}
 	
+	@Test
+	public void ratNumNumerator(){
+		RationalNumber a = factory.rational(bigTen, bigThirty);
+		IntegerNumber expectedB = factory.integer(bigTen);
+		IntegerNumber b = factory.numerator(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void testOneIntMethod(){
+		IntegerNumber a = factory.oneInteger();
+		IntegerNumber b = factory.integer(bigOne);
+		assertEquals(b, a);
+	}
+	
+	@Test
+	public void testOneRatMethod(){
+		RationalNumber a = factory.oneRational();
+		RationalNumber b = factory.rational(bigOne, bigOne);
+		assertEquals(b, a);
+	}
 	
 	
 }
