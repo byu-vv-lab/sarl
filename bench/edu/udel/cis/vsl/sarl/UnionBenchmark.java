@@ -33,7 +33,7 @@ public class UnionBenchmark {
 	public static SymbolicUnionType myUnion;
 					
 	/**
-	 * Runs the benchmarks for unions: unionInjectBenchmark()
+	 * Runs the benchmarks for unions: unionInjectBenchmark(), unionTestBenchmark()
 	 * 
 	 * @param args
 	 *            ignored
@@ -46,6 +46,10 @@ public class UnionBenchmark {
 		
 	}
 	
+	/**
+	 * Runs many unionInject() operations on large scale unions (2^20) and times them
+	 * as well as a single unionInject() operation
+	 */
 	public static void unionInjectBenchmark(){
 		
 		// Maximum size to benchmark, starts at 16 and doubles until this ceiling
@@ -88,6 +92,9 @@ public class UnionBenchmark {
 		}
 	}
 	
+	/**
+	 * Creates large sized (2^20) unions and runs unionTest() on each type within the union
+	 */
 	public static void unionTestBenchmark(){
 		
 		// Maximum size to benchmark, starts at 16 and doubles until this ceiling
