@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,7 +35,6 @@ public class ArrayTests {
 	// SymbolicTypes
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
-
 	private static SymbolicType intArrayType;
 	private static SymbolicType doubleIntArrayType;
 	// SymbolicExpressions
@@ -64,25 +60,13 @@ public class ArrayTests {
 		expressionFactory = system.expressionFactory();
 		nullExpression = expressionFactory.nullExpression();
 	}
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 
 	/**
 	 * Main function that tests for successful completion of denseArrayWrite()
 	 * Written by Jordan Saints on 9/16/13
 	 */
 	@Test
-	public void testDenseArrayWrite_success() {
+	public void testDenseArrayWriteSuccess() {
 		// The SymbolicExpression, of type ARRAY(int) (array of ints), that we will be writing to
 		SymbolicExpression intArrayTypeExpression = universe.symbolicConstant(universe.stringObject("intArrayTypeExpression"), intArrayType);
 		
@@ -122,7 +106,7 @@ public class ArrayTests {
 	 * Written by Jordan Saints on 9/16/13
 	 */
 	@Test(expected=SARLException.class)
-	public void testDenseArrayWrite_param1Exception() {
+	public void testDenseArrayWriteParam1Exception() {
 		// Create SymbolicExpression of type INTEGER (no array at all)
 		SymbolicExpression integerTypeExpression = universe.symbolicConstant(universe.stringObject("integerTypeExpression"), integerType);
 		
@@ -139,7 +123,7 @@ public class ArrayTests {
 	 * Written by Jordan Saints on 9/16/13
 	 */
 	@Test(expected=SARLException.class)
-	public void testDenseArrayWrite_param2Exception() {
+	public void testDenseArrayWriteParam2Exception() {
 		// Create SymbolicExpression of type ARRAY(int[]) (an array of int arrays) to fill with new values
 		SymbolicExpression doubleIntArrayTypeExpression = universe.symbolicConstant(universe.stringObject("doubleIntArrayTypeExpression"), doubleIntArrayType);
 		
