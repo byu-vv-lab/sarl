@@ -5,6 +5,14 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
+/**
+ * @author blutuu
+ * 
+ * Returns the amount of time it takes to return the number of canonic objects 
+ * within the universe. Testing is between 'objects()' and 'numObjects()'.
+ * 
+ */
+
 public class ObjectBenchmark {
 	static FactorySystem system = PreUniverses.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses.newPreUniverse(system);
