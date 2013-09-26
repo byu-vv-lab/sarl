@@ -24,6 +24,7 @@ import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -270,6 +271,7 @@ public class IdealTest {
 	}
 
 	@Test
+	@Ignore
 	public void bigPower() {
 		int exponent = 100;
 		IntObject n = objectFactory.intObject(exponent);
@@ -785,7 +787,17 @@ public class IdealTest {
 		Constant eleven = commonIdealFactory.intConstant(11);
 		assertEquals(subEleven, eleven);
 	}
-	
+	@Test
+	public void nonneg(){
+		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
+		Monomial factorization = idealFactory.monomial(constFour, (Monic) x);
+		Polynomial numeratorIsFive = commonIdealFactory.polynomial(termMap, factorization);
+		SymbolicMap<Monic, Monomial> map01 = numeratorIsFive.termMap(commonIdealFactory);		
+		Polynomial poly = commonIdealFactory.polynomial(map01, factorization);
+		BooleanExpression bool = commonIdealFactory.isNonnegative(poly);
+		out.println("bool="  +poly);
+		assertEquals(bool, commonIdealFactory.booleanFactory().trueExpr());
+	}
 	@Test
 	// Non-ASCII characters replaced with ?????? below
 	//(21x^3 - 35x^2) / (7x) -------> 3x^2 ????????? 5x
