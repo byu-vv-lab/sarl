@@ -46,6 +46,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+@SuppressWarnings("all")
 public class CommonPreUniverseTest {
 
 	// Universe
@@ -420,20 +421,44 @@ public class CommonPreUniverseTest {
 		StringObject name = universe.stringObject("name");
 		SymbolicType type = universe.integerType(); 
 		SymbolicConstant index = universe.symbolicConstant(name, type);
-		NumericExpression low, high;
+		NumericExpression low, high, low2, high2;
 		low = universe.integer(999);
 		high = universe.integer(2000);
+		low2 = universe.integer(1200);
+		high2 = universe.integer(2350);
+		SymbolicConstant nullConstant = 
+				universe.symbolicConstant(
+						universe.stringObject("null"), integerType);
+		BooleanExpression falseExp = universe.bool(false);
 		BooleanExpression trueExp = universe.bool(true);
 		
-		BooleanExpression testResult = 
-				universe.forallInt((NumericSymbolicConstant)index, low, high, trueExp);
+		BooleanExpression testResult1 = 
+				universe.forallInt((NumericSymbolicConstant)index, 
+						low, high, trueExp);
+		BooleanExpression testResult2 = 
+				universe.forallInt((NumericSymbolicConstant)index, 
+						(NumericExpression)nullConstant, high, trueExp);
+		BooleanExpression testResult3 = 
+				universe.forallInt((NumericSymbolicConstant)index, 
+						low, (NumericExpression)nullConstant, trueExp);
 		
 		
 		assertEquals(universe.forallInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("name"), integerType),
 				universe.integer(999), universe.integer(2000), 
-				universe.bool(true)), testResult);
+				universe.bool(true)), testResult1);
+		assertEquals(universe.forallInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("name"), integerType),
+						(NumericExpression)nullConstant, 
+						universe.integer(2000), 
+						universe.bool(true)), testResult2);
+		assertEquals(universe.forallInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("name"), integerType),
+						universe.integer(999), (NumericExpression)nullConstant, 
+						universe.bool(true)), testResult3);
 	}
 
 	@Test
@@ -447,6 +472,9 @@ public class CommonPreUniverseTest {
 		low1 = universe.integer(1350);
 		high1 = universe.integer(1200);
 		low2 = universe.integer(1200);
+		SymbolicConstant nullConstant = 
+				universe.symbolicConstant(
+						universe.stringObject("null"), integerType);
 		high2 = universe.integer(2350);
 		BooleanExpression falseExp = universe.bool(false);
 		BooleanExpression trueExp = universe.bool(true);
@@ -457,18 +485,35 @@ public class CommonPreUniverseTest {
 		BooleanExpression testResult2 = 
 				universe.existsInt((NumericSymbolicConstant)index,
 						low2, high2, trueExp);
+		BooleanExpression testResult3 = 
+				universe.existsInt((NumericSymbolicConstant)index, 
+						(NumericExpression)nullConstant, 
+						high1, falseExp);
+		BooleanExpression testResult4 = 
+				universe.existsInt((NumericSymbolicConstant)index, 
+						low2, (NumericExpression)nullConstant, trueExp);
 		
 		
 		assertEquals(universe.existsInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("branch1"), integerType),
-				universe.integer(1350), universe.integer(1200), 
-				universe.bool(false)), testResult1);
+						universe.integer(1350), universe.integer(1200), 
+						universe.bool(false)), testResult1);
 		assertEquals(universe.existsInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("branch1"), integerType),
-				universe.integer(1200), universe.integer(2350), 
-				universe.bool(true)), testResult2);
+						universe.integer(1200), universe.integer(2350), 
+						universe.bool(true)), testResult2);
+		assertEquals(universe.existsInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("branch1"), integerType),
+						(NumericExpression)nullConstant, universe.integer(1200), 
+						universe.bool(false)), testResult3);
+		assertEquals(universe.existsInt(
+				(NumericSymbolicConstant) universe.symbolicConstant(
+						universe.stringObject("branch1"), integerType),
+						universe.integer(1200), (NumericExpression)nullConstant, 
+						universe.bool(true)), testResult4);
 	}
 
 	@Test
@@ -1646,7 +1691,8 @@ public class CommonPreUniverseTest {
 		SymbolicExpression array = null,resultArray,symbolicExpr1,symbolicExpr2,symbolicExpr3;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
-		SymbolicType Integer,Bool,Real;
+		SymbolicType Integer,Bool,Real;// For testing nullExpression() method
+
 		Integer = universe.integerType();
 		Bool = universe.booleanType();
 		Real = universe.realType();
