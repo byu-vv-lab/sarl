@@ -26,36 +26,45 @@ public class UnionBenchmark {
 
 	public final static SymbolicType realType = universe.realType();
 	public final static SymbolicArrayType realArray = universe.arrayType(realType);
+	public static SymbolicArrayType unionArray;
 	
 	public final static ExpressionFactory expressionFactory = system.expressionFactory();
 	
 	public static SymbolicUnionType myUnion;
 					
 	/**
-	 * Runs the test, prints the total time, takes no arguments.
+	 * Runs the benchmarks for unions: unionInjectBenchmark()
 	 * 
 	 * @param args
 	 *            ignored
 	 */
 	public static void main(String[] args) {
 		
+		unionInjectBenchmark();
+		
+		unionTestBenchmark();
+		
+	}
+	
+	public static void unionInjectBenchmark(){
+		
 		// Maximum size to benchmark, starts at 16 and doubles until this ceiling
 		int MAXSIZE = (int)Math.pow(2,20); // 1M
-		
+				
 		for(int currSize = 16; currSize <= MAXSIZE; currSize *= 2){
-		
-			int ARRAYSIZE = currSize;
+				
 			LinkedList<SymbolicType> symbolicTypeList = new LinkedList<SymbolicType>();
-			for(int i = 0; i < ARRAYSIZE; ++i){
+			for(int i = 0; i < currSize; ++i){
 				symbolicTypeList.push(universe.arrayType(realType, universe.integer(i)));
 			}
-			
+					
 			myUnion = universe.unionType(universe.stringObject("myUnion"), symbolicTypeList);
 		
 			long startTime = System.nanoTime(), stopTime;
 			double totalTime;
 			
-			for(int i = 0; i < ARRAYSIZE; ++i){
+			// Perform currSize unionInject() operations to show scalability
+			for(int i = 0; i < currSize; ++i){
 					SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(i));
 					SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
 					@SuppressWarnings("unused")
@@ -64,7 +73,51 @@ public class UnionBenchmark {
 			
 			stopTime = System.nanoTime();
 			totalTime = ((double) (stopTime - startTime)) / 1000000000.0;
-			System.out.println("Time (s): " + totalTime + "  for size: " + ARRAYSIZE);
+			//System.out.println("Time (s): " + totalTime + "  for size: " + ARRAYSIZE);
+			
+			startTime = System.nanoTime();
+			
+			// Perform 1 unionInject() operation
+			SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(currSize-1));
+			SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
+			@SuppressWarnings("unused")
+			SymbolicExpression tempInject = universe.unionInject(myUnion, universe.intObject(currSize-1), tempExpr);
+			
+			stopTime = System.nanoTime();
+			totalTime = ((double) (stopTime - startTime)) / 1000000000.0;
+		}
+	}
+	
+	public static void unionTestBenchmark(){
+		
+		// Maximum size to benchmark, starts at 16 and doubles until this ceiling
+		int MAXSIZE = (int)Math.pow(2,20); // 1M
+				
+		for(int currSize = 16; currSize <= MAXSIZE; currSize *= 2){
+				
+			LinkedList<SymbolicType> symbolicTypeList = new LinkedList<SymbolicType>();
+			for(int i = 0; i < currSize; ++i){
+				symbolicTypeList.push(universe.arrayType(realType, universe.integer(i)));
+			}
+					
+			myUnion = universe.unionType(universe.stringObject("myUnion"), symbolicTypeList);
+		
+			long startTime, stopTime;
+			double totalTime = 0.0;
+			
+			// Perform currSize unionInject() operations to show scalability
+			for(int i = 0; i < currSize; ++i){
+					SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(i));
+					SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
+					@SuppressWarnings("unused")
+					SymbolicExpression tempInject = universe.unionInject(myUnion, universe.intObject(i), tempExpr);
+					startTime = System.nanoTime();
+					universe.unionTest(universe.intObject(i), tempExpr);
+					stopTime = System.nanoTime();
+					totalTime += (((double)(stopTime - startTime)) / 100000000.0);
+			}
+			
+			//System.out.println("Time (s): " + totalTime + "  for size: " + currSize + " unionTest() operations");			
 		}
 	}
 
