@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
-import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -26,20 +24,15 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -326,7 +319,7 @@ public class CVC3ModelFinderTest {
 				SymbolicOperator.APPLY, universe.referenceType(), args);
 	}
 
-	@Test(expected = SARLInternalException.class)
+	@Test
 	public void testAssignApplyElseStatement() {
 		SymbolicType arrayIntType = universe.arrayType(universe.integerType());
 		SymbolicExpression a = universe.symbolicConstant(
@@ -341,5 +334,61 @@ public class CVC3ModelFinderTest {
 		ModelResult model = (ModelResult) result;
 		
 		System.out.println(model.getModel());
+	}
+	
+	@Test
+	public void testAssignArrayRealType() {
+		SymbolicType arrayRealType = universe.arrayType(universe.realType());
+		SymbolicExpression a = universe.symbolicConstant(
+				universe.stringObject("a"), arrayRealType);
+		NumericExpression one = universe.integer(1);
+		NumericExpression two = universe.rational(2);
+		BooleanExpression predicate = universe.equals(
+				universe.arrayRead(a, one), two);
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		
+		assertEquals(ResultType.NO, result.getResultType());
+		ModelResult model = (ModelResult) result;
+		
+		System.out.println(model.getModel());
+	}
+	
+	@Test
+	public void testAssignTupleInt() {
+		
+		Expr one = cvcProver.translate(universe.integer(1));
+		Expr two = cvcProver.translate(universe.integer(2));
+		Expr three = cvcProver.translate(universe.integer(3));
+		
+		List<Expr> tuple = new ArrayList<Expr>();
+		tuple.add(one);
+		tuple.add(two);
+		tuple.add(three);
+
+		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
+		tuple.add(one);
+		tuple.add(two);
+		tuple.add(three);
+
+		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
+		tuple.add(one);
+		tuple.add(two);
+		tuple.add(three);
+
+		
+		Expr myTuple = vc.tupleExpr(tuple);
+		
+		SymbolicExpression sarlTuple = universe.tuple(universe.tupleType(
+				universe.stringObject("myFavoriteTuple"), tupleType), tupleList);
+		
+		SymbolicExpression sarlTupleRead = expressionFactory.expression(
+				SymbolicOperator.TUPLE_READ, sarlTuple.type(), sarlTuple, universe.intObject(0));
+		
+		BooleanExpression predicate = universe.equals(sarlTupleRead ,universe.integer(4));
+		
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		
+		assertEquals(ResultType.NO, result.getResultType());
+		
 	}
 }
