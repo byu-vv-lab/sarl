@@ -21,10 +21,13 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.expr.TupleComponentReference;
+import edu.udel.cis.vsl.sarl.IF.expr.UnionMemberReference;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -87,14 +90,19 @@ public class ExpressionTest {
 	private BooleanSymbolicConstant b;
 	private SymbolicConstant t;
 	private NumericExpression two; // real 2.0
+	private NumericExpression zero; // real 0
+	private NumericExpression one; // real 1.0
 	private NumericExpression three; // real 3.0
 	private NumericExpression twoInt; // int 2.0
 	private NumericExpression threeInt; // int 3.0
+	private NumericExpression oneInt; // int 2.0
+	private NumericExpression zeroInt; // int 3.0
 	private BooleanObject trueBoolObj; // True
 	private BooleanObject falseBoolObj; // False
 	private IntObject fiveIntObj; // 5
 	private IntObject zeroIntObj; // 0
 	private IntObject negIntObj; // -10
+	private IntObject oneIntObj; // 1
 	private NumericExpression xpy;
 	private NumericExpression xty;
 	private NumericExpression xpyDxty;
@@ -126,6 +134,7 @@ public class ExpressionTest {
 		trueBoolObj = sUniverse.booleanObject(true);
 		falseBoolObj = sUniverse.booleanObject(false);
 		fiveIntObj = sUniverse.intObject(5);
+		oneIntObj = sUniverse.intObject(1);
 		zeroIntObj = sUniverse.intObject(0);
 		negIntObj = sUniverse.intObject(-10);
 		realType = sUniverse.realType();
@@ -147,9 +156,13 @@ public class ExpressionTest {
 		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, integerType);
 		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
 		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
+		one = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(1));
+		zero = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(0));
 		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
 		twoInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(2));
 		threeInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(3));
+		zeroInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(0));
+		oneInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(1));
 		xpy = sUniverse.add(x,y);
 		xty = sUniverse.multiply(x,y);
 		xpyDxty = sUniverse.divide(xpy,xty);
@@ -188,39 +201,60 @@ public class ExpressionTest {
 		referenceFunctionType = of.canonic(stf.functionType(
 				referenceIndexSeq, referenceType));
 		
-	//---------------------------------------------------
-		
-		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
 		SymbolicSequence s,s1,s2;
 		s = cf.emptySequence();
 		s1= s.add(sUniverse.identityReference());
 		s2 = s1.add(sUniverse.integer(1));
+		
+	//---------------------------------------------------
+		
+		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
 		SymbolicExpression test =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test2, s2);
 		ArrayElementReference testRef = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
 		assertEquals(test,testRef);
 	//---------------------------------------------------
 		SymbolicExpression test3 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("TupleComponentRef"), referenceFunctionType));
 		SymbolicExpression testtuple =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test3, s2);
-		ArrayElementReference testTuple = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		assertEquals(test,testTuple);
+		TupleComponentReference testTuple = expressionFactory.tupleComponentReference((ReferenceExpression) s1.get(0), oneIntObj);
+		assertEquals(testtuple,testTuple);
 	//---------------------------------------------------
 		SymbolicExpression test5 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("UnionMemberRef"), referenceFunctionType));
 		SymbolicExpression testunion =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test5, s2);
-		ArrayElementReference testUnion = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		assertEquals(test,testUnion);
+		UnionMemberReference testUnion = expressionFactory.unionMemberReference((ReferenceExpression) s1.get(0), oneIntObj);
+		assertEquals(testunion,testUnion);
 	//---------------------------------------------------
 		SymbolicExpression test6 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("OffsetRef"), referenceFunctionType));
 		SymbolicExpression testoffset =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test6, s2);
-		ArrayElementReference testOffset = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		assertEquals(test,testOffset);
+		OffsetReference testOffset = expressionFactory.offsetReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(testoffset,testOffset);
   
 	}
-	@Ignore
+	
 	@Test
 	public void CommonExpressionFactoryConcreteTest(){
-		
+		SymbolicType referenceType1,referenceType2;
 
-  
+
+		referenceType1 = of.canonic(stf.tupleType(
+				of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
+
+		referenceType2 = of.canonic(stf.tupleType(
+				of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { booleanType })));
+
+
+
+		SymbolicSequence<NumericExpression> zeroSequence = of.canonic(cf
+				.singletonSequence(zeroInt));
+		SymbolicSequence<NumericExpression> oneSequence = of.canonic(cf
+				.singletonSequence(oneInt));
+		
+		SymbolicExpression test = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType1, zeroSequence);
+		SymbolicExpression test2 = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType2, oneSequence);
+		
+		assertEquals(test.toString(),"(Ref<int>)<0>");
+		assertEquals(test2.toString(),"(Ref<boolean>)<1>");
 	}
 	
 	
