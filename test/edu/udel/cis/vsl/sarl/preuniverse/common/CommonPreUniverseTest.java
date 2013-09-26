@@ -658,7 +658,7 @@ public class CommonPreUniverseTest {
 		three = universe.integer(3);
 		
 		//Reference Expressions
-		ReferenceExpression nullReference, offsetReference, identityReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
+		ReferenceExpression nullReference, offsetReference, identityReference, unionReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
 		nullReference = universe.nullReference();
 		identityReference = universe.identityReference();
 		arrayReference = universe.arrayElementReference(identityReference, zero);
@@ -666,6 +666,7 @@ public class CommonPreUniverseTest {
 		tupleInArrayReference = universe.arrayElementReference(identityReference, zero);
 		arrayInTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
 		offsetReference = universe.offsetReference(identityReference, zero);
+		unionReference = universe.unionMemberReference(identityReference, zeroInt);
 
 		//Tuple containing array
 		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleOfArrayType"), Arrays.asList(new SymbolicType[]{arrayType}));
@@ -682,10 +683,13 @@ public class CommonPreUniverseTest {
 		
 		//Two Dimensional Array
 		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
-
-		//Two Dimensional Array test
-		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
 		
+		//Union Type
+		SymbolicUnionType unionType = universe.unionType(universe.stringObject("UnionType"), Arrays.asList(new SymbolicType[]{integerType,realType}));
+
+		//Two Dimensional Array test and UnionTest
+		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
+		assertEquals(universe.referencedType(unionType, unionReference), integerType);
 		
 		
 		//ERROR TESTS
@@ -700,6 +704,8 @@ public class CommonPreUniverseTest {
 		try{universe.referencedType(twoDimensionalArrayType, arrayReference);}
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 		try{universe.referencedType(tupleOfArrayType, tupleInArrayReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		try{assertEquals(universe.referencedType(twoDimensionalArrayType, unionReference), arrayType);}
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 	}
 
