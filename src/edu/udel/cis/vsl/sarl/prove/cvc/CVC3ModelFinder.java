@@ -271,7 +271,7 @@ public class CVC3ModelFinder {
 			Op op = expr.getOp();
 			Expr opExpr = op.getExpr();
 			String opKind = opExpr.getKind();
-
+			
 			if (opKind.equals("_TUPLE_SELECT")) {
 				int index = opExpr.getChild(0).getRational().getInteger();
 				Expr argExpr = expr.getChild(0);
@@ -712,11 +712,6 @@ public class CVC3ModelFinder {
 	 * 		 1)), kind = _TUPLE_SELECT: Expr[1, type=INT,
 	 * 		 kind=_RATIONAL_EXPR]]: Expr[a, type=[INT, (ARRAY INT OF INT)],
 	 * 		 kind=_UCONST]], Expr[0, type=INT, kind=_RATIONAL_EXPR]]
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * </pre>
 	 */
 	private void computeModel() {
