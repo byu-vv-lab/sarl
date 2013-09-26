@@ -9,9 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.*;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealRational;
@@ -215,6 +214,35 @@ public class NumberFactoryTest {
 		assertEquals(expectedC, c);
 	}
 	
+	@Test
+	public void intNumCompare(){
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(bigTwenty);
+		int c = factory.compare(a, b);
+		int expectedC = 1;
+		assertEquals(expectedC, c);
+	}
+	
+	@Test
+	public void numberCompare(){
+		Number a = factory.number("20");
+		Number b = factory.number("10");
+		int c = factory.compare(a, b);
+		int expectedC = 1;
+		assertEquals(expectedC, c);
+		Number d = factory.rational(bigTwenty, bigTen);
+		Number e = factory.rational(bigTen, bigThree);
+		int f = factory.compare(d, e);
+		int expectedF = -1;
+		assertEquals(expectedF, f);
+		Number g = factory.integer(bigThirty);
+		Number h = factory.integer(bigTen);
+		int i = factory.compare(g, h);
+		int expectedI = 1;
+		assertEquals(expectedI, i);
+		
+		
+	}
 	
 	
 }
