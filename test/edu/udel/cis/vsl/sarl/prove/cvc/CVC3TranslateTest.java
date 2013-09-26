@@ -109,24 +109,35 @@ public class CVC3TranslateTest {
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		Expr falseExpr = cvcProver.translate(booleanExprFalse);
 
-		BooleanExpression andExp = (BooleanExpression) expressionFactory
-				.expression(SymbolicOperator.AND, boolType, 
-						booleanExprTrue, booleanExprTrue);
-		Expr expr2 = cvcProver.translate(andExp);
-		Expr expected2 = vc.andExpr(trueExpr, trueExpr);
-		assertEquals(expected2, expr2);
+		List<BooleanExpression> s1 = new ArrayList<BooleanExpression>();
+		s1.add(booleanExprFalse);
+		s1.add(booleanExprTrue);
+		
+		SymbolicCollection<BooleanExpression> boolList = universe.basicCollection(s1);
+		BooleanExpression andExp1 = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, boolList);
+		Expr expr1 = cvcProver.translate(andExp1);
+		Expr expected1 = vc.andExpr(falseExpr, trueExpr);
+		assertEquals(expected1, expr1);
 		
 		BooleanExpression andExp2 = (BooleanExpression) expressionFactory
 				.expression(SymbolicOperator.AND, boolType, 
+						booleanExprTrue, booleanExprTrue);
+		Expr expr2 = cvcProver.translate(andExp2);
+		Expr expected2 = vc.andExpr(trueExpr, trueExpr);
+		assertEquals(expected2, expr2);
+		
+		BooleanExpression andExp3 = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, 
 						booleanExprTrue, booleanExprFalse);
-		Expr expr3 = cvcProver.translate(andExp2);
+		Expr expr3 = cvcProver.translate(andExp3);
 		Expr expected3 = vc.andExpr(trueExpr, falseExpr);
 		assertEquals(expected3, expr3);
 		
-		BooleanExpression andExp3 = (BooleanExpression) expressionFactory
+		BooleanExpression andExp4 = (BooleanExpression) expressionFactory
 				.expression(SymbolicOperator.AND, boolType, booleanExprTrue, 
 						booleanExprFalse, booleanExprFalse);
-		cvcProver.translate(andExp3);
+		cvcProver.translate(andExp4);
 	}
 
 	@Test
@@ -161,7 +172,8 @@ public class CVC3TranslateTest {
 		types.add(intType);
 		
 		SymbolicType type = universe.functionType(types, intType);
-		SymbolicConstant symFunction = universe.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
+		SymbolicConstant symFunction = universe
+				.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
 		
 		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
 		funList.add(oneInt); 
