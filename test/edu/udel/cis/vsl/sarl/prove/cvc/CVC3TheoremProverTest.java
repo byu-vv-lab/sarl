@@ -3,8 +3,6 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,8 +24,6 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TheoremProverTest {
 
 	// Static fields: instantiated once and used for all tests...
-
-	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
@@ -67,15 +63,6 @@ public class CVC3TheoremProverTest {
 
 		assertEquals(t, vc.boolType());
 	}
-
-	public void testQuotientRemainderPair() {
-
-		/*SymbolicExpression numerator = universe.rational(1);
-		SymbolicExpression denominator = universe.rational(2);
-
-		cvcProver.getQuotientRemainderPair(numerator, denominator);
-		*/
-	}
 	
 	@Test
 	public void testToString(){
@@ -91,8 +78,6 @@ public class CVC3TheoremProverTest {
 	
 	@Test
 	public void testValid() {
-		// show queries
-		cvcProver.setOutput(out);
 		
 		// if true, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES, 

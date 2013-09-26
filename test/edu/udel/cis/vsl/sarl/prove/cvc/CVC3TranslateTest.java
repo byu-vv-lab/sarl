@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TranslateTest {
 	
 	// Static fields: instantiated once and used for all tests...
-	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
@@ -234,9 +232,6 @@ public class CVC3TranslateTest {
 		Expr expected = vc.orExpr(list);
 		
 		// diagnostics
-		out.println("expected: " + expected);
-		out.println("translateResult: " + translateResult);
-		out.println();
 		assertEquals(expected, translateResult);
 		list.clear();
 		
@@ -252,9 +247,6 @@ public class CVC3TranslateTest {
 		expected = vc.orExpr(list);
 		
 		// diagnostics
-		out.println("expected: " + expected);
-		out.println("translateResult: " + translateResult);
-		out.println();
 		assertEquals(expected, translateResult);
 	}
 
