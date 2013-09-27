@@ -16,18 +16,24 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class ExpressionBenchmark {
-	private SymbolicUniverse sUniverse;
-	private BooleanSymbolicConstant x,y;
-	private SymbolicType booleanType;
-	private StringObject Xobj,Yobj; // "X" , "Y"
-	long start;
-	long end;
-	long mark;
+	private static SymbolicUniverse sUniverse;
+	private static BooleanSymbolicConstant x,y;
+	private static SymbolicType booleanType;
+	private static StringObject Xobj,Yobj; // "X" , "Y"
+	static long start;
+	static long end;
+	static long mark;
 	
-	//benchmark for large boolean operation on large boolean expressions
-	//does not include time to construct individual expressions
-	@Test
-	public void mark1(){
+
+	/**
+	 * benchmark for large boolean operation on large boolean expressions
+	 * does not include time to construct individual expressions
+	 * 
+	 * @param args
+	 *            ignored
+	 */
+	
+	public static void main(String[] args) {
 
 		
 		sUniverse = Universes.newIdealUniverse();
