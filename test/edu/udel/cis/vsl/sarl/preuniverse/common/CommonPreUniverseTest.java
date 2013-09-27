@@ -1623,16 +1623,6 @@ public class CommonPreUniverseTest {
 		result = universe.equals(exp1, exp2);
 		assertEquals(universe.bool(false), result);
 		
-		// Written by Marlin Blue 9/26
-		ArrayList<SymbolicType> test1 = new ArrayList<SymbolicType>();
-		SymbolicType test2 = universe.booleanType();
-		SymbolicConstant symFunc1 = universe.symbolicConstant(
-				universe.stringObject("function"), universe.functionType(test1, test2));
-		SymbolicConstant symFunc2 = universe.symbolicConstant(
-				universe.stringObject("function"), universe.functionType(test1, test2));
-		result = universe.equals(symFunc1, symFunc2);
-		// Testing case 6
-		assertEquals(universe.bool(true), result);
 		
 		
 	}
@@ -1654,6 +1644,50 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, array);
 		
 	}
+	
+	@Test
+	// Written by Marlin Blue
+	public void testEqualsFunction() {
+		SymbolicExpression result1, result2;
+		SymbolicConstant nullConstant = universe.symbolicConstant(
+				universe.stringObject("null"), integerType);
+
+		ArrayList<SymbolicType> testArray1 = new ArrayList<SymbolicType>();
+		testArray1.add(integerType);
+		LinkedList<SymbolicType> testArray2 = new LinkedList<SymbolicType>();
+
+		StringObject name1 = universe.stringObject("f");
+		StringObject name2 = universe.stringObject("g");
+		StringObject name3 = universe.stringObject("x");
+		StringObject name4 = universe.stringObject("y");
+
+		SymbolicType testBool1 = universe.booleanType();
+
+		SymbolicType functionType1 = universe.functionType(testArray1, testBool1);
+		SymbolicType functionType2 = universe.functionType(testArray2, testBool1);
+
+		SymbolicConstant symFunc1 = universe.symbolicConstant(
+				name1, functionType1);
+		SymbolicConstant symFunc2 = universe.symbolicConstant(
+				name2, functionType1);
+		SymbolicConstant symFunc3 = universe.symbolicConstant(
+				name3, functionType2);
+		SymbolicConstant symFunc4 = universe.symbolicConstant(
+				name4, functionType2);
+
+		result1 = universe.equals(symFunc1, symFunc2);
+		result2 = universe.equals(symFunc3, symFunc4);
+
+		// Testing case 6: FUNCTION
+		assertEquals(universe.equals(
+				universe.symbolicConstant(name1, functionType1), 
+				universe.symbolicConstant(name2, functionType1)), result1);
+		assertEquals(universe.equals(
+				universe.symbolicConstant(name3, functionType2),
+				universe.symbolicConstant(name4, functionType2)), result2);
+				
+	}
+	
 	// written by Mohammad Alsulmi
 	@Test (expected= SARLException.class)
 	public void testAppendException(){
