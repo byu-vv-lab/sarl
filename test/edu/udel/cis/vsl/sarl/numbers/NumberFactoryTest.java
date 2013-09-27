@@ -175,14 +175,6 @@ public class NumberFactoryTest {
 		assertEquals(expectedB, b);
 		
 	}
-	/*@Test
-	public void intApply() {
-		IntegerNumber a = factory.integer(bigTen);
-		IntegerNumber b = factory.integer(bigThree);
-		IntegerNumber expectedC = factory.integer(bigThirty);
-		IntegerNumber c = factory.apply(a,b);
-		assertEquals(expectedC, c);
-	}*/
 	
 	@Test
 	public void realRatRat(){
