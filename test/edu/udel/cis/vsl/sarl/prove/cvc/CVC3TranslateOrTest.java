@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import cvc3.Expr;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -59,7 +60,7 @@ public class CVC3TranslateOrTest {
 	public void tearDown() throws Exception {
 	}
 		
-	@Test
+	@Test(expected = SARLInternalException.class)
 	public void testTranslateOr() {
 		// holds cvc3 variables
 		List<Expr> list = new ArrayList<Expr>();
@@ -92,5 +93,10 @@ public class CVC3TranslateOrTest {
 		
 		// diagnostics
 		assertEquals(expected, translateResult);
+		
+		SymbolicExpression orExpression3 = expressionFactory
+				.expression(SymbolicOperator.OR, boolType,
+						booleanExprTrue, booleanExprFalse, booleanExprTrue);
+		translateResult = cvcProver.translate(orExpression3);
 	}
 }
