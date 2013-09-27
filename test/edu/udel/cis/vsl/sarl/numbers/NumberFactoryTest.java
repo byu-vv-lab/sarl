@@ -29,7 +29,7 @@ public class NumberFactoryTest {
 	private static BigInteger bigThirtyOne = new BigInteger("31");
 
 	private static BigInteger bigTen = new BigInteger("10");
-
+	private static BigInteger bigNegativeTen = new BigInteger("-10");
 	private static BigInteger bigFifteen = new BigInteger("15"); 
 	
 	private static BigInteger bigFive = new BigInteger("5"); 
@@ -278,10 +278,14 @@ public class NumberFactoryTest {
 		IntegerNumber expectedD = factory.integer(bigNegativeOne);
 		IntegerNumber d = factory.floor(c);
 		assertEquals(expectedD, d);
-		RationalNumber e = factory.rational(bigTen, bigOne);
-		IntegerNumber expectedF = factory.integer(bigTen);
+		RationalNumber e = factory.rational(bigNegativeTen, bigOne);
+		IntegerNumber expectedF = factory.integer(bigNegativeTen);
 		IntegerNumber f = factory.floor(e);
 		assertEquals(expectedF, f);	
+	}
+	
+	public void ratNumFloorModZero(){
+		
 	}
 	@Test
 	public void intInt(){
