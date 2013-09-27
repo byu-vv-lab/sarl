@@ -171,7 +171,8 @@ public class NumberFactoryTest {
 	public void longInt(){
 		long a = 30;
 		RealInteger b = (RealInteger) factory.integer(a);
-		assertEquals(bigThirty, b);
+		RealInteger expectedB = (RealInteger) factory.integer(bigThirty);
+		assertEquals(expectedB, b);
 		
 	}
 	/*@Test
