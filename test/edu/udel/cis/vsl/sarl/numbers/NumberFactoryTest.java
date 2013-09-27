@@ -381,6 +381,13 @@ public class NumberFactoryTest {
 		assertEquals(expectedB, b);
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberToRationalWrongArg(){
+		Number a = factory.number("bigThree");
+		factory.rational(a);
+	}
+	
+	
 	@Test
 	public void testZeroIntMethod(){
 		IntegerNumber a = factory.zeroInteger();
@@ -475,6 +482,20 @@ public class NumberFactoryTest {
 		Number expectedF = factory.number("3.4");
 		Number f = factory.add(c, d);
 		assertEquals(expectedF, f);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAdditionInvalArgs(){
+		Number a = factory.number("10");
+		Number b = factory.number("10.4");
+		factory.add(a, b);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAdditionInvalArgsTwo(){
+		Number a = factory.number("10.4");
+		Number b = factory.number("10");
+		factory.add(a, b);
 	}
 	
 	public void numberSubtraction(){
