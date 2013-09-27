@@ -343,7 +343,8 @@ public class BoundsObject implements Interval {
 	 * Modifies the lower bound of a BoundsObject if the desired new lower bound is of a lower absolute value.
 	 * 
 	 * @param thatLower The desired, new, lower bound for the BoundsObject calling this method
-	 * @param thatStrict
+	 * @param thatStrict Strictness of new, more restrictive bound.
+	 * @return If a new lower bound of -infty (value of null) is provided, no changes to the BoundsObject are made.
 	 */
 	public void restrictLower(Number thatLower, boolean thatStrict) {
 		if (thatLower == null) {
