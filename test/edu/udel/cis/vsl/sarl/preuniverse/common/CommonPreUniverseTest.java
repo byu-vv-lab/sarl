@@ -860,7 +860,7 @@ public class CommonPreUniverseTest {
 		universe.assign(u_ten, null, u_ten); // test for SARLException
 	}
 	
-/*	
+
 	
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
@@ -935,7 +935,7 @@ public class CommonPreUniverseTest {
 		NumericExpression zero = universe.integer(0);
 		assertEquals(zero,universe.length(array));
 	}
-	*/
+	
 	@Test(expected= SARLException.class)
 	public void testModuloWithExceptions(){
 		NumericExpression fiveInt, threeInt;
@@ -985,7 +985,7 @@ public class CommonPreUniverseTest {
 		
 		result = universe.power(base, -2);
 	}
-	/*
+	
 	// written by Mohammad Alsulmi
 	@Test
 	public void testRemoveElementAt(){
@@ -1155,7 +1155,7 @@ public class CommonPreUniverseTest {
 		two = universe.rational(2.0);
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
-	*/
+	
 	// written by Mohammad Alsulmi
 	@Test
 	public void testRational(){
@@ -1180,7 +1180,7 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.rational(.1), result);
 		
 	}
-	/*
+	
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)	
 	public void TestArrayReadException(){
@@ -1363,7 +1363,7 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 		
 	}
-*/
+
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithReal(){
@@ -1382,7 +1382,7 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 		
 	}
-	/*
+	
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithArray(){
@@ -1478,7 +1478,7 @@ public class CommonPreUniverseTest {
 		array = universe.array(realType, Arrays.asList(elements)); // non compatible type
 
 	}
-	*/
+	
 	// written by Mohammad Alsulmi	
 	@Test
 	public void testInteger(){
@@ -1632,7 +1632,7 @@ public class CommonPreUniverseTest {
 		
 		
 	}
-	/*
+	
 	// written by Mohammad Alsulmi
 	@Test 
 	public void testAppend(){
@@ -1651,7 +1651,7 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, array);
 		
 	}
-	*/
+	
 	@Test
 	// Written by Marlin Blue
 	public void testEqualsFunction() {
@@ -1695,7 +1695,7 @@ public class CommonPreUniverseTest {
 				universe.symbolicConstant(name4, functionType2)), universe.equals(symFunc3, symFunc4));*/
 				
 	}
-	/*
+	
 	// written by Mohammad Alsulmi
 	@Test (expected= SARLException.class)
 	public void testAppendException(){
@@ -1738,7 +1738,7 @@ public class CommonPreUniverseTest {
 		array = universe.append(array, value);
 	}
 
-	*/
+	
 	@Test
 
 	public void testMake(){
