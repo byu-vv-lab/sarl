@@ -282,7 +282,7 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.floor(a);
 		assertEquals(expectedB, b);
 		RationalNumber c = factory.rational(bigNegativeOne, bigThree);
-		IntegerNumber expectedD = factory.integer(bigZero);
+		IntegerNumber expectedD = factory.integer(bigNegativeOne);
 		IntegerNumber d = factory.floor(c);
 		assertEquals(expectedD, d);
 		RationalNumber e = factory.rational(bigTen, bigOne);
@@ -432,7 +432,6 @@ public class NumberFactoryTest {
 		RationalNumber b = (RationalNumber) factory.negate(a);
 		assertEquals(expectedB, b);
 	}
-	/////
 	@Test
 	public void numIncrement(){
 		Number a = factory.integer(bigThirty);
@@ -456,7 +455,59 @@ public class NumberFactoryTest {
 		Number b = factory.decrement(a);
 		assertEquals(expectedB, b);
 	}
+	//
+	@Test
+	public void numberAddition(){
+		Number a = factory.number("10");
+		Number b = factory.number("20");
+		Number c = factory.number("1.1");
+		Number d = factory.number("2.3");
+		Number expectedE = factory.number("30");
+		Number e = factory.add(a, b);
+		assertEquals(expectedE, e);
+		Number expectedF = factory.number("3.4");
+		Number f = factory.add(c, d);
+		assertEquals(expectedF, f);
+	}
 	
+	public void numberSubtraction(){
+		Number a = factory.number("20");
+		Number b = factory.number("10");
+		Number c = factory.number("2.3");
+		Number d = factory.number("1.1");
+		Number expectedE = factory.number("10");
+		Number e = factory.subtract(a, b);
+		assertEquals(expectedE, e);
+		Number expectedF = factory.number("1.2");
+		Number f = factory.subtract(c, d);
+		assertEquals(expectedF, f);
+	}
 	
+	public void numberMultiply(){
+		Number a = factory.number("2");
+		Number b = factory.number("3");
+		Number c = factory.number("1.1");
+		Number d = factory.number("2.1");
+		Number expectedE = factory.number("6");
+		Number e = factory.multiply(a, b);
+		assertEquals(expectedE, e);
+		Number expectedF = factory.number("2.31");
+		Number f = factory.multiply(c, d);
+		assertEquals(expectedF, f);
+		
+	}
+	
+	public void numberDivide(){
+		Number a = factory.number("12");
+		Number b = factory.number("3");
+		Number c = factory.number("6.51");
+		Number d = factory.number("2.1");
+		Number expectedE = factory.number("4");
+		Number e = factory.divide(a, b);
+		assertEquals(expectedE, e);
+		Number expectedF = factory.number("3.1");
+		Number f = factory.divide(c, d);
+		assertEquals(expectedF, f);
+	}
 	
 }
