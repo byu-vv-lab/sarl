@@ -40,7 +40,7 @@ public class TupleWritingBenchmark {
 	public static void main(String[] args) {
 		
 		
-		int maxSize =(int) Math.pow(2,20);			// the size of tuple
+		int maxSize =(int) Math.pow(2,18);			// the size of tuple
 		SymbolicType typeArray[];		
 		NumericExpression tupleArray[];			
 		long startingTime, stoppingTime;			// used for measuring the time
