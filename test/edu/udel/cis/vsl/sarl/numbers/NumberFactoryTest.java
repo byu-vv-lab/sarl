@@ -511,6 +511,20 @@ public class NumberFactoryTest {
 		assertEquals(expectedF, f);
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberSubtractionInvalArgs(){
+		Number a = factory.number("10");
+		Number b = factory.number("10.4");
+		factory.subtract(a, b);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberSubtractionInvalArgsTwo(){
+		Number a = factory.number("10.4");
+		Number b = factory.number("10");
+		factory.subtract(a, b);
+	}
+	
 	public void numberMultiply(){
 		Number a = factory.number("2");
 		Number b = factory.number("3");
@@ -522,7 +536,20 @@ public class NumberFactoryTest {
 		Number expectedF = factory.number("2.31");
 		Number f = factory.multiply(c, d);
 		assertEquals(expectedF, f);
-		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberMultiplyInvalArgs(){
+		Number a = factory.number("10");
+		Number b = factory.number("10.4");
+		factory.multiply(a, b);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberMultiplyInvalArgsTwo(){
+		Number a = factory.number("10.4");
+		Number b = factory.number("10");
+		factory.multiply(a, b);
 	}
 	
 	public void numberDivide(){
@@ -536,6 +563,20 @@ public class NumberFactoryTest {
 		Number expectedF = factory.number("3.1");
 		Number f = factory.divide(c, d);
 		assertEquals(expectedF, f);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberDivideInvalArgs(){
+		Number a = factory.number("10");
+		Number b = factory.number("10.4");
+		factory.divide(a, b);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void numberDivideInvalArgsTwo(){
+		Number a = factory.number("10.4");
+		Number b = factory.number("10");
+		factory.divide(a, b);
 	}
 	
 }
