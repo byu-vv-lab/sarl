@@ -73,10 +73,10 @@ public class CommonObjectFactory implements ObjectFactory {
 		this.oneRealObj = canonic(numberObject(numberFactory.oneRational()));
 	}
 
-	/*@Override
+	@Override
 	public NumberFactory numberFactory() {
 		return numberFactory;
-	}*/
+	}
 
 	@Override
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
@@ -222,11 +222,5 @@ public class CommonObjectFactory implements ObjectFactory {
 	public int numObjects() {
 		return objectList.size();
 	}
-
-	@Override
-	public NumberFactory numberFactory() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 }
