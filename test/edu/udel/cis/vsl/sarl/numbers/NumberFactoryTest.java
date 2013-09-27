@@ -349,7 +349,7 @@ public class NumberFactoryTest {
 	@Test
 	public void ratNumNumerator(){
 		RationalNumber a = factory.rational(bigTen, bigThirty);
-		IntegerNumber expectedB = factory.integer(bigTen);
+		IntegerNumber expectedB = factory.integer(bigOne);
 		IntegerNumber b = factory.numerator(a);
 		assertEquals(expectedB, b);
 	}
