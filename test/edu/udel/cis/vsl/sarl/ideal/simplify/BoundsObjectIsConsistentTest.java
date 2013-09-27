@@ -86,5 +86,45 @@ public class BoundsObjectIsConsistentTest {
 		boundObj.isConsistent();
 		//out.println(boundObj);
 	}
+	
+	/**
+	 * Tests isConsistent on
+	 * if (compare == 0 && (strictLower || strictUpper))
+	 * when compare == 0, && False || True
+	 */
+	@Test
+	public void isConsistentEqualMixedStrictTest(){
+		boundObj = BoundsObject.newUpperBound(xxy, num0, true);
+		boundObj.restrictLower(num0, false);
+		boundObj.isConsistent();
+		assertFalse(boundObj.isConsistent());
+	}
+	
+	/**
+	 * Tests isConsistent on
+	 * if (compare == 0 && (strictLower || strictUpper))
+	 * when compare == 0, && True || False
+	 */
+	@Test
+	public void isConsistentEqualMixedStrictTest2(){
+		boundObj = BoundsObject.newUpperBound(xxy, num0, false);
+		boundObj.restrictLower(num0, true);
+		boundObj.isConsistent();
+		assertFalse(boundObj.isConsistent());
+	}
+	
+	/**
+	 * Tests isConsistent on
+	 * if (compare == 0 && (strictLower || strictUpper))
+	 * when compare == 0, && False || False
+	 */
+	@Test
+	public void isConsistentEqualMixedStrictTest3(){
+		boundObj = BoundsObject.newUpperBound(xxy, num0, false);
+		boundObj.restrictLower(num0, false);
+		boundObj.isConsistent();
+		assertEquals(boundObj.lower(), boundObj.upper());
+		assertTrue(boundObj.isConsistent());
+	}
 
 }
