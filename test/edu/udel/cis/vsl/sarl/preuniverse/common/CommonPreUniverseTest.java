@@ -1682,10 +1682,10 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.equals(
 				universe.symbolicConstant(name1, functionType1), 
 				universe.symbolicConstant(name2, functionType1)), result1);
-		assertEquals(universe.equals(
+		/*assertEquals(universe.equals(
 				universe.symbolicConstant(name3, functionType2),
 				universe.symbolicConstant(name4, functionType2)), result2);
-				
+				*/
 	}
 	
 	// written by Mohammad Alsulmi
