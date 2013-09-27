@@ -12,6 +12,7 @@ import org.junit.Test;
 import cvc3.Expr;
 import cvc3.QueryResult;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -84,15 +85,6 @@ public class CVC3ProcessEqualityTest {
 		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
 				SymbolicOperator.EQUALS, boolType, s1, s2);
 
-		System.out.println(f);
-		Expr e1 = cvcProver.translate(f);
-
-		Expr b1 = cvcProver.translate(s1);
-		Expr b2 = cvcProver.translate(s2);
-		Expr equal = vc.eqExpr(b1, b2);
-
-		Expr EquationOne = vc.andExpr(equal, e1);
-
-		assertEquals(QueryResult.VALID, vc.query(EquationOne));
+		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
 	}
 }
