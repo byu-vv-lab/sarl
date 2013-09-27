@@ -392,4 +392,53 @@ public class NumberFactoryTest {
 		assertEquals(b, a);
 		
 	}
+	/////////
+	@Test
+	public void positiveNumberAbs(){
+		Number a = factory.number("30");
+		Number expectedB = factory.number("30");
+		Number b = factory.abs(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void negativeNumberAbs(){
+		Number a = factory.number("-30");
+		Number expectedB = factory.number("30");
+		Number b = factory.abs(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void intInteger(){
+		int a = 30;
+		IntegerNumber expectedB = factory.integer(bigThirty);
+		IntegerNumber b = factory.integer(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void numberNegateIntNum(){
+		Number a = factory.number("30");
+		IntegerNumber expectedB = (IntegerNumber) factory.number("-30");
+		IntegerNumber b = (IntegerNumber) factory.negate(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void numberNegateRatNum(){
+		Number a = factory.number("30");
+		RationalNumber expectedB = (RationalNumber) factory.number("-30");
+		RationalNumber b = (RationalNumber) factory.negate(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void intNumIncrement(){
+		IntegerNumber a = factory.integer(bigThirty);
+		IntegerNumber expectedB = factory.integer(bigThirtyOne);
+		IntegerNumber b = factory.increment(a);
+		assertEquals(expectedB, b);		
+	}
+	
 }
