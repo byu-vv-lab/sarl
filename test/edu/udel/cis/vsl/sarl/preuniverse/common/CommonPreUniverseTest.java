@@ -1648,7 +1648,7 @@ public class CommonPreUniverseTest {
 	@Test
 	// Written by Marlin Blue
 	public void testEqualsFunction() {
-		SymbolicExpression result1, result2;
+		//SymbolicExpression result1, result2; 
 		SymbolicConstant nullConstant = universe.symbolicConstant(
 				universe.stringObject("null"), integerType);
 
@@ -1675,17 +1675,18 @@ public class CommonPreUniverseTest {
 		SymbolicConstant symFunc4 = universe.symbolicConstant(
 				name4, functionType2);
 
-		result1 = universe.equals(symFunc1, symFunc2);
-		result2 = universe.equals(symFunc3, symFunc4);
+		/* Edited by Gunjan Majmudar*/
+		//result1 = universe.equals(symFunc1, symFunc2);
+		//result2 = universe.equals(symFunc3, symFunc4);
 
 		// Testing case 6: FUNCTION
 		assertEquals(universe.equals(
 				universe.symbolicConstant(name1, functionType1), 
-				universe.symbolicConstant(name2, functionType1)), result1);
+				universe.symbolicConstant(name2, functionType1)), universe.equals(symFunc1, symFunc2));
 		/*assertEquals(universe.equals(
 				universe.symbolicConstant(name3, functionType2),
-				universe.symbolicConstant(name4, functionType2)), result2);
-				*/
+				universe.symbolicConstant(name4, functionType2)), universe.equals(symFunc3, symFunc4));*/
+				
 	}
 	
 	// written by Mohammad Alsulmi
