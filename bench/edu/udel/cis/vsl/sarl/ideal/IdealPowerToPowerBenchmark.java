@@ -8,7 +8,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
 /**
- * Benchmark test which computes the polynomial (x+y)^N for a big integer N.
+ * Benchmark test which computes the polynomial (x+y)^10 and then raises that to 25
+ * for comparison with BigPower
  * 
  * @author cboucher
  * 
