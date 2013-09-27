@@ -370,16 +370,21 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
-	public void numberToRational(){
-		Number a = (RationalNumber) factory.rational(bigThirty, bigOne);
-		Number b = (IntegerNumber) factory.integer(bigFive);
-		RationalNumber expectedC = factory.rational(bigThirty, bigOne);
-		RationalNumber c = factory.rational(a);
+	public void numberInstOfRationalToRational(){
+		Number a = factory.rational(bigThirty, bigOne);
+		Number expectedC = factory.rational(bigThirty, bigOne);
+		Number c = factory.rational(a);
 		assertEquals(expectedC, c);
-		RationalNumber expectedD = (RationalNumber) factory.integer(bigFive);
-		RationalNumber d = factory.rational(b);
-		assertEquals(expectedD, d);
 	}
+	
+	@Test
+	public void numberInstOfIntNumtoRational(){
+		Number a = (factory.integer(bigThirty));
+		Number b = factory.rational(a);
+		Number expectedB = (RealRational) factory.rational(bigThirty, bigOne);
+		assertEquals(expectedB, b);
+	}
+	
 	@Test
 	public void testZeroIntMethod(){
 		IntegerNumber a = factory.zeroInteger();
