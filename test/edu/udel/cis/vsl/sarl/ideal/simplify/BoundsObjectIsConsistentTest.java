@@ -84,7 +84,7 @@ public class BoundsObjectIsConsistentTest {
 		boundObj = BoundsObject.newUpperBound(xxy, num0, true);
 		boundObj.restrictLower(num10000, true);
 		boundObj.isConsistent();
-		out.println(boundObj);
+		//out.println(boundObj);
 	}
 
 }
