@@ -670,7 +670,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		int index = 0;
 
 		for (Expr value : values) {
-			if (value != null)
+			if (value != null) // Branch is unreachable
 				result = vc.writeExpr(result, vc.ratExpr(index), value);
 			index++;
 		}
@@ -700,7 +700,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		int index = 0;
 
 		for (Expr value : values) {
-			if (value != null)
+			if (value != null) // Branch is unreachable
 				result = vc.tupleUpdateExpr(result, index, value);
 			index++;
 		}
@@ -720,7 +720,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			return vc.forallExpr(vars, predicate);
 		} else if (kind == SymbolicOperator.EXISTS) {
 			return vc.existsExpr(vars, predicate);
-		} else {
+		} else { // Branch is unreachable
 			throw new SARLInternalException(
 					"Cannot translate quantifier into CVC3: " + expr);
 		}
