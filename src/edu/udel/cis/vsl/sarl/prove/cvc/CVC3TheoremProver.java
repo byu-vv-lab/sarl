@@ -726,6 +726,20 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 	}
 
+	/**
+	 * Processes the equality of two arrays.  Arrays can be of complete type or
+	 * incomplete type.  
+	 * 
+	 * @param type1
+	 * 			a SARL SymbolicType
+	 * @param type2
+	 * 			a SARL SymbolicType
+	 * @param cvcExpression1
+	 * 			a CVC3 array
+	 * @param cvcExpression2
+	 * 			a CVC3 array
+	 * @return
+	 */
 	private Expr processEquality(SymbolicType type1, SymbolicType type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
 		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
