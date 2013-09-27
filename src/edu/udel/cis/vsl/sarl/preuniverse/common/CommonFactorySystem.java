@@ -72,10 +72,10 @@ public class CommonFactorySystem implements FactorySystem {
 		return collectionFactory;
 	}
 
-	/*@Override
+	@Override
 	public NumberFactory numberFactory() {
 		return objectFactory.numberFactory();
-	}*/
+	}
 
 	@Override
 	public NumericExpressionFactory numericFactory() {
@@ -86,11 +86,5 @@ public class CommonFactorySystem implements FactorySystem {
 	public BooleanExpressionFactory booleanFactory() {
 		return expressionFactory.booleanFactory();
 	}
-
-	@Override
-	public NumberFactory numberFactory() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+ 
 }
