@@ -3,6 +3,8 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.Map;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -80,6 +82,7 @@ public class CVC3TheoremProverTest {
 	
 	@Test
 	public void testValid() {
+		// including for coverage
 		boolean show = cvcProver.showProverQueries();
 
 		// if true, then true (valid)
@@ -97,7 +100,10 @@ public class CVC3TheoremProverTest {
 				cvcProver.valid(booleanExprFalse).getResultType());
 		// if false, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES,
-				cvcProver.valid(booleanExprTrue).getResultType());		
+				cvcProver.valid(booleanExprTrue).getResultType());	
+		
+		// including for coverage
+		Map<SymbolicExpression, Expr> map = cvcProver.expressionMap();
 	}
 	
 	@Test
