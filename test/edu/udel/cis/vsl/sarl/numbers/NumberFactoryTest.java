@@ -429,10 +429,15 @@ public class NumberFactoryTest {
 	@Test
 	public void numberNegateRatNum(){
 		Number a = factory.number("30");
-		RationalNumber expectedB = (RationalNumber) factory.number("-30");
-		RationalNumber b = (RationalNumber) factory.negate(a);
+		Number expectedB = factory.number("-30");
+		Number b = factory.negate(a);
 		assertEquals(expectedB, b);
+		Number c = factory.number("30.1");
+		Number expectedD = factory.number("-30.1");
+		Number d = factory.negate(c);
+		assertEquals(expectedD, d);
 	}
+	
 	@Test
 	public void numIncrement(){
 		Number a = factory.integer(bigThirty);
