@@ -19,6 +19,19 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * Importing this class into test files stored in the same package 
+ * allows for the availability of common SARL objects.
+ * <p>
+ * Importation of this class merely provides the declaration statements.
+ * To also include the initialization of the SARL objects, the setUp()
+ * method must be called.
+ * 
+ * @see CommonObjects.setUp()
+ * 
+ * @author danfried
+ *
+ */
 public class CommonObjects {
 
 	static FactorySystem system;
@@ -96,6 +109,15 @@ public class CommonObjects {
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3Int,
 	num5Int, num0Int, numNeg2000Int, num10000Int;
 
+	/**
+	 * Method provides initialization of common SARL Objects declared 
+	 * in the CommonObjects Class.
+	 * <p>
+	 * This method is only accessible within the
+	 * edu.udel.cis.vsl.sarl.ideal.simplify package.
+	 * 
+	 * @see CommonObjects
+	 */
 	static void setUp() {
 		system = PreUniverses.newIdealFactorySystem();
 		preUniv = PreUniverses.newPreUniverse(system);
