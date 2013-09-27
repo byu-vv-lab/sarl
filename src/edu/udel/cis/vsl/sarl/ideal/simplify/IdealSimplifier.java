@@ -886,7 +886,9 @@ public class IdealSimplifier extends CommonSimplifier {
 			return simplifyRelational((BooleanExpression) expression);
 		return expression;
 	}
-
+	/**
+	 *   
+	 */
 	@Override
 	public Interval assumptionAsInterval(SymbolicConstant symbolicConstant) {
 		if (intervalComputed) {
@@ -951,12 +953,16 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 		return substitutionMap;
 	}
-
+	/**
+	 *  This method takes the assumption in the IdealSimplifier and reduces the Context to its basic form.
+	 */
 	@Override
 	public BooleanExpression getReducedContext() {
 		return assumption;
 	}
-
+	/**
+	 * This method takes the assumption in the IdealSimplifier and 
+	 */
 	@Override
 	public BooleanExpression getFullContext() {
 		if (fullContext == null) {
