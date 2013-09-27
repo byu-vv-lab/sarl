@@ -9,9 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import cvc3.Expr;
-import cvc3.QueryResult;
-import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -47,7 +44,6 @@ public class CVC3ProcessEqualityTest {
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
-	private ValidityChecker vc;
 
 	/**
 	 * Set up each test. This method is run before each test.
@@ -59,7 +55,6 @@ public class CVC3ProcessEqualityTest {
 		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
-		vc = cvcProver.validityChecker();
 	}
 
 	@After
@@ -86,5 +81,58 @@ public class CVC3ProcessEqualityTest {
 				SymbolicOperator.EQUALS, boolType, s1, s2);
 
 		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
+	}
+	
+	@Test
+	public void testProcessEqualityArrayCompleteNotEqual() {
+
+		List<SymbolicExpression> a1 = new ArrayList<SymbolicExpression>();
+		a1.add(0, two);
+		a1.add(1, one);
+		
+		List<SymbolicExpression> a2 = new ArrayList<SymbolicExpression>();
+		a2.add(0, two);
+		a2.add(1, one);
+		a2.add(2, five);
+
+		SymbolicExpression s1 = universe.array(realType, a1);
+		SymbolicExpression s2 = universe.array(realType, a2);
+
+		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
+				SymbolicOperator.EQUALS, boolType, s1, s2);
+
+		assertEquals(ResultType.NO, cvcProver.valid(f).getResultType());
+	}
+	
+	@Test
+	public void testProcessEqualityArrayIncompleteEqual(){
+
+		SymbolicType incompleteArrayType = universe.arrayType(realType);
+		
+		SymbolicExpression a1 = universe.symbolicConstant(universe
+				.stringObject("a"), incompleteArrayType);
+		SymbolicExpression a2 = universe.symbolicConstant(universe
+				.stringObject("a"), incompleteArrayType);
+
+		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
+				SymbolicOperator.EQUALS, boolType, a1, a2);
+
+		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
+	}
+	
+	@Test
+	public void testProcessEqualityArrayIncompleteNotEqual(){
+
+		SymbolicType incompleteArrayType = universe.arrayType(realType);
+		
+		SymbolicExpression a1 = universe.symbolicConstant(universe
+				.stringObject("a"), incompleteArrayType);
+		SymbolicExpression a2 = universe.symbolicConstant(universe
+				.stringObject("b"), incompleteArrayType);
+
+		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
+				SymbolicOperator.EQUALS, boolType, a1, a2);
+
+		assertEquals(ResultType.NO, cvcProver.valid(f).getResultType());
 	}
 }
