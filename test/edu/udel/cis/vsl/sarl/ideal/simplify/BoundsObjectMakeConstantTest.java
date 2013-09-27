@@ -8,9 +8,11 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 /**
  * @author danfried
@@ -102,6 +104,24 @@ public class BoundsObjectMakeConstantTest {
 		//boundObj.makeConstant(num0);
 		//boundObj.makeConstant(num10pt5);
 		boundObj.makeConstant(null);
+	}
+	
+	/**
+	 * Tests makeConstant, when a rational is passed as an argument for a BoundsObject
+	 * with an integral Symbolic Expression.
+	 */
+	@Test(expected = RuntimeException.class)
+	public void makeConstantIntRealTest(){
+		boundObj = BoundsObject.newTightBound(symbExpr_xpyInt, num10000Int);
+		assertTrue(boundObj.isIntegral());
+		boundObj.makeConstant(num10pt5);
+	}
+	
+	@Ignore
+	@Test
+	public void makeConstantIntRatTest(){
+		boundObj = BoundsObject.newTightBound(symbExpr_xpyInt, num10000Int);
+		boundObj.makeConstant(num10000Int);
 	}
 
 }
