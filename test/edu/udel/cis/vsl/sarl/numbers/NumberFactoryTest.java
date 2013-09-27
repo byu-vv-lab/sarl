@@ -21,28 +21,23 @@ public class NumberFactoryTest {
 
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 
-	private static BigInteger bigNegativeOne = new BigInteger("-1");
-	private static BigInteger bigOne = BigInteger.ONE;
 	private static BigInteger bigNegativeThirty = new BigInteger("-30");
-	private static BigInteger bigThirty = new BigInteger("30");
-
-	private static BigInteger bigThirtyOne = new BigInteger("31");
-
-	private static BigInteger bigTen = new BigInteger("10");
 	private static BigInteger bigNegativeTen = new BigInteger("-10");
-	private static BigInteger bigFifteen = new BigInteger("15"); 
-	
-	private static BigInteger bigFive = new BigInteger("5"); 
-	
-	private static BigInteger bigTwo = new BigInteger("2");  
-	
-	private static BigInteger bigZero = new BigInteger("0"); 
-	
-	private static BigInteger bigSix = new BigInteger("6");
-	
-	private static BigInteger bigTwenty = new BigInteger("20");
 	private static BigInteger bigNegativeThree = new BigInteger("-3");
+	private static BigInteger bigNegativeOne = new BigInteger("-1");
+	private static BigInteger bigZero = new BigInteger("0");
+	private static BigInteger bigOne = BigInteger.ONE;
+	private static BigInteger bigTwo = new BigInteger("2");
 	private static BigInteger bigThree = new BigInteger("3");
+	private static BigInteger bigFive = new BigInteger("5"); 
+	private static BigInteger bigSix = new BigInteger("6");
+	private static BigInteger bigEight = new BigInteger("8");
+	private static BigInteger bigTen = new BigInteger("10");
+	private static BigInteger bigFifteen = new BigInteger("15"); 
+	private static BigInteger bigTwenty = new BigInteger("20");
+	private static BigInteger bigThirty = new BigInteger("30");
+	private static BigInteger bigThirtyOne = new BigInteger("31");
+	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -455,6 +450,23 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	public void ratNumIncrement(){
+		RationalNumber a = factory.rational(bigFive, bigThree);
+		RationalNumber expectedB = factory.rational(bigEight, bigThree);
+		RationalNumber b = factory.increment(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void numIncrementRatArg(){
+		Number a = factory.rational(bigFive, bigThree);
+		Number expectedB = factory.rational(bigEight, bigThree);
+		Number b = factory.increment(a);
+		assertEquals(expectedB, b);
+	}
+	
+	
+	@Test
 	public void ratNumDecrement(){
 		RationalNumber a = factory.rational(bigThirtyOne, bigOne);
 		RationalNumber expectedB = factory.rational(bigThirty, bigOne);
@@ -469,7 +481,16 @@ public class NumberFactoryTest {
 		Number b = factory.decrement(a);
 		assertEquals(expectedB, b);
 	}
-	//
+	
+	@Test
+	public void numDecrementRatArg(){
+		Number a = factory.rational(bigEight, bigThree);
+		Number expectedB = factory.rational(bigFive, bigThree);
+		Number b = factory.decrement(a);
+		assertEquals(expectedB, b);
+	}
+	
+	
 	@Test
 	public void numberAddition(){
 		Number a = factory.number("10");
