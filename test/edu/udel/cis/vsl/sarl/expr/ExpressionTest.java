@@ -236,22 +236,16 @@ public class ExpressionTest {
 				of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
 
-		referenceType2 = of.canonic(stf.tupleType(
-				of.stringObject("Ref"),
-				stf.sequence(new SymbolicType[] { booleanType })));
-
-
-
 		SymbolicSequence<NumericExpression> zeroSequence = of.canonic(cf
 				.singletonSequence(zeroInt));
 		SymbolicSequence<NumericExpression> oneSequence = of.canonic(cf
 				.singletonSequence(oneInt));
 		
 		SymbolicExpression test = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType1, zeroSequence);
-		SymbolicExpression test2 = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType2, oneSequence);
+		SymbolicExpression test2 = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType1, oneSequence);
 		
 		assertEquals(test.toString(),"(Ref<int>)<0>");
-		assertEquals(test2.toString(),"(Ref<boolean>)<1>");
+		assertEquals(test2.toString(),"(Ref<int>)<1>");
 	}
 	
 	
