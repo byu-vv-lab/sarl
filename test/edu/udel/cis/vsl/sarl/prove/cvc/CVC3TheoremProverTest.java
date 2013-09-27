@@ -80,7 +80,8 @@ public class CVC3TheoremProverTest {
 	
 	@Test
 	public void testValid() {
-		
+		boolean show = cvcProver.showProverQueries();
+
 		// if true, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES, 
 				cvcProver.valid(booleanExprTrue).getResultType());
