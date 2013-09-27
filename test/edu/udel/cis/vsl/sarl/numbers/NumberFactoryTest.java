@@ -392,7 +392,7 @@ public class NumberFactoryTest {
 		assertEquals(b, a);
 		
 	}
-	/////////
+	
 	@Test
 	public void positiveNumberAbs(){
 		Number a = factory.number("30");
@@ -432,13 +432,31 @@ public class NumberFactoryTest {
 		RationalNumber b = (RationalNumber) factory.negate(a);
 		assertEquals(expectedB, b);
 	}
-	
+	/////
 	@Test
-	public void intNumIncrement(){
-		IntegerNumber a = factory.integer(bigThirty);
-		IntegerNumber expectedB = factory.integer(bigThirtyOne);
-		IntegerNumber b = factory.increment(a);
+	public void numIncrement(){
+		Number a = factory.integer(bigThirty);
+		Number expectedB = factory.integer(bigThirtyOne);
+		Number b = factory.increment(a);
 		assertEquals(expectedB, b);		
 	}
+	
+	@Test
+	public void ratNumDecrement(){
+		RationalNumber a = factory.rational(bigThirtyOne, bigOne);
+		RationalNumber expectedB = factory.rational(bigThirty, bigOne);
+		RationalNumber b = factory.decrement(a);
+		assertEquals(expectedB, b);
+	}
+	
+	@Test
+	public void numDecrement(){
+		Number a = factory.number("31");
+		Number expectedB = factory.number("30");
+		Number b = factory.decrement(a);
+		assertEquals(expectedB, b);
+	}
+	
+	
 	
 }
