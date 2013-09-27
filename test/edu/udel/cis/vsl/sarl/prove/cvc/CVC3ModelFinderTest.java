@@ -60,8 +60,6 @@ public class CVC3ModelFinderTest {
 
 	private static NumberFactory numFactory = factorySystem.numberFactory();
 
-	private static SymbolicRealType realType = universe.realType();
-
 	private static NumericExpression two = universe.rational(2);
 
 	private static NumericExpression five = universe.rational(5);
@@ -355,28 +353,14 @@ public class CVC3ModelFinderTest {
 	
 	@Test
 	public void testAssignTupleInt() {
-		
-		Expr one = cvcProver.translate(universe.integer(1));
-		Expr two = cvcProver.translate(universe.integer(2));
-		Expr three = cvcProver.translate(universe.integer(3));
-		
-		List<Expr> tuple = new ArrayList<Expr>();
-		tuple.add(one);
-		tuple.add(two);
-		tuple.add(three);
-
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
-		tuple.add(one);
-		tuple.add(two);
-		tuple.add(three);
+		tupleList.add(universe.integer(1));
+		tupleList.add(universe.integer(2));
+		tupleList.add(universe.integer(3));
 
 		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
-		tuple.add(one);
-		tuple.add(two);
-		tuple.add(three);
-
-		
-		Expr myTuple = vc.tupleExpr(tuple);
+		tupleType.add(universe.integerType());
+		tupleType.add(universe.realType());
 		
 		SymbolicExpression sarlTuple = universe.tuple(universe.tupleType(
 				universe.stringObject("myFavoriteTuple"), tupleType), tupleList);
@@ -388,7 +372,6 @@ public class CVC3ModelFinderTest {
 		
 		ValidityResult result = cvcProver.validOrModel(predicate);
 		
-		assertEquals(ResultType.NO, result.getResultType());
-		
+		assertEquals(ResultType.NO, result.getResultType());	
 	}
 }
