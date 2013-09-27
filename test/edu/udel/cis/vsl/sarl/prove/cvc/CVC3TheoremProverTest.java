@@ -61,7 +61,7 @@ public class CVC3TheoremProverTest {
 
 	@Test
 	public void testBoolean() {
-		
+		cvcProver.setOutput(null);
 		SymbolicType boolType = universe.booleanType();
 		Type t = cvcProver.translateType(boolType);
 
