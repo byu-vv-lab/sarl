@@ -86,5 +86,5 @@ public class CommonFactorySystem implements FactorySystem {
 	public BooleanExpressionFactory booleanFactory() {
 		return expressionFactory.booleanFactory();
 	}
- 
+
 }

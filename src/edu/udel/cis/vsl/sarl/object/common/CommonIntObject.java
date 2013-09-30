@@ -40,9 +40,6 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value == ((IntObject) o).getInt();
 	}
 
-	/**
-	 * @return Hash code based on object
-	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ new Integer(value).hashCode();
@@ -103,9 +100,6 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 		return value == 1;
 	}
 
-	/**
-	 * Purposely empty method. Basic objects should not be able to be canonized.
-	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
@@ -117,11 +111,8 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer buffer = new StringBuffer(Integer.toString(value));
-		if (atomize)
-			this.atomize(buffer);
-		return buffer;
-			
+		return new StringBuffer(Integer.toString(value));
+
 	}
 
 	@Override

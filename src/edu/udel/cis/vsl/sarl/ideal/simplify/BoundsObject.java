@@ -39,7 +39,7 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
  * For an integer type bounds object, a non-null lower or upper 
  * bound must be a non-strict integer.
  * The static constructors guarantee this and take care of any conversions 
- * necessary if the inputs do not satisfy these constraints.
+ * necessary if the inputs do not satify these constraints.
  * 
  * A BoundsObject instance is not immutable.   There are methods for modifying the object.
  * However the symbolic expression (and therefore type) cannot change.
@@ -58,15 +58,6 @@ public class BoundsObject implements Interval {
 
 	private NumberFactory factory = Numbers.REAL_FACTORY;
 
-	/**
-	 * Modifies the lower bound of a BoundsObject, and whether or not this lower bound is strict.
-	 * 
-	 * @param expression SARL Symbolic Expression being bounded below
-	 * @param bound SARL Number providing the value of the bound being set
-	 * @param strict Boolean value: True ("<") or False ("<=")
-	 * @return BoundObject with a lower bound and strictness provided as arguments when method is called
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 */
 	public static BoundsObject newLowerBound(SymbolicExpression expression,
 			Number bound, boolean strict) {
 		BoundsObject result = new BoundsObject(expression);
@@ -75,15 +66,6 @@ public class BoundsObject implements Interval {
 		return result;
 	}
 
-	/**
-	 * Modifies the upper bound of a BoundsObject, and whether or not this upper bound is strict.
-	 * 
-	 * @param expression SARL Symbolic Expression being bounded above
-	 * @param bound SARL Number providing the value of the bound being set
-	 * @param strict Boolean value: True ("<") or False ("<=")
-	 * @return BoundObject with an upper bound and strictness provided as arguments when method is called
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 */
 	public static BoundsObject newUpperBound(SymbolicExpression expression,
 			Number bound, boolean strict) {
 		BoundsObject result = new BoundsObject(expression);
@@ -92,15 +74,6 @@ public class BoundsObject implements Interval {
 		return result;
 	}
 
-	/**
-	 * Modifies a BoundsObject to constrain the bound at a single value (value <= Symbolic Expression <= value).
-	 * 
-	 * @param expression SARL Symbolic Expression being tightly bounded (upper and lower)
-	 * @param bound SARL Number providing the value of the bound being set
-	 * @return BoundsObject with the provided Symbolic Expression with a upper and lower bound value of the 
-	 * provided SARL Number
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 */
 	public static BoundsObject newTightBound(SymbolicExpression expression,
 			Number bound) {
 		BoundsObject result = new BoundsObject(expression);
@@ -109,16 +82,6 @@ public class BoundsObject implements Interval {
 		return result;
 	}
 
-	/**
-	 * Private default constructor with the complete set of constructor arguments for a BoundsObject.
-	 * 
-	 * @param symbolicConstant SARL Symbolic Expression being being bounded
-	 * @param upper SARL Number providing the value of the upper bound being set
-	 * @param strictUpper Strictness of upper bound. Boolean value: True ("<") or False ("<=")
-	 * @param lower SARL Number providing the value of the lower bound being set
-	 * @param strictLower Strictness of lower bound. Boolean value: True ("<") or False ("<=")
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 */
 	private BoundsObject(SymbolicExpression symbolicConstant, Number upper,
 			boolean strictUpper, Number lower, boolean strictLower) {
 		assert symbolicConstant != null;
@@ -129,26 +92,10 @@ public class BoundsObject implements Interval {
 		this.strictLower = strictLower;
 	}
 
-	/**
-	 * Single-parameter, private constructor called by newLowerBound, newUpperBound, newTightBound
-	 * that sets the Symbolic Expression of a newly-created BoundsObject.
-	 * 
-	 * @param symbolicConstant SARL Symbolic Expression to have a bound applied
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 * @see newLowerBound for call of this method in modifying the lower bound of a BoundsObject
-	 * @see newUpperBound for call of this method in modifying the upper bound of a BoundsObject
-	 * @see newTightBound for call of this method in modifying the tight bound of a BoundsObject
-	 */
 	private BoundsObject(SymbolicExpression symbolicConstant) {
 		this(symbolicConstant, null, true, null, true);
 	}
 
-	/**
-	 * Private setter that modifies the lower bound of a BoundsObject
-	 * 
-	 * @param bound SARL Number providing the value of the lower bound being set
-	 * @param strict Boolean value: True ("<") or False ("<=")
-	 */
 	private void setLower(Number bound, boolean strict) {
 		if (bound == null && !strict)
 			throw new RuntimeException(
@@ -165,12 +112,6 @@ public class BoundsObject implements Interval {
 		this.strictLower = strict;
 	}
 
-	/**
-	 * Private setter that modifies the upper bound of a BoundsObject
-	 * 
-	 * @param bound SARL Number providing the value of the upper bound being set
-	 * @param strict Boolean value: True ("<") or False ("<=")
-	 */
 	private void setUpper(Number bound, boolean strict) {
 		if (bound == null && !strict)
 			throw new RuntimeException(
@@ -210,11 +151,6 @@ public class BoundsObject implements Interval {
 		return false;
 	}
 
-	/**
-	 * Getter method for retrieving the underlying Symbolic Expression of a BoundsObject
-	 * 
-	 * @return The Symbolic Expression of BoundsObject this method is called by
-	 */
 	public SymbolicExpression symbolicConstant() {
 		return expression;
 	}
@@ -249,15 +185,6 @@ public class BoundsObject implements Interval {
 		return !isIntegral();
 	}
 
-	/**
-	 * Setter to make a BoundsObject tightly bounded about the underlying Symbolic Expression of the BoundsObject
-	 * (value <= Symbolic Expression <= value).
-	 * <p>
-	 * Automatically sets the tight bound (upper, lower) to non-strict.
-	 * 
-	 * @param value SARL Number providing the value of the bound being set
-	 * @see BoundsObject for associated constraints on real/integer type and strictness
-	 */
 	public void makeConstant(Number value) {
 		if (value == null)
 			throw new RuntimeException(
@@ -277,12 +204,6 @@ public class BoundsObject implements Interval {
 		strictUpper = false;
 	}
 
-	/**
-	 * Indicates if the bounds of a BoundsObject are in the form "lower <= Symbolic Expression <= upper".
-	 * 
-	 * @return (Boolean value) True if a lower bound is not of a greater value than the upper bound, 
-	 * false otherwise
-	 */
 	public boolean isConsistent() {
 		int compare;
 
@@ -339,13 +260,6 @@ public class BoundsObject implements Interval {
 		}
 	}
 
-	/**
-	 * Modifies the lower bound of a BoundsObject if the desired new lower bound is of a lower absolute value.
-	 * 
-	 * @param thatLower The desired, new, lower bound for the BoundsObject calling this method
-	 * @param thatStrict Strictness of new, more restrictive bound.
-	 * @return If a new lower bound of -infty (value of null) is provided, no changes to the BoundsObject are made.
-	 */
 	public void restrictLower(Number thatLower, boolean thatStrict) {
 		if (thatLower == null) {
 			return;

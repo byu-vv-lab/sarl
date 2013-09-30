@@ -471,50 +471,12 @@ public interface PreUniverse {
 
 	/** The symbolic expression representing the real number 1. */
 	NumericExpression oneReal();
-	/**
-	 * Creates a concrete expression from the given integer.
-	 * 
-	 * @param value
-	 *            a Java integer type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         integer
-	 */
-
 
 	NumericExpression rational(int value);
-	/**
-	 * Creates a concrete expression from the given long.
-	 * 
-	 * @param value
-	 *            a Java long type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         long
-	 */
-
 
 	NumericExpression rational(long value);
-	
-	/**
-	 * Creates a concrete expression from the given BigInteger.
-	 * 
-	 * @param value
-	 *            a Java.Math BigInteger type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         BigInteger
-	 */
-
 
 	NumericExpression rational(BigInteger value);
-	
-	/**
-	 * Creates a concrete expression from the given float.
-	 * 
-	 * @param value
-	 *            a Java float type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         float
-	 */
-
 
 	NumericExpression rational(float value);
 
@@ -532,8 +494,8 @@ public interface PreUniverse {
 	NumericExpression rational(double value);
 
 	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
-	 * division.
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
 	 * 
 	 * @param numerator
 	 *            a Java int
@@ -543,34 +505,8 @@ public interface PreUniverse {
 	 *         symbolic expression
 	 */
 	NumericExpression rational(int numerator, int denominator);
-	
-	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
-	 * division.
-	 * 
-	 * @param numerator
-	 *            a Java long
-	 * @param denominator
-	 *            a Java long
-	 * @return the real number formed by dividing numerator by denominator, as a
-	 *         symbolic expression
-	 */
-
 
 	NumericExpression rational(long numerator, long denominator);
-	
-	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by performing real
-	 * division.
-	 * 
-	 * @param numerator
-	 *            a Java.Math.BigInteger
-	 * @param denominator
-	 *            a Java.Math.BigInteger
-	 * @return the real number formed by dividing numerator by denominator, as a
-	 *         symbolic expression
-	 */
-
 
 	NumericExpression rational(BigInteger numerator, BigInteger denominator);
 
@@ -622,7 +558,7 @@ public interface PreUniverse {
 	 *            a symbolic expression of a numeric type
 	 * @param arg1
 	 *            a symbolic expression of the same numeric type
-	 * @return expression representing the sum
+	 * @return arg0+arg1
 	 */
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
@@ -697,21 +633,18 @@ public interface PreUniverse {
 	 *            a symbolic expression of integer type
 	 * @param arg1
 	 *            a symbolic expression of integer type
-	 * @return an expression representing arg0 % arg1
+	 * @return arg0 % arg1
 	 */
 	NumericExpression modulo(NumericExpression arg0, NumericExpression arg1);
 
 	/**
-	 * Returns a symbolic expression which is the result of subtracting the given
-	 * two numerical expressions. The given expression must be non-null and have
+	 * Returns a symbolic expression which is the negative of the given
+	 * numerical expression. The given expression must be non-null and have
 	 * either integer or real type.
 	 * 
-	 * @param arg0
+	 * @param arg
 	 *            a symbolic expression of integer or real type
-	 * @param arg1
-	 * 			  a symbolic expression of integer or real type
-	 * @return 
-	 * 			  an expression representing ar0 - arg1
+	 * @return -arg
 	 */
 	NumericExpression minus(NumericExpression arg);
 
@@ -721,40 +654,31 @@ public interface PreUniverse {
 	 * necessarily return an expression with operator POWER.
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            the base expression in the power expression
 	 * @param exponent
-	 *            a non-negative concrete IntObject exponent
-	 * @return
-	 * 			 the expression after applying power operation
+	 *            a non-negative concrete integer exponent
 	 */
 	NumericExpression power(NumericExpression base, IntObject exponent);
 
 	/**
-	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
-	 * This method might actually multiply out the expression, i.e., it does not
-	 * necessarily return an expression with operator POWER.
+	 * Shorthand for power(base, intObject(exponent)).
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            he base expression in the power expression
+	 * 
 	 * @param exponent
 	 *            a non-negative concrete integer exponent
-	 * @return
-	 * 			 the expression after applying power operation
-	 * 
+	 * @return power(base, intObject(exponent))
 	 */
 	NumericExpression power(NumericExpression base, int exponent);
 
 	/**
-	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
-	 * This method might actually multiply out the expression, i.e., it does not
-	 * necessarily return an expression with operator POWER.
+	 * General power operator: e^b. Both e and b are numeric expressions.
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            the base expression in the power expression
 	 * @param exponent
-	 *            the exponent expression
-	 * @return
-	 * 			 the expression after applying power operation
+	 *            the exponent in the power expression
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
@@ -1112,30 +1036,13 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression append(SymbolicExpression concreteArray,
 			SymbolicExpression element);
-	/**
-	 * Remove an element from array at the given position. Returns a new array expression which is same as old 
-	 * except the removed element won't be included
-	 * 
-	 * @param concreteArray
-	 *            the given concrete array
-	 * @param index
-	 * 			the position where the element will be deleted
-	 * 
-	 * 
-	 * @return an array obtained by removing element from given array
-	 */
-
-	
-
-	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
-			int index);
 
 	/**
-	 * Returns an array of length 0.
+	 * Returns array of length 0.
 	 * 
 	 * @param elementType
 	 *            the type of the non-existent elements of this array
-	 * @return an empty array with length 0 of given type
+	 * @return array of length 0 of given type
 	 */
 	SymbolicExpression emptyArray(SymbolicType elementType);
 
@@ -1158,7 +1065,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type representing the position of the element within the array
+	 *            symbolic expression of integer type
 	 * @return expression representing value of index-th element of the array
 	 */
 	SymbolicExpression arrayRead(SymbolicExpression array,
@@ -1172,7 +1079,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type representing the position of the element within the array
+	 *            symbolic expression of integer type
 	 * @param value
 	 *            the new value for the element at position index
 	 * @return expression representing the result of changing the index-th
@@ -1299,9 +1206,7 @@ public interface PreUniverse {
 
 	/**
 	 * Returns the type referenced by a reference into an object of the given
-	 * type. You can only use this method to get the type referenced into a
-	 * SymbolicType, not a SymbolicExpression.
-	 * Example: if type is array-of-int and the reference is an array
+	 * type. Example: if type is array-of-int and the reference is an array
 	 * element reference, this method returns int.
 	 * 
 	 * @param type
@@ -1353,16 +1258,12 @@ public interface PreUniverse {
 	SymbolicExpression assign(SymbolicExpression value,
 			ReferenceExpression reference, SymbolicExpression subValue);
 
+	// Additional methods not part of SymbolicUniverse...
+
 	void incrementValidCount();
 
 	void incrementProverValidCount();
 
-	/**
-	 * Given an iterable collection of SymbolicTypes, returns a SymbolicTypeSequence
-	 * conatining those SymbolicTypes
-	 * @param SymbolicType - types
-	 * @return SymbolicTypeSequence of SymbolicType - types
-	 */
 	SymbolicTypeSequence typeSequence(Iterable<? extends SymbolicType> types);
 
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(

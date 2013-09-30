@@ -66,7 +66,6 @@
 		<pathelement location="${test.src.dir}" />
 		<pathelement location="${bin.dir}" />
 		<pathelement location="${junit.jar}" />
-		<pathelement location="${hamcrest.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.classes}" />
@@ -76,7 +75,6 @@
 		<pathelement location="${test.bin.dir}" />
 		<pathelement location="${bin.dir}" />
 		<pathelement location="${junit.jar}" />
-		<pathelement location="${hamcrest.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.classes}" />

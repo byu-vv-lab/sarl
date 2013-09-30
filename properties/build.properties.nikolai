@@ -4,4 +4,3 @@ clj-ds.classes=/Users/tester/VSL/Tools/src/clj-ds-master/src/main/java
 pcollections.jar=/Users/tester/VSL/Tools/lib/pcollections.jar
 junit.jar=/Users/tester/VSL/Tools/lib/junit.jar
 jacoco.jar=/Users/tester/VSL/Tools/src/jacoco/lib/jacocoant.jar
-hamcrest.jar=/Users/tester/VSL/Tools/lib/hamcrest-core.jar

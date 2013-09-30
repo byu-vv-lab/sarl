@@ -4,4 +4,3 @@ clj-ds.classes=/VSL/Tools/src/clj-ds-master/src/main/java
 pcollections.jar=/VSL/Tools/lib/pcollections.jar
 junit.jar=/VSL/Tools/lib/junit.jar
 jacoco.jar=/VSL/Tools/src/jacoco/lib/jacocoant.jar
-hamcrest.jar=/VSL/Tools/lib/hamcrest-core.jar

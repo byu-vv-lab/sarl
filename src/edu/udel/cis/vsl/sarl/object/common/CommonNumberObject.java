@@ -79,9 +79,6 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 		return value instanceof RationalNumber;
 	}
 
-	/**
-	 * Intentionally empty method
-	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
@@ -93,9 +90,7 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer buffer = new StringBuffer(value.toString());
-		if (atomize) this.atomize(buffer);
-		return buffer;
+		return new StringBuffer(value.toString());
 	}
 
 	@Override

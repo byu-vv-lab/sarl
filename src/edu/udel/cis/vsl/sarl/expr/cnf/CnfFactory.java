@@ -172,17 +172,17 @@ public class CnfFactory implements BooleanExpressionFactory {
 			SymbolicOperator op1 = c1.operator();
 
 			if (op0 == SymbolicOperator.AND) {
-				BooleanExpression result = trueExpr;
+				BooleanExpression result = falseExpr;
 
 				for (BooleanExpression clause : c0.booleanSetArg(0))
-					result = and(result, or(clause, c1));
+					result = or(result, and(clause, c1));
 				return result;
 			}
 			if (op1 == SymbolicOperator.AND) {
-				BooleanExpression result = trueExpr;
+				BooleanExpression result = falseExpr;
 
 				for (BooleanExpression clause : c1.booleanSetArg(0))
-					result = and(result, or(c0, clause));
+					result = or(result, and(c0, clause));
 				return result;
 			}
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {

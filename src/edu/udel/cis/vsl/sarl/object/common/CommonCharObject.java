@@ -36,20 +36,11 @@ public class CommonCharObject extends CommonSymbolicObject implements
 		return value;
 	}
 
-	/**
-	 * Compares the boolean values of two boolean objects
-	 * Know that o has kind BOOLEAN and is not == to this.
-	 * @return Boolean
-	 */
 	@Override
 	public boolean intrinsicEquals(SymbolicObject o) {
 		return value == ((CharObject) o).getChar();
 	}
 
-	/**
-	 * Returns a hash code for the boolean object
-	 * @return Hash Code
-	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode()
@@ -61,9 +52,6 @@ public class CommonCharObject extends CommonSymbolicObject implements
 		return new Character(value).toString();
 	}
 
-	/**
-	 * Empty method; does nothing.
-	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
@@ -75,10 +63,7 @@ public class CommonCharObject extends CommonSymbolicObject implements
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer buffer = new StringBuffer(Character.toString(value));
-		if (atomize)
-			this.atomize(buffer);
-		return buffer;
+		return new StringBuffer(Character.toString(value));
 
 	}
 

@@ -296,7 +296,6 @@ public abstract class CommonSimplifier implements Simplifier {
 							for (int j = i + 1; j < numArgs; j++)
 								simplifiedArgs[j] = simplifyObject(expression
 										.argument(j));
-							break;
 						}
 					}
 				} else {
@@ -317,8 +316,6 @@ public abstract class CommonSimplifier implements Simplifier {
 	// !(0<=a) <=> a<0 <=> -a>0 <=> 0<-a
 
 	// also might be able to simplify symbolic constants such as booleans
-
-	public static int simplifyCount = 0;
 
 	@Override
 	public SymbolicExpression apply(SymbolicExpression expression) {

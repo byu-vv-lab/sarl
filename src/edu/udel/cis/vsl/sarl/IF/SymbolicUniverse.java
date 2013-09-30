@@ -1137,8 +1137,6 @@ public interface SymbolicUniverse {
 	 * Appends an element to the end of a concrete symbolic array. Returns a new
 	 * array expression which is same as old with new element appended to end.
 	 * 
-	 * TODO: extend to arbitrary arrays, not just symbolic
-	 * 
 	 * @param concreteArray
 	 *            a concrete array
 	 * @param element
@@ -1148,28 +1146,6 @@ public interface SymbolicUniverse {
 	 */
 	SymbolicExpression append(SymbolicExpression concreteArray,
 			SymbolicExpression element);
-
-	/**
-	 * Removes an element in a specified position in a concrete symbolic array.
-	 * Returns a new array which is same as old except the element has been
-	 * removed and the remaining elements have been shifted down to remove the
-	 * gap. The resulting array has length 1 less than the original one.
-	 * 
-	 * TODO: extend to arbitrary arrays, not just symbolic
-	 * 
-	 * @param concreteArray
-	 *            a concrete array
-	 * @param index
-	 *            an int index
-	 * @return array obtained by removing element at specified index
-	 * @throws SARLException
-	 *             if index is negative or greater than or equal to the length
-	 *             of the given concrete array
-	 * 
-	 * 
-	 */
-	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
-			int index);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a

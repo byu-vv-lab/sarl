@@ -29,13 +29,9 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
-import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class UnionTest {
@@ -54,15 +50,10 @@ public class UnionTest {
 	 * precisely: inject(1, 2/3), inject(2, true), and inject(0, 10).
 	 */
 	SymbolicExpression a;
-	
-	private BooleanExpressionFactory booleanFactory;
 
 	@Before
 	public void setUp() throws Exception {
 		universe = Universes.newIdealUniverse();
-		FactorySystem system = PreUniverses.newIdealFactorySystem();
-		
-		booleanFactory = system.booleanFactory();
 		intType = universe.integerType();
 		realType = universe.realType();
 		booleanType = universe.booleanType();
@@ -137,35 +128,19 @@ public class UnionTest {
 
 	@Test
 	public void unionTestTest() {
-		
 		SymbolicExpression ten = universe.integer(10);
 		SymbolicExpression u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
-
 		SymbolicExpression test0 = universe.unionTest(universe.intObject(0),
 				u_ten);
 		SymbolicExpression test1 = universe.unionTest(universe.intObject(1),
 				u_ten);
 		SymbolicExpression test2 = universe.unionTest(universe.intObject(2),
 				u_ten);
-		
+
 		assertEquals(universe.bool(true), test0);
 		assertEquals(universe.bool(false), test1);
 		assertEquals(universe.bool(false), test2);
-	}
-	
-	@Test
-	public void abstractUnionTestTest(){
-		
-		SymbolicExpression x = universe.symbolicConstant(universe.stringObject("x"), union1);
-		
-		SymbolicExpression test0 = universe.unionTest(universe.intObject(0), x);
-		
-		assertEquals(booleanType, test0.type());
-		assertEquals(SymbolicExpression.SymbolicOperator.UNION_TEST, test0.operator());
-		assertEquals(universe.intObject(0), test0.argument(0));
-		assertEquals(x, test0.argument(1));
-		
 	}
 
 	@Test

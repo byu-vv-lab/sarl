@@ -46,15 +46,6 @@ public class AffineExpression {
 	private Number coefficient; /* not null */
 
 	private Number offset; /* not null */
-	
-	/**
-	 * @param pseudo
-	 * 			Polynomial
-	 * @param coefficient
-	 * 		 leading coefficient number
-	 * @param offset
-	 * 			offset number
-	 */
 
 	public AffineExpression(Polynomial pseudo, Number coefficient, Number offset) {
 		assert coefficient != null;
@@ -64,9 +55,7 @@ public class AffineExpression {
 		this.coefficient = coefficient;
 		this.offset = offset;
 	}
-/** 
- * @return coefficient * pseudo
- */
+
 	public String toString() {
 		String result = "";
 
@@ -80,25 +69,15 @@ public class AffineExpression {
 		}
 		return result;
 	}
-	/**
-	 * 
-	 * @return Polynomial
-	 */
 
 	public Polynomial pseudo() {
 		return pseudo;
 	}
-/**
- * 
- * @return   coefficient number
- */
+
 	public Number coefficient() {
 		return coefficient;
 	}
-/**
- * 
- * @return offset number
- */
+
 	public Number offset() {
 		return offset;
 	}
@@ -106,13 +85,6 @@ public class AffineExpression {
 	boolean iff(boolean p, boolean q) {
 		return (p && q) || ((!p) && !q);
 	}
-/**
- * Equals compares an affineExpression to another
- * @return boolean
- * 	       true if equal false if not equal
- * @param object 
- * 			an AffineExpression
- */
 
 	@Override
 	public boolean equals(Object object) {

@@ -91,13 +91,6 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Returns the arguments of this symbolic expression.
-	 */
-	public SymbolicObject[] arguments() {
-		return arguments;
-	}
-
-	/**
 	 * Know that o has argumentKind SYMBOLIC_EXPRESSION and is not == to this.
 	 */
 	@Override
@@ -161,7 +154,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		buffer.append("[");
 		buffer.append(operator.toString());
 		buffer.append("; ");
-		buffer.append(type != null ? type.toString() : "no type");
+		buffer.append(type.toString());
 		buffer.append("; ");
 		buffer.append(toStringBufferLong(arguments));
 		buffer.append("]");
@@ -232,7 +225,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			processFlexibleBinary(result, "+", false, atomize);
 			return result;
 		case AND:
-			processFlexibleBinary(result, " && ", true, atomize);
+			processFlexibleBinary(result, " && ", false, atomize);
 			return result;
 		case APPLY: {
 			result.append(arguments[0].toStringBuffer(true));
@@ -347,8 +340,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case INT_DIVIDE: {
 			result.append(arguments[0].toStringBuffer(true));
-			// result.append("\u00F7");
-			result.append(" div ");
+			result.append("\u00F7");
 			result.append(arguments[1].toStringBuffer(true));
 			if (atomize)
 				atomize(result);
@@ -418,8 +410,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case OR:
 			processFlexibleBinary(result, " || ", false, atomize);
-//			if (atomize)
-//				atomize(result);
+			if (atomize)
+				atomize(result);
 			return result;
 		case POWER:
 			result.append(arguments[0].toStringBuffer(true));

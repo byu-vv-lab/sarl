@@ -58,7 +58,6 @@ public abstract class CommonSymbolicType extends CommonSymbolicObject implements
 
 			if (kind != that.kind)
 				return false;
-			
 			return typeEquals(that);
 		}
 		return false;
