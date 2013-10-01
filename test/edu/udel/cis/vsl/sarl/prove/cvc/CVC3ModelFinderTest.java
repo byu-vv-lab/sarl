@@ -355,12 +355,9 @@ public class CVC3ModelFinderTest {
 	public void testAssignTupleInt() {
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
 		tupleList.add(universe.integer(1));
-		tupleList.add(universe.integer(2));
-		tupleList.add(universe.integer(3));
 
 		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
 		tupleType.add(universe.integerType());
-		tupleType.add(universe.realType());
 		
 		SymbolicExpression sarlTuple = universe.tuple(universe.tupleType(
 				universe.stringObject("myFavoriteTuple"), tupleType), tupleList);
@@ -372,6 +369,6 @@ public class CVC3ModelFinderTest {
 		
 		ValidityResult result = cvcProver.validOrModel(predicate);
 		
-		assertEquals(ResultType.NO, result.getResultType());	
+		assertEquals(ResultType.NO, result.getResultType());
 	}
 }
