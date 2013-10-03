@@ -37,8 +37,7 @@ public class CVC3UnionTest {
 	// types
 	private static SymbolicType realType = universe.realType();
 	private static SymbolicType intType = universe.integerType();
-	private static SymbolicType boolType = universe.booleanType();
-	private static SymbolicUnionType intRealBoolUnion;
+	private static SymbolicUnionType intRealUnion;
 	private static SymbolicType unionArrayType;
 	// expressions
 	private static SymbolicExpression tenAndHalf = universe.rational(10.5);
@@ -67,33 +66,27 @@ public class CVC3UnionTest {
 		vc = cvcProver.validityChecker();
 		
 		// make a union to test
-		// union of int, real, bool
-		intRealBoolUnion = universe.unionType(universe
+		// union of int, real, herbrand int
+		intRealUnion = universe.unionType(universe
 				.stringObject("union1"), Arrays.asList(new SymbolicType[]
-						{intType, realType, boolType}));
+						{intType, realType}));
 		// union array type
-		unionArrayType = universe.arrayType(intRealBoolUnion);
+		unionArrayType = universe.arrayType(intRealUnion);
 		
 		// union array expression to write values to
 		unionArray = universe
 				.symbolicConstant(universe.stringObject("unionArray"),
 						unionArrayType);
-		// add true bool
-		unionArray = universe.arrayWrite(unionArray, 
-				universe.integer(0), // index of array
-				universe.unionInject(intRealBoolUnion,
-						universe.intObject(2), // 2 is index of type (bool)
-						booleanExprTrue));
 		// add 10.5 real
 		unionArray = universe.arrayWrite(unionArray, 
 				universe.integer(1), // index of array
-				universe.unionInject(intRealBoolUnion,
+				universe.unionInject(intRealUnion,
 						universe.intObject(1), // 1 is index of type (real)
 						tenAndHalf));
 		// add 0 int
 		unionArray = universe.arrayWrite(unionArray, 
 				universe.integer(2), // index of array
-				universe.unionInject(intRealBoolUnion,
+				universe.unionInject(intRealUnion,
 						universe.intObject(0), // 0 is index of type (int)
 						universe.integer(0)));
 	}
@@ -105,42 +98,67 @@ public class CVC3UnionTest {
 	@Test
 	public void testTranslateUnionInject() {
 		// translate union type
-		Type unionType = cvcProver.translateType(intRealBoolUnion);
-		// inject bool false
+		Type unionType = cvcProver.translateType(intRealUnion);
 		
-		// both versions gives an error in translateUnionInject
-		SymbolicExpression injectBoolFalse = universe
-				.unionInject(intRealBoolUnion, universe.intObject(2), 
-						booleanExprFalse);
+		// inject -0.5 real
+		SymbolicExpression injectNegHalf = universe
+				.unionInject(intRealUnion, universe.intObject(1), 
+						universe.rational(-0.5));
 		
-		SymbolicExpression injectBoolFalse2 = expressionFactory
-				.expression(SymbolicOperator.UNION_INJECT, realType,
-						universe.intObject(1), tenAndHalf);
-		
-		Expr translateResult = cvcProver.translate(injectBoolFalse);
-		out.println(translateResult);
+		Expr translateResult = cvcProver.translate(injectNegHalf);
+//		out.println(translateResult);
+//		out.println(injectNegHalf);
 	}
 	
 	@Test
 	public void testTranslateUnionExtract() {
 		// inject statement
 		SymbolicExpression injectedTenAndHalf = universe.unionInject(
-				intRealBoolUnion, universe.intObject(1), tenAndHalf);
+				intRealUnion, universe.intObject(1), tenAndHalf);
 
 		// extract 10.5 real
-		
-		// this version translates as concrete, so no coverage for union extract
-//		SymbolicExpression extractReal = universe
-//				.unionExtract(universe.intObject(1), injectedTenandHalf);
-		
-		cvcProver.translateType(intRealBoolUnion);
-		
-		// this version gives an error in translateUnionExtract
+		cvcProver.translateType(intRealUnion);		
 		SymbolicExpression extractReal2 = expressionFactory
 				.expression(SymbolicOperator.UNION_EXTRACT, realType,
 						universe.intObject(1), injectedTenAndHalf);
 		
 		Expr translateResult = cvcProver.translate(extractReal2);
-		out.println("translateResult: " + translateResult);
+//		out.println("translateResult: " + translateResult);
+//		out.println(extractReal2);
+	}
+	
+	@Test
+	public void testTranslateUnionTest() {
+		// inject statement
+		SymbolicExpression injectedTenAndHalf = universe.unionInject(
+				intRealUnion, universe.intObject(1), tenAndHalf);
+		// union test
+		// translate type first
+		cvcProver.translateType(intRealUnion);		
+		SymbolicExpression intTest = expressionFactory
+				.expression(SymbolicOperator.UNION_TEST, universe.booleanType(),
+						universe.intObject(0), injectedTenAndHalf);
+		
+		Expr translateResult = cvcProver.translate(intTest);
+//		out.println(translateResult);
+		assertEquals(intTest.isTrue(), translateResult.isTrue());
+		
+		intTest = expressionFactory
+				.expression(SymbolicOperator.UNION_TEST, universe.booleanType(),
+						universe.intObject(1), injectedTenAndHalf);
+		translateResult = cvcProver.translate(intTest);
+//		out.println(translateResult);
+		assertEquals(intTest.isTrue(), translateResult.isTrue());
+		
+		// inject statement
+		SymbolicExpression injectedZero = universe.unionInject(
+				intRealUnion, universe.intObject(0), universe.zeroInt());
+		
+	    intTest = expressionFactory
+				.expression(SymbolicOperator.UNION_TEST, universe.booleanType(),
+						universe.intObject(1), injectedZero);
+		translateResult = cvcProver.translate(intTest);
+//		out.println(translateResult);
+		assertEquals(intTest.isTrue(), translateResult.isTrue());
 	}
 }
