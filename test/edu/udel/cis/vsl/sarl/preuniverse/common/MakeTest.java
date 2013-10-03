@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -257,21 +258,33 @@ public class MakeTest {
 		SymbolicObject[] Args_TupleWrite={tuple,i1,two};
 		assertEquals(universe.make(SymbolicOperator.TUPLE_WRITE,Integer,Args_TupleWrite),resultedTuple);
 		//case UNION_INJECT
-		//		LinkedList<SymbolicType> memberTypes;
-		//		memberTypes = new LinkedList<SymbolicType>();
-		//		memberTypes.add(integerType);
-		//		memberTypes.add(realType);
-		//		union1 = universe.unionType(
-		//				universe.stringObject("union1"),
-		//				Arrays.asList(new SymbolicType[] { integerType, realType,
-		//						booleanType, realArray }));
-		//		SymbolicObject x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
-		//		symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
-		//				universe.unionType(universe.stringObject("MyUnion1"),
-		//						memberTypes), universe.intObject(1), x1);
-		//		symbolicExpr2 = universe.unionInject(union1, I1, symbolicExpr1);
-		//		SymbolicObject[] Args_Union_Inject={I1,symbolicExpr1};
-		//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);	
+		// finished by Jeff DiMarco (jdimarco) 10/3/13. Not sure who started this
+		LinkedList<SymbolicType> memberTypes;
+		memberTypes = new LinkedList<SymbolicType>();
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		IntObject I0 = universe.intObject(0);
+		union1 = universe.unionType(
+				universe.stringObject("union1"),
+				Arrays.asList(new SymbolicType[] { integerType, realType,
+						booleanType, realArray }));
+		SymbolicObject x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
+		SymbolicExpression symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
+				universe.unionType(universe.stringObject("MyUnion1"),
+						memberTypes), universe.intObject(1), x1);
+		SymbolicExpression symbolicExpr2 = universe.unionInject(union1, I0, universe.integer(5));
+		SymbolicObject[] Args_Union_Inject={I0,universe.integer(5)};
+		SymbolicExpression symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);
+		assertEquals(symbolicExpr2, symbolicExpr3);
+		//case UNION_TEST
+		// test written by Jeff DiMarco (jdimarco) 10/3/13. uses variables from UNION_INJECT case
+		// TODO: failing test
+		BooleanExpression ans1 = universe.unionTest(I0, symbolicExpr2);
+		SymbolicObject[] Args_Union_Test = {I0, symbolicExpr2};
+		symbolicExpr3 = universe.make(SymbolicOperator.UNION_TEST, union1, Args_Union_Test);
+		assertEquals(ans1, universe.bool(true));
+		assertEquals(symbolicExpr3, ans1);
+		
 	}
 
 }
