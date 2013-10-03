@@ -41,6 +41,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
@@ -83,51 +84,51 @@ public class MakeTest {
 	private static Collection<SymbolicObject> objectCollection;
 	private static ArrayList<NumericExpression> emptyNumericList;
 	private static ArrayList<NumericExpression> numericList;
-	
+
 	private static SymbolicUnionType union1;
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		universe = PreUniverses.newPreUniverse(system);
-		
+
 		// Types
 		integerType = universe.integerType();
 		booleanType = universe.booleanType();
 		realType = universe.realType();
 		arrayType = universe.arrayType(integerType); //creates an array of ints
 		realArray = universe.arrayType(realType);
-		
+
 		// For testing comparator() method
 		objectFactory = system.objectFactory();
 		objectComparator = objectFactory.comparator();
-		
+
 		// For testing nullExpression() method
 		expressionFactory = system.expressionFactory();
 		nullExpression = expressionFactory.nullExpression();
-		
+
 		booleanFactory = system.booleanFactory();
-		
+
 		// For testing objects() method
 		objectCollection = objectFactory.objects();
-		
+
 		// For testing multipl(Iterable) method
 		emptyNumericList = new ArrayList<NumericExpression>();
 		numericList = new ArrayList<NumericExpression>();
-		
+
 		numericFactory = system.numericFactory();
-		
+
 		typeFactory = system.typeFactory();
-		
+
 		union1 = universe.unionType(
 				universe.stringObject("union1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						booleanType, realArray }));
-		
-		
-		
+
+
+
 	}
-	
+
 	public void setUp() throws Exception {
 	}
 
@@ -138,29 +139,40 @@ public class MakeTest {
 	//@Ignore
 	@Test
 	public void testMake(){
-		NumericExpression zero,one,two,three,five, N_one;
-		BooleanExpression resultTrue, resultFalse;
-		SymbolicExpression array = null,resultArray,symbolicExpr1,symbolicExpr2,symbolicExpr3;
+		NumericExpression zero,one,two,three,five, N_one,low,high;
+		NumericSymbolicConstant x_var,y_var,z_var;
+		BooleanExpression resultTrue, resultFalse,expression,expression2;
+		SymbolicExpression array = null,y_minus_x,x_minus_y;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
 		SymbolicType Integer,Bool,Real;// For testing nullExpression() method
-
+		StringObject name = universe.stringObject("name");
+		SymbolicType type = universe.integerType(); 
+		SymbolicConstant index = universe.symbolicConstant(name, type);
 		Integer = universe.integerType();
 		Bool = universe.booleanType();
 		Real = universe.realType();
-		
-		
+
+
 		zero=universe.integer(0);
 		one = universe.integer(1);
 		two = universe.integer(2);
 		three = universe.integer(3);
 		five = universe.integer(5);
-		N_one=universe.integer(-1);
-		universe.minus(N_one);
+		N_one=universe.minus(one);;
+		low = universe.integer(999);
+		high = universe.integer(2000);
+		
+		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), realType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("y"), realType);
+		z_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("z"), realType);
 
 		//case ADD;
-		SymbolicObject[] Args_ADD={one,two};
-		assertEquals(universe.add(one,two),universe.make(SymbolicOperator.ADD,Integer,Args_ADD));
+		SymbolicObject[] Args_ADD={x_var,y_var};
+		assertEquals(universe.add(y_var,x_var),universe.make(SymbolicOperator.ADD,Integer,Args_ADD));
 		//case AND;
 		SymbolicObject[] Args_AND1={resultTrue,resultTrue};
 		SymbolicObject[] Args_AND2={resultTrue,resultFalse};
@@ -186,6 +198,16 @@ public class MakeTest {
 		//case DIVIDE:
 		SymbolicObject[] Args_Divide={two,one};
 		assertEquals(universe.make(SymbolicOperator.DIVIDE,Integer,Args_Divide),two);
+		//case EXITS
+		SymbolicObject[] Args_EXISTS={(NumericSymbolicConstant)index,resultFalse};
+		assertEquals(universe.make(SymbolicOperator.EXISTS,Bool,Args_EXISTS),resultFalse);
+		//case FORALL
+		BooleanExpression testResult1 = 
+				universe.forallInt((NumericSymbolicConstant)index, 
+						low, high, resultTrue);
+		SymbolicObject[] Args_FORALL={(NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("name"), integerType),resultTrue};
+		assertEquals(universe.make(SymbolicOperator.FORALL,Bool,Args_FORALL),testResult1);
 		//case MULTIPLY
 		SymbolicObject[] testList =new SymbolicObject[] {one};
 		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();
@@ -195,11 +217,13 @@ public class MakeTest {
 		SymbolicObject[] Args_Modulo= {three, one};
 		assertEquals(universe.make(SymbolicOperator.MODULO,Integer,Args_Modulo), zero);
 		//case NEGATIVE;
-		SymbolicObject[] Args_Negative={one};
-		assertEquals(N_one,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
+		y_minus_x = universe.subtract(y_var,x_var);
+		x_minus_y = universe.subtract(x_var,y_var);
+		SymbolicObject[] Args_Negative={x_minus_y};
+		assertEquals(y_minus_x,universe.make(SymbolicOperator.NEGATIVE,Integer,Args_Negative));
 		//case NEQ
 		SymbolicObject[] Args_NEQ={resultTrue,resultTrue};
-		assertEquals(universe.make(SymbolicOperator.OR,Bool,Args_NEQ),resultTrue);
+		assertEquals(universe.make(SymbolicOperator.NEQ,Bool,Args_NEQ),resultFalse);
 		//case NOT:
 		SymbolicObject[] Args_NOT={resultTrue};
 		assertEquals(universe.make(SymbolicOperator.NOT,Bool,Args_NOT),resultFalse);
@@ -210,7 +234,7 @@ public class MakeTest {
 		assertEquals(universe.make(SymbolicOperator.OR,Bool,Args_OR2),resultFalse);
 		assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR1)),resultTrue);
 		//assertEquals((universe.make(SymbolicOperator.OR,Bool,Args_OR3)),resultTrue);
-	 	//case POWER:
+		//case POWER:
 		IntObject I1;
 		I1 = universe.intObject(1);
 		SymbolicObject[] Args_Power1= {one, one};
@@ -233,21 +257,21 @@ public class MakeTest {
 		SymbolicObject[] Args_TupleWrite={tuple,i1,two};
 		assertEquals(universe.make(SymbolicOperator.TUPLE_WRITE,Integer,Args_TupleWrite),resultedTuple);
 		//case UNION_INJECT
-//		LinkedList<SymbolicType> memberTypes;
-//		memberTypes = new LinkedList<SymbolicType>();
-//		memberTypes.add(integerType);
-//		memberTypes.add(realType);
-//		union1 = universe.unionType(
-//				universe.stringObject("union1"),
-//				Arrays.asList(new SymbolicType[] { integerType, realType,
-//						booleanType, realArray }));
-//		SymbolicObject x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
-//		symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
-//				universe.unionType(universe.stringObject("MyUnion1"),
-//						memberTypes), universe.intObject(1), x1);
-//		symbolicExpr2 = universe.unionInject(union1, I1, symbolicExpr1);
-//		SymbolicObject[] Args_Union_Inject={I1,symbolicExpr1};
-//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);	
+		//		LinkedList<SymbolicType> memberTypes;
+		//		memberTypes = new LinkedList<SymbolicType>();
+		//		memberTypes.add(integerType);
+		//		memberTypes.add(realType);
+		//		union1 = universe.unionType(
+		//				universe.stringObject("union1"),
+		//				Arrays.asList(new SymbolicType[] { integerType, realType,
+		//						booleanType, realArray }));
+		//		SymbolicObject x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
+		//		symbolicExpr1 = expressionFactory.expression(SymbolicExpression.SymbolicOperator.UNION_INJECT, 
+		//				universe.unionType(universe.stringObject("MyUnion1"),
+		//						memberTypes), universe.intObject(1), x1);
+		//		symbolicExpr2 = universe.unionInject(union1, I1, symbolicExpr1);
+		//		SymbolicObject[] Args_Union_Inject={I1,symbolicExpr1};
+		//		symbolicExpr3 =universe.make(SymbolicOperator.UNION_INJECT,union1,Args_Union_Inject);	
 	}
-	
-	}
+
+}
