@@ -132,7 +132,17 @@ public interface NumericExpressionFactory {
 	NumericExpression oneInt();
 
 	NumericExpression oneReal();
-
+	/**
+	 * Returns a symbolic expression which is the result of adding arg1
+	 * from arg0. The two given expressions must have the same (numeric) type:
+	 * either both integers, or both real.
+	 * 
+	 * @param arg0
+	 *            a symbolic expression of a numeric type
+	 * @param arg1
+	 *            a symbolic expression of the same numeric type
+	 * @return arg0+arg1
+	 */
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
 	/**
