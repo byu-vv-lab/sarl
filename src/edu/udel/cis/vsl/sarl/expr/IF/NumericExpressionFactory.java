@@ -124,12 +124,31 @@ public interface NumericExpressionFactory {
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2);
-
+	/**
+	 * Returns a symbolic expression of integer type with the value of 0
+	 * @return
+	 */
+	
 	NumericExpression zeroInt();
+	
+	/**
+	 * Returns a symbolic expression of real type with the value of 0
+	 * @return
+	 */
 
 	NumericExpression zeroReal();
 
+	/**
+	 * Returns a symbolic expression of integer type with the value of 1
+	 * @return
+	 */
+	
 	NumericExpression oneInt();
+	
+	/**
+	 * Returns a symbolic expression of real type with the value of 1
+	 * @return
+	 */
 
 	NumericExpression oneReal();
 	/**
