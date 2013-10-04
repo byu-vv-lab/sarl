@@ -1,4 +1,4 @@
-/*Author: Gunjan Majmudar */
+/*@Author Gunjan Majmudar */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
@@ -79,7 +79,7 @@ public class FunctionCaseEqualsTest {
 	
 	@Ignore
 	@Test
-	public void functionCaseEqualsTest1(){
+	public void functionTypeCompatibleTest(){
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
 		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
 		SymbolicTupleType tupleType3 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
@@ -98,9 +98,9 @@ public class FunctionCaseEqualsTest {
 	}
 	
 	@Test
-	public void functionCaseEqualsTest2(){
+	public void equalsTest(){
 		
-		value3 = universe.add(a,b); //it is not recognizing it
+		value3 = universe.add(a,b);
 		value4 = universe.add(a,b);
 		value = universe.equals(value3, value4);
 

@@ -1,4 +1,4 @@
-/* Author: Gunjan Majmudar */
+/*@Author Gunjan Majmudar */
 
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
@@ -65,7 +65,7 @@ public class FunctionTypeTest {
 	
 	
 	@Test
-	public void FunctionTypeTest1(){
+	public void functionKindTest(){
 		SymbolicTupleType tupleType1 = universe.tupleType(universe.stringObject("SequenceofInteger"), Arrays.asList(new SymbolicType[]{integerType,integerType,integerType}));
 		SymbolicTupleType tupleType2 = universe.tupleType(universe.stringObject("Sequenceofreals"), Arrays.asList(new SymbolicType[]{realType,realType,realType}));
 		sequence1 = tupleType1.sequence();
