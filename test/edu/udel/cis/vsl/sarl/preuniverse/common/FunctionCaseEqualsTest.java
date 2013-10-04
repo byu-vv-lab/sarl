@@ -48,6 +48,7 @@ public class FunctionCaseEqualsTest {
 	
 	private static BooleanExpression value1, value2, value, trueExpr, falseExpr;
 	
+	private static NumericExpression a, b, c, value3, value4;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -57,6 +58,10 @@ public class FunctionCaseEqualsTest {
 		realType = universe.realType();
 		trueExpr = universe.trueExpression();
 		falseExpr = universe.falseExpression();
+		a = universe.integer(1);
+		b = universe.integer(2);
+		c = universe.integer(3);
+		
 		
 	}
 
@@ -95,9 +100,9 @@ public class FunctionCaseEqualsTest {
 	@Test
 	public void functionCaseEqualsTest2(){
 		
-		addition1 = universe.add(y,z); //it is not recognizing it
-		addition2 = universe.add(y,z);
-		value = universe.equals(addition1, addition2);
+		value3 = universe.add(a,b); //it is not recognizing it
+		value4 = universe.add(a,b);
+		value = universe.equals(value3, value4);
 
 		assertEquals (trueExpr,value);
 		
