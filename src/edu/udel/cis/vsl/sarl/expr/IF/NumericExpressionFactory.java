@@ -109,6 +109,18 @@ public interface NumericExpressionFactory {
 	NumericSymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type);
 
+	/**
+	 * Returns an expression, given the operator, type, and collection of arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param numericType
+	 * 		A SymbolicType
+	 * @param arguments
+	 * 		Collection of arguments
+	 * @return
+	 * 		Returns a NumericExpression
+	 */
+	
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, Collection<SymbolicObject> arguments);
 
@@ -166,7 +178,7 @@ public interface NumericExpressionFactory {
 
 	/**
 	 * Returns a symbolic expression which is the result of subtracting arg1
-	 * from arg0. The two given expressions must have the same (numeric) type:
+	 * and arg0. The two given expressions must have the same (numeric) type:
 	 * either both integers, or both real.
 	 * 
 	 * @param arg0
