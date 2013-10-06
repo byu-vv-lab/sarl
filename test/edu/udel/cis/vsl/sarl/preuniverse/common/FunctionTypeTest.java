@@ -1,4 +1,4 @@
-/*@Author Gunjan Majmudar */
+/*@author Gunjan Majmudar */
 
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;

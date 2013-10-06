@@ -1,4 +1,4 @@
-/* Author: Gunjan Majmudar */
+/* @author Gunjan Majmudar */
 
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
@@ -65,7 +65,7 @@ public class PureTypeTest {
 	}
 	
 	@Test
-	public void PureTypeTest1(){
+	public void pureTypeKindTest(){
 		
 		SymbolicType pureType1 = universe.pureType(integerType);
 		SymbolicType pureType2 = universe.pureType(integerType);

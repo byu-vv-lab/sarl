@@ -1,4 +1,4 @@
-/* Author: Gunjan Majmudar */
+/* @author Gunjan Majmudar */
 
 package edu.udel.cis.vsl.sarl.preuniverse.IF;
 
@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -24,6 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -33,20 +35,16 @@ public class ObjectWithIdTest {
 	
 	
 	private static PreUniverse universe;
-
-	private static SymbolicType realType, integerType,tupleType;
-
-	private static SymbolicTypeKind three;
 	
 	private static SymbolicObject stringObject, objectWithId;
+	
+	private static Collection test;
 	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem test = PreUniverses.newIdealFactorySystem();
 		universe =  PreUniverses.newPreUniverse(test);
-		integerType = universe.integerType();
-		realType = universe.realType();
 		stringObject = universe.stringObject("Hello");
 
 	}
@@ -67,8 +65,12 @@ public class ObjectWithIdTest {
 	@Test
 	public void objectWithIdTest(){
 		
-		objectWithId = universe.objectWithId(1);
-		assertEquals("Hello", objectWithId);
+		test = universe.objects();
+		System.out.print(test);
+		objectWithId = universe.objectWithId(40);
+		
+		assertEquals(universe.stringObject("Hello"), objectWithId);
+		
 		
 	}
 }
