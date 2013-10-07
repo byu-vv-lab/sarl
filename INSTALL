@@ -10,9 +10,15 @@ openjdk-7-jdk.
 2. Install Apache ant, if you don't already have it
 (http://ant.apache.org).
 
-3. Download the JUnit jar (v. 4.11), hamcrest, and Jacoco gzipped tar archives from
-http://vsl.cis.udel.edu/tools. Put these files somewhere on your
-system and untar the Jacoco archives.
+3. Point your web browser to http://vsl.cis.udel.edu/tools and download
+the following:
+  clj-ds.jar
+  hamcrest-core-1.3.jar
+  jacoco.tgz
+  jsr166y.jar
+  junit-4.11.jar
+  pcollections-2.1.2.jar
+Put these files somewhere on your system and untar the Jacoco archive.
 
 4. Download and build CVC3:
    4a. Start by downloading
@@ -20,11 +26,7 @@ system and untar the Jacoco archives.
        unzip and untar.  
    4b. On linux, make sure you have flex, bison, libgmp10, and openjdk-7-jdk.
        You can get these as follows:
-         sudo apt-get install flex --assume-yes
-         sudo apt-get install bison --assume-yes
-         sudo apt-get install libgmp10 --assume-yes
-         sudo apt-get install libgmp-dev --assume-yes
-         sudo apt-get install openjdk-7-jdk --assume-yes
+         sudo apt-get install flex bison libgmp10 libgmp-dev openjdk-7-jdk
        On OS X, use the App Store to install XCode, and use XCode to
        install the Developer Tools.
    4c. Change into the CVC3 directory and run the configure script as follows:
@@ -36,23 +38,16 @@ system and untar the Jacoco archives.
 ./configure CXXFLAGS=-m64 --enable-dynamic --enable-java --with-java-home=/System/Library/Frameworks/JavaVM.framework/Versions/Current --with-java-includes=/System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers
    4d. make
 
-5. Download and build clj-ds, Clojure's persistent data structures in
-pure Java. We need the older version found at http://vsl.cis.udel.edu/tools
-(The current version is at https://github.com/krukow/clj-ds).
+5. svn checkout svn://vsl.cis.udel.edu/sarl/trunk sarl
 
-6. Download and build PCollections, another persistent data structure
-library, from http://vsl.cis.udel.edu/tools.  (Current version is 
-at http://code.google.com/p/pcollections/).
+6. cd sarl
 
-7. svn checkout svn://vsl.cis.udel.edu/sarl
-
-8. cd sarl/trunk
-
-9. Create a file named build.properties by copying and editing one of
+7. Create a file named build.properties (in the same directory as the one
+containing build.xml) by copying and editing one of
 the examples in the properties directory.  Edit each entry to point to
-the corresponding items you downloaded in step 3.
+the corresponding items you downloaded and built in steps 3 and 4.
 
-10. Type "ant" and everything should build without warnings or errors
+8. Type "ant" and everything should build without warnings or errors
 and produce sarl.jar.  Type "ant test" to run a JUnit test suite.  All
 tests should pass.
 
@@ -62,8 +57,9 @@ If there are any problems, email siegel at udel dot edu.
 
 1. Start with Eclipse IDE for Java/EE developers, available at
 http://www.eclipse.org/downloads/
+You need at least version Kepler (which comes with JUnit 4.11)
 
-2. Do steps 1-6 from above if you have not already.
+2. Do steps 1-4 from above if you have not already.
 
 3. Install an SVN plugin in Eclipse (such as Subversive) if you have
 not already.
@@ -87,11 +83,10 @@ defining Classpath variables.  Navigate to Preferences->Java->Build
 Path->Classpath Variables->New and define a new variable called
 "CVC3". To define it, navigate to and select the file libcvc3.jar
 you created by building CVC3.  Create a new variable
-"CLJ-DS" to point to the directory containing the class files
-for CLJ-DS (.../src/main/java).  Create a new variable "PCOLLECTIONS"
-to point to the PCollections jar file.  You may optionally define
-variable for the source directories of all the above.  This can
-help with debugging.
+"CLJ-DS" to point to the clj-ds.jar file.  Create a new variable
+"PCOLLECTIONS" to point to the PCollections jar file.  You may
+optionally define variable for the source directories of all the above.
+This can help with debugging.
 
 8. Do a clean build.  Everything should compile.  Generate the sarl.jar
 by right-clicking (or ctrl-click on OS X) the build.xml file and
