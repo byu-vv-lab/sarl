@@ -10,7 +10,7 @@ openjdk-7-jdk.
 2. Install Apache ant, if you don't already have it
 (http://ant.apache.org).
 
-3. Download the JUnit jar (v. 4.11) and Jacoco gzipped tar archives from
+3. Download the JUnit jar (v. 4.11), hamcrest, and Jacoco gzipped tar archives from
 http://vsl.cis.udel.edu/tools. Put these files somewhere on your
 system and untar the Jacoco archives.
 
@@ -37,10 +37,12 @@ system and untar the Jacoco archives.
    4d. make
 
 5. Download and build clj-ds, Clojure's persistent data structures in
-pure Java, from https://github.com/krukow/clj-ds
+pure Java. We need the older version found at http://vsl.cis.udel.edu/tools
+(The current version is at https://github.com/krukow/clj-ds).
 
 6. Download and build PCollections, another persistent data structure
-library, from http://code.google.com/p/pcollections/
+library, from http://vsl.cis.udel.edu/tools.  (Current version is 
+at http://code.google.com/p/pcollections/).
 
 7. svn checkout svn://vsl.cis.udel.edu/sarl
 

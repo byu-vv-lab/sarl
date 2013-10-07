@@ -1,6 +1,6 @@
 cvc3.jni.dir=/usr/local/lib
 cvc3.lib.jar=/usr/local/java/libcvc3-5.0.0.jar
-clj-ds.classes=/tools/clj-ds-master/src/main/java
+clj-ds.jar=/tools/clj-ds.jar
 pcollections.jar=/tools/pcollections-2.1.2.jar
 junit.jar=/tools/junit-4.11.jar
 hamcrest.jar=/tools/hamcrest-core-1.3.jar
