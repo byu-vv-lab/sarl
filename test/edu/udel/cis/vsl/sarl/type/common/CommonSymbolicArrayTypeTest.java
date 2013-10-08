@@ -2,9 +2,6 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,11 +9,21 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 
+/**
+ * @author alali
+ * Testing CommonSymbolicArrayType
+ *  - typeEquals()
+ *  - computeHashCode()
+ *  - elementType()
+ *  - toStringBuffer()
+ *  - isComplete()
+ *  - canonizedChildren() - not yet tested
+ *  - getPureType() - not yet tested
+ *  - setPureType() - not yet tested.
+ */
 public class CommonSymbolicArrayTypeTest {
 		
 	CommonSymbolicArrayType intArrayType1, intArrayType11, intArrayType2, realArrayType1, realArrayType2;
@@ -52,12 +59,19 @@ public class CommonSymbolicArrayTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Testing the hash code of two array type
+	 * They should have the same Hash Code if they're identical
+	 */
 	@Test
 	public void testComputeHashCode() {
 		assertEquals(intArrayType1.computeHashCode(), intArrayType11.computeHashCode());
 		assertNotEquals(intArrayType1.computeHashCode(), intArrayType2.computeHashCode());
 	}
 	
+	/**
+	 * Testing if two types are equals, i.e. the have the same type and kins.
+	 */
 	@Test
 	public void testTypeEquals() {
 		
@@ -65,6 +79,10 @@ public class CommonSymbolicArrayTypeTest {
 		assertFalse(intArrayType1.typeEquals(intArrayType2));
 	}
 	
+	/**
+	 * Testing the Kinds of the types of the different array types
+	 * making sure that they've the same type as the enumerated predefined Kinds.
+	 */
 	@Test
 	public void testElementType() {
 		
@@ -78,18 +96,26 @@ public class CommonSymbolicArrayTypeTest {
 		assertEquals(((CommonSymbolicRealType)realArrayType2.elementType()).realKind(), RealKind.FLOAT);
 	}
 	
+	/**
+	 * Testing toStringBuffer for two identical array types.
+	 */
 	@Test
 	public void testToStringBuffer() {
 		assertEquals(intArrayType1.toStringBuffer(true).toString(), intArrayType11.toStringBuffer(true).toString());
 	}
 	
+	
+	/**
+	 *  Testing to make sure that this array type isn't complete.
+	 */
 	@Test
 	public void testIsComplete() {
 		assertFalse(intArrayType1.isComplete());
-		//assertTrue(intArrayType1.isIdeal());
+		//assertTrue(idealIntKind.isIdeal());
 	}
 	
-	/*
+
+	/**
 	 * testing if two array types are equal using
 	 * compareTo in TypeComparator
 	 */

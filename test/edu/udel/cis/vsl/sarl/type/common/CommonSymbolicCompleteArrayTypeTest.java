@@ -95,6 +95,7 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	@Test
 	public void testTypeComparator(){
 		//Null pointer exception
+		
 		//assertEquals(typeComparator.compare(completeArray3, completeArray33), 0);
 	}
 	

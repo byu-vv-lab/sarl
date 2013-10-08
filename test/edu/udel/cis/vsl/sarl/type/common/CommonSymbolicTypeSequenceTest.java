@@ -13,6 +13,18 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 
+/**
+ * @author alali
+ * 
+ * Testing CommonSymbolicTypeSequence
+ * - computeHashCode()
+ * - numTypes()
+ * - getType()
+ * - intrinsicEquals()
+ * - typeComparator()
+ * - canonizeChildren() - not tested yet
+ *
+ */
 public class CommonSymbolicTypeSequenceTest {
 
 	CommonSymbolicTypeSequence typeSequence, typeSequence2;
@@ -38,10 +50,10 @@ public class CommonSymbolicTypeSequenceTest {
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
 		types = new ArrayList<CommonSymbolicType>();
-		types.add(idealRealKind);
-		types.add(floatRealKind);
 		types.add(idealIntKind);
 		types.add(boundedIntKind);
+		types.add(idealRealKind);
+		types.add(floatRealKind);
 		typeSequence = new CommonSymbolicTypeSequence(types);
 		typeSequence2 = new CommonSymbolicTypeSequence(types);
 	}
@@ -91,8 +103,8 @@ public class CommonSymbolicTypeSequenceTest {
 		assertEquals(typeComparator.compare(typeSequence.getType(1), typeSequence.getType(2)), -1);
 		assertEquals(typeComparator.compare(typeSequence.getType(2), typeSequence.getType(3)), -1);
 		assertEquals(typeComparator.compare(typeSequence.getType(3), typeSequence.getType(4)), -1);
-
-	*/
+		 */
+	
 
 	}
 	/*
