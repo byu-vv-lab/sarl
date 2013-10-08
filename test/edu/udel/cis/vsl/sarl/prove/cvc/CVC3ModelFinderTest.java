@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
@@ -29,12 +30,8 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -83,6 +80,32 @@ public class CVC3ModelFinderTest {
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();
+	}
+	
+	@Test
+	public void testUniverseEquals() {
+		//Give the prover the assumption y = 6
+		CVC3TheoremProver cvcProverYIs6 = (CVC3TheoremProver) proverFactory
+				.newProver(universe.equals(universe.symbolicConstant(
+						universe.stringObject("y"), universe.integerType()),
+						universe.integer(6)));
+		vc = cvcProverYIs6.validityChecker();
+
+		StringObject strY = universe.stringObject("y");
+		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
+				universe.integerType());
+		StringObject strX = universe.stringObject("x");
+		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,
+				universe.integerType());
+		
+		SymbolicExpression symExprXplusY = expressionFactory.expression(
+				SymbolicOperator.ADD, universe.integerType(),
+				symConstYInt, symConstXInt);
+	
+		NumericExpression numExprSix = universe.integer(6);
+		BooleanExpression predicate = universe.equals(numExprSix, symExprXplusY);
+		ValidityResult result = cvcProverYIs6.validOrModel(predicate);
+		assertEquals(ResultType.NO, result.getResultType());
 	}
 
 	/*
@@ -185,7 +208,6 @@ public class CVC3ModelFinderTest {
 		assertEquals(ResultType.NO, resultType);
 
 		ModelResult model = (ModelResult) result;
-
 	}
 
 	@Test
@@ -281,10 +303,6 @@ public class CVC3ModelFinderTest {
 	public void testCVC3ModelFinderApplyBoolean() {
 
 		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
-		NumberFactory numFactory = factorySystem.numberFactory();
-		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
-		NumericExpressionFactory numericFactory = factorySystem
-				.numericFactory();
 		ObjectFactory objectFactory = factorySystem.objectFactory();
 
 		SymbolicObject[] args = new SymbolicObject[5];
@@ -300,12 +318,6 @@ public class CVC3ModelFinderTest {
 
 	@Test
 	public void testCVC3ModelFinderApplyReferenced() {
-		CollectionFactory collectionFactory = factorySystem.collectionFactory();
-		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
-		NumberFactory numFactory = factorySystem.numberFactory();
-		BooleanExpressionFactory boolFactory = factorySystem.booleanFactory();
-		NumericExpressionFactory numericFactory = factorySystem
-				.numericFactory();
 		ObjectFactory objectFactory = factorySystem.objectFactory();
 
 		SymbolicObject[] args = new SymbolicObject[3];
@@ -355,12 +367,15 @@ public class CVC3ModelFinderTest {
 	public void testAssignTupleInt() {
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
 		tupleList.add(universe.integer(1));
+		tupleList.add(universe.integer(2));
+		tupleList.add(universe.integer(3));
+		tupleList.add(universe.integer(4));
 
 		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
 		tupleType.add(universe.integerType());
 		
 		SymbolicExpression sarlTuple = universe.tuple(universe.tupleType(
-				universe.stringObject("myFavoriteTuple"), tupleType), tupleList);
+				universe.stringObject("myTuple"), tupleType), tupleList);
 		
 		SymbolicExpression sarlTupleRead = expressionFactory.expression(
 				SymbolicOperator.TUPLE_READ, sarlTuple.type(), sarlTuple, universe.intObject(0));
@@ -370,5 +385,30 @@ public class CVC3ModelFinderTest {
 		ValidityResult result = cvcProver.validOrModel(predicate);
 		
 		assertEquals(ResultType.NO, result.getResultType());
+		
+		ModelResult modelResult = (ModelResult) result;
+		
+		Map<SymbolicConstant, SymbolicExpression> model = modelResult.getModel();
+	
+		System.out.println(model);
+	}
+	
+	@Ignore
+	public void testConcreteArray() {
+		SymbolicObject[] soArray = new SymbolicObject[5];
+		soArray[0] = universe.integer(1);
+		soArray[1] = universe.integer(2);
+		soArray[2] = universe.integer(3);
+		soArray[3] = universe.integer(4);
+		soArray[4] = universe.integer(5);
+		SymbolicOperator concrete = SymbolicOperator.CONCRETE;
+		SymbolicExpression ne = expressionFactory.expression(concrete,
+				universe.integerType(), 
+				soArray);
+		
+		BooleanExpression predicate = universe.equals(ne, ne);
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		ResultType actual = result.getResultType();
+		assertEquals(actual, actual);
 	}
 }
