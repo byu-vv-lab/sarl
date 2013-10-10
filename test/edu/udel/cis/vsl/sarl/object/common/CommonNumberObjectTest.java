@@ -7,7 +7,10 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
+import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.number.real.RealRational;
 
 public class CommonNumberObjectTest {
@@ -19,6 +22,7 @@ public class CommonNumberObjectTest {
 	CommonNumberObject zero;
 	CommonNumberObject one;
 	CommonNumberObject negint;
+	NumberFactory realfactory;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -31,24 +35,25 @@ public class CommonNumberObjectTest {
 		this.zero = new CommonNumberObject(new RealInteger(BigInteger.ZERO));
 		this.one = new CommonNumberObject(new RealInteger(BigInteger.ONE));
 		this.negint = new CommonNumberObject(new RealInteger(new BigInteger("-123")));
+		this.realfactory = new RealNumberFactory();
 	}
 
-	@Test
-	public void testComputeHashCode() {
+	//@Test
+	//public void testComputeHashCode() {
 		//System.out.println(this.realint.computeHashCode());
 		//System.out.println(this.newrealint.computeHashCode());
 		//assertEquals(this.realint.computeHashCode(), this.newrealint.computeHashCode());
 		//assertEquals(this.realrational.computeHashCode(), this.newrealrational.computeHashCode());
-	}
+	//}
 
-	@Test
-	public void testIntrinsicEquals() {
+	//@Test
+	//public void testIntrinsicEquals() {
 		//System.out.println(this.newrealint.getNumber());
 		//System.out.println(this.realint.getNumber());
 		//System.out.println(this.realint.getNumber() == this.newrealint.getNumber());
 		//assertTrue(this.realint.intrinsicEquals(this.newrealint));
 		//assertTrue(this.realrational.intrinsicEquals(this.newrealrational));
-	}
+	//}
 
 	@Test
 	public void testToString() {

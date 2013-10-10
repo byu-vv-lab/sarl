@@ -11,6 +11,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealNumber;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
@@ -33,17 +34,18 @@ public class CommonObjectFactoryTest {
 
 	@Test
 	public void testNumberFactory() {
-		//assertTrue(this.fac.numberFactory() instanceof NumberFactory);
-	}
-/*
-	@Test
-	public void testSetExpressionComparator() {
-		this.fac.setExpressionComparator(new Comparator<SymbolicExpression>());
+		assertTrue(this.fac.numberFactory() instanceof RealNumberFactory);
 	}
 
 	@Test
+	public void testSetExpressionComparator() {
+		this.fac.setExpressionComparator(new ExpressionComparatorStub());
+		assertTrue(this.fac.comparator().expressionComparator() instanceof ExpressionComparatorStub);
+	}
+/*
+	@Test
 	public void testSetCollectionComparator() {
-		fail("Not yet implemented");
+		this.fac.setCollectionComparator(new CollectionComparatorStub());
 	}
 
 	@Test

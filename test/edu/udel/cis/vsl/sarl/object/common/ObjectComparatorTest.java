@@ -2,15 +2,20 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import static org.junit.Assert.*;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
 import edu.udel.cis.vsl.sarl.collections.common.CommonSymbolicMap;
+import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 
 public class ObjectComparatorTest {
 
@@ -20,33 +25,16 @@ public class ObjectComparatorTest {
 	public void setUp() throws Exception {
 		this.com = new ObjectComparator();
 	}
-/*
-	@Test
-	public void testSetExpressionComparator() {
-		Comparator<SymbolicExpression> comp = new Comparator<SymbolicExpression>();
-		this.com.setExpressionComparator(comp);
-	}
 
-	@Test
-	public void testSetCollectionComparator() {
-		Comparator<BasicCollection<SymbolicExpression>> comp = new Comparator<BasicCollection<SymbolicExpression>>();
-	}
-
-	@Test
-	public void testSetTypeComparator() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTypeSequenceComparator() {
-		fail("Not yet implemented");
-	}
-
+	/**
+	 * Tests expressionComparator() and setExpressionComparator()
+	 */
 	@Test
 	public void testExpressionComparator() {
-		fail("Not yet implemented");
+		this.com.setExpressionComparator(new ExpressionComparatorStub());
+		assertTrue(this.com.expressionComparator() instanceof ExpressionComparatorStub);
 	}
-
+/*
 	@Test
 	public void testCollectionComparator() {
 		fail("Not yet implemented");
@@ -64,7 +52,9 @@ public class ObjectComparatorTest {
 
 	@Test
 	public void testCompare() {
-		fail("Not yet implemented");
+		CommonNumberObject ex1 = new CommonNumberObject(new RealInteger(new BigInteger("1")));
+		CommonNumberObject ex2 = new CommonNumberObject(new RealInteger(new BigInteger("1")));
+		System.out.println(this.com.compare(ex1, ex2));
 	}
 */
 }
