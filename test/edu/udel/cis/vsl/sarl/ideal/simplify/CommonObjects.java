@@ -1,6 +1,10 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.boolExprFact;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.preUniv;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat0;
+
 import java.io.PrintStream;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -9,6 +13,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.Ideal;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
@@ -46,15 +51,19 @@ public class CommonObjects {
 	
 	static NumericExpressionFactory numExprFact;
 	
+	static BooleanExpressionFactory boolExprFact;
+	
 	static IdealFactory idealFactory;
 	
 	static IdealSimplifierFactory idealSimplifierFactory;
 	
 	static IdentitySimplifierFactory identitySimplifierFactory;
 	
+	static IdealSimplifier idealSimplifier;
+	
 	static Simplifier simp1ifier_xeq5;
 	
-	static BooleanExpression xeq5;
+	static BooleanExpression xeq5, trueExpr, falseExpr;
 	
 	static SymbolicExpression symbExpr_xpy; // x + y
 	
@@ -87,8 +96,8 @@ public class CommonObjects {
 	
 	static SymbolicType realType, integerType;
 		
-	static NumericExpression ratNeg1, ratNeg2, ratNeg3, ratNeg5,  
-	rat1, rat2, rat3, rat4, rat5, rat6; // -1.0, -2.0, -3.0, -5.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
+	static NumericExpression ratNeg1, ratNeg2, ratNeg3, ratNeg5, ratNeg25,
+	rat0, rat1, rat2, rat3, rat4, rat5, rat6, rat25, rat200; // -1.0, -2.0, -3.0, -5.0, -25.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 25.0, 200.0
 	
 	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5,
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
@@ -126,16 +135,21 @@ public class CommonObjects {
 				.numericFactory();
 		idealSimplifierFactory = (IdealSimplifierFactory) Ideal
 				.newIdealSimplifierFactory(idealFactory, preUniv);
+		boolExprFact = PreUniverses.newIdealFactorySystem().booleanFactory();
 		ratNeg1 = preUniv.rational(-1);
 		ratNeg2 = preUniv.rational(-2);
 		ratNeg3 = preUniv.rational(-3);
 		ratNeg5 = preUniv.rational(-5);
+		ratNeg25 = preUniv.rational(-25);
+		rat0 = preUniv.rational(0);
 		rat1 = preUniv.rational(1);
 		rat2 = preUniv.rational(2);
 		rat3 = preUniv.rational(3);
 		rat4 = preUniv.rational(4);
 		rat5 = preUniv.rational(5);
 		rat6 = preUniv.rational(6);
+		rat25 = preUniv.rational(25); //25.0
+		rat200 = preUniv.rational(200);
 		intNeg1 = preUniv.integer(-1);
 		intNeg2 = preUniv.integer(-2);
 		intNeg3 = preUniv.integer(-3);
@@ -194,6 +208,8 @@ public class CommonObjects {
 		num5Int = numFact.integer("5");
 		numNeg2000Int = numFact.integer("-2000");
 		num10000Int = numFact.integer("10000");
+		trueExpr = preUniv.bool(true);
+		falseExpr = preUniv.bool(false);
 	}
 
 }
