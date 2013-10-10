@@ -2,17 +2,13 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.util.Arrays;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
-import cvc3.Type;
-import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -27,7 +23,6 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3UnionTest { 
 	// Static fields: instantiated once and used for all tests...
-	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
@@ -43,15 +38,12 @@ public class CVC3UnionTest {
 	private static SymbolicExpression tenAndHalf = universe.rational(10.5);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	private static BooleanExpression booleanExprFalse = universe
-			.falseExpression();
 	private static SymbolicExpression unionArray;
 	// constants
 	
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
-	private ValidityChecker vc;
 
 	/**
 	 * Set up each test. This method is run before each test.
@@ -63,10 +55,9 @@ public class CVC3UnionTest {
 		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
-		vc = cvcProver.validityChecker();
 		
 		// make a union to test
-		// union of int, real, herbrand int
+		// union of int, real
 		intRealUnion = universe.unionType(universe
 				.stringObject("union1"), Arrays.asList(new SymbolicType[]
 						{intType, realType}));
@@ -96,9 +87,9 @@ public class CVC3UnionTest {
 	}
 	
 	@Test
-	public void testTranslateUnionInject() {
+	public void TranslateUnionInject() {
 		// translate union type
-		Type unionType = cvcProver.translateType(intRealUnion);
+		cvcProver.translateType(intRealUnion);
 		
 		// inject -0.5 real
 		SymbolicExpression injectNegHalf = universe
@@ -106,12 +97,14 @@ public class CVC3UnionTest {
 						universe.rational(-0.5));
 		
 		Expr translateResult = cvcProver.translate(injectNegHalf);
+		assertEquals(translateResult.getType(), cvcProver
+				.translateType(injectNegHalf.type()));
 //		out.println(translateResult);
 //		out.println(injectNegHalf);
 	}
 	
 	@Test
-	public void testTranslateUnionExtract() {
+	public void TranslateUnionExtract() {
 		// inject statement
 		SymbolicExpression injectedTenAndHalf = universe.unionInject(
 				intRealUnion, universe.intObject(1), tenAndHalf);
@@ -121,14 +114,15 @@ public class CVC3UnionTest {
 		SymbolicExpression extractReal2 = expressionFactory
 				.expression(SymbolicOperator.UNION_EXTRACT, realType,
 						universe.intObject(1), injectedTenAndHalf);
-		
-		Expr translateResult = cvcProver.translate(extractReal2);
-//		out.println("translateResult: " + translateResult);
-//		out.println(extractReal2);
+		SymbolicExpression extractReal1 = universe
+				.unionExtract(universe.intObject(1), injectedTenAndHalf);
+		Expr translateResult = cvcProver.translate(extractReal1);
+		assertEquals(translateResult.getType(), cvcProver
+				.translateType(extractReal2.type()));
 	}
 	
 	@Test
-	public void testTranslateUnionTest() {
+	public void TranslateUnionTest() {
 		// inject statement
 		SymbolicExpression injectedTenAndHalf = universe.unionInject(
 				intRealUnion, universe.intObject(1), tenAndHalf);
