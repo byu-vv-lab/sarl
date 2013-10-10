@@ -1,8 +1,8 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.PrintStream;
 
@@ -184,7 +184,7 @@ public class AffineExpressionTest {
 			System.out.println("Epic fail!:" + e.getMessage());
 			nullError = true;
 		}
-		assertEquals(nullError, false);
+		assertTrue(nullError);
 	}
 
 	@Test(expected = AssertionError.class)
