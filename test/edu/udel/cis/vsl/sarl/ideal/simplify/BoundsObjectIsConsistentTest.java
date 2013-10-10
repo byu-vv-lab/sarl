@@ -82,8 +82,10 @@ public class BoundsObjectIsConsistentTest {
 	@Test
 	public void isConsistentCompare0(){
 		boundObj = BoundsObject.newUpperBound(xxy, num0, true);
+		//out.println(boundObj);
 		boundObj.restrictLower(num10000, true);
 		boundObj.isConsistent();
+		assertFalse(boundObj.isConsistent());
 		//out.println(boundObj);
 	}
 	
@@ -121,10 +123,27 @@ public class BoundsObjectIsConsistentTest {
 	@Test
 	public void isConsistentEqualMixedStrictTest3(){
 		boundObj = BoundsObject.newUpperBound(xxy, num0, false);
+		//out.println(boundObj);
 		boundObj.restrictLower(num0, false);
 		boundObj.isConsistent();
 		assertEquals(boundObj.lower(), boundObj.upper());
 		assertTrue(boundObj.isConsistent());
+		//out.println(boundObj);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
