@@ -124,15 +124,65 @@ public interface NumericExpressionFactory {
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, Collection<SymbolicObject> arguments);
 
+	/**
+	 * Returns an expression, given the operator, type, and array of arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param numericType
+	 * 		A SymbolicType
+	 * @param arguments
+	 * 		array of arguments
+	 * @return
+	 * 		Returns a NumericExpression
+	 */
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject[] arguments);
 
+	/**
+	 * Returns an expression, given the operator, type, and an argument
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param numericType
+	 * 		A SymbolicType
+	 * @param arg0
+	 * 		A SymbolicObject
+	 * @return
+	 * 		Returns a NumericExpression
+	 */
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0);
 
+	/**
+	 * Returns an expression, given the operator, type, and two arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param numericType
+	 * 		A SymbolicType
+	 * @param arg0
+	 * 		A SymbolicObject
+	 * @param arg1
+	 * 		A SymbolicObject
+	 * @return
+	 * 		Returns a NumericExpression
+	 */
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1);
 
+	/**
+	 * Returns an expression, given the operator, type, and three arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param numericType
+	 * 		A SymbolicType
+	 * @param arg0
+	 * 		A SymbolicObject
+	 * @param arg1
+	 * 		A SymbolicObject
+	 * @param arg2
+	 * 		A SymbolicObject
+	 * @return
+	 * 		Returns a NumericExpression
+	 */
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2);
