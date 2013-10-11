@@ -478,6 +478,8 @@ public class CommonPreUniverse implements PreUniverse {
 				result = and(result, expr);
 				return result;
 			}
+			
+			return result;
 		}
 		case TUPLE: {
 			int numComponents = ((SymbolicTupleType) type).sequence()
