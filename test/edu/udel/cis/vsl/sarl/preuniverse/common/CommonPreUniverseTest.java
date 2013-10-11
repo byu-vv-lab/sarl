@@ -1658,18 +1658,14 @@ public class CommonPreUniverseTest {
 		//SymbolicExpression result1, result2; 
 		SymbolicConstant nullConstant = universe.symbolicConstant(
 				universe.stringObject("null"), integerType);
-
 		ArrayList<SymbolicType> testArray1 = new ArrayList<SymbolicType>();
 		testArray1.add(integerType);
 		LinkedList<SymbolicType> testArray2 = new LinkedList<SymbolicType>();
-
 		StringObject name1 = universe.stringObject("f");
 		StringObject name2 = universe.stringObject("g");
 		StringObject name3 = universe.stringObject("x");
 		StringObject name4 = universe.stringObject("y");
-
 		SymbolicType testBool1 = universe.booleanType();
-
 		SymbolicType functionType1 = universe.functionType(testArray1, testBool1);
 		SymbolicType functionType2 = universe.functionType(testArray2, testBool1);
 
@@ -1682,17 +1678,16 @@ public class CommonPreUniverseTest {
 		SymbolicConstant symFunc4 = universe.symbolicConstant(
 				name4, functionType2);
 
-		/* Edited by Gunjan Majmudar*/
-		//result1 = universe.equals(symFunc1, symFunc2);
-		//result2 = universe.equals(symFunc3, symFunc4);
+		BooleanExpression result1 = universe.equals(symFunc1, symFunc2);
+		BooleanExpression result2 = universe.equals(symFunc3, symFunc4);
 
 		// Testing case 6: FUNCTION
 		assertEquals(universe.equals(
 				universe.symbolicConstant(name1, functionType1), 
-				universe.symbolicConstant(name2, functionType1)), universe.equals(symFunc1, symFunc2));
-		/*assertEquals(universe.equals(
+				universe.symbolicConstant(name2, functionType1)), result1);
+		assertEquals(universe.equals(
 				universe.symbolicConstant(name3, functionType2),
-				universe.symbolicConstant(name4, functionType2)), universe.equals(symFunc3, symFunc4));*/
+				universe.symbolicConstant(name4, functionType2)), result2);
 				
 	}
 	
