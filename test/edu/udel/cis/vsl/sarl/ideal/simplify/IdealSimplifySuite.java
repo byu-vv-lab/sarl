@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ IdealSimplifierTest.class,IdealSimplifierSimpExprTest.class })
+@SuiteClasses({ SimplifyFPTest.class, IdealSimplifierTest.class,IdealSimplifierSimpExprTest.class, SimplifyEqualsZeroTest.class })
 public class IdealSimplifySuite {
 
 }
