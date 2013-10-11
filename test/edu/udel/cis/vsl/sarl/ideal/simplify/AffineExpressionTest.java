@@ -186,11 +186,11 @@ public class AffineExpressionTest {
 		}
 		assertTrue(nullError);
 	}
-
-	@Test(expected = AssertionError.class)
-	public void nullCoefficient() {
-		new AffineExpression((Polynomial) x, null, offset);
-	}
+	
+	//@Test(expected = AssertionError.class)
+	//public void nullCoefficient() {
+	//	new AffineExpression((Polynomial) x, null, offset);
+	//}
 
 	@Test
 	public void makeAffine() {

@@ -165,6 +165,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 			return arg0;
 		if (arg0.equals(arg1))
 			return arg0;
+		if (arg0.equals(not(arg1)))
+			return trueExpr;
 		else {
 			CnfExpression c0 = (CnfExpression) arg0;
 			CnfExpression c1 = (CnfExpression) arg1;

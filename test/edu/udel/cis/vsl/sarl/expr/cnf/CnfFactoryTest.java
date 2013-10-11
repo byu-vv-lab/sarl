@@ -229,16 +229,21 @@ public class CnfFactoryTest {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression testingtrue = sUniverse.bool(true);
 		BooleanExpression testingfalse = sUniverse.bool(false);
-		StringObject pobject = sUniverse.stringObject("a");
-		StringObject qobject = sUniverse.stringObject("b");
+		StringObject pobject = sUniverse.stringObject("p");
+		StringObject qobject = sUniverse.stringObject("q");
+		StringObject robject = sUniverse.stringObject("r");
 		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
 		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		BooleanExpression r = (BooleanExpression) sUniverse.symbolicConstant(robject, booleanType);
 		BooleanExpression falseExpr= bef.falseExpr();
 		BooleanExpression trueExpr= bef.trueExpr();
 		BooleanExpression qandtrue = bef.and(q, trueExpr);
 		BooleanExpression pandfalse = bef.and(p, falseExpr);
 		
 		//testing for various combinations of true and falso and and or results
+		//System.out.println(bef.or(p, bef.or(q, bef.or(bef.not(p), r))));
+		assertEquals(testingtrue, bef.or(p, bef.not(p)));
+		assertEquals(testingtrue, bef.or(bef.not(p),p));
 		assertEquals(testingtrue, bef.and(testingtrue, testingtrue));
 		assertEquals(testingtrue, bef.and(trueExpr, testingtrue));
 		assertEquals(testingfalse, bef.and(trueExpr, testingfalse));
