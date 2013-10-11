@@ -1,10 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.boolExprFact;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.preUniv;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat0;
-
 import java.io.PrintStream;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -103,7 +99,7 @@ public class CommonObjects {
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xpy, xy, xx, x4th, threeX4th, xxy,
-	xyy, onePxPxSqdP3x4th, xSqrLess1, xSqrP1;
+	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
@@ -190,6 +186,8 @@ public class CommonObjects {
 		xyy = preUniv.multiply(xy, y);
 		symbExpr_xyy = xyy;
 		onePxPxSqdP3x4th = preUniv.add(rat1, preUniv.add(x, preUniv.add(xx, threeX4th)));
+		mixedXYTermPoly = preUniv.multiply(preUniv.add(onePxPxSqdP3x4th, preUniv.add(xxy, xyy)), xpy);
+		bigMixedXYTermPoly = preUniv.power(mixedXYTermPoly, int3);
 		xpyInt = preUniv.add(xInt, yInt);
 		symbExpr_xpyInt = xpyInt;
 		xxInt = preUniv.multiply(xInt, xInt);
