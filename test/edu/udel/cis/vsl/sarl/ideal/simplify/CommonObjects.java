@@ -96,8 +96,8 @@ public class CommonObjects {
 	
 	static SymbolicType realType, integerType;
 		
-	static NumericExpression ratNeg1, ratNeg2, ratNeg3, ratNeg5, ratNeg25,
-	rat0, rat1, rat2, rat3, rat4, rat5, rat6, rat25, rat200; // -1.0, -2.0, -3.0, -5.0, -25.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 25.0, 200.0
+	static NumericExpression ratNeg1, ratNeg2, ratNeg3, ratNeg5, ratNeg25, ratNeg300,
+	rat0, rat1, rat2, rat3, rat4, rat5, rat6, rat20, rat25, rat200; // -1.0, -2.0, -3.0, -5.0, -25.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 25.0, 200.0
 	
 	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5, int0,
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
@@ -141,6 +141,7 @@ public class CommonObjects {
 		ratNeg3 = preUniv.rational(-3);
 		ratNeg5 = preUniv.rational(-5);
 		ratNeg25 = preUniv.rational(-25);
+		ratNeg300 = preUniv.rational(-300);
 		rat0 = preUniv.rational(0);
 		rat1 = preUniv.rational(1);
 		rat2 = preUniv.rational(2);
@@ -148,6 +149,7 @@ public class CommonObjects {
 		rat4 = preUniv.rational(4);
 		rat5 = preUniv.rational(5);
 		rat6 = preUniv.rational(6);
+		rat20 = preUniv.rational(20);
 		rat25 = preUniv.rational(25); //25.0
 		rat200 = preUniv.rational(200);
 		intNeg1 = preUniv.integer(-1);
