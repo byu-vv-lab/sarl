@@ -262,6 +262,18 @@ public interface NumericExpressionFactory {
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
+	/**
+	 * Returns a NumericExpression with the symbolic type passed in the second argument
+	 * 
+	 * 
+	 * @param numericExpression
+	 * 			The NumericExpression that will receive the new type
+	 * 
+	 * @param newType
+	 * 			The new SymbolicType for the numericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	NumericExpression cast(NumericExpression numericExpression,
 			SymbolicType newType);
 
@@ -271,18 +283,36 @@ public interface NumericExpressionFactory {
 	 */
 	Number extractNumber(NumericExpression expression);
 
+	/**
+	 * Returns a BooleanExpression with the result of the lessThan operation on 2 NumericExpressions
+	 */
 	BooleanExpression lessThan(NumericExpression arg0, NumericExpression arg1);
 
+	/**
+	 * Returns a BooleanExpression with the result of the lessThanEquals operation on 2 NumericExpressions
+	 */
 	BooleanExpression lessThanEquals(NumericExpression arg0,
 			NumericExpression arg1);
 
+	/**
+	 * Returns a BooleanExpression with the result of the notLessThan operation on 2 NumericExpressions
+	 */
 	BooleanExpression notLessThan(NumericExpression arg0, NumericExpression arg1);
 
+	/**
+	 * Returns a BooleanExpression with the result of the notLessThanEquals operation on 2 NumericExpressions
+	 */
 	BooleanExpression notLessThanEquals(NumericExpression arg0,
 			NumericExpression arg1);
 
+	/**
+	 * Returns a BooleanExpression with the result of the equals operation on 2 NumericExpressions
+	 */
 	BooleanExpression equals(NumericExpression arg0, NumericExpression arg1);
 
+	/**
+	 * Returns a BooleanExpression with the result of the notEquals operation on 2 NumericExpressions
+	 */
 	BooleanExpression neq(NumericExpression arg0, NumericExpression arg1);
 
 }
