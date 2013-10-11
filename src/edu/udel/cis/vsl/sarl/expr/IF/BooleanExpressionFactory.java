@@ -30,23 +30,85 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public interface BooleanExpressionFactory {
 
+	/**
+	 * Returns an expression, given the operator and collection of arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param args
+	 * 		Collection of arguments
+	 * @return
+	 * 		Returns a BooleanExpression
+	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			Collection<SymbolicObject> args);
 
+	/**
+	 * Returns an expression, given the operator and an array of arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param args
+	 * 		Array of arguments
+	 * @return
+	 * 		Returns a BooleanExpression
+	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject[] args);
 
+	/**
+	 * Returns an expression, given the operator and an argument
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param arg0
+	 * 		A SymbolicObject 
+	 * @return
+	 * 		Returns a BooleanExpression
+	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0);
 
+	/**
+	 * Returns an expression, given the operator and two arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param arg0
+	 * 		A SymbolicObject
+	 * @param arg1
+	 * 		A SymbolicObject 
+	 * @return
+	 * 		Returns a BooleanExpression
+	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1);
 
+	/**
+	 * Returns an expression, given the operator and three arguments
+	 * @param operator
+	 * 		A SymbolicOperator
+	 * @param arg0
+	 * 		A SymbolicObject
+	 * @param arg1
+	 * 		A SymbolicObject
+	 * @param arg2
+	 * 		A SymbolicObject 
+	 * @return
+	 * 		Returns a BooleanExpression
+	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2);
 
+	/**
+	 * Returns a true BooleanExpression
+	 * 
+	 * @return BooleanExpression
+	 */
 	BooleanExpression trueExpr();
 
+	
+	/**
+	 * Returns a false BooleanExpression
+	 * 
+	 * @return BooleanExpression
+	 */
 	BooleanExpression falseExpr();
 
 	/**
