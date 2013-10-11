@@ -53,10 +53,5 @@ public class SimplifyFPTest {
 		//out.println("xx - 1 :  " + xSqrLess1.toString());
 		//IdealSimplifier.
 	}
-	
-	@Test
-	public void factorableTest(){
-		
-	}
 
 }
