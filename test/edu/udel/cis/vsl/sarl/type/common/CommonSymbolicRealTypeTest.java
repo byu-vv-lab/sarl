@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 
-import static edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind.*;
-
 public class CommonSymbolicRealTypeTest {
 	/* Testing CommonSymbolicRealType by Team3
 	 * Three realKinds: ideal, herbrand, and float;

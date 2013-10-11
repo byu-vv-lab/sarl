@@ -3,9 +3,6 @@ package edu.udel.cis.vsl.sarl.type.common;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -70,6 +67,7 @@ public class CommonSymbolicTypeFactoryTest {
 		typesArray[1] = floatRealKind;
 		typesArray[2] = idealIntKind;
 		typesArray[3] = boundedIntKind;
+		
 	}
 
 	@After

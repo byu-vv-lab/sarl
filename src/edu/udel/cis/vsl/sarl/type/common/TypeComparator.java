@@ -28,6 +28,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
+/**
+ * @author alali
+ *	
+ *	This class is to compare different types in the Type module.
+ *	It compare those types: Boolean, Integer, Real, Array, Function, Tuple, and Union.
+ */
 public class TypeComparator implements Comparator<SymbolicType> {
 
 	private Comparator<SymbolicTypeSequence> typeSequenceComparator;

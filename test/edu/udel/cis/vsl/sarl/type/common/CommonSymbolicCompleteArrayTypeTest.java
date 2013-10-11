@@ -8,20 +8,31 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.expr.common.ExpressionComparator;
-import edu.udel.cis.vsl.sarl.ideal.common.NTConstant;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonIntObject;
 
+/**
+ * @author alali
+ *
+ *	Testing CommonSymbolicCompleteArrayType: 
+ *	this type of array is complete, i.e. you have to specify the length of the array
+ *	when creating a new object of this type.
+ *
+ *	int computeHashCode()
+ *	String extentString()
+ *	NumericExpression extent()
+ *	canonizeChildren(CommonObjectFactory factory)
+ *	isComplete()
+ *	
+ */
 public class CommonSymbolicCompleteArrayTypeTest {
 	
 	CommonSymbolicCompleteArrayType completeArray2, completeArray3, completeArray33;
@@ -30,6 +41,7 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	SymbolicObject symbolicObject2, symbolicObject3;
 	NumericPrimitive number2, number3;
 	TypeComparator typeComparator;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -51,8 +63,10 @@ public class CommonSymbolicCompleteArrayTypeTest {
 		//number = new NumericPrimitive(SymbolicOperator.CONCRETE, SymbolicType.SymbolicTypeKind.INTEGER, symbolicObject3);
 		number3 = new NumericPrimitive(SymbolicOperator.CONCRETE, intType, symbolicObject3);
 		number2 = new NumericPrimitive(SymbolicOperator.CONCRETE, intType, symbolicObject3);
+		//ExpressionStub exprStub = new ExpressionStub("exprStub");
 		completeArray2 = new CommonSymbolicCompleteArrayType(arrayType, number2);
 		completeArray3 = new CommonSymbolicCompleteArrayType(arrayType, number3);
+		//completeArray3 = new CommonSymbolicCompleteArrayType(arrayType, (NumericExpression)exprStub);
 		completeArray33 = new CommonSymbolicCompleteArrayType(arrayType, number3);
 	}
 
@@ -61,22 +75,32 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	}
 
 
+	/**
+	 * testing computeHashCode()
+	 * two objects have the same hashCode if they're identical
+	 * i.e. they've the same properties.
+	 */
 	@Test
 	public void testComputeHashCode() {
-		assertEquals("The two completeArrays aren't equal", completeArray3.computeHashCode(), completeArray33.computeHashCode());
+		assertEquals(completeArray3.computeHashCode(), completeArray33.computeHashCode());
 		
 	}
 	
-	/*
-	 * Testing if the compelteArrays are complete
+	/**
+	 * testing isComplete()
+	 * all objects of this type must be complete
 	 */
 	@Test
 	public void testIsComplete() {
-		assertTrue("The completeArray isn't complete", completeArray3.isComplete());
-		assertTrue("The completeArray2 isn't complete", completeArray33.isComplete());
+		assertTrue(completeArray3.isComplete());
+		assertTrue(completeArray33.isComplete());
 		
 	}
 	
+	/**
+	 * 	testing if two CommonSymbolicCompleteArrayType objects
+	 * 	have the same type
+	 */
 	@Test
 	public void testTypeEquals(){
 		assertTrue(completeArray3.typeEquals(completeArray33));
@@ -84,6 +108,9 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	}
 
 
+	/**
+	 * testing extendString(), checking if it prints those square parentheses
+	 */
 	@Test
 	public void testExtentString() {
 		assertEquals(completeArray2.extentString(), "[" + completeArray2.extent() + "]");
@@ -94,9 +121,10 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	 */
 	@Test
 	public void testTypeComparator(){
-		//Null pointer exception
-		
-		//assertEquals(typeComparator.compare(completeArray3, completeArray33), 0);
+		assertNull(typeComparator.expressionComparator());
+		typeComparator.setExpressionComparator(new ExpressionComparatorStub());
+		assertNotNull(typeComparator.expressionComparator());
+		// Failed, assertEquals(typeComparator.compare(completeArray3, completeArray33), 0);
 	}
 	
 	/*

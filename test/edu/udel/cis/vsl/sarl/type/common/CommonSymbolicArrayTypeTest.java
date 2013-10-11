@@ -24,6 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  *  - getPureType() - not yet tested
  *  - setPureType() - not yet tested.
  */
+
 public class CommonSymbolicArrayTypeTest {
 		
 	CommonSymbolicArrayType intArrayType1, intArrayType11, intArrayType2, realArrayType1, realArrayType2;
@@ -39,6 +40,10 @@ public class CommonSymbolicArrayTypeTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	/**
+	 * Initiating the variables.
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		typeComparator = new TypeComparator();
@@ -111,7 +116,6 @@ public class CommonSymbolicArrayTypeTest {
 	@Test
 	public void testIsComplete() {
 		assertFalse(intArrayType1.isComplete());
-		//assertTrue(idealIntKind.isIdeal());
 	}
 	
 
