@@ -43,12 +43,20 @@ public class SimplifyFPTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Testing of polynomial simplification where factoring results in non-real terms
+	 */
 	@Test
-	public void test() {
+	public void assumptionTest() {
 		out.println(idealSimplifier.simplifyExpression(xSqrLess1));
 		out.println(idealSimplifier.apply(xSqrP1));
 		//out.println("xx - 1 :  " + xSqrLess1.toString());
 		//IdealSimplifier.
+	}
+	
+	@Test
+	public void factorableTest(){
+		
 	}
 
 }
