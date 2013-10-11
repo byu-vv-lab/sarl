@@ -83,7 +83,7 @@ public class CVC3ModelFinderTest {
 	}
 	
 	@Test
-	public void testUniverseEquals() {
+	public void universeEquals() {
 		//Give the prover the assumption y = 6
 		CVC3TheoremProver cvcProverYIs6 = (CVC3TheoremProver) proverFactory
 				.newProver(universe.equals(universe.symbolicConstant(
@@ -103,6 +103,7 @@ public class CVC3ModelFinderTest {
 				symConstYInt, symConstXInt);
 	
 		NumericExpression numExprSix = universe.integer(6);
+		//I believe this is where casting error was being thrown.
 		BooleanExpression predicate = universe.equals(numExprSix, symExprXplusY);
 		ValidityResult result = cvcProverYIs6.validOrModel(predicate);
 		assertEquals(ResultType.NO, result.getResultType());
@@ -114,7 +115,7 @@ public class CVC3ModelFinderTest {
 	 */
 
 	@Test(expected = SARLInternalException.class)
-	public void testCreateCVC3ModelFinder() {
+	public void createCVC3ModelFinder() {
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
 		h.put(vc.falseExpr(), vc.falseExpr());
 		CVC3TheoremProver prover = (CVC3TheoremProver) proverFactory
@@ -124,7 +125,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testIsApplyExpr() {
+	public void isApplyExpr() {
 		Expr varExpr = vc.varExpr("var",
 				cvcProver.translateType(universe.realType()));
 		Expr expr2 = cvcProver.translate(two);
@@ -137,7 +138,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testIsBooleanExpr() {
+	public void isBooleanExpr() {
 		Expr exprTrue = cvcProver.translate(booleanExprTrue);
 		Expr exprFalse = cvcProver.translate(booleanExprFalse);
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
@@ -148,7 +149,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderInvalid() {
+	public void CVC3ModelFinderInvalid() {
 		StringObject strX = universe.stringObject("x");
 		SymbolicIntegerType sInt = universe.integerType();
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX, sInt);
@@ -178,7 +179,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderTuple() {
+	public void CVC3ModelFinderTuple() {
 		NumericExpression sevenInt = universe.integer(7);
 		NumericExpression fourInt = universe.integer(4);
 		NumericExpression eightInt = universe.integer(8);
@@ -211,7 +212,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderWithContext() {
+	public void CVC3ModelFinderWithContext() {
 		// Give the prover the assumption that y = 0.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
 				.newProver(universe.equals(universe.symbolicConstant(
@@ -237,7 +238,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderRational() {
+	public void CVC3ModelFinderRational() {
 		// Create the assumption y = 0.
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
@@ -272,7 +273,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderTestDivideByOne() {
+	public void CVC3ModelFinderTestDivideByOne() {
 		// Create the assumption y = 2.
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
@@ -300,7 +301,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderApplyBoolean() {
+	public void CVC3ModelFinderApplyBoolean() {
 
 		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
 		ObjectFactory objectFactory = factorySystem.objectFactory();
@@ -317,7 +318,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testCVC3ModelFinderApplyReferenced() {
+	public void CVC3ModelFinderApplyReferenced() {
 		ObjectFactory objectFactory = factorySystem.objectFactory();
 
 		SymbolicObject[] args = new SymbolicObject[3];
@@ -330,7 +331,7 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void testAssignApplyElseStatement() {
+	public void assignApplyElseStatement() {
 		SymbolicType arrayIntType = universe.arrayType(universe.integerType());
 		SymbolicExpression a = universe.symbolicConstant(
 				universe.stringObject("a"), arrayIntType);
@@ -347,7 +348,7 @@ public class CVC3ModelFinderTest {
 	}
 	
 	@Test
-	public void testAssignArrayRealType() {
+	public void AssignArrayRealType() {
 		SymbolicType arrayRealType = universe.arrayType(universe.realType());
 		SymbolicExpression a = universe.symbolicConstant(
 				universe.stringObject("a"), arrayRealType);
@@ -364,7 +365,7 @@ public class CVC3ModelFinderTest {
 	}
 	
 	@Test
-	public void testAssignTupleInt() {
+	public void assignTupleInt() {
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
 		tupleList.add(universe.integer(1));
 		tupleList.add(universe.integer(2));
@@ -394,7 +395,7 @@ public class CVC3ModelFinderTest {
 	}
 	
 	@Ignore
-	public void testConcreteArray() {
+	public void concreteArray() {
 		SymbolicObject[] soArray = new SymbolicObject[5];
 		soArray[0] = universe.integer(1);
 		soArray[1] = universe.integer(2);
