@@ -90,7 +90,7 @@ public interface ExpressionFactory {
 	Comparator<SymbolicExpression> comparator();
 
 	/**
-	 * Returns an expression with the given operator type and argument sequence.
+	 * Returns an expression with the given operator, type, and argument sequence.
 	 * 
 	 * @param operator
 	 *            a symbolic operator
@@ -109,9 +109,35 @@ public interface ExpressionFactory {
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1);
 
+	/**
+	 * Returns an expression with the given operator, type, and three arguments
+	 * 
+	 * @param operator
+	 *            a symbolic operator
+	 * @param type
+	 *            a symbolic type
+	 * @param arg0
+	 *            a SymbolicObject
+	 * @param arg1
+	 * 			  a SymbolicObject
+	 * @param arg2
+	 * 			  a SymbolicObject
+	 * @return the expression specified by above
+	 */
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2);
 
+	/**
+	 * Returns an expression with the given operator, type, and collection of arguments.
+	 * 
+	 * @param operator
+	 *            a symbolic operator
+	 * @param type
+	 *            a symbolic type
+	 * @param args
+	 *            Collection of SymbolicObject arguments
+	 * @return the expression specified by above
+	 */
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			Collection<SymbolicObject> args);
 
