@@ -63,7 +63,7 @@ public class CommonObjects {
 	
 	static Simplifier simp1ifier_xeq5;
 	
-	static BooleanExpression xeq5, trueExpr, falseExpr;
+	static BooleanExpression xeq5, trueExpr, falseExpr, assumption; //assumption is not initialized, as uses will vary greatly
 	
 	static SymbolicExpression symbExpr_xpy; // x + y
 	
@@ -99,11 +99,11 @@ public class CommonObjects {
 	static NumericExpression ratNeg1, ratNeg2, ratNeg3, ratNeg5, ratNeg25,
 	rat0, rat1, rat2, rat3, rat4, rat5, rat6, rat25, rat200; // -1.0, -2.0, -3.0, -5.0, -25.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 25.0, 200.0
 	
-	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5,
+	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5, int0,
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xpy, xy, xx, x4th, threeX4th, xxy,
-	xyy, onePxPxSqdP3x4th;
+	xyy, onePxPxSqdP3x4th, xSqrLess1, xSqrP1;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
@@ -116,7 +116,7 @@ public class CommonObjects {
 	num5, numNeg2000, num10000, num0, num10pt5;
 	
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3Int,
-	num5Int, num0Int, numNeg2000Int, num10000Int;
+	num5Int, num0Int, numNeg2000Int, num10000Int, neg1Int;
 
 	/**
 	 * Method provides initialization of common SARL Objects declared 
@@ -154,11 +154,13 @@ public class CommonObjects {
 		intNeg2 = preUniv.integer(-2);
 		intNeg3 = preUniv.integer(-3);
 		intNeg5 = preUniv.integer(-5);
+		int0 = preUniv.integer(0);
 		int1 = preUniv.integer(1);
 		int2 = preUniv.integer(2);
 		int3 = preUniv.integer(3);
 		int4 = preUniv.integer(4);
 		int5 = preUniv.integer(5);
+		//neg1Int = preUniv.integer(-1);
 		symbFactory = system.expressionFactory().typeFactory();
 		realType = preUniv.realType();
 		integerType = preUniv.integerType();
@@ -196,6 +198,8 @@ public class CommonObjects {
 		symbExpr_xxyInt = xxyInt;
 		xyyInt = preUniv.multiply(xyInt, yInt);
 		symbExpr_xyyInt = xyyInt;
+		xSqrLess1 = preUniv.subtract(xxInt, int1);
+		xSqrP1 = preUniv.add(xxInt, int1);
 		numFact = preUniv.numberFactory();
 		num3 = numFact.rational("3");
 		num5 = numFact.rational("5");
