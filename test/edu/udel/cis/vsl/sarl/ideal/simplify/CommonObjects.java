@@ -81,7 +81,7 @@ public class CommonObjects {
 	
 	static SymbolicExpression symbExpr_xyyInt; // (int)x * (int)y^2
 	
-	static NumericSymbolicConstant x, xsqd, y, xInt, yInt;
+	static NumericSymbolicConstant x, xsqd, y, z, xInt, yInt;
 	
 	
 	/*static SymbolicExpression symbExpr
@@ -165,6 +165,8 @@ public class CommonObjects {
 		x = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("x"), realType);
 		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
+				preUniv.stringObject("y"), realType);
+		z = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("y"), realType);
 		xInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("xInt"), integerType);

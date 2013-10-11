@@ -71,13 +71,13 @@ public class IdealSimplifierSimpExprTest {
 		assertEquals(onePxPxSqdP3x4th, idealSimp.simplifyExpression(symExpr));
 	}
 	
-	/*@Test
+	@Test
 	public void simplifyExpressionAddition(){
 		NumericExpression one;
 		NumericExpression two;
-		NumericExpression three;
-		NumericExpression four;
-		NumericExpression five;
+		NumericExpression three = preUniv.rational(1081392);
+		NumericExpression four = preUniv.multiply(rat6, ratNeg25);
+		NumericExpression five = preUniv.multiply(preUniv.power(x, 27),preUniv.power(z, 9));
 		NumericExpression six;
 		NumericExpression seven;
 		NumericExpression eight;
@@ -88,13 +88,13 @@ public class IdealSimplifierSimpExprTest {
 		NumericExpression thirteen;
 		NumericExpression fourteen;
 		NumericExpression fifteen;
-		expr1=	preUniv.add(one, preUniv.add(two, three));
-		expr2=	preUniv.add(four, preUniv.add(five, six));
-		expr3=	preUniv.add(seven, preUniv.add(eight, nine));
-		expr4=	preUniv.add(ten,preUniv.add(eleven, twelve));
-		NumericExpression expr5 = preUniv.add(thirteen, preUniv.add(fourteen, fifteen));
+		//expr1=	preUniv.add(one, preUniv.add(two, three));
+		//expr2=	preUniv.add(four, preUniv.add(five, six));
+		//expr3=	preUniv.add(seven, preUniv.add(eight, nine));
+		//expr4=	preUniv.add(ten,preUniv.add(eleven, twelve));
+		//NumericExpression expr5 = preUniv.add(thirteen, preUniv.add(fourteen, fifteen));
 		
-	}*/
+	}
 	
 	@Test
 	public void simplifyExpressionSubtraction(){
