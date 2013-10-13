@@ -142,7 +142,6 @@ public class TupleTest {
 		SymbolicTupleType type1, type2, type3,type5, type6,type7;
 		SymbolicType type4;
 		BooleanExpression result, expected;
-		SymbolicTypeSequence sequence;
 		LinkedList<SymbolicType> members = new LinkedList<>();
 		
 		
@@ -192,6 +191,7 @@ public class TupleTest {
 				
 
 	}
+	
 
 
 
