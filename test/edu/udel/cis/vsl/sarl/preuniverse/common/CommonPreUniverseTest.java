@@ -861,7 +861,7 @@ public class CommonPreUniverseTest {
 	}
 	
 
-	
+/*	
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void tupleExceptionTest1(){
@@ -878,6 +878,7 @@ public class CommonPreUniverseTest {
 
 		
 	}
+	*/
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void testLengthExceptions(){
@@ -908,6 +909,7 @@ public class CommonPreUniverseTest {
 
 
 	}
+	/*
 	// written by Mohammad Alsulmi
 	@Test(expected= SARLException.class)
 	public void tupleWriteTest(){
@@ -927,6 +929,7 @@ public class CommonPreUniverseTest {
 		
 			
 	}
+	*/
 	// written by Mohammad Alsulmi
 	@Test
 	public void emptyArrayTest(){
@@ -1244,6 +1247,7 @@ public class CommonPreUniverseTest {
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
 		resultedArray = universe.arrayRead(array, negativeOne);
 	}
+	/*
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithTuple(){
@@ -1302,6 +1306,7 @@ public class CommonPreUniverseTest {
 				
 
 	}
+	*/
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithUnion(){
