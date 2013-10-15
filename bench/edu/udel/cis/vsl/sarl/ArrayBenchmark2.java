@@ -1,28 +1,18 @@
 package edu.udel.cis.vsl.sarl;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
-/**
- * 
- * @author Mohammad Alsulmi (malsulmi)
- *
- * The main purpose of the benchmark is to provide a performance comparison
- * between array() and append() methods that are used in creating arrays
- * 
- * Here, our comparison will be a time comparison
- */
-
-public class ArrayBenchmark {
-
+public class ArrayBenchmark2 {
+	
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses.newIdealFactorySystem();
 
@@ -33,10 +23,9 @@ public class ArrayBenchmark {
 	public static SymbolicExpression array;
 
 
-
 	public static void main(String[] args) {
-		NumericExpression elementsArray[];
-		int maxSize =(int) Math.pow(2, 15);
+		LinkedList<NumericExpression> elementsList;
+		int maxSize =(int) Math.pow(2, 20);
 		int size;
 		long startingTime, endingTime;
 		double totalTime;
@@ -46,11 +35,11 @@ public class ArrayBenchmark {
 			size = i;
 			// starting the time
 			startingTime = System.nanoTime();
-			elementsArray = new NumericExpression[size];
+			elementsList = new LinkedList();
 			for(int j = 0;j<size; j++ ){
-				elementsArray[j] = universe.integer(j);
+				elementsList.add(universe.integer(j));
 			}
-			array = universe.array(integerType, Arrays.asList(elementsArray));
+			array = universe.array(integerType, (elementsList));
 			endingTime = System.nanoTime();
 			
 			// total time calculation
@@ -66,8 +55,8 @@ public class ArrayBenchmark {
 			size = i;
 			// starting the time
 			startingTime = System.nanoTime();
-			elementsArray = new NumericExpression[0];
-			array = universe.array(integerType, Arrays.asList(elementsArray));
+			elementsList = new LinkedList<>();
+			array = universe.array(integerType, elementsList);
 
 			for(int j = 0;j<size; j++ ){
 				array = universe.append(array, universe.integer(j));
@@ -82,6 +71,7 @@ public class ArrayBenchmark {
 		}
 
 
+		
 
 	}
 

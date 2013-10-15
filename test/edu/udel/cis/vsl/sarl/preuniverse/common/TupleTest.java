@@ -152,8 +152,8 @@ public class TupleTest {
 	public void testCompatibleWithTuple() {
 
 		// here we test compatible with tuple types
-		SymbolicTupleType type1, type2, type3, type5, type6, type7;
-		SymbolicType type4;
+		SymbolicTupleType type1, type2, type3, type4, type5, type6;
+		SymbolicType type7;
 		BooleanExpression result, expected;
 		LinkedList<SymbolicType> members = new LinkedList<>();
 
@@ -163,14 +163,14 @@ public class TupleTest {
 				Arrays.asList(new SymbolicType[] { integerType, integerType }));
 		type3 = universe.tupleType(universe.stringObject("type2"),
 				Arrays.asList(new SymbolicType[] { realType, integerType }));
-		type5 = universe.tupleType(universe.stringObject("Type1"),
+		type4 = universe.tupleType(universe.stringObject("Type1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType }));
-		type6 = universe.tupleType(
+		type5 = universe.tupleType(
 				universe.stringObject("Type1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						integerType }));
-		type7 = universe.tupleType(universe.stringObject("Type1"), members);
-		type4 = universe.integerType();
+		type6 = universe.tupleType(universe.stringObject("Type1"), members);
+		type7 = universe.integerType();
 
 		// here we compare two identical tuple types (type1, type2)
 		// the expected compatible call should return true
@@ -187,30 +187,30 @@ public class TupleTest {
 		// here we compare a tuple type with integer type (type1, type4)
 		// the expected compatible call should return false
 		expected = universe.bool(false);
-		result = universe.compatible(type1, type4);
+		result = universe.compatible(type1, type7);
 		assertEquals(expected, result);
 
 		// here we compare two different tuple types (type1, type5), but they
 		// have the same name
 		// the expected compatible call should return false
 		expected = universe.bool(false);
-		result = universe.compatible(type1, type5);
+		result = universe.compatible(type1, type4);
 		assertEquals(expected, result);
 
 		// here we compare two different tuple types (type1, type6), but they
 		// have the same name
 		// the expected compatible call should return false
 		expected = universe.bool(false);
-		result = universe.compatible(type1, type6);
+		result = universe.compatible(type1, type5);
 		assertEquals(expected, result);
 
 		// here we compare two different tuple types (type7, type6), but they
 		// have the same name
 		// the expected compatible call should return false
 		expected = universe.bool(false);
-		result = universe.compatible(type7, type6);
+		result = universe.compatible(type6, type5);
 		assertEquals(expected, result);
 
 	}
-
+	
 }

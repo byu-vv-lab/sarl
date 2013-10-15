@@ -48,7 +48,7 @@ public class TupleBenchmark {
 		int size;
 		double totalTime;
 		
-		int maxSize =(int) Math.pow(2,20);
+		int maxSize =(int) Math.pow(2,10);
 		System.out.println("Testing of tuple creation using linked lists");
 		for(int i = 1; i<=maxSize; i = i*2){
 			members = new LinkedList<>();

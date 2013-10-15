@@ -40,7 +40,7 @@ public class TupleWritingBenchmark {
 	public static void main(String[] args) {
 		
 		
-		int maxSize =(int) Math.pow(2,18);			// the size of tuple
+		int maxSize =(int) Math.pow(2,15);			// the size of tuple
 		SymbolicType typeArray[];		
 		NumericExpression tupleArray[];			
 		long startingTime, stoppingTime;			// used for measuring the time
@@ -70,7 +70,7 @@ public class TupleWritingBenchmark {
 		
 		// here we measure the time for performing large number of tupleWrite()
 		startingTime = System.nanoTime();
-		for(int i = 0;i<100; i++){
+		for(int i = 0;i<200; i++){
 			index = universe.intObject(i);
 			// write a new value which is 2*i
 			tuple = universe.tupleWrite(tuple, index, universe.integer(i*2));
