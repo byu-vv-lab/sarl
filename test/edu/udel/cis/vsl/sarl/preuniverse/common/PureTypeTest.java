@@ -56,17 +56,21 @@ public class PureTypeTest {
 		
 		SymbolicType pureType1 = universe.pureType(integerType);
 		SymbolicType pureType2 = universe.pureType(integerType);
-		assertEquals(pureType1.typeKind(), pureType2.typeKind());
+		SymbolicType pureType3 = universe.pureType(realType);
 		
+		assertEquals(pureType1.typeKind(), pureType2.typeKind());
+		assertEquals(pureType1.isInteger(), true);
+		assertEquals(pureType3.isReal(), true);
+		assertEquals(pureType1.equals(pureType2), true);
 	}
 	
 	@Test
 	public void pureTypeObjectKindTest(){
 		
-		SymbolicType pureType2 = universe.pureType(array1);
-		SymbolicType pureType4 = universe.pureType(booleanType);
-		assertEquals(pureType2.symbolicObjectKind(), pureType4.symbolicObjectKind());
+		SymbolicType pureType1 = universe.pureType(array1);
+		SymbolicType pureType2 = universe.pureType(booleanType);
 		
+		assertEquals(pureType1.symbolicObjectKind(), pureType2.symbolicObjectKind());
 	}
 	
 }
