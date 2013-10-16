@@ -273,8 +273,8 @@ public class IdealTest {
 		assertEquals(xp1squared, x2p2xp1);
 	}
 
-	@Test
 	@Ignore
+	@Test
 	public void bigPower() {
 		int exponent = 100;
 		IntObject n = objectFactory.intObject(exponent);
@@ -545,6 +545,12 @@ public class IdealTest {
 		assertEquals(m2, n);
 	}
 
+	/**
+	 * Returns a Zero Constant
+	 * 
+	 * @param type
+	 * 				Constant
+	 */
 	@Test
 	public void zero() {
 		Constant c1 = commonIdealFactory.zero(real);
@@ -552,6 +558,12 @@ public class IdealTest {
 		// out.println("zero=" +c);
 	}
 
+	/**
+	 * Returns a zero monomial
+	 * 
+	 * @param type
+	 * 				Monomial
+	 */
 	@Test
 	public void monomial() {
 		Monic monic = (Monic) idealFactory.multiply(x, x);
@@ -559,7 +571,15 @@ public class IdealTest {
 		// out.println("monomial=" +m);
 		assertEquals(constZero, m);
 	}
-
+    
+	/**
+	 * Multiplies two rational numbers. These numbers can also be Real type.
+	 * 
+	 * Also checks if the first or second argument is zero or one.
+	 * 
+	 * @param type
+	 * 				Rational Number
+	 */
 	@Test
 	public void rationalMultiply() {
 		NumericExpression n1 = commonIdealFactory.multiply(three, five);
@@ -628,6 +648,16 @@ public class IdealTest {
 		assertEquals(e9, n1);
 	}
 	
+	/**
+	 * Returns a zero polynomial from the given type and term map
+	 * 
+	 * @param type
+	 * 				the numeric type of polynomial
+	 * 
+	 *  @param termMap
+	 *            the terms of the polynomial expressed as a map; all of the
+	 *            terms must have the specified type
+	 */
 	
 	@Test
 	public void polynomial() {
