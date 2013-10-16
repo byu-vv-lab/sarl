@@ -300,11 +300,18 @@ public class TupleTest {
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
 		// checking if it equals to tuple1
 		assertEquals(tuple1, readingResult);
+		// extracting the array from the resulted tuple
 		readingResult = universe.tupleRead(readingResult, universe.intObject(0));
+		// checking if the result equals to intArrray
 		assertEquals(intArray, readingResult);
+		
+		// reading the second position in tuple3
 		readingResult = universe.tupleRead(tuple3, universe.intObject(1));
+		// checking if it equals to tuple2
 		assertEquals(tuple2, readingResult);
+		
 		try{
+			// here, we expect an exception since the index is out of bound
 			readingResult = universe.tupleRead(tuple3, universe.intObject(3));
 			assertEquals(universe.rational(8.9), readingResult);
 			
@@ -318,13 +325,16 @@ public class TupleTest {
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
 		readingResult = universe.tupleRead(readingResult, universe.intObject(1));
 		try{
+			// here, we expect an exception since appending invalid type
 			readingResult = universe.append(readingResult, universe.integer(50));
 		}
 		catch(SARLException ex){
 			readingResult = universe.append(readingResult, universe.rational(50));
 		}
+		// writing the array back to the tuple1
 		tuple1 = universe.tupleWrite(tuple1, universe.intObject(1), readingResult);
 		readingResult = universe.tupleWrite(tuple3, universe.intObject(0), tuple1);
+		// it should return false expression
 		boolExp = universe.equals(readingResult, tuple3);
 		assertEquals(universe.bool(false), boolExp);
 		
