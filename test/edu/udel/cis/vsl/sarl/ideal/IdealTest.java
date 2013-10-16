@@ -186,6 +186,8 @@ public class IdealTest {
 		e7 = commonIdealFactory.expression(SymbolicOperator.SUBTRACT, integer,
 				five, three); // 5 - 3 SUBTRACT
 		e8 = commonIdealFactory.zeroReal(); // DEFAULT}
+		e9 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
+				three, one); // 5 + 3 +1 ADD
 
 	}
 
@@ -390,6 +392,7 @@ public class IdealTest {
 		NumericExpression p5 = idealFactory.add(
 				idealFactory.multiply(idealFactory.intConstant(2), x4), p4);
 		assertEquals(p5, b1);
+		assertEquals(intZero, b2);
 	}
 
 
@@ -404,7 +407,7 @@ public class IdealTest {
 		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
 		Polynomial b3 = commonIdealFactory.subtractConstantTerm(constZero);
-		//out.println("Constant Term Subtraction1=" + b2);
+		out.println("Constant Term Subtraction1=" + b2);
 		//out.println("Constant Term Subtraction=" + b1);
 		assertEquals(x, b1);
 		assertEquals(constZero, b3);
@@ -621,16 +624,19 @@ public class IdealTest {
 		NumericExpression n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
 		out.println("Exp=" + n1);
+		out.println("Expr2=" +e9);
+		assertEquals(e9, n1);
 	}
-
+	
+	
 	@Test
 	public void polynomial() {
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Monomial monomial = idealFactory.monomial(intTen, (Monic) x);
-		// Polynomial poly = idealFactory.polynomial(termMap, monomial);
 		Polynomial b = commonIdealFactory.polynomial(termMap, monomial);
-		// assertEquals(b, commonIdealFactory.booleanFactory().trueExpr());
-	}
+		out.println("Zero Polynomial=" + b);
+		assertEquals(intZero, b);
+		}
 
 	@Test
 	public void primitiveSubtract() {
