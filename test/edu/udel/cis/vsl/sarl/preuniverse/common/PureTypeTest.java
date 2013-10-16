@@ -14,6 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -25,6 +26,7 @@ public class PureTypeTest {
 
 	private static SymbolicType realType, integerType, booleanType;
 	
+	private static SymbolicArrayType array1;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -33,6 +35,7 @@ public class PureTypeTest {
 		integerType = universe.integerType();
 		realType = universe.realType();
 		booleanType = universe.booleanType();
+		array1 = universe.arrayType(integerType);
 		
 	}
 
@@ -60,7 +63,7 @@ public class PureTypeTest {
 	@Test
 	public void pureTypeObjectKindTest(){
 		
-		SymbolicType pureType2 = universe.pureType(realType);
+		SymbolicType pureType2 = universe.pureType(array1);
 		SymbolicType pureType4 = universe.pureType(booleanType);
 		assertEquals(pureType2.symbolicObjectKind(), pureType4.symbolicObjectKind());
 		
