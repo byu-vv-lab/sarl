@@ -6,9 +6,6 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -19,19 +16,11 @@ import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.SARLException;
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant; 
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.common.OptimizedMap;
 
 public class OptimizedMapTest {
@@ -47,6 +36,8 @@ public class OptimizedMapTest {
 	private static int value;
 	
 	private static char c;
+	
+	private static Object nvalue, nkey;
 	
 	
 	
@@ -74,17 +65,71 @@ public class OptimizedMapTest {
 	
 	
 	
+	
+	
+	@Test
+	(expected = UnsupportedOperationException.class)
+	public void optimizedMapPutTest(){
+		
+		nMap.put(key, hello);
+	
+		
+	}
+	
 	@Test
 	public void optimizedMapTest(){
 		temp = nMap.isEmpty();
+		
 		value = nMap.size();
 		System.out.print(value);
 		
 		assertEquals(temp, true);
-
-	/* still working on it */
+		assertEquals(nMap.containsKey(key),false);
+		assertEquals(nMap.containsValue(nvalue), false);
 		
 	}
 	
+	@Test
+	(expected = UnsupportedOperationException.class)
+	public void optimizedMapRemoveTest(){
+		
+		nMap.remove(key);
+	
+		
+	}
+	
+	
+	@Test
+	(expected = UnsupportedOperationException.class)
+	public void optimizedMapEntrySetTest(){
+		
+		nMap.entrySet();
+	
+		
+	}
+	
+	@Test
+	public void optimizedMapValuesTest(){
+		
+		nMap.values();
+	
+		
+	}
+	
+	@Test
+	(expected = UnsupportedOperationException.class)
+	public void optimizedMapKeysetTest(){
+	
+		nMap.keySet();
+		
+	}
+	
+	@Test
+	(expected = UnsupportedOperationException.class)
+	public void optimizedMapClearTest(){
+		
+		nMap.clear();
+		
+	}
 
 }
