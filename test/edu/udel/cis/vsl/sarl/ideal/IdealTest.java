@@ -115,14 +115,14 @@ public class IdealTest {
 	NumericExpression intHundred;
 	NumericExpression intTwenty;
 	NumericExpression e1; // 5 IsReal
-	NumericExpression e2; // 5 + 3 Add
+	NumericExpression e2; // 5 + 3 ADD
 	NumericExpression e3; // 5 > 3, 5, 3 COND
 	NumericExpression e4; // 5 * 3 MULTIPLY
 	NumericExpression e5; // -5 NEGATIVE
 	NumericExpression e6; // 5 ^ 3 POWER
 	NumericExpression e7; // 5 - 3 SUBTRACT
 	NumericExpression e8; // DEFAULT
-	NumericExpression e9;
+	NumericExpression e9; // 5 + 3 + 1 ADD
 
 	@Before
 	public void setUp() throws Exception {
@@ -163,8 +163,7 @@ public class IdealTest {
 		integer = typeFactory.integerType();
 		realZero = numberFactory.rational("0");
 		realOne = numberFactory.rational("1");
-		realFifteen = numberFactory
-				.integerToRational(numberFactory.integer(15));
+		realFifteen = numberFactory.rational("15");
 		realFive = numberFactory.rational("5");
 		zero = commonIdealFactory.constant(realZero);
 		one = commonIdealFactory.constant(realOne);
@@ -281,12 +280,10 @@ public class IdealTest {
 	 */
 	@Test
 	public void xplus1squared() {
-		NumericExpression xp1 = idealFactory
-				.add(x, intOne);
+		NumericExpression xp1 = idealFactory.add(x, intOne);
 		SymbolicExpression xp1squared = idealFactory.multiply(xp1, xp1);
 		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(x,
-				x), idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(2), x),
+				x), idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), x),
 				intOne));
 
 		out.println("xplus1squared: " + xp1squared + " vs. " + x2p2xp1);
@@ -324,15 +321,12 @@ public class IdealTest {
 	 */
 	@Test
 	public void xp1xm1() {
-		NumericExpression xp1 = idealFactory
-				.add(x, intOne);
+		NumericExpression xp1 = idealFactory.add(x, intOne);
 		NumericExpression xm1 = idealFactory.add(x,
 				idealFactory.minus(intOne));
 		SymbolicExpression xp1xm1 = idealFactory.multiply(xp1, xm1);		
-		SymbolicExpression x2m1 = idealFactory.subtract(
-				idealFactory.multiply(x, x),
-				idealFactory.multiply(intOne,
-						intOne));
+		SymbolicExpression x2m1 = idealFactory.subtract(idealFactory.multiply(x, x),
+				idealFactory.multiply(intOne,intOne));
 		
 		out.println("xp1xm1=" + xp1xm1);
 		out.println("x2m1=" + x2m1);
@@ -361,21 +355,20 @@ public class IdealTest {
 	 */
 	@Test
 	public void lessThan() {
-		NumericExpression n1 = idealFactory.subtract(x,
-				intOne);
-		NumericExpression n2 = idealFactory.add(x, intOne);
-		BooleanExpression n = commonIdealFactory.lessThan(n1, n2);
-		NumericExpression n3 = idealFactory.add(x, intOne);
-		BooleanExpression n0 = commonIdealFactory.lessThan(n2, n3);
+		NumericExpression n1 = idealFactory.subtract(x, intOne);
+		NumericExpression n2 = idealFactory.add(x, intOne);		
+		NumericExpression n3 = idealFactory.add(x, intOne);		
 		NumericExpression n11 = idealFactory.add(x, y);
-		NumericExpression n22 = idealFactory.subtract(x, y);
-		BooleanExpression n1122 = commonIdealFactory.lessThan(n11, n22);
+		NumericExpression n22 = idealFactory.subtract(x, y);		
 		// out.println("less than=" +n);
 		// out.println("less than1=" +n0);
 		// out.println("less than2=" +n1122);
 		BooleanExpression m1 = booleanFactory.symbolic(true);
 		BooleanExpression m2 = booleanFactory.symbolic(false);
 		
+		BooleanExpression n = commonIdealFactory.lessThan(n1, n2);
+		BooleanExpression n0 = commonIdealFactory.lessThan(n2, n3);
+		BooleanExpression n1122 = commonIdealFactory.lessThan(n11, n22);
 		assertEquals(m1, n);
 		assertEquals(m2, n0);
 	}
@@ -395,26 +388,26 @@ public class IdealTest {
 						idealFactory.multiply(x, x)),
 				intOne);
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
-		// NumericExpression p4 = idealFactory.add(idealFactory.multiply(three,
+		NumericExpression p4 = idealFactory.add(
+				idealFactory.multiply(idealFactory.intConstant(3), idealFactory.
+						multiply(x, x)), idealFactory.intConstant(2));
+		// NumericExpression p5 = idealFactory.add(idealFactory.multiply(three,
 		// x), idealFactory.intConstant(5));
-		// NumericExpression p5 = idealFactory.add(idealFactory.multiply(five,
+		// NumericExpression p6 = idealFactory.add(idealFactory.multiply(five,
 		// x), idealFactory.intConstant(3));
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
 		// Polynomial poly4 = (Polynomial) p4;
 		// Polynomial poly5 = (Polynomial) p5;
+		
+		
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
 		// Polynomial b3 = commonIdealFactory.add(poly4, poly5);		
-		NumericExpression p6 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(3),
-						idealFactory.multiply(x, x)),
-				idealFactory.intConstant(2));
 		// Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		
-		out.println("ADD_Polynomial=" + b1);
-		assertEquals(p6, b1);
+		//out.println("ADD_Polynomial=" + b1);
+		assertEquals(p4, b1);
 		assertEquals(p2, b2);
 	}
 
@@ -430,23 +423,21 @@ public class IdealTest {
 				intOne);
 		NumericExpression p2 = idealFactory.add(
 				idealFactory.multiply(idealFactory.intConstant(2),
-						idealFactory.multiply(x, x)),
-				intOne);
+						idealFactory.multiply(x, x)), intOne);
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
-		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);		
 		NumericExpression x2 = idealFactory.multiply(x, x);
 		NumericExpression x4 = idealFactory.multiply(x2, x2);
-		NumericExpression p4 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(3),
-						idealFactory.multiply(x, x)),
-				intOne);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.
+				intConstant(3), idealFactory.multiply(x, x)), intOne);
 		NumericExpression p5 = idealFactory.add(
 				idealFactory.multiply(idealFactory.intConstant(2), x4), p4);
 		
+		
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);		
 		out.println("Multiply_Polynomial=" + b1);
 		assertEquals(p5, b1);
 		assertEquals(intZero, b2);
