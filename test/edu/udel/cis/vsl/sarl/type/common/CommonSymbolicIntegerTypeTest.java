@@ -9,11 +9,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
+/**
+ * @author alali
+ *
+ *	Testing CommonSymbolicIntegerType:
+ *	- IntegerKind integerKind()
+ *	- typeEquals(...)
+ *	- int computeHashCode()
+ *	- StringBuffer toStringBuffer(...)
+ *	- isHerbrand()
+ *	- isIdeal()
+ *	- SymbolicType getPureType()
+ */
 public class CommonSymbolicIntegerTypeTest {
-	/*Testing SymbolicIntegerType
-	 * 
-	 */	
+	
 		CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind, herbrandIntKind;
 		TypeComparator typeComparator;
 		@BeforeClass
@@ -37,6 +48,10 @@ public class CommonSymbolicIntegerTypeTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testing integer kind from created objects 
+	 * with the enum type (IntegerKind)
+	 */
 	@Test
 	public void testIntegerKind() {
 		assertEquals(idealIntKind.integerKind(), IntegerKind.IDEAL);
@@ -44,13 +59,20 @@ public class CommonSymbolicIntegerTypeTest {
 		assertEquals(herbrandIntKind.integerKind(), IntegerKind.HERBRAND);
 	}
 	
+	/**
+	 * testing the same integer type and two identical integer types.
+	 */
 	@Test
 	public void testTypeEquals() {
 		assertTrue(idealIntKind.typeEquals(idealIntKind));
+		assertTrue(idealIntKind.typeEquals(idealIntKind2));
 		assertFalse(idealIntKind.typeEquals(boundedIntKind));
 	}
 	
 	
+	/**
+	 * testing if the created herbrand integer types are really herbrand.
+	 */
 	@Test
 	public void testIsHerbrand() {
 		assertTrue(herbrandIntKind.isHerbrand());
@@ -58,6 +80,9 @@ public class CommonSymbolicIntegerTypeTest {
 		assertFalse(boundedIntKind.isHerbrand());
 	}
 	
+	/**
+	 * testing if the created ideal integer types are really Ideal!
+	 */
 	@Test
 	public void testIsIdeal() {
 		assertTrue(idealIntKind.isIdeal());
@@ -65,11 +90,18 @@ public class CommonSymbolicIntegerTypeTest {
 		assertFalse(herbrandIntKind.isIdeal());
 	}
 	
+	/**
+	 * testing the hash code for two integer types
+	 * they've to have the same hash code if they're identical
+	 */
 	@Test
 	public void testComputeHashCode() {
 		assertEquals(idealIntKind.computeHashCode(),idealIntKind2.computeHashCode());
 	}
 	
+	/**
+	 * testing the string representation for the different integer types
+	 */
 	@Test
 	public void testToStringBuffer() {
 		assertEquals(idealIntKind.toStringBuffer(true).toString(), "int");
@@ -78,27 +110,22 @@ public class CommonSymbolicIntegerTypeTest {
 		assertEquals(boundedIntKind.toStringBuffer(true).toString(), "bounded");
 	}
 	
+	/**
+	 * comparing the integer types using TypeComparator.
+	 */
 	@Test
 	public void testTypeComparator(){
-		//System.out.println(typeComparator.compare(idealIntKind, idealIntKind2));
 		assertEquals(typeComparator.compare(idealIntKind, idealIntKind2), 0);
+		assertNotEquals(typeComparator.compare(herbrandIntKind, boundedIntKind), 0);
 	}
 	
-	/*
-
-	@Test
-	public void testCanonizeChildren() {
-		fail("Not yet implemented");
-	}
-
+	/**
+	 * checking the pure type of the integer type.
+	 */
 	@Test
 	public void testGetPureType() {
-		fail("Not yet implemented");
+		assertEquals(((CommonSymbolicIntegerType)idealIntKind.getPureType()).integerKind(), IntegerKind.IDEAL);
+		
 	}
-
-	@Test
-	public void testCommonSymbolicIntegerType() {
-		fail("Not yet implemented");
-	}
-*/
+	
 }
