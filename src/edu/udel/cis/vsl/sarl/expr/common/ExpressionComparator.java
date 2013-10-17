@@ -43,6 +43,13 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 
 	private Comparator<NumericExpression> numericComparator;
 
+	/**
+	 * Constructor that takes a three Comparators of types NumericExpression,SymbolicObject,
+	 * and SymbolicType.
+	 * @param numericComparator 
+	 * @param objectComparator
+	 * @param typeComparator
+	 */
 	public ExpressionComparator(
 			Comparator<NumericExpression> numericComparator,
 			Comparator<SymbolicObject> objectComparator,
@@ -51,15 +58,27 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 		this.objectComparator = objectComparator;
 		this.typeComparator = typeComparator;
 	}
-
+	
+	/**
+	 * Returns a comparator of the type SymbolicObject
+	 * @return Comparator<SymbolicObject>
+	 */
 	public Comparator<SymbolicObject> objectComparator() {
 		return objectComparator;
 	}
-
+	
+	/**
+	 * Returns a comparator of the type SymbolicType
+	 * @return Comparator<SymbolicType>
+	 */
 	public Comparator<SymbolicType> typeComparator() {
 		return typeComparator;
 	}
 
+	/**
+	 * Returns a comparator of the type numericExpression
+	 * @return Comparator<NumericExpression>
+	 */
 	public Comparator<NumericExpression> numericComparator() {
 		return numericComparator;
 	}
