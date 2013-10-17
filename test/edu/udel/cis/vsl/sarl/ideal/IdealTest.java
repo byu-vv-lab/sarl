@@ -91,6 +91,8 @@ public class IdealTest {
 	//private Constant constFour;
 	private Constant intNegOne; // int constant -1
 	private Constant intOne; // int constant 1
+	private Constant intTwo; // int constant 2
+	private Constant intThree; // int constant 3
 	private Constant intTen; // int constant 10
 	private SymbolicIntegerType integerOne; // Integer 1
 	private SymbolicIntegerType integerTen; // Integer 10
@@ -100,7 +102,10 @@ public class IdealTest {
 	// NumericSymbolicConstant mx;
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen;
-	private NumericExpression five; 
+	private NumericExpression five;
+	private NumericExpression seven;
+	private NumericExpression twentyOne;
+	private NumericExpression thirtyFive;
 	private NumericExpression zero;
 	private NumericExpression one;
 	private RationalNumber realZero;
@@ -109,7 +114,10 @@ public class IdealTest {
 	private RationalNumber realFive; 
 	private NumericExpression three; 
 	private RationalNumber realThree; 
-	private NumericExpression intThree;
+	private RationalNumber realSeven;
+	private RationalNumber realTwentyOne;
+	private RationalNumber realThirtyFive;
+	//private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
 	NumericExpression intHundred;
@@ -151,6 +159,8 @@ public class IdealTest {
 		//constFour = idealFactory.constant(ratFour);
 		intNegOne = idealFactory.intConstant(-1);
 		intOne = idealFactory.intConstant(1);
+		intTwo = idealFactory.intConstant(2);
+		intThree = idealFactory.intConstant(3);
 		intTen = idealFactory.intConstant(10);
 		integerTen = typeFactory.integerType();
 		integerOne = typeFactory.integerType();
@@ -165,14 +175,19 @@ public class IdealTest {
 		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");
 		realFive = numberFactory.rational("5");
+		realSeven = numberFactory.rational("7");
+		realTwentyOne = numberFactory.rational("21");
+		realThirtyFive = numberFactory.rational("35");
 		zero = commonIdealFactory.constant(realZero);
 		one = commonIdealFactory.constant(realOne);
 		fifteen = commonIdealFactory.constant(realFifteen);
 		five = commonIdealFactory.constant(realFive);
+		seven = commonIdealFactory.constant(realSeven);
+		twentyOne = commonIdealFactory.constant(realTwentyOne);
+		thirtyFive = commonIdealFactory.constant(realThirtyFive);
 		realThree = numberFactory.rational("3");
 		three = commonIdealFactory.constant(realThree);
-		intThree = commonIdealFactory.expression(SymbolicOperator.CAST,
-				integer, three);
+		//intThree = commonIdealFactory.expression(SymbolicOperator.CAST,	integer, three);
 		intHundred = idealFactory.intConstant(100);
 		intTwenty = idealFactory.intConstant(20);
 		e1 = commonIdealFactory.constant(realFive);
@@ -841,27 +856,28 @@ public class IdealTest {
 				typeFactory.realType()));
 		IntObject exp3 = objectFactory.intObject(3);
 		IntObject exp2 = objectFactory.intObject(2);
-		NumericExpression three = commonIdealFactory.constant(
-				numberFactory.integerToRational(numberFactory.integer(3)));
-		NumericExpression five = commonIdealFactory.constant(
-				numberFactory.integerToRational(numberFactory.integer(5)));
-		NumericExpression seven = commonIdealFactory.constant(
-				numberFactory.integerToRational(numberFactory.integer(7)));
-		NumericExpression twentyOne = commonIdealFactory.constant(
-				numberFactory.integerToRational(numberFactory.integer(21)));
-		NumericExpression thirtyFive = commonIdealFactory.constant(
-				numberFactory.integerToRational(numberFactory.integer(35)));
-		NumericExpression complex1 = idealFactory.power(x, exp3);
-		complex1 = idealFactory.multiply(complex1, twentyOne);
-		NumericExpression complex2 = idealFactory.power(x, exp2);
-		complex2 = idealFactory.multiply(complex2, thirtyFive);
-		NumericExpression numer = idealFactory.subtract(complex1, complex2);		
-		NumericExpression denom = idealFactory.multiply(x, seven);
-		NumericExpression complex = idealFactory.divide(numer, denom);
-		NumericExpression result1 = idealFactory.multiply(idealFactory.power(x, exp2), three);
-		NumericExpression result2 = idealFactory.multiply(x, five);
-		NumericExpression result = idealFactory.subtract(result1, result2);
 		
+		
+		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
+				power(x, exp3));
+		//out.println("Complex 1=" +complex1);
+		NumericExpression complex2 = commonIdealFactory.multiply(thirtyFive, idealFactory.
+				power(x, exp2));
+		//out.println("Complex 2=" +complex2);
+		NumericExpression numer = commonIdealFactory.subtract(complex1, complex2);		
+		//out.println("Num=" +numer);
+		NumericExpression denom = commonIdealFactory.multiply(x, seven);
+		//out.println("Den=" +denom);
+		NumericExpression complex = commonIdealFactory.divide(numer, denom);
+		//out.println("Complex =" +complex);
+		NumericExpression result1 = commonIdealFactory.multiply(idealFactory.power(x, 
+				exp2), three);
+		//out.println("result 1=" +result1);
+		NumericExpression result2 = commonIdealFactory.multiply(x, five);
+		//out.println("result 2=" +result2);
+		NumericExpression result = commonIdealFactory.subtract(result1, result2);
+		//out.println("Result=" +result);
+		//out.println("Complex=" +complex);
 		assertEquals(result, complex);
 	}
 
