@@ -1562,7 +1562,16 @@ public class CommonPreUniverseTest {
 	}
 	*/
 	@Test
-	// Written by Marlin Blue
+	/**
+	 * @author Marlin Blue
+	 * 
+	 * Tests whether the two given Symbolic Constants are equal. This 
+	 * test targets the FUNCTION case of the 'equals()' method. An ArrayList
+	 * and a Boolean serve as the parameters. Two assertions contribute to 
+	 * this test where one tests the null branch while the other tests
+	 * the non-null branch.Successfully hits all branches.
+	 * 
+	 */
 	public void testEqualsFunction() {
 		//SymbolicExpression result1, result2; 
 		SymbolicConstant nullConstant = universe.symbolicConstant(
