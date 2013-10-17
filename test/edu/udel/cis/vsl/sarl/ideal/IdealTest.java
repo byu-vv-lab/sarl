@@ -901,16 +901,16 @@ public class IdealTest {
 		 
 		
 		//RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(five, y2);
-		BooleanExpression nb2 = commonIdealFactory.notLessThan(r1, 
-				commonIdealFactory.zeroReal());
-		BooleanExpression nb3 = commonIdealFactory.notLessThan(r2, 
-				commonIdealFactory.zeroReal());
+		BooleanExpression nb2 = idealFactory.notLessThan(commonIdealFactory.
+				zeroReal(), r1);
+		//BooleanExpression nb3 = commonIdealFactory.notLessThan(r2, 
+			//	commonIdealFactory.zeroReal());
 		BooleanExpression nb4 = commonIdealFactory.notLessThanEquals(
 				commonIdealFactory.zeroReal(), r1);
 
 		out.println("b1 = " + b1);
 		out.println("b2 = " + b2);
-		out.println("!b2 = " + nb3);
+		out.println("!b2 = " + nb2);
 		//assertEquals(b1, nb2);
 	}
 }
