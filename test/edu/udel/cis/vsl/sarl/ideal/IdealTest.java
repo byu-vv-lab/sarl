@@ -896,7 +896,9 @@ public class IdealTest {
 		BooleanExpression b2 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
 		// BooleanExpression nb2 = booleanFactory.not(b2);
-		BooleanExpression nb2 = idealFactory.notLessThan(
+		BooleanExpression nb2 = commonIdealFactory.notLessThan(
+				commonIdealFactory.zeroReal(), r1);
+		BooleanExpression nb3 = commonIdealFactory.notLessThanEquals(
 				commonIdealFactory.zeroReal(), r1);
 
 		out.println("b1 = " + b1);
