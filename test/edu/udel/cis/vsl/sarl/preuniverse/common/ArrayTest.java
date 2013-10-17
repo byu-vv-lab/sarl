@@ -141,6 +141,7 @@ public class ArrayTest {
 		
 		NumericExpression[] arrayMembers = new NumericExpression[2] ;
 		SymbolicExpression array;
+		@SuppressWarnings("unused")
 		NumericExpression length;
 		
 		arrayMembers[0] = universe.integer(1);
@@ -159,6 +160,7 @@ public class ArrayTest {
 		// exception for non array type
 		SymbolicTupleType tupleType1;
 		SymbolicExpression tuple;
+		@SuppressWarnings("unused")
 		NumericExpression length;
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
 		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
@@ -200,6 +202,7 @@ public class ArrayTest {
 	public void testRemoveElementAtException(){
 		
 		SymbolicTupleType tupleType1;
+		@SuppressWarnings("unused")
 		SymbolicExpression tuple, resultedArray;
 		
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
@@ -222,6 +225,7 @@ public class ArrayTest {
 		expected = universe.array(integerType, Arrays.asList(new NumericExpression[]{one,three}));
 		// index out of range exception
 		resultedArray = universe.removeElementAt(array, 3);
+		assertEquals(expected, resultedArray);
 		
 	}
 	
@@ -249,6 +253,7 @@ public class ArrayTest {
 	public void testArrayWriteException()
 	{
 		// testing the fail when pass a null array to arrayWrite()
+		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
 		NumericExpression one,two, three, five;
 		
@@ -267,6 +272,7 @@ public class ArrayTest {
 	public void testArrayWriteException2()
 	{
 		// testing the fail when pass a null index to arrayWrite()
+		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
 		NumericExpression one,two, three, five;
 		
@@ -286,6 +292,7 @@ public class ArrayTest {
 	public void testArrayWriteException3()
 	{
 		// testing the fail when pass a null value to arrayWrite()
+		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
 		NumericExpression one,two, three, five;
 		
@@ -306,8 +313,9 @@ public class ArrayTest {
 	{
 		// testing the fail when pass a non array type to arrayWrite()
 		// here we use a tuple instead of array
+		@SuppressWarnings("unused")
 		SymbolicExpression  resultedArray,tuple;
-		NumericExpression one,two,five;
+		NumericExpression one,two;
 		SymbolicTupleType tupleType1;
 		
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
@@ -324,6 +332,7 @@ public class ArrayTest {
 	public void testArrayWriteException5()
 	{
 		// testing the fail when pass a non integer index to arrayWrite()
+		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
 		NumericExpression one,two, three, five;
 		
@@ -353,6 +362,7 @@ public class ArrayTest {
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
 		two = universe.rational(2.0);
 		resultedArray = universe.arrayWrite(array, one, two);
+		assertEquals(resultedArray, array);
 	}
 
 	// written by Mohammad Alsulmi
@@ -369,6 +379,7 @@ public class ArrayTest {
 		array = universe.array(integerType, Arrays.asList(new NumericExpression[]{two,three,five}));
 		array = null;	// null array
 		resultedArray = universe.arrayRead(array, one);
+		assertEquals(resultedArray, array);
 	}
 	
 	// written by Mohammad Alsulmi
@@ -377,9 +388,8 @@ public class ArrayTest {
 		// testing the fail when pass a null index to arrayRead()
 				
 		SymbolicExpression array, resultedArray;
-		NumericExpression one,two, three, five;
+		NumericExpression two, three, five;
 
-		one = universe.integer(1);
 		two = universe.integer(2);
 		three = universe.integer(3);
 		five = universe.integer(5);		
@@ -387,6 +397,7 @@ public class ArrayTest {
 
 		two = null; // null index
 		resultedArray = universe.arrayRead(array, two);
+		assertEquals(resultedArray, array);
 	}
 	
 	// written by Mohammad Alsulmi
@@ -394,13 +405,13 @@ public class ArrayTest {
 	public void TestArrayReadException3(){
 		// testing the fail when pass a non array type to arrayRead()
 		// here we use a tuple instead of array
+		@SuppressWarnings("unused")
 		SymbolicExpression  resultedArray,tuple;
-		NumericExpression one,two,five;
+		NumericExpression two;
 		SymbolicTupleType tupleType1;
 
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"), Arrays.asList(new SymbolicType[]{integerType,integerType}));
 		tuple = universe.tuple(tupleType1, Arrays.asList(new SymbolicExpression[]{universe.integer(1),universe.integer(2)}));
-		one = universe.integer(1);
 		two = universe.integer(2);
 		
 		resultedArray = universe.arrayRead(tuple, two);
@@ -410,6 +421,7 @@ public class ArrayTest {
 	@Test(expected= SARLException.class)
 	public void TestArrayReadException4(){
 		// testing the fail when pass a negative index to arrayRead()
+		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
 		NumericExpression negativeOne,two, three, five;
 		
@@ -454,6 +466,7 @@ public class ArrayTest {
 	public void testArray(){
 		// testing array() when passing with no exceptions
 		LinkedList<SymbolicExpression> elements; // list of elements
+		@SuppressWarnings("unused")
 		SymbolicExpression array;
 		
 		elements = new LinkedList<>();
@@ -470,6 +483,7 @@ public class ArrayTest {
 	public void testArrayException(){
 		// testing the fail when passing a null elements reference to array()
 		LinkedList<SymbolicExpression> elements; // list of elements
+		@SuppressWarnings("unused")
 		SymbolicExpression array;
 		
 		elements = null; // null reference
@@ -481,6 +495,7 @@ public class ArrayTest {
 	public void testArrayException2(){
 		// testing the fail when passing a null elements type to array()
 		LinkedList<SymbolicExpression> elements; // list of elements
+		@SuppressWarnings("unused")
 		SymbolicExpression array;
 		SymbolicType realType;
 
@@ -498,6 +513,7 @@ public class ArrayTest {
 	public void testArrayException3(){
 		// testing the fail when passing an array with null elements to array()
 		NumericExpression elements[]; // array of elements
+		@SuppressWarnings("unused")
 		SymbolicExpression array;
 
 		elements = new NumericExpression[4]; 
@@ -512,6 +528,7 @@ public class ArrayTest {
 	public void testArrayException4(){
 		// testing the fail when passing non compatible type to array
 		NumericExpression elements[]; // array of elements
+		@SuppressWarnings("unused")
 		SymbolicExpression array;
 
 		elements = new NumericExpression[2];
@@ -584,4 +601,5 @@ public class ArrayTest {
 		value = universe.rational(6.0);
 		array = universe.append(array, value);
 	}
+	
 }
