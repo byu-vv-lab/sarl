@@ -888,22 +888,29 @@ public class IdealTest {
 		NumericSymbolicConstant y2 = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
 						typeFactory.realType()));
-		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(
-				x2, y2);
+		
+		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x2, y2);
+		RationalExpression r2 = (RationalExpression) commonIdealFactory.
+		divide(idealFactory.multiply(three,x2), idealFactory.multiply(five,x2));
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
 				commonIdealFactory.zeroReal());
 		BooleanExpression b2 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
 		// BooleanExpression nb2 = booleanFactory.not(b2);
-		BooleanExpression nb2 = commonIdealFactory.notLessThan(
-				commonIdealFactory.zeroReal(), r1);
-		BooleanExpression nb3 = commonIdealFactory.notLessThanEquals(
+		 
+		
+		//RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(five, y2);
+		BooleanExpression nb2 = commonIdealFactory.notLessThan(r1, 
+				commonIdealFactory.zeroReal());
+		BooleanExpression nb3 = commonIdealFactory.notLessThan(r2, 
+				commonIdealFactory.zeroReal());
+		BooleanExpression nb4 = commonIdealFactory.notLessThanEquals(
 				commonIdealFactory.zeroReal(), r1);
 
 		out.println("b1 = " + b1);
 		out.println("b2 = " + b2);
-		out.println("!b2 = " + nb2);
+		out.println("!b2 = " + nb3);
 		//assertEquals(b1, nb2);
 	}
 }
