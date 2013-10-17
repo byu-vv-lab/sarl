@@ -40,6 +40,7 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 //import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 //import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
@@ -91,6 +92,8 @@ public class IdealTest {
 	private Constant intNegOne; // int constant -1
 	private Constant intOne; // int constant 1
 	private Constant intTen; // int constant 10
+	private SymbolicIntegerType integerOne; // Integer 1
+	private SymbolicIntegerType integerTen; // Integer 10
 	StringObject Xobj; // "X"
 	// StringObject mXobj;
 	NumericSymbolicConstant x; // int symbolic constant "X"
@@ -149,6 +152,8 @@ public class IdealTest {
 		intNegOne = idealFactory.intConstant(-1);
 		intOne = idealFactory.intConstant(1);
 		intTen = idealFactory.intConstant(10);
+		integerTen = typeFactory.integerType();
+		integerOne = typeFactory.integerType();
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
@@ -496,20 +501,15 @@ public class IdealTest {
 	 */
 	@Test
 	public void notLessThan() {
-		NumericExpression n11 = idealFactory.add(x, y);
-		NumericExpression n22 = idealFactory.subtract(x, y);
 		NumericExpression n1 = idealFactory.subtract(x,intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
-		NumericExpression n3 = idealFactory.add(x, intOne);
-		BooleanExpression n1122 = commonIdealFactory.notLessThan(n11, n22);
-		BooleanExpression n = commonIdealFactory.notLessThan(n1, n2);
-		BooleanExpression n0 = commonIdealFactory.notLessThan(n2, n3);
-		//out.println("Not Less Than=" +n1122);
+		BooleanExpression n = commonIdealFactory.notLessThan(n2, n1);
+		BooleanExpression nn = commonIdealFactory.notLessThan(n1, n2);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
 		// out.println("Not Less Than=" +n);
-		assertEquals(m1, n);
-		assertEquals(m2, n0);
+		assertEquals(m2, n);
+		assertEquals(m1, nn);
 	}
 
 	/**
@@ -523,13 +523,28 @@ public class IdealTest {
 	 */
 	@Test
 	public void notLessThanEquals() {
-		NumericExpression n1 = idealFactory.subtract(x,
-				intOne);
+		/*
+		NumericExpression n1 = idealFactory.subtract(x, intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
 		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
 		// out.println("Not Less Than Equals=" +n);
 		BooleanExpression m = booleanFactory.symbolic(false);
 		assertEquals(m, n);
+		*/
+		NumericExpression n11 = idealFactory.add(x, y);
+		NumericExpression n22 = idealFactory.subtract(x, y);
+		NumericExpression n1 = idealFactory.subtract(x,intOne);
+		NumericExpression n2 = idealFactory.add(x, intOne);
+		NumericExpression n3 = idealFactory.add(x, intOne);
+		BooleanExpression n1122 = commonIdealFactory.notLessThanEquals(n11, n22);
+		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
+		BooleanExpression n0 = commonIdealFactory.notLessThanEquals(n2, n3);
+		//out.println("Not Less Than=" +n1122);
+		BooleanExpression m1 = booleanFactory.symbolic(false);
+		BooleanExpression m2 = booleanFactory.symbolic(true);
+		// out.println("Not Less Than=" +n);
+		//assertEquals(m1, n);
+		//assertEquals(m2, n0);
 	}
 	
 	/**
@@ -614,6 +629,8 @@ public class IdealTest {
 		NumericExpression n5 = idealFactory.multiply(fifteen, three);
 		NumericExpression n6 = idealFactory.multiply(five, three);
 		NumericExpression n7 = idealFactory.multiply(zero, three);
+		//NumericExpression n8 = idealFactory.multiply(IntegerOne, x);
+		//NumericExpression n9 = idealFactory.multiply(IntegerTen, x);
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
 		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
