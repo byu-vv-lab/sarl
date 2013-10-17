@@ -453,20 +453,26 @@ public class IdealTest {
 	 */
 	@Test
 	public void constantTermSubtraction() {
-		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x),
-				intOne);
-		NumericExpression m = idealFactory.add(idealFactory.multiply(one, x),
-				idealFactory.intConstant(0));
+		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), intOne);
+		NumericExpression m = idealFactory.add(idealFactory.multiply(one, x), intZero);
+		NumericExpression o = idealFactory.add(idealFactory.multiply(intTen, 
+				idealFactory.multiply(x, x)),(idealFactory.add(
+						idealFactory.multiply(intTen, x), intOne)));
+		NumericExpression p = idealFactory.add(idealFactory.multiply(intTen, 
+				idealFactory.multiply(x, x)), idealFactory.multiply(intTen, x));
 		Polynomial poly1 = (Polynomial) n;
 		Polynomial poly2 = (Polynomial) m;
+		Polynomial poly3 = (Polynomial) o;
 		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
-		Polynomial b3 = commonIdealFactory.subtractConstantTerm(constZero);
-		//out.println("Constant Term Subtraction1=" + b2);
+		Polynomial b3 = commonIdealFactory.subtractConstantTerm(poly3);
+		Polynomial b4 = commonIdealFactory.subtractConstantTerm(constZero);
+		out.println("Constant Term Subtraction1=" + b3);
 		//out.println("Constant Term Subtraction=" + b1);
 		assertEquals(x, b1);
 		assertEquals(x, b2);
-		assertEquals(constZero, b3);
+		assertEquals(p, b3);
+		assertEquals(constZero, b4);
 	}
 
 	/**
