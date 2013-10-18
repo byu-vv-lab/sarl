@@ -192,8 +192,9 @@ public class CnfFactory implements BooleanExpressionFactory {
 				c2 = c0.booleanSetArg(0).addAll(c1.booleanSetArg(0));
 				for (BooleanExpression clause : c0.booleanSetArg(0)){
 					if (c1.booleanSetArg(0).contains(not(clause))){
-						c2 = c2.remove(clause);
-						c2 = c2.remove(not(clause));
+						c2= c2.remove(clause);
+						c2= c2.remove(not(clause));
+						return (trueExpr);
 					}
 				}
 				return booleanExpression(op0,c2);
@@ -201,20 +202,27 @@ public class CnfFactory implements BooleanExpressionFactory {
 				//		c0.booleanSetArg(0).addAll(c1.booleanSetArg(0)));
 			}
 			if (op0 == SymbolicOperator.OR) {
+				c2 = c0.booleanSetArg(0).add(c1);
 				for (BooleanExpression clause : c0.booleanSetArg(0)){
 					if(clause.equals(not(c1))){
-						return booleanExpression(op0, c0.booleanSetArg(0).remove(clause));
+						c2= c2.remove(clause);
+						c2= c2.remove(not(clause));
+						return (trueExpr);
 					}
 				}
-				return booleanExpression(op0, c0.booleanSetArg(0).add(c1));
+				return booleanExpression(op0, c2);
 			}
 			if (op1 == SymbolicOperator.OR) {
+				c2 = c1.booleanSetArg(0).add(c0);
 				for (BooleanExpression clause : c1.booleanSetArg(0)){
 					if(clause.equals(not(c0))){
-						return booleanExpression(op1, c1.booleanSetArg(0).remove(clause));
+						c2= c2.remove(clause);
+						c2= c2.remove(not(clause));
+						return (trueExpr);
 					}
 				}
-				return booleanExpression(op1, c1.booleanSetArg(0).add(c0));
+				return booleanExpression(op1, c2);
+				//return booleanExpression(op1, c1.booleanSetArg(0).add(c0));
 			}
 			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}

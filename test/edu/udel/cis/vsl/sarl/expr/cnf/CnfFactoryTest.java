@@ -243,9 +243,12 @@ public class CnfFactoryTest {
 		BooleanExpression porfalse = bef.or(p, r);
 		
 		//testing for various combinations of true and false and and or results
-		assertEquals(bef.or(q, r),(bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
-		assertEquals(bef.or(r, q), bef.or(qortrue, porfalse));
+		assertEquals(trueExpr,(bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
+		assertEquals(trueExpr, bef.or(qortrue, porfalse));
 		
+		//System.out.println(bef.or(bef.not(p), (bef.or(p, bef.or(bef.not(q), bef.or(bef.not(p), r))))));
+		
+		assertEquals(bef.or(bef.not(p),r),(bef.or(bef.not(p), bef.and(p, r))));
 		
 		assertEquals(testingtrue, bef.or(p, bef.not(p)));
 		assertEquals(testingtrue, bef.or(bef.not(p),p));
