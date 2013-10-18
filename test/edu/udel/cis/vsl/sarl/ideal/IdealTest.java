@@ -38,7 +38,7 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-//import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 //import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -54,6 +54,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 //import edu.udel.cis.vsl.sarl.ideal.common.IdealComparator;
 //import edu.udel.cis.vsl.sarl.number.real.RealNumber;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
@@ -785,16 +786,30 @@ public class IdealTest {
 		assertEquals(q1, q);
 	}
 
-	/*
-	 * @Test public void number(){ NumericExpression n =
-	 * idealFactory.multiply(idealFactory.intConstant(5), x); Number number =
-	 * commonIdealFactory.extractNumber(n); NumberObject s =
-	 * commonObjectFactory.numberObject(number); NumericExpression s1 =
-	 * commonIdealFactory.number(s); out.println("s1=" +s1); }
+	/**
+	 * Displays the number of type NumberObject
+	 * 
+	 * @param type
+	 * 				RationalNumber
+	 */
+	@Test
+	public void number(){
+		NumberObject n = objectFactory.numberObject(ratThree);
+		
+		NumericExpression ne = commonIdealFactory.number(n);
+		out.println("Number=" +ne);
+		assertEquals(three, ne);
+	}
+	
+	/**
+	 * Displays the expression consisting of addition of three arguments
+	 * 
+	 * @retun type
+	 * 				NumericPrimitive
 	 */
 	@Test
 	public void expression() {
-		NumericExpression n1 = commonIdealFactory.expression(
+		NumericPrimitive n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
 		out.println("Exp=" + n1);
 		out.println("Expr2=" +e9);
