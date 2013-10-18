@@ -103,9 +103,33 @@ public interface ExpressionFactory {
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments);
 
+	/**
+	 * Returns an expression with the given operator, type, and an argument
+	 * 
+	 * @param operator
+	 *            a symbolic operator
+	 * @param type
+	 *            a symbolic type
+	 * @param arg0
+	 *            a SymbolicObject
+	 * @return the expression specified by above
+	 */
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0);
 
+	/**
+	 * Returns an expression with the given operator, type, and two arguments
+	 * 
+	 * @param operator
+	 *            a symbolic operator
+	 * @param type
+	 *            a symbolic type
+	 * @param arg0
+	 *            a SymbolicObject
+	 * @param arg1
+	 * 			  a SymbolicObject
+	 * @return the expression specified by above
+	 */
 	SymbolicExpression expression(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1);
 
