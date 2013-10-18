@@ -40,12 +40,27 @@ import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.common.CommonSymbolicUniverse;
+import edu.udel.cis.vsl.sarl.universe.common.MathUniverse;
 
 public class Universes {
 
 	public static SymbolicUniverse newIdealUniverse() {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
+		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
+				(IdealFactory) system.numericFactory(), universe);
+		TheoremProverFactory proverFactory = Prove
+				.newCVC3TheoremProverFactory(universe);
+		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+				simplifierFactory, proverFactory);
+
+		universe.setReasonerFactory(reasonerFactory);
+		return universe;
+	}
+
+	public static SymbolicUniverse newMathUniverse() {
+		FactorySystem system = PreUniverses.newIdealFactorySystem();
+		MathUniverse universe = new MathUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
 				(IdealFactory) system.numericFactory(), universe);
 		TheoremProverFactory proverFactory = Prove
