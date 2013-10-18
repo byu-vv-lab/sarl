@@ -99,6 +99,7 @@ public class IdealTest {
 	private SymbolicIntegerType integerTen; // Integer 10
 	StringObject Xobj; // "X"
 	IntObject intObj3;
+	NumberObject numObj3;
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	// NumericSymbolicConstant mx;
 	NumericSymbolicConstant y; // int symbolic constant "Y"
@@ -125,6 +126,7 @@ public class IdealTest {
 	private SymbolicType integer;
 	NumericExpression intHundred;
 	NumericExpression intTwenty;
+	NumericExpression e01; // Real 3 cast to integer 3
 	NumericExpression e1; // 5 IsReal
 	NumericExpression e2; // 5 + 3 ADD
 	NumericExpression e3; // 5 > 3, 5, 3 COND
@@ -169,6 +171,7 @@ public class IdealTest {
 		integerTen = typeFactory.integerType();
 		integerOne = typeFactory.integerType();
 		intObj3 = objectFactory.intObject(3);
+		numObj3 = objectFactory.numberObject(ratThree);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
@@ -197,11 +200,13 @@ public class IdealTest {
 		//intThree = commonIdealFactory.expression(SymbolicOperator.CAST,	integer, three);
 		intHundred = idealFactory.intConstant(100);
 		intTwenty = idealFactory.intConstant(20);
+		e01 = commonIdealFactory.expression(SymbolicOperator.CAST, 
+				real, three);
 		e1 = commonIdealFactory.constant(realFive);
 		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
 				three); // 5 + 3 ADD
 		e3 = commonIdealFactory.expression(SymbolicOperator.COND,
-				typeFactory.booleanType(), booleanFactory.trueExpr(),
+				real, x, booleanFactory.trueExpr(), 
 				booleanFactory.falseExpr());
 		e4 = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer,
 				five, three); // 5 * 3 MULTIPLY
@@ -769,7 +774,7 @@ public class IdealTest {
 		NumericExpression o1 = idealFactory.minus(five);
 		NumericExpression p1 = idealFactory.power(five, three);
 		NumericExpression q1 = idealFactory.subtract(five, three);
-		
+				
 		
 		NumericExpression n22 = commonIdealFactory.cast(n11, real);
 		NumericExpression m = commonIdealFactory.cast(e2, real); // ADD
@@ -779,6 +784,7 @@ public class IdealTest {
 		NumericExpression p0 = commonIdealFactory.cast(e10, real); // POWER
 		NumericExpression q = commonIdealFactory.cast(e7, real); // SUBTRACT
 		NumericExpression r = commonIdealFactory.cast(e3, real);
+		NumericExpression s = commonIdealFactory.cast(e01, integer);
 		//SymbolicOperator s = r.operator();
 		//out.println("operator=" + s);
 		out.println("n22=" + n22);
@@ -788,13 +794,15 @@ public class IdealTest {
 		out.println("POWER=" + p);
 		out.println("POWER0=" +p0);
 		out.println("SUBTRACT=" + q);
-		out.println("R=" +r);
+		out.println("COND=" +r);
+		out.println("CAST=" +s.type());
 		assertEquals(m1, m);
 		assertEquals(n1, n);
 		assertEquals(o1, o);
 		assertEquals(p1, p);
 		assertEquals(oneTwoFive, p0);
 		assertEquals(q1, q);
+		//assertEquals(intThree, s);
 	}
 
 	/**
