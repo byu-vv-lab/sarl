@@ -18,12 +18,33 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.type;
 
+/**
+ * 	SymbolicIntegerType is an interface that contains representation for a Symbolic Integer Type:
+ * 	It has three kinds: 
+ * 		- herbrand: it doesn't do simplifications, when used in equations
+ * 		- ideal:
+ * 		- bounded:
+ * 
+ * 	Also it has a method to return the kind of the integer.
+ * 
+ * 	@author alali
+ *
+ */
 public interface SymbolicIntegerType extends SymbolicType {
 
+	/**
+	 * three kinds for the integer type
+	 * 
+	 * @author alali
+	 */
 	public enum IntegerKind {
 		HERBRAND, IDEAL, BOUNDED
 	}
 
+	/**
+	 * a method to return the kind of the integer type.
+	 * @return IntegerKind: either herbrand, ideal, or bounded.
+	 */
 	IntegerKind integerKind();
 
 }
