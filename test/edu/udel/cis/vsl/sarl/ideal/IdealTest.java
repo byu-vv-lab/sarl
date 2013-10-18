@@ -80,13 +80,15 @@ public class IdealTest {
 
 	private RationalNumber ratThree; // 3
 	private RationalNumber ratFour; // 4
-	private RationalNumber ratZero;
+	private RationalNumber ratZero; // 0
+	private RationalNumber ratOne; // 1
 	private RationalNumber ratOnePointFive; // 3/2
 	private RationalNumber ratNegPointTwoFive; // -1/4
 	private RationalNumber ratOnePointTwoFive; // 5/4
 	private Constant constZero;
 	private Constant intZero;
 	private Constant constOnePointFive; // real constant 3/2
+	private Constant constOne;
 	private Constant constNegPointTwoFive; // real constant -1/4
 	//private Constant constThree;
 	//private Constant constFour;
@@ -152,6 +154,7 @@ public class IdealTest {
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratZero = numberFactory.rational("0");
+		ratOne = numberFactory.rational("1");
 		ratOnePointFive = numberFactory.rational("1.5");
 		ratNegPointTwoFive = numberFactory.rational("-.25");
 		ratOnePointTwoFive = numberFactory.rational("1.25");
@@ -160,6 +163,7 @@ public class IdealTest {
 		constZero = idealFactory.constant(ratZero);
 		intZero = idealFactory.intConstant(0);
 		constOnePointFive = idealFactory.constant(ratOnePointFive);
+		constOne = idealFactory.constant(ratOne);
 		constNegPointTwoFive = idealFactory.constant(ratNegPointTwoFive);
 		//constThree = idealFactory.constant(ratThree);
 		//constFour = idealFactory.constant(ratFour);
@@ -621,22 +625,19 @@ public class IdealTest {
 	 */
 	@Test
 	public void intModulusPoly() {
-		NumericExpression n1 = idealFactory.add(idealFactory.multiply(x, x),
+		NumericExpression n1 = idealFactory.subtract(idealFactory.multiply(x, x),
 				intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
-		NumericExpression n3 = intZero;
-		NumericExpression n4 = intOne;
 		NumericExpression ne1 = idealFactory.modulo(n1, n2);
-		NumericExpression ne2 = idealFactory.modulo(n3, n2);
-		NumericExpression ne3 = idealFactory.modulo(n1, n4);
-		
+				
 		NumericExpression n = commonIdealFactory.modulo(n1, n2);
-		NumericExpression m = commonIdealFactory.modulo(n3, n2);
-		NumericExpression p = commonIdealFactory.modulo(n1, n4);
-		out.println("modulo=" + n);
+		NumericExpression m = commonIdealFactory.modulo(intZero, n2);
+		NumericExpression p = commonIdealFactory.modulo(n1, intOne);
+		NumericExpression q = commonIdealFactory.modulo(constOnePointFive, constOne);
+		out.println("modulo=" + q);
 		assertEquals(ne1, n);
-		assertEquals(ne2, m);
-		assertEquals(ne3, p);
+		assertEquals(intZero, m);
+		assertEquals(intZero, p);
 	}
 
 	/**
