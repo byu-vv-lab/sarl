@@ -98,7 +98,7 @@ public class IdealTest {
 	private SymbolicIntegerType integerOne; // Integer 1
 	private SymbolicIntegerType integerTen; // Integer 10
 	StringObject Xobj; // "X"
-	// StringObject mXobj;
+	IntObject intObj3;
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	// NumericSymbolicConstant mx;
 	NumericSymbolicConstant y; // int symbolic constant "Y"
@@ -107,6 +107,7 @@ public class IdealTest {
 	private NumericExpression seven;
 	private NumericExpression twentyOne;
 	private NumericExpression thirtyFive;
+	private NumericExpression oneTwoFive;
 	private NumericExpression zero;
 	private NumericExpression one;
 	private RationalNumber realZero;
@@ -118,6 +119,7 @@ public class IdealTest {
 	private RationalNumber realSeven;
 	private RationalNumber realTwentyOne;
 	private RationalNumber realThirtyFive;
+	private RationalNumber realOneTwoFive;
 	//private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
@@ -132,6 +134,7 @@ public class IdealTest {
 	NumericExpression e7; // 5 - 3 SUBTRACT
 	NumericExpression e8; // DEFAULT
 	NumericExpression e9; // 5 + 3 + 1 ADD
+	NumericExpression e10; // 5 ^ 3   (3 - IntObject)
 
 	@Before
 	public void setUp() throws Exception {
@@ -165,6 +168,7 @@ public class IdealTest {
 		intTen = idealFactory.intConstant(10);
 		integerTen = typeFactory.integerType();
 		integerOne = typeFactory.integerType();
+		intObj3 = objectFactory.intObject(3);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
@@ -179,6 +183,7 @@ public class IdealTest {
 		realSeven = numberFactory.rational("7");
 		realTwentyOne = numberFactory.rational("21");
 		realThirtyFive = numberFactory.rational("35");
+		realOneTwoFive = numberFactory.rational("125");
 		zero = commonIdealFactory.constant(realZero);
 		one = commonIdealFactory.constant(realOne);
 		fifteen = commonIdealFactory.constant(realFifteen);
@@ -186,6 +191,7 @@ public class IdealTest {
 		seven = commonIdealFactory.constant(realSeven);
 		twentyOne = commonIdealFactory.constant(realTwentyOne);
 		thirtyFive = commonIdealFactory.constant(realThirtyFive);
+		oneTwoFive = commonIdealFactory.constant(realOneTwoFive);
 		realThree = numberFactory.rational("3");
 		three = commonIdealFactory.constant(realThree);
 		//intThree = commonIdealFactory.expression(SymbolicOperator.CAST,	integer, three);
@@ -208,6 +214,8 @@ public class IdealTest {
 		e8 = commonIdealFactory.zeroReal(); // DEFAULT}
 		e9 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
 				three, one); // 5 + 3 +1 ADD
+		e10 = commonIdealFactory.expression(SymbolicOperator.POWER, integer,
+				five, intObj3); // 5 ^ 3 POWER
 
 	}
 
@@ -768,6 +776,7 @@ public class IdealTest {
 		NumericExpression n = commonIdealFactory.cast(e4, real); // MULTIPLY
 		NumericExpression o = commonIdealFactory.cast(e5, real); // MINUS
 		NumericExpression p = commonIdealFactory.cast(e6, real); // POWER
+		NumericExpression p0 = commonIdealFactory.cast(e10, real); // POWER
 		NumericExpression q = commonIdealFactory.cast(e7, real); // SUBTRACT
 		NumericExpression r = commonIdealFactory.cast(e3, real);
 		//SymbolicOperator s = r.operator();
@@ -777,12 +786,14 @@ public class IdealTest {
 		out.println("MULTIPLY=" + n);
 		out.println("MINUS=" + o);
 		out.println("POWER=" + p);
+		out.println("POWER0=" +p0);
 		out.println("SUBTRACT=" + q);
 		out.println("R=" +r);
 		assertEquals(m1, m);
 		assertEquals(n1, n);
 		assertEquals(o1, o);
 		assertEquals(p1, p);
+		assertEquals(oneTwoFive, p0);
 		assertEquals(q1, q);
 	}
 
