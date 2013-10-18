@@ -9,6 +9,9 @@ import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 
+/**
+ * Implementation of a non-trivial reference to a TupleComponent
+ */
 public class CommonTupleComponentReference extends CommonNTReference implements
 		TupleComponentReference {
 
@@ -19,6 +22,14 @@ public class CommonTupleComponentReference extends CommonNTReference implements
 	 */
 	private IntObject fieldIndex;
 
+	/**
+	 * Constructor asserts that parentIndexSequnce is a valid and Concrete IntegerNumber
+	 * 
+	 * @param referenceType
+	 * @param tupleComponentReferenceFunction
+	 * @param parentIndexSequence
+	 * @param fieldIndex
+	 */
 	public CommonTupleComponentReference(SymbolicType referenceType,
 			SymbolicConstant tupleComponentReferenceFunction,
 			SymbolicSequence<SymbolicExpression> parentIndexSequence,
@@ -33,16 +44,25 @@ public class CommonTupleComponentReference extends CommonNTReference implements
 		this.fieldIndex = fieldIndex;
 	}
 
+	/**
+	 * @return fieldIndex
+	 */
 	@Override
 	public IntObject getIndex() {
 		return fieldIndex;
 	}
 
+	/**
+	 * @return True
+	 */
 	@Override
 	public boolean isTupleComponentReference() {
 		return true;
 	}
 
+	/**
+	 * @return ReferenceKind.TUPLE_COMPONENT
+	 */
 	@Override
 	public ReferenceKind referenceKind() {
 		return ReferenceKind.TUPLE_COMPONENT;

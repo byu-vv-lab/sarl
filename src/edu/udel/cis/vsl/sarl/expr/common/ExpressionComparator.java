@@ -46,6 +46,7 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 	/**
 	 * Constructor that takes a three Comparators of types NumericExpression,SymbolicObject,
 	 * and SymbolicType.
+	 * 
 	 * @param numericComparator 
 	 * @param objectComparator
 	 * @param typeComparator

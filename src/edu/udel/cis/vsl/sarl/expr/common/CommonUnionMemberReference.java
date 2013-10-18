@@ -9,6 +9,9 @@ import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 
+/**
+ * Implementation of a non-trivial reference to a UnionMember
+ */
 public class CommonUnionMemberReference extends CommonNTReference implements
 		UnionMemberReference {
 
@@ -19,6 +22,15 @@ public class CommonUnionMemberReference extends CommonNTReference implements
 	 */
 	private IntObject memberIndex;
 
+	
+	/**
+	 * Constructor asserts that parentIndexSequnce is a valid IntegerNumber
+	 * 
+	 * @param referenceType
+	 * @param unionMemberReferenceFunction
+	 * @param parentIndexSequence
+	 * @param memberIndex
+	 */
 	public CommonUnionMemberReference(SymbolicType referenceType,
 			SymbolicConstant unionMemberReferenceFunction,
 			SymbolicSequence<SymbolicExpression> parentIndexSequence,
@@ -32,16 +44,25 @@ public class CommonUnionMemberReference extends CommonNTReference implements
 		this.memberIndex = memberIndex;
 	}
 
+	/**
+	 * @return memberIndex
+	 */
 	@Override
 	public IntObject getIndex() {
 		return memberIndex;
 	}
 
+	/**
+	 * @return true
+	 */
 	@Override
 	public boolean isUnionMemberReference() {
 		return true;
 	}
 
+	/**
+	 *@return ReferenceKind.UNION_MEMBER
+	 */
 	@Override
 	public ReferenceKind referenceKind() {
 		return ReferenceKind.UNION_MEMBER;

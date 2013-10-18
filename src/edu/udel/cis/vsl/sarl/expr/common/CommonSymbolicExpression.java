@@ -51,6 +51,14 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	// Constructors...
 
+	/**
+	 * Main Constructor that takes an array of SymbolicObjects.  Other constructors are converted
+	 * into this format.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param arguments
+	 */
 	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {
 		super(SymbolicObjectKind.EXPRESSION);
@@ -62,22 +70,53 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		this.arguments = arguments;
 	}
 
+	/**
+	 * Constructor with a single SymbolicObject converted to array of SymbolicObjects
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg0
+	 */
 	protected CommonSymbolicExpression(SymbolicOperator kind,
 			SymbolicType type, SymbolicObject arg0) {
 		this(kind, type, new SymbolicObject[] { arg0 });
 	}
 
+	/**
+	 * Constructor with two SymbolicObjects converted to array of SymbolicObjects
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg0
+	 * @param arg1
+	 */
 	protected CommonSymbolicExpression(SymbolicOperator kind,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
 		this(kind, type, new SymbolicObject[] { arg0, arg1 });
 	}
 
+	/**
+	 * Constructor with three SymbolicObjects converted to array of SymbolicObjects
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg0
+	 * @param arg1
+	 * @param arg2
+	 */
 	protected CommonSymbolicExpression(SymbolicOperator kind,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
 		this(kind, type, new SymbolicObject[] { arg0, arg1, arg2 });
 	}
 
+	/**
+	 * Constructor with a Collection of SymbolicObjects which is converted to array format.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param args
+	 */
 	protected CommonSymbolicExpression(SymbolicOperator kind,
 			SymbolicType type, Collection<SymbolicObject> args) {
 		this(kind, type, args.toArray(new SymbolicObject[args.size()]));
@@ -109,6 +148,9 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				&& Arrays.equals(arguments, that.arguments);
 	}
 
+	/**
+	 * Returns the type HashCode if not Null and all the Expressions arguments' Hashcodes
+	 */
 	@Override
 	protected int computeHashCode() {
 		int numArgs = this.numArguments();
@@ -121,21 +163,36 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return result;
 	}
 
+	/**
+	 * Returns an individual argument within the SymbolicExpression
+	 */
 	@Override
 	public SymbolicObject argument(int index) {
 		return arguments[index];
 	}
 
+	/**
+	 * Returns the operator
+	 */
 	@Override
 	public SymbolicOperator operator() {
 		return operator;
 	}
 
+	/**
+	 * Returns the number of arguments within the SymbolicExpression
+	 */
 	@Override
 	public int numArguments() {
 		return arguments.length;
 	}
 
+	/**
+	 * String Representation of an array of SymbolicObjects
+	 * 
+	 * @param objects
+	 * @return buffer
+	 */
 	private StringBuffer toStringBufferLong(SymbolicObject[] objects) {
 		StringBuffer buffer = new StringBuffer("{");
 		boolean first = true;
@@ -154,6 +211,9 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return buffer;
 	}
 
+	/**
+	 * String representation of a SymbolicExpression
+	 */
 	@Override
 	public StringBuffer toStringBufferLong() {
 		StringBuffer buffer = new StringBuffer(getClass().getSimpleName());
