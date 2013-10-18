@@ -941,10 +941,13 @@ public class IdealTest {
 			//	commonIdealFactory.zeroReal());
 		BooleanExpression nb4 = commonIdealFactory.notLessThanEquals(
 				commonIdealFactory.zeroReal(), r1);
+		NumericExpression nb5 = commonIdealFactory.divide(
+				commonIdealFactory.zeroReal(), r1);
 
 		out.println("b1 = " + b1);
 		out.println("b2 = " + b2);
 		out.println("!b2 = " + nb2);
 		//assertEquals(b1, nb2);
+		assertEquals(zero, nb5);
 	}
 }
