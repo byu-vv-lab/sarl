@@ -81,7 +81,7 @@ public class CommonObjects {
 	
 	static SymbolicExpression symbExpr_xyyInt; // (int)x * (int)y^2
 	
-	static NumericSymbolicConstant x, xsqd, y, z, xInt, yInt;
+	static NumericSymbolicConstant A, B, C, x, xsqd, y, z, xInt, yInt;
 	
 	
 	/*static SymbolicExpression symbExpr
