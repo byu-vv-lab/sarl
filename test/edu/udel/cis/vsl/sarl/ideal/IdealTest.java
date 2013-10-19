@@ -232,12 +232,26 @@ public class IdealTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Checks whether the Constant is created correctly or not.
+	 * 
+	 * @param type
+	 * 				 Constant
+	 */
+	
 	@Test
 	public void constantCreation() {
 		out.println("constantCreation: " + intTen);
 		assertEquals(10, ((IntegerNumber) intTen.number()).intValue());
 	}
 
+	/**
+	 * Adds two Constants
+	 * 
+	 * @param type
+	 * 				Constant
+	 */
+	
 	@Test
 	public void constantAdd() {
 		Constant c3 = (Constant) idealFactory.add(constOnePointFive, constNegPointTwoFive);
@@ -246,6 +260,13 @@ public class IdealTest {
 		assertEquals(ratOnePointTwoFive, c3.number());
 	}
 
+	/**
+	 * Multiplies two Constants
+	 * 
+	 * @param type
+	 * 				Constant
+	 */
+	
 	@Test
 	public void constantMultiply() {
 		Constant result = (Constant) idealFactory.multiply(constOnePointFive, constNegPointTwoFive);
@@ -255,6 +276,13 @@ public class IdealTest {
 		assertEquals(expected, result.number());
 	}
 
+	/**
+	 * Asserts the Numeric Symbolic Constant x has the value "X"
+	 * 
+	 * @param type
+	 * 				NumericSymbolicConstant
+	 */
+	
 	@Test
 	public void symbolicConstantCreate() {
 		out.println("symbolicConstantCreate: " + x);
@@ -262,6 +290,13 @@ public class IdealTest {
 		assertEquals(typeFactory.integerType(), x.type());
 	}
 
+	/**
+	 * Checks if two Symbolic Constants are equal
+	 * 
+	 * @param type
+	 * 				NumericSymbolicConstant
+	 */
+	
 	@Test
 	public void symbolicConstantEquality() {
 		SymbolicConstant x2 = idealFactory.symbolicConstant(
@@ -270,11 +305,24 @@ public class IdealTest {
 		assertEquals(x, x2);
 	}
 
+	/**
+	 * Checks if two Symbolic Constants are not equal
+	 * 
+	 * @param type
+	 * 				NumericSymbolicConstant
+	 */
+	
 	@Test
 	public void symbolicConstantInequality1() {
 		assertFalse(x.equals(y));
 	}
 
+	/**
+	 * Returns false if two Symbolic Constants are of different type
+	 * 
+	 * @param type
+	 * 				NumericSymbolicConstant
+	 */
 	@Test
 	public void symbolicConstantInequality2() {
 		SymbolicConstant x2 = idealFactory.symbolicConstant(
@@ -284,8 +332,12 @@ public class IdealTest {
 	}
 
 	/**
-	 * Shows that the commutative property holds for two SymbolicExpressions
+	 * Shows that the commutative property holds for two Numeric Symbolic Constants
+	 * 
+	 * @param type
+	 * 				NumericSymbolicConstant
 	 */
+	
 	@Test
 	public void commutativity1() {
 		SymbolicExpression xpy = idealFactory.add(x, y);
@@ -298,6 +350,7 @@ public class IdealTest {
 	/**
 	 * Returns SymbolicExpression of Real type with the value equal to 1
 	 */
+	
 	@Test
 	public void realone() {
 		NumericExpression n2 = commonIdealFactory.oneReal();
@@ -310,13 +363,13 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
+	
 	@Test
 	public void xplus1squared() {
 		NumericExpression xp1 = idealFactory.add(x, intOne);
 		SymbolicExpression xp1squared = idealFactory.multiply(xp1, xp1);
 		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(x,
-				x), idealFactory.add(idealFactory.multiply(idealFactory.intConstant(2), x),
-				intOne));
+				x), idealFactory.add(idealFactory.multiply(intTwo, x), intOne));
 
 		out.println("xplus1squared: " + xp1squared + " vs. " + x2p2xp1);
 		assertEquals(xp1squared, x2p2xp1);
@@ -328,6 +381,7 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
+	
 	@Ignore
 	@Test
 	public void bigPower() {
@@ -351,6 +405,7 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of Numeric type
 	 */
+	
 	@Test
 	public void xp1xm1() {
 		NumericExpression xp1 = idealFactory.add(x, intOne);
@@ -377,41 +432,12 @@ public class IdealTest {
 	 */
 
 	/**
-	 * Returns true if the first argument is 'less than' the second argument and vice-versa.
-	 * 
-	 * @param type
-	 * 				NumericExpression
-	 * 
-	 * @return type
-	 * 				BooleanExpression
-	 */
-	@Test
-	public void lessThan() {
-		NumericExpression n1 = idealFactory.subtract(x, intOne);
-		NumericExpression n2 = idealFactory.add(x, intOne);		
-		NumericExpression n3 = idealFactory.add(x, intOne);		
-		NumericExpression n11 = idealFactory.add(x, y);
-		NumericExpression n22 = idealFactory.subtract(x, y);		
-		// out.println("less than=" +n);
-		// out.println("less than1=" +n0);
-		// out.println("less than2=" +n1122);
-		BooleanExpression m1 = booleanFactory.symbolic(true);
-		BooleanExpression m2 = booleanFactory.symbolic(false);
-		
-		
-		BooleanExpression n = commonIdealFactory.lessThan(n1, n2);
-		BooleanExpression n0 = commonIdealFactory.lessThan(n2, n3);
-		BooleanExpression n1122 = commonIdealFactory.lessThan(n11, n22);
-		assertEquals(m1, n);
-		assertEquals(m2, n0);
-	}
-
-	/**
 	 * Adds two polynomials
 	 * 
 	 * @param type
 	 * 				Polynomial
 	 */
+	
 	@Test
 	public void addPoly() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -561,11 +587,14 @@ public class IdealTest {
 	public void notLessThanEquals() {		
 		NumericExpression n1 = idealFactory.subtract(x, intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
-		
-		BooleanExpression n = commonIdealFactory.notLessThanEquals(n1, n2);
+		BooleanExpression m = booleanFactory.symbolic(true);
+		BooleanExpression n = booleanFactory.symbolic(false);
+				
+		BooleanExpression n01 = commonIdealFactory.notLessThanEquals(n1, n2);
+		BooleanExpression n02 = commonIdealFactory.notLessThanEquals(n2, n1);
 		// out.println("Not Less Than Equals=" +n);
-		BooleanExpression m = booleanFactory.symbolic(false);
-		assertEquals(m, n);		
+		assertEquals(n, n01);
+		assertEquals(m, n02);
 	}
 	
 	/**
