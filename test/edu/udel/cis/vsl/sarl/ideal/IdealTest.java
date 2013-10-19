@@ -465,17 +465,16 @@ public class IdealTest {
 	}
 
 	/**
-	 * Returns the multiplied result of two polynomials
+	 * Returns the multiplication of two polynomials
 	 * 
 	 * @param type
 	 * 				Polynomial
 	 */
+	
 	@Test
 	public void multPoly() {
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),
-				intOne);
-		NumericExpression p2 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(2),
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo,
 						idealFactory.multiply(x, x)), intOne);
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
 		Polynomial poly1 = (Polynomial) p1;
@@ -485,8 +484,7 @@ public class IdealTest {
 		NumericExpression x4 = idealFactory.multiply(x2, x2);
 		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.
 				intConstant(3), idealFactory.multiply(x, x)), intOne);
-		NumericExpression p5 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(2), x4), p4);
+		NumericExpression p5 = idealFactory.add(idealFactory.multiply(intTwo, x4), p4);
 		
 		
 		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
@@ -502,6 +500,7 @@ public class IdealTest {
 	 * @param type
 	 * 				Polynomial
 	 */
+	
 	@Test
 	public void constantTermSubtraction() {
 		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), intOne);
@@ -535,6 +534,7 @@ public class IdealTest {
 	 * 				SymbolicExpression of integer or real type
 	 * 
 	 */
+	
 	@Test
 	public void minus() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),intOne);
@@ -552,7 +552,8 @@ public class IdealTest {
 	}
 
 	/**
-	 * Returns true if the first argument is 'not less than' the second argument and vice-versa.
+	 * Returns true if the first argument is 'not less than' the second argument and 
+	 * vice-versa.
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -560,6 +561,7 @@ public class IdealTest {
 	 * @return type
 	 * 				BooleanExpression
 	 */
+	
 	@Test
 	public void notLessThan() {
 		NumericExpression n1 = idealFactory.subtract(x,intOne);
@@ -575,7 +577,8 @@ public class IdealTest {
 	}
 
 	/**
-	 * Returns true if the first argument is 'not less than or equal' to the second argument and vice-versa.
+	 * Returns true if the first argument is 'not less than or equal' to the second argument 
+	 * and vice-versa.
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -583,6 +586,7 @@ public class IdealTest {
 	 * @return type
 	 * 				BooleanExpression
 	 */
+	
 	@Test
 	public void notLessThanEquals() {		
 		NumericExpression n1 = idealFactory.subtract(x, intOne);
@@ -598,7 +602,8 @@ public class IdealTest {
 	}
 	
 	/**
-	 * Returns true or false if the two symbolic Expressions are equal or not equal respectively
+	 * Returns true or false if the two symbolic Expressions are equal or not equal 
+	 * respectively
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -646,6 +651,7 @@ public class IdealTest {
 	 *            
 	 * @return the polynomial representing numerator%denominator
 	 */
+	
 	@Test
 	public void intModulusPoly() {
 		NumericExpression n1 = idealFactory.subtract(idealFactory.multiply(x, x),
@@ -669,6 +675,7 @@ public class IdealTest {
 	 * @param type
 	 * 				the SymbolicExpression of numeric type of a Polynomial
 	 */
+	
 	@Test
 	public void divide() {
 		NumericExpression n1 = idealFactory.multiply(intTen, x);
@@ -701,7 +708,8 @@ public class IdealTest {
 	}
 
 	/**
-	 * Returns true or false if the two symbolic Expressions are not equal or equal respectively
+	 * Returns true or false if the two symbolic Expressions are not equal or equal 
+	 * respectively
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -710,14 +718,14 @@ public class IdealTest {
 	 * 				BooleanExpression
 	 * 
 	 */
+	
 	@Test
 	public void neq() {
 		NumericExpression n11 = idealFactory.add(x, y);
 		NumericExpression n22 = idealFactory.subtract(x, y);
-		NumericExpression n1 = idealFactory.add(y, idealFactory.intConstant(2));
-		NumericExpression n2 = idealFactory.subtract(y,
-				idealFactory.intConstant(2));
-		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));
+		NumericExpression n1 = idealFactory.add(y, intTwo);
+		NumericExpression n2 = idealFactory.subtract(y,	intTwo);
+		NumericExpression n3 = idealFactory.add(y, intTwo);
 		
 		
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
@@ -738,6 +746,7 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicType (Example: Real)
 	 */
+	
 	@Test
 	public void zero() {
 		Constant c1 = commonIdealFactory.zero(real);
@@ -751,6 +760,7 @@ public class IdealTest {
 	 * @param type
 	 * 				Constant, Monic
 	 */
+	
 	@Test
 	public void monomial() {
 		Monic monic = (Monic) idealFactory.multiply(x, x);
@@ -761,13 +771,14 @@ public class IdealTest {
 	}
     
 	/**
-	 * Multiplies two rational numbers. These numbers can also be Real type.
+	 * Multiplies two rational numbers.
 	 * 
 	 * Also checks if the first or second argument is zero or one.
 	 * 
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
+	
 	@Test
 	public void rationalMultiply() {
 		NumericExpression n1 = commonIdealFactory.multiply(three, five);
@@ -835,6 +846,7 @@ public class IdealTest {
 	 * @param type
 	 * 				RationalNumber
 	 */
+	
 	@Test
 	public void number(){
 		NumberObject n = objectFactory.numberObject(ratThree);
@@ -847,9 +859,10 @@ public class IdealTest {
 	/**
 	 * Displays the expression consisting of addition of three arguments
 	 * 
-	 * @retun type
+	 * @return type
 	 * 				NumericPrimitive
 	 */
+	
 	@Test
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
