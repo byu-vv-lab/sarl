@@ -414,19 +414,13 @@ public class IdealTest {
 	 */
 	@Test
 	public void addPoly() {
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),
-				intOne);
-		NumericExpression p2 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(2),
-						idealFactory.multiply(x, x)),
-				intOne);
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
-		NumericExpression p4 = idealFactory.add(
-				idealFactory.multiply(idealFactory.intConstant(3), idealFactory.
-						multiply(x, x)), idealFactory.intConstant(2));
-		// NumericExpression p5 = idealFactory.add(idealFactory.multiply(three,
-		// x), idealFactory.intConstant(5));
-		// NumericExpression p6 = idealFactory.add(idealFactory.multiply(five,
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, idealFactory.
+						multiply(x, x)), intTwo);
+		// NumericExpression p5 = idealFactory.add(idealFactory.multiply(five,
 		// x), idealFactory.intConstant(3));
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
@@ -944,6 +938,7 @@ public class IdealTest {
 				commonIdealFactory.zeroReal(), r1);
 		NumericExpression nb5 = commonIdealFactory.divide(
 				commonIdealFactory.zeroReal(), r1);
+		//RationalExpression nb6 = (RationalExpression) commonIdealFactory.divide(fifteen, five);
 
 		out.println("b1 = " + b1);
 		out.println("b2 = " + b2);
