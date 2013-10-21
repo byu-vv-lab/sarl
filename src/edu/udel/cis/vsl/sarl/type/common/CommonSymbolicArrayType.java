@@ -130,6 +130,10 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		return pureType;
 	}
 
+	/**
+	 * setting a new pureType to this ArrayType
+	 * @param pureType
+	 */
 	public void setPureType(SymbolicArrayType pureType) {
 		this.pureType = pureType;
 	}
