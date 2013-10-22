@@ -60,7 +60,7 @@ public class IdealSimplifierBBTest {
 		
 		assumption = preUniv.equals(rat1, yNE);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
-		//out.println(idealSimplifier.apply(noX));
+		out.println(idealSimplifier.apply(noX));
 		//0^3 should = 0...
 		assertEquals(rat0, idealSimplifier.apply(noX));
 		out.println(idealSimplifier.getFullContext());
