@@ -1273,6 +1273,17 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
+	
+	/**
+	 * queryCVC3 gets called by valid, prints out predicate and context, and
+	 * the CVC3 assumptions and CVC3 predicate. 
+	 * Passes the symbolicPredicate through translate and uses the cvcPredicate
+	 * for the validitychecker.
+	 * 
+	 * @param symbolicPredicate
+	 * @return QueryResult
+	 * @throws CVC3Exception
+	 */
 
 	private QueryResult queryCVC3(BooleanExpression symbolicPredicate) {
 		QueryResult result = null;
@@ -1329,6 +1340,15 @@ public class CVC3TheoremProver implements TheoremProver {
 		intDivisionStack.removeLast();
 		translationStack.removeLast();
 	}
+	
+	/**
+	 * translateResult takes a QueryResult and processes the equality between
+	 * said QueryResult and the result types (valid, invalid, unknown, abort)
+	 * and returns the SARL validity results. 
+	 * 
+	 * @param result
+	 * @return ValidityResult
+	 */
 
 	private ValidityResult translateResult(QueryResult result) {
 		if (showProverQueries) {
@@ -1353,22 +1373,50 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	// Public methods...
+	
+	/**
+	 * expressionMap gets called from testValid. Returns the 
+	 * expressionMap which maps SARL symbolic expressions to CVC3 expressions
+	 * @return Map of SARL symbolic expressions and CVC3 expressions
+	 */
 
 	public Map<SymbolicExpression, Expr> expressionMap() {
 		return expressionMap;
 	}
 
+	/**
+	 * opMap gets called from CVC3ModelFinder. Returns the opMap that
+	 * maps operations and their symbolic constants.
+	 * @return Map of operations and symbolic constants
+	 */
+	
 	public Map<Op, SymbolicConstant> opMap() {
 		return opMap;
 	}
+	
+	/**
+	 * varMap gets called from CVC3ModelFinder. Returns the varMap
+	 * that maps CVC3 variables and their symbolic constants.
+	 * @return Map of CVC3 variables and symbolic constants
+	 */
 
 	public Map<Expr, SymbolicConstant> varMap() {
 		return varMap;
 	}
+	
+	/**
+	 * Returns the validityChecker
+	 * @return ValidityChecker 
+	 */
 
 	public ValidityChecker validityChecker() {
 		return vc;
 	}
+	
+	/**
+	 * Returns the queries and results 
+	 * @return PrintSteam
+	 */
 
 	public PrintStream out() {
 		return out;
@@ -1498,10 +1546,25 @@ public class CVC3TheoremProver implements TheoremProver {
 		this.expressionMap.put(expr, result);
 		return result;
 	}
+	
+	/**
+	 * Outputs the boolean value of showProverQueries
+	 * @return boolean value, true if out in setOutput is not equal to null
+	 */
 
 	public boolean showProverQueries() {
 		return showProverQueries;
 	}
+	
+	/**
+	 * Takes a BooleanExpression and passes it through queryCVC3 
+	 * to return a QueryResult. The QueryResult is then passed through
+	 * translateResult that gives us a QueryResult that is checked whether
+	 * it is valid, invalid, to abort, or if the QueryResult is unknown.
+	 * 
+	 * @param expr
+	 * @return ValidityResult from using translateResult
+	 */
 
 	@Override
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
@@ -1551,6 +1614,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		return translateResult(cvcResult);
 	}
 
+	/**
+	 ** Deletes ValidityChecker 
+	 * @throws CVC3Exception
+	 */
+	
 	@Override
 	protected void finalize() {
 		intDivisionStack.removeLast();
