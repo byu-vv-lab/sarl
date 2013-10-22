@@ -592,7 +592,15 @@ public class CVC3ModelFinder {
 		}
 		return universe.array(elementType, sequence);
 	}
-
+	
+	/**
+	 * Maps a SymbolicExpression value to a SymbolicConstant key in model
+	 *  or throws exception if expr is not in the varMap.
+	 * 
+	 * @param expr
+	 * @param value
+	 * @throws SARLInternalException
+	 */
 	private void assignVariable(Expr expr, SymbolicExpression value) {
 		SymbolicConstant x = varMap.get(expr);
 
@@ -748,8 +756,15 @@ public class CVC3ModelFinder {
 						+ value);
 			assign(key, sarlValue);
 		}
-	}
-
+	} 
+	
+	/**
+	 * Returns the model variable which is set upon instantiation of this class.
+	 * The model is a Map of SymbolicConstant to SymbolicExpression and 
+	 * represents the counterexample of an proof.
+	 * 
+	 * @return a CVC3 Model
+	 */
 	public Map<SymbolicConstant, SymbolicExpression> getModel() {
 		return model;
 	}
