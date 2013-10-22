@@ -154,6 +154,9 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo> permanentIntegerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>();
 
+	/**
+	 * Stack of SymbolicExpressions and their translations as Exprs
+	 */
 	private LinkedList<Map<SymbolicExpression, Expr>> translationStack = new LinkedList<Map<SymbolicExpression, Expr>>();
 
 	/**
@@ -190,6 +193,11 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	// Helper methods...
 
+	/**
+	 * Single element list used by processEquality and translateFunction
+	 * @param element
+	 * @return the element as a list
+	 */
 	private <E> List<E> newSingletonList(E element) {
 		List<E> result = new LinkedList<E>();
 
@@ -197,6 +205,12 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	/**
+	 * Renaming function for keeping unique names between constants
+	 * Example: new(x) = x; new(x) = x'1; etc.
+	 * @param root
+	 * @return root's new name
+	 */
 	private String newCvcName(String root) {
 		Integer count = nameCountMap.get(root);
 
@@ -211,6 +225,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 	}
 
+	/**
+	 * Creates a "default" CVC3 Expr with a given CVC3 Type
+	 * @param type
+	 * @return the CVC3 Expr
+	 */
 	private Expr newAuxVariable(Type type) {
 		return vc.varExpr(newCvcName("_x"), type);
 	}
@@ -259,6 +278,11 @@ public class CVC3TheoremProver implements TheoremProver {
 				&& !((SymbolicArrayType) type).isComplete();
 	}
 	
+	/**
+	 * Like above, but takes SymbolicExpression as input.
+	 * @param expr
+	 * @return true iff the type of expr is an incomplete array type
+	 */
 	private boolean isBigArray(SymbolicExpression expr) {
 		return isBigArrayType(expr.type());
 	}
@@ -305,10 +329,22 @@ public class CVC3TheoremProver implements TheoremProver {
 		return vc.tupleSelectExpr(bigArray, 1);
 	}
 
+	/**
+	 * Formats the name of unionType during type translation.
+	 * @param unionType
+	 * @param index
+	 * @return the newly formatted name of the unionType
+	 */
 	private String selector(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_extract_" + index;
 	}
 
+	/**
+	 * Formats the name of unionType during type translation.
+	 * @param unionType
+	 * @param index
+	 * @return the newly formatted name of the unionType
+	 */
 	private String constructor(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_inject_" + index;
 	}
@@ -348,7 +384,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates a symbolic expression of functional type. In CVC3, functions
 	 * have type Op; expressions have type Expr.
-	 * 
+	 * @param expr
+	 * @return the function expression as a CVC3 Op
 	 */
 	private Op translateFunction(SymbolicExpression expr) {
 		Op result = functionMap.get(expr);
@@ -381,7 +418,8 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates any concrete SymbolicExpression with concrete type
 	 * to equivalent CVC3 Expr using the validitychecker. 
-	 * 
+	 * @param expr
+	 * @return the CVC3 equivalent Expr
 	 */
 	private Expr translateConcrete(SymbolicExpression expr) {
 		SymbolicType type = expr.type();
@@ -430,6 +468,9 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * quantified (forall, exists) expression.
 	 * 
 	 * Precondition: ?
+	 * @param symbolicConstant
+	 * @param isBoundVariable
+	 * @return the CVC3 equivalent Expr
 	 */
 	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
 			boolean isBoundVariable) throws Cvc3Exception {
@@ -474,6 +515,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	/**
+	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC3 Expr 
+	 * @param expr
+	 * @return CVC3 representation of expr
+	 */
 	private Expr translateOr(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
 		Expr result;
@@ -582,6 +628,12 @@ public class CVC3TheoremProver implements TheoremProver {
 		return info.quotient;
 	}
 
+	/**
+	 * Checks whether an index is in the bounds of an array SymbolicExpression
+	 * by passing in the arguments to the validity checker
+	 * @param arrayExpression
+	 * @param index
+	 */
 	private void assertIndexInBounds(SymbolicExpression arrayExpression,
 			NumericExpression index) {
 		NumericExpression length = universe.length(arrayExpression);
@@ -709,6 +761,15 @@ public class CVC3TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	/**
+	 * Translates SymbolicExpressions of the type "exists" and "for all" into
+	 * the CVC3 equivalent Expr
+	 * @param expr
+	 * 			a "exists" or "for all" expression
+	 * @return the equivalent CVC3 Expr
+	 * @throws Cvc3Exception
+	 * 			by CVC3
+	 */
 	private Expr translateQuantifier(SymbolicExpression expr)
 			throws Cvc3Exception {
 		Expr variable = this.translateSymbolicConstant(
@@ -784,6 +845,15 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 	}
 
+	/**
+	 * Translates a SymbolicExpression that represents a == b into the CVC3
+	 * equivalent Expr
+	 * @param expr
+	 * 			the equals type expression
+	 * @return the equivalent CVC3 Expr
+	 * @throws Cvc3Exception
+	 * 			by CVC3
+	 */
 	private Expr translateEquality(SymbolicExpression expr)
 			throws Cvc3Exception {
 		SymbolicExpression leftExpression = (SymbolicExpression) expr

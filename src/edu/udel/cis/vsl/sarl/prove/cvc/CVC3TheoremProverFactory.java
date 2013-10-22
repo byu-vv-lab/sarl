@@ -31,12 +31,25 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
  */
 public class CVC3TheoremProverFactory implements TheoremProverFactory {
 
+	/**
+	 * The symbolic universe used for managing symbolic expressions. Initialized
+	 * by constructor and never changes.
+	 */
 	private PreUniverse universe;
 
+	/**
+	 * Constructs a CVC3 theorem prover factory with the given symbolic universe.
+	 * @param universe
+	 */
 	public CVC3TheoremProverFactory(PreUniverse universe) {
 		this.universe = universe;
 	}
 
+	/**
+	 * This is where the factory produces instances with a given context
+	 * @param context
+	 * @return a new CVC3 theorem prover
+	 */
 	@Override
 	public TheoremProver newProver(BooleanExpression context) {
 		return new CVC3TheoremProver(universe, context);

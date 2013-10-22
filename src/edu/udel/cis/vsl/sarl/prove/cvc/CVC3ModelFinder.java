@@ -56,8 +56,13 @@ import edu.udel.cis.vsl.sarl.util.Util;
 
 public class CVC3ModelFinder {
 
+	/**
+	 * The symbolic universe used for managing symbolic expressions. Initialized
+	 * by constructor and never changes.
+	 */
 	private PreUniverse universe;
 
+	/** The CVC3 object used to check queries. */
 	private ValidityChecker vc;
 
 	private PrintStream out;
