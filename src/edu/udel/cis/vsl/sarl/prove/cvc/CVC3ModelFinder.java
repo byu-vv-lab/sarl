@@ -127,6 +127,12 @@ public class CVC3ModelFinder {
 		}
 	}
 
+	/**
+	 *  Prints the expression to the given print stream.
+	 *  
+	 * @param expr
+	 * @param out
+	 */
 	private void printExpr(Expr expr, PrintStream out) {
 		boolean first = true;
 		String kind = expr.getKind();
@@ -157,7 +163,13 @@ public class CVC3ModelFinder {
 
 	// TODO: find some way to share code with CommonSimpifier
 	// rather than copying the code.
-
+	
+	/**
+	 * Simplifies the type of every SymbolicType in a sequence and then
+	 * returns the simplified sequence.
+	 * 
+	 * @param SymbolicTypeSequence
+	 */
 	private Iterable<? extends SymbolicType> simplifyTypeSequenceWork(
 			SymbolicTypeSequence sequence) {
 		int size = sequence.numTypes();
@@ -179,13 +191,26 @@ public class CVC3ModelFinder {
 		}
 		return sequence;
 	}
-
+	
+	/**
+	 * Returns a new CommonSymbolicTypeSequence with the given
+	 * SymbolicTypeSequence that has been simplified.
+	 * 
+	 * @param sequence
+	 * @return
+	 */
 	private SymbolicTypeSequence simplifyTypeSequence(
 			SymbolicTypeSequence sequence) {
 		return new CommonSymbolicTypeSequence(
 				simplifyTypeSequenceWork(sequence));
 	}
-
+	
+	/**
+	 * If types are of ARRAY, TUPLE, FUNCTION, OR  UNION, it simplifies the type.
+	 *  
+	 * @param type
+	 * @return
+	 */
 	private SymbolicType simplifyType(SymbolicType type) {
 		SymbolicTypeKind kind = type.typeKind();
 
@@ -514,6 +539,13 @@ public class CVC3ModelFinder {
 		throw new SARLInternalException("Unknown CVC3 expression: " + expr);
 	}
 
+	/**
+	 * Returns the default value for a SymbolicType (e.g. default for 
+	 * INTEGER is a zeroInt(), default for BOOLEAN is false, etc.)
+	 *  
+	 * @param type
+	 * @return
+	 */
 	private SymbolicExpression defaultValue(SymbolicType type) {
 		SymbolicTypeKind kind = type.typeKind();
 
