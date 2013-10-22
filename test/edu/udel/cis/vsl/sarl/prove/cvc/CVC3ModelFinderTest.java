@@ -73,6 +73,11 @@ public class CVC3ModelFinderTest {
 	private CVC3TheoremProver cvcProver;
 
 	private ValidityChecker vc;
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
 
 	@Before
 	public void setUp() throws Exception {
@@ -81,6 +86,14 @@ public class CVC3ModelFinderTest {
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();
 	}
+	
+	/**
+	 * Test for universeEquals creates a CVC3Theorem Prover that assumes
+	 * y = 6 and sets the validityChecker to that value. The test then
+	 * creates StringObjects and SymbolicConstants (another y = 6) to checks
+	 * that the created validityChecker equates to the 
+	 * predicate expression created.
+	 */
 	
 	@Test
 	public void universeEquals() {
@@ -123,6 +136,14 @@ public class CVC3ModelFinderTest {
 		prover.setOutput(out);
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
 	}
+	
+	/**
+	 * Test for isApplyExpr creates three expressions; a varExpr, and 
+	 * two expression values. It then creates a HashMap that maps
+	 * the varExpr to a funExpr that uses minusOp() with the two 
+	 * expression values. It then uses a CVC3TheoremProver created and the
+	 * HashMap with the varExpr and minusOP to create a CVC3ModelFinder.
+	 */
 
 	@Test
 	public void isApplyExpr() {
@@ -136,6 +157,12 @@ public class CVC3ModelFinderTest {
 				.newProver(universe.bool(true));
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
 	}
+	
+	/**
+	 * Test for isBooleanExpr creates two CVC boolean expressions, creates a
+	 * Hashmap and inserts the two expressions. The test creates a CVC3TheoremProver
+	 * and uses the created Hashmap and TheoremProver to create a CVC3ModelFinder.
+	 */
 
 	@Test
 	public void isBooleanExpr() {
@@ -147,6 +174,16 @@ public class CVC3ModelFinderTest {
 				.newProver(universe.bool(true));
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
 	}
+	
+	/**
+	 * test for CVC3ModelFinderInvalid creates a Boolean expression predicate
+	 * and creates a ValidityResult from the given predicate. The test then
+	 * assesses the resultType. The test then takes the ModelResult of the
+	 * ValidityResult made from the predicate and creates a map, mapping symbolic
+	 * constant to symbolic expressions and verifies that there is only one
+	 * element in the map. It then creates a counterexample that verifies
+	 * that a given value does not equal zero.
+	 */
 
 	@Test
 	public void CVC3ModelFinderInvalid() {
