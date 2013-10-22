@@ -478,7 +478,7 @@ public class CommonPreUniverse implements PreUniverse {
 				result = and(result, expr);
 				return result;
 			}
-			
+
 			return result;
 		}
 		case TUPLE: {
@@ -1333,7 +1333,7 @@ public class CommonPreUniverse implements PreUniverse {
 			SymbolicExpression arg1) {
 		// edited by malsulmi
 		// by adding && arg1.isNumeric() to the condition
-		if (arg0.isNumeric()&& arg1.isNumeric())
+		if (arg0.isNumeric() && arg1.isNumeric())
 			return numericFactory.equals((NumericExpression) arg0,
 					(NumericExpression) arg1);
 		return equals(arg0, arg1, 0);
@@ -2211,7 +2211,8 @@ public class CommonPreUniverse implements PreUniverse {
 			return parentType;
 		}
 		default:
-			throw new SARLInternalException("Unknown reference kind: " + reference);//unreachable
+			throw new SARLInternalException("Unknown reference kind: "
+					+ reference);// unreachable
 		}
 	}
 
@@ -2298,16 +2299,23 @@ public class CommonPreUniverse implements PreUniverse {
 			NumericExpression index = ref.getOffset();
 			IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
 
-			if (indexNumber == null || !indexNumber.isZero()) //first case unreachable
+			if (indexNumber == null || !indexNumber.isZero()) // first case
+																// unreachable
 				throw new SARLException(
 						"Cannot assign via an offset reference with non-zero offset:\n"
 								+ reference + "\n" + value);
 			return assign(value, ref.getParent(), subValue);
 		}
-		default: //unreachable
+		default: // unreachable
 			throw new SARLInternalException("Unknown reference kind: "
 					+ reference);
 		}
+	}
+
+	public SymbolicExpression cleanBoundVariables(SymbolicExpression expr) {
+		// TODO
+		
+		return null;
 	}
 
 }
