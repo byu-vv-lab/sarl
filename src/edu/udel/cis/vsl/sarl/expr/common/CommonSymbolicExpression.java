@@ -191,7 +191,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	 * String Representation of an array of SymbolicObjects
 	 * 
 	 * @param objects
-	 * @return buffer
+	 @param buffer
+	 * 		string buffer to which computed result should be appended
 	 */
 	private StringBuffer toStringBufferLong(SymbolicObject[] objects) {
 		StringBuffer buffer = new StringBuffer("{");
@@ -228,11 +229,24 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return buffer;
 	}
 
+	/**
+	 * accumulates the operator opString to every operand in the following format
+	 * opString = " " + opString + " ";
+	 * 
+	 * @param buffer
+	 * 		string buffer to which computed result should be appended
+	 * @param opString
+	 * 		the string representation of the operator, e.g. "+"
+	 * @param operands
+	 * 		collection of Symbolic Objects
+	 * @param atomizeArgs
+	 * 		should each argument be atomized (surrounded by parens if
+	 */
 	private void accumulate(StringBuffer buffer, String opString,
 			SymbolicCollection<?> operands, boolean atomizeArgs) {
 		boolean first = true;
 
-		// opString = " " + opString + " ";
+		
 		for (SymbolicExpression arg : operands) {
 			if (first)
 				first = false;
@@ -242,6 +256,21 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		}
 	}
 
+	/**
+	 * Computes string representation of a binary operator expression
+	 * 
+	 * @param buffer
+	 *       string buffer to which computed result should be appended
+	 * @param opString
+	 * 	  	the string representation of the operator, e.g. "+"
+	 * @param arg0
+	 * 		object to be represented
+	 * @param arg1
+	 * 		object to be represented
+	 * @param atomizeArgs
+	 * 		should each argument be atomized (surrounded by parens if
+	 *      necessary)?
+	 */
 	private void processBinary(StringBuffer buffer, String opString,
 			SymbolicObject arg0, SymbolicObject arg1, boolean atomizeArgs) {
 		buffer.append(arg0.toStringBuffer(atomizeArgs));
@@ -284,6 +313,15 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return toStringBuffer1(atomize);
 	}
 
+	
+	/**
+	 * Returns a string representation of this object as a StringBuffer. Use this instead of "toString()" for 
+ 		performance reasons if you are going to be building up big strings.
+	 * 	
+	 * @param atomize	if true, place parentheses around the string if necessary in order to include this as a term in 
+	 a larger expression
+	 * @return	result StringBuffer
+	 */
 	public StringBuffer toStringBuffer1(boolean atomize) {
 		StringBuffer result = new StringBuffer();
 

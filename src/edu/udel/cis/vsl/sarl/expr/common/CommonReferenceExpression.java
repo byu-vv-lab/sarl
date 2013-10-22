@@ -7,6 +7,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 
+/**
+ *Abstract Reference Symbolic Expression.
+ *	Methods return false and will be overridden
+ */
 public abstract class CommonReferenceExpression extends
 		CommonSymbolicExpression implements ReferenceExpression {
 

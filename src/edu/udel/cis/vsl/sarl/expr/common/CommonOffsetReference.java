@@ -7,6 +7,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 
+/**
+ * 
+ *Implementation of a non-trivial Reference that is offset by a Numeric value
+ */
 public class CommonOffsetReference extends CommonNTReference implements
 		OffsetReference {
 

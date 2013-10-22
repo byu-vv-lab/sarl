@@ -6,6 +6,10 @@ public interface ReferenceExpression extends SymbolicExpression {
 		NULL, IDENTITY, ARRAY_ELEMENT, TUPLE_COMPONENT, UNION_MEMBER, OFFSET
 	}
 
+	/**
+	 * 
+	 * @return an item within the ReferenceKind enumeration
+	 */
 	ReferenceKind referenceKind();
 
 	/** Is this the null reference? */
