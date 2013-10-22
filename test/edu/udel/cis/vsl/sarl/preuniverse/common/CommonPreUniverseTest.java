@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -23,7 +25,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
@@ -277,6 +278,36 @@ public class CommonPreUniverseTest {
 		assertEquals(objectCollection, testCollection);
 	}
 
+	/**
+	 * Test for substitute() method
+	 */
+	@Test
+	public void substituteArrayType() {
+		
+		NumericExpression length = (NumericExpression)universe.symbolicConstant(universe.stringObject("n"), integerType);
+		NumericExpression newLength = (NumericExpression)universe.symbolicConstant(universe.stringObject("m"), integerType);
+		SymbolicType arrayTypeComplete = universe.arrayType(integerType, length);
+		SymbolicType newArrayTypeComplete = universe.arrayType(integerType, newLength);
+		
+		SymbolicExpression a = universe.symbolicConstant(universe.stringObject("a"), arrayTypeComplete);
+		SymbolicExpression b = universe.symbolicConstant(universe.stringObject("a"), newArrayTypeComplete);
+		
+		Map<SymbolicExpression, SymbolicExpression> map = new HashMap<>();
+		map.put(length, newLength);
+		
+		//System.out.println("substituteArrayType - a.type(): " + a.type());
+		
+		SymbolicExpression result = universe.substitute(a, map);
+		//System.out.println("substituteArraytype - result: " + result);
+		//System.out.println("substituteArrayType - result.type(): " + result.type());
+		//System.out.println("substituteArrayType - b.type(): " + b.type());
+		
+		assertEquals(b, result);
+		
+		
+		
+	}
+	
 	@Test
 	//written by Chris Heider
 	public void testSymbolicConstant() {

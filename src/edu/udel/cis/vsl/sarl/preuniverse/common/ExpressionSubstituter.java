@@ -272,6 +272,8 @@ public class ExpressionSubstituter {
 				case NUMBER:
 				case STRING:
 					// no substitutions into those primitive objects
+					if (newArgs != null)
+						newArgs[i] = arg;
 					break;
 				default:
 					SymbolicObject newArg;
