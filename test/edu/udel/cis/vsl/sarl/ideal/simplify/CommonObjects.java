@@ -98,7 +98,7 @@ public class CommonObjects {
 	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5, int0,
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
-	static NumericExpression xpy, xy, xx, x4th, threeX4th, xxy,
+	static NumericExpression xNE, xpy, xy, xx, x4th, threeX4th, xxy,
 	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
@@ -181,6 +181,7 @@ public class CommonObjects {
 		xy = preUniv.multiply(x, y);
 		symbExpr_xy = xy;
 		xx = preUniv.power(x, 2);
+		xNE = preUniv.add(x, rat0);
 		x4th = preUniv.power(xx, 2);
 		threeX4th = preUniv.multiply(rat3, x4th);
 		xxy = preUniv.multiply(xy, x);
