@@ -78,10 +78,42 @@ public interface IdealFactory extends NumericExpressionFactory {
 	Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization);
 
+	/**
+	 * Adds two polynomials
+	 * 
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * Returns
+	 * 			Addition of two polynomials of type Polynomial
+	 */
 	Polynomial add(Polynomial p1, Polynomial p2);
 
+	/**
+	 * Subtracts the constant term for the given polynomial
+	 * 
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * Returns
+	 * 			The resultant polynomial of type Polynomial, without the constant term
+	 * 
+	 * 			If the constant term is passed as an argument, then returns zero
+	 */
 	Polynomial subtractConstantTerm(Polynomial polynomial);
 
+	/**
+	 * Divides the polynomial with a constant of type Constant
+	 * 
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * Returns
+	 * 			a polynomial with the common factors, which are common to the constant of type Constant, removed
+	 */
 	Polynomial divide(Polynomial polynomial, Constant constant);
 
 }
