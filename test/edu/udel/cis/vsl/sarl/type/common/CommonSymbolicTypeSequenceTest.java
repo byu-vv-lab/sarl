@@ -75,10 +75,10 @@ public class CommonSymbolicTypeSequenceTest {
 	
 	@Test
 	public void testGetType() {
-		assertTrue(typeSequence.getType(2) instanceof CommonSymbolicIntegerType);
-		assertTrue(typeSequence.getType(3) instanceof CommonSymbolicIntegerType);
-		assertTrue(typeSequence.getType(0) instanceof CommonSymbolicRealType);
-		assertTrue(typeSequence.getType(1) instanceof CommonSymbolicRealType);
+		assertTrue(typeSequence.getType(1) instanceof CommonSymbolicIntegerType);
+		assertTrue(typeSequence.getType(0) instanceof CommonSymbolicIntegerType);
+		assertTrue(typeSequence.getType(2) instanceof CommonSymbolicRealType);
+		assertTrue(typeSequence.getType(3) instanceof CommonSymbolicRealType);
 	}
 	
 
