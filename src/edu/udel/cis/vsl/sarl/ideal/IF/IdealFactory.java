@@ -67,12 +67,47 @@ public interface IdealFactory extends NumericExpressionFactory {
 
 	Constant zero(SymbolicType type);
 
+	/**
+	 * Returns a constant
+	 * 
+	 * @param number
+	 * 
+	 * @param type
+	 * 				Number
+	 * 
+	 * @return
+	 * 			a constant of type Constant
+	 */
 	Constant constant(Number number);
 
 	One one(SymbolicType type);
 
+	/**
+	 * Creates a Monomial
+	 * 
+	 * @param constant
+	 * @param monic
+	 * 
+	 * @param type
+	 * 				Constant and Monic
+	 * 
+	 * @return
+	 * 			a monomial by concatenating a constant of type Constant and a monic of type Monic
+	 */
 	Monomial monomial(Constant constant, Monic monic);
 
+	/**
+	 * Multiplies two polynomials
+	 * 
+	 * @param poly1
+	 * @param poly2
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * Returns
+	 * 			Multiplication of two polynomials of type Polynomial
+	 */
 	Polynomial multiply(Polynomial poly1, Polynomial poly2);
 
 	Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
@@ -81,6 +116,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Adds two polynomials
 	 * 
+	 * @param p1
+	 * @param p2
 	 * 
 	 * @param type
 	 * 				Polynomial
@@ -88,25 +125,27 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * Returns
 	 * 			Addition of two polynomials of type Polynomial
 	 */
+	
 	Polynomial add(Polynomial p1, Polynomial p2);
 
 	/**
 	 * Subtracts the constant term for the given polynomial
 	 * 
+	 * @param polynomial
 	 * 
 	 * @param type
 	 * 				Polynomial
 	 * 
 	 * Returns
-	 * 			The resultant polynomial of type Polynomial, without the constant term
-	 * 
-	 * 			If the constant term is passed as an argument, then returns zero
+	 * 			a polynomial of type Polynomial, without the constant term. If the constant term is passed as an argument, then returns zero
 	 */
 	Polynomial subtractConstantTerm(Polynomial polynomial);
 
 	/**
 	 * Divides the polynomial with a constant of type Constant
 	 * 
+	 * @param polynomial
+	 * @param constant
 	 * 
 	 * @param type
 	 * 				Polynomial
