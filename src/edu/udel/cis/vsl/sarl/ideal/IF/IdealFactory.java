@@ -57,14 +57,48 @@ public interface IdealFactory extends NumericExpressionFactory {
 
 	IntObject oneIntObject();
 
+	/**
+	 * Creates an integer constant
+	 * 
+	 * @param value - a normal integer
+	 * 
+	 * @param type
+	 * 				Integer
+	 * 
+	 * @return
+	 * 			an integer of type Constant
+	 */
 	Constant intConstant(int value);
 
 	@Override
+	/**
+	 * Creates a zero integer constant
+	 * 
+	 * @return
+	 * 			a zero integer of type Constant
+	 */
 	Constant zeroInt();
 
 	@Override
+	/**
+	 * Creates a real zero constant
+	 * 
+	 * @return
+	 * 			a real zero of type Constant
+	 */
 	Constant zeroReal();
-
+	
+	/**
+	 * Creates a value zero for the type that is passed as an argument
+	 * 
+	 * @param type - different data types of SymbolicType - real, Integer etc.
+	 * 
+	 * @param type
+	 * 				SymbolicType
+	 * 
+	 * @return
+	 * 			a value zero of the specified type
+	 */
 	Constant zero(SymbolicType type);
 
 	/**
