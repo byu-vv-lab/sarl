@@ -39,6 +39,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
+/**
+ * The primary Factory for creating objects
+ */
 public class CommonObjectFactory implements ObjectFactory {
 
 	private NumberFactory numberFactory;

@@ -2,20 +2,9 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
-import java.util.Comparator;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
-import edu.udel.cis.vsl.sarl.collections.common.CommonSymbolicMap;
-import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 
 public class ObjectComparatorTest {
 

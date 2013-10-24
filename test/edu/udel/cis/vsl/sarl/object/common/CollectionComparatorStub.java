@@ -2,18 +2,20 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import java.util.Comparator;
 
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 
-public class CollectionComparatorStub implements Comparator<BasicCollection> {
+
+public class CollectionComparatorStub implements Comparator<SymbolicCollection<?>> {
+
+	public CollectionComparatorStub() {
+	}
 
 	@Override
-	public int compare(BasicCollection o1, BasicCollection o2) {
-//		String name1 = ((ExpressionStub) o1).toString();
-//		String name2 = ((ExpressionStub) o2).toString();
-//
-//		return name1.compareTo(name2);
-		return 0;
+	public int compare(SymbolicCollection<?> o1, SymbolicCollection<?> o2) {
+		String name1 = (o1).toString();
+		String name2 = (o2).toString();
+
+		return name1.compareTo(name2);
 	}
 
 }

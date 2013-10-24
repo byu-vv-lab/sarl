@@ -37,18 +37,46 @@ import edu.udel.cis.vsl.sarl.object.common.ObjectComparator;
 
 public interface ObjectFactory {
 	
+	/**
+	 * @return the numberFactory of the ObjectFactory
+	 */
     NumberFactory numberFactory(); 
 
+    /**
+     * Sets the Expression Comparator of the ObjectFactory
+     * @param c
+     */
 	void setExpressionComparator(Comparator<SymbolicExpression> c);
 
+	/**
+	 * Sets the Collection Comparator of the ObjectFactory
+	 * @param c
+	 */
 	void setCollectionComparator(Comparator<SymbolicCollection<?>> c);
 
+	/**
+	 * Sets the TypeComparator of the ObjectFactory
+	 * @param c
+	 */
 	void setTypeComparator(Comparator<SymbolicType> c);
 
+	/**
+	 * Sets the TypeSequenceComparator of the ObjectFactory
+	 * @param c
+	 */
 	void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c);
 
+	/**
+	 * Asserts that expressionComparator, collectionComparator, typeComparator, and typeSequenceComparator 
+	 * are set for this object
+	 */
 	public void init();
 
+	
+	/**
+	 * 
+	 * @return the object's comparator
+	 */
 	ObjectComparator comparator();
 
 	/**
