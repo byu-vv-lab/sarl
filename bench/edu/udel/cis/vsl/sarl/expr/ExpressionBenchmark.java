@@ -51,12 +51,12 @@ public class ExpressionBenchmark {
 		Collection<BooleanExpression> col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
 		BooleanExpression[] ExpressionList2 = {};
 		Collection<BooleanExpression> col2= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList2));
-		for(int i = 0; i < 200; i++){
+		for(int i = 0; i < 100; i++){
 	
 			col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
 	
 		}
-		for(int i = 0; i < 200; i++){
+		for(int i = 0; i < 100; i++){
 			col2.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(-i)), booleanType));
 			
 		}
@@ -65,11 +65,14 @@ public class ExpressionBenchmark {
 		
 		
 		start = System.currentTimeMillis();
-		
-		BooleanExpression s1 = sUniverse.and(col1);
-		BooleanExpression s2 = sUniverse.and(col2);
-		BooleanExpression s3 = sUniverse.or(s1,s2);
-		
+	
+			BooleanExpression s1 = sUniverse.and(col1);
+			BooleanExpression s2 = sUniverse.and(col2);
+			BooleanExpression s3 = sUniverse.or(s1,s2);
+			
+			
+			
+	
 		end = System.currentTimeMillis();
 		mark = end - start;
 		System.out.println(mark);

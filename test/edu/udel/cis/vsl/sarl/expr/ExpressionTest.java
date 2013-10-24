@@ -70,8 +70,8 @@ import java.util.List;
 public class ExpressionTest {
 	private SymbolicUniverse sUniverse;
 	private static PrintStream out = System.out;
-	
-	//Kolby's Play Area
+
+	// Kolby's Play Area
 	private SymbolicTypeFactory stf;
 	private CollectionFactory cf;
 	private ObjectFactory of;
@@ -80,12 +80,13 @@ public class ExpressionTest {
 	StringObject string1;
 	StringObject string2;
 	StringObject string3;
-	
+
 	private SymbolicConstant zz;
-	
+
 	private StringObject Xobj; // "X"
 	private StringObject Yobj; // "Y"
-	private SymbolicType realType, integerType, arrayType, booleanType, tupleType;
+	private SymbolicType realType, integerType, arrayType, booleanType,
+			tupleType;
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
@@ -104,26 +105,29 @@ public class ExpressionTest {
 	private NumericExpression xty;
 	private NumericExpression xpyDxty;
 
-	private static  FactorySystem factorySystem = PreUniverses
+	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
 	private ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-	private static NumericExpressionFactory idealFactory = factorySystem.numericFactory();
-	private static NumericExpressionFactory herbrandFactory = factorySystem.numericFactory();
-	CommonNumericExpressionFactory cnef = new CommonNumericExpressionFactory(idealFactory, herbrandFactory);
-	
-	
+	private static NumericExpressionFactory idealFactory = factorySystem
+			.numericFactory();
+	private static NumericExpressionFactory herbrandFactory = factorySystem
+			.numericFactory();
+	CommonNumericExpressionFactory cnef = new CommonNumericExpressionFactory(
+			idealFactory, herbrandFactory);
+
 	SymbolicIntegerType intType;
 	private SymbolicType herbrandIntType;
 	private SymbolicOperator addOperator;
-	//CommonSymbolicConstant c1 = new CommonSymbolicConstant(string1, intType);
-	
+
+	// CommonSymbolicConstant c1 = new CommonSymbolicConstant(string1, intType);
+
 	@Before
 	public void setUp() throws Exception {
 		sUniverse = Universes.newIdealUniverse();
-	
+
 		Xobj = sUniverse.stringObject("X");
 		Yobj = sUniverse.stringObject("Y");
 		fiveIntObj = sUniverse.intObject(5);
@@ -135,33 +139,44 @@ public class ExpressionTest {
 		arrayType = sUniverse.arrayType(integerType);
 		List<SymbolicType> fieldType1 = new ArrayList<SymbolicType>();
 		fieldType1.add(integerType);
-		
-		tupleType = sUniverse.tupleType(sUniverse.stringObject("typ1"), fieldType1);
-		
-		zz =  sUniverse.symbolicConstant(Xobj, arrayType);
+
+		tupleType = sUniverse.tupleType(sUniverse.stringObject("typ1"),
+				fieldType1);
+
+		zz = sUniverse.symbolicConstant(Xobj, arrayType);
 		t = sUniverse.symbolicConstant(Xobj, tupleType);
-		b = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,booleanType );
-		x = (NumericSymbolicConstant)  sUniverse.symbolicConstant(Xobj, realType);
-		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, integerType);
-		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
-		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
-		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
-		twoInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(2));
-		threeInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(3));
-		zeroInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(0));
-		oneInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(1));
-		xpy = sUniverse.add(x,y);
-		xty = sUniverse.multiply(x,y);
-		xpyDxty = sUniverse.divide(xpy,xty);
-		
+		b = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,
+				booleanType);
+		x = (NumericSymbolicConstant) sUniverse
+				.symbolicConstant(Xobj, realType);
+		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj,
+				integerType);
+		y = (NumericSymbolicConstant) sUniverse
+				.symbolicConstant(Yobj, realType);
+		two = (NumericExpression) sUniverse
+				.cast(realType, sUniverse.integer(2));
+		three = (NumericExpression) sUniverse.cast(realType,
+				sUniverse.integer(3));
+		twoInt = (NumericExpression) sUniverse.cast(integerType,
+				sUniverse.integer(2));
+		threeInt = (NumericExpression) sUniverse.cast(integerType,
+				sUniverse.integer(3));
+		zeroInt = (NumericExpression) sUniverse.cast(integerType,
+				sUniverse.integer(0));
+		oneInt = (NumericExpression) sUniverse.cast(integerType,
+				sUniverse.integer(1));
+		xpy = sUniverse.add(x, y);
+		xty = sUniverse.multiply(x, y);
+		xpyDxty = sUniverse.divide(xpy, xty);
+
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
-		
+
 		stf = system.typeFactory();
 		of = system.objectFactory();
 		cf = system.collectionFactory();
 		nf = system.numberFactory();
 		addOperator = xpy.operator();
-		
+
 		herbrandType = stf.herbrandRealType();
 		herbrandIntType = stf.herbrandIntegerType();
 	}
@@ -175,321 +190,399 @@ public class ExpressionTest {
 	}
 
 	@Test
-	public void CommonExpressionFactoryNonTrivialTest(){
+	/**
+	 * A series of tests for the creation of Array/Tuple/Union/Offset references using an expressionFactory
+	 */
+	public void commonExpressionFactoryNonTrivialTest() {
 		SymbolicType referenceType;
 		SymbolicTypeSequence referenceIndexSeq; // Ref x Int
 		SymbolicType referenceFunctionType; // Ref x Int -> Ref
-		
-		referenceType = of.canonic(stf.tupleType(
-				of.stringObject("Ref"),
+		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
-		referenceIndexSeq = stf.sequence(new SymbolicType[] {
-				referenceType, integerType });
-		referenceFunctionType = of.canonic(stf.functionType(
-				referenceIndexSeq, referenceType));
-		
-		SymbolicSequence s,s1,s2;
+		referenceIndexSeq = stf.sequence(new SymbolicType[] { referenceType,
+				integerType });
+		referenceFunctionType = of.canonic(stf.functionType(referenceIndexSeq,
+				referenceType));
+		SymbolicSequence<SymbolicExpression> s, s1, s2;
 		s = cf.emptySequence();
-		s1= s.add(sUniverse.identityReference());
+		s1 = s.add(sUniverse.identityReference());
 		s2 = s1.add(sUniverse.integer(1));
-		
-	
-		
-		SymbolicExpression test2 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("ArrayElementRef"), referenceFunctionType));
-		SymbolicExpression test =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test2, s2);
-		ArrayElementReference testRef = expressionFactory.arrayElementReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		assertEquals(test,testRef);
-	
-		SymbolicExpression test3 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("TupleComponentRef"), referenceFunctionType));
-		SymbolicExpression testtuple =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test3, s2);
-		TupleComponentReference testTuple = expressionFactory.tupleComponentReference((ReferenceExpression) s1.get(0), oneIntObj);
-		assertEquals(testtuple,testTuple);
-	
-		SymbolicExpression test5 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("UnionMemberRef"), referenceFunctionType));
-		SymbolicExpression testunion =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test5, s2);
-		UnionMemberReference testUnion = expressionFactory.unionMemberReference((ReferenceExpression) s1.get(0), oneIntObj);
-		assertEquals(testunion,testUnion);
-	
-		SymbolicExpression test6 =  of.canonic(sUniverse.symbolicConstant(sUniverse.stringObject("OffsetRef"), referenceFunctionType));
-		SymbolicExpression testoffset =  expressionFactory.expression(SymbolicOperator.APPLY, sUniverse.referenceType(),test6, s2);
-		OffsetReference testOffset = expressionFactory.offsetReference((ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		assertEquals(testoffset,testOffset);
-  
+
+		SymbolicExpression test2 = of.canonic(sUniverse.symbolicConstant(
+				sUniverse.stringObject("ArrayElementRef"),
+				referenceFunctionType));
+		SymbolicExpression test = expressionFactory.expression(
+				SymbolicOperator.APPLY, sUniverse.referenceType(), test2, s2);
+		ArrayElementReference testRef = expressionFactory
+				.arrayElementReference((ReferenceExpression) s1.get(0),
+						sUniverse.integer(1));
+		assertEquals(test, testRef);
+
+		SymbolicExpression test3 = of.canonic(sUniverse.symbolicConstant(
+				sUniverse.stringObject("TupleComponentRef"),
+				referenceFunctionType));
+		SymbolicExpression testtuple = expressionFactory.expression(
+				SymbolicOperator.APPLY, sUniverse.referenceType(), test3, s2);
+		TupleComponentReference testTuple = expressionFactory
+				.tupleComponentReference((ReferenceExpression) s1.get(0),
+						oneIntObj);
+		assertEquals(testtuple, testTuple);
+
+		SymbolicExpression test5 = of
+				.canonic(sUniverse.symbolicConstant(
+						sUniverse.stringObject("UnionMemberRef"),
+						referenceFunctionType));
+		SymbolicExpression testunion = expressionFactory.expression(
+				SymbolicOperator.APPLY, sUniverse.referenceType(), test5, s2);
+		UnionMemberReference testUnion = expressionFactory
+				.unionMemberReference((ReferenceExpression) s1.get(0),
+						oneIntObj);
+		assertEquals(testunion, testUnion);
+
+		SymbolicExpression test6 = of.canonic(sUniverse.symbolicConstant(
+				sUniverse.stringObject("OffsetRef"), referenceFunctionType));
+		SymbolicExpression testoffset = expressionFactory.expression(
+				SymbolicOperator.APPLY, sUniverse.referenceType(), test6, s2);
+		OffsetReference testOffset = expressionFactory.offsetReference(
+				(ReferenceExpression) s1.get(0), sUniverse.integer(1));
+		assertEquals(testoffset, testOffset);
 	}
-	
+
 	@Test
-	public void CommonExpressionFactoryConcreteTest(){
-		SymbolicType referenceType1,referenceType2;
-
-
-		referenceType1 = of.canonic(stf.tupleType(
-				of.stringObject("Ref"),
+	/**
+	 * Tests for the CommonExpressionFactory Class
+	 * Tests for concreteReferenceExpression(SymbolicOperator operator, SymbolicObject arg0)
+	 */
+	public void commonExpressionFactoryConcreteTest() {
+		SymbolicType referenceType1;
+		referenceType1 = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
-
 		SymbolicSequence<NumericExpression> zeroSequence = of.canonic(cf
 				.singletonSequence(zeroInt));
 		SymbolicSequence<NumericExpression> oneSequence = of.canonic(cf
 				.singletonSequence(oneInt));
-		
-		SymbolicExpression test = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType1, zeroSequence);
-		SymbolicExpression test2 = expressionFactory.expression(SymbolicOperator.CONCRETE,referenceType1, oneSequence);
-		
-		assertEquals(test.toString(),"(Ref<int>)<0>");
-		assertEquals(test2.toString(),"(Ref<int>)<1>");
+		SymbolicExpression test = expressionFactory.expression(
+				SymbolicOperator.CONCRETE, referenceType1, zeroSequence);
+		SymbolicExpression test2 = expressionFactory.expression(
+				SymbolicOperator.CONCRETE, referenceType1, oneSequence);
+		assertEquals(test.toString(), "(Ref<int>)<0>");
+		assertEquals(test2.toString(), "(Ref<int>)<1>");
 	}
-	
-	
-	@Test
-	public void CommonExpressionFactoryExpressionTest(){
-		
-		SymbolicType referenceType;
-		referenceType = of.canonic(stf.tupleType(
-				of.stringObject("Ref"),
-				stf.sequence(new SymbolicType[] { integerType })));
 
+	@Test
+	/**
+	 * Tests for the CommonExpressionFactory Class
+	 * Tests for expression(SymbolicOperator operator,SymbolicType type, SymbolicObject[] arguments)
+	 */
+	public void commonExpressionFactoryExpressionTest() {
+		SymbolicType referenceType;
+		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
 		BooleanExpression b1 = sUniverse.trueExpression();
 		BooleanExpression b2 = sUniverse.falseExpression();
 		ReferenceExpression r1 = sUniverse.identityReference();
 		ReferenceExpression r2 = sUniverse.identityReference();
-		SymbolicObject[] ExpressionList = {two,three};
-		SymbolicObject[] ExpressionList2 = {b1,b2};
-		SymbolicObject[] ExpressionList3 = {r1,r2};
-		
-		Collection<SymbolicObject> args1= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList));
-		Collection<SymbolicObject> args2= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList2));
-		Collection<SymbolicObject> args3= new ArrayList<SymbolicObject>(Arrays.asList(ExpressionList3));
-		
-		SymbolicExpression test1 =  expressionFactory.expression(SymbolicOperator.ADD, integerType, args1);
-		SymbolicExpression test2 =  expressionFactory.expression(SymbolicOperator.ADD, booleanType, args2);
-		SymbolicExpression test3 =  expressionFactory.expression(SymbolicOperator.ADD, referenceType, args3);
+		SymbolicObject[] ExpressionList = { two, three };
+		SymbolicObject[] ExpressionList2 = { b1, b2 };
+		SymbolicObject[] ExpressionList3 = { r1, r2 };
+		Collection<SymbolicObject> args1 = new ArrayList<SymbolicObject>(
+				Arrays.asList(ExpressionList));
+		Collection<SymbolicObject> args2 = new ArrayList<SymbolicObject>(
+				Arrays.asList(ExpressionList2));
+		Collection<SymbolicObject> args3 = new ArrayList<SymbolicObject>(
+				Arrays.asList(ExpressionList3));
+		SymbolicExpression test1 = expressionFactory.expression(
+				SymbolicOperator.ADD, integerType, args1);
+		SymbolicExpression test2 = expressionFactory.expression(
+				SymbolicOperator.ADD, booleanType, args2);
+		SymbolicExpression test3 = expressionFactory.expression(
+				SymbolicOperator.ADD, referenceType, args3);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
-  
 	}
-	
-	@Test
-	public void CommonExpressionFactoryExpressionTest2(){
-		
-		SymbolicType referenceType;
-		referenceType = of.canonic(stf.tupleType(
-				of.stringObject("Ref"),
-				stf.sequence(new SymbolicType[] { integerType })));
 
+	@Test
+	/**
+	 * Tests for the CommonExpressionFactory Class
+	 * expression(SymbolicOperator operator,SymbolicType type, Collection<SymbolicObject> args) 
+	 */
+	public void commonExpressionFactoryExpressionTest2() {
+		SymbolicType referenceType;
+		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
 		BooleanExpression b1 = sUniverse.trueExpression();
 		BooleanExpression b2 = sUniverse.falseExpression();
 		ReferenceExpression r1 = sUniverse.identityReference();
 		ReferenceExpression r2 = sUniverse.identityReference();
-		SymbolicObject[] ExpressionList = {two,three};
-		SymbolicObject[] ExpressionList2 = {b1,b2};
-		SymbolicObject[] ExpressionList3 = {r1,r2};
-		
-	
-		
-		SymbolicExpression test1 =  expressionFactory.expression(SymbolicOperator.ADD, integerType, ExpressionList);
-		SymbolicExpression test2 =  expressionFactory.expression(SymbolicOperator.ADD, booleanType, ExpressionList2);
-		SymbolicExpression test3 =  expressionFactory.expression(SymbolicOperator.ADD, referenceType, ExpressionList3);
+		SymbolicObject[] ExpressionList = { two, three };
+		SymbolicObject[] ExpressionList2 = { b1, b2 };
+		SymbolicObject[] ExpressionList3 = { r1, r2 };
+		SymbolicExpression test1 = expressionFactory.expression(
+				SymbolicOperator.ADD, integerType, ExpressionList);
+		SymbolicExpression test2 = expressionFactory.expression(
+				SymbolicOperator.ADD, booleanType, ExpressionList2);
+		SymbolicExpression test3 = expressionFactory.expression(
+				SymbolicOperator.ADD, referenceType, ExpressionList3);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
-  
 	}
-	
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage POWER, parens and correct operators
+	 */
 	public void toStringBuffer1PowerTest() {
 		int exponent = 4;
 		IntObject n = sUniverse.intObject(exponent);
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression xpyp1 = sUniverse.power(xpy, n);
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
-		
-		assertEquals(xpyp1.toString(), "X^4+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^4");
+		assertEquals(xpyp1.toString(),
+				"X^4+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
-		
-		//power test atomize
-		assertEquals(xpyp1.toStringBuffer(true).toString(), "(X^(4)+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^(4))");
+		// power test atomize
+		assertEquals(xpyp1.toStringBuffer(true).toString(),
+				"(X^(4)+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^(4))");
 		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
-		
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage ADD, parens and correct operators
+	 */
 	public void toStringBuffer1AddTest() {
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression test1 = sUniverse.add(xpy, two);
 		assertEquals(test1.toString(), "X+Y+2");
-		
-		//add test atomize
+		// add test atomize
 		assertEquals(test1.toStringBuffer(true).toString(), "(X+Y+2)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage COND, parens and correct operators
+	 */
 	public void toStringBuffer1CondTest() {
-		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two), three, two);
+		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two),
+				three, two);
 		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
-		
-		//cond test atomize
-		assertEquals(test2.toStringBuffer(true).toString(), "((0 == -1*X+2) ? 3 : 3)");
+		// cond test atomize
+		assertEquals(test2.toStringBuffer(true).toString(),
+				"((0 == -1*X+2) ? 3 : 3)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage DIVIDE, parens and correct operators
+	 */
 	public void toStringBuffer1DivideTest() {
 		NumericExpression test3 = sUniverse.divide(x, y);
 		assertEquals(test3.toString(), "X/Y");
-		
-		//divide test atomize
+		// divide test atomize
 		assertEquals(test3.toStringBuffer(true).toString(), "(X/Y)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage EXISTS, parens and correct operators
+	 */
 	public void toStringBuffer1ExistsTest() {
 		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
 		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
-		
-		//exists test atomize
-		assertEquals(test4.toStringBuffer(true).toString(), "(exists X : real . (0 == -1*X+Y))");
+		// exists test atomize
+		assertEquals(test4.toStringBuffer(true).toString(),
+				"(exists X : real . (0 == -1*X+Y))");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage FORALL, parens and correct operators
+	 */
 	public void toStringBuffer1ForAllTest() {
 		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
 		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
-		
-		//forall test atomize
-		assertEquals(test5.toStringBuffer(true).toString(), "(forall X : real . (0 == -1*X+Y))");
+		// forall test atomize
+		assertEquals(test5.toStringBuffer(true).toString(),
+				"(forall X : real . (0 == -1*X+Y))");
 	}
-	
+
 	@Test
-	public void toStringBuffer1LengthTest() {	
-NumericExpression test6 = sUniverse.length(zz);
-System.out.println(test6);
-assertEquals(test6.toString(), "length(X)");
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage LENGTH, parens and correct operators
+	 */
+	public void toStringBuffer1LengthTest() {
+		NumericExpression test6 = sUniverse.length(zz);
+		System.out.println(test6);
+		assertEquals(test6.toString(), "length(X)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage LESSTHAN, parens and correct operators
+	 */
 	public void toStringBuffer1LessThanTest() {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
-		out.println(x);
-		out.println(three);
 		for (SymbolicObject expr : test7.arguments())
 			out.println(expr.toString());
 		assertEquals(test7.toString(), "0 < -1*X+3");
-		
-		//Less_than test atomize
+		// Less_than test atomize
 		assertEquals(test7.toStringBuffer(true).toString(), "(0 < -1*X+3)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage LESSTHANEQUALS, parens and correct operators
+	 */
 	public void toStringBuffer1LessThanEqualTest() {
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
 		assertEquals(test8.toString(), "0 <= -1*X+3");
-		
-		//Less_than_equals test atomize
-		assertEquals(test8.toStringBuffer(true).toString(),"(0 <= -1*X+3)");
+		// Less_than_equals test atomize
+		assertEquals(test8.toStringBuffer(true).toString(), "(0 <= -1*X+3)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage MODULO, parens and correct operators
+	 */
 	public void toStringBuffer1ModuloTest() {
 		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
 		assertEquals(test9.toString(), "X%3");
-		
-		//Modulo test atomize
+		// Modulo test atomize
 		assertEquals(test9.toStringBuffer(true).toString(), "(X%3)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage NEQ, parens and correct operators
+	 */
 	public void toStringBuffer1NeqTest() {
 		BooleanExpression test10 = sUniverse.neq(x, y);
 		assertEquals(test10.toString(), "0 != -1*X+Y");
-		
-		//Neg test atomize
+		// Neg test atomize
 		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage NEGATIVE, parens and correct operators
+	 */
 	public void toStringBuffer1NegativeTest() {
-		
-		NumericExpression negExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.NEGATIVE, integerType, two);
-		
-
+		NumericExpression negExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.NEGATIVE, integerType, two);
 		assertEquals(negExp.toString(), "-2");
-
-		//Neg test atomize
+		// Neg test atomize
 		assertEquals(negExp.toStringBuffer(true).toString(), "(-2)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage NOT, parens and correct operators
+	 */
 	public void toStringBuffer1NotTest() {
-		
 		BooleanExpression test11 = sUniverse.not(b);
 		assertEquals(test11.toString(), "!X");
-		
-		//not test atomize
+		// not test atomize
 		assertEquals(test11.toStringBuffer(true).toString(), "(!X)");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage LAMBDA, parens and correct operators
+	 */
 	public void toStringBuffer1LambdaTest() {
 		BooleanExpression a = sUniverse.not(b);
 		SymbolicExpression test11 = sUniverse.lambda(x, a);
 		assertEquals(test11.toString(), "lambda X : real . (!X)");
-		
-		//atomize
-		assertEquals(test11.toStringBuffer(true).toString(), "(lambda X : real . (!X))");
+		// atomize
+		assertEquals(test11.toStringBuffer(true).toString(),
+				"(lambda X : real . (!X))");
 	}
-	
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage NULL, parens and correct operators
+	 */
 	public void toStringBuffer1NullTest() {
 		BooleanExpression a = sUniverse.not(b);
-		BooleanExpression nullexp = (BooleanExpression) expressionFactory.expression(SymbolicOperator.NULL, booleanType, a);
+		BooleanExpression nullexp = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.NULL, booleanType, a);
 
 		assertEquals(nullexp.toStringBuffer(false).toString(), "NULL");
-
 	}
 
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage INTDIVIDE, parens and correct operators
+	 */
 	public void toStringBuffer1IntDivideTest() {
-		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.INT_DIVIDE, integerType, x,y);
+		NumericExpression intExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.INT_DIVIDE, integerType, x, y);
 		assertEquals(intExp.toStringBuffer(false).toString(), "X div Y");
-		//atomize
+		// atomize
 		assertEquals(intExp.toStringBuffer(true).toString(), "(X div Y)");
-
 	}
 
-	
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage OR, parens and correct operators
+	 */
 	public void toStringBuffer1OrTest() {
 		BooleanExpression a = sUniverse.not(b);
-		BooleanExpression test13 = sUniverse.or(a,b);
-		
-		
-		//System.out.println(test13.toStringBuffer(true));
-		//If statement is needed because X and !X are sometimes flipped
-		if(test13.toStringBuffer(false).toString().equals("!X || X" ) || test13.toStringBuffer(true).toString().equals( "(!X || X)")){
-			assertEquals(test13.toStringBuffer(false).toString(),"!X || X");
-			assertEquals(test13.toStringBuffer(true).toString(),"(!X || X)");
-		}else{
-			assertEquals(test13.toStringBuffer(false).toString(),"X || !X");
-			assertEquals(test13.toStringBuffer(true).toString(),"(X || !X)");
+		BooleanExpression test13 = sUniverse.or(a, b);
+
+		// System.out.println(test13.toStringBuffer(true));
+		// If statement is needed because X and !X are sometimes flipped
+		if (test13.toStringBuffer(false).toString().equals("!X || X")
+				|| test13.toStringBuffer(true).toString().equals("(!X || X)")) {
+			assertEquals(test13.toStringBuffer(false).toString(), "!X || X");
+			assertEquals(test13.toStringBuffer(true).toString(), "(!X || X)");
+		} else {
+			assertEquals(test13.toStringBuffer(false).toString(), "X || !X");
+			assertEquals(test13.toStringBuffer(true).toString(), "(X || !X)");
 		}
 	}
+
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage TUPLEREAD, parens and correct operators
+	 */
 	public void toStringBuffer1TupleReadTest() {
-SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
+		SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(test.toStringBuffer(false).toString(), "X.0");
-		
 		assertEquals(test.toStringBuffer(true).toString(), "(X.0)");
 	}
 
-	
-	
 	@Test
+	/**
+	 * Part of the series of toStringBuffer1 String tests
+	 * checks for proper usage SUBTRACT, parens and correct operators
+	 */
 	public void toStringBuffer1SubtractTest() {
-		NumericExpression intExp = (NumericExpression) expressionFactory.expression(SymbolicOperator.SUBTRACT, integerType, x,y);
-		
+		NumericExpression intExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.SUBTRACT, integerType, x, y);
+
 		assertEquals(intExp.toStringBuffer(false).toString(), "X - Y");
-		
-		//subtract test atomize
+		// subtract test atomize
 		assertEquals(intExp.toStringBuffer(true).toString(), "(X - Y)");
 	}
 	
