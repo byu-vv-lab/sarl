@@ -252,6 +252,13 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
+	/**
+	 * @author blutuu
+	 * 
+	 * This tests whether the universe method is equal to
+	 * the objectFactor method. The function obtains the number
+	 * of objects within the given instance and returns an int.
+	 */
 	@Test
 	// Written by Marlin Blue
 	public void testNumObjects() {
@@ -270,6 +277,13 @@ public class CommonPreUniverseTest {
 		assertEquals(obj1.id(), 3);
 	}
 
+	/**
+	 * @author blutuu
+	 * 
+	 * Here, a local sequence of universe.objects are tested against
+	 * a global preuniverse.objectCollection. The object() method
+	 * returns a sequence of objects, which populates testCollection.
+	 */
 	@Test
 	// Written by Marlin Blue
 	public void testObjects() {
@@ -446,6 +460,16 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
+	/**
+	 * @author blutuu
+	 * 
+	 * testForAllInt() tests the forAllInt() method. It takes 
+	 * 4 parameters which checks whether the given index conforms
+	 * to the given upper and lower bounds. This test conducts 
+	 * three different assertions (two of which use null constants)
+	 * which uniquely hit each branch of the forAllInt() method.
+	 * 
+	 */
 	@Test
 	// Written by Marlin Blue 9/25
 	public void testForallInt() {
@@ -477,8 +501,8 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.forallInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
 						universe.stringObject("name"), integerType),
-				universe.integer(999), universe.integer(2000), 
-				universe.bool(true)), testResult1);
+						universe.integer(999), universe.integer(2000), 
+						universe.bool(true)), testResult1);
 		// Testing null values
 		assertEquals(universe.forallInt(
 				(NumericSymbolicConstant) universe.symbolicConstant(
@@ -1592,7 +1616,7 @@ public class CommonPreUniverseTest {
 		
 	}
 	*/
-	@Test
+	
 	/**
 	 * @author Marlin Blue
 	 * 
@@ -1603,6 +1627,7 @@ public class CommonPreUniverseTest {
 	 * the non-null branch.Successfully hits all branches.
 	 * 
 	 */
+	@Test
 	public void testEqualsFunction() {
 		//SymbolicExpression result1, result2; 
 		SymbolicConstant nullConstant = universe.symbolicConstant(
