@@ -50,7 +50,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 *            an element of K
 	 * @param value
 	 *            an element of V
-	 * @return symbolic map consiting of one entry (key,value)
+	 * @return symbolic map consisting of one entry (key,value)
 	 */
 	<K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
 			K key, V value);

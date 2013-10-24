@@ -26,8 +26,19 @@ package edu.udel.cis.vsl.sarl.ideal.IF;
  */
 public interface Monomial extends Polynomial {
 
+	/**
+	 * Creates a constant using an IdealFactory
+	 * @param factory
+	 * @return constant
+	 */
 	Constant monomialConstant(IdealFactory factory);
-
+	
+	/**
+	 * Creates a Monic using an IdealFactory
+	 *
+	 * @param factory
+	 * @return Monic
+	 */
 	Monic monic(IdealFactory factory);
 
 	/**
