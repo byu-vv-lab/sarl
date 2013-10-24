@@ -120,5 +120,11 @@ public class ExpressionStub implements SymbolicExpression {
 	public SymbolicType type() {
 		return null;
 	}
-
+	
+	public String toString()
+	{
+		return this.name;
+	}
+	
+	
 }

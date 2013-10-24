@@ -101,6 +101,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 
 	@Override
 	protected int computeHashCode() {
+		
 		return SymbolicCollectionKind.MAP.hashCode() ^ pmap.hashCode();
 	}
 

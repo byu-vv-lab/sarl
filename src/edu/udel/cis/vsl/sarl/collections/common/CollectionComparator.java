@@ -37,8 +37,7 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 	public CollectionComparator() {
 	}
 
-	public void setElementComparator(
-			Comparator<SymbolicExpression> elementComparator) {
+	public void setElementComparator(Comparator<SymbolicExpression> elementComparator) {
 		this.elementComparator = elementComparator;
 	}
 

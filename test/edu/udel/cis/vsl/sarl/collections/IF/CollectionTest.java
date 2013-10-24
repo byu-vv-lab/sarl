@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectFactoryStub;
 
@@ -29,14 +30,23 @@ public class CollectionTest {
 	private static SymbolicExpression x = new ExpressionStub("x");
 
 	private static SymbolicExpression y = new ExpressionStub("y");
+	
+	private static SymbolicExpression a = new ExpressionStub("5");
 
-	// private static SymbolicExpression z = new ExpressionStub("z");
+	private static SymbolicExpression b = new ExpressionStub("9");
+ 
+	private static CommonCollectionFactory mapCreate;
+	private static SymbolicMap<SymbolicExpression, SymbolicExpression> collectionMap;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		collectionFactory.setElementComparator(elementComparator);
 		collectionFactory.init();
 		comparator = collectionFactory.comparator();
+		collectionMap = mapCreate.emptySortedMap();
+		collectionMap = collectionMap.put(a, b);
+		collectionMap = collectionMap.put(x, b);
+		collectionMap = collectionMap.put(b, y);
 	}
 
 	@Before

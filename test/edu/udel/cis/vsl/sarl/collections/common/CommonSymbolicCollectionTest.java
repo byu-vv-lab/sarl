@@ -1,7 +1,5 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CommonSymbolicCollectionTest {
-
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -20,6 +18,7 @@ public class CommonSymbolicCollectionTest {
 
 	@Before
 	public void setUp() throws Exception {
+		
 	}
 
 	@After

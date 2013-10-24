@@ -32,7 +32,7 @@ public class CollectionsTest {
 		NumberFactory numberFactory = Numbers.REAL_FACTORY;
 		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
 		collectionFactory = Collections.newCollectionFactory(objectFactory);
-		
+
 		
 	}
 
