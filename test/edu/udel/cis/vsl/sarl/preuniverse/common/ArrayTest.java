@@ -695,7 +695,7 @@ public class ArrayTest {
 		// showing an example of creating nested arrays
 		SymbolicArrayType arrayType;
 		SymbolicExpression array1, array2, array3, array4;
-		
+
 		// initialization of integer type array
 		arrayType = universe.arrayType(integerType);
 
@@ -721,6 +721,9 @@ public class ArrayTest {
 		
 		// performing write an array inside another array
 		array3 = universe.arrayWrite(array4, universe.integer(1), array4);
+		
+		
+		
 
 	}
 
@@ -767,4 +770,60 @@ public class ArrayTest {
 
 		assertEquals(tuple1, universe.arrayRead(array, universe.integer(1)));
 	}
+	// written by Mohammad Alsulmi
+		@Test
+		public void testMixedArray3() {
+			// Testing two levels of nested arrays
+			SymbolicArrayType arrayType;
+			SymbolicArrayType nestedType;
+			SymbolicExpression array1, array2, array3, array4;
+			SymbolicExpression nestedArray;
+			
+			
+			// initialization of integer type array
+			arrayType = universe.arrayType(integerType);
+
+			// creating first array
+			array1 = universe.array(
+					integerType,
+					Arrays.asList(new NumericExpression[] { universe.integer(10),
+							universe.integer(25) }));
+			// creating second array
+			array2 = universe.array(
+					integerType,
+					Arrays.asList(new NumericExpression[] { universe.integer(1),
+							universe.integer(5), universe.integer(8) }));
+			// creating one array that contains two arrays: array1 and array2 both of type integer type
+			array3 = universe.array(arrayType,
+					Arrays.asList(new SymbolicExpression[] { array1, array2 }));
+			
+			// creating another array that contains two arrays: array2 and array1 both of type integer type
+			// here, it is similar to array3 except the order of the elements
+			array4 = universe.array(arrayType,
+					Arrays.asList(new SymbolicExpression[] { array2, array1 }));
+			
+			// do some assertion to ensure that the arrays are equals
+			assertEquals(universe.length(array3), universe.integer(2));
+			assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
+			assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
+
+			// initialization of nested array type that contains the previous initialized array type
+
+			nestedType = universe.arrayType(arrayType);
+			try{
+				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4, array2}));
+
+			}
+			catch(SARLException ex){
+				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4}));
+				assertEquals(array3, universe.arrayRead(nestedArray, universe.integer(0)));
+				assertEquals(array4, universe.arrayRead(nestedArray, universe.integer(1)));
+
+			}
+			
+
+		}
+
+
+	
 }
