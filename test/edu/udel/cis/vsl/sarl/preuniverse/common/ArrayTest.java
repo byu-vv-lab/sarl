@@ -807,15 +807,23 @@ public class ArrayTest {
 			assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
 			assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
 
+			
 			// initialization of nested array type that contains the previous initialized array type
-
 			nestedType = universe.arrayType(arrayType);
+			
 			try{
+				// error is expected since array2 is different type
 				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4, array2}));
 
 			}
 			catch(SARLException ex){
+
+				// no Errors
+				// it will create a two level nested array
 				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4}));
+				
+				// do some assertions to ensure the data was inserted properly
+				
 				assertEquals(array3, universe.arrayRead(nestedArray, universe.integer(0)));
 				assertEquals(array4, universe.arrayRead(nestedArray, universe.integer(1)));
 
