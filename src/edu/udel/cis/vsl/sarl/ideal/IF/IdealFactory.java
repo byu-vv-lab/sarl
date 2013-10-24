@@ -70,7 +70,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Returns a constant
 	 * 
-	 * @param number
+	 * @param number - another form/representation of real number
 	 * 
 	 * @param type
 	 * 				Number
@@ -85,8 +85,9 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Creates a Monomial
 	 * 
-	 * @param constant
-	 * @param monic
+	 * @param constant - a concrete number. Wraps a NumberObject, which wraps a Number
+	 * @param monic - product of powers of primitive expressions x_1^{i_1}*...*x_n^{i_n}, 
+	 *                where the x_i are primitives and the i_j are positive concrete integers.
 	 * 
 	 * @param type
 	 * 				Constant and Monic
@@ -99,8 +100,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Multiplies two polynomials
 	 * 
-	 * @param poly1
-	 * @param poly2
+	 * @param poly1 - Numeric Expression of type Polynomial
+	 * @param poly2 - Numeric Expression of type Polynomial
 	 * 
 	 * @param type
 	 * 				Polynomial
@@ -116,8 +117,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Adds two polynomials
 	 * 
-	 * @param p1
-	 * @param p2
+	 * @param p1 - Numeric Expression of type Polynomial
+	 * @param p2 - Numeric Expression of type Polynomial
 	 * 
 	 * @param type
 	 * 				Polynomial
@@ -131,7 +132,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Subtracts the constant term for the given polynomial
 	 * 
-	 * @param polynomial
+	 * @param polynomial - Numeric Expression of type Polynomial
 	 * 
 	 * @param type
 	 * 				Polynomial
@@ -144,8 +145,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	/**
 	 * Divides the polynomial with a constant of type Constant
 	 * 
-	 * @param polynomial
-	 * @param constant
+	 * @param polynomial - Numeric Expression of type Polynomial
+	 * @param constant - a concrete number. Wraps a NumberObject, which wraps a Number
 	 * 
 	 * @param type
 	 * 				Polynomial
