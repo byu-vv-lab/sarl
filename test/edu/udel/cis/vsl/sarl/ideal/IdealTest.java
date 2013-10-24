@@ -328,7 +328,7 @@ public class IdealTest {
 	 * Returns SymbolicExpression of Real type with the value equal to 1
 	 */
 	@Test
-	public void realone() {
+	public void realOne() {
 		NumericExpression n2 = commonIdealFactory.oneReal();
 		
 		assertEquals(one, n2);
@@ -341,7 +341,7 @@ public class IdealTest {
 	 * 				SymbolicExpression of numeric type
 	 */
 	@Test
-	public void xplus1squared() {
+	public void xPlus1Squared() {
 		NumericExpression xp1 = idealFactory.add(x, intOne);
 		SymbolicExpression xp1squared = idealFactory.multiply(xp1, xp1);
 		SymbolicExpression x2p2xp1 = idealFactory.add(idealFactory.multiply(x,
