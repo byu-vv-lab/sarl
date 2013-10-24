@@ -709,7 +709,8 @@ public class ArrayTest {
 				integerType,
 				Arrays.asList(new NumericExpression[] { universe.integer(1),
 						universe.integer(5), universe.integer(8) }));
-		// creating an array that contains two arrays: array1 and array2 both of type integer type
+		// creating an array that contains two arrays: array1 and array2 both of
+		// type integer type
 		array3 = universe.array(arrayType,
 				Arrays.asList(new SymbolicExpression[] { array1, array2 }));
 		// do some assertion to ensure that the arrays are equals
@@ -718,32 +719,29 @@ public class ArrayTest {
 		assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
 
 		array4 = universe.array(realType, Arrays.asList(universe.rational(8)));
-		
+
 		// performing write an array inside another array
 		array3 = universe.arrayWrite(array4, universe.integer(1), array4);
-		
-		
-		
 
 	}
 
 	// written by Mohammad Alsulmi
 	@Test
 	public void testMixedArray2() {
-		
+
 		// showing an example of creating array of unions
 
 		SymbolicTupleType tupleType;
 		SymbolicExpression array;
 		SymbolicExpression tuple1, tuple2;
-		
+
 		// initialization of tuple type
 
 		tupleType = universe.tupleType(
 				universe.stringObject("TupleType"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						integerType }));
-		
+
 		// tuple1 and tuple2 will use the previous tuple type
 		tuple1 = universe.tuple(
 				tupleType,
@@ -770,68 +768,112 @@ public class ArrayTest {
 
 		assertEquals(tuple1, universe.arrayRead(array, universe.integer(1)));
 	}
+
 	// written by Mohammad Alsulmi
-		@Test
-		public void testMixedArray3() {
-			// Testing two levels of nested arrays
-			SymbolicArrayType arrayType;
-			SymbolicArrayType nestedType;
-			SymbolicExpression array1, array2, array3, array4;
-			SymbolicExpression nestedArray;
-			
-			
-			// initialization of integer type array
-			arrayType = universe.arrayType(integerType);
+	@Test
+	public void testMixedArray3() {
+		// Testing two levels of nested arrays
+		SymbolicArrayType arrayType;
+		SymbolicArrayType nestedType;
+		SymbolicExpression array1, array2, array3, array4;
+		SymbolicExpression nestedArray;
 
-			// creating first array
-			array1 = universe.array(
-					integerType,
-					Arrays.asList(new NumericExpression[] { universe.integer(10),
-							universe.integer(25) }));
-			// creating second array
-			array2 = universe.array(
-					integerType,
-					Arrays.asList(new NumericExpression[] { universe.integer(1),
-							universe.integer(5), universe.integer(8) }));
-			// creating one array that contains two arrays: array1 and array2 both of type integer type
-			array3 = universe.array(arrayType,
-					Arrays.asList(new SymbolicExpression[] { array1, array2 }));
-			
-			// creating another array that contains two arrays: array2 and array1 both of type integer type
-			// here, it is similar to array3 except the order of the elements
-			array4 = universe.array(arrayType,
-					Arrays.asList(new SymbolicExpression[] { array2, array1 }));
-			
-			// do some assertion to ensure that the arrays are equals
-			assertEquals(universe.length(array3), universe.integer(2));
-			assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
-			assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
+		// initialization of integer type array
+		arrayType = universe.arrayType(integerType);
 
-			
-			// initialization of nested array type that contains the previous initialized array type
-			nestedType = universe.arrayType(arrayType);
-			
-			try{
-				// error is expected since array2 is different type
-				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4, array2}));
+		// creating first array
+		array1 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(10),
+						universe.integer(25) }));
+		// creating second array
+		array2 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(1),
+						universe.integer(5), universe.integer(8) }));
+		// creating one array that contains two arrays: array1 and array2 both
+		// of type integer type
+		array3 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array1, array2 }));
 
-			}
-			catch(SARLException ex){
+		// creating another array that contains two arrays: array2 and array1
+		// both of type integer type
+		// here, it is similar to array3 except the order of the elements
+		array4 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array2, array1 }));
 
-				// no Errors
-				// it will create a two level nested array
-				nestedArray = universe.array(nestedType, Arrays.asList(new SymbolicExpression[]{array3,array4}));
-				
-				// do some assertions to ensure the data was inserted properly
-				
-				assertEquals(array3, universe.arrayRead(nestedArray, universe.integer(0)));
-				assertEquals(array4, universe.arrayRead(nestedArray, universe.integer(1)));
+		// do some assertion to ensure that the arrays are equals
+		assertEquals(universe.length(array3), universe.integer(2));
+		assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
+		assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
 
-			}
-			
+		// initialization of nested array type that contains the previous
+		// initialized array type
+		nestedType = universe.arrayType(arrayType);
+
+		try {
+			// error is expected since array2 is different type
+			nestedArray = universe.array(
+					nestedType,
+					Arrays.asList(new SymbolicExpression[] { array3, array4,
+							array2 }));
+
+		} catch (SARLException ex) {
+
+			// no Errors
+			// it will create a two level nested array
+			nestedArray = universe.array(nestedType,
+					Arrays.asList(new SymbolicExpression[] { array3, array4 }));
+
+			// do some assertions to ensure the data was inserted properly
+
+			assertEquals(array3,
+					universe.arrayRead(nestedArray, universe.integer(0)));
+			assertEquals(array4,
+					universe.arrayRead(nestedArray, universe.integer(1)));
 
 		}
 
+	}
 
-	
+	// written by Mohammad Alsulmi
+	@Test
+	public void testCompleteArrays() {
+
+		// testing complete arrays
+		SymbolicExpression array1, array2, array3, array4;
+		SymbolicExpression completeArray;
+		SymbolicArrayType arrayType;
+		SymbolicCompleteArrayType arraycompleteType;
+
+		arraycompleteType = universe.arrayType(intArrayType,
+				universe.integer(2));
+		arrayType = universe.arrayType(integerType);
+
+		// creating first array
+		array1 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(10),
+						universe.integer(25), universe.integer(50) }));
+		// creating second array
+		array2 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(1),
+						universe.integer(5), universe.integer(8),
+						universe.integer(11) }));
+		// creating one array that contains two arrays: array1 and array2 both
+		// of type integer type
+		array3 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array1, array2 }));
+
+		array4 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array2, array1 }));
+
+		completeArray = universe.array(arraycompleteType,
+				Arrays.asList(new SymbolicExpression[] { array3, array4 }));
+		assertEquals(array4,
+				universe.arrayRead(completeArray, universe.integer(1)));
+
+	}
+
 }
