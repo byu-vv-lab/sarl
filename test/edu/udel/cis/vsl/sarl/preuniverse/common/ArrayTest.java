@@ -692,28 +692,34 @@ public class ArrayTest {
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testMixedArray1() {
+		// showing an example of creating nested arrays
 		SymbolicArrayType arrayType;
 		SymbolicExpression array1, array2, array3, array4;
-
+		
+		// initialization of integer type array
 		arrayType = universe.arrayType(integerType);
 
+		// creating first array
 		array1 = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { universe.integer(10),
 						universe.integer(25) }));
+		// creating second array
 		array2 = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { universe.integer(1),
 						universe.integer(5), universe.integer(8) }));
+		// creating an array that contains two arrays: array1 and array2 both of type integer type
 		array3 = universe.array(arrayType,
 				Arrays.asList(new SymbolicExpression[] { array1, array2 }));
-
+		// do some assertion to ensure that the arrays are equals
 		assertEquals(universe.length(array3), universe.integer(2));
 		assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
 		assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
 
 		array4 = universe.array(realType, Arrays.asList(universe.rational(8)));
-
+		
+		// performing write an array inside another array
 		array3 = universe.arrayWrite(array4, universe.integer(1), array4);
 
 	}
@@ -721,15 +727,21 @@ public class ArrayTest {
 	// written by Mohammad Alsulmi
 	@Test
 	public void testMixedArray2() {
+		
+		// showing an example of creating array of unions
 
 		SymbolicTupleType tupleType;
 		SymbolicExpression array;
 		SymbolicExpression tuple1, tuple2;
+		
+		// initialization of tuple type
 
 		tupleType = universe.tupleType(
 				universe.stringObject("TupleType"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						integerType }));
+		
+		// tuple1 and tuple2 will use the previous tuple type
 		tuple1 = universe.tuple(
 				tupleType,
 				Arrays.asList(new NumericExpression[] { universe.integer(20),
@@ -738,7 +750,7 @@ public class ArrayTest {
 				tupleType,
 				Arrays.asList(new NumericExpression[] { universe.integer(8),
 						universe.rational(8.2), universe.integer(100000) }));
-
+		// creating an array that contain two tuples
 		array = universe.array(tupleType,
 				Arrays.asList(new SymbolicExpression[] { tuple1, tuple2 }));
 
@@ -750,6 +762,7 @@ public class ArrayTest {
 				tupleType,
 				Arrays.asList(new NumericExpression[] { universe.integer(1000),
 						universe.rational(1.5), universe.integer(11) }));
+		// performing an array write to a specific position in the array.
 		array = universe.arrayWrite(array, universe.integer(1), tuple1);
 
 		assertEquals(tuple1, universe.arrayRead(array, universe.integer(1)));
