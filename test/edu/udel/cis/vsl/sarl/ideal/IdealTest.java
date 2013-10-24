@@ -40,13 +40,10 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
-//import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
@@ -55,11 +52,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
-//import edu.udel.cis.vsl.sarl.ideal.common.IdealComparator;
-//import edu.udel.cis.vsl.sarl.number.real.RealNumber;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -69,41 +62,32 @@ public class IdealTest {
 	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
-	//private CommonObjectFactory commonObjectFactory;
 	private SymbolicTypeFactory typeFactory;
 	private CollectionFactory collectionFactory;
-	//private NumericExpressionFactory numericExpressionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-	//private RealNumberFactory realNumberFactory;
 	private CommonIdealFactory commonIdealFactory;
 
-	private RationalNumber ratThree; // 3
-	private RationalNumber ratFour; // 4
-	private RationalNumber ratZero; // 0
-	private RationalNumber ratOne; // 1
-	private RationalNumber ratOnePointFive; // 3/2
 	private RationalNumber ratNegPointTwoFive; // -1/4
+	private RationalNumber ratZero; // 0
+	private RationalNumber ratOne; // 1	
+	private RationalNumber ratOnePointFive; // 3/2
 	private RationalNumber ratOnePointTwoFive; // 5/4
+	private RationalNumber ratThree; // 3
 	private Constant constZero;
-	private Constant intZero;
 	private Constant constOnePointFive; // real constant 3/2
 	private Constant constOne;
 	private Constant constNegPointTwoFive; // real constant -1/4
-	//private Constant constThree;
-	//private Constant constFour;
 	private Constant intNegOne; // int constant -1
+	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
 	private Constant intThree; // int constant 3
 	private Constant intTen; // int constant 10
-	private SymbolicIntegerType integerOne; // Integer 1
-	private SymbolicIntegerType integerTen; // Integer 10
 	StringObject Xobj; // "X"
 	IntObject intObj3;
 	NumberObject numObj3;
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	// NumericSymbolicConstant mx;
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen;
 	private NumericExpression five;
@@ -123,7 +107,6 @@ public class IdealTest {
 	private RationalNumber realTwentyOne;
 	private RationalNumber realThirtyFive;
 	private RationalNumber realOneTwoFive;
-	//private NumericExpression intThree;
 	private SymbolicType real;
 	private SymbolicType integer;
 	NumericExpression intHundred;
@@ -147,10 +130,8 @@ public class IdealTest {
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		collectionFactory = system.collectionFactory();
-		//numericExpressionFactory = system.numericFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		//realNumberFactory = (RealNumberFactory) system.numberFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratZero = numberFactory.rational("0");
@@ -159,21 +140,18 @@ public class IdealTest {
 		ratNegPointTwoFive = numberFactory.rational("-.25");
 		ratOnePointTwoFive = numberFactory.rational("1.25");
 		ratThree = numberFactory.rational("3");
-		ratFour = numberFactory.rational("4");
 		constZero = idealFactory.constant(ratZero);
 		intZero = idealFactory.intConstant(0);
 		constOnePointFive = idealFactory.constant(ratOnePointFive);
 		constOne = idealFactory.constant(ratOne);
 		constNegPointTwoFive = idealFactory.constant(ratNegPointTwoFive);
-		//constThree = idealFactory.constant(ratThree);
-		//constFour = idealFactory.constant(ratFour);
 		intNegOne = idealFactory.intConstant(-1);
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		intThree = idealFactory.intConstant(3);
 		intTen = idealFactory.intConstant(10);
-		integerTen = typeFactory.integerType();
-		integerOne = typeFactory.integerType();
+		typeFactory.integerType();
+		typeFactory.integerType();
 		intObj3 = objectFactory.intObject(3);
 		numObj3 = objectFactory.numberObject(ratThree);
 		Xobj = objectFactory.stringObject("X");
@@ -201,7 +179,6 @@ public class IdealTest {
 		oneTwoFive = commonIdealFactory.constant(realOneTwoFive);
 		realThree = numberFactory.rational("3");
 		three = commonIdealFactory.constant(realThree);
-		//intThree = commonIdealFactory.expression(SymbolicOperator.CAST,	integer, three);
 		intHundred = idealFactory.intConstant(100);
 		intTwenty = idealFactory.intConstant(20);
 		e01 = commonIdealFactory.expression(SymbolicOperator.CAST, 
@@ -230,28 +207,27 @@ public class IdealTest {
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
-
+	
 	/**
 	 * Checks whether the Constant is created correctly or not.
 	 * 
 	 * @param type
 	 * 				 Constant
 	 */
-	
 	@Test
 	public void constantCreation() {
 		out.println("constantCreation: " + intTen);
 		assertEquals(10, ((IntegerNumber) intTen.number()).intValue());
 	}
-
+	
 	/**
 	 * Adds two Constants
 	 * 
 	 * @param type
 	 * 				Constant
 	 */
-	
 	@Test
 	public void constantAdd() {
 		Constant c3 = (Constant) idealFactory.add(constOnePointFive, constNegPointTwoFive);
@@ -282,7 +258,6 @@ public class IdealTest {
 	 * @param type
 	 * 				NumericSymbolicConstant
 	 */
-	
 	@Test
 	public void symbolicConstantCreate() {
 		out.println("symbolicConstantCreate: " + x);
@@ -296,7 +271,6 @@ public class IdealTest {
 	 * @param type
 	 * 				NumericSymbolicConstant
 	 */
-	
 	@Test
 	public void symbolicConstantEquality() {
 		SymbolicConstant x2 = idealFactory.symbolicConstant(
@@ -311,7 +285,6 @@ public class IdealTest {
 	 * @param type
 	 * 				NumericSymbolicConstant
 	 */
-	
 	@Test
 	public void symbolicConstantInequality1() {
 		assertFalse(x.equals(y));
@@ -337,7 +310,6 @@ public class IdealTest {
 	 * @param type
 	 * 				NumericSymbolicConstant
 	 */
-	
 	@Test
 	public void commutativity1() {
 		SymbolicExpression xpy = idealFactory.add(x, y);
@@ -350,7 +322,6 @@ public class IdealTest {
 	/**
 	 * Returns SymbolicExpression of Real type with the value equal to 1
 	 */
-	
 	@Test
 	public void realone() {
 		NumericExpression n2 = commonIdealFactory.oneReal();
@@ -363,7 +334,6 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
-	
 	@Test
 	public void xplus1squared() {
 		NumericExpression xp1 = idealFactory.add(x, intOne);
@@ -381,7 +351,6 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
-	
 	@Ignore
 	@Test
 	public void bigPower() {
@@ -405,7 +374,6 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of Numeric type
 	 */
-	
 	@Test
 	public void xp1xm1() {
 		NumericExpression xp1 = idealFactory.add(x, intOne);
@@ -420,24 +388,12 @@ public class IdealTest {
 		assertEquals(x2m1, xp1xm1);
 	}
 
-	/*
-	 * @Test public void rationalMinus() { RationalExpression r =
-	 * (RationalExpression) idealFactory.divide(x, y); NumericExpression minusr
-	 * =
-	 * idealFactory.multiply(y,idealFactory.subtract(idealFactory.intConstant(1
-	 * ), r)); Monomial negativex = idealFactory.monomial(c4, (Monic) x);
-	 * RationalExpression negativer = (RationalExpression)
-	 * idealFactory.divide(negativex, y); out.println("minus r: " + minusr
-	 * +"vs. " + negativer); assertEquals(negativer, minusr); }
-	 */
-
 	/**
 	 * Adds two polynomials
 	 * 
 	 * @param type
 	 * 				Polynomial
 	 */
-	
 	@Test
 	public void addPoly() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -446,20 +402,14 @@ public class IdealTest {
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
 		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, idealFactory.
 						multiply(x, x)), intTwo);
-		// NumericExpression p5 = idealFactory.add(idealFactory.multiply(five,
-		// x), idealFactory.intConstant(3));
+
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
-		// Polynomial poly4 = (Polynomial) p4;
-		// Polynomial poly5 = (Polynomial) p5;
-		
 		
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
-		// Polynomial b3 = commonIdealFactory.add(poly4, poly5);		
-		// Polynomial c = (Polynomial) idealFactory.intConstant(0);
-		//out.println("ADD_Polynomial=" + b1);
+
 		assertEquals(p4, b1);
 		assertEquals(p2, b2);
 	}
@@ -470,7 +420,6 @@ public class IdealTest {
 	 * @param type
 	 * 				Polynomial
 	 */
-	
 	@Test
 	public void multPoly() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -486,7 +435,6 @@ public class IdealTest {
 				intConstant(3), idealFactory.multiply(x, x)), intOne);
 		NumericExpression p5 = idealFactory.add(idealFactory.multiply(intTwo, x4), p4);
 		
-		
 		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);		
 		out.println("Multiply_Polynomial=" + b1);
@@ -500,7 +448,6 @@ public class IdealTest {
 	 * @param type
 	 * 				Polynomial
 	 */
-	
 	@Test
 	public void constantTermSubtraction() {
 		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), intOne);
@@ -514,13 +461,12 @@ public class IdealTest {
 		Polynomial poly2 = (Polynomial) m;
 		Polynomial poly3 = (Polynomial) o;
 		
-		
 		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
 		Polynomial b3 = commonIdealFactory.subtractConstantTerm(poly3);
 		Polynomial b4 = commonIdealFactory.subtractConstantTerm(constZero);
 		out.println("Constant Term Subtraction1=" + b3);
-		//out.println("Constant Term Subtraction=" + b1);
+		
 		assertEquals(x, b1);
 		assertEquals(x, b2);
 		assertEquals(p, b3);
@@ -534,7 +480,6 @@ public class IdealTest {
 	 * 				SymbolicExpression of integer or real type
 	 * 
 	 */
-	
 	@Test
 	public void minus() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),intOne);
@@ -542,11 +487,9 @@ public class IdealTest {
 		NumericExpression n = idealFactory.minus(p1);
 		NumericExpression m = idealFactory.minus(p2);
 		
-		
 		NumericExpression m1 = commonIdealFactory.minus(p2);
 		NumericExpression n1 = commonIdealFactory.minus(p1);
-		// out.println("n=" +n);
-		// out.println("ne=" +ne);
+
 		assertEquals(n, n1);
 		assertEquals(m, m1);
 	}
@@ -561,7 +504,6 @@ public class IdealTest {
 	 * @return type
 	 * 				BooleanExpression
 	 */
-	
 	@Test
 	public void notLessThan() {
 		NumericExpression n1 = idealFactory.subtract(x,intOne);
@@ -571,7 +513,7 @@ public class IdealTest {
 		BooleanExpression nn = commonIdealFactory.notLessThan(n1, n2);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
-		// out.println("Not Less Than=" +n);
+		
 		assertEquals(m2, n);
 		assertEquals(m1, nn);
 	}
@@ -586,7 +528,6 @@ public class IdealTest {
 	 * @return type
 	 * 				BooleanExpression
 	 */
-	
 	@Test
 	public void notLessThanEquals() {		
 		NumericExpression n1 = idealFactory.subtract(x, intOne);
@@ -596,7 +537,7 @@ public class IdealTest {
 				
 		BooleanExpression n01 = commonIdealFactory.notLessThanEquals(n1, n2);
 		BooleanExpression n02 = commonIdealFactory.notLessThanEquals(n2, n1);
-		// out.println("Not Less Than Equals=" +n);
+		
 		assertEquals(n, n01);
 		assertEquals(m, n02);
 	}
@@ -612,7 +553,6 @@ public class IdealTest {
 	 * 				BooleanExpression
 	 * 
 	 */
-
 	@Test
 	public void equals() {
 		NumericExpression n11 = idealFactory.add(x, y);
@@ -621,7 +561,6 @@ public class IdealTest {
 		NumericExpression n2 = idealFactory.subtract(y,
 				idealFactory.intConstant(2));
 		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));
-		
 		
 		BooleanExpression n = commonIdealFactory.equals(n1, n2);
 		BooleanExpression n0 = commonIdealFactory.equals(n1, n3);
@@ -651,19 +590,19 @@ public class IdealTest {
 	 *            
 	 * @return the polynomial representing numerator%denominator
 	 */
-	
 	@Test
 	public void intModulusPoly() {
 		NumericExpression n1 = idealFactory.subtract(idealFactory.multiply(x, x),
 				intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
 		NumericExpression ne1 = idealFactory.modulo(n1, n2);
-				
 		NumericExpression n = commonIdealFactory.modulo(n1, n2);
 		NumericExpression m = commonIdealFactory.modulo(intZero, n2);
 		NumericExpression p = commonIdealFactory.modulo(n1, intOne);
 		NumericExpression q = commonIdealFactory.modulo(constOnePointFive, constOne);
+		
 		out.println("modulo=" + q);
+		
 		assertEquals(ne1, n);
 		assertEquals(intZero, m);
 		assertEquals(intZero, p);
@@ -675,7 +614,6 @@ public class IdealTest {
 	 * @param type
 	 * 				the SymbolicExpression of numeric type of a Polynomial
 	 */
-	
 	@Test
 	public void divide() {
 		NumericExpression n1 = idealFactory.multiply(intTen, x);
@@ -685,12 +623,9 @@ public class IdealTest {
 		NumericExpression n5 = idealFactory.multiply(fifteen, three);
 		NumericExpression n6 = idealFactory.multiply(five, three);
 		NumericExpression n7 = idealFactory.multiply(zero, three);
-		//NumericExpression n8 = idealFactory.multiply(IntegerOne, x);
-		//NumericExpression n9 = idealFactory.multiply(IntegerTen, x);
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
 		NumericExpression np = idealFactory.divide(n, m);
-		
 		
 		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
 		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
@@ -698,7 +633,9 @@ public class IdealTest {
 		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
 		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
 		NumericExpression p1 = commonIdealFactory.divide(n, m);
+		
 		out.println("b1=" + b1);
+		
 		assertEquals(np, p1);
 		assertEquals(intTen, b1);
 		assertEquals(intZero, b2);
@@ -718,7 +655,6 @@ public class IdealTest {
 	 * 				BooleanExpression
 	 * 
 	 */
-	
 	@Test
 	public void neq() {
 		NumericExpression n11 = idealFactory.add(x, y);
@@ -726,7 +662,6 @@ public class IdealTest {
 		NumericExpression n1 = idealFactory.add(y, intTwo);
 		NumericExpression n2 = idealFactory.subtract(y,	intTwo);
 		NumericExpression n3 = idealFactory.add(y, intTwo);
-		
 		
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
 		BooleanExpression n0 = commonIdealFactory.neq(n1, n3);
@@ -746,12 +681,11 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicType (Example: Real)
 	 */
-	
 	@Test
 	public void zero() {
 		Constant c1 = commonIdealFactory.zero(real);
+		
 		assertEquals(constZero, c1);
-		// out.println("zero=" +c);
 	}
 
 	/**
@@ -764,9 +698,8 @@ public class IdealTest {
 	@Test
 	public void monomial() {
 		Monic monic = (Monic) idealFactory.multiply(x, x);
-		
 		Monomial m = commonIdealFactory.monomial(constZero, monic);
-		// out.println("monomial=" +m);
+		
 		assertEquals(constZero, m);
 	}
     
@@ -778,28 +711,20 @@ public class IdealTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
-	
 	@Test
 	public void rationalMultiply() {
 		NumericExpression n1 = commonIdealFactory.multiply(three, five);
 		NumericExpression n2 = commonIdealFactory.multiply(three, zero);
 		NumericExpression n3 = commonIdealFactory.multiply(zero, five);
 		NumericExpression n4 = commonIdealFactory.multiply(three, one);
+		
 		assertEquals(fifteen, n1);
 		assertEquals(zero, n2);
 		assertEquals(zero, n3);
 		assertEquals(three, n4);
 	}
 
-	/*
-	 * @Test public void polynomialDividedByConstant(){ 
-	 * NumericExpression n =
-	 * idealFactory.multiply(idealFactory.intConstant(3),
-	 * idealFactory.multiply(x,x)); Polynomial poly = (Polynomial) n; Polynomial
-	 * p = commonIdealFactory.divide(poly, c3);
-	 * out.println("poly divided by const.=" +p); }
-	 */
-
+	
 	@Test
 	public void cast() {
 		NumericExpression n11 = idealFactory.subtract(idealFactory.multiply(
@@ -820,8 +745,7 @@ public class IdealTest {
 		NumericExpression q = commonIdealFactory.cast(e7, real); // SUBTRACT
 		NumericExpression r = commonIdealFactory.cast(e3, real);
 		NumericExpression s = commonIdealFactory.cast(e01, integer);
-		//SymbolicOperator s = r.operator();
-		//out.println("operator=" + s);
+		
 		out.println("n22=" + n22);
 		out.println("ADD=" + m);
 		out.println("MULTIPLY=" + n);
@@ -831,13 +755,13 @@ public class IdealTest {
 		out.println("SUBTRACT=" + q);
 		out.println("COND=" +r);
 		out.println("CAST=" +s.type());
+		
 		assertEquals(m1, m);
 		assertEquals(n1, n);
 		assertEquals(o1, o);
 		assertEquals(p1, p);
 		assertEquals(oneTwoFive, p0);
 		assertEquals(q1, q);
-		//assertEquals(intThree, s);
 	}
 
 	/**
@@ -846,13 +770,13 @@ public class IdealTest {
 	 * @param type
 	 * 				RationalNumber
 	 */
-	
 	@Test
 	public void number(){
 		NumberObject n = objectFactory.numberObject(ratThree);
-		
 		NumericExpression ne = commonIdealFactory.number(n);
+		
 		out.println("Number=" +ne);
+		
 		assertEquals(three, ne);
 	}
 	
@@ -862,13 +786,14 @@ public class IdealTest {
 	 * @return type
 	 * 				NumericPrimitive
 	 */
-	
 	@Test
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
+		
 		out.println("Exp=" + n1);
 		out.println("Expr2=" +e9);
+		
 		assertEquals(e9, n1);
 	}
 	
@@ -882,7 +807,6 @@ public class IdealTest {
 	 *            the terms of the polynomial expressed as a map; all of the
 	 *            terms must have the specified type
 	 */
-	
 	@Test
 	public void polynomial() {
 		Monomial monomial = idealFactory.monomial(intTen, (Monic) x);
@@ -907,48 +831,28 @@ public class IdealTest {
 		Constant eleven = commonIdealFactory.intConstant(11);
 		assertEquals(subEleven, eleven);
 	}
-	/*
-	@Test
-	public void nonneg(){
-		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
-		Monomial factorization = idealFactory.monomial(constFour, (Monic) x);
-		Polynomial numeratorIsFive = commonIdealFactory.polynomial(termMap, factorization);
-		SymbolicMap<Monic, Monomial> map01 = numeratorIsFive.termMap(commonIdealFactory);		
-		Polynomial poly = commonIdealFactory.polynomial(map01, factorization);
-		BooleanExpression bool = commonIdealFactory.isNonnegative(poly);
-		out.println("bool="  +poly);
-		assertEquals(bool, commonIdealFactory.booleanFactory().trueExpr());
-	}
-	*/
+
 	@Test
 	//(21x^3 - 35x^2) / (7x) -------> 3x^2 - 5x
 	public void complexRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.realType()));
+		
 		IntObject exp3 = objectFactory.intObject(3);
 		IntObject exp2 = objectFactory.intObject(2);
 		
-		
 		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
 				power(x, exp3));
-		//out.println("Complex 1=" +complex1);
 		NumericExpression complex2 = commonIdealFactory.multiply(thirtyFive, idealFactory.
 				power(x, exp2));
-		//out.println("Complex 2=" +complex2);
 		NumericExpression numer = commonIdealFactory.subtract(complex1, complex2);		
-		//out.println("Num=" +numer);
 		NumericExpression denom = commonIdealFactory.multiply(x, seven);
-		//out.println("Den=" +denom);
 		NumericExpression complex = commonIdealFactory.divide(numer, denom);
-		//out.println("Complex =" +complex);
 		NumericExpression result1 = commonIdealFactory.multiply(idealFactory.power(x, 
 				exp2), three);
-		//out.println("result 1=" +result1);
 		NumericExpression result2 = commonIdealFactory.multiply(x, five);
-		//out.println("result 2=" +result2);
 		NumericExpression result = commonIdealFactory.subtract(result1, result2);
-		//out.println("Result=" +result);
-		//out.println("Complex=" +complex);
+		
 		assertEquals(result, complex);
 	}
 
@@ -961,31 +865,22 @@ public class IdealTest {
 						typeFactory.realType()));
 		
 		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x2, y2);
-		RationalExpression r2 = (RationalExpression) commonIdealFactory.
-		divide(idealFactory.multiply(three,x2), idealFactory.multiply(five,x2));
+		
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
 				commonIdealFactory.zeroReal());
 		BooleanExpression b2 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
-		// BooleanExpression nb2 = booleanFactory.not(b2);
-		 
-		
-		//RationalExpression r2 = (RationalExpression) commonIdealFactory.multiply(five, y2);
 		BooleanExpression nb2 = idealFactory.notLessThan(commonIdealFactory.
 				zeroReal(), r1);
-		//BooleanExpression nb3 = commonIdealFactory.notLessThan(r2, 
-			//	commonIdealFactory.zeroReal());
-		BooleanExpression nb4 = commonIdealFactory.notLessThanEquals(
-				commonIdealFactory.zeroReal(), r1);
+		
 		NumericExpression nb5 = commonIdealFactory.divide(
 				commonIdealFactory.zeroReal(), r1);
-		//RationalExpression nb6 = (RationalExpression) commonIdealFactory.divide(fifteen, five);
 
 		out.println("b1 = " + b1);
 		out.println("b2 = " + b2);
 		out.println("!b2 = " + nb2);
-		//assertEquals(b1, nb2);
+
 		assertEquals(zero, nb5);
 	}
 }
