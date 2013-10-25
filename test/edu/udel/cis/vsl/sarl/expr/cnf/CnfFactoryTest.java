@@ -105,7 +105,6 @@ public class CnfFactoryTest {
 		BooleanExpression e1 = factory.not(factory.and(p, q));
 		BooleanExpression e2 = factory.or(factory.not(p), factory.not(q));
 
-		//out.println("!(p&&q) = " + e1);
 		assertEquals(e1, e2);
 	}
 	
@@ -149,28 +148,33 @@ public class CnfFactoryTest {
 	@Test
 	public void forallTest(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
+		
 		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
 		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
 		BooleanExpression foralltrue = bef.forall(b, q);
 		BooleanExpression foralltrue2 = bef.forall(b, p);
 		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
 		BooleanExpression FORALL2 = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue2);
+		BooleanExpression andtrue = bef.and(p, q);
+		
 		CnfExpression cnf = (CnfExpression) FORALL;
 		CnfExpression cnf2 = (CnfExpression) FORALL2;
-		BooleanExpression andtrue = bef.and(p, q);
+		
+		
 		assertEquals(bef.and((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.forall(b, andtrue));
 	}
 	
 	@Test
 	public void orTest(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
-		BooleanExpression testingtrue = sUniverse.bool(true);
-		BooleanExpression testingfalse = sUniverse.bool(false);
+
 		StringObject pobject = sUniverse.stringObject("p");
 		StringObject qobject = sUniverse.stringObject("q");
 		StringObject robject = sUniverse.stringObject("r");
+		
 		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
 		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
 		BooleanExpression r = (BooleanExpression) sUniverse.symbolicConstant(robject, booleanType);
@@ -180,6 +184,8 @@ public class CnfFactoryTest {
 		BooleanExpression pandfalse = bef.and(p, falseExpr);
 		BooleanExpression qortrue = bef.or(q, bef.not(p));
 		BooleanExpression porfalse = bef.or(p, r);
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression testingfalse = sUniverse.bool(false);
 		
 		//testing for various combinations of true and false and and or results
 		assertEquals(trueExpr,(bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
@@ -279,8 +285,10 @@ public class CnfFactoryTest {
 	@Test
 	public void cnfSymbolicConstantTest() {
 		StringObject name = sUniverse.stringObject("Hello");
+		
 		CnfFactory Test = new CnfFactory(stf, of, cf);
 		CnfSymbolicConstant hellotest = (CnfSymbolicConstant) Test.booleanSymbolicConstant(name);
+		
 		StringObject hellomsg = sUniverse.stringObject("Hello");
 		StringObject hellomsgfalse = sUniverse.stringObject("hello");
 		
@@ -294,8 +302,10 @@ public class CnfFactoryTest {
 	@Test
 	public void existsTest2(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
+		
 		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
 		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
 		BooleanExpression ortrue = bef.or(p, q);
@@ -303,6 +313,7 @@ public class CnfFactoryTest {
 		BooleanExpression existstrue2 = bef.exists(b, p);
 		BooleanExpression EXISTS = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue);
 		BooleanExpression EXISTS2 = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue2);
+		
 		CnfExpression cnf = (CnfExpression) EXISTS;
 		CnfExpression cnf2 = (CnfExpression) EXISTS2;
 		
