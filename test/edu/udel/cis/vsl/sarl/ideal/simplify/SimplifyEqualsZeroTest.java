@@ -15,6 +15,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
+ * Testing on IdealSimplifier with expressions that have a variable and its respective terms drop
+ * due to being set equal to 0.  Aims to confirm that remaining terms, be they constant or variable, agree with expectations.
  * @author danfried
  *
  */
@@ -48,7 +50,8 @@ public class SimplifyEqualsZeroTest {
 	}
 
 	/**
-	 * Testing of polynomial simplification where factoring results in non-real terms
+	 * Testing of IdealSimplifier with expressions when variable is dropped, and 
+	 * only a constant (integer) remains.
 	 */
 	@Test
 	public void assumptionTest() {
@@ -60,9 +63,16 @@ public class SimplifyEqualsZeroTest {
 		//out.println(idealSimplifier.simplifyExpression(symbExpr_xpyInt));
 		//out.println("xx - 1 :  " + xSqrLess1.toString());
 		//IdealSimplifier.
-		out.println(mixedXYTermPoly);
-		out.println(bigMixedXYTermPoly);
-		
+		//out.println(mixedXYTermPoly);
+		//out.println(bigMixedXYTermPoly);
+	}
+	
+	/**
+	 * Testing of IdealSimplifier with expressions of two two variables, when one is dropped
+	 * by being set equal to 0.
+	 */
+	@Test
+	public void assumptionOnPolyTest(){
 		assumption = preUniv.equals(x, rat0);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		
