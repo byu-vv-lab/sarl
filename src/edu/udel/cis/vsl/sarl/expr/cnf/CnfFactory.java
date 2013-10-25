@@ -128,6 +128,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	@Override
 	public BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1) {
+		if (arg0 == not(arg1))
+			return falseExpr;
 		if (arg0 == trueExpr)
 			return arg1;
 		if (arg1 == trueExpr)

@@ -13,6 +13,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class ExpressionBenchmark {
@@ -44,8 +48,7 @@ public class ExpressionBenchmark {
 		booleanType = sUniverse.booleanType();
 		 x = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,booleanType );
 		 y = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Yobj,booleanType );
-			
-	
+				
 		
 		BooleanExpression[] ExpressionList1 = {};
 		Collection<BooleanExpression> col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));

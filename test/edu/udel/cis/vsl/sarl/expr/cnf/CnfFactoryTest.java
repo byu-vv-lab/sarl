@@ -3,11 +3,8 @@ package edu.udel.cis.vsl.sarl.expr.cnf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -18,13 +15,10 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -44,38 +38,17 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
 public class CnfFactoryTest {
 	
 	private SymbolicUniverse sUniverse;
-	private static PrintStream out = System.out;
 	
 	private SymbolicTypeFactory stf;
 	private CollectionFactory cf;
 	private ObjectFactory of;
-	private NumberFactory nf;
-	private SymbolicType herbrandType;
 	StringObject string1;
 	StringObject string2;
 	StringObject string3;
 	
-	private SymbolicConstant zz;
-	
-	private StringObject Xobj; // "X"
-	private StringObject Yobj; // "Y"
-	private SymbolicType realType, integerType, arrayType, tupleType;
 	private NumericSymbolicConstant x; // real symbolic constant "X"
-	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
-	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private BooleanSymbolicConstant b;
-	private SymbolicConstant t;
-	private NumericExpression two; // real 2.0
-	private NumericExpression three; // real 3.0
-	private NumericExpression twoInt; // int 2.0
-	private NumericExpression threeInt; // int 3.0
-	private BooleanObject trueBoolObj; // True
-	private BooleanObject falseBoolObj; // False
-	private IntObject fiveIntObj; // 5
-	private IntObject zeroIntObj; // 0
-	private IntObject negIntObj; // -10
-	private NumericExpression xpy;
-	private NumericExpression xty;
+
 
 	static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
@@ -110,48 +83,14 @@ public class CnfFactoryTest {
 	public void setUp() throws Exception {
 		sUniverse = Universes.newIdealUniverse();
 
-		
-		
-		Xobj = sUniverse.stringObject("X");
-		Yobj = sUniverse.stringObject("Y");
-		trueBoolObj = sUniverse.booleanObject(true);
-		falseBoolObj = sUniverse.booleanObject(false);
-		fiveIntObj = sUniverse.intObject(5);
-		zeroIntObj = sUniverse.intObject(0);
-		negIntObj = sUniverse.intObject(-10);
-		realType = sUniverse.realType();
 		booleanType = sUniverse.booleanType();
-		integerType = sUniverse.integerType();
-		arrayType = sUniverse.arrayType(integerType);
-		List<SymbolicType> fieldType1 = new ArrayList<SymbolicType>();
-		fieldType1.add(integerType);
-		
-		
-		tupleType = sUniverse.tupleType(sUniverse.stringObject("typ1"), fieldType1);
-		
-	
-		
-		zz =  sUniverse.symbolicConstant(Xobj, arrayType);
-		t = sUniverse.symbolicConstant(Xobj, tupleType);
-		b = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,booleanType );
-		x = (NumericSymbolicConstant)  sUniverse.symbolicConstant(Xobj, realType);
-		xInt = (NumericSymbolicConstant) sUniverse.symbolicConstant(Xobj, integerType);
-		y = (NumericSymbolicConstant) sUniverse.symbolicConstant(Yobj, realType);
-		two = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(2));
-		three = (NumericExpression) sUniverse.cast(realType, sUniverse.integer(3));
-		twoInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(2));
-		threeInt = (NumericExpression) sUniverse.cast(integerType, sUniverse.integer(3));
-		xpy = sUniverse.add(x,y);
-		xty = sUniverse.multiply(x,y);
 		
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		
 		stf = system.typeFactory();
 		of = system.objectFactory();
 		cf = system.collectionFactory();
-		nf = system.numberFactory();
 		
-		herbrandType = stf.herbrandRealType();
 	}
 
 	@After
@@ -245,6 +184,10 @@ public class CnfFactoryTest {
 		//testing for various combinations of true and false and and or results
 		assertEquals(trueExpr,(bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
 		assertEquals(trueExpr, bef.or(qortrue, porfalse));
+		System.out.println(bef.and(p, bef.not(p)));
+		
+		assertEquals(falseExpr, bef.and(p, bef.not(p)));
+		System.out.println(bef.and(bef.or(p,r), bef.not(p)));
 		
 		//System.out.println(bef.or(bef.not(p), (bef.or(p, bef.or(bef.not(q), bef.or(bef.not(p), r))))));
 		
