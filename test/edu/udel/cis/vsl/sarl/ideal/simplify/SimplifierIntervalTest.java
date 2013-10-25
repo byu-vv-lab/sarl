@@ -14,6 +14,9 @@ import org.junit.Test;
 //private static SymbolicConstant t;
 
 /**
+ * Testing on assumptionAsInterval method in IdealSimplifier to look for expected behavior
+ * when giving mixed-type value, and also to confirm bounds of the supplied interval
+ * 
  * @author danfried
  *
  */
@@ -32,7 +35,6 @@ public class SimplifierIntervalTest {
 		assumption = preUniv.lessThan(xInt, int0);
 		//preUniv.equals(preUniv.multiply(rat5,x), preUniv.multiply(y, y));
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
-		
 	}
 
 	/**
@@ -50,15 +52,26 @@ public class SimplifierIntervalTest {
 	}
 	
 	/**
-	 * Testing of idealsimplifier on assumptionAsInterval method...
+	 * Testing of IdealSimplifier on assumptionAsInterval method...
 	 * Tests passing matched and mismatched symbolic constants as assumption
 	 */
 	@Test
-	public void badTest() {
+	public void mixedTypeNullTest() {
 		//non-matching symbolic constant in assumptionAsInterval and 
 		//the initial assumption should return null
 		assertNull(idealSimplifier.assumptionAsInterval(x));
+	}
+	
+	/**
+	 * Testing of IdealSimplifier on assumptionAsInterval method, when matched-type (integer)
+	 * expressions are used for the assumption and also expression assumption is applied to.
+	 */
+	@Test
+	public void matchedTypeTest(){
 		//the upper bound should be -1
+		//out.println(intNeg1.toString());
+		//out.println(idealSimplifier.assumptionAsInterval(xInt));
+		//out.println(assumption.atomString());
 		assertEquals(intNeg1.toString(),idealSimplifier.assumptionAsInterval(xInt).upper().toString());
 	}
 
