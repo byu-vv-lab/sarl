@@ -593,12 +593,12 @@ public class IdealTest {
 	 * Ex: (2u)%2 = (u%1)2 = 0
 	 * 
 	 * @param numerator
-	 *            an integer polynomial assumed to be nonnegative
+	 *            a nonnegative integer polynomial
 	 *            
 	 * @param denominator
-	 *            an integer polynomial assumed to be positive
+	 *            a positive integer polynomial
 	 *            
-	 * @return the polynomial representing numerator%denominator
+	 * @return the polynomial of the form numerator%denominator
 	 */
 	@Test
 	public void intModulusPoly() {
@@ -704,7 +704,6 @@ public class IdealTest {
 	 * @param type
 	 * 				Constant, Monic
 	 */
-	
 	@Test
 	public void monomial() {
 		Monic monic = (Monic) idealFactory.multiply(x, x);
@@ -734,7 +733,12 @@ public class IdealTest {
 		assertEquals(three, n4);
 	}
 
-	
+	/**
+	 * Performs type casting from one type to another type, which is passed as an argument
+	 * 
+	 * @param type
+	 * 				NumericExpression along with the new type
+	 */
 	@Test
 	public void cast() {
 		NumericExpression n11 = idealFactory.subtract(idealFactory.multiply(
@@ -860,9 +864,11 @@ public class IdealTest {
 	 * 
 	 * @param type
 	 * 				Symbolic Expressions of same numeric type
+	 * 
+	 * the test below does this:
+	 * 		(21x^3 - 35x^2) / (7x) -------> 3x^2 - 5x
 	 */
 	@Test
-	//(21x^3 - 35x^2) / (7x) -------> 3x^2 - 5x
 	public void complexRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.realType()));
@@ -884,6 +890,13 @@ public class IdealTest {
 		
 		assertEquals(result, complex);
 	}
+	
+	/**
+	 * Compares two Rational Expressions
+	 * 
+	 * @param type
+	 * 				Symbolic Expressions of same numeric type
+	 */
 @Ignore
 	@Test
 	public void comparingRationalExpressions() {
