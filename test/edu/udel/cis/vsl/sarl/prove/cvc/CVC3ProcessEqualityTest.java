@@ -60,6 +60,11 @@ public class CVC3ProcessEqualityTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testProcessEqualityArrayCompleteEqual creates two equal lists of
+	 * symbolicExpressions and asserts that they are in fact equal
+	 */
 
 	@Test
 	public void testProcessEqualityArrayCompleteEqual() {
@@ -82,6 +87,11 @@ public class CVC3ProcessEqualityTest {
 
 		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
 	}
+	
+	/**
+	 * testProcessEqualityArrrayCompleteNotEqual creates two unequal lists of 
+	 * symbolicExpressions and asserts whether the two ArrayLists are equal
+	 */
 	
 	@Test
 	public void testProcessEqualityArrayCompleteNotEqual() {
