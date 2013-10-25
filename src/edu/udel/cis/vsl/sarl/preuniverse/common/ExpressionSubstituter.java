@@ -285,7 +285,7 @@ public class ExpressionSubstituter {
 					case EXPRESSION_COLLECTION:
 						newArg = substitute((SymbolicCollection<?>) arg, map);
 						break;
-					case TYPE:
+					case TYPE: // currently unreachable, no expressions have TYPE arg
 						newArg = substitute((SymbolicType) arg, map);
 						break;
 					case TYPE_SEQUENCE:
