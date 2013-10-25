@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
+import cvc3.QueryResult;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -31,10 +32,12 @@ public class CVC3TranslateTest {
 	private static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
 	private static SymbolicIntegerType intType = universe.integerType();
+	private static SymbolicType realType = universe.realType();
 	private static SymbolicType boolType = universe.booleanType();
 	// expressions
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
+	private static NumericExpression oneFiveDouble = universe.rational(1.5);
 	private static NumericExpression oneInt = universe.integer(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
@@ -61,7 +64,7 @@ public class CVC3TranslateTest {
 	}
 
 	@Test
-	public void testTranslateCast(){
+	public void testTranslateCastRealToInt(){
 		Expr oneIntExpr = cvcProver.translate(oneInt);
 
 		SymbolicExpression castExp = expressionFactory
@@ -69,6 +72,28 @@ public class CVC3TranslateTest {
 		Expr expr4 = cvcProver.translate(castExp);
 		Expr expected4 = oneIntExpr;
 		assertEquals(expected4, expr4);
+	}
+	
+	@Test
+	public void testTranslateCastIntToReal(){
+		Expr oneRealExpr = cvcProver.translate(one);
+
+		SymbolicExpression castExp = expressionFactory
+				.expression(SymbolicOperator.CAST, realType, oneInt);
+		Expr expr4 = cvcProver.translate(castExp);
+		Expr expected4 = oneRealExpr;
+		assertEquals(expected4, expr4);
+	}
+
+	@Test
+	public void testTranslateCastDoubleToInt(){
+		Expr oneFiveDoubleExpr = cvcProver.translate(oneFiveDouble);
+		
+		SymbolicExpression castExp = expressionFactory
+				.expression(SymbolicOperator.CAST, intType, oneFiveDouble);
+		Expr expr4 = cvcProver.translate(castExp);
+		Expr expr5 = vc.eqExpr(expr4, oneFiveDoubleExpr);
+		assertEquals(QueryResult.VALID, vc.query(expr5));
 	}
 	
 	@Test
