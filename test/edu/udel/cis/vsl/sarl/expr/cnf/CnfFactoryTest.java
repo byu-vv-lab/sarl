@@ -240,6 +240,8 @@ public class CnfFactoryTest {
 		CnfFactory test = new CnfFactory(stf, of, cf);
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression falseEx = bef.falseExpr();
+		
+		
 		assertEquals(false, test.not(falseEx).isFalse());
 	}
 	
@@ -281,6 +283,8 @@ public class CnfFactoryTest {
 		CnfSymbolicConstant hellotest = (CnfSymbolicConstant) Test.booleanSymbolicConstant(name);
 		StringObject hellomsg = sUniverse.stringObject("Hello");
 		StringObject hellomsgfalse = sUniverse.stringObject("hello");
+		
+		
 		assertEquals(hellomsg, hellotest.name());
 		assertNotEquals(hellomsgfalse, hellotest.name());
 		assertEquals("Hello", hellotest.toString());
@@ -301,7 +305,8 @@ public class CnfFactoryTest {
 		BooleanExpression EXISTS2 = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue2);
 		CnfExpression cnf = (CnfExpression) EXISTS;
 		CnfExpression cnf2 = (CnfExpression) EXISTS2;
-		//System.out.println(cnf.argument(0));
+		
+		
 		assertEquals(bef.or((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.exists(b, ortrue));
 		}
 	
