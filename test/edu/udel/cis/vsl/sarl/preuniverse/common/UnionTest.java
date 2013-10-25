@@ -21,6 +21,7 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,10 +35,13 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class UnionTest {
@@ -58,6 +62,7 @@ public class UnionTest {
 	SymbolicExpression a;
 	
 	private BooleanExpressionFactory booleanFactory;
+	private SymbolicTypeFactory typeFactory;
 
 	@Before
 	public void setUp() throws Exception {
@@ -65,6 +70,7 @@ public class UnionTest {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		
 		booleanFactory = system.booleanFactory();
+		typeFactory = system.typeFactory();
 		intType = universe.integerType();
 		integerType = universe.integerType();
 		realType = universe.realType();
@@ -251,6 +257,63 @@ public class UnionTest {
 		result  = universe.compatible(type1, type5);
 		assertEquals(expected, result);
 
+	}
+	
+	@Test
+	// Test written by Jeff DiMarco (jdimarco) 9/24/13
+	public void typeSequenceSymbolicTypeArray() {
+		SymbolicType[] typeArray = {typeFactory.booleanType(), typeFactory.integerType()};
+		SymbolicTypeSequence typeSequence;
+		SymbolicTypeSequence expectedTypeSequence;
+		
+		CommonPreUniverse commonUniverse = (CommonPreUniverse)universe;
+		typeSequence = commonUniverse.typeSequence(typeArray);
+		expectedTypeSequence = typeFactory.sequence(typeArray);
+		
+		assertEquals(expectedTypeSequence.numTypes(), typeSequence.numTypes());
+		assertEquals(expectedTypeSequence.getType(0), typeSequence.getType(0));
+		assertEquals(expectedTypeSequence.getType(1), typeSequence.getType(1));
+	}
+
+	@Test
+	// Written by Jeff DiMarco(jdimarco) 9/20/13
+	public void unionTypeStringObjectSymbolicTypeSequence() {
+		LinkedList<SymbolicType> memberTypes = new LinkedList<SymbolicType>();
+		SymbolicUnionType unionType;
+		SymbolicTypeSequence sequence;
+		CommonPreUniverse commonUniverse = (CommonPreUniverse)universe;
+
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		sequence = ((CommonPreUniverse) universe).typeSequence(memberTypes);
+		
+		unionType = commonUniverse.unionType(universe.stringObject("MyUnion"),
+				sequence);
+		
+		assertEquals(SymbolicTypeKind.UNION, unionType.typeKind());
+		sequence = unionType.sequence();
+		assertEquals(integerType, sequence.getType(0));
+		assertEquals(realType, sequence.getType(1));
+		assertEquals(2, sequence.numTypes());
+		assertEquals(universe.stringObject("MyUnion"), unionType.name());
+	}
+
+	@Test
+	public void unionTypeTest() {
+		LinkedList<SymbolicType> memberTypes = new LinkedList<SymbolicType>();
+		SymbolicUnionType unionType;
+		SymbolicTypeSequence sequence;
+
+		memberTypes.add(integerType);
+		memberTypes.add(realType);
+		unionType = universe.unionType(universe.stringObject("MyUnion"),
+				memberTypes);
+		assertEquals(SymbolicTypeKind.UNION, unionType.typeKind());
+		sequence = unionType.sequence();
+		assertEquals(integerType, sequence.getType(0));
+		assertEquals(realType, sequence.getType(1));
+		assertEquals(2, sequence.numTypes());
+		assertEquals(universe.stringObject("MyUnion"), unionType.name());
 	}
 
 }
