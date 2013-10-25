@@ -14,6 +14,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
+ * Set of tests on IdealSimplifier based about assigning values to single variables
+ * and a polynomial, and then confirming expected full and reduced contexts.
  * @author danfried
  *
  */
@@ -45,12 +47,18 @@ public class IdealSimplifierBBTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Simple test to make sure simplifier has agreement between full and reduced context when variable, x,
+	 * is set to 0.0
+	 */
 	@Test
 	public void xGreater0Test() {
 		assumption = preUniv.lessThan(rat0, xNE);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		//out.println(idealSimplifier.simplifyExpression(bigMixedXYTermPoly));
 		assertEquals("0 < x", idealSimplifier.getReducedContext().toString());
+		//out.println("full: " + idealSimplifier.getFullContext() + " reduced: " + idealSimplifier.getReducedContext());
+		//out.println(idealSimplifier.apply(bigMixedXYTermPoly));
 		assertEquals(idealSimplifier.getReducedContext(), idealSimplifier.getFullContext());
 	}
 	
