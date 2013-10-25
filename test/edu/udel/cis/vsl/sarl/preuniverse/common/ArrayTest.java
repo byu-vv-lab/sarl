@@ -840,7 +840,7 @@ public class ArrayTest {
 	@Test
 	public void testCompleteArrays() {
 
-		// testing complete arrays
+		// testing complete type arrays
 		SymbolicExpression array1, array2, array3, array4;
 		SymbolicExpression completeArray;
 		SymbolicArrayType arrayType;
@@ -868,9 +868,12 @@ public class ArrayTest {
 
 		array4 = universe.array(arrayType,
 				Arrays.asList(new SymbolicExpression[] { array2, array1 }));
+		
+		// creating the complete type array from the previous arrays
 
 		completeArray = universe.array(arraycompleteType,
 				Arrays.asList(new SymbolicExpression[] { array3, array4 }));
+		// do some assertions 
 		assertEquals(array4,
 				universe.arrayRead(completeArray, universe.integer(1)));
 
