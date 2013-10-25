@@ -72,6 +72,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 
 	private Comparator<NumericExpression> comparator;
 
+	/**
+	 * Constructor that creates a CommonNumericExpressionFactory.
+	 * 
+	 * @param idealFactory
+	 * @param herbrandFactory
+	 * 
+	 * @return CommonNumericExpressionFactory
+	 */
 	public CommonNumericExpressionFactory(
 			NumericExpressionFactory idealFactory,
 			NumericExpressionFactory herbrandFactory) {
@@ -92,6 +100,13 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 
 	// Helpers...
 
+	/**
+	 * Private method that casts NumericExpression to Ideal type.
+	 * 
+	 * @param arg
+	 * 
+	 * @return NumericExpression
+	 */
 	private NumericExpression castToIdeal(NumericExpression arg) {
 		SymbolicType oldType = arg.type();
 
@@ -111,6 +126,13 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 		}
 	}
 
+	/**
+	 * Private method that casts NumericExpression to Herbrand type.
+	 * 
+	 * @param arg
+	 * 
+	 * @return NumericExpression
+	 */
 	private NumericExpression castToHerbrand(NumericExpression arg) {
 		SymbolicType oldType = arg.type();
 
@@ -130,45 +152,89 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 
 	// Exported methods....
 
+	/**
+	 * Getter method that returns idealFactory.
+	 * 
+	 * @return idealFactory
+	 */
 	public NumericExpressionFactory idealFactory() {
 		return idealFactory;
 	}
 
+	/**
+	 * Getter method that returns herbrandFactory.
+	 * 
+	 * @return herbrandFactory
+	 */
 	public NumericExpressionFactory herbrandFactory() {
 		return herbrandFactory;
 	}
 
+	/**
+	 * Method that initializes this CommonNumericExpressionFactory
+	 * 
+	 */
 	@Override
 	public void init() {
 		idealFactory.init();
 		herbrandFactory.init();
 	}
 
+	/**
+	 * Getter method that returns booleanFactory.
+	 * 
+	 * @return BooleanExpressionFactory
+	 */
 	@Override
 	public BooleanExpressionFactory booleanFactory() {
 		return booleanFactory;
 	}
 
+	/**
+	 * Getter method that returns numberFactory.
+	 * 
+	 * @return NumberFactory
+	 */
 	@Override
 	public NumberFactory numberFactory() {
 		return numberFactory;
 	}
 
+	/**
+	 * Getter method that returns objectFacotry.
+	 * 
+	 * @return ObjectFactory
+	 */
 	@Override
 	public ObjectFactory objectFactory() {
 		return objectFactory;
 	}
 
+	/**
+	 * Getter method that returns typeFactory.
+	 * 
+	 * @return SymbolicTypeFactory
+	 */
 	@Override
 	public SymbolicTypeFactory typeFactory() {
 		return typeFactory;
 	}
 
+	/**
+	 * Getter method that returns collectionFactory.
+	 * 
+	 * @return CollectionFactory
+	 */
 	@Override
 	public CollectionFactory collectionFactory() {
 		return collectionFactory;
 	}
 
+	/**
+	 * Getter method that returns comparator.
+	 * 
+	 * @return Comparator<NumericExpression>
+	 */
 	@Override
 	public Comparator<NumericExpression> comparator() {
 		return comparator;
@@ -177,12 +243,24 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 	/**
 	 * Returns the ideal number. If you want it to be Herbrand you need to cast
 	 * it to the appropriate Herbrand type.
+	 * 
+	 * @param numberObject
+	 * 
+	 * @return NumericExpression
 	 */
 	@Override
 	public NumericExpression number(NumberObject numberObject) {
 		return idealFactory.number(numberObject);
 	}
 
+	/**
+	 * Method that returns NumericSymbolicConstant.
+	 * 
+	 * @param name
+	 * @param type
+	 * 
+	 * @return NumericSymbolicConstant
+	 */
 	@Override
 	public NumericSymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type) {
@@ -192,6 +270,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.symbolicConstant(name, type);
 	}
 
+	/**
+	 * One of several methods that create a NumericExpression.
+	 * 
+	 * @param operator
+	 * @param numericType
+	 * @param arguments
+	 * 	arguments is a Collection<SymbolicObject>
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, Collection<SymbolicObject> arguments) {
@@ -201,6 +289,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.expression(operator, numericType, arguments);
 	}
 
+	/**
+	 * One of several methods that create a NumericExpression.
+	 * 
+	 * @param operator
+	 * @param numericType
+	 * @param arguments
+	 * 	arguments is a SymbolicObject array
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject[] arguments) {
@@ -210,6 +308,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.expression(operator, numericType, arguments);
 	}
 
+	/**
+	 * One of several methods that create a NumericExpression.
+	 * 
+	 * @param operator
+	 * @param numericType
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0) {
@@ -219,6 +327,18 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.expression(operator, numericType, arg0);
 	}
 
+	/**
+	 * One of several methods that create a NumericExpression.
+	 * 
+	 * @param operator
+	 * @param numericType
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * @param arg1
+	 * 	arg1 is a SymbolicObject
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1) {
@@ -229,6 +349,20 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					.expression(operator, numericType, arg0, arg1);
 	}
 
+	/**
+	 * One of several methods that create a NumericExpression.
+	 * 
+	 * @param operator
+	 * @param numericType
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * @param arg1
+	 * 	arg1 is a SymbolicObject
+	 * @param arg2
+	 * 	arg2 is a SymbolicObject
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
@@ -241,26 +375,56 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					arg1, arg2);
 	}
 
+	/**
+	 * Method that returns zeroInt NumericExpression.
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression zeroInt() {
 		return idealFactory.zeroInt();
 	}
 
+	/**
+	 * Method that returns zeroReal NumericExpression.
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression zeroReal() {
 		return idealFactory.zeroReal();
 	}
 
+	/**
+	 * Method that returns oneInt NumericExpression.
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression oneInt() {
 		return idealFactory.oneInt();
 	}
 
+	/**
+	 * Method that returns oneReal NumericExpression.
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression oneReal() {
 		return idealFactory.oneReal();
 	}
 
+	/**
+	 * Method that adds two NumericExpressions.
+	 * 
+	 * @param arg0
+	 * 	arg0 is a NumericExpression
+	 * @param arg1
+	 * 	arg1 is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
 		SymbolicType t0 = arg0.type(), t1 = arg1.type();
@@ -272,6 +436,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that subtracts a NumericExpression from another NumericExpression.
+	 * 
+	 * @param arg0
+	 * 	arg0 is a NumericExpression
+	 * @param arg1
+	 * 	arg1 is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression subtract(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -284,6 +458,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that multiplies two NumericExpressions.
+	 * 
+	 * @param arg0
+	 * 	arg0 is a NumericExpression
+	 * @param arg1
+	 * 	arg1 is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression multiply(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -296,6 +480,16 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that divides one numeric expression by another.
+	 * 
+	 * @param arg0
+	 * 	arg0 is a NumericExpression
+	 * @param arg1
+	 * 	arg1 is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression divide(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -308,6 +502,15 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns modulo arg1 of arg0.
+	 * 
+	 * @param arg0
+	 * 	arg0 is a NumericExpression
+	 * @param arg1 is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression modulo(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -320,6 +523,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns a NumericExpression minus arg.
+	 * 
+	 * @param arg
+	 * 	arg is a numeric expression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression minus(NumericExpression arg) {
 		SymbolicType type = arg.type();
@@ -330,6 +541,15 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.minus(castToHerbrand(arg));
 	}
 
+	/**
+	 * One of two methods that returns base raised to exponent.
+	 * 
+	 * @param base
+	 * @param exponent
+	 * 	exponent is an IntObject
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression power(NumericExpression base, IntObject exponent) {
 		SymbolicType type = base.type();
@@ -340,6 +560,15 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			return herbrandFactory.power(castToHerbrand(base), exponent);
 	}
 
+	/**
+	 * One of two methods that returns base raised to exponent.
+	 * 
+	 * @param base
+	 * @param exponent
+	 * 	exponent is a NumericExpression
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
@@ -352,6 +581,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(exponent));
 	}
 
+	/**
+	 * Method that casts expr to newType
+	 * 
+	 * @param expr
+	 * @param newType
+	 * 
+	 * @return NumericExpression
+	 */
 	@Override
 	public NumericExpression cast(NumericExpression expr, SymbolicType newType) {
 		SymbolicType oldType = expr.type();
@@ -389,6 +626,13 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 			throw new SARLInternalException("Unknown type: " + newType);
 	}
 
+	/**
+	 * Method that extracts Number from expression.
+	 * 
+	 * @param expression
+	 * 
+	 * @return Number
+	 */
 	@Override
 	public Number extractNumber(NumericExpression expression) {
 		if (expression.type().isHerbrand())
@@ -398,6 +642,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 		return null;
 	}
 
+	/**
+	 * Method that returns BooleanExpression of arg0 < arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression lessThan(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -410,6 +662,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns BooleanExpression of arg0 <= arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression lessThanEquals(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -422,6 +682,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns BooleanExpression of arg0 !< arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression notLessThan(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -434,6 +702,14 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns BooleanExpression of arg0 !<= arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression notLessThanEquals(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -446,28 +722,69 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 					castToHerbrand(arg1));
 	}
 
+	/**
+	 * Method that returns BooleanExpression of equals arg0 arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression equals(NumericExpression arg0,
 			NumericExpression arg1) {
 		return idealFactory.equals(castToIdeal(arg0), castToIdeal(arg1));
 	}
 
+	/**
+	 * Method that returns BooleanExpression of not equals arg0 arg1
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression neq(NumericExpression arg0, NumericExpression arg1) {
 		return idealFactory.neq(castToIdeal(arg0), castToIdeal(arg1));
 	}
 }
 
+/**
+ * 
+ * CommonNumericComparator class implements Comparator<NumericExpression> interface
+ * 
+ * @author siegel
+ *
+ */
 class CommonNumericComparator implements Comparator<NumericExpression> {
 	private Comparator<NumericExpression> idealComparator;
 	private Comparator<NumericExpression> herbrandComparator;
 
+	/**
+	 * Constructor that creates a CommonNumericComparator
+	 * 
+	 * @param idealComparator
+	 * @param herbrandComparator
+	 * 
+	 * @return CommonNumericComparator
+	 */
 	CommonNumericComparator(Comparator<NumericExpression> idealComparator,
 			Comparator<NumericExpression> herbrandComparator) {
 		this.idealComparator = idealComparator;
 		this.herbrandComparator = herbrandComparator;
 	}
 
+	/**
+	 * Compare method for NumericExpressions.
+	 * 
+	 * @param o1
+	 * 	o1 is a NumericExpression
+	 * @param o2
+	 * 	o2 is a NumericExpression
+	 * 
+	 * @return int
+	 */
 	@Override
 	public int compare(NumericExpression o1, NumericExpression o2) {
 		if (o1.type().isHerbrand()) {

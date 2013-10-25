@@ -49,6 +49,14 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * CommonExpressionFactory is used to create many CommonExpressions.
+ * 
+ * Implements the ExpressionFactory interface.
+ * 
+ * @author siegel
+ * 
+ */
 public class CommonExpressionFactory implements ExpressionFactory {
 
 	private ObjectFactory objectFactory;
@@ -87,6 +95,13 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	private SymbolicSequence<NumericExpression> oneSequence;
 
+	/**
+	 * Constructor that builds a CommonExpressionFactory.
+	 * 
+	 * @param numericFactory 
+	 * 
+	 * @return CommonExpressionFactory
+	 */
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		NumericExpression zero = numericFactory.zeroInt();
 		NumericExpression one = numericFactory.oneInt();
@@ -111,6 +126,13 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				.singletonSequence(one));
 	}
 
+	/**
+	 * Private method that extracts integer value from NumericExpression.
+	 * 
+	 * @param expr
+	 * 
+	 * @return int
+	 */
 	private int extractInt(NumericExpression expr) {
 		int result = ((IntegerNumber) ((NumberObject) expr.argument(0))
 				.getNumber()).intValue();
@@ -118,6 +140,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return result;
 	}
 
+	/**
+	 * Private method that builds a concrete ReferenceExpression.
+	 * 
+	 * @param operator
+	 * @param arg0
+	 * 
+	 * @return ReferenceExpression
+	 */
 	private ReferenceExpression concreteReferenceExpression(
 			SymbolicOperator operator, SymbolicObject arg0) {
 		if (operator != SymbolicOperator.CONCRETE)
@@ -131,8 +161,15 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				"Unexpected concrete argument to reference: " + arg0);
 	}
 
-	// private NTReferenceExpression nonTrivialReferenceExpression
-
+	/**
+	 * Private method that builds a non-trivial ReferenceExpression.
+	 * 
+	 * @param operator
+	 * @param arg0
+	 * @param arg1
+	 * 
+	 * @return SymbolicExpression
+	 */
 	private SymbolicExpression nonTrivialReferenceExpression(
 			SymbolicOperator operator, SymbolicObject arg0, SymbolicObject arg1) {
 		if (operator == SymbolicOperator.APPLY) {
@@ -195,6 +232,9 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		// "Unexpected operator in reference expression: " + operator);
 	}
 
+	/**
+	 * Method that initializes a CommonExpressionFactory.
+	 */
 	@Override
 	public void init() {
 		SymbolicTypeSequence referenceIndexSeq; // Ref x Int
@@ -229,23 +269,47 @@ public class CommonExpressionFactory implements ExpressionFactory {
 				referenceType, oneSequence));
 	}
 
+	/**
+	 * Getter method that returns the NumericExpressionFactory.
+	 * 
+	 * @return NumericExpressionFactory
+	 */
 	@Override
 	public NumericExpressionFactory numericFactory() {
 		return numericFactory;
 	}
 
+	/**
+	 * Getter method that returns the ObjectFactory.
+	 * 
+	 * @return ObjectFactory
+	 */
 	@Override
 	public ObjectFactory objectFactory() {
 		return objectFactory;
 	}
 
+	/**
+	 * Getter Method that returns the Comparator<SymbolicExpression>
+	 * 
+	 * @return Comparator<SymbolicExpression>
+	 */
 	@Override
 	public Comparator<SymbolicExpression> comparator() {
 		return expressionComparator;
 	}
 
 	// replace all of these by just one:
-
+	/**
+	 * One of several methods that builds a symbolic expression.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param arguments
+	 * 	arguments is a SymbolicObject array
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {
@@ -260,6 +324,16 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return new CommonSymbolicExpression(operator, type, arguments);
 	}
 
+	/**
+	 * One of several methods that builds a symbolic expression.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0) {
@@ -274,6 +348,18 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return new CommonSymbolicExpression(operator, type, arg0);
 	}
 
+	/**
+	 * One of several methods that builds a symbolic expression.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * @param arg1
+	 * 	arg1 is a SymbolicObject
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
@@ -288,6 +374,20 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return new CommonSymbolicExpression(operator, type, arg0, arg1);
 	}
 
+	/**
+	 * One of several methods that builds a symbolic expression.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param arg0
+	 * 	arg0 is a SymbolicObject
+	 * @param arg1
+	 * 	arg1 is a SymbolicObject
+	 * @param arg2
+	 * 	arg2 is a SymbolicObject
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
@@ -303,6 +403,16 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return new CommonSymbolicExpression(operator, type, arg0, arg1, arg2);
 	}
 
+	/**
+	 * One of several methods that builds a symbolic expression.
+	 * 
+	 * @param operator
+	 * @param type
+	 * @param args
+	 * 	args is a Collection<SymbolicObject>
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression expression(SymbolicOperator operator,
 			SymbolicType type, Collection<SymbolicObject> args) {
@@ -319,6 +429,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	}
 
+	/**
+	 * Method that builds a SymbolicConstant.
+	 * 
+	 * @param name
+	 * @param type
+	 * 
+	 * @return SymbolicConstant
+	 */
 	@Override
 	public SymbolicConstant symbolicConstant(StringObject name,
 			SymbolicType type) {
@@ -329,37 +447,83 @@ public class CommonExpressionFactory implements ExpressionFactory {
 		return new CommonSymbolicConstant(name, type);
 	}
 
+	/** 
+	 * Getter method that returns the nullExpression.
+	 * 
+	 * @return SymbolicExpression
+	 */
 	@Override
 	public SymbolicExpression nullExpression() {
 		return nullExpression;
 	}
 
+	/**
+	 * Getter method that returns the booleanFactory.
+	 * 
+	 * @return BooleanExpressionFactory
+	 * 
+	 */
 	@Override
 	public BooleanExpressionFactory booleanFactory() {
 		return booleanFactory;
 	}
-
+	
+	/**
+	 * Getter method that returns the typeFactory.
+	 * 
+	 * @return SymbolicTypeFactory
+	 * 
+	 */
 	@Override
 	public SymbolicTypeFactory typeFactory() {
 		return typeFactory;
 	}
 
+	/**
+	 * Getter method that returns the nullReference.
+	 * 
+	 * @return ReferenceExpression
+	 */
 	@Override
 	public ReferenceExpression nullReference() {
 		return nullReference;
 	}
 
+	/**
+	 * Getter method that returns the identityReference.
+	 * 
+	 * @return ReferenceExpression
+	 */
 	@Override
 	public ReferenceExpression identityReference() {
 		return identityReference;
 	}
 
+	/**
+	 * One of two private methods that returns SymbolicSequence<SymbolicExpression>.
+	 * 
+	 * @param parent
+	 * @param index
+	 * 	index is a NumericExpression
+	 * 
+	 * @return SymbolicSequence<SymbolicExpression>
+	 * 
+	 */
 	private SymbolicSequence<SymbolicExpression> parentIndexSequence(
 			ReferenceExpression parent, NumericExpression index) {
 		return collectionFactory.sequence(new SymbolicExpression[] { parent,
 				index });
 	}
 
+	/**
+	 * One of two private methods that returns SymbolicSequence<SymbolicExpression>.
+	 * 
+	 * @param parent
+	 * @param index
+	 * 	index is an IntObject
+	 * 
+	 * @return SymbolicSequence<SymbolicExpression>
+	 */
 	private SymbolicSequence<SymbolicExpression> parentIndexSequence(
 			ReferenceExpression parent, IntObject index) {
 		return collectionFactory.sequence(new SymbolicExpression[] {
@@ -368,6 +532,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 						.integer(index.getInt()))) });
 	}
 
+	/**
+	 * method that builds an ArrayElementReference.
+	 * 
+	 * @param arrayReference
+	 * @param index
+	 * 
+	 * @return ArrayElementReference
+	 */
 	@Override
 	public ArrayElementReference arrayElementReference(
 			ReferenceExpression arrayReference, NumericExpression index) {
@@ -376,6 +548,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 						arrayReference, index));
 	}
 
+	/**
+	 * Method that builds a TupleComponentReference.
+	 * 
+	 * @param tupleReference
+	 * @param fieldIndex
+	 * 
+	 * @return TupleComponentReference
+	 */
 	@Override
 	public TupleComponentReference tupleComponentReference(
 			ReferenceExpression tupleReference, IntObject fieldIndex) {
@@ -385,6 +565,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 						tupleReference, fieldIndex), fieldIndex);
 	}
 
+	/**
+	 * Method that builds a UnionMemberReference.
+	 * 
+	 * @param unionReference
+	 * @param memberIndex
+	 * 
+	 * @return UnionMemberReference
+	 */
 	@Override
 	public UnionMemberReference unionMemberReference(
 			ReferenceExpression unionReference, IntObject memberIndex) {
@@ -393,6 +581,14 @@ public class CommonExpressionFactory implements ExpressionFactory {
 						unionReference, memberIndex), memberIndex);
 	}
 
+	/**
+	 * Method that builds an OffsetReference.
+	 * 
+	 * @param reference
+	 * @param offset
+	 * 
+	 * @return OffsetReference
+	 */
 	@Override
 	public OffsetReference offsetReference(ReferenceExpression reference,
 			NumericExpression offset) {
@@ -401,6 +597,11 @@ public class CommonExpressionFactory implements ExpressionFactory {
 
 	}
 
+	/**
+	 * Getter method that returns referenceType.
+	 * 
+	 * @return SymbolicType
+	 */
 	@Override
 	public SymbolicType referenceType() {
 		return referenceType;
