@@ -11,6 +11,7 @@ import cvc3.QueryResult;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
@@ -39,8 +40,14 @@ public class CVC3TranslateTest {
 	private static NumericExpression one = universe.rational(1);
 	private static NumericExpression oneFiveDouble = universe.rational(1.5);
 	private static NumericExpression oneInt = universe.integer(1);
+	private static NumericExpression twoInt = universe.integer(2);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
+	//SymbolicConstants
+	private static SymbolicConstant eReal = universe.symbolicConstant(universe.stringObject("e"), realType);
+	private static SymbolicConstant eInt = universe.symbolicConstant(universe.stringObject("e"), intType);
+	private static SymbolicConstant fReal = universe.symbolicConstant(universe.stringObject("f"), realType);
+	private static SymbolicConstant fInt = universe.symbolicConstant(universe.stringObject("f"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -70,8 +77,7 @@ public class CVC3TranslateTest {
 		SymbolicExpression castExp = expressionFactory
 				.expression(SymbolicOperator.CAST, intType, one);
 		Expr expr4 = cvcProver.translate(castExp);
-		Expr expected4 = oneIntExpr;
-		assertEquals(expected4, expr4);
+		assertEquals(oneIntExpr, expr4);
 	}
 	
 	@Test
@@ -81,8 +87,7 @@ public class CVC3TranslateTest {
 		SymbolicExpression castExp = expressionFactory
 				.expression(SymbolicOperator.CAST, realType, oneInt);
 		Expr expr4 = cvcProver.translate(castExp);
-		Expr expected4 = oneRealExpr;
-		assertEquals(expected4, expr4);
+		assertEquals(oneRealExpr, expr4);
 	}
 
 	@Test
@@ -97,7 +102,49 @@ public class CVC3TranslateTest {
 	}
 	
 	@Test
-	public void testTranslateCond(){	
+	public void testTranslateCondSymbolicInt(){	
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr eExpr = cvcProver.translate(eInt);
+		Expr fExpr = cvcProver.translate(fInt);
+
+		SymbolicExpression condExp = expressionFactory
+				.expression(SymbolicOperator.COND, boolType, booleanExprTrue, 
+						eInt, fInt);
+		Expr expr5 = cvcProver.translate(condExp);
+		Expr expected5 = vc.iteExpr(trueExpr, eExpr, fExpr);
+		assertEquals(expected5, expr5);
+	}
+	
+	@Test
+	public void testTranslateCondSymbolicReal(){	
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr eExpr = cvcProver.translate(eReal);
+		Expr fExpr = cvcProver.translate(fReal);
+
+		SymbolicExpression condExp = expressionFactory
+				.expression(SymbolicOperator.COND, boolType, booleanExprTrue, 
+						eReal, fReal);
+		Expr expr5 = cvcProver.translate(condExp);
+		Expr expected5 = vc.iteExpr(trueExpr, eExpr, fExpr);
+		assertEquals(expected5, expr5);
+	}
+	
+	@Test
+	public void testTranslateCondConcreteInt(){	
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr oneExpr = cvcProver.translate(oneInt);
+		Expr twoExpr = cvcProver.translate(twoInt);
+
+		SymbolicExpression condExp = expressionFactory
+				.expression(SymbolicOperator.COND, boolType, booleanExprTrue, 
+						oneInt, twoInt);
+		Expr expr5 = cvcProver.translate(condExp);
+		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
+		assertEquals(expected5, expr5);
+	}
+	
+	@Test
+	public void testTranslateCondConcreteReal(){	
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
@@ -111,11 +158,12 @@ public class CVC3TranslateTest {
 	}
 	
 	@Test
-	public void testTranslateNot(){
+	public void testTranslateNotBoolean(){
 		SymbolicExpression notExp = expressionFactory
 				.expression(SymbolicOperator.NOT, boolType, booleanExprTrue);
 		Expr translateResult = cvcProver.translate(notExp);
 		Expr expected = vc.notExpr(vc.trueExpr());
 		assertEquals(expected, translateResult);
 	}
+
 }
