@@ -827,15 +827,26 @@ public class IdealTest {
 		assertEquals(intZero, b);
 		}
 
+	/**
+	 * Returns the subtraction of symbolic expression of same numeric type
+	 * 
+	 * @param type
+	 * 				Symbolic Expression of Numeric type
+	 */
 	@Test
 	public void primitiveSubtract() {
 		NumericExpression subNine = commonIdealFactory.subtract(intTen, intOne);
 		Constant nine = commonIdealFactory.intConstant(9);
 		
 		assertEquals(subNine, nine);
-
 	}
 
+	/**
+	 * Returns the subtraction of symbolic expression of same numeric type
+	 * 
+	 * @param type
+	 * 				Symbolic Expressions of same Numeric type
+	 */
 	@Test
 	public void primitiveNegSubtract() {
 		NumericExpression subEleven = commonIdealFactory.subtract(intTen, intNegOne);
@@ -844,6 +855,12 @@ public class IdealTest {
 		assertEquals(subEleven, eleven);
 	}
 
+	/**
+	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
+	 * 
+	 * @param type
+	 * 				Symbolic Expressions of same numeric type
+	 */
 	@Test
 	//(21x^3 - 35x^2) / (7x) -------> 3x^2 - 5x
 	public void complexRational() {
@@ -867,7 +884,7 @@ public class IdealTest {
 		
 		assertEquals(result, complex);
 	}
-
+@Ignore
 	@Test
 	public void comparingRationalExpressions() {
 		NumericSymbolicConstant x2 = objectFactory.canonic(idealFactory
