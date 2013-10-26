@@ -80,6 +80,7 @@ public class IdealSimplifierBBTest {
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		//out.println(idealSimplifier.apply(noX));
 		//0^3 should = 0...
+		assertEquals(rat0.type(), idealSimplifier.apply(noX).type());
 		assertEquals(rat0, idealSimplifier.apply(noX));
 		//out.println(idealSimplifier.getFullContext());
 		//out.println(idealSimplifier.getReducedContext());
@@ -106,8 +107,8 @@ public class IdealSimplifierBBTest {
 	public void singlePowerTermSimplifyTest(){
 		assumption = preUniv.equals(rat0, x4th);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
-		//out.println("here: " + idealSimplifier.getFullContext());
-		//out.println(idealSimplifier.getReducedContext());
+		out.println("here: " + idealSimplifier.getFullContext());
+		out.println(idealSimplifier.getReducedContext());
 		assertEquals(rat0, idealSimplifier.apply(threeX4th));
 		//x^4 == 0 should be reduced to x == 0
 		assertNotEquals(idealSimplifier.getFullContext(), idealSimplifier.getReducedContext());
