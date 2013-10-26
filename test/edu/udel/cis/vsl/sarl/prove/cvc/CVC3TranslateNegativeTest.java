@@ -10,6 +10,7 @@ import cvc3.Expr;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
@@ -35,11 +36,14 @@ public class CVC3TranslateNegativeTest {
 	private static NumericExpression one = universe.rational(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
+	// SymbolicConstant
+	private static SymbolicConstant e = universe.symbolicConstant(
+			universe.stringObject("e"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -56,12 +60,23 @@ public class CVC3TranslateNegativeTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	@Test
-	public void testTranslateNegative(){
+	public void testTranslateNegative() {
 
 		NumericExpression negExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.NEGATIVE, intType, one);
+		Expr expr7 = cvcProver.translate(negExp);
+		Expr expected7 = vc.uminusExpr(cvcProver
+				.translate((SymbolicExpression) negExp.argument(0)));
+		assertEquals(expected7, expr7);
+	}
+
+	@Test
+	public void testTranslateNegativeSymbolic() {
+
+		NumericExpression negExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.NEGATIVE, intType, e);
 		Expr expr7 = cvcProver.translate(negExp);
 		Expr expected7 = vc.uminusExpr(cvcProver
 				.translate((SymbolicExpression) negExp.argument(0)));
