@@ -1510,7 +1510,7 @@ public class CommonPreUniverse implements PreUniverse {
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, integer(count)), sequence(elements));
 	}
-
+/*
 	@Override
 	public SymbolicExpression append(SymbolicExpression concreteArray,
 			SymbolicExpression element) {
@@ -1539,6 +1539,64 @@ public class CommonPreUniverse implements PreUniverse {
 			result = expression(SymbolicOperator.CONCRETE, type,
 					sequence(elements));
 			return result;
+		}
+	}
+*/
+	 @Override
+	public SymbolicExpression append(SymbolicExpression concreteArray,
+			SymbolicExpression arrayOrElement) {
+		SymbolicType type = concreteArray.type();
+
+		if (type.typeKind() != SymbolicTypeKind.ARRAY)
+			throw err("argument concreteArray not array type:\n"
+					+ concreteArray);
+		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
+			throw err("append invoked on non-concrete array:\n" + concreteArray);
+		} else {
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+					.argument(0);
+			SymbolicType arrayOrElementType = arrayOrElement.type();
+			SymbolicExpression result;
+
+			if (arrayOrElement == null || arrayOrElement.isNull())
+				throw err("Element to append has illegal value:\n"
+						+ arrayOrElement);
+			// appending an array
+			if (arrayOrElementType.typeKind() != SymbolicTypeKind.ARRAY) {
+				if (arrayOrElement.operator() != SymbolicOperator.CONCRETE)
+					throw err("append invoked on non-concrete array:\n"
+							+ arrayOrElement);
+				if (incompatible(concreteArray.type(), arrayOrElement.type()))
+					throw err("Element(s) to append has incompatible type:\n"
+							+ "Expected: " + concreteArray.type() + "\nSaw: "
+							+ arrayOrElement.type());
+
+				@SuppressWarnings("unchecked")
+				SymbolicSequence<SymbolicExpression> appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
+						.argument(0);
+				type = arrayType(concreteArray.type(), integer(elements.size()
+						+ appendedElements.size()));
+				result = expression(SymbolicOperator.CONCRETE, type,
+						sequence(elements), sequence(appendedElements));
+
+				return result;
+
+			} else {
+				// appending an element
+				SymbolicType elementType = ((SymbolicArrayType) type)
+						.elementType();
+
+				if (incompatible(elementType, arrayOrElement.type()))
+					throw err("Element to append has incompatible type:\n"
+							+ "Expected: " + elementType + "\nSaw: "
+							+ arrayOrElement.type());
+				elements = elements.add(arrayOrElement);
+				type = arrayType(elementType, integer(elements.size()));
+				result = expression(SymbolicOperator.CONCRETE, type,
+						sequence(elements));
+				return result;
+			}
 		}
 	}
 
@@ -2314,7 +2372,7 @@ public class CommonPreUniverse implements PreUniverse {
 
 	public SymbolicExpression cleanBoundVariables(SymbolicExpression expr) {
 		// TODO
-		
+
 		return null;
 	}
 
