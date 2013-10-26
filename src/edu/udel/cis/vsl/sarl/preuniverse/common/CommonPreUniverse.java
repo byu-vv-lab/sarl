@@ -1556,14 +1556,15 @@ public class CommonPreUniverse implements PreUniverse {
 			@SuppressWarnings("unchecked")
 			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
 					.argument(0);
-			SymbolicType arrayOrElementType = (SymbolicType)arrayOrElement.type();
+			
 			SymbolicExpression result;
 
 			if (arrayOrElement == null || arrayOrElement.isNull())
 				throw err("Element to append has illegal value:\n"
 						+ arrayOrElement);
+			SymbolicType arrayOrElementType = arrayOrElement.type();
 			// appending an array
-			if (arrayOrElementType.typeKind() != SymbolicTypeKind.ARRAY) {
+			if (arrayOrElementType.typeKind() == SymbolicTypeKind.ARRAY) {
 				if (arrayOrElement.operator() != SymbolicOperator.CONCRETE)
 					throw err("append invoked on non-concrete array:\n"
 							+ arrayOrElement);
