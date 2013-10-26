@@ -10,6 +10,7 @@ import cvc3.Expr;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -35,6 +36,9 @@ public class CVC3TranslateDivisionTest {
 	private static NumericExpression one = universe.rational(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
+	//SymbolicConstants
+	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), realType);
+	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), realType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -66,6 +70,18 @@ public class CVC3TranslateDivisionTest {
 				.expression(SymbolicOperator.DIVIDE, realType, one, two);
 		Expr expr6 = cvcProver.translate(divExp);
 		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected6, expr6);
+	}
+	
+	@Test
+	public void testTranslateDivisionSymbolic(){
+		Expr eExpr = cvcProver.translate(e);
+		Expr fExpr = cvcProver.translate(f);
+
+		NumericExpression divExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.DIVIDE, realType, e, f);
+		Expr expr6 = cvcProver.translate(divExp);
+		Expr expected6 = vc.divideExpr(eExpr, fExpr);
 		assertEquals(expected6, expr6);
 	}
 }
