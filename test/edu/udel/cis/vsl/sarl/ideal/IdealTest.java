@@ -409,17 +409,37 @@ public class IdealTest {
 		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
 		NumericExpression p3 = idealFactory.multiply(intZero, x);
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, idealFactory.
-						multiply(x, x)), intTwo);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+				idealFactory.multiply(x, x)), intTwo);
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+				intTen, x), idealFactory.add(idealFactory.multiply(
+						intTwo, idealFactory.multiply(x, x)), intOne));
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p8 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intTwo);
+		NumericExpression p9 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intThree);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
-		
+		Polynomial poly4 = (Polynomial) p5;
+		Polynomial poly5 = (Polynomial) p7;
+		Polynomial poly6 = (Polynomial) p8;
+						
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
+		Polynomial b4 = commonIdealFactory.add(poly5, poly6);
+		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
+		Polynomial b6 = commonIdealFactory.add(poly5, intOne);
 		
 		assertEquals(p4, b1);
 		assertEquals(p2, b2);
+		assertEquals(p6, b3);
+		assertEquals(p9, b4);
+		assertEquals(p8, b5);
+		assertEquals(p1, b6);
 	}
 
 	/**
