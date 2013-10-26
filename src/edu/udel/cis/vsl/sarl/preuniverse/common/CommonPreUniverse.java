@@ -1556,7 +1556,7 @@ public class CommonPreUniverse implements PreUniverse {
 			@SuppressWarnings("unchecked")
 			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
 					.argument(0);
-			SymbolicType arrayOrElementType = arrayOrElement.type();
+			SymbolicType arrayOrElementType = (SymbolicType)arrayOrElement.type();
 			SymbolicExpression result;
 
 			if (arrayOrElement == null || arrayOrElement.isNull())
