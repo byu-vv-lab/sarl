@@ -10,7 +10,9 @@ import cvc3.Expr;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -30,11 +32,17 @@ public class CVC3TranslateSubtractTest {
 			.expressionFactory();
 	// types
 	private static SymbolicRealType realType = universe.realType();
+	private static SymbolicIntegerType intType = universe.integerType();
 	// expressions
 	private static NumericExpression two = universe.rational(2);
 	private static NumericExpression one = universe.rational(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
+	//SymbolicConstants
+	private static SymbolicConstant e = universe
+			.symbolicConstant(universe.stringObject("e"), intType);
+	private static SymbolicConstant f = universe
+			.symbolicConstant(universe.stringObject("f"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -66,6 +74,18 @@ public class CVC3TranslateSubtractTest {
 				.expression(SymbolicOperator.SUBTRACT, realType, two, one);
 		Expr expr10 = cvcProver.translate(subExp);
 		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
+		assertEquals(expected10, expr10);
+	}
+	
+	@Test
+	public void testTranslateSubtractSymbolic(){
+		Expr eExpr = cvcProver.translate(e);
+		Expr fExpr = cvcProver.translate(f);
+
+		NumericExpression subExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.SUBTRACT, intType, e, f);
+		Expr expr10 = cvcProver.translate(subExp);
+		Expr expected10 = vc.minusExpr(eExpr, fExpr);
 		assertEquals(expected10, expr10);
 	}
 }
