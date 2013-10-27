@@ -60,6 +60,11 @@ public class CVC3TheoremProverTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testBoolean sets the created cvcTheoremProver to null and compares the boolean type
+	 * of the validity checker created.
+	 */
 
 	@Test
 	public void testBoolean() {
@@ -69,6 +74,12 @@ public class CVC3TheoremProverTest {
 
 		assertEquals(t, vc.boolType());
 	}
+	
+	/**
+	 * testToString creates two strings and asserts that one of the created strings
+	 * is equal to the cvcProver as a string and the other is not equal to the 
+	 * cvcProver as a string.
+	 */
 	
 	@Test
 	public void testToString(){
@@ -80,7 +91,11 @@ public class CVC3TheoremProverTest {
 		assertFalse(notExpected.equals(cvcProver.toString()));
 	}
 	
-	
+	/**
+	 * testValid asserts the equality of the created CVC3TheoremProver
+	 * when it's boolean value is set to true and when it's set to false in comparison
+	 * to the validity result types.
+	 */
 	
 	@Test
 	public void testValid() {
