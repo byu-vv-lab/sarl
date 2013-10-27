@@ -60,6 +60,10 @@ public class CVC3TranslateNegativeTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslateNegative compares a negative numeric expression and the validity checker
+	 */
 
 	@Test
 	public void testTranslateNegative() {
@@ -71,6 +75,10 @@ public class CVC3TranslateNegativeTest {
 				.translate((SymbolicExpression) negExp.argument(0)));
 		assertEquals(expected7, expr7);
 	}
+	
+	/**
+	 * testTranslateNegative compares a negative symbolic constant expression and the validity checker
+	 */
 
 	@Test
 	public void testTranslateNegativeSymbolic() {
