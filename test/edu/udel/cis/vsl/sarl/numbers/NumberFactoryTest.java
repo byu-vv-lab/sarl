@@ -48,6 +48,10 @@ public class NumberFactoryTest {
 	}
 
 	@Test
+	/**
+	 * Testing the multiply method with two IntegerNumbers.
+	 * 
+	 */
 	public void multiplyIntegers() {
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTen);
@@ -59,6 +63,9 @@ public class NumberFactoryTest {
 	}
 
 	@Test
+	/**
+	 * Testing that SARL finds a decimal value equivalent to its fraction form
+	 */
 	public void decimalString() {
 		RationalNumber a = factory.rational(".1");
 		RationalNumber b = factory.rational(bigOne, bigTen);
@@ -67,11 +74,17 @@ public class NumberFactoryTest {
 	}
 
 	@Test(expected=ArithmeticException.class)
+	/**
+	 *@Exception ArithmeticException is thrown if the denominator (arg1) is zero.
+	 */
 	public void divideBy0() {
 		factory.rational(bigOne, BigInteger.ZERO);
 	}
 
 	@Test
+	/**
+	 * Testing the add method with two RationalNumbers.
+	 */
 	public void addRat() {
 		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
 		RationalNumber b = factory.rational(bigTen, bigFifteen);
@@ -84,6 +97,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the ceiling function ceil to ensure that ceilings are properly computed
+	 * for rational numbers that, when simplified, stay in fraction form, and the 
+	 * case where they are integers.
+	 */
 	public void rationalCeiling() {
 		RationalNumber a = factory.rational(bigThirty, bigThirtyOne);
 		RationalNumber b = factory.rational(bigTen, bigOne);
@@ -98,6 +116,9 @@ public class NumberFactoryTest {
 	} 
 	
 	@Test
+	/**
+	 * Testing the GCD function (GCD is computed with IntegerNumbers)
+	 */
 	public void GCD() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTwenty);
@@ -109,6 +130,9 @@ public class NumberFactoryTest {
 	} 
 	
 	@Test
+	/**
+	 * Testing the LCM function (LCM is computed with IntegerNumbers)
+	 */
 	public void LCM() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigThirtyOne);
@@ -121,6 +145,9 @@ public class NumberFactoryTest {
 	} 
 	
 	@Test
+	/**
+	 * Testing the subtract method for two IntegerNumbers.
+	 */
 	public void subInteger() { 
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTen);
@@ -132,6 +159,10 @@ public class NumberFactoryTest {
 	} 
 	
 	@Test
+	/**
+	 * Testing the decrement function. This is covering the case of an IntegerNumber
+	 * argument here, subtracting one and ensuring that it is computed correctly).
+	 */
 	public void IntegerNumberDecrement() { 
 		IntegerNumber a = factory.integer(bigThirty); 
 		IntegerNumber c = factory.decrement(a); 
@@ -142,6 +173,10 @@ public class NumberFactoryTest {
 	} 
 	
 	@Test
+	/**
+	 * Testing the increment function. This is covering the case of an IntegerNumber
+	 * argument here, adding one and ensuring that is is computed correctly).
+	 */
 	public void IntegerNumberIncrement() { 
 		IntegerNumber a = factory.integer(bigThirty); 
 		IntegerNumber c = factory.increment(a); 
