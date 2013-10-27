@@ -76,6 +76,12 @@ public class CVC3TranslateMathTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testTranslateIntegerDivision creates two numeric expressions, one using the symbolic operator
+	 * INT_DIVIDE, the other using MODULO, and two symbolic constants. The test compares the validity checker
+	 * and the queryresult.
+	 */
+	
 	@Test
 	public void testTranslateIntegerDivision(){
 		
@@ -98,6 +104,12 @@ public class CVC3TranslateMathTest {
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
 		assertEquals(QueryResult.VALID, vc.query(equationThree));
 	}
+	
+	/**
+	 * testTranslateMultiply compares translated numeric expressions
+	 * when using the multiply symbolic operator and the validity checker
+	 * using multExpr. The test asserts multiple arguments as well.
+	 */
 	
 
 	@Test(expected=SARLInternalException.class)
@@ -132,6 +144,12 @@ public class CVC3TranslateMathTest {
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
 		cvcProver.translate(mulExp3);
 	}
+	
+	/**
+	 * testTranslateMultiplySymbolic compares translated symbolic constant expressions
+	 * when using the multiply symbolic operator and the validity checker
+	 * using multExpr. The test asserts multiple arguments as well.
+	 */
 	
 	@Test(expected=SARLInternalException.class)
 	public void testTranslateMultiplySymbolic() {
