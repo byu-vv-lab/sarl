@@ -11,9 +11,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.SARL;
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -31,11 +35,11 @@ public class TupleTest {
 	private static SymbolicType integerType;
 
 	private static SymbolicType realType;
-	
+
 	private static SymbolicArrayType arrayIntegerType;
-	
+
 	private static SymbolicArrayType arrayRealType;
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -220,46 +224,59 @@ public class TupleTest {
 		result = universe.compatible(type6, type5);
 		assertEquals(expected, result);
 
-	
 	}
-	
+
+	// written by Mohammad Alsulmi
+
 	@Test
-	public void testTupleOfArrays(){
-		
+	public void testTupleOfArrays() {
+
 		SymbolicTupleType type1;
 		SymbolicExpression tuple;
 		SymbolicExpression intArray;
 		SymbolicExpression realArray;
 		SymbolicExpression readingResult;
-		
+
 		// creating a tuple type containing two different array types
-		type1 = universe.tupleType(universe.stringObject("Type1"),
-				Arrays.asList(new SymbolicType[] { arrayIntegerType, arrayRealType }));
-	
+		type1 = universe.tupleType(
+				universe.stringObject("Type1"),
+				Arrays.asList(new SymbolicType[] { arrayIntegerType,
+						arrayRealType }));
+
 		// an array of integer
-		intArray =  universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(2),universe.integer(8)}));
+		intArray = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(2),
+						universe.integer(8) }));
 		// an array of real
-		realArray =  universe.array(realType, Arrays.asList(new NumericExpression[]{universe.rational(6.7),universe.rational(9.99), universe.rational(9)}));
-		
+		realArray = universe.array(
+				realType,
+				Arrays.asList(new NumericExpression[] { universe.rational(6.7),
+						universe.rational(9.99), universe.rational(9) }));
+
 		// creating the tuple
-		tuple = universe.tuple(type1, Arrays.asList(new SymbolicExpression[]{intArray,realArray}));
-		
+		tuple = universe
+				.tuple(type1,
+						Arrays.asList(new SymbolicExpression[] { intArray,
+								realArray }));
+
 		readingResult = universe.tupleRead(tuple, universe.intObject(0));
-		
+
 		// checking if the resulted is an intArray
 		assertEquals(intArray, readingResult);
-		
+
 		readingResult = universe.tupleRead(tuple, universe.intObject(1));
-		
+
 		// checking if the resulted is an intArray
 		assertEquals(realArray, readingResult);
-			
-		
+
 	}
-	
+
+	// written by Mohammad Alsulmi
+
 	@Test
-	public void testMixedTypeTuples(){
-		
+	public void testMixedTypeTuples() {
+
 		SymbolicTupleType type1;
 		SymbolicTupleType type2;
 		SymbolicTupleType type3;
@@ -267,78 +284,151 @@ public class TupleTest {
 		SymbolicExpression tuple1;
 		SymbolicExpression tuple2;
 		SymbolicExpression tuple3;
-		
+
 		SymbolicExpression intArray;
 		SymbolicExpression realArray;
 		SymbolicExpression readingResult;
 		BooleanExpression boolExp;
-		
+
 		// creating a tuple type containing two different array types
-		type1 = universe.tupleType(universe.stringObject("Type1"),
-				Arrays.asList(new SymbolicType[] { arrayIntegerType, arrayRealType }));
+		type1 = universe.tupleType(
+				universe.stringObject("Type1"),
+				Arrays.asList(new SymbolicType[] { arrayIntegerType,
+						arrayRealType }));
 		// creating a tuple type containing three primitive types
-		type2 = universe.tupleType(universe.stringObject("Type2"),
-				Arrays.asList(new SymbolicType[] { integerType, integerType, realType }));
-		// creating a tuple type containing the previous two types  + real type
+		type2 = universe.tupleType(
+				universe.stringObject("Type2"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType,
+						realType }));
+		// creating a tuple type containing the previous two types + real type
 		type3 = universe.tupleType(universe.stringObject("Type3"),
 				Arrays.asList(new SymbolicType[] { type1, type2, realType }));
-	
-	
+
 		// an array of integer
-		intArray =  universe.array(integerType, Arrays.asList(new NumericExpression[]{universe.integer(2),universe.integer(8)}));
+		intArray = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(2),
+						universe.integer(8) }));
 		// an array of real
-		realArray =  universe.array(realType, Arrays.asList(new NumericExpression[]{universe.rational(6.7),universe.rational(9.99), universe.rational(9)}));
-		
+		realArray = universe.array(
+				realType,
+				Arrays.asList(new NumericExpression[] { universe.rational(6.7),
+						universe.rational(9.99), universe.rational(9) }));
+
 		// creating the 1st tuple
-		tuple1 = universe.tuple(type1, Arrays.asList(new SymbolicExpression[]{intArray,realArray}));
+		tuple1 = universe
+				.tuple(type1,
+						Arrays.asList(new SymbolicExpression[] { intArray,
+								realArray }));
 		// creating the 2nd tuple
-		tuple2 = universe.tuple(type2, Arrays.asList(new NumericExpression[]{universe.integer(50),universe.integer(40),universe.rational(3.14)}));
+		tuple2 = universe.tuple(
+				type2,
+				Arrays.asList(new NumericExpression[] { universe.integer(50),
+						universe.integer(40), universe.rational(3.14) }));
 		// creating the 3rd tuple
-		tuple3 = universe.tuple(type3, Arrays.asList(new SymbolicExpression[]{tuple1,tuple2,universe.rational(8.9)}));
-		
+		tuple3 = universe.tuple(
+				type3,
+				Arrays.asList(new SymbolicExpression[] { tuple1, tuple2,
+						universe.rational(8.9) }));
+
 		// reading the first position in tuple3
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
 		// checking if it equals to tuple1
 		assertEquals(tuple1, readingResult);
 		// extracting the array from the resulted tuple
-		readingResult = universe.tupleRead(readingResult, universe.intObject(0));
+		readingResult = universe
+				.tupleRead(readingResult, universe.intObject(0));
 		// checking if the result equals to intArrray
 		assertEquals(intArray, readingResult);
-		
+
 		// reading the second position in tuple3
 		readingResult = universe.tupleRead(tuple3, universe.intObject(1));
 		// checking if it equals to tuple2
 		assertEquals(tuple2, readingResult);
-		
-		try{
+
+		try {
 			// here, we expect an exception since the index is out of bound
 			readingResult = universe.tupleRead(tuple3, universe.intObject(3));
 			assertEquals(universe.rational(8.9), readingResult);
-			
-			
-		}catch(java.lang.IndexOutOfBoundsException ex){
-			
+
+		} catch (java.lang.IndexOutOfBoundsException ex) {
+
 			readingResult = universe.tupleRead(tuple3, universe.intObject(2));
 			assertEquals(universe.rational(8.9), readingResult);
-			
+
 		}
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
-		readingResult = universe.tupleRead(readingResult, universe.intObject(1));
-		try{
+		readingResult = universe
+				.tupleRead(readingResult, universe.intObject(1));
+		try {
 			// here, we expect an exception since appending invalid type
-			readingResult = universe.append(readingResult, universe.integer(50));
-		}
-		catch(SARLException ex){
-			readingResult = universe.append(readingResult, universe.rational(50));
+			readingResult = universe
+					.append(readingResult, universe.integer(50));
+		} catch (SARLException ex) {
+			readingResult = universe.append(readingResult,
+					universe.rational(50));
 		}
 		// writing the array back to the tuple1
-		tuple1 = universe.tupleWrite(tuple1, universe.intObject(1), readingResult);
-		readingResult = universe.tupleWrite(tuple3, universe.intObject(0), tuple1);
+		tuple1 = universe.tupleWrite(tuple1, universe.intObject(1),
+				readingResult);
+		readingResult = universe.tupleWrite(tuple3, universe.intObject(0),
+				tuple1);
 		// it should return false expression
 		boolExp = universe.equals(readingResult, tuple3);
 		assertEquals(universe.bool(false), boolExp);
-		
+
 	}
-	
-	
+
+	// written by Mohammad Alsulmi
+
+	@Test
+	public void testComplexTuples() {
+		NumericSymbolicConstant x_var, y_var;
+		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
+		SymbolicExpression tuple, expected, simplifiedTuple;
+		SymbolicTupleType tupleType;
+		BooleanExpression claim1, claim2, claim;
+		Reasoner reasoner;
+		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
+
+		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("y"), integerType);
+
+		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
+
+		x_minus_y = (NumericExpression) universe.subtract(x_var, y_var);
+		x_plus_2y = (NumericExpression) universe.multiply(universe.integer(2),
+				y_var);
+		x_plus_2y = (NumericExpression) universe.add(x_var, x_plus_2y);
+
+		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
+				x_plus_y, x_plus_y);
+
+		tupleType = universe.tupleType(
+				universe.stringObject("type1"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType,
+						integerType, integerType }));
+		tuple = universe.tuple(
+				tupleType,
+				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y,
+						x_plus_2y, x_plus_y_multiply_x_plus_y }));
+
+		claim1 = universe.equals(x_var, universe.integer(5));
+		claim2 = universe.equals(y_var, universe.integer(3));
+		claim = universe.and(claim1, claim2);
+		reasoner = reasonerUniverse.reasoner(claim);
+
+		expected = universe.tuple(
+				tupleType,
+				Arrays.asList(new NumericExpression[] { universe.integer(8),
+						universe.integer(2), universe.integer(11),
+						universe.integer(64) }));
+		simplifiedTuple = reasoner.simplify(tuple);
+
+		assertEquals(expected, simplifiedTuple);
+
+	}
+
 }
