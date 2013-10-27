@@ -634,6 +634,36 @@ public class ArrayTest {
 
 	}
 
+	@Test
+	public void testAppendTwoArrays() {
+
+		// here we test the regular case of array append when it passes
+		SymbolicExpression array1, array2, expected;
+
+		array1 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(7),
+						universe.integer(10) }));
+		array2 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(7),
+						universe.integer(110) }));
+
+		// expected array after append call
+		expected = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(7),
+						universe.integer(10), universe.integer(7),
+						universe.integer(110) }));
+		// appending here
+		array1 = universe.append(array1, array2);
+
+		// assertion call
+
+		assertEquals(expected, array1);
+
+	}
+
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testAppendException() {
@@ -868,12 +898,12 @@ public class ArrayTest {
 
 		array4 = universe.array(arrayType,
 				Arrays.asList(new SymbolicExpression[] { array2, array1 }));
-		
+
 		// creating the complete type array from the previous arrays
 
 		completeArray = universe.array(arraycompleteType,
 				Arrays.asList(new SymbolicExpression[] { array3, array4 }));
-		// do some assertions 
+		// do some assertions
 		assertEquals(array4,
 				universe.arrayRead(completeArray, universe.integer(1)));
 
