@@ -61,6 +61,11 @@ public class CVC3TranslateDivisionTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testTranslateDivision compares the validity checker and a cvc3ThoremProver 
+	 * using the divide symbolic operator and numericExpressions
+	 */
+	
 	@Test
 	public void testTranslateDivision(){
 		Expr oneExpr = cvcProver.translate(one);
@@ -72,6 +77,11 @@ public class CVC3TranslateDivisionTest {
 		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
 		assertEquals(expected6, expr6);
 	}
+	
+	/**
+	 * testTranslateDivisionSymbolic compares the validity checker and a cvc3ThoremProver 
+	 * using the divide symbolic operator and symbolic constants
+	 */
 	
 	@Test
 	public void testTranslateDivisionSymbolic(){
