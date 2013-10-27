@@ -60,6 +60,11 @@ public class CVC3TranslateAndTest {
 		public void tearDown() throws Exception {
 		}
 		
+		/**
+		 * testTranslateAndOneArg compares a Arraylist of BooleanExpressions with
+		 * the validity checker using the AND symbolic operator.
+		 */
+		
 		@Test
 		public void testTranslateAndOneArg(){
 			Expr trueExpr = cvcProver.translate(booleanExprTrue);
@@ -77,6 +82,11 @@ public class CVC3TranslateAndTest {
 			assertEquals(expected1, expr1);
 			
 		}
+		
+		/**
+		 * testTranslateandTwoArg compares two boolean expressions 
+		 * with the and symbolic operator 
+		 */
 		
 		@Test
 		public void testTranslateAndTwoArg(){
@@ -98,6 +108,12 @@ public class CVC3TranslateAndTest {
 			Expr expected3 = vc.andExpr(trueExpr, falseExpr);
 			assertEquals(expected3, expr3);
 		}
+		
+		/**
+		 * testTranslateAndException translates a boolean expression using the and symbolic
+		 * operator
+		 * @exception SARLInternalException.class
+		 */
 		
 		@Test(expected = SARLInternalException.class)
 		public void testTranslateAndException(){
