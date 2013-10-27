@@ -68,6 +68,12 @@ public class CVC3TranslateAddTest {
 		@After
 		public void tearDown() throws Exception {
 		}
+		
+	/**
+	 * testTranslateAddOneArg creates exprs from translating rational numeric 
+	 * expressions and adds them to an SymbolicCollection. The test then compares
+	 * the translated symboliccollection list and the validity checker.
+	 */
 
 	
 	@Test
@@ -93,6 +99,11 @@ public class CVC3TranslateAddTest {
 		assertEquals(addExpected4, addExpr2);
 	}
 	
+	/**
+	 * testTranslateAddTwoArg compares the validity checker and a CVC3TheoremProver
+	 * when taking two expr arguments.
+	 */
+	
 	@Test
 	public void testTranslateAddTwoArg(){
 		
@@ -105,6 +116,11 @@ public class CVC3TranslateAddTest {
 		Expr addExpected1 = vc.plusExpr(oneExpr, twoExpr);
 		assertEquals(addExpected1, addExpr1);
 	}
+	
+	/**
+	 * testTranslateAddTwoArgSymbolic compares the valditychecker and a CVC3ThoremProver
+	 * when taking two symbolic constants.
+	 */
 	
 	@Test
 	public void testTranslateAddTwoArgSymbolic(){
@@ -119,6 +135,10 @@ public class CVC3TranslateAddTest {
 		assertEquals(addExpected1, addExpr1);
 	}
 	
+	/**
+	 * testTranslateAddException adds and translates numeric expressions
+	 */
+	
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateAddException(){
 		
@@ -126,6 +146,10 @@ public class CVC3TranslateAddTest {
 				.expression(SymbolicOperator.ADD, realType, one, two, five);
 		cvcProver.translate(addExp3);
 	}
+	
+	/**
+	 * testTranslateAddExceptionSymbolic adds and translates symbolic constants
+	 */
 	
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateAddExceptionSymbolic(){
