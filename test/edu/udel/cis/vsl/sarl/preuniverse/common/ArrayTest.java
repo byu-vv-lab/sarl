@@ -9,9 +9,13 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.SARL;
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
@@ -633,6 +637,7 @@ public class ArrayTest {
 		assertEquals(expected, array);
 
 	}
+
 	// written by Mohammad Alsulmi
 	@Test
 	public void testAppendTwoArrays() {
@@ -718,6 +723,7 @@ public class ArrayTest {
 		value = universe.rational(6.0);
 		array = universe.append(array, value);
 	}
+
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testAppendException4() {
@@ -748,7 +754,6 @@ public class ArrayTest {
 		assertEquals(expected, array1);
 
 	}
-
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
@@ -937,6 +942,144 @@ public class ArrayTest {
 		// do some assertions
 		assertEquals(array4,
 				universe.arrayRead(completeArray, universe.integer(1)));
+
+	}
+
+	// written by Mohammad Alsulmi
+	@Test
+	public void complexArrayTest() {
+		NumericSymbolicConstant x_var, y_var;
+		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
+		SymbolicExpression array, expected, simplifiedArray;
+		BooleanExpression claim1, claim2, claim;
+		Reasoner reasoner;
+		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
+
+		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("y"), integerType);
+
+		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
+
+		x_minus_y = (NumericExpression) universe.subtract(x_var, y_var);
+		x_plus_2y = (NumericExpression) universe.multiply(universe.integer(2),
+				y_var);
+		x_plus_2y = (NumericExpression) universe.add(x_var, x_plus_2y);
+
+		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
+				x_plus_y, x_plus_y);
+
+		array = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y,
+						x_plus_2y, x_plus_y_multiply_x_plus_y }));
+
+		claim1 = universe.equals(x_var, universe.integer(5));
+		claim2 = universe.equals(y_var, universe.integer(3));
+		claim = universe.and(claim1, claim2);
+		reasoner = reasonerUniverse.reasoner(claim);
+
+		expected = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(8),
+						universe.integer(2), universe.integer(11),
+						universe.integer(64) }));
+		simplifiedArray = reasoner.simplify(array);
+
+		assertEquals(expected, simplifiedArray);
+
+	}
+	// written by Mohammad Alsulmi
+	@Test
+	public void testComplexMixedArray() {
+		// Testing two levels of nested arrays
+		SymbolicArrayType arrayType;
+		SymbolicArrayType nestedType;
+		SymbolicExpression array1, array2;
+		SymbolicExpression nestedArray, array3, array4;
+		NumericSymbolicConstant x_var, y_var;
+		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
+		@SuppressWarnings("unused")
+		SymbolicExpression simplifiedArray;
+		BooleanExpression claim1, claim2, claim;
+		Reasoner reasoner;
+		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
+
+		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
+		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("y"), integerType);
+
+		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
+
+		x_minus_y = (NumericExpression) universe.subtract(x_var, y_var);
+		x_plus_2y = (NumericExpression) universe.multiply(universe.integer(2),
+				y_var);
+		x_plus_2y = (NumericExpression) universe.add(x_var, x_plus_2y);
+
+		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
+				x_plus_y, x_plus_y);
+
+		// initialization of integer type array
+		arrayType = universe.arrayType(integerType);
+
+		// creating first array
+		array1 =  universe.array(integerType,
+				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y }));
+		// creating second array
+		array2 =  universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { x_plus_2y,
+						x_plus_y_multiply_x_plus_y, x_minus_y }));
+		// creating one array that contains two arrays: array1 and array2 both
+		// of type integer type
+		array3 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array1, array2 }));
+
+		// creating another array that contains two arrays: array2 and array1
+		// both of type integer type
+		// here, it is similar to array3 except the order of the elements
+		array4 = universe.array(arrayType,
+				Arrays.asList(new SymbolicExpression[] { array2, array1 }));
+
+		// do some assertion to ensure that the arrays are equals
+		assertEquals(universe.length(array3), universe.integer(2));
+		assertEquals(universe.arrayRead(array3, universe.integer(0)), array1);
+		assertEquals(universe.arrayRead(array3, universe.integer(1)), array2);
+
+		// initialization of nested array type that contains the previous
+		// initialized array type
+		nestedType = universe.arrayType(arrayType);
+
+		claim1 = universe.equals(x_var, universe.integer(5));
+		claim2 = universe.equals(y_var, universe.integer(3));
+		claim = universe.and(claim1, claim2);
+
+		try {
+			// error is expected since array2 is different type
+			nestedArray = universe.array(
+					nestedType,
+					Arrays.asList(new SymbolicExpression[] { array3, array4,
+							array2 }));
+
+		} catch (SARLException ex) {
+
+			// no Errors
+			// it will create a two level nested array
+			nestedArray = universe.array(nestedType,
+					Arrays.asList(new SymbolicExpression[] { array3, array4 }));
+			reasoner = reasonerUniverse.reasoner(claim);
+			simplifiedArray = reasoner.simplify(nestedArray);
+
+			// do some assertions to ensure the data was inserted properly
+
+			assertEquals(array3,
+					universe.arrayRead(nestedArray, universe.integer(0)));
+			assertEquals(array4,
+					universe.arrayRead(nestedArray, universe.integer(1)));
+
+		}
 
 	}
 
