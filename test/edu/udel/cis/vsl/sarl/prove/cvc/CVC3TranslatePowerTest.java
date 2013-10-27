@@ -64,6 +64,11 @@ public class CVC3TranslatePowerTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslate power compares the validity checker and a created expr from numeric expressions
+	 * using the symbolic operator POWER and powExpr.
+	 */
 
 	@Test
 	public void testTranslatePower() {
@@ -76,6 +81,11 @@ public class CVC3TranslatePowerTest {
 		Expr expected9 = vc.powExpr(twoExpr, fiveExpr);
 		assertEquals(expected9, expr9);
 	}
+	
+	/**
+	 * testTranslateSymbolic power compares the validity checker and a created expr from symbolic constants
+	 * using the symbolic operator POWER and powExpr.
+	 */
 
 	@Test
 	public void testTranslatePowerSymbolic() {
