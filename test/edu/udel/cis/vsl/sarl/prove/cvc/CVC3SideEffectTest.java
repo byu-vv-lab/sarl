@@ -59,6 +59,11 @@ public class CVC3SideEffectTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testIntDivSideEffect creates two numeric expressions with one using the symbolic
+	 * operator INT_DIVIDE, and asserts that the two numeric expressions are not equal.
+	 */
+	
 	@Test
 	public void testIntDivSideEffect(){
 		
@@ -71,6 +76,11 @@ public class CVC3SideEffectTest {
 		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
 	}
 	
+	/**
+	 * testModSideEffect creates two numeric expressions with one using the symbolic
+	 * operator MODULO, and asserts that the two numeric expressions are not equal.
+	 */
+	
 	@Test
 	public void testModSideEffect(){
 		
@@ -82,6 +92,13 @@ public class CVC3SideEffectTest {
 		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
 		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
 	}
+	
+	/**
+	 * testIntDivModSideEffect creates three numeric expressions with one using
+	 * the symbolic operator INT_DIVIDE and another using MODULO. The third numeric
+	 * expression uses universe.add and the two numericExpressions. The test asserts that
+	 * the third numeric expression is not equal to created integer variable one.
+	 */
 	
 	@Test
 	public void testIntDivModSideEffect(){
