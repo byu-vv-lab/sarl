@@ -59,6 +59,11 @@ public class CVC3TranslateOrTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslateOr uses an ArayList of boolean expressions in comparison to the
+	 * validity checker using the Symbolic Operator OR and the orExpr.
+	 */
 		
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateOr() {
