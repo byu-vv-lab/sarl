@@ -67,6 +67,10 @@ public class RealNumberFactory implements NumberFactory {
 	}
 
 	@Override
+	/**
+	 * See interface javadoc. Returns absolute value of a Number.
+	 * 
+	 */
 	public Number abs(Number number) {
 		if (number.signum() < 0) {
 			return negate(number);
@@ -76,6 +80,10 @@ public class RealNumberFactory implements NumberFactory {
 	}
 
 	@Override
+	/**
+	 * See interface. This takes in a BigInteger, and returns an IntegerNumber.
+	 * 
+	 */
 	public RealInteger integer(BigInteger big) {
 		RealInteger oldValue = integerMap.get(big);
 
