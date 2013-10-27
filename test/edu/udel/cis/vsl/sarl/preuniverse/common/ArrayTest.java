@@ -633,7 +633,7 @@ public class ArrayTest {
 		assertEquals(expected, array);
 
 	}
-
+	// written by Mohammad Alsulmi
 	@Test
 	public void testAppendTwoArrays() {
 
@@ -718,6 +718,37 @@ public class ArrayTest {
 		value = universe.rational(6.0);
 		array = universe.append(array, value);
 	}
+	// written by Mohammad Alsulmi
+	@Test(expected = SARLException.class)
+	public void testAppendException4() {
+
+		// here we test append an array of realtype to another with intgerType
+		SymbolicExpression array1, array2, expected;
+
+		array1 = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(7),
+						universe.integer(10) }));
+		array2 = universe.array(
+				realType,
+				Arrays.asList(new NumericExpression[] { universe.rational(6),
+						universe.rational(110) }));
+
+		// expected array after append call
+		expected = universe.array(
+				integerType,
+				Arrays.asList(new NumericExpression[] { universe.integer(7),
+						universe.integer(10), universe.integer(7),
+						universe.integer(110) }));
+		// appending here
+		array1 = universe.append(array1, array2);
+
+		// assertion call
+
+		assertEquals(expected, array1);
+
+	}
+
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
