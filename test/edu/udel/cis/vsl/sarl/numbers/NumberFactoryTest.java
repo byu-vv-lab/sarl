@@ -249,7 +249,8 @@ public class NumberFactoryTest {
 	
 	@Test
 	/**
-	 * Testing that the compare method works correctly for RationalNumbers
+	 * Testing that the compare method works correctly with 
+	 * an input of two RationalNumber arguments.
 	 */
 	public void ratNumCompare(){
 		RationalNumber a = factory.rational(bigThirty, bigTen);
@@ -260,6 +261,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the compare method works correctly with
+	 * an input of two IntegerNumber arguments.
+	 */
 	public void intNumCompare(){
 		IntegerNumber a = factory.integer(bigThirty);
 		IntegerNumber b = factory.integer(bigTwenty);
@@ -269,6 +274,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the compare method works correctly with
+	 * an input of two Number arguments. Covering cases of
+	 * Number being a Number, RationalNumber, or Integer Number
+	 */
 	public void numberCompare(){
 		Number a = factory.number("20");
 		Number b = factory.number("10");
@@ -288,6 +298,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the denominator method works correctly (returning 
+	 * the denominator of the input RationalNumber).
+	 */
 	public void ratNumDenominator(){
 		RationalNumber a = factory.rational(bigTen, bigThree);
 		IntegerNumber b = factory.denominator(a);
@@ -296,6 +310,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the divide method works correctly with an
+	 * input of two RationalNumber arguments.
+	 */
 	public void ratNumDivide(){
 		RationalNumber a = factory.rational(bigTen, bigThree);
 		RationalNumber b = factory.rational(bigTwo, bigOne);
