@@ -398,12 +398,21 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=ArithmeticException.class)
+	/**
+	 *@Exception ArithmeticException is thrown if trying to represent the
+	 * integer value of a RationalNumber if the RationalNumber argument 
+	 * is not integral.
+	 */
 	public void ratNumIntValueNotIntegral(){
 		RationalNumber a = factory.rational(bigTen, bigThree);
 		factory.integerValue(a);
 	}
 	
 	@Test
+	/**
+	 * Testing the integerValue method (with proper input of a RationalNumber
+	 * argument where the RationalNumber is integral).
+	 */
 	public void ratNumIntValue(){
 		RationalNumber a = factory.rational(bigTen, bigOne);
 		IntegerNumber expectedB = factory.integer(bigTen);
@@ -412,6 +421,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the multiply method, taking an input 
+	 * of two RationalNumber arguments.
+	 */
 	public void ratNumMultiply(){
 		RationalNumber a = factory.rational(bigTen, bigOne);
 		RationalNumber b = factory.rational(bigTwo, bigOne);
@@ -420,6 +433,9 @@ public class NumberFactoryTest {
 		assertEquals(expectedC, c);
 	}
 	@Test
+	/**
+	 * Testing the negate method for an input of an IntegerNumber argument.
+	 */
 	public void intNegate(){
 		IntegerNumber a = factory.integer(bigOne);
 		IntegerNumber expectedB = factory.integer(bigNegativeOne);
