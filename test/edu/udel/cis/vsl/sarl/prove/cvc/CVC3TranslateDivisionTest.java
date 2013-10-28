@@ -36,14 +36,16 @@ public class CVC3TranslateDivisionTest {
 	private static NumericExpression one = universe.rational(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	//SymbolicConstants
-	private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), realType);
-	private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), realType);
+	// SymbolicConstants
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), realType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), realType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -60,38 +62,40 @@ public class CVC3TranslateDivisionTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateDivision compares the validity checker and a cvc3ThoremProver 
-	 * using the divide symbolic operator and numericExpressions
+	 * testTranslateDivision compares the validity checker and a
+	 * cvc3ThoremProver using the divide symbolic operator and
+	 * numericExpressions
 	 */
-	
+
 	@Test
-	public void testTranslateDivision(){
+	public void testTranslateDivision() {
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 
 		NumericExpression divExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.DIVIDE, realType, one, two);
-		Expr expr6 = cvcProver.translate(divExp);
-		Expr expected6 = vc.divideExpr(oneExpr, twoExpr);
-		assertEquals(expected6, expr6);
+		Expr expr = cvcProver.translate(divExp);
+		Expr expected = vc.divideExpr(oneExpr, twoExpr);
+		assertEquals(expected, expr);
 	}
-	
+
 	/**
-	 * testTranslateDivisionSymbolic compares the validity checker and a cvc3ThoremProver 
-	 * using the divide symbolic operator and symbolic constants
+	 * testTranslateDivisionSymbolic compares the validity checker and a
+	 * cvc3ThoremProver using the divide symbolic operator and symbolic
+	 * constants
 	 */
-	
+
 	@Test
-	public void testTranslateDivisionSymbolic(){
-		Expr eExpr = cvcProver.translate(e);
-		Expr fExpr = cvcProver.translate(f);
+	public void testTranslateDivisionSymbolic() {
+		Expr xExpr = cvcProver.translate(x);
+		Expr yExpr = cvcProver.translate(y);
 
 		NumericExpression divExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.DIVIDE, realType, e, f);
-		Expr expr6 = cvcProver.translate(divExp);
-		Expr expected6 = vc.divideExpr(eExpr, fExpr);
-		assertEquals(expected6, expr6);
+				.expression(SymbolicOperator.DIVIDE, realType, x, y);
+		Expr expr = cvcProver.translate(divExp);
+		Expr expected = vc.divideExpr(xExpr, yExpr);
+		assertEquals(expected, expr);
 	}
 }
