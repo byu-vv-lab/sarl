@@ -38,7 +38,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -61,7 +60,6 @@ public class UnionTest {
 	 */
 	SymbolicExpression a;
 	
-	private BooleanExpressionFactory booleanFactory;
 	private SymbolicTypeFactory typeFactory;
 
 	@Before
@@ -69,7 +67,6 @@ public class UnionTest {
 		universe = Universes.newIdealUniverse();
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		
-		booleanFactory = system.booleanFactory();
 		typeFactory = system.typeFactory();
 		intType = universe.integerType();
 		integerType = universe.integerType();
