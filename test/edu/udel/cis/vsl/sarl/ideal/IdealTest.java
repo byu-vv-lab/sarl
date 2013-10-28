@@ -83,6 +83,7 @@ public class IdealTest {
 	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
 	private Constant intThree; // int constant 3
+	private Constant intFive; // int constant 5
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
 	IntObject intObj3;
@@ -149,6 +150,7 @@ public class IdealTest {
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		intThree = idealFactory.intConstant(3);
+		intFive = idealFactory.intConstant(5);
 		intTen = idealFactory.intConstant(10);
 		typeFactory.integerType();
 		typeFactory.integerType();
@@ -577,6 +579,87 @@ public class IdealTest {
 		assertEquals(zero, b5);
 	}
 	
+	/**
+	 * Also divides two polynomials
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 */
+	@Test
+	public void dividePoly() {
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p3 = idealFactory.multiply(intZero, x);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+				idealFactory.multiply(x, x)), intTwo);
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+				intTen, x), idealFactory.add(idealFactory.multiply(
+						intTwo, idealFactory.multiply(x, x)), intOne));
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p8 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intTwo);
+		NumericExpression p9 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intThree);
+		NumericExpression p10 = idealFactory.add(x, idealFactory.multiply(x, x));
+		NumericExpression p11 = idealFactory.add(x, intOne);
+		
+		NumericExpression p01 = idealFactory.multiply(x, x);
+		NumericExpression p02 = idealFactory.add(intTen, idealFactory.
+				multiply(intTen, x));
+		NumericExpression p03 = idealFactory.add(intTwo, idealFactory.
+				multiply(intTwo, x));
+		NumericExpression p04 = idealFactory.multiply(intTen, x);
+		NumericExpression p05 = idealFactory.add(p04, idealFactory.
+				multiply(intTen, p01));
+		NumericExpression p06 = idealFactory.add(x, intOne);
+		NumericExpression p07 = idealFactory.multiply(intTen, p01);
+		
+		/*
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly3 = (Polynomial) p3;
+		Polynomial poly4 = (Polynomial) p5;
+		Polynomial poly5 = (Polynomial) p7;
+		Polynomial poly6 = (Polynomial) p8;
+		Polynomial poly7 = (Polynomial) x;*/
+		
+		Polynomial poly1 = (Polynomial) p01;
+		Polynomial poly2 = (Polynomial) p02;
+		Polynomial poly3 = (Polynomial) p03;
+		Polynomial poly4 = (Polynomial) p04;
+		Polynomial poly5 = (Polynomial) p05;
+		Polynomial poly6 = (Polynomial) p07;
+		
+		
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
+		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
+		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);
+		/*
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
+		Polynomial b4 = commonIdealFactory.add(poly5, poly6);
+		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
+		Polynomial b6 = commonIdealFactory.add(poly5, poly7);
+		Polynomial b7 = commonIdealFactory.add(poly7, intOne);*/
+		
+		assertEquals(intFive, b1);
+		assertEquals(p06, b2);
+		assertEquals(intTen, b3);
+		/*
+		assertEquals(p4, b1);
+		assertEquals(p2, b2);
+		assertEquals(p6, b3);
+		assertEquals(p9, b4);
+		assertEquals(p8, b5);
+		assertEquals(p10, b6);
+		assertEquals(p11, b7);*/
+		
+		
+	}
+		
 	/**
 	 * Returns the expression by removing the constant term present in the passed argument.
 	 * 
