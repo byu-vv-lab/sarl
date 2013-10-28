@@ -42,16 +42,16 @@ public class CVC3TranslateFunctionTest {
 	private static NumericExpression oneInt = universe.integer(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	//constants
-	private static SymbolicConstant e = universe
-			.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe
-			.symbolicConstant(universe.stringObject("f"), intType);
+	// SymbolcConstants
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -68,93 +68,101 @@ public class CVC3TranslateFunctionTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateFunctionSymbolicConstant assesses the validity of the query of the validity checker
-	 * while using the operation and children of a symbolic expression made from various array lists created
-	 * within the test.
-	**/
+	 * testTranslateFunctionSymbolicConstant assesses the validity of the query
+	 * of the validity checker while using the operation and children of a
+	 * symbolic expression made from various array lists created within the
+	 * test.
+	 **/
 
 	@Test
-	public void testTranslateFunctionSymbolicConstant(){
-	
-		List <SymbolicType> types = new ArrayList<SymbolicType>();
+	public void testTranslateFunctionSymbolicConstant() {
+
+		List<SymbolicType> types = new ArrayList<SymbolicType>();
 		types.add(intType);
-		
+
 		SymbolicType type = universe.functionType(types, intType);
-		SymbolicConstant symFunction = universe
-				.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
-		
+		SymbolicConstant symFunction = universe.symbolicConstant(
+				universe.stringObject("SymbolicConstant"), type);
+
 		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
-		funList.add(oneInt); 
-		SymbolicCollection<SymbolicExpression> collect = universe.basicCollection(funList);
-		
-		SymbolicExpression e = expressionFactory
-				.expression(SymbolicOperator.APPLY, symFunction.type(), symFunction, collect);
+		funList.add(oneInt);
+		SymbolicCollection<SymbolicExpression> collect = universe
+				.basicCollection(funList);
+
+		SymbolicExpression e = expressionFactory.expression(
+				SymbolicOperator.APPLY, symFunction.type(), symFunction,
+				collect);
 
 		Expr expr = cvcProver.translate(e);
 		Expr expr1 = expr.getOpExpr();
 		Expr expr2 = expr.getChild(0);
 
 		Expr oneIntExpr = cvcProver.translate(oneInt);
-		
-		Expr equationOne = vc.eqExpr(expr1, vc.exprFromString("SymbolicConstant"));
+
+		Expr equationOne = vc.eqExpr(expr1,
+				vc.exprFromString("SymbolicConstant"));
 		Expr equationTwo = vc.eqExpr(expr2, oneIntExpr);
 
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
 	}
-	
+
 	/**
-	 * testTranslateFunctionLambda creates a symbolic expression using lambda and 
-	 * symbolic constants. The test translates the symbolic expression and assesses
-	 * the validity of the validity checker when using the translation.
+	 * testTranslateFunctionLambda creates a symbolic expression using lambda
+	 * and symbolic constants. The test translates the symbolic expression and
+	 * assesses the validity of the validity checker when using the translation.
 	 */
-	
+
 	@Test
-	public void testTranslateFunctionLambda(){
-		
-		List <SymbolicType> types = new ArrayList<SymbolicType>();
+	public void testTranslateFunctionLambda() {
+
+		List<SymbolicType> types = new ArrayList<SymbolicType>();
 		types.add(intType);
-		
+
 		SymbolicType type = universe.functionType(types, intType);
 		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
-		funList.add(oneInt); 
-		SymbolicCollection<SymbolicExpression> collect = universe.basicCollection(funList);
-		
-		SymbolicExpression lamFunction = universe.lambda(e, f);
-		SymbolicExpression e = expressionFactory
-				.expression(SymbolicOperator.APPLY, type, lamFunction, collect);
-		
+		funList.add(oneInt);
+		SymbolicCollection<SymbolicExpression> collect = universe
+				.basicCollection(funList);
+
+		SymbolicExpression lamFunction = universe.lambda(x, y);
+		SymbolicExpression e = expressionFactory.expression(
+				SymbolicOperator.APPLY, type, lamFunction, collect);
+
 		Expr expr = cvcProver.translate(e);
-		Expr equationOne = vc.eqExpr(expr, vc.exprFromString("(LAMBDA (e: INT): f)(1)"));
-		
+		Expr equationOne = vc.eqExpr(expr,
+				vc.exprFromString("(LAMBDA (e: INT): f)(1)"));
+
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 	}
-	
+
 	/**
-	 * testTranslateFunctionUnexpected translates a symbolic expression that uses an array
-	 * of symbolic functions.
-	 * @exception expected = SARLInternalException.class
+	 * testTranslateFunctionUnexpected translates a symbolic expression that
+	 * uses an array of symbolic functions.
+	 * 
+	 * @exception expected
+	 *                = SARLInternalException.class
 	 */
-	
+
 	@Test(expected = SARLInternalException.class)
-	public void testTranslateFunctionUnexpected(){
-	
-		List <SymbolicType> types = new ArrayList<SymbolicType>();
+	public void testTranslateFunctionUnexpected() {
+
+		List<SymbolicType> types = new ArrayList<SymbolicType>();
 		types.add(intType);
-		
+
 		SymbolicType type = universe.functionType(types, intType);
-		SymbolicExpression symFunction = universe
-				.symbolicConstant(universe.stringObject("SymbolicConstant"), type);
-		
+		SymbolicExpression symFunction = universe.symbolicConstant(
+				universe.stringObject("SymbolicConstant"), type);
+
 		List<SymbolicExpression> funList = new ArrayList<SymbolicExpression>();
 		funList.add(symFunction);
-		
+
 		SymbolicExpression d = universe.array(symFunction.type(), funList);
-		SymbolicExpression e = expressionFactory
-				.expression(SymbolicOperator.APPLY, d.type(), d);
-		
+		SymbolicExpression e = expressionFactory.expression(
+				SymbolicOperator.APPLY, d.type(), d);
+
 		cvcProver.translate(e);
 	}
 
