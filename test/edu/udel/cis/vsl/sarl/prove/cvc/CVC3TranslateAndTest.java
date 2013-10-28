@@ -26,101 +26,103 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 public class CVC3TranslateAndTest {
 
 	// Static fields: instantiated once and used for all tests...
-		private static FactorySystem factorySystem = PreUniverses
-				.newIdealFactorySystem();
-		private static PreUniverse universe = PreUniverses
-				.newPreUniverse(factorySystem);
-		private static ExpressionFactory expressionFactory = factorySystem
-				.expressionFactory();
-		private static SymbolicType boolType = universe.booleanType();
-		// expressions
-		private static BooleanExpression booleanExprTrue = universe
-				.trueExpression();
-		private static BooleanExpression booleanExprFalse = universe
-				.falseExpression();
-		// Instance fields: instantiated before each test is run...
-		private TheoremProverFactory proverFactory;
-		private CVC3TheoremProver cvcProver;
-		private ValidityChecker vc;
-		
-		/**
-		 * Set up each test. This method is run before each test.
-		 * 
-		 * @throws Exception
-		 */
-		@Before
-		public void setUp() throws Exception {
-			proverFactory = Prove.newCVC3TheoremProverFactory(universe);
-			cvcProver = (CVC3TheoremProver) proverFactory
-					.newProver(booleanExprTrue);
-			vc = cvcProver.validityChecker();
-		}
+	private static FactorySystem factorySystem = PreUniverses
+			.newIdealFactorySystem();
+	private static PreUniverse universe = PreUniverses
+			.newPreUniverse(factorySystem);
+	private static ExpressionFactory expressionFactory = factorySystem
+			.expressionFactory();
+	private static SymbolicType boolType = universe.booleanType();
+	// expressions
+	private static BooleanExpression booleanExprTrue = universe
+			.trueExpression();
+	private static BooleanExpression booleanExprFalse = universe
+			.falseExpression();
+	// Instance fields: instantiated before each test is run...
+	private TheoremProverFactory proverFactory;
+	private CVC3TheoremProver cvcProver;
+	private ValidityChecker vc;
 
-		@After
-		public void tearDown() throws Exception {
-		}
-		
-		/**
-		 * testTranslateAndOneArg compares a Arraylist of BooleanExpressions with
-		 * the validity checker using the AND symbolic operator.
-		 */
-		
-		@Test
-		public void testTranslateAndOneArg(){
-			Expr trueExpr = cvcProver.translate(booleanExprTrue);
-			Expr falseExpr = cvcProver.translate(booleanExprFalse);
+	/**
+	 * Set up each test. This method is run before each test.
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		cvcProver = (CVC3TheoremProver) proverFactory
+				.newProver(booleanExprTrue);
+		vc = cvcProver.validityChecker();
+	}
 
-			List<BooleanExpression> s1 = new ArrayList<BooleanExpression>();
-			s1.add(booleanExprFalse);
-			s1.add(booleanExprTrue);
-			
-			SymbolicCollection<BooleanExpression> boolList = universe.basicCollection(s1);
-			BooleanExpression andExp1 = (BooleanExpression) expressionFactory
-					.expression(SymbolicOperator.AND, boolType, boolList);
-			Expr expr1 = cvcProver.translate(andExp1);
-			Expr expected1 = vc.andExpr(falseExpr, trueExpr);
-			assertEquals(expected1, expr1);
-			
-		}
-		
-		/**
-		 * testTranslateandTwoArg compares two boolean expressions 
-		 * with the and symbolic operator 
-		 */
-		
-		@Test
-		public void testTranslateAndTwoArg(){
-			
-			Expr trueExpr = cvcProver.translate(booleanExprTrue);
-			Expr falseExpr = cvcProver.translate(booleanExprFalse);
-			
-			BooleanExpression andExp2 = (BooleanExpression) expressionFactory
-					.expression(SymbolicOperator.AND, boolType, 
-							booleanExprTrue, booleanExprTrue);
-			Expr expr2 = cvcProver.translate(andExp2);
-			Expr expected2 = vc.andExpr(trueExpr, trueExpr);
-			assertEquals(expected2, expr2);
-			
-			BooleanExpression andExp3 = (BooleanExpression) expressionFactory
-					.expression(SymbolicOperator.AND, boolType, 
-							booleanExprTrue, booleanExprFalse);
-			Expr expr3 = cvcProver.translate(andExp3);
-			Expr expected3 = vc.andExpr(trueExpr, falseExpr);
-			assertEquals(expected3, expr3);
-		}
-		
-		/**
-		 * testTranslateAndException translates a boolean expression using the and symbolic
-		 * operator
-		 * @exception SARLInternalException.class
-		 */
-		
-		@Test(expected = SARLInternalException.class)
-		public void testTranslateAndException(){
-			
-			BooleanExpression andExp4 = (BooleanExpression) expressionFactory
-					.expression(SymbolicOperator.AND, boolType, booleanExprTrue, 
-							booleanExprFalse, booleanExprFalse);
-			cvcProver.translate(andExp4);
-		}
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	/**
+	 * testTranslateAndOneArg compares a Arraylist of BooleanExpressions with
+	 * the validity checker using the AND symbolic operator.
+	 */
+
+	@Test
+	public void testTranslateAndOneArg() {
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr falseExpr = cvcProver.translate(booleanExprFalse);
+
+		List<BooleanExpression> s1 = new ArrayList<BooleanExpression>();
+		s1.add(booleanExprFalse);
+		s1.add(booleanExprTrue);
+
+		SymbolicCollection<BooleanExpression> boolList = universe
+				.basicCollection(s1);
+		BooleanExpression andExp = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, boolList);
+		Expr expr = cvcProver.translate(andExp);
+		Expr expected = vc.andExpr(falseExpr, trueExpr);
+		assertEquals(expected, expr);
+
+	}
+
+	/**
+	 * testTranslateandTwoArg compares two boolean expressions with the and
+	 * symbolic operator
+	 */
+
+	@Test
+	public void testTranslateAndTwoArg() {
+
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr falseExpr = cvcProver.translate(booleanExprFalse);
+
+		BooleanExpression andExp = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, booleanExprTrue,
+						booleanExprTrue);
+		Expr expr = cvcProver.translate(andExp);
+		Expr expected = vc.andExpr(trueExpr, trueExpr);
+		assertEquals(expected, expr);
+
+		BooleanExpression andExp2 = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, booleanExprTrue,
+						booleanExprFalse);
+		Expr expr2 = cvcProver.translate(andExp2);
+		Expr expected2 = vc.andExpr(trueExpr, falseExpr);
+		assertEquals(expected2, expr2);
+	}
+
+	/**
+	 * testTranslateAndException translates a boolean expression using the and
+	 * symbolic operator
+	 * 
+	 * @exception SARLInternalException.class
+	 */
+
+	@Test(expected = SARLInternalException.class)
+	public void testTranslateAndException() {
+
+		BooleanExpression andExp = (BooleanExpression) expressionFactory
+				.expression(SymbolicOperator.AND, boolType, booleanExprTrue,
+						booleanExprFalse, booleanExprFalse);
+		cvcProver.translate(andExp);
+	}
 }
