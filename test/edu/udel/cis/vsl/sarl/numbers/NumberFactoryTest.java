@@ -553,6 +553,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the abs method, with an input of a Number argument
+	 * that is a positive number.
+	 */
 	public void positiveNumberAbs(){
 		Number a = factory.number("30");
 		Number expectedB = factory.number("30");
@@ -561,6 +565,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the abs method, with an input of a Number argument
+	 * that is a negative number.
+	 */
 	public void negativeNumberAbs(){
 		Number a = factory.number("-30");
 		Number expectedB = factory.number("30");
@@ -569,6 +577,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the integer function, with an input of an int (ensuring
+	 * that is is properly converted to an IntegerNumber).
+	 */
 	public void intInteger(){
 		int a = 30;
 		IntegerNumber expectedB = factory.integer(bigThirty);
@@ -577,6 +589,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the negate method for a Number argument that is
+	 * an IntegerNumber.
+	 */
 	public void numberNegateIntNum(){
 		Number a = factory.number("30");
 		IntegerNumber expectedB = (IntegerNumber) factory.number("-30");
