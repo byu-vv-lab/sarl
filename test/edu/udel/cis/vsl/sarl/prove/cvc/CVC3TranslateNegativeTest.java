@@ -37,8 +37,8 @@ public class CVC3TranslateNegativeTest {
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	// SymbolicConstant
-	private static SymbolicConstant e = universe.symbolicConstant(
-			universe.stringObject("e"), intType);
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -60,9 +60,10 @@ public class CVC3TranslateNegativeTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateNegative compares a negative numeric expression and the validity checker
+	 * testTranslateNegative compares a negative numeric expression and the
+	 * validity checker
 	 */
 
 	@Test
@@ -70,24 +71,25 @@ public class CVC3TranslateNegativeTest {
 
 		NumericExpression negExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.NEGATIVE, intType, one);
-		Expr expr7 = cvcProver.translate(negExp);
-		Expr expected7 = vc.uminusExpr(cvcProver
+		Expr expr = cvcProver.translate(negExp);
+		Expr expected = vc.uminusExpr(cvcProver
 				.translate((SymbolicExpression) negExp.argument(0)));
-		assertEquals(expected7, expr7);
+		assertEquals(expected, expr);
 	}
-	
+
 	/**
-	 * testTranslateNegative compares a negative symbolic constant expression and the validity checker
+	 * testTranslateNegative compares a negative symbolic constant expression
+	 * and the validity checker
 	 */
 
 	@Test
 	public void testTranslateNegativeSymbolic() {
 
 		NumericExpression negExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.NEGATIVE, intType, e);
-		Expr expr7 = cvcProver.translate(negExp);
-		Expr expected7 = vc.uminusExpr(cvcProver
+				.expression(SymbolicOperator.NEGATIVE, intType, x);
+		Expr expr = cvcProver.translate(negExp);
+		Expr expected = vc.uminusExpr(cvcProver
 				.translate((SymbolicExpression) negExp.argument(0)));
-		assertEquals(expected7, expr7);
+		assertEquals(expected, expr);
 	}
 }
