@@ -34,9 +34,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
@@ -46,7 +44,11 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
-//writen by Boyang Luo
+/**
+ * This class tests array functionality in the PreUniverse package.
+ * 
+ * @author Boyang Luo
+ */
 public class MakeTest {
 	// Universe
 	private static PreUniverse universe;
@@ -98,7 +100,7 @@ public class MakeTest {
 		NumericExpression zero,one,two,three,low,high;
 		NumericSymbolicConstant x_var,y_var;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicExpression y_minus_x,x_minus_y;
+		SymbolicExpression y_minus_x,x_minus_y,array1;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
 		SymbolicType Integer,Bool;// For testing nullExpression() method
@@ -108,6 +110,10 @@ public class MakeTest {
 		Integer = universe.integerType();
 		Bool = universe.booleanType();
 		//Real = universe.realType();
+		
+		array1 = universe.array(
+				type,
+				Arrays.asList(new SymbolicConstant[] { index }));
 
 
 		zero=universe.integer(0);
@@ -173,6 +179,15 @@ public class MakeTest {
 		SymbolicObject[] Args_FORALL={(NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("name"), integerType),resultTrue};
 		assertEquals(universe.make(SymbolicOperator.FORALL,Bool,Args_FORALL),testResult1);
+		
+		
+		//case LENGTH
+		//TODO:did not finish,need help
+		SymbolicExpression[] Args_Length={array1};
+		System.out.println(universe.length(Args_Length[0]));
+		//System.out.println(universe.make(SymbolicOperator.LENGTH, Integer, Args_Length));
+		
+		
 		//case MULTIPLY
 		//SymbolicObject[] testList =new SymbolicObject[] {one};
 		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();
@@ -247,7 +262,6 @@ public class MakeTest {
 		symbolicExpr3 = universe.make(SymbolicOperator.UNION_TEST, union1, Args_Union_Test);
 		assertEquals(ans1, universe.bool(true));
 		assertEquals(symbolicExpr3, ans1);
-		
 	}
 
 }
