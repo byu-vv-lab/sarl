@@ -311,8 +311,39 @@ public class CommonPreUniverseTest {
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testMinus() {
+		NumericExpression x_var;
+		NumericExpression y_var;
+		NumericExpression x_neg;
+		NumericExpression y_neg;
+		NumericExpression x_plus_y;
+		NumericExpression x_neg_minus_y;
+		NumericExpression x_neg_plus_y_neg;
 		NumericExpression seventeen = universe.integer(17);
 		NumericExpression negativeSeventeen = universe.integer(-17);
+		
+		x_var = (NumericExpression) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
+		y_var = (NumericExpression) universe.symbolicConstant(
+				universe.stringObject("y"), integerType);
+		
+		x_neg = universe.minus(x_var);
+		y_neg = universe.minus(y_var);
+		
+		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
+		x_neg_minus_y = (NumericExpression) universe.subtract(x_neg, y_var);
+		x_neg_plus_y_neg = (NumericExpression) universe.add(x_neg, y_neg);
+		
+		// Check negative and double negative of symbolic variables
+		assertEquals(universe.minus(x_neg), x_var);
+		assertEquals(universe.minus(universe.minus(x_var)), x_var);
+		assertEquals(universe.minus(y_neg), y_var);
+		assertEquals(universe.minus(universe.minus(y_var)), y_var);
+		
+		// Check correct behavior for symbolic expressions
+		assertEquals(x_neg_minus_y, universe.minus(x_plus_y));
+		assertEquals(x_neg_plus_y_neg, universe.minus(x_plus_y));
+		assertEquals(x_neg_minus_y, x_neg_plus_y_neg);
+		
 		assertEquals(universe.minus(seventeen), negativeSeventeen); // test -( 17) = -17
 		assertEquals(universe.minus(negativeSeventeen), seventeen); // test -(-17) =  17
 	}
