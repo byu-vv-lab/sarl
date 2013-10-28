@@ -601,6 +601,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the negate method for an input of a String argument,
+	 * covering the cases of an integer and a rational number.
+	 */
 	public void numberNegateRatNum(){
 		Number a = factory.number("30");
 		Number expectedB = factory.number("-30");
@@ -613,6 +617,9 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the increment method for an input of a Number.
+	 */
 	public void numIncrement(){
 		Number a = factory.integer(bigThirty);
 		Number expectedB = factory.integer(bigThirtyOne);
@@ -621,6 +628,9 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the increment method for an input of a RationalNumber.
+	 */
 	public void ratNumIncrement(){
 		RationalNumber a = factory.rational(bigFive, bigThree);
 		RationalNumber expectedB = factory.rational(bigEight, bigThree);
@@ -629,6 +639,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the increment method for an input of a Number argument
+	 * that is a RationalNumber.
+	 */
 	public void numIncrementRatArg(){
 		Number a = factory.rational(bigFive, bigThree);
 		Number expectedB = factory.rational(bigEight, bigThree);
