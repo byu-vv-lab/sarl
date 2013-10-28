@@ -14,5 +14,5 @@
  *  @see edu.udel.cis.vsl.sarl.SARL
  *  @see edu.udel.cis.vsl.sarl.IF
  */
-package edu.udel.cis.vsl.sarl.preuniverse;
+package edu.udel.cis.vsl.sarl.preuniverse.common;
 
