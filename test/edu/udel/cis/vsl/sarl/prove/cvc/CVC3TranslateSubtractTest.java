@@ -65,6 +65,12 @@ public class CVC3TranslateSubtractTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testTranslateSubtract creates a numeric expression using the symbolic operator
+	 * SUBTRACT and rational numeric expressions. The test then translates the numeric 
+	 * expression and compares it to the validity checker using .minusExpr.
+	 */
+	
 	@Test
 	public void testTranslateSubtract(){
 		Expr oneExpr = cvcProver.translate(one);
@@ -76,6 +82,12 @@ public class CVC3TranslateSubtractTest {
 		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
 		assertEquals(expected10, expr10);
 	}
+	
+	/**
+	 * testTranslateSubtractSymbolic creates a numeric expression using the symbolic operator
+	 * SUBTRACT and symbolic constants. The test then translates the numeric expression and 
+	 * compares it to the validity checker using .minusExpr.
+	 */
 	
 	@Test
 	public void testTranslateSubtractSymbolic(){
