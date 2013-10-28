@@ -110,7 +110,7 @@ public class MakeTest {
 		Integer = universe.integerType();
 		Bool = universe.booleanType();
 		//Real = universe.realType();
-		
+
 		array1 = universe.array(
 				type,
 				Arrays.asList(new SymbolicConstant[] { index }));
@@ -122,8 +122,7 @@ public class MakeTest {
 		three = universe.integer(3);
 		low = universe.integer(999);
 		high = universe.integer(2000);
-				//numberFactory.integer(1);
-		
+
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), realType);
 		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -151,18 +150,18 @@ public class MakeTest {
 		SymbolicExpression writeResult = universe.arrayWrite(write,two,one);		
 		SymbolicObject[] Args_Array_Write={write,two,one};
 		assertEquals(writeResult,universe.make(SymbolicOperator.ARRAY_WRITE,intArrayType,Args_Array_Write));
-		
-		
-		
+
+
+
 		//case CONCRETE
 		// TODO: don't know how to do
 		//SymbolicObject[] Args_Concrete={null};
 		//SymbolicObject Concrete_result = universe.canonic();
 		//System.out.println(Concrete_result);
 		//assertEquals(universe.make(SymbolicOperator.CONCRETE, Integer, Args_Concrete),Concrete_result);
-		
-		
-		
+
+
+
 		//case COND
 		SymbolicObject[] Args_COND={resultTrue,resultTrue,resultTrue};
 		assertEquals(universe.make(SymbolicOperator.COND,Bool,Args_COND),resultTrue);
@@ -179,15 +178,15 @@ public class MakeTest {
 		SymbolicObject[] Args_FORALL={(NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("name"), integerType),resultTrue};
 		assertEquals(universe.make(SymbolicOperator.FORALL,Bool,Args_FORALL),testResult1);
-		
-		
+
+
 		//case LENGTH
 		//TODO:did not finish,need help
 		SymbolicExpression[] Args_Length={array1};
 		System.out.println(universe.length(Args_Length[0]));
 		//System.out.println(universe.make(SymbolicOperator.LENGTH, Integer, Args_Length));
-		
-		
+
+
 		//case MULTIPLY
 		//SymbolicObject[] testList =new SymbolicObject[] {one};
 		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();

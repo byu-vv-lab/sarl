@@ -326,7 +326,14 @@ public interface PreUniverse {
 	 * @return the NumberObject wrapping that Number
 	 */
 	NumberObject numberObject(Number value);
-
+	/**
+	 * Returns the charObject wrapping the given char value. These are SARL
+	 * char, not Java char. 
+	 * 
+	 * @param value
+	 *            a SARL char
+	 * @return the CharObject wrapping that char
+	 */
 	CharObject charObject(char value);
 
 	/**
@@ -599,9 +606,19 @@ public interface PreUniverse {
 	Number extractNumber(NumericExpression expression);
 
 	// Character and string...
-
+	/**
+	 * 
+	 * @param char
+	 *            
+	 * @return SymbolicExpression char by given char type theChar
+	 */
 	SymbolicExpression character(char theChar);
-
+	/**
+	 * 
+	 * @param String
+	 *            
+	 * @return SymbolicExpression String by given String type theString
+	 */
 	SymbolicExpression stringExpression(String theString);
 
 	Character extractCharacter(SymbolicExpression expression);
