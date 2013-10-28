@@ -37,7 +37,7 @@ public class CVC3TheoremProverTest {
 			.trueExpression();
 	private static BooleanExpression booleanExprFalse = universe
 			.falseExpression();
-	
+
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -50,7 +50,7 @@ public class CVC3TheoremProverTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		
+
 		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
@@ -60,10 +60,10 @@ public class CVC3TheoremProverTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testBoolean sets the created cvcTheoremProver to null and compares the boolean type
-	 * of the validity checker created.
+	 * testBoolean sets the created cvcTheoremProver to null and compares the
+	 * boolean type of the validity checker created.
 	 */
 
 	@Test
@@ -74,81 +74,79 @@ public class CVC3TheoremProverTest {
 
 		assertEquals(t, vc.boolType());
 	}
-	
+
 	/**
-	 * testToString creates two strings and asserts that one of the created strings
-	 * is equal to the cvcProver as a string and the other is not equal to the 
-	 * cvcProver as a string.
+	 * testToString creates two strings and asserts that one of the created
+	 * strings is equal to the cvcProver as a string and the other is not equal
+	 * to the cvcProver as a string.
 	 */
-	
+
 	@Test
-	public void testToString(){
-		
+	public void testToString() {
+
 		String expected = "CVC3TheoremProver";
 		String notExpected = "This is wrong";
-		
+
 		assertEquals(expected, cvcProver.toString());
 		assertFalse(notExpected.equals(cvcProver.toString()));
 	}
-	
+
 	/**
-	 * testValid asserts the equality of the created CVC3TheoremProver
-	 * when it's boolean value is set to true and when it's set to false in comparison
-	 * to the validity result types.
+	 * testValid asserts the equality of the created CVC3TheoremProver when it's
+	 * boolean value is set to true and when it's set to false in comparison to
+	 * the validity result types.
 	 */
-	
+
 	@Test
 	public void testValid() {
-		cvcProver = (CVC3TheoremProver) proverFactory.
-				newProver(booleanExprTrue);
-		
+		cvcProver = (CVC3TheoremProver) proverFactory
+				.newProver(booleanExprTrue);
+
 		// including for coverage
 		cvcProver.setOutput(out);
 		cvcProver.showProverQueries();
 
 		// if true, then true (valid)
-		assertEquals(ValidityResult.ResultType.YES, 
+		assertEquals(ValidityResult.ResultType.YES,
 				cvcProver.valid(booleanExprTrue).getResultType());
 		// if true, then false (invalid)
 		assertEquals(ValidityResult.ResultType.NO,
 				cvcProver.valid(booleanExprFalse).getResultType());
-		
-		cvcProver = (CVC3TheoremProver) proverFactory.
-				newProver(booleanExprFalse);
-		
+
+		cvcProver = (CVC3TheoremProver) proverFactory
+				.newProver(booleanExprFalse);
+
 		// if false, then false (valid)
 		assertEquals(ValidityResult.ResultType.YES,
 				cvcProver.valid(booleanExprFalse).getResultType());
 		// if false, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES,
-				cvcProver.valid(booleanExprTrue).getResultType());	
-		
+				cvcProver.valid(booleanExprTrue).getResultType());
+
 		// including for coverage
 		Map<SymbolicExpression, Expr> map = cvcProver.expressionMap();
 		out.println(map.toString());
 	}
-	
+
 	@Test
 	@Ignore
 	public void testNewCVCName() {
-		
-		//use expression factory to get APPLY expression in order to use translate to hit switch case
-		//in order to publicly get to translateFunction which uses newCvcName
-		SymbolicExpression x = universe
-				.symbolicConstant(universe.stringObject("x"),
-						universe.booleanType());
-		
-		SymbolicExpression x2 = universe
-				.symbolicConstant(universe.stringObject("x"),
-						universe.booleanType());
-		
+
+		// use expression factory to get APPLY expression in order to use
+		// translate to hit switch case
+		// in order to publicly get to translateFunction which uses newCvcName
+		SymbolicExpression x = universe.symbolicConstant(
+				universe.stringObject("x"), universe.booleanType());
+
+		SymbolicExpression x2 = universe.symbolicConstant(
+				universe.stringObject("x"), universe.booleanType());
+
 		Expr xTranslateSym = cvcProver.translate(x);
 		Expr xTranslateSym2 = cvcProver.translate(x2);
-		
+
 		assertEquals(xTranslateSym.toString(), "x");
 		assertEquals(xTranslateSym2.toString(), "x'1");
 
 	}
-	
-	
+
 }
