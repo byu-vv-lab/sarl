@@ -563,6 +563,12 @@ public class CommonPreUniverseTest {
 						universe.bool(true)), testResult4);
 	}
 
+	/**
+	 * Test for equals() method in which UNIONS are passed.  Multiple cases
+	 * where different components of the unions are not equal.
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/23/13
 	public void testEqualsSymbolicExpressionSymbolicExpression() {
