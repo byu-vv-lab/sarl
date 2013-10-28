@@ -1,6 +1,5 @@
 package edu.udel.cis.vsl.sarl;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
@@ -81,7 +80,6 @@ public class UnionBenchmark {
 			for(int i = 0; i < currSize; ++i){
 					SymbolicCompleteArrayType tempArray = universe.arrayType(realType, universe.integer(i));
 					SymbolicExpression tempExpr = expressionFactory.expression(SymbolicOperator.UNION_INJECT, realArray, tempArray);
-					@SuppressWarnings("unused")
 					SymbolicExpression tempInject = universe.unionInject(myUnion, universe.intObject(i), tempExpr);
 					unionList.push(tempInject);
 			}
