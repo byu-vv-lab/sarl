@@ -16,6 +16,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -36,6 +37,7 @@ public class CVC3TranslateAddTest {
 				.expressionFactory();
 		// types
 		private static SymbolicRealType realType = universe.realType();
+		private static SymbolicIntegerType intType = universe.integerType();
 		//expressions
 		private static NumericExpression five = universe.rational(5);
 		private static NumericExpression two = universe.rational(2);
@@ -43,9 +45,9 @@ public class CVC3TranslateAddTest {
 		private static BooleanExpression booleanExprTrue = universe
 				.trueExpression();
 		//SymbolicConstant
-		private static SymbolicConstant e = universe.symbolicConstant(universe.stringObject("e"), realType);
-		private static SymbolicConstant f = universe.symbolicConstant(universe.stringObject("f"), realType);
-		private static SymbolicConstant g = universe.symbolicConstant(universe.stringObject("g"), realType);
+		private static SymbolicConstant x = universe.symbolicConstant(universe.stringObject("x"), realType);
+		private static SymbolicConstant y = universe.symbolicConstant(universe.stringObject("y"), realType);
+		private static SymbolicConstant z = universe.symbolicConstant(universe.stringObject("z"), intType);
 		// Instance fields: instantiated before each test is run...
 		private TheoremProverFactory proverFactory;
 		private CVC3TheoremProver cvcProver;
@@ -75,7 +77,6 @@ public class CVC3TranslateAddTest {
 	 * the translated symboliccollection list and the validity checker.
 	 */
 
-	
 	@Test
 	public void testTranslateAddOneArg(){
 		
@@ -90,31 +91,30 @@ public class CVC3TranslateAddTest {
 		
 		SymbolicCollection<NumericExpression> addList = universe.basicCollection(s1);
 		
-		NumericExpression addExp2 = universe.add(addList);
-		Expr addExpr2 = cvcProver.translate(addExp2);
+		NumericExpression addExp = universe.add(addList);
+		Expr addExpr = cvcProver.translate(addExp);
 		
-		Expr addExpected2 = vc.plusExpr(oneExpr, twoExpr);
-		Expr addExpected3 = vc.plusExpr(addExpected2, fiveExpr);
-		Expr addExpected4 = vc.simplify(addExpected3);
-		assertEquals(addExpected4, addExpr2);
+		Expr addExpected1 = vc.plusExpr(oneExpr, twoExpr);
+		Expr addExpected2 = vc.plusExpr(addExpected1, fiveExpr);
+		Expr addExpected3 = vc.simplify(addExpected2);
+		assertEquals(addExpected3, addExpr);
 	}
 	
 	/**
 	 * testTranslateAddTwoArg compares the validity checker and a CVC3TheoremProver
-	 * when taking two expr arguments.
+	 * when taking two numericExpression arguments.
 	 */
 	
 	@Test
 	public void testTranslateAddTwoArg(){
-		
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 		
-		NumericExpression addExp1 = (NumericExpression) expressionFactory
+		NumericExpression addExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.ADD, realType, one, two);
-		Expr addExpr1 = cvcProver.translate(addExp1);
-		Expr addExpected1 = vc.plusExpr(oneExpr, twoExpr);
-		assertEquals(addExpected1, addExpr1);
+		Expr addExpr = cvcProver.translate(addExp);
+		Expr addExpected = vc.plusExpr(oneExpr, twoExpr);
+		assertEquals(addExpected, addExpr);
 	}
 	
 	/**
@@ -125,14 +125,14 @@ public class CVC3TranslateAddTest {
 	@Test
 	public void testTranslateAddTwoArgSymbolic(){
 		
-		Expr eExpr = cvcProver.translate(e);
-		Expr fExpr = cvcProver.translate(f);
+		Expr xExpr = cvcProver.translate(x);
+		Expr yExpr = cvcProver.translate(y);
 		
-		NumericExpression addExp1 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, e, f);
-		Expr addExpr1 = cvcProver.translate(addExp1);
-		Expr addExpected1 = vc.plusExpr(eExpr, fExpr);
-		assertEquals(addExpected1, addExpr1);
+		NumericExpression addExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.ADD, realType, x, y);
+		Expr addExpr = cvcProver.translate(addExp);
+		Expr addExpected = vc.plusExpr(xExpr, yExpr);
+		assertEquals(addExpected, addExpr);
 	}
 	
 	/**
@@ -142,9 +142,9 @@ public class CVC3TranslateAddTest {
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateAddException(){
 		
-		NumericExpression addExp3 = (NumericExpression) expressionFactory
+		NumericExpression addExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.ADD, realType, one, two, five);
-		cvcProver.translate(addExp3);
+		cvcProver.translate(addExp);
 	}
 	
 	/**
@@ -154,8 +154,42 @@ public class CVC3TranslateAddTest {
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateAddExceptionSymbolic(){
 		
-		NumericExpression addExp3 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.ADD, realType, e, f, g);
-		cvcProver.translate(addExp3);
+		NumericExpression addExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.ADD, realType, x, y, z);
+		cvcProver.translate(addExp);
+	}
+	
+	/**
+	 * testTranslateAddIntAndRealToInt takes a SymbolicConstant of RealType and
+	 * a SymbolicConstant of IntType and adds them together as a Real.  This is
+	 * compared for equality to CVC3.  
+	 */
+	@Test
+	public void testTranslateAddIntAndRealToInt(){	
+		Expr yExpr = cvcProver.translate(y);
+		Expr zExpr = cvcProver.translate(z);
+		
+		NumericExpression addExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.ADD, intType, y, z);
+		Expr addExpr = cvcProver.translate(addExp);
+		Expr addExpected = vc.plusExpr(yExpr, zExpr);
+		assertEquals(addExpected, addExpr);
+	}
+
+	/**
+	 * testTranslateAddIntAndRealToInt takes a SymbolicConstant of RealType and
+	 * a SymbolicConstant of IntType and adds them together as an Int.  This is
+	 * compared for equality to CVC3.  
+	 */
+	@Test
+	public void testTranslateAddIntAndRealToReal(){	
+		Expr yExpr = cvcProver.translate(y);
+		Expr zExpr = cvcProver.translate(z);
+		
+		NumericExpression addExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.ADD, realType, y, z);
+		Expr addExpr = cvcProver.translate(addExp);
+		Expr addExpected = vc.plusExpr(yExpr, zExpr);
+		assertEquals(addExpected, addExpr);
 	}
 }
