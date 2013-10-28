@@ -38,16 +38,18 @@ public class CVC3TranslateSubtractTest {
 	private static NumericExpression one = universe.rational(1);
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
-	//SymbolicConstants
-	private static SymbolicConstant e = universe
-			.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe
-			.symbolicConstant(universe.stringObject("f"), intType);
+	// SymbolicConstants
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), intType);
+	private static SymbolicConstant z = universe.symbolicConstant(
+			universe.stringObject("z"), realType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -64,40 +66,77 @@ public class CVC3TranslateSubtractTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateSubtract creates a numeric expression using the symbolic operator
-	 * SUBTRACT and rational numeric expressions. The test then translates the numeric 
-	 * expression and compares it to the validity checker using .minusExpr.
+	 * testTranslateSubtract creates a numeric expression using the symbolic
+	 * operator SUBTRACT and rational numeric expressions. The test then
+	 * translates the numeric expression and compares it to the validity checker
+	 * using .minusExpr.
 	 */
-	
+
 	@Test
-	public void testTranslateSubtract(){
+	public void testTranslateSubtract() {
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 
 		NumericExpression subExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.SUBTRACT, realType, two, one);
-		Expr expr10 = cvcProver.translate(subExp);
-		Expr expected10 = vc.minusExpr(twoExpr, oneExpr);
-		assertEquals(expected10, expr10);
+		Expr expr = cvcProver.translate(subExp);
+		Expr expected = vc.minusExpr(twoExpr, oneExpr);
+		assertEquals(expected, expr);
 	}
-	
+
 	/**
-	 * testTranslateSubtractSymbolic creates a numeric expression using the symbolic operator
-	 * SUBTRACT and symbolic constants. The test then translates the numeric expression and 
-	 * compares it to the validity checker using .minusExpr.
+	 * testTranslateSubtractSymbolic creates a numeric expression using the
+	 * symbolic operator SUBTRACT and symbolic constants. The test then
+	 * translates the numeric expression and compares it to the validity checker
+	 * using .minusExpr.
 	 */
-	
+
 	@Test
-	public void testTranslateSubtractSymbolic(){
-		Expr eExpr = cvcProver.translate(e);
-		Expr fExpr = cvcProver.translate(f);
+	public void testTranslateSubtractSymbolic() {
+		Expr xExpr = cvcProver.translate(x);
+		Expr yExpr = cvcProver.translate(y);
 
 		NumericExpression subExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.SUBTRACT, intType, e, f);
-		Expr expr10 = cvcProver.translate(subExp);
-		Expr expected10 = vc.minusExpr(eExpr, fExpr);
-		assertEquals(expected10, expr10);
+				.expression(SymbolicOperator.SUBTRACT, intType, x, y);
+		Expr expr = cvcProver.translate(subExp);
+		Expr expected = vc.minusExpr(xExpr, yExpr);
+		assertEquals(expected, expr);
 	}
+
+	/**
+	 * testTranslateTwoTypeInt takes two SymbolicConstants of different types
+	 * and subtracts one from another and returns an Int. This is compared to
+	 * the CVC3 result of the same expression.
+	 */
+	@Test
+	public void testTranslateSubtractTwoTypeInt() {
+		Expr yExpr = cvcProver.translate(y);
+		Expr zExpr = cvcProver.translate(z);
+
+		NumericExpression subExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.SUBTRACT, intType, y, z);
+		Expr expr = cvcProver.translate(subExp);
+		Expr expected = vc.minusExpr(yExpr, zExpr);
+		assertEquals(expected, expr);
+	}
+
+	/**
+	 * testTranslateTwoTypeInt takes two SymbolicConstants of different types
+	 * and subtracts one from another and returns a Real. This is compared to
+	 * the CVC3 result of the same expression.
+	 */
+	@Test
+	public void testTranslateSubtractTwoTypeReal() {
+		Expr yExpr = cvcProver.translate(y);
+		Expr zExpr = cvcProver.translate(z);
+
+		NumericExpression subExp = (NumericExpression) expressionFactory
+				.expression(SymbolicOperator.SUBTRACT, realType, y, z);
+		Expr expr = cvcProver.translate(subExp);
+		Expr expected = vc.minusExpr(yExpr, zExpr);
+		assertEquals(expected, expr);
+	}
+
 }
