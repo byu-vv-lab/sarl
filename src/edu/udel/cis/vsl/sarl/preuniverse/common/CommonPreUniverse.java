@@ -1908,8 +1908,15 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression arrayLambda(SymbolicCompleteArrayType arrayType,
 			SymbolicExpression function) {
-		// TODO Auto-generated method stub
-		return null;
+		if (arrayType == null)
+			throw err("Argument arrayType to method arrayLambda was null");
+		if (function == null)
+			throw err("Argument function to method arrayLambda was null");
+		// TODO: Make sure the function takes an index (Integer) and outputs elementType
+		//
+		return expression(SymbolicOperator.ARRAY_LAMBDA,
+				arrayType, function);
+		
 	}
 
 	// public SymbolicExpression arraySlice(SymbolicExpression array,
