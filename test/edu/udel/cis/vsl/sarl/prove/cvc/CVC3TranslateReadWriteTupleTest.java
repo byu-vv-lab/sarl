@@ -68,6 +68,12 @@ public class CVC3TranslateReadWriteTupleTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testTranslateTupleRead creates two ArrayLists one for numeric expressions and one for 
+	 * symbolic integer type. The test then translates symbolic expressions that use the symbolic operator
+	 * TUPLE_READ and compares it to the validity checker. 
+	 */
+	
 	@Test
 	public void testTranslateTupleRead() {
 		
@@ -93,6 +99,12 @@ public class CVC3TranslateReadWriteTupleTest {
 		
 		assertEquals(QueryResult.VALID, vc.query(expr3));
 	}
+	
+	/**
+	 * testTranslateTupleWrite creates two ArrayLists one for numeric expressions and one for 
+	 * symbolic integer type. The test then translates symbolic expressions that use the symbolic operator
+	 * TUPLE_WRITE and compares it to the validity checker. 
+	 */
 	
 	@Test
 	public void testTranslateTupleWrite(){
@@ -120,6 +132,13 @@ public class CVC3TranslateReadWriteTupleTest {
 		
 		assertEquals(QueryResult.VALID, vc.query(expr3));
 	}
+	
+	/**
+	 * testTranslateDenseTupleWrite translates symbolic expressions that
+	 * use the symbolic operator DENSE_TUPLE_WRITE and TUPLE_READ. The test uses the validity
+	 * checker and compares translations using numeric integer expressions with the 
+	 * created translations using DENSE_TUPLE_WRITE and TUPLE_READ.
+	 */
 	
 	@Test
 	public void testTranslateDenseTupleWrite(){
