@@ -55,12 +55,18 @@ public interface IdealFactory extends NumericExpressionFactory {
 	<K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
 			K key, V value);
 
+	/**
+	 * Create a value 1
+	 * 
+	 * @return
+	 * 			a value 1 of type IntObject
+	 */
 	IntObject oneIntObject();
 
 	/**
 	 * Creates an integer constant
 	 * 
-	 * @param value - a normal integer
+	 * @param value - a normal integer value
 	 * 
 	 * @param type
 	 * 				Integer
@@ -114,6 +120,17 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 */
 	Constant constant(Number number);
 
+	/**
+	 * a Monic ONE
+	 * 
+	* @param type - different data types of SymbolicType - real, Integer etc.
+	 * 
+	 * @param type
+	 * 				SymbolicType
+	 * 
+	 * @return
+	 * 			a value of 1 of type Monic
+	 */
 	One one(SymbolicType type);
 
 	/**
@@ -145,6 +162,15 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 */
 	Polynomial multiply(Polynomial poly1, Polynomial poly2);
 
+	/**
+	 * The symbolic map from a Monic to a Monomial consisting of one or many entries given its factorization
+	 * 
+	 * @param termMap - a symbolic map between Monic and Monomial
+	 * @param factorization - is of type Monomial
+	 * 
+	 * @return
+	 * 			a polynomial consisting of symbolic map with entries of (monic, monomial) given factorization of type Monomial
+	 */
 	Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization);
 
