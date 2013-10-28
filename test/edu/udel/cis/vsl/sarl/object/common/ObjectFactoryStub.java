@@ -20,7 +20,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
- * Simple stub object factory. Implmeents only those methods related to
+ * Simple stub object factory. Implements only those methods related to
  * {@link #canonic}.
  * 
  * @author siegel

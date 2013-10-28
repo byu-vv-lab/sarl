@@ -3,32 +3,33 @@ package edu.udel.cis.vsl.sarl.object.common;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
-import java.util.Comparator;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
-import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
-import edu.udel.cis.vsl.sarl.expr.common.CommonExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
-import edu.udel.cis.vsl.sarl.number.real.RealNumber;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.number.real.RealRational;
 import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
 
+/**
+ * Test class for CommonObjectFactory
+ * @author jtirrell
+ *
+ */
 public class CommonObjectFactoryTest {
 
+	/**
+	 * CommonObjectFactory that is instantiated during setUp
+	 */
 	CommonObjectFactory fac;
 	
+	/**
+	 * Instantiates this.fac to a CommonObjectFactory
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		this.fac = null;
@@ -57,6 +58,7 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testSetExpressionComparator() {
 		this.fac.setExpressionComparator(new ExpressionComparatorStub());
+		
 		assertTrue(this.fac.comparator().expressionComparator() instanceof ExpressionComparatorStub);
 	}
 
@@ -66,6 +68,7 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testSetCollectionComparator() {
 		this.fac.setCollectionComparator(new CollectionComparatorStub());
+		
 		assertTrue(this.fac.comparator().collectionComparator() instanceof CollectionComparatorStub);
 	}
 
@@ -75,6 +78,7 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testSetTypeComparator() {
 		this.fac.setTypeComparator(new TypeComparator());
+		
 		assertTrue(this.fac.comparator().typeComparator() instanceof TypeComparator);
 	}
 
@@ -84,6 +88,7 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testSetTypeSequenceComparator() {
 		this.fac.setTypeSequenceComparator(new TypeSequenceComparator());
+		
 		assertTrue(this.fac.comparator().typeSequenceComparator() instanceof TypeSequenceComparator);
 	}
 
@@ -96,6 +101,7 @@ public class CommonObjectFactoryTest {
 		this.fac.setCollectionComparator(new CollectionComparatorStub());
 		this.fac.setTypeComparator(new TypeComparator());
 		this.fac.setTypeSequenceComparator(new TypeSequenceComparator());
+		
 		try {
 			this.fac.init();
 			assertTrue(true);
@@ -216,7 +222,6 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testObjectWithId() {
 		IntObject tempint = this.fac.intObject(2);
-		IntObject tempint2 = this.fac.intObject(2);
 		this.fac.canonic(tempint);
 		
 		assertEquals("2", this.fac.objectWithId(8).toString());
@@ -231,6 +236,7 @@ public class CommonObjectFactoryTest {
 		int originalcount = this.fac.objects().size();
 		IntObject tempint = this.fac.intObject(2);
 		IntObject tempint2 = this.fac.intObject(2);
+		
 		this.fac.canonic(tempint);
 		assertEquals(this.fac.objects().size(), originalcount+1);
 	}
@@ -242,6 +248,7 @@ public class CommonObjectFactoryTest {
 	public void testNumObjects() {
 		int originalcount = this.fac.numObjects();
 		IntObject tempint = this.fac.intObject(2);
+		
 		this.fac.canonic(tempint);
 		assertEquals(this.fac.numObjects(), originalcount+1);
 	}

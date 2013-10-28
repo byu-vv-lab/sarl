@@ -80,7 +80,7 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Intentionally empty method
+	 * Does nothing; Basic objects have no children, so there is nothing to do.
 	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {

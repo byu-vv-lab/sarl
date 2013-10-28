@@ -75,6 +75,11 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return kind;
 	}
 
+	/**
+	 * Computes the hash code to be returned by hashCode(). This is run the first time hashCode is run.
+	 * The hash is cached for future calls to hashCode();
+	 * @return hash code
+	 */
 	protected abstract int computeHashCode();
 
 	@Override
@@ -125,8 +130,6 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 *            a string buffer
 	 */
 	protected void atomize(StringBuffer buffer) {
-		buffer.insert(0, '(');
-		buffer.append(')');
 	}
 
 	@Override

@@ -4,7 +4,12 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 
-
+/**
+ * An implementation of the Symbolic Expression Comparator
+ * Used for testing Objects
+ * @author jtirrell
+ *
+ */
 public class CollectionComparatorStub implements Comparator<SymbolicCollection<?>> {
 
 	public CollectionComparatorStub() {

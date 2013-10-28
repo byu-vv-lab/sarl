@@ -46,10 +46,6 @@ public class CommonCharObject extends CommonSymbolicObject implements
 		return value == ((CharObject) o).getChar();
 	}
 
-	/**
-	 * Returns a hash code for the boolean object
-	 * @return Hash Code
-	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode()
@@ -62,7 +58,7 @@ public class CommonCharObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Empty method; does nothing.
+	 * Does nothing; Basic objects have no children, so there is nothing to do.
 	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {

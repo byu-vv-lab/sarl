@@ -41,9 +41,6 @@ public class CommonStringObject extends CommonSymbolicObject implements
 		return value.equals(((StringObject) o).getString());
 	}
 
-	/**
-	 * @return Hash code for the object
-	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ value.hashCode();
@@ -55,7 +52,7 @@ public class CommonStringObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Intentionally empty method
+	 * Does nothing; Basic objects have no children, so there is nothing to do.
 	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {

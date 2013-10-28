@@ -51,10 +51,6 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 		return value == ((BooleanObject) o).getBoolean();
 	}
 
-	/**
-	 * Returns a hash code for the boolean object
-	 * @return Hash Code
-	 */
 	@Override
 	public int computeHashCode() {
 		return symbolicObjectKind().hashCode() ^ new Boolean(value).hashCode();
@@ -66,7 +62,7 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Empty method; does nothing.
+	 * Does nothing; Basic objects have no children, so there is nothing to do.
 	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
