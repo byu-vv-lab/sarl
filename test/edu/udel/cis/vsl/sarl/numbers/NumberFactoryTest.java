@@ -650,7 +650,9 @@ public class NumberFactoryTest {
 		assertEquals(expectedB, b);
 	}
 	
-	
+	/**
+	 * Testing the decrement method with an input of a RationalNumber.
+	 */
 	@Test
 	public void ratNumDecrement(){
 		RationalNumber a = factory.rational(bigThirtyOne, bigOne);
@@ -660,6 +662,9 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the decrement method with an input of a Number.
+	 */
 	public void numDecrement(){
 		Number a = factory.number("31");
 		Number expectedB = factory.number("30");
@@ -668,6 +673,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the decrement method with an input of a Number
+	 * that is a RationalNumber.
+	 */
 	public void numDecrementRatArg(){
 		Number a = factory.rational(bigEight, bigThree);
 		Number expectedB = factory.rational(bigFive, bigThree);
@@ -677,6 +686,10 @@ public class NumberFactoryTest {
 	
 	
 	@Test
+	/**
+	 * Testing the add function with an input of a Number, covering
+	 * cases of adding both integer numbers and rational numbers.
+	 */
 	public void numberAddition(){
 		Number a = factory.number("10");
 		Number b = factory.number("20");
