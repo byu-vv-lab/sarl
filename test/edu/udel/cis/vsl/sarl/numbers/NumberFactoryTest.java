@@ -443,16 +443,27 @@ public class NumberFactoryTest {
 		assertEquals(expectedB, b);
 	}
 	@Test
+	/**
+	 * Testing the number method (covering the cases where an IntegerNumber
+	 * String and a RationalNumber String are getting converted to Numbers.
+	 */
 	public void stringToIntOrRat(){
 		String a = "30";
 		String b = "0.1";
 		Number expectedC = factory.integer(bigThirty);
 		Number c = factory.number(a);
+		assertEquals(expectedC, c);
 		Number expectedD = factory.rational(bigOne, bigTen);
 		Number d = factory.number(b);
+		assertEquals(expectedD, d);
 	}
 	
 	@Test
+	/**
+	 * Testing that the numerator method works correctly (taking an input
+	 * of a RationalNumber argument, converting the fraction into lowest
+	 * terms if necessary, and then returning the numerator).
+	 */
 	public void ratNumNumerator(){
 		RationalNumber a = factory.rational(bigTen, bigThirty);
 		IntegerNumber expectedB = factory.integer(bigOne);
@@ -461,6 +472,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the oneInteger method, that it actually returns the
+	 * IntegerNumber equivalent of 1.
+	 */
 	public void testOneIntMethod(){
 		IntegerNumber a = factory.oneInteger();
 		IntegerNumber b = factory.integer(bigOne);
@@ -468,6 +483,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the oneRational method, that it actually returns the
+	 * RationalNumber equivalent of 1 (1/1).
+	 */
 	public void testOneRatMethod(){
 		RationalNumber a = factory.oneRational();
 		RationalNumber b = factory.rational(bigOne, bigOne);
