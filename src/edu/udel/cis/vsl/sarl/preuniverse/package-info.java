@@ -1,5 +1,5 @@
 /**
- * This package provides an interface to  symbolic universe services except those for reasoning.
+ * This package provides all of the functionality of a symbolic universe except reasoning.
  * {@link edu.udel.cis.vsl.sarl.preuniverse}.  That class provides 
  * methods to produce new symbolic universes.
  * Those methods should be the starting point for
