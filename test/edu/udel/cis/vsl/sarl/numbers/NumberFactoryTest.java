@@ -687,8 +687,10 @@ public class NumberFactoryTest {
 	
 	@Test
 	/**
-	 * Testing the add function with an input of a Number, covering
+	 * Testing the add method with an input of a Number, covering
 	 * cases of adding both integer numbers and rational numbers.
+	 * This method is only intended to work with both arguments
+	 * being the same type of number.
 	 */
 	public void numberAddition(){
 		Number a = factory.number("10");
@@ -704,6 +706,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the add method
+	 * when trying to add two numbers together that are not both the
+	 * same type of number (rational number or integer number).
+	 */
 	public void numberAdditionInvalArgs(){
 		Number a = factory.number("10");
 		Number b = factory.number("10.4");
@@ -711,12 +718,25 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the add method
+	 * when trying to add two numbers together that are not both the
+	 * same type of number (rational number or integer number). This
+	 * tests ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
 	public void numberAdditionInvalArgsTwo(){
 		Number a = factory.number("10.4");
 		Number b = factory.number("10");
 		factory.add(a, b);
 	}
-	
+	@Test
+	/**
+	 * Testing the subtract method with an input of a Number, covering
+	 * cases of subtracting both integer numbers and rational numbers.
+	 * This method is only intended to work with both arguments
+	 * being the same type of number.
+	 */
 	public void numberSubtraction(){
 		Number a = factory.number("20");
 		Number b = factory.number("10");
