@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cvc3.Expr;
+import cvc3.QueryResult;
+import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -44,6 +46,7 @@ public class CVC3UnionTest {
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
+	private ValidityChecker vc;
 
 	/**
 	 * Set up each test. This method is run before each test.
@@ -55,6 +58,7 @@ public class CVC3UnionTest {
 		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
+		vc = cvcProver.validityChecker();
 
 		// make a union to test
 		// union of int, real
@@ -173,5 +177,7 @@ public class CVC3UnionTest {
 		Expr expr = cvcProver.translate(extractedZero);
 		Expr expected = cvcProver.translate(universe.zeroInt());
 		assertEquals(expected, expr);
+		Expr boolExpr = vc.eqExpr(expr, expected);
+		assertEquals(QueryResult.VALID, vc.query(boolExpr));
 	}
 }
