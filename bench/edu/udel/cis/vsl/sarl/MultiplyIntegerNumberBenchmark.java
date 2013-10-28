@@ -37,6 +37,11 @@ public class MultiplyIntegerNumberBenchmark {
 	private static BigInteger bigFifteen = new BigInteger("15"); 
 	private static BigInteger bigThirtyOne = new BigInteger("31"); 
 	private static BigInteger bigTen = new BigInteger("10"); 
+	private static BigInteger bigA1 = new BigInteger("21220"); 
+	private static BigInteger bigA2 = new BigInteger("43784"); 
+	private static BigInteger bigA3 = new BigInteger("452222");  
+	private static BigInteger bigA4 = new BigInteger("48273"); 
+
 
 
 
@@ -104,7 +109,45 @@ public void MultiplyIntegerNumberBenchmar4() {
 
 	System.out.println(y-x);
 
+}  
+
+public void MultiplyIntegerNumberBenchmark6() { 
+	
+	IntegerNumber a = factory.integer(bigA1);
+	IntegerNumber b = factory.integer(bigA2); 
+	long x = System.currentTimeMillis() % 1000;
+	factory.multiply(a, b); 
+	long y = System.currentTimeMillis() % 1000;
+
+	System.out.println(y-x);
+
+}  
+
+
+public void MultiplyIntegerNumberBenchmark7() { 
+	
+	IntegerNumber a = factory.integer(bigA3);
+	IntegerNumber b = factory.integer(bigA2); 
+	long x = System.currentTimeMillis() % 1000;
+	factory.multiply(a, b); 
+	long y = System.currentTimeMillis() % 1000;
+
+	System.out.println(y-x);
+
 } 
+
+
+public void MultiplyIntegerNumberBenchmark8() { 
+	
+	IntegerNumber a = factory.integer(bigA3);
+	IntegerNumber b = factory.integer(bigA4); 
+	long x = System.currentTimeMillis() % 1000;
+	factory.multiply(a, b); 
+	long y = System.currentTimeMillis() % 1000;
+
+	System.out.println(y-x);
+
+}  
 	
 	
 	
