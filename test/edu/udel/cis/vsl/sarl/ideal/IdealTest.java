@@ -448,6 +448,54 @@ public class IdealTest {
 	}
 
 	/**
+	 * Subtracts two polynomials
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 */
+	@Test
+	public void subPoly() {
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p3 = idealFactory.multiply(intZero, x);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+				idealFactory.multiply(x, x)), intTwo);
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+				intTen, x), idealFactory.add(idealFactory.multiply(
+						intTwo, idealFactory.multiply(x, x)), intOne));
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p8 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intTwo);
+		NumericExpression p9 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intThree);
+		NumericExpression p10 = idealFactory.add(x, idealFactory.multiply(x, x));
+		NumericExpression p11 = idealFactory.add(x, intOne);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly3 = (Polynomial) p3;
+		Polynomial poly4 = (Polynomial) p5;
+		Polynomial poly5 = (Polynomial) p7;
+		Polynomial poly6 = (Polynomial) p8;
+		Polynomial poly7 = (Polynomial) x;
+						
+		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
+		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
+		Polynomial b4 = commonIdealFactory.add(poly5, poly6);
+		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
+		Polynomial b6 = commonIdealFactory.add(poly5, poly7);
+		Polynomial b7 = commonIdealFactory.add(poly7, intOne);
+		
+		assertEquals(p7, b1);
+		assertEquals(p6, b3);
+		assertEquals(p9, b4);
+		assertEquals(p8, b5);
+		assertEquals(p10, b6);
+		assertEquals(p11, b7);
+	}
+	
+	/**
 	 * Returns the multiplication of two polynomials
 	 * 
 	 * @param type
@@ -494,6 +542,41 @@ public class IdealTest {
 		assertEquals(p10, b7);
 	}
 
+	/**
+	 * Divides two polynomials
+	 * 
+	 * @param type
+	 * 				the SymbolicExpression of numeric type of a Polynomial
+	 */
+	@Test
+	public void divide() {
+		NumericExpression n1 = idealFactory.multiply(intTen, x);
+		NumericExpression n2 = idealFactory.multiply(intOne, x);
+		NumericExpression n3 = idealFactory.multiply(intZero, x);
+		NumericExpression n4 = idealFactory.multiply(intOne, intOne);
+		NumericExpression n5 = idealFactory.multiply(fifteen, three);
+		NumericExpression n6 = idealFactory.multiply(five, three);
+		NumericExpression n7 = idealFactory.multiply(zero, three);
+		NumericExpression n = idealFactory.add(x, y);
+		NumericExpression m = idealFactory.subtract(x, y);
+		NumericExpression np = idealFactory.divide(n, m);
+		
+		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
+		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
+		NumericExpression b3 = commonIdealFactory.divide(n1, n4);
+		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
+		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
+		NumericExpression p1 = commonIdealFactory.divide(n, m);
+		out.println("b1=" + b1);
+		
+		assertEquals(np, p1);
+		assertEquals(intTen, b1);
+		assertEquals(intZero, b2);
+		assertEquals(n1, b3);
+		assertEquals(three, b4);
+		assertEquals(zero, b5);
+	}
+	
 	/**
 	 * Returns the expression by removing the constant term present in the passed argument.
 	 * 
@@ -659,41 +742,6 @@ public class IdealTest {
 		assertEquals(ne1, n);
 		assertEquals(intZero, m);
 		assertEquals(intZero, p);
-	}
-
-	/**
-	 * Divides two polynomials
-	 * 
-	 * @param type
-	 * 				the SymbolicExpression of numeric type of a Polynomial
-	 */
-	@Test
-	public void divide() {
-		NumericExpression n1 = idealFactory.multiply(intTen, x);
-		NumericExpression n2 = idealFactory.multiply(intOne, x);
-		NumericExpression n3 = idealFactory.multiply(intZero, x);
-		NumericExpression n4 = idealFactory.multiply(intOne, intOne);
-		NumericExpression n5 = idealFactory.multiply(fifteen, three);
-		NumericExpression n6 = idealFactory.multiply(five, three);
-		NumericExpression n7 = idealFactory.multiply(zero, three);
-		NumericExpression n = idealFactory.add(x, y);
-		NumericExpression m = idealFactory.subtract(x, y);
-		NumericExpression np = idealFactory.divide(n, m);
-		
-		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
-		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
-		NumericExpression b3 = commonIdealFactory.divide(n1, n4);
-		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
-		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
-		NumericExpression p1 = commonIdealFactory.divide(n, m);
-		out.println("b1=" + b1);
-		
-		assertEquals(np, p1);
-		assertEquals(intTen, b1);
-		assertEquals(intZero, b2);
-		assertEquals(n1, b3);
-		assertEquals(three, b4);
-		assertEquals(zero, b5);
 	}
 
 	/**
