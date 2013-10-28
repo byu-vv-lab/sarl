@@ -39,10 +39,10 @@ public class CVC3TranslatePowerTest {
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	// SymbolicConstants
-	private static SymbolicConstant e = universe.symbolicConstant(
-			universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe.symbolicConstant(
-			universe.stringObject("f"), intType);
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -64,10 +64,10 @@ public class CVC3TranslatePowerTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslate power compares the validity checker and a created expr from numeric expressions
-	 * using the symbolic operator POWER and powExpr.
+	 * testTranslate power compares the validity checker and a created expr from
+	 * numeric expressions using the symbolic operator POWER and powExpr.
 	 */
 
 	@Test
@@ -77,26 +77,27 @@ public class CVC3TranslatePowerTest {
 
 		NumericExpression powerExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.POWER, realType, two, five);
-		Expr expr9 = cvcProver.translate(powerExp);
-		Expr expected9 = vc.powExpr(twoExpr, fiveExpr);
-		assertEquals(expected9, expr9);
+		Expr expr = cvcProver.translate(powerExp);
+		Expr expected = vc.powExpr(twoExpr, fiveExpr);
+		assertEquals(expected, expr);
 	}
-	
+
 	/**
-	 * testTranslateSymbolic power compares the validity checker and a created expr from symbolic constants
-	 * using the symbolic operator POWER and powExpr.
+	 * testTranslateSymbolic power compares the validity checker and a created
+	 * expr from symbolic constants using the symbolic operator POWER and
+	 * powExpr.
 	 */
 
 	@Test
 	public void testTranslatePowerSymbolic() {
-		Expr eExpr = cvcProver.translate(e);
-		Expr fExpr = cvcProver.translate(f);
+		Expr xExpr = cvcProver.translate(x);
+		Expr yExpr = cvcProver.translate(y);
 
 		NumericExpression powerExp = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.POWER, intType, e, f);
-		Expr expr9 = cvcProver.translate(powerExp);
-		Expr expected9 = vc.powExpr(eExpr, fExpr);
-		assertEquals(expected9, expr9);
+				.expression(SymbolicOperator.POWER, intType, x, y);
+		Expr expr = cvcProver.translate(powerExp);
+		Expr expected = vc.powExpr(xExpr, yExpr);
+		assertEquals(expected, expr);
 	}
 
 }
