@@ -351,9 +351,12 @@ public class CommonPreUniverseTest {
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testBoolBooleanObject() {
-		BooleanObject booleanObj = universe.booleanObject(true);
-		BooleanExpression booleanExpr = booleanFactory.symbolic(booleanObj);
-		assertEquals(universe.bool(booleanObj), booleanExpr); // trivial check of return type
+		BooleanObject booleanObject1;
+		BooleanExpression booleanExpression1;
+		
+		booleanObject1 = universe.booleanObject(true);
+		booleanExpression1= booleanFactory.symbolic(booleanObject1);
+		assertEquals(universe.bool(booleanObject1), booleanExpression1); // trivial check of return type
 	}
 
 	@Test
@@ -568,8 +571,11 @@ public class CommonPreUniverseTest {
 		SymbolicUnionType unionType6;
 		SymbolicUnionType unionType7;
 		SymbolicObject x1;
-		BooleanExpression trueExpr = universe.bool(true);
-		BooleanExpression falseExpr = universe.bool(false);
+		BooleanExpression trueExpression;
+		BooleanExpression falseExpression;
+		
+		trueExpression = universe.bool(true);
+		falseExpression = universe.bool(false);
 		
 		x1 = universe.symbolicConstant(universe.stringObject("x1"), integerType);
 
@@ -610,32 +616,32 @@ public class CommonPreUniverseTest {
 				unionType7, universe.intObject(1), x1);
 		
 		// Test that unions with different values are not equal
-		assertEquals(universe.equals(symbolicExpr1, symbolicExpr2), falseExpr);
-		assertEquals(universe.equals(symbolicExpr1, symbolicExpr3), falseExpr);
-		assertEquals(universe.equals(symbolicExpr3, symbolicExpr1), falseExpr);
-		assertEquals(universe.equals(symbolicExpr1, symbolicExpr7), falseExpr);
-		assertEquals(universe.equals(symbolicExpr7, symbolicExpr1), falseExpr);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr2), falseExpression);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr3), falseExpression);
+		assertEquals(universe.equals(symbolicExpr3, symbolicExpr1), falseExpression);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr7), falseExpression);
+		assertEquals(universe.equals(symbolicExpr7, symbolicExpr1), falseExpression);
 		// Test UNION_INJECT, UNION_TEST
-		assertEquals(universe.equals(symbolicExpr1, symbolicExpr4), falseExpr);
-		assertEquals(universe.equals(symbolicExpr5, symbolicExpr1), falseExpr);
+		assertEquals(universe.equals(symbolicExpr1, symbolicExpr4), falseExpression);
+		assertEquals(universe.equals(symbolicExpr5, symbolicExpr1), falseExpression);
 		// Test that empty unions with different expressions are not equal
-		assertEquals(universe.equals(symbolicExpr5, symbolicExpr6), falseExpr);
+		assertEquals(universe.equals(symbolicExpr5, symbolicExpr6), falseExpression);
 	}
 
 	@Test
 	// Test written by Jeff DiMarco(jdimarco) 9/20/13
 	public void testExtractBoolean() {
-		BooleanExpression trueExpr;
-		BooleanExpression falseExpr;
-		BooleanExpression nullExpr;
+		BooleanExpression trueExpression;
+		BooleanExpression falseExpression;
+		BooleanExpression nullExpression;
 		
-		trueExpr = universe.bool(true);
-		falseExpr = universe.bool(false);
-		nullExpr = null;
+		trueExpression = universe.bool(true);
+		falseExpression = universe.bool(false);
+		nullExpression = null;
 		
-		assertEquals(universe.extractBoolean(trueExpr), true);
-		assertEquals(universe.extractBoolean(falseExpr), false);
-		assertEquals(universe.extractBoolean(nullExpr), null);
+		assertEquals(universe.extractBoolean(trueExpression), true);
+		assertEquals(universe.extractBoolean(falseExpression), false);
+		assertEquals(universe.extractBoolean(nullExpression), null);
 			
 	}
 
@@ -818,18 +824,23 @@ public class CommonPreUniverseTest {
 	@Test
 	// Test written by Jeff DiMarco/Julian Piane (jdimarco) 9/25/13
 	public void testAssign() {
-		SymbolicExpression ten = universe.integer(10);
-		SymbolicExpression u_ten = universe.unionInject(union1,
-				universe.intObject(0), ten);
+		SymbolicExpression ten;
+		SymbolicExpression u_ten;
+		ReferenceExpression iref;
+		ReferenceExpression nref;
+		ReferenceExpression offsetReference5;
+		ReferenceExpression offsetReference0;
 		
-		ReferenceExpression iref = expressionFactory.identityReference();
-		ReferenceExpression nref = expressionFactory.nullReference();
+		ten = universe.integer(10);
+		u_ten = universe.unionInject(union1,
+				universe.intObject(0), ten);
+		iref = expressionFactory.identityReference();
+		nref = expressionFactory.nullReference();
+		
+		offsetReference5 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(5));
+		offsetReference0 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(0));
 		
 		assertEquals(universe.assign(u_ten, iref, u_ten), u_ten); // test for subvalue
-		
-		ReferenceExpression offsetReference5 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(5));
-		ReferenceExpression offsetReference0 = universe.offsetReference(expressionFactory.identityReference(), universe.integer(0));
-		
 		assertEquals(universe.assign(u_ten, offsetReference0, u_ten), u_ten);
 		
 		//Test exception case
@@ -840,12 +851,16 @@ public class CommonPreUniverseTest {
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException1() {
-		SymbolicExpression ten = universe.integer(10);
-		SymbolicExpression u_ten = universe.unionInject(union1,
+		SymbolicExpression ten;
+		SymbolicExpression u_ten;
+		ReferenceExpression iref;
+		ReferenceExpression nref;
+
+		ten = universe.integer(10);
+		u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
-		
-		ReferenceExpression iref = expressionFactory.identityReference();
-		ReferenceExpression nref = expressionFactory.nullReference();
+		iref = expressionFactory.identityReference();
+		nref = expressionFactory.nullReference();
 		
 		universe.assign(u_ten, nref, u_ten); // test for SARLException
 	}
@@ -853,12 +868,17 @@ public class CommonPreUniverseTest {
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException2() {
-		SymbolicExpression ten = universe.integer(10);
-		SymbolicExpression u_ten = universe.unionInject(union1,
+		SymbolicExpression ten;
+		SymbolicExpression u_ten;
+		ReferenceExpression iref;
+		ReferenceExpression nref;
+		
+		ten = universe.integer(10);
+		u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
 		
-		ReferenceExpression iref = expressionFactory.identityReference();
-		ReferenceExpression nref = expressionFactory.nullReference();
+		iref = expressionFactory.identityReference();
+		nref = expressionFactory.nullReference();
 		
 		universe.assign(u_ten, iref, null); // test for SARLException
 	}
@@ -866,12 +886,17 @@ public class CommonPreUniverseTest {
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException3() {
-		SymbolicExpression ten = universe.integer(10);
-		SymbolicExpression u_ten = universe.unionInject(union1,
+		SymbolicExpression ten;
+		SymbolicExpression u_ten;
+		ReferenceExpression iref;
+		ReferenceExpression nref;
+		
+		ten = universe.integer(10);
+		u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
 		
-		ReferenceExpression iref = expressionFactory.identityReference();
-		ReferenceExpression nref = expressionFactory.nullReference();
+		iref = expressionFactory.identityReference();
+		nref = expressionFactory.nullReference();
 		
 		universe.assign(null, nref, u_ten); // test for SARLException
 	}
@@ -879,12 +904,18 @@ public class CommonPreUniverseTest {
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException4() {
-		SymbolicExpression ten = universe.integer(10);
-		SymbolicExpression u_ten = universe.unionInject(union1,
+		SymbolicExpression ten;
+		SymbolicExpression u_ten;
+		
+		ReferenceExpression iref;
+		ReferenceExpression nref;
+		
+		ten = universe.integer(10);
+		u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
 		
-		ReferenceExpression iref = expressionFactory.identityReference();
-		ReferenceExpression nref = expressionFactory.nullReference();
+		iref = expressionFactory.identityReference();
+		nref = expressionFactory.nullReference();
 		
 		universe.assign(u_ten, null, u_ten); // test for SARLException
 	}
