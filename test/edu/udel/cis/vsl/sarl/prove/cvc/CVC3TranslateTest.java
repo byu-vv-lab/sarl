@@ -69,6 +69,12 @@ public class CVC3TranslateTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslateCastRealToInt translates an integer numeric expression; and it also uses the
+	 * symbolic operator CAST to create a symbolic expression. The test compares the created
+	 * expr and the translated symbolic expression that was casted.
+	 */
 
 	@Test
 	public void testTranslateCastRealToInt(){
@@ -80,6 +86,12 @@ public class CVC3TranslateTest {
 		assertEquals(oneIntExpr, expr4);
 	}
 	
+	/**
+	 * testTranslateCastIntToReal translates an rational numeric expression; and it also uses the
+	 * symbolic operator CAST to create a symbolic expression. The test compares the created
+	 * expr and the translated symbolic expression that was casted.
+	 */
+	
 	@Test
 	public void testTranslateCastIntToReal(){
 		Expr oneRealExpr = cvcProver.translate(one);
@@ -89,6 +101,12 @@ public class CVC3TranslateTest {
 		Expr expr4 = cvcProver.translate(castExp);
 		assertEquals(oneRealExpr, expr4);
 	}
+	
+	/**
+	 * testTranslateCastDoubleToInt translates a double rational numeric expression; and it also uses the
+	 * symbolic operator CAST to create a symbolic expression. The test compares the created
+	 * expr and the translated symbolic expression that was casted.
+	 */
 
 	@Test
 	public void testTranslateCastDoubleToInt(){
@@ -100,6 +118,12 @@ public class CVC3TranslateTest {
 		Expr expr5 = vc.eqExpr(expr4, oneFiveDoubleExpr);
 		assertEquals(QueryResult.VALID, vc.query(expr5));
 	}
+	
+	/**
+	 * testTranslateCondSymbolicInt translates a boolean expression and two symbolic int constants.
+	 * The test creates a symbolic expression using the symbolic operator COND and the translated variables.
+	 * The test compares the validity checker using .iteExpr and the translation of the symbolic expression.
+	 */
 	
 	@Test
 	public void testTranslateCondSymbolicInt(){	
@@ -115,6 +139,12 @@ public class CVC3TranslateTest {
 		assertEquals(expected5, expr5);
 	}
 	
+	/**
+	 * testTranslateCondSymbolicInt translates a boolean expression and two symbolic real constants.
+	 * The test creates a symbolic expression using the symbolic operator COND and the translated variables.
+	 * The test compares the validity checker using .iteExpr and the translation of the symbolic expression.
+	 */
+	
 	@Test
 	public void testTranslateCondSymbolicReal(){	
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
@@ -128,6 +158,12 @@ public class CVC3TranslateTest {
 		Expr expected5 = vc.iteExpr(trueExpr, eExpr, fExpr);
 		assertEquals(expected5, expr5);
 	}
+	
+	/**
+	 * testTranslateCondConcreteInt creates a symbolic expression using translated boolean expression
+	 * , translated int numeric constants, and the symbolic operator COND. It then compares the validity checker
+	 * using .iteExpr and the translation of that symbolic expression.
+	 */
 	
 	@Test
 	public void testTranslateCondConcreteInt(){	
@@ -143,6 +179,12 @@ public class CVC3TranslateTest {
 		assertEquals(expected5, expr5);
 	}
 	
+	/**
+	 * testTranslateCondConcreteInt creates a symbolic expression using translated boolean expression
+	 * , translated rational numeric constants, and the symbolic operator COND. It then compares the validity checker
+	 * using .iteExpr and the translation of that symbolic expression.
+	 */
+	
 	@Test
 	public void testTranslateCondConcreteReal(){	
 		Expr trueExpr = cvcProver.translate(booleanExprTrue);
@@ -156,6 +198,12 @@ public class CVC3TranslateTest {
 		Expr expected5 = vc.iteExpr(trueExpr, oneExpr, twoExpr);
 		assertEquals(expected5, expr5);
 	}
+	
+	/**
+	 * testTranslateNotBoolean creates a symbolic expression using the symbolic operator NOT
+	 * anda booleanExprTrue. It then assesses the equality of the translation of the symbolic expression
+	 * and the validity checker using .notExpr and .trueExpr.
+	 */
 	
 	@Test
 	public void testTranslateNotBoolean(){
