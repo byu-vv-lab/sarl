@@ -203,7 +203,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	Polynomial subtractConstantTerm(Polynomial polynomial);
 
 	/**
-	 * Divides the polynomial with a constant of type Constant
+	 * Divides each term in a polynomial with a constant of type Constant
 	 * 
 	 * @param polynomial - Numeric Expression of type Polynomial
 	 * @param constant - a concrete number. Wraps a NumberObject, which wraps a Number
@@ -212,7 +212,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * 				Polynomial
 	 * 
 	 * Returns
-	 * 			a polynomial with the common factors, which are common to the constant of type Constant, removed
+	 * 			a polynomial with the common factors, which are common to the constant of type Constant, removed in each term
 	 */
 	Polynomial divide(Polynomial polynomial, Constant constant);
 
