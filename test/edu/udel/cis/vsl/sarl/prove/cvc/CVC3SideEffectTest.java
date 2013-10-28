@@ -35,14 +35,14 @@ public class CVC3SideEffectTest {
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	// constants
-	private static SymbolicConstant e = universe
-			.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe
-			.symbolicConstant(universe.stringObject("f"), intType);
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -58,60 +58,69 @@ public class CVC3SideEffectTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testIntDivSideEffect creates two numeric expressions with one using the symbolic
-	 * operator INT_DIVIDE, and asserts that the two numeric expressions are not equal.
+	 * testIntDivSideEffect creates two numeric expressions with one using the
+	 * symbolic operator INT_DIVIDE, and asserts that the two numeric
+	 * expressions are not equal.
 	 */
-	
+
 	@Test
-	public void testIntDivSideEffect(){
-		
-		NumericExpression q = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
+	public void testIntDivSideEffect() {
+
+		NumericExpression q = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.INT_DIVIDE, intType, x, y);
 
 		NumericExpression r = universe.add(q, one);
-		
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
+
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q))
+				.getResultType());
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q))
+				.getResultType());
 	}
-	
+
 	/**
-	 * testModSideEffect creates two numeric expressions with one using the symbolic
-	 * operator MODULO, and asserts that the two numeric expressions are not equal.
+	 * testModSideEffect creates two numeric expressions with one using the
+	 * symbolic operator MODULO, and asserts that the two numeric expressions
+	 * are not equal.
 	 */
-	
+
 	@Test
-	public void testModSideEffect(){
-		
-		NumericExpression q = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MODULO, intType, e, f);
-		
+	public void testModSideEffect() {
+
+		NumericExpression q = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.MODULO, intType, x, y);
+
 		NumericExpression r = universe.add(q, one);
-		
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q)).getResultType());
+
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q))
+				.getResultType());
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(r, q))
+				.getResultType());
 	}
-	
+
 	/**
 	 * testIntDivModSideEffect creates three numeric expressions with one using
-	 * the symbolic operator INT_DIVIDE and another using MODULO. The third numeric
-	 * expression uses universe.add and the two numericExpressions. The test asserts that
-	 * the third numeric expression is not equal to created integer variable one.
+	 * the symbolic operator INT_DIVIDE and another using MODULO. The third
+	 * numeric expression uses universe.add and the two numericExpressions. The
+	 * test asserts that the third numeric expression is not equal to created
+	 * integer variable one.
 	 */
-	
+
 	@Test
-	public void testIntDivModSideEffect(){
-		
-		NumericExpression q = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
-		NumericExpression r = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MODULO, intType, e, f);
+	public void testIntDivModSideEffect() {
+
+		NumericExpression q = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.INT_DIVIDE, intType, x, y);
+		NumericExpression r = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.MODULO, intType, x, y);
 
 		NumericExpression s = universe.add(q, r);
-		
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(s, one)).getResultType());
-		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(s, one)).getResultType());
+
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(s, one))
+				.getResultType());
+		assertEquals(ResultType.NO, cvcProver.valid(universe.equals(s, one))
+				.getResultType());
 	}
-	
+
 }
