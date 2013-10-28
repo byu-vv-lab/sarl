@@ -722,7 +722,7 @@ public class NumberFactoryTest {
 	 * @Exception IllegalArgumentException is thrown for the add method
 	 * when trying to add two numbers together that are not both the
 	 * same type of number (rational number or integer number). This
-	 * tests ensures that the throwing of the exception does not rely
+	 * test ensures that the throwing of the exception does not rely
 	 * on the order of the incompatible number arguments.
 	 */
 	public void numberAdditionInvalArgsTwo(){
@@ -751,6 +751,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the subtract method
+	 * when trying to subtract two numbers together that are not both the
+	 * same type of number (rational number or integer number).
+	 */
 	public void numberSubtractionInvalArgs(){
 		Number a = factory.number("10");
 		Number b = factory.number("10.4");
@@ -758,12 +763,24 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the subtract method
+	 * when trying to subtract two numbers together that are not both the
+	 * same type of number (rational number or integer number). This
+	 * test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
 	public void numberSubtractionInvalArgsTwo(){
 		Number a = factory.number("10.4");
 		Number b = factory.number("10");
 		factory.subtract(a, b);
 	}
-	
+	@Test
+	/**
+	 * Testing the multiply method with an input of two Number arguments.
+	 * This covers the cases of the arguments being integer numbers
+	 * and rational numbers.
+	 */
 	public void numberMultiply(){
 		Number a = factory.number("2");
 		Number b = factory.number("3");
@@ -778,6 +795,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the multiply method
+	 * when trying to multiply two numbers together that are not both the
+	 * same type of number (rational number or integer number).
+	 */
 	public void numberMultiplyInvalArgs(){
 		Number a = factory.number("10");
 		Number b = factory.number("10.4");
@@ -785,6 +807,13 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the multiply method
+	 * when trying to multiply two numbers together that are not both the
+	 * same type of number (rational number or integer number). This
+	 * test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
 	public void numberMultiplyInvalArgsTwo(){
 		Number a = factory.number("10.4");
 		Number b = factory.number("10");
