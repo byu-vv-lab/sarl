@@ -127,6 +127,11 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private ExpressionSubstituter2 substituter;
 
+	/**
+	 * The object used to give quantified (bound) variables unique names.
+	 */
+	private BoundCleaner cleaner;
+
 	/** The boolean type. */
 	private SymbolicType booleanType;
 
@@ -183,6 +188,8 @@ public class CommonPreUniverse implements PreUniverse {
 		nullExpression = expressionFactory.nullExpression();
 		substituter = new ExpressionSubstituter2(this, collectionFactory,
 				typeFactory);
+		cleaner = new BoundCleaner(this, collectionFactory, typeFactory,
+				substituter);
 	}
 
 	// Helper methods...
@@ -1912,11 +1919,11 @@ public class CommonPreUniverse implements PreUniverse {
 			throw err("Argument arrayType to method arrayLambda was null");
 		if (function == null)
 			throw err("Argument function to method arrayLambda was null");
-		// TODO: Make sure the function takes an index (Integer) and outputs elementType
+		// TODO: Make sure the function takes an index (Integer) and outputs
+		// elementType
 		//
-		return expression(SymbolicOperator.ARRAY_LAMBDA,
-				arrayType, function);
-		
+		return expression(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
+
 	}
 
 	// public SymbolicExpression arraySlice(SymbolicExpression array,
@@ -2374,9 +2381,7 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	public SymbolicExpression cleanBoundVariables(SymbolicExpression expr) {
-		// TODO
-
-		return null;
+		return cleaner.clean(expr);
 	}
 
 }
