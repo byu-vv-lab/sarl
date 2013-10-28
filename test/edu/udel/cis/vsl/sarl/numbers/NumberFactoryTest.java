@@ -174,7 +174,7 @@ public class NumberFactoryTest {
 	
 	@Test
 	/**
-	 * Testing the increment function. This is covering the case of an IntegerNumber
+	 * Testing the increment method. This is covering the case of an IntegerNumber
 	 * argument here, adding one and ensuring that is is computed correctly).
 	 */
 	public void IntegerNumberIncrement() { 
@@ -187,6 +187,9 @@ public class NumberFactoryTest {
 	}  	
 	
 	@Test
+	/**
+	 * Testing the subtract method for two RationalNumbers.
+	 */
 	public void subRat() {
 		RationalNumber a = factory.rational(bigFive, bigTwo);
 		RationalNumber b = factory.rational(bigTen, bigFifteen);
@@ -198,6 +201,9 @@ public class NumberFactoryTest {
 		assertEquals(expected, c);
 	}		
 	@Test
+	/**
+	 * Testing integer method (converting a long to a RealInteger).
+	 */
 	public void longInt(){
 		long a = 30;
 		RealInteger b = (RealInteger) factory.integer(a);
@@ -207,6 +213,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that a positive numerator divided by a negative denominator is equivalent
+	 * to a negative numerator divided by a positive denominator.
+	 */
 	public void realRatRat(){
 		RealRational a = (RealRational) factory.rational(bigThirty, bigNegativeOne);
 		RealRational expectedA = (RealRational) factory.rational(bigNegativeThirty, bigOne);
@@ -214,6 +224,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Ensuring that a RationalNumber with a denominator of one is
+	 * considered integral.
+	 */
 	public void realRatIsIntegral(){
 		RealRational a = (RealRational) factory.rational(bigThirty, bigOne);
 		boolean expected = true;
@@ -222,6 +236,9 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the ceiling method works correctly for a negative RationalNumber
+	 */
 	public void ceilingRatNumNegNum(){
 		RationalNumber a = factory.rational(bigNegativeThree, bigOne);
 		IntegerNumber b = factory.ceil(a);
@@ -231,6 +248,9 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the compare method works correctly for RationalNumbers
+	 */
 	public void ratNumCompare(){
 		RationalNumber a = factory.rational(bigThirty, bigTen);
 		RationalNumber b = factory.rational(bigTwenty, bigTen);
