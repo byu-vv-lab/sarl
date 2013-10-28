@@ -468,31 +468,34 @@ public class IdealTest {
 		NumericExpression p7 = idealFactory.multiply(x, x);
 		NumericExpression p8 = idealFactory.multiply(idealFactory.
 				multiply(x, x), intTwo);
-		NumericExpression p9 = idealFactory.multiply(idealFactory.
-				multiply(x, x), intThree);
-		NumericExpression p10 = idealFactory.add(x, idealFactory.multiply(x, x));
-		NumericExpression p11 = idealFactory.add(x, intOne);
-		Polynomial poly1 = (Polynomial) p1;
+		NumericExpression p9 = idealFactory.subtract(idealFactory.
+				multiply(x, x), intOne);
+		NumericExpression p10 = idealFactory.subtract(idealFactory.
+				multiply(x, x), idealFactory.multiply(intTen, x));
+		NumericExpression p11 = idealFactory.subtract(p7, x);
 		Polynomial poly2 = (Polynomial) p2;
-		Polynomial poly3 = (Polynomial) p3;
-		Polynomial poly4 = (Polynomial) p5;
-		Polynomial poly5 = (Polynomial) p7;
-		Polynomial poly6 = (Polynomial) p8;
-		Polynomial poly7 = (Polynomial) x;
-						
+		Polynomial poly4 = (Polynomial) p4;
+		Polynomial poly5 = (Polynomial) p5;
+		Polynomial poly6 = (Polynomial) p6;
+		Polynomial poly7 = (Polynomial) p7;
+								
 		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
-		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
-		Polynomial b4 = commonIdealFactory.add(poly5, poly6);
-		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
-		Polynomial b6 = commonIdealFactory.add(poly5, poly7);
-		Polynomial b7 = commonIdealFactory.add(poly7, intOne);
+		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);
+		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);
+		NumericExpression b4 = commonIdealFactory.subtract(poly5, poly5);
+		NumericExpression b5 = commonIdealFactory.subtract(poly7, poly5);
+		NumericExpression b6 = commonIdealFactory.subtract(poly7, poly7);
+		NumericExpression b7 = commonIdealFactory.subtract(poly7, intOne);
+		NumericExpression b8 = commonIdealFactory.subtract(poly7, x);
 		
 		assertEquals(p7, b1);
-		assertEquals(p6, b3);
-		assertEquals(p9, b4);
-		assertEquals(p8, b5);
-		assertEquals(p10, b6);
-		assertEquals(p11, b7);
+		assertEquals(p1, b2);
+		assertEquals(p2, b3);
+		assertEquals(intZero, b4);
+		assertEquals(p10, b5);
+		assertEquals(intZero, b6);
+		assertEquals(p9, b7);
+		assertEquals(p11, b8);
 	}
 	
 	/**
