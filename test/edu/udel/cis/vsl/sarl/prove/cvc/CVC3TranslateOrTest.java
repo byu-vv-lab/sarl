@@ -42,7 +42,7 @@ public class CVC3TranslateOrTest {
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -59,49 +59,50 @@ public class CVC3TranslateOrTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateOr uses an ArayList of boolean expressions in comparison to the
-	 * validity checker using the Symbolic Operator OR and the orExpr.
+	 * testTranslateOr uses an ArayList of boolean expressions in comparison to
+	 * the validity checker using the Symbolic Operator OR and the orExpr.
 	 */
-		
+
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateOr() {
+		// Translated booleanExpressions
+		Expr trueExpr = cvcProver.translate(booleanExprTrue);
+		Expr falseExpr = cvcProver.translate(booleanExprFalse);
 		// holds cvc3 variables
 		List<Expr> list = new ArrayList<Expr>();
-		
+		list.add(trueExpr);
+		list.add(trueExpr);
+
 		// true or true
 		SymbolicExpression orExpression = expressionFactory
-				.expression(SymbolicOperator.OR, boolType,
-						booleanExprTrue, booleanExprTrue);
+				.expression(SymbolicOperator.OR, boolType, booleanExprTrue,
+						booleanExprTrue);
 		Expr translateResult = cvcProver.translate(orExpression);
-		
-		Expr trueExpr = cvcProver.translate(booleanExprTrue);
-		list.add(trueExpr);
-		list.add(trueExpr);
 		Expr expected = vc.orExpr(list);
-		
+
 		// diagnostics
 		assertEquals(expected, translateResult);
 		list.clear();
-		
+
 		// true or false
-		SymbolicExpression orExpression2 = expressionFactory
-				.expression(SymbolicOperator.OR, boolType,
-						booleanExprTrue, booleanExprFalse);
+		SymbolicExpression orExpression2 = expressionFactory.expression(
+				SymbolicOperator.OR, boolType, booleanExprTrue,
+				booleanExprFalse);
 		translateResult = cvcProver.translate(orExpression2);
-		
-		Expr falseExpr = cvcProver.translate(booleanExprFalse);
+
+		// Add expressions to the list for comparison
 		list.add(trueExpr);
 		list.add(falseExpr);
 		expected = vc.orExpr(list);
-		
+
 		// diagnostics
 		assertEquals(expected, translateResult);
-		
-		SymbolicExpression orExpression3 = expressionFactory
-				.expression(SymbolicOperator.OR, boolType,
-						booleanExprTrue, booleanExprFalse, booleanExprTrue);
+
+		SymbolicExpression orExpression3 = expressionFactory.expression(
+				SymbolicOperator.OR, boolType, booleanExprTrue,
+				booleanExprFalse, booleanExprTrue);
 		translateResult = cvcProver.translate(orExpression3);
 	}
 }
