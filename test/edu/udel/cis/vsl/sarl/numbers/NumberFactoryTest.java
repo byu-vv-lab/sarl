@@ -820,6 +820,12 @@ public class NumberFactoryTest {
 		factory.multiply(a, b);
 	}
 	
+	@Test
+	/**
+	 * Testing the divide method with an input of two Number arguments.
+	 * This covers the cases of the arguments being integer numbers
+	 * and rational numbers.
+	 */
 	public void numberDivide(){
 		Number a = factory.number("12");
 		Number b = factory.number("3");
@@ -834,6 +840,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the divide method
+	 * when trying to divide two numbers together that are not both the
+	 * same type of number (rational number or integer number).
+	 */
 	public void numberDivideInvalArgs(){
 		Number a = factory.number("10");
 		Number b = factory.number("10.4");
@@ -841,6 +852,13 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 * @Exception IllegalArgumentException is thrown for the divide method
+	 * when trying to divide two numbers together that are not both the
+	 * same type of number (rational number or integer number). This
+	 * test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
 	public void numberDivideInvalArgsTwo(){
 		Number a = factory.number("10.4");
 		Number b = factory.number("10");
