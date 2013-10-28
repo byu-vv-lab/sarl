@@ -494,6 +494,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the rational method where a RationalNumber is taken as an argument
+	 * and a RationalNumber is returned.
+	 */
 	public void numberInstOfRationalToRational(){
 		Number a = factory.rational(bigThirty, bigOne);
 		Number expectedC = factory.rational(bigThirty, bigOne);
@@ -502,6 +506,10 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing the rational method where an IntegerNumber is taken in as
+	 * an argument and a RationalNumber is returned.
+	 */
 	public void numberInstOfIntNumtoRational(){
 		Number a = (factory.integer(bigThirty));
 		Number b = factory.rational(a);
@@ -510,6 +518,12 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 *@Exception IllegalArgumentException is thrown in the number method when an
+	 * argument is passed that isn't compatible with the method. (In this case,
+	 * a String is getting passed, but not in the correct form of a Number).
+	 *
+	 */
 	public void numberToRationalWrongArg(){
 		Number a = factory.number("bigThree");
 		factory.rational(a);
@@ -517,12 +531,20 @@ public class NumberFactoryTest {
 	
 	
 	@Test
+	/**
+	 * Testing the zeroInteger method, that it actually returns the
+	 * IntegerNumber equivalent of 0.
+	 */
 	public void testZeroIntMethod(){
 		IntegerNumber a = factory.zeroInteger();
 		IntegerNumber b = factory.integer(bigZero);
 		assertEquals(b, a);
 	}
 	@Test
+	/**
+	 * Testing the zeroRational method, that it actually returns the
+	 * RationalNumber equivalent of 0 (0/1).
+	 */
 	public void testZeroRatMethod(){
 		RationalNumber a = factory.zeroRational();
 		RationalNumber b = factory.rational(bigZero, bigOne);
