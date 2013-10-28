@@ -56,6 +56,10 @@ public class CommonSymbolicFunctionTypeTest
 	}
 	
 
+	/**
+	 in this test the hash code for two functions is compared with each other and depending upon the type of function i.e. if 
+	 they are similar than the hash codes should be equal and at the same time the hash code for two different functions should be different. 
+	 */
 	@Test
 	public void testComputeHashCode() 
 	{
@@ -69,6 +73,9 @@ public class CommonSymbolicFunctionTypeTest
 //		fail("Not yet implemented");
 //	}
 
+	/**
+	 this test checks whether one type of function is similar to another type of function or not.  
+	 */
 	@Test
 	public void testTypeEquals() 
 	{
@@ -82,6 +89,9 @@ public class CommonSymbolicFunctionTypeTest
 //		fail("Not yet implemented");
 //	}
 
+	/**
+	 this test aims to check the output type of a function. 
+	 */
 	@Test
 	public void testOutputType() 
 	{
@@ -89,6 +99,9 @@ public class CommonSymbolicFunctionTypeTest
 		assertFalse(function2.outputType().isInteger());
 	}
 
+	/**
+	 this test checks the string output of each function. 
+	 */
 	@Test
 	public void testToStringBuffer() 
 	{
@@ -100,6 +113,9 @@ public class CommonSymbolicFunctionTypeTest
 		assertNotEquals(function2.toStringBuffer(true).toString(),"<int,bounded,real,float>->int");
 	}
 
+	/**
+	 this test check the how many input types the function has, in this particular test it should return true only for 4.   
+	 */
 	@Test
 	public void testInputTypes() {
 		assertEquals(function.inputTypes().numTypes(), 4);
