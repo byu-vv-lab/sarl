@@ -323,12 +323,21 @@ public class NumberFactoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	/**
+	 *@Exception IllegalArgumentException is thrown if taking the modulus 
+	 *of two IntegerNumber inputs where there is a negative IntegerNumber as
+	 *an argument.
+	 */
 	public void intNumModNegArg(){
 		IntegerNumber a = factory.integer(bigTen);
 		IntegerNumber b = factory.integer(bigNegativeOne);
 		factory.mod(a, b);		
 	}
 	@Test
+	/**
+	 * Testing that the modulus method works correctly with an input of two
+	 * IntegerNumber arguments.
+	 */
 	public void intNumMod(){
 		IntegerNumber a = factory.integer(bigTen);
 		IntegerNumber b = factory.integer(bigThree);
@@ -337,6 +346,12 @@ public class NumberFactoryTest {
 		assertEquals(expectedC, c);
 	}
 	@Test
+	/**
+	 * Testing that the floor method works correctly with an input of a
+	 * RationalNumber argument. This covers the cases of both positive
+	 * and negative RationalNumbers, as well as having a negative RationalNumber
+	 * that is integral and not integral.
+	 */
 	public void ratNumFloor(){
 		RationalNumber a = factory.rational(bigTwenty, bigThree);
 		IntegerNumber expectedB = factory.integer(bigSix);
@@ -355,7 +370,12 @@ public class NumberFactoryTest {
 	public void ratNumFloorModZero(){
 		
 	}
+	
 	@Test
+	/**
+	 * Testing that the integer method works correctly with an
+	 * input of a String.
+	 */
 	public void intInt(){
 		String a = "30";
 		IntegerNumber b = factory.integer(a);
@@ -364,6 +384,11 @@ public class NumberFactoryTest {
 	}
 	
 	@Test
+	/**
+	 * Testing that the integerToRatioal method works correctly
+	 * (taking an input argument of an IntegerNumber, and returning
+	 * a RationalNumber).
+	 */
 	public void intNumIntToRat(){
 		IntegerNumber a = factory.integer(bigThirty);
 		RationalNumber expectedB = factory.rational(bigThirty, bigOne);
