@@ -494,6 +494,19 @@ public class CommonPreUniverseTest {
 						universe.bool(true)), testResult3);
 	}
 
+	/**
+	 * @author blutuu
+	 * 
+	 * testExistsInt() uses the existsInt() method to check 
+	 * whether the given index is found between the given 
+	 * upper and lower bounds. Within this test there is a 
+	 * collection of variables to be used in testing. Each 
+	 * variable fulfills the "index", "low", "high", and 
+	 * "predicate" parameters, respectively. The variable 
+	 * parameters combine to test null and non null values
+	 * which aid in reaching every branch of existsInt()
+	 * successfully. 
+	 */
 	@Test
 	// Written by Marlin Blue 9/25
 	public void testExistsInt() {
@@ -1623,7 +1636,7 @@ public class CommonPreUniverseTest {
 	*/
 	
 	/**
-	 * @author Marlin Blue
+	 * @author blutuu
 	 * 
 	 * Tests whether the two given Symbolic Constants are equal. This 
 	 * test targets the FUNCTION case of the 'equals()' method. An ArrayList
@@ -1633,6 +1646,7 @@ public class CommonPreUniverseTest {
 	 * 
 	 */
 	@Test
+	// Written by Marlin Blue
 	public void testEqualsFunction() {
 		//SymbolicExpression result1, result2; 
 		SymbolicConstant nullConstant = universe.symbolicConstant(
