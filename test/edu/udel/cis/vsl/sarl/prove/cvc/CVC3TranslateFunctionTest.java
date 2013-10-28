@@ -68,6 +68,12 @@ public class CVC3TranslateFunctionTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslateFunctionSymbolicConstant assesses the validity of the query of the validity checker
+	 * while using the operation and children of a symbolic expression made from various array lists created
+	 * within the test.
+	**/
 
 	@Test
 	public void testTranslateFunctionSymbolicConstant(){
@@ -99,6 +105,12 @@ public class CVC3TranslateFunctionTest {
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
 	}
 	
+	/**
+	 * testTranslateFunctionLambda creates a symbolic expression using lambda and 
+	 * symbolic constants. The test translates the symbolic expression and assesses
+	 * the validity of the validity checker when using the translation.
+	 */
+	
 	@Test
 	public void testTranslateFunctionLambda(){
 		
@@ -119,6 +131,12 @@ public class CVC3TranslateFunctionTest {
 		
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 	}
+	
+	/**
+	 * testTranslateFunctionUnexpected translates a symbolic expression that uses an array
+	 * of symbolic functions.
+	 * @exception expected = SARLInternalException.class
+	 */
 	
 	@Test(expected = SARLInternalException.class)
 	public void testTranslateFunctionUnexpected(){
