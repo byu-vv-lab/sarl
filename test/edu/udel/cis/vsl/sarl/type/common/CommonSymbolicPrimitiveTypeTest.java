@@ -34,6 +34,10 @@ public class CommonSymbolicPrimitiveTypeTest {
 	}
 	
 
+	/**
+	 in this test the hash code of boolean is compared to boolean which should be the same and 
+	 hash code of boolean is compared to character which should be different. 
+	 */
 	@Test
 	public void testComputeHashCode() 
 	{
@@ -41,6 +45,9 @@ public class CommonSymbolicPrimitiveTypeTest {
 		assertNotEquals(bool1.computeHashCode(), char1.computeHashCode());
 	}
 	
+	/**
+	 this test checks whether a variable of one type is the same or different from a variable of another type.  
+	 */
 	@Test
 	public void testTypeEquals() 
 	{
@@ -57,6 +64,9 @@ public class CommonSymbolicPrimitiveTypeTest {
 */
 	
 
+	/**
+	  
+	 */
 	@Test
 	public void testGetPureType() 
 	{
@@ -71,7 +81,8 @@ public class CommonSymbolicPrimitiveTypeTest {
 //	}
 
 	/**
-	 * 
+	 this test checks the string output of a variable. The string output of variables of the same type should match but 
+	 those of different types should not. 
 	 */
 	@Test
 	public void testToStringBuffer() 
