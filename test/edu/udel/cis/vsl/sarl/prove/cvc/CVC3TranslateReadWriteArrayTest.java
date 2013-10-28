@@ -68,6 +68,12 @@ public class CVC3TranslateReadWriteArrayTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	/**
+	 * testTranslateArrayWriteComplete creates a Array using translated numeric expressions.
+	 * The test compares the array, using the symbolic operator, with the validity checker using
+	 * writeExpr. 
+	 */
 
 	@Test
 	public void testTranslateArrayWriteComplete(){
@@ -93,6 +99,12 @@ public class CVC3TranslateReadWriteArrayTest {
 		
 	}
 	
+	/**
+	 * testTranslateArrayWriteIncomplete uses ARRAY_WRITE and ARRAY_Read to
+	 * create symbolic expressions that will be used in translation for a Expr
+	 * that will be compared to a translation that uses a numeric expression.
+	 */
+	
 	@Test
 	public void testTranslateArrayWriteIncomplete(){
 		
@@ -115,6 +127,14 @@ public class CVC3TranslateReadWriteArrayTest {
 		
 		assertEquals(QueryResult.VALID, vc.query(equation1));
 	}
+	
+	/**
+	 * testTranslateDenseArrayWriteComplete creates a symbolic expression
+	 * using dense array write taking two array lists created within the test. 
+	 * The test then translates the dense array write symbolic expression and compares
+	 * it to the validity checker using the operation writeExpr.
+	 * 
+	 */
 	
 	@Test
 	public void testTranslateDenseArrayWriteComplete(){
@@ -145,8 +165,14 @@ public class CVC3TranslateReadWriteArrayTest {
 		assertEquals(expected, cvcArray);
 	}
 	
+	/**
+	 * testTranslateDenseArrayWriteIncomplete uses universe.denseArrayWrite and ARRAY_READ
+	 * to create symbolic expressions for translations that will be used to compare with the
+	 * validity checker using eqExpr.
+	 */
+	
 	@Test
-	public void translateDenseArrayWriteIncomplete(){
+	public void testTranslateDenseArrayWriteIncomplete(){
 		
 		Expr expr4 = cvcProver.translate(five);
 		Expr expr5 = cvcProver.translate(ten);
