@@ -615,6 +615,7 @@ public class IdealTest {
 				multiply(intTen, p01));
 		NumericExpression p06 = idealFactory.add(x, intOne);
 		NumericExpression p07 = idealFactory.multiply(intTen, p01);
+		NumericExpression p08 = idealFactory.divide(x, intTen);
 		
 		/*
 		Polynomial poly1 = (Polynomial) p1;
@@ -636,6 +637,9 @@ public class IdealTest {
 		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
 		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
 		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);
+		Polynomial b4 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
+		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);
+		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);
 		/*
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
@@ -648,6 +652,9 @@ public class IdealTest {
 		assertEquals(intFive, b1);
 		assertEquals(p06, b2);
 		assertEquals(intTen, b3);
+		assertEquals(intOne, b4);
+		assertEquals(intTen, b5);
+		assertEquals(p08, b6);
 		/*
 		assertEquals(p4, b1);
 		assertEquals(p2, b2);
