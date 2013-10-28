@@ -125,7 +125,7 @@ public class CommonPreUniverse implements PreUniverse {
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
 	 */
-	private ExpressionSubstituter substituter;
+	private ExpressionSubstituter2 substituter;
 
 	/** The boolean type. */
 	private SymbolicType booleanType;
@@ -181,7 +181,7 @@ public class CommonPreUniverse implements PreUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		substituter = new ExpressionSubstituter(this, collectionFactory,
+		substituter = new ExpressionSubstituter2(this, collectionFactory,
 				typeFactory);
 	}
 
