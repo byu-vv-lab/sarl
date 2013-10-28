@@ -31,8 +31,24 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
  */
 public interface RationalExpression extends NumericExpression {
 
+	/**
+	 * Numerator of a Rational Expression
+	 * 
+	 * @param factory - different values that are present in idealFactory interface
+	 * 
+	 * @return
+	 * 			a polynomial which is the Numerator of a Rational Expression
+	 */
 	Polynomial numerator(IdealFactory factory);
 
+	/**
+	 * Denominator of a Rational Expression
+	 * 
+	 * @param factory - different values that are present in idealFactory interface
+	 * 
+	 * @return
+	 * 			a polynomial which is the denominator of a Rational Expression
+	 */
 	Polynomial denominator(IdealFactory factory);
 
 }
