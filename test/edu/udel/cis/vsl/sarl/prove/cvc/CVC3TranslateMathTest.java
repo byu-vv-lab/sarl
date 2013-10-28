@@ -28,7 +28,7 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3TranslateMathTest {
-	
+
 	// Static fields: instantiated once and used for all tests...
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
@@ -48,17 +48,17 @@ public class CVC3TranslateMathTest {
 	private static BooleanExpression booleanExprTrue = universe
 			.trueExpression();
 	// constants
-	private static SymbolicConstant e = universe
-			.symbolicConstant(universe.stringObject("e"), intType);
-	private static SymbolicConstant f = universe
-			.symbolicConstant(universe.stringObject("f"), intType);
-	private static SymbolicConstant g = universe
-			.symbolicConstant(universe.stringObject("g"), intType);
+	private static SymbolicConstant x = universe.symbolicConstant(
+			universe.stringObject("x"), intType);
+	private static SymbolicConstant y = universe.symbolicConstant(
+			universe.stringObject("y"), intType);
+	private static SymbolicConstant z = universe.symbolicConstant(
+			universe.stringObject("z"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -75,112 +75,113 @@ public class CVC3TranslateMathTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateIntegerDivision creates two numeric expressions, one using the symbolic operator
-	 * INT_DIVIDE, the other using MODULO, and two symbolic constants. The test compares the validity checker
-	 * and the queryresult.
+	 * testTranslateIntegerDivision creates two numeric expressions, one using
+	 * the symbolic operator INT_DIVIDE, the other using MODULO, and two
+	 * symbolic constants. The test compares the validity checker and the
+	 * queryresult.
 	 */
-	
+
 	@Test
-	public void testTranslateIntegerDivision(){
-		
-		NumericExpression q = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.INT_DIVIDE, intType, e, f);
-		NumericExpression r = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MODULO, intType, e, f);
-		
-		Expr e2 = cvcProver.translate(e);
-		Expr f2 = cvcProver.translate(f);
+	public void testTranslateIntegerDivision() {
+
+		NumericExpression q = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.INT_DIVIDE, intType, x, y);
+		NumericExpression r = (NumericExpression) expressionFactory.expression(
+				SymbolicOperator.MODULO, intType, x, y);
+
+		Expr e = cvcProver.translate(x);
+		Expr f = cvcProver.translate(y);
 		Expr q2 = cvcProver.translate(q);
-		Expr r2 = cvcProver.translate(r);
-		
-		Expr equationOne = vc.eqExpr(e2, 
-				vc.plusExpr(r2, vc.multExpr(f2, q2)));	//e2 = f2*q2+r2
+		Expr r2= cvcProver.translate(r);
+
+		Expr equationOne = vc.eqExpr(e, vc.plusExpr(r2, vc.multExpr(f, q2))); // e2 = f * q2 + r2
 		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
-		Expr equationThree = vc.ltExpr(r2, f2); // r2 < f2
-		
+		Expr equationThree = vc.ltExpr(r2, f); // r2 < f
+
 		assertEquals(QueryResult.VALID, vc.query(equationOne));
 		assertEquals(QueryResult.VALID, vc.query(equationTwo));
 		assertEquals(QueryResult.VALID, vc.query(equationThree));
 	}
-	
-	/**
-	 * testTranslateMultiply compares translated numeric expressions
-	 * when using the multiply symbolic operator and the validity checker
-	 * using multExpr. The test asserts multiple arguments as well.
-	 */
-	
 
-	@Test(expected=SARLInternalException.class)
+	/**
+	 * testTranslateMultiply compares translated numeric expressions when using
+	 * the multiply symbolic operator and the validity checker using multExpr.
+	 * The test asserts multiple arguments as well.
+	 */
+
+	@Test(expected = SARLInternalException.class)
 	public void testTranslateMultiply() {
-		
+
 		Expr oneExpr = cvcProver.translate(one);
 		Expr twoExpr = cvcProver.translate(two);
 		Expr fiveExpr = cvcProver.translate(five);
 		Expr tenExpr = cvcProver.translate(ten);
-		
+
 		List<NumericExpression> mulList = new ArrayList<NumericExpression>();
 		mulList.add(five);
 		mulList.add(ten);
-		SymbolicCollection<NumericExpression> mulCollection = universe.basicCollection(mulList);
-		
-		//One argument
-		NumericExpression mulExp1 = (NumericExpression)expressionFactory
+		SymbolicCollection<NumericExpression> mulCollection = universe
+				.basicCollection(mulList);
+
+		// One argument
+		NumericExpression mulExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, mulCollection);
-		Expr expr1 = cvcProver.translate(mulExp1);
+		Expr expr = cvcProver.translate(mulExp);
 		Expr expr2 = vc.multExpr(vc.multExpr(oneExpr, fiveExpr), tenExpr);
-		assertEquals(expr2, expr1);
-		
-		//Two arguments
+		assertEquals(expr2, expr);
+
+		// Two arguments
 		NumericExpression mulExp2 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five);
 		Expr expr3 = cvcProver.translate(mulExp2);
 		Expr expected2 = vc.multExpr(twoExpr, fiveExpr);
 		assertEquals(expected2, expr3);
-		
-		//More than two arguments
+
+		// More than two arguments
 		NumericExpression mulExp3 = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, realType, two, five, ten);
 		cvcProver.translate(mulExp3);
 	}
-	
+
 	/**
-	 * testTranslateMultiplySymbolic compares translated symbolic constant expressions
-	 * when using the multiply symbolic operator and the validity checker
-	 * using multExpr. The test asserts multiple arguments as well.
+	 * testTranslateMultiplySymbolic compares translated symbolic constant
+	 * expressions when using the multiply symbolic operator and the validity
+	 * checker using multExpr. The test asserts multiple arguments as well.
 	 */
-	
-	@Test(expected=SARLInternalException.class)
+
+	@Test(expected = SARLInternalException.class)
 	public void testTranslateMultiplySymbolic() {
-		
+
 		Expr oneExpr = cvcProver.translate(oneInt);
-		Expr eExpr = cvcProver.translate(e);
-		Expr fExpr = cvcProver.translate(f);
-		
+		Expr xExpr = cvcProver.translate(x);
+		Expr yExpr = cvcProver.translate(y);
+
 		List<SymbolicConstant> mulList = new ArrayList<SymbolicConstant>();
-		mulList.add(e);
-		mulList.add(f);
-		SymbolicCollection<SymbolicConstant> mulCollection = universe.basicCollection(mulList);
-		
-		//One argument
-		NumericExpression mulExp1 = (NumericExpression)expressionFactory
+		mulList.add(x);
+		mulList.add(y);
+		SymbolicCollection<SymbolicConstant> mulCollection = universe
+				.basicCollection(mulList);
+
+		// One argument
+		NumericExpression mulExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.MULTIPLY, intType, mulCollection);
-		
-		Expr expr1 = cvcProver.translate(mulExp1);
-		Expr expr2 = vc.multExpr(vc.multExpr(oneExpr, eExpr), fExpr);
-		assertEquals(expr2, expr1);
-		
-		//Two arguments
+
+		Expr expr = cvcProver.translate(mulExp);
+		Expr expr2 = vc.multExpr(vc.multExpr(oneExpr, xExpr), yExpr);
+		assertEquals(expr2, expr);
+
+		// Two arguments
 		NumericExpression mulExp2 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, intType, e, f);
+				.expression(SymbolicOperator.MULTIPLY, intType, x, y);
 		Expr expr3 = cvcProver.translate(mulExp2);
-		Expr expected2 = vc.multExpr(eExpr, fExpr);
+		Expr expected2 = vc.multExpr(xExpr, yExpr);
 		assertEquals(expected2, expr3);
-		
-		//More than two arguments
+
+		// More than two arguments
 		NumericExpression mulExp3 = (NumericExpression) expressionFactory
-				.expression(SymbolicOperator.MULTIPLY, intType, e, f, g);
+				.expression(SymbolicOperator.MULTIPLY, intType, x, y, z);
 		cvcProver.translate(mulExp3);
 	}
 }
