@@ -458,7 +458,6 @@ public class IdealTest {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
 		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p3 = idealFactory.multiply(intZero, x);
 		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
 				idealFactory.multiply(x, x)), intTwo);
 		NumericExpression p5 = idealFactory.multiply(intTen, x);
@@ -466,8 +465,6 @@ public class IdealTest {
 				intTen, x), idealFactory.add(idealFactory.multiply(
 						intTwo, idealFactory.multiply(x, x)), intOne));
 		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p8 = idealFactory.multiply(idealFactory.
-				multiply(x, x), intTwo);
 		NumericExpression p9 = idealFactory.subtract(idealFactory.
 				multiply(x, x), intOne);
 		NumericExpression p10 = idealFactory.subtract(idealFactory.
