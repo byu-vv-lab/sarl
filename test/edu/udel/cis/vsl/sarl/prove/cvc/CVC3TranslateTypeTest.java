@@ -65,6 +65,11 @@ public class CVC3TranslateTypeTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * testTranslateTupleType creates cvc3 tuples and creates an array list of their types.
+	 * Their types should correspond to another array list of the expected cvc3 types.
+	 */
+	
 	@Test
 	public void testTranslateTupleType() {
 		// cvc3 int array (with int index type)
@@ -102,6 +107,11 @@ public class CVC3TranslateTypeTest {
 		assertEquals(expected, translateResult);
 	}
 	
+	/**
+	 * testTranslateFunctionType creates a list of cvc3types using intType and boolType and expected types from
+	 * the validity checker.
+	 */
+	
 	@Test
 	public void testTranslateFunctionType() {
 		// int -> int 
@@ -134,6 +144,11 @@ public class CVC3TranslateTypeTest {
 		out.println();
 		assertEquals(expected, translateResult);
 	}
+	
+	/**
+	 * testTranslateFunctionType creates a list of cvc3types using union and expected types from
+	 * the validity checker.
+	 */
 	
 	@Test
 	public void testTranslateUnionType() {
