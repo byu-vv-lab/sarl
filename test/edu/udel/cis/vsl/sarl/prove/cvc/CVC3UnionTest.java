@@ -86,6 +86,11 @@ public class CVC3UnionTest {
 	public void tearDown() throws Exception {
 	}
 	
+	/**
+	 * TranslateUnionInject translates union type and injects -0.5 rational and assest the equality of
+	 * the translated result and th cvcProver when translating the symbolic expression after injecting -0.5.
+	 */
+	
 	@Test
 	public void TranslateUnionInject() {
 		// translate union type
@@ -102,6 +107,11 @@ public class CVC3UnionTest {
 //		out.println(translateResult);
 //		out.println(injectNegHalf);
 	}
+	
+	/**
+	 * translateUnionExtract asserts the type equality of translated real int and the 
+	 * symbolic expression after using the UNION_EXTRACT symbolic operator.
+	 */
 	
 	@Test
 	public void TranslateUnionExtract() {
@@ -120,6 +130,11 @@ public class CVC3UnionTest {
 		assertEquals(translateResult.getType(), cvcProver
 				.translateType(extractReal2.type()));
 	}
+	
+	/**
+	 * TranslateUnionTest creates an inject statement, and asserts a union test involving the
+	 * UNION_TEST symbolic operator. 
+	 */
 	
 	@Test
 	public void TranslateUnionTest() {
