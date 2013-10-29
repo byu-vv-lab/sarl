@@ -1303,6 +1303,11 @@ public interface PreUniverse {
 	 * Given a reference and a value, returns the sub-expression of value
 	 * specified by the reference. Throws exception if the reference is not of
 	 * the correct form for the type of value.
+	 *  @param value
+	 *  		a SymbolicExpression which you would like to dereference from
+	 *  @param reference
+	 *  		a ReferenceExpression which is compatible with the value
+	 *  		and points to the sub-expression you would like to dereference.
 	 */
 	SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference);
