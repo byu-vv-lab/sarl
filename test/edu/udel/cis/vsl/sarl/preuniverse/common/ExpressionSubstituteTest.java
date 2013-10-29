@@ -60,17 +60,16 @@ public class ExpressionSubstituteTest {
 	@Test
 	public void expressionSubstituteConstructorTest() {
 		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
+		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
 
+		//constructor test
 		assertEquals(this.factory1, factory1);
 		assertEquals(this.universe, universe);
 		assertEquals(this.typeFactory1, typeFactory1);
-	}
-
-	@Test
-	public void expressionSubstituteNullTest() {
-		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
-
-		assertEquals(universe.substitute(expression1, newMap), expression1);
-
+		
+		//subsitute method case Null expression
+		assertEquals(expr1.substitute(expression1, newMap), expression1);
+		
+		
 	}
 }
