@@ -71,6 +71,9 @@ public class CommonSymbolicPrimitiveTypeTest {
 	@Test
 	public void testGetPureType() 
 	{
+//		System.out.println(bool1.getPureType());
+//		System.out.println(bool2.getPureType());
+//		System.out.println(char1.getPureType());
 		assertEquals(bool1.getPureType(), bool2.getPureType());
 		assertNotEquals(bool1.getPureType(), char1.getPureType());
 	}
@@ -88,9 +91,22 @@ public class CommonSymbolicPrimitiveTypeTest {
 	@Test
 	public void testToStringBuffer() 
 	{
-		//System.out.print(bool1.toStringBuffer(true));
+//		System.out.println(bool1.toStringBuffer(true));
+//		System.out.println(bool2.toStringBuffer(true));
+//		System.out.println(bool1.toStringBuffer(false));
+//		System.out.println(char1.toStringBuffer(true));
+//		System.out.println(char1.toStringBuffer(false));
 		assertEquals(bool1.toStringBuffer(true).toString(),"boolean");
 		assertEquals(bool2.toStringBuffer(false).toString(),"boolean");
+		assertNotEquals(bool1.toStringBuffer(true).toString(),"char");
+		assertNotEquals(bool1.toStringBuffer(false).toString(),"char");
+		assertNotEquals(bool2.toStringBuffer(true).toString(),"CHAR");
+		assertNotEquals(bool2.toStringBuffer(false).toString(),"CHAR");
+		assertEquals(char1.toStringBuffer(true).toString(),"CHAR");
+		assertEquals(char1.toStringBuffer(true).toString(),"CHAR");
+		assertEquals(char1.toStringBuffer(false).toString(),"CHAR");
+		assertNotEquals(char1.toStringBuffer(true).toString(),"char");
+		assertNotEquals(char1.toStringBuffer(false).toString(),"char");
 		assertNotEquals(char1.toStringBuffer(true).toString(),"boolean");
 	}
 
