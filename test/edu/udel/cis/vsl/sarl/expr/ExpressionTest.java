@@ -76,6 +76,7 @@ import java.util.List;
  */
 public class ExpressionTest {
 	private SymbolicUniverse sUniverse;
+	@SuppressWarnings("unused")
 	private static PrintStream out = System.out;
 	private SymbolicTypeFactory stf;
 	private CollectionFactory cf;
@@ -758,14 +759,17 @@ public class ExpressionTest {
 	 */
 	public void cnefDivide() {
 		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-
 		//NumericExpression testExpr = cnef.expression(xpyDxty.operator(), xpyDxty.type(), xpy,xty);
-
 		
 		assertEquals(cnef.divide(xpy, xty), xpyDxty);
+		assertEquals(xpyDxty.argument(0),xpy);
+		assertEquals(xpyDxty.argument(1),xty);
+		assertEquals(xpyDxty.numArguments(),2);
+		assertEquals(xpyDxty.operator(), SymbolicOperator.DIVIDE);
 		//assertEquals(xpyDxty, testExpr);
+		assertEquals(xpyDxtyH.type(),herbrandType);
 		assertEquals(cnef.divide(cnef.cast(xpy, herbrandType),  cnef.cast(xty, herbrandType)), xpyDxtyH);
-		assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(), "((X+Y)/X*Y)");
+		//assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(), "((X+Y)/X*Y)");
 	}
 	
 	@Test
@@ -786,9 +790,12 @@ public class ExpressionTest {
 		NumericExpression minus = cnef.minus(xpy);
 		NumericExpression minusH = cnef.minus(cnef.cast(xpy, herbrandType));
 		
+		assertEquals(minus.argument(0), xpy);
+		assertEquals(minus.numArguments(),1);
 		assertEquals(minus, sUniverse.minus(xpy));
 		assertEquals(minus, idealFactory.minus(xpy));
 		assertEquals(minus.toStringBuffer(true).toString(), "(-1*X+-1*Y)");
+		assertEquals(minusH.type(), herbrandType);
 		assertEquals(minusH, sUniverse.minus(cnef.cast(xpy, herbrandType)));
 		assertEquals(minusH, idealFactory.minus(cnef.cast(xpy, herbrandType)));
 		assertEquals(minusH.toStringBuffer(true).toString(), "-1*(hreal)(hreal)(X+Y)");
@@ -808,13 +815,17 @@ public class ExpressionTest {
 		NumericExpression testExpr = cnef.expression(moduloExpression.operator(), moduloExpression.type(), expr1,expr2);
 		
 		assertEquals(moduloExpression, testExpr);
+		assertEquals(moduloExpression.numArguments(), 2);
+		assertEquals(moduloExpression.argument(0), expr1);
+		assertEquals(moduloExpression.argument(1), expr2);
+		assertEquals(moduloExpression.operator(), SymbolicOperator.MODULO);
 		assertEquals(moduloExpression, sUniverse.modulo(expr1, expr2));
 		assertEquals(moduloExpression, testExpr);
 		assertEquals(moduloExpression,idealFactory.modulo(expr1, expr2));
-		assertEquals(moduloExpression.toStringBuffer(true).toString(), "(9%(2 div X))");
+		//assertEquals(moduloExpression.toStringBuffer(true).toString(), "(9%(2 div X))");
 		assertEquals(moduloExpressionH, sUniverse.modulo(expr1H, expr2H));
 		assertEquals(moduloExpressionH, idealFactory.modulo(expr1H, expr2H));
-		assertEquals(moduloExpressionH.toStringBuffer(true).toString(), "(9%(hint)(hint)(2 div X))");
+		//assertEquals(moduloExpressionH.toStringBuffer(true).toString(), "(9%(hint)(hint)(2 div X))");
 	}
 	
 	@Test
@@ -833,11 +844,15 @@ public class ExpressionTest {
 		NumericExpression powerExpression2H = cnef.power(expr1H, fiveIntObj);
 		NumericExpression testExpr = cnef.expression(powerExpression.operator(), powerExpression.type(), expr1,expr2);
 		
+		assertEquals(powerExpression.numArguments(), 2);
+		assertEquals(powerExpression.argument(0), expr1);
+		assertEquals(powerExpression.argument(1), expr2);
 		assertEquals(powerExpression, testExpr);
 		assertEquals(powerExpression, sUniverse.power(expr1, expr2));
 		assertEquals(powerExpression, idealFactory.power(expr1, expr2));
 		assertEquals(powerExpression2, sUniverse.power(expr1, fiveIntObj));
 		assertEquals(powerExpression2, idealFactory.power(expr1, fiveIntObj));
+		assertEquals(powerExpressionH.type(), herbrandIntType);
 		assertEquals(powerExpressionH, sUniverse.power(expr1H, expr2H));
 		assertEquals(powerExpressionH, idealFactory.power(expr1H, expr2H));
 		assertEquals(powerExpression2H, sUniverse.power(expr1H, fiveIntObj));
