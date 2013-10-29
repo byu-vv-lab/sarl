@@ -903,23 +903,57 @@ public class ArrayTest {
 	}
 
 	//Written by Chris Heider
-		@Test
-		public void testArrayLambda() {
-			SymbolicCompleteArrayType arrayType;
-			NumericSymbolicConstant x;
-			SymbolicExpression function;
-			SymbolicExpression arrayL;
-			SymbolicExpression ans;
+	@Test
+	public void testArrayLambda() {
+		SymbolicCompleteArrayType arrayType;
+		NumericSymbolicConstant x;
+		NumericSymbolicConstant p;
+		SymbolicExpression function1;
+		SymbolicExpression function2;
+		SymbolicExpression arrayL1;
+		SymbolicExpression arrayL2;
+		SymbolicExpression ans;
+		
+		arrayType = universe.arrayType(integerType, universe.integer(6));
+		x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
+		function1 = universe.lambda(x, universe.multiply(x, x));
+		arrayL1 = universe.arrayLambda(arrayType, function1);
+		p = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("p"), integerType);
+		function2 = universe.lambda(p, universe.add(p,p));
+		arrayL2 = universe.arrayLambda(arrayType, function2);
+		ans = universe.integer(4);
 			
-			arrayType = universe.arrayType(integerType, universe.integer(6));
-			x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
-			function = universe.lambda(x, universe.multiply(x, x));
-			arrayL = universe.arrayLambda(arrayType, function);
-			ans = universe.integer(4);
-			
-			
-			assertEquals(ans, universe.arrayRead(arrayL,universe.integer(2)));
-		}
+		assertEquals(ans, universe.arrayRead(arrayL1,universe.integer(2)));
+		assertEquals(ans, universe.arrayRead(arrayL2,universe.integer(2)));
+	}
+	
+	//Written by Chris Heider
+	@Test(expected = SARLException.class)
+	public void testArrayLambdaException1() {
+		SymbolicCompleteArrayType arrayType;
+		NumericSymbolicConstant x;
+		SymbolicExpression function;
+		SymbolicExpression arrayL;
+		SymbolicExpression ans;
+		
+		arrayType = universe.arrayType(integerType, universe.integer(6));
+		x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
+		function = universe.multiply(x, x);
+		arrayL = universe.arrayLambda(arrayType, function);
+	}
+	
+	//Written by Chris Heider
+	@Test(expected = SARLException.class)
+	public void testArrayLambdaException2() {
+		SymbolicCompleteArrayType arrayType;
+		SymbolicExpression function;
+		SymbolicExpression arrayL;
+		
+		arrayType = universe.arrayType(integerType, universe.integer(6));
+		function = universe.nullExpression();
+		arrayL = universe.arrayLambda(arrayType, function);
+	}
+	
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompleteArrays() {
