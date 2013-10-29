@@ -37,7 +37,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+//import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
@@ -59,8 +59,8 @@ public class MakeTest {
 	private static SymbolicType  realArray;
 	private static SymbolicType intArrayType;
 	// SymbolicObjects
-	private static SymbolicExpression nullExpression;
-	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
+	//private static SymbolicExpression nullExpression;
+	//private static SymbolicCompleteArrayType symbolicCompleteArrayType;
 
 
 	private static SymbolicUnionType union1;
@@ -76,15 +76,10 @@ public class MakeTest {
 		realType = universe.realType();
 		//arrayType = universe.arrayType(integerType); //creates an array of ints
 		realArray = universe.arrayType(realType);
-
-
 		union1 = universe.unionType(
 				universe.stringObject("union1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						booleanType, realArray }));
-
-
-
 	}
 
 	public void setUp() throws Exception {
@@ -139,7 +134,8 @@ public class MakeTest {
 		assertEquals((universe.make(SymbolicOperator.AND,Bool,Args_AND1)),resultTrue);
 		//assertEquals((universe.make(SymbolicOperator.AND,Bool,Args_AND3)),resultTrue);
 		//case ARRAY_LAMBDA
-		SymbolicObject[] Args_Array_Lambda={nullExpression};
+		//TODO: need to wait until Array_Lambda implement
+		//SymbolicObject[] Args_Array_Lambda={nullExpression};
 		//assertEquals(null,universe.make(SymbolicOperator.ARRAY_LAMBDA,symbolicCompleteArrayType,Args_Array_Lambda));
 		//case ARRAY_WRITE
 		intArrayType = universe.arrayType(integerType);
@@ -228,7 +224,7 @@ public class MakeTest {
 		SymbolicObject[] Args_TupleWrite={tuple,i1,two};
 		assertEquals(universe.make(SymbolicOperator.TUPLE_WRITE,Integer,Args_TupleWrite),resultedTuple);
 		//case UNION_INJECT
-		// finished by Jeff DiMarco (jdimarco) 10/3/13. Not sure who started this
+		// finished by Jeff DiMarco (jdimarco) 10/3/13. Boyang started this 9/29/13
 		LinkedList<SymbolicType> memberTypes;
 		memberTypes = new LinkedList<SymbolicType>();
 		memberTypes.add(integerType);
