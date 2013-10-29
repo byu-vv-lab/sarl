@@ -39,22 +39,53 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * an implementation of SymbolicTypeFactory, 
+ * 
+ * @author alali
+ *
+ */
 public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
+	/**
+	 * an ObjectFactory object to be used to create a TypeFactory
+	 */
 	private ObjectFactory objectFactory;
 
+	/**
+	 * a TypeComparator to be used in comparing two types
+	 */
 	private TypeComparator typeComparator;
 
+	/**
+	 * a TypeSequenceComparator to be used in comparing SymbolicSequenceType
+	 */
 	private TypeSequenceComparator typeSequenceComparator;
 
+	/**
+	 * a booleanType CommonSymbolicPrimitiveType to be returned by the factory
+	 */
 	private CommonSymbolicPrimitiveType booleanType;
 
+	/**
+	 * a SymbolicIntegerType object to be returned by the factory
+	 */
 	private SymbolicIntegerType integerType, herbrandIntegerType;
 
+	/**
+	 * a SymbolicRealType objects to be returned by the factory
+	 */
 	private SymbolicRealType realType, herbrandRealType;
 
+	/**
+	 * a SymbolicType object to be returned for Char or CommonSymbolicPrimitiveType
+	 */
 	private SymbolicType characterType;
 
+	/**
+	 * Constructs a CommonSymbolicTypeFactory from an ObjectFactory
+	 * @param objectFactory
+	 */
 	public CommonSymbolicTypeFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
 		typeComparator = new TypeComparator();
@@ -185,6 +216,12 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 		assert typeComparator.expressionComparator() != null;
 	}
 
+	/**
+	 * Creates a SymbolicTypeSequence that contains the pureType of all the 
+	 * elements in the sequence
+	 * @param sequence, a sequence of SymbolicTypes
+	 * @return a sequence of pureType of elements in the original sequence
+	 */
 	private SymbolicTypeSequence pureSequence(SymbolicTypeSequence sequence) {
 		int length = sequence.numTypes();
 

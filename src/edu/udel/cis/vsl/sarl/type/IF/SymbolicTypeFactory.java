@@ -36,12 +36,26 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
 
+/**
+ * A SymbolicTypeFactory interface that sets fields and methods
+ * for creating all different types:
+ * 	- CommonSymbolicIntegerType
+ * 	- CommonSymbolicRealType
+ *  - CommonSymbolicCompleteArrayType
+ *  - CommonSymbolicArrayType
+ *  - CommonSymbolicPrimitiveType
+ *  - CommonSymbolicFunctionType
+ *  - CommonSymbolicTypeSequence
+ *  - TypeComparator
+ * @author alali
+ *
+ */
 public interface SymbolicTypeFactory {
 	
 	/**
 	 * setting the way you want to comparator to compare two expressions
-	 * 
-	 * @param c
+	 * used when comparing CompleteArrayType
+	 * @param c used to compare
 	 */
 	void setExpressionComparator(Comparator<SymbolicExpression> c);
 	
@@ -69,7 +83,7 @@ public interface SymbolicTypeFactory {
 	SymbolicIntegerType integerType();
 
 	/**
-	 * @return a SymbolicIntegerType that has a herbrand type.
+	 * @return a SymbolicIntegerType that has a herbrand kind.
 	 */
 	SymbolicIntegerType herbrandIntegerType();
 
@@ -98,62 +112,79 @@ public interface SymbolicTypeFactory {
 	SymbolicType characterType();
 
 	/**
-	 * @param elements
+	 * Creates a SymbolicTypeSequence from a list of SymbolicTypes
+	 * @param elements elements can be of any type that extends SymbolicType.
 	 * @return a symbolic type sequence for any SymbolicType elements.
-	 * elements can be of any type that extends SymbolicType.
+	 * 
 	 */
 	SymbolicTypeSequence sequence(Iterable<? extends SymbolicType> elements);
 
+	/**
+	 * Creates a SymbolicTypeSequecne from an array of SymbolicType
+	 * @param elements array of any length of any SymbolicType, e.g. integer, real, primitve, array, ...
+	 * @return a SymbolicTypeSequence for the elements in the array.
+	 */
 	SymbolicTypeSequence sequence(SymbolicType[] elements);
 
+	/**
+	 * Creates a SymbolicTypeSequence of 1 element that has a SymbolicType
+	 * @param type any SymbolicType
+	 * @return a SymbolicTypeSequence that contains one element only.
+	 */
 	SymbolicTypeSequence singletonSequence(SymbolicType type);
 
 	/**
-	 * @param elementType
-	 * @return an incomplete arrayType from elementType.
+	 * Creates a SymbolicArrayType that has elements of type elementType
+	 * @param elementType any SymbolicType that represents that type of the SymbolicArrayType
+	 * @return an SymbolicArrayType of elements of type elementType.
 	 */
 	SymbolicArrayType arrayType(SymbolicType elementType);
 
 	/**
-	 * @param elementType
-	 * @param extent
-	 * @return a complete array type from elementType
+	 * Creates a SymbolicCompleteArrayType
+	 * @param elementType the type of elements in the array
+	 * @param extent the length of the array as a NumericExpression
+	 * @return a SymbolicCompleteArrayType of length extent and type elementType
 	 */
 	SymbolicCompleteArrayType arrayType(SymbolicType elementType,
 			NumericExpression extent);
 
 	/**
-	 * @param name
-	 * @param fieldTypes
-	 * @return a symbolic tuple type
+	 * Creates a SymbolicTupleType
+	 * @param name the name of the SymbolicTupleType
+	 * @param fieldTypes a finite, ordered typeSequence
+	 * @return a SymbolicTupleType that contains a name and fieldTypes as typeSequence
 	 */
 	SymbolicTupleType tupleType(StringObject name,
 			SymbolicTypeSequence fieldTypes);
 
 	/**
-	 * @param name
-	 * @param memberTypes
-	 * @return a symbolic union type.
+	 * Creates a SymbolicUnionType
+	 * @param name the name of the unionType
+	 * @param memberTypes a typeSequence of the elements in the UnionType
+	 * @return a SymbolicUnionType that contains a name and a memberTypes.
 	 */
 	SymbolicUnionType unionType(StringObject name,
 			SymbolicTypeSequence memberTypes);
 
 	/**
-	 * @param inputTypes
-	 * @param outputType
-	 * @return a symbolic function type
+	 * Creates a SymbolicFunctionType, which represents an abstract mathematical function
+	 * @param inputTypes a SymbolicTypeSequence of SymbolicTypes.
+	 * @param outputType a SymbolicType that represents the output of the function
+	 * @return a SymbolicFunctionType of sequence inputTypes and outputType.
 	 */
 	SymbolicFunctionType functionType(SymbolicTypeSequence inputTypes,
 			SymbolicType outputType);
 
 	/**
+	 * Creates a TypeComparator that is used to compare SymbolicTypes
 	 * @return a typeComparator to compare two symbolic types
 	 */
 	TypeComparator typeComparator();
 
 	/**
 	 * @return typeSequenceComparator that is used 
-	 * when comparing two symbolic tuble, union, or function types
+	 * when comparing two symbolic Tuble, Union, or Function types
 	 */
 	TypeSequenceComparator typeSequenceComparator();
 

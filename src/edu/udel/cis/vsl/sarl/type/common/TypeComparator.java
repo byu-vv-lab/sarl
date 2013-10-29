@@ -29,23 +29,33 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
 /**
- * @author alali
- *	
  *	This class is to compare different types in the Type module.
  *	It compare those types: Boolean, Integer, Real, Array, Function, Tuple, and Union.
+ *
+ *	@author alali
  */
 public class TypeComparator implements Comparator<SymbolicType> {
 
+	/**
+	 * used to compare typeSequence from the types that contain a sequence, i.e. Function, Tuple, Union
+	 */
 	private Comparator<SymbolicTypeSequence> typeSequenceComparator;
 
+	/**
+	 * used to compare the lengths of a SymbolicCompleteArrayType
+	 */
 	private Comparator<SymbolicExpression> expressionComparator;
 
+	/**
+	 * a default constructor (with no arguments) for TypeComparator
+	 */
 	public TypeComparator() {
 
 	}
 
 	
 	/**
+	 * setting value to the typeSequenceComparator that will be used to compare typeSequence in Function, Tuple, and Union
 	 * @param c Comparator of type SymbolicTypeSequence
 	 */
 	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
@@ -54,8 +64,8 @@ public class TypeComparator implements Comparator<SymbolicType> {
 
 	
 	/**
+	 * sets expressionComparator to be used in comparing SymbolicCompleteArrayType
 	 * @param c , a comparator of type symbolic expressions
-	 * sets expressionComparator to be used in comparison
 	 */
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		expressionComparator = c;
@@ -64,8 +74,7 @@ public class TypeComparator implements Comparator<SymbolicType> {
 
 	
 	/**
-	 * @return expressionComparator that has the way to compare two expressions 
-	 * and also used when comparing two complete array types
+	 * @return expressionComparator that was set to compare SymbolicCompleteArrayType
 	 */
 	public Comparator<SymbolicExpression> expressionComparator() {
 		return expressionComparator;
