@@ -93,7 +93,7 @@ public class ExpressionTest {
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
-	private BooleanSymbolicConstant b;
+	private BooleanSymbolicConstant b,b2;
 	private SymbolicConstant t;
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
@@ -146,6 +146,8 @@ public class ExpressionTest {
 		zz = sUniverse.symbolicConstant(Xobj, arrayType);
 		t = sUniverse.symbolicConstant(Xobj, tupleType);
 		b = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,
+				booleanType);
+		b2 = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Yobj,
 				booleanType);
 		x = (NumericSymbolicConstant) sUniverse
 				.symbolicConstant(Xobj, realType);
@@ -348,11 +350,11 @@ public class ExpressionTest {
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
 		
 		assertEquals(xpyp1.toString(),
-				"X^4+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^4");
+				"X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
 		// power test atomize
 		assertEquals(xpyp1.toStringBuffer(true).toString(),
-				"(X^(4)+4*(X^(3))*Y+6*(X^(2))*(Y^(2))+4*X*(Y^(3))+Y^(4))");
+				"(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
 		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
 	}
 
@@ -568,18 +570,17 @@ public class ExpressionTest {
 	 * checks for proper usage OR, parens and correct operators
 	 */
 	public void toStringBuffer1Or() {
-		BooleanExpression a = sUniverse.not(b);
-		BooleanExpression test13 = sUniverse.or(a, b);
+		BooleanExpression test13 = sUniverse.or(b, b2);
 
 		// System.out.println(test13.toStringBuffer(true));
 		// If statement is needed because X and !X are sometimes flipped
-		if (test13.toStringBuffer(false).toString().equals("!X || X")
-				|| test13.toStringBuffer(true).toString().equals("(!X || X)")) {
-			assertEquals(test13.toStringBuffer(false).toString(), "!X || X");
-			assertEquals(test13.toStringBuffer(true).toString(), "(!X || X)");
+		if (test13.toStringBuffer(false).toString().equals("Y || X")
+				|| test13.toStringBuffer(true).toString().equals("(Y || X)")) {
+			assertEquals(test13.toStringBuffer(false).toString(), "Y || X");
+			assertEquals(test13.toStringBuffer(true).toString(), "(Y || X)");
 		} else {
-			assertEquals(test13.toStringBuffer(false).toString(), "X || !X");
-			assertEquals(test13.toStringBuffer(true).toString(), "(X || !X)");
+			assertEquals(test13.toStringBuffer(false).toString(), "X || Y");
+			assertEquals(test13.toStringBuffer(true).toString(), "(X || Y)");
 		}
 	}
 
