@@ -194,7 +194,7 @@ public class ExpressionTest {
 	/**
 	 * A series of tests for the creation of Array/Tuple/Union/Offset references using an expressionFactory
 	 */
-	public void commonExpressionFactoryNonTrivialTest() {
+	public void commonExpressionFactoryNonTrivial() {
 		SymbolicType referenceType;
 		SymbolicTypeSequence referenceIndexSeq; // Ref x Int
 		SymbolicType referenceFunctionType; // Ref x Int -> Ref
@@ -254,7 +254,7 @@ public class ExpressionTest {
 	 * Tests for the CommonExpressionFactory Class
 	 * Tests for concreteReferenceExpression(SymbolicOperator operator, SymbolicObject arg0)
 	 */
-	public void commonExpressionFactoryConcreteTest() {
+	public void commonExpressionFactoryConcrete() {
 		SymbolicType referenceType1;
 		referenceType1 = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
@@ -275,7 +275,7 @@ public class ExpressionTest {
 	 * Tests for the CommonExpressionFactory Class
 	 * Tests for expression(SymbolicOperator operator,SymbolicType type, SymbolicObject[] arguments)
 	 */
-	public void commonExpressionFactoryExpressionTest() {
+	public void commonExpressionFactoryExpression() {
 		SymbolicType referenceType;
 		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
@@ -308,7 +308,7 @@ public class ExpressionTest {
 	 * Tests for the CommonExpressionFactory Class
 	 * expression(SymbolicOperator operator,SymbolicType type, Collection<SymbolicObject> args) 
 	 */
-	public void commonExpressionFactoryExpressionTest2() {
+	public void commonExpressionFactoryExpression2() {
 		SymbolicType referenceType;
 		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
@@ -335,7 +335,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage POWER, parens and correct operators
 	 */
-	public void toStringBuffer1PowerTest() {
+	public void toStringBuffer1Power() {
 		int exponent = 4;
 		IntObject n = sUniverse.intObject(exponent);
 		NumericExpression xpy = sUniverse.add(x, y);
@@ -355,7 +355,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage ADD, parens and correct operators
 	 */
-	public void toStringBuffer1AddTest() {
+	public void toStringBuffer1Add() {
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression test1 = sUniverse.add(xpy, two);
 		assertEquals(test1.toString(), "X+Y+2");
@@ -368,7 +368,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage COND, parens and correct operators
 	 */
-	public void toStringBuffer1CondTest() {
+	public void toStringBuffer1Cond() {
 		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two),
 				three, two);
 		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
@@ -382,7 +382,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage DIVIDE, parens and correct operators
 	 */
-	public void toStringBuffer1DivideTest() {
+	public void toStringBuffer1Divide() {
 		NumericExpression test3 = sUniverse.divide(x, y);
 		assertEquals(test3.toString(), "X/Y");
 		// divide test atomize
@@ -394,7 +394,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage EXISTS, parens and correct operators
 	 */
-	public void toStringBuffer1ExistsTest() {
+	public void toStringBuffer1Exists() {
 		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
 		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
 		// exists test atomize
@@ -407,7 +407,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage FORALL, parens and correct operators
 	 */
-	public void toStringBuffer1ForAllTest() {
+	public void toStringBuffer1ForAll() {
 		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
 		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
 		// forall test atomize
@@ -420,7 +420,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage LENGTH, parens and correct operators
 	 */
-	public void toStringBuffer1LengthTest() {
+	public void toStringBuffer1Length() {
 		NumericExpression test6 = sUniverse.length(zz);
 		System.out.println(test6);
 		assertEquals(test6.toString(), "length(X)");
@@ -431,7 +431,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage LESSTHAN, parens and correct operators
 	 */
-	public void toStringBuffer1LessThanTest() {
+	public void toStringBuffer1LessThan() {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
 		for (SymbolicObject expr : test7.arguments())
 			out.println(expr.toString());
@@ -445,7 +445,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage LESSTHANEQUALS, parens and correct operators
 	 */
-	public void toStringBuffer1LessThanEqualTest() {
+	public void toStringBuffer1LessThanEqual() {
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
 		assertEquals(test8.toString(), "0 <= -1*X+3");
 		// Less_than_equals test atomize
@@ -457,7 +457,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage MODULO, parens and correct operators
 	 */
-	public void toStringBuffer1ModuloTest() {
+	public void toStringBuffer1Modulo() {
 		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
 		assertEquals(test9.toString(), "X%3");
 		// Modulo test atomize
@@ -469,7 +469,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage NEQ, parens and correct operators
 	 */
-	public void toStringBuffer1NeqTest() {
+	public void toStringBuffer1Neq() {
 		BooleanExpression test10 = sUniverse.neq(x, y);
 		assertEquals(test10.toString(), "0 != -1*X+Y");
 		// Neg test atomize
@@ -481,7 +481,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage NEGATIVE, parens and correct operators
 	 */
-	public void toStringBuffer1NegativeTest() {
+	public void toStringBuffer1Negative() {
 		NumericExpression negExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.NEGATIVE, integerType, two);
 		assertEquals(negExp.toString(), "-2");
@@ -494,7 +494,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage NOT, parens and correct operators
 	 */
-	public void toStringBuffer1NotTest() {
+	public void toStringBuffer1Not() {
 		BooleanExpression test11 = sUniverse.not(b);
 		assertEquals(test11.toString(), "!X");
 		// not test atomize
@@ -506,7 +506,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage LAMBDA, parens and correct operators
 	 */
-	public void toStringBuffer1LambdaTest() {
+	public void toStringBuffer1Lambda() {
 		BooleanExpression a = sUniverse.not(b);
 		SymbolicExpression test11 = sUniverse.lambda(x, a);
 		assertEquals(test11.toString(), "lambda X : real . (!X)");
@@ -520,7 +520,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage NULL, parens and correct operators
 	 */
-	public void toStringBuffer1NullTest() {
+	public void toStringBuffer1Null() {
 		BooleanExpression a = sUniverse.not(b);
 		BooleanExpression nullexp = (BooleanExpression) expressionFactory
 				.expression(SymbolicOperator.NULL, booleanType, a);
@@ -533,7 +533,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage INTDIVIDE, parens and correct operators
 	 */
-	public void toStringBuffer1IntDivideTest() {
+	public void toStringBuffer1IntDivide() {
 		NumericExpression intExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.INT_DIVIDE, integerType, x, y);
 		assertEquals(intExp.toStringBuffer(false).toString(), "X div Y");
@@ -546,7 +546,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage OR, parens and correct operators
 	 */
-	public void toStringBuffer1OrTest() {
+	public void toStringBuffer1Or() {
 		BooleanExpression a = sUniverse.not(b);
 		BooleanExpression test13 = sUniverse.or(a, b);
 
@@ -567,7 +567,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage TUPLEREAD, parens and correct operators
 	 */
-	public void toStringBuffer1TupleReadTest() {
+	public void toStringBuffer1TupleRead() {
 		SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
 		assertEquals(test.toStringBuffer(false).toString(), "X.0");
 		assertEquals(test.toStringBuffer(true).toString(), "(X.0)");
@@ -578,7 +578,7 @@ public class ExpressionTest {
 	 * Part of the series of toStringBuffer1 String tests
 	 * checks for proper usage SUBTRACT, parens and correct operators
 	 */
-	public void toStringBuffer1SubtractTest() {
+	public void toStringBuffer1Subtract() {
 		NumericExpression intExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.SUBTRACT, integerType, x, y);
 
@@ -588,7 +588,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void toStringBufferLongTest() {
+	/**
+	 * Tests toStringBufferLong() method from CommonSymbolicExpression class
+	 */
+	public void toStringBufferLong() {
 		StringBuffer tstStringBuff = new StringBuffer(xpyDxty.getClass().getSimpleName());
 		tstStringBuff.append("[");
 		tstStringBuff.append(xpyDxty.operator());
@@ -627,7 +630,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnfFactoryForallTest(){
+	public void cnfFactoryForall(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
@@ -644,7 +647,7 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnfFactoryExistsTest(){
+	public void cnfFactoryExists(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
@@ -663,33 +666,33 @@ public class ExpressionTest {
 		}
 
 	@Test
-	public void CnFFactoryNotTest(){
+	public void CnFFactoryNot(){
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression testingfalse = sUniverse.bool(false);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
-		StringObject robject = sUniverse.stringObject("c");
+		//StringObject robject = sUniverse.stringObject("c");
 		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
 		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
-		SymbolicConstant r = sUniverse.symbolicConstant(robject, booleanType);
-		BooleanExpression falseExpr= bef.falseExpr();
-		BooleanExpression trueExpr= bef.trueExpr();
+		//SymbolicConstant r = sUniverse.symbolicConstant(robject, booleanType);
+		//BooleanExpression falseExpr= bef.falseExpr();
+		//BooleanExpression trueExpr= bef.trueExpr();
 		BooleanExpression testingtrue = sUniverse.bool(true);
-		BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
+		//BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
 		BooleanExpression andtrue =  bef.and(p, q);
 		BooleanExpression ortrue = bef.or(p, q);
-		BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, andtrue);
+		//BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, andtrue);
 		//BooleanExpression OR = bef.booleanExpression(SymbolicOperator.OR, ortrue);
 		BooleanExpression nottrue = bef.not(q);
 		//BooleanExpression NOT = bef.booleanExpression(SymbolicOperator.NOT, nottrue);
-		BooleanExpression neqtrue = bef.equiv(q, p);
+		//BooleanExpression neqtrue = bef.equiv(q, p);
 		//BooleanExpression NEQ = bef.booleanExpression(SymbolicOperator.EQUALS, neqtrue);
 		BooleanExpression foralltrue = bef.forall(b, testingtrue);
 		//BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
 		BooleanExpression existstrue = bef.exists(b, testingfalse);
 
 		//BooleanExpression FORALLTEST = bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
-		CnfExpression cnf = (CnfExpression) AND;
+		//CnfExpression cnf = (CnfExpression) AND;
 		
 		assertEquals(bef.or(bef.not(p), bef.not(q)), bef.not(andtrue));
 		assertEquals(bef.and(bef.not(p), bef.not(q)), bef.not(ortrue));
@@ -722,16 +725,19 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void newCnfFactoryTest() {
+	public void newCnfFactory() {
 		//or here.
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		assertNotNull(bef);
 	}
 	
 	@Test
-	public void cnefDivideTest() {
+	/** 
+	 * Tests divide() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefDivide() {
 		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		NumericExpression testExpr = cnef.expression(xpyDxty.operator(), xpyDxty.type(), xpy,xty);
+		//NumericExpression testExpr = cnef.expression(xpyDxty.operator(), xpyDxty.type(), xpy,xty);
 		
 		assertEquals(cnef.divide(xpy, xty), xpyDxty);
 		//assertEquals(xpyDxty, testExpr);
@@ -740,14 +746,20 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefHerbrandFactoryTest() {
+	/**
+	 * Tests herbrandFactory() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefHerbrandFactory() {
 		NumericExpressionFactory hf = cnef.herbrandFactory();
 		
 		assertEquals(hf, herbrandFactory);
 	}
 	
 	@Test
-	public void cnefMinusTest() {
+	/**
+	 * Tests minus() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefMinus() {
 		NumericExpression minus = cnef.minus(xpy);
 		NumericExpression minusH = cnef.minus(cnef.cast(xpy, herbrandType));
 		
@@ -760,7 +772,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefModuloTest() {
+	/**
+	 * Tests modulo() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefModulo() {
 		NumericExpression expr1 = sUniverse.multiply(threeInt, threeInt);
 		NumericExpression expr1H = cnef.cast(sUniverse.multiply(threeInt, threeInt), herbrandIntType);
 		NumericExpression expr2 = sUniverse.divide(twoInt, xInt);
@@ -780,7 +795,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefPowerTest() {
+	/**
+	 * Tests power() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefPower() {
 		NumericExpression expr1 = sUniverse.multiply(xInt, threeInt);
 		NumericExpression expr1H = cnef.cast(expr1, herbrandIntType);
 		expr1H = cnef.cast(expr1H, herbrandIntType);
@@ -804,7 +822,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefExtractNumberTest() {
+	/**
+	 * Tests extractNumber() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefExtractNumber() {
 		NumericExpression expr1 = sUniverse.multiply(xInt,threeInt);
 		NumericExpression expr1H = cnef.cast(expr1, herbrandType);
 		
@@ -818,7 +839,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cneflessThanTest() {
+	/**
+	 * Test lessThan() method in CommonNumericExpressionFactory class
+	 */
+	public void cneflessThan() {
 		BooleanExpression lessThan = cnef.lessThan(xpy, xty);
 		
 		// This line causes an Assertion Error. Why?
@@ -831,7 +855,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefNotLessThanTest() {
+	/**
+	 * Tests notLessThan() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefNotLessThan() {
 		BooleanExpression notLessThan = cnef.notLessThan(xpy, xty);
 		
 		// This line causes an Assertion Error. Why?
@@ -845,7 +872,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefNotLessThanEqualsTest() {
+	/**
+	 * Tests notLessThanEquals() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefNotLessThanEquals() {
 		BooleanExpression notLessThanEquals = cnef.notLessThanEquals(xpy, xty);
 		
 		// This line causes an Assertion Error. Why?
@@ -859,7 +889,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefExpressionTest() {
+	/**
+	 * Tests all 4 constructors in CommonNumericExpressionFactory class
+	 */
+	public void cnefExpression() {
 		NumericExpression[] args = {xpy, xty};
 		NumericExpression[] argsH = {cnef.cast(xpy, herbrandType)};
 		Collection<SymbolicObject> args2= new ArrayList<SymbolicObject>(Arrays.asList(args));
@@ -895,7 +928,10 @@ public class ExpressionTest {
 	}
 	
 	@Test
-	public void cnefSubtractTest() {
+	/**
+	 * Tests subtract() method in CommonNumericExpressionFactory class
+	 */
+	public void cnefSubtract() {
 		
 		NumericExpression expr1 = cnef.subtract(xpy, xty);
 		
@@ -909,9 +945,10 @@ public class ExpressionTest {
 		//assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 		//assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 	}
+	
 	@Ignore // remember to remove this
 	@Test
-	public void standardSimplifierFactoryTest() {
+	public void standardSimplifierFactory() {
 		//This test fails with a Null Pointer Exception.
 		//Professor is going to look into the issue.
 		
