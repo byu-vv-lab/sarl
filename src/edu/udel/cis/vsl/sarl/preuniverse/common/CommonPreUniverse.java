@@ -124,7 +124,7 @@ public class CommonPreUniverse implements PreUniverse {
 
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
-	 */
+	 */ 
 	private ExpressionSubstituter2 substituter;
 
 	/**
@@ -408,6 +408,30 @@ public class CommonPreUniverse implements PreUniverse {
 		return compatible(type0, type1).isFalse();
 	}
 
+	/**
+	 * Compares two arguments to check compatibility first, then passes 
+	 * those arguments to a case/switch. Each case checks the equality 
+	 * of the two arguments based on the following types:
+	 * <ul>
+	 * <li>BOOLEAN:</li>
+	 * <li>CHAR:</li>
+	 * <li>INTEGER:</li>
+	 * <li>REAL:</li>
+	 * <li>ARRAY:<li>
+	 * <li>FUNCTION: Takes a sequence and checks the content and 
+	 * equality of its elements</li>
+	 * <li>TUPLE:</li>
+	 * <li>UNION:</li>
+	 * </ul>
+	 * @param arg0
+	 * 			SymbolicType
+	 * @param arg1
+	 * 			SymbolicType
+	 * @param quantifierDepth
+	 * 			int
+	 * @return
+	 * 			BooleanExpression
+	 */
 	private BooleanExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1, int quantifierDepth) {
 		if (arg0.equals(arg1))
