@@ -189,6 +189,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 
 	/**
 	 * String Representation of an array of SymbolicObjects
+	 * -call to toStringBufferLong() for individual string representations
 	 * 
 	 * @param objects
 	 @param buffer
@@ -213,7 +214,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * String representation of a SymbolicExpression
+	 * String representation of a singular SymbolicExpression
 	 */
 	@Override
 	public StringBuffer toStringBufferLong() {

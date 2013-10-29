@@ -27,56 +27,36 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 /**
- * GeneralExpressinBenchmark is a class used to measure benchmarks of computing
- * simple large boolean expressions.
- * @author Siegel
+ * Benchmarks for general Expressions
+ * @author schivi
  *
  */
 public class GenenralExpressionBenchmark {
-
-	
-	private static SymbolicUniverse sUniverse;
-	private static SymbolicType booleanType;
-	static long start;
-	static long end;
-	static long mark;
-	
-
 	/**
 	 * benchmark for computing a simple large boolean expression
-	 * -checking for a close to'; linear relationship as the amount of expressions increase
+	 * -checking for a close to linear relationship as the amount of expressions increase
 	 */
-	
 	public static void main(String[] args) {
+		SymbolicUniverse sUniverse;
+		SymbolicType booleanType;
+		long start;
+		long end;
+		long mark;
+		int numexpr;
+		Collection<BooleanExpression> col1;
 
-		
+		numexpr = 1000;
 		sUniverse = Universes.newIdealUniverse();
-		
 		booleanType = sUniverse.booleanType();
-				
-		
 		BooleanExpression[] ExpressionList1 = {};
-		Collection<BooleanExpression> col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
-		for(int i = 0; i < 1000; i++){
-	
+		col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
+		for(int i = 0; i < numexpr; i++){
 			col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
-	
 		}
-
-		
-		
-		
 		start = System.currentTimeMillis();
-		BooleanExpression s1 = sUniverse.and(col1);
-
-	
+			BooleanExpression s1 = sUniverse.and(col1);
 		end = System.currentTimeMillis();
 		mark = end - start;
-		System.out.println(mark);
-		
-		
-				
+		System.out.println(mark);	
 			}
-	
-	
 }

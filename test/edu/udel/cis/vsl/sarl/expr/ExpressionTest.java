@@ -310,15 +310,20 @@ public class ExpressionTest {
 	 */
 	public void commonExpressionFactoryExpressionWithCollections() {
 		SymbolicType referenceType;
-		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
-				stf.sequence(new SymbolicType[] { integerType })));
-		BooleanExpression b1 = sUniverse.trueExpression();
-		BooleanExpression b2 = sUniverse.falseExpression();
-		ReferenceExpression r1 = sUniverse.identityReference();
-		ReferenceExpression r2 = sUniverse.identityReference();
+		BooleanExpression b1;
+		BooleanExpression b2;
+		ReferenceExpression r1;
+		ReferenceExpression r2;
+		
+		 b1 = sUniverse.trueExpression();
+		 b2 = sUniverse.falseExpression();
+		 r1 = sUniverse.identityReference();
+		 r2 = sUniverse.identityReference();
 		SymbolicObject[] ExpressionList = { two, three };
 		SymbolicObject[] ExpressionList2 = { b1, b2 };
 		SymbolicObject[] ExpressionList3 = { r1, r2 };
+		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
+				stf.sequence(new SymbolicType[] { integerType })));
 		SymbolicExpression test1 = expressionFactory.expression(
 				SymbolicOperator.ADD, integerType, ExpressionList);
 		SymbolicExpression test2 = expressionFactory.expression(
