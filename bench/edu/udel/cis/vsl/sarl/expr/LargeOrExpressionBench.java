@@ -4,26 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
-public class ExpressionBenchmark {
+public class LargeOrExpressionBench {
 	private static SymbolicUniverse sUniverse;
-	private static BooleanSymbolicConstant x,y;
 	private static SymbolicType booleanType;
-	private static StringObject Xobj,Yobj; // "X" , "Y"
 	static long start;
 	static long end;
 	static long mark;
@@ -42,12 +31,7 @@ public class ExpressionBenchmark {
 		
 		sUniverse = Universes.newIdealUniverse();
 		
-		
-		Xobj = sUniverse.stringObject("X");
-		Yobj = sUniverse.stringObject("Y");
 		booleanType = sUniverse.booleanType();
-		 x = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Xobj,booleanType );
-		 y = (BooleanSymbolicConstant) sUniverse.symbolicConstant(Yobj,booleanType );
 				
 		
 		BooleanExpression[] ExpressionList1 = {};
