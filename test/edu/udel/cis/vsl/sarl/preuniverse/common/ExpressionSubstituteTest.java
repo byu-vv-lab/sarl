@@ -12,10 +12,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -38,7 +36,7 @@ public class ExpressionSubstituteTest {
 	private static ExpressionSubstituter expr1;
 
 	private static SymbolicExpression expression1, expression2, expression3,
-			expression4;
+			expression4, expression5;
 
 	private static SymbolicType integerType, intArrayType, functionType,
 			realType, booleanType;
@@ -46,7 +44,7 @@ public class ExpressionSubstituteTest {
 	private static SymbolicTupleType tupleType;
 
 	private static SymbolicUnionType unionType;
-	
+
 	private static SymbolicTypeSequence sequence;
 
 	@BeforeClass
@@ -69,6 +67,8 @@ public class ExpressionSubstituteTest {
 				universe.stringObject("union1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						booleanType, intArrayType }));
+		sequence = tupleType.sequence();
+		functionType = universe.functionType(sequence, realType);
 		expression1 = universe.nullExpression();
 		expression2 = universe.symbolicConstant(
 				universe.stringObject("intArrayTypeExpression"), intArrayType);
@@ -76,6 +76,8 @@ public class ExpressionSubstituteTest {
 				universe.stringObject("TupleTypeExpression"), tupleType);
 		expression4 = universe.symbolicConstant(
 				universe.stringObject("UnionTypeExpression"), unionType);
+		expression5 = universe.symbolicConstant(
+				universe.stringObject("functionTypeExpression"), functionType);
 	}
 
 	@AfterClass
@@ -90,6 +92,7 @@ public class ExpressionSubstituteTest {
 	public void tearDown() throws Exception {
 	}
 
+	@SuppressWarnings("static-access")
 	@Test
 	public void expressionSubstituteTest() {
 		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
@@ -111,5 +114,8 @@ public class ExpressionSubstituteTest {
 
 		// case unionType
 		assertEquals(expr1.substitute(expression4, newMap), expression4);
+
+		// case functionType
+		assertEquals(expr1.substitute(expression5, newMap), expression5);
 	}
 }
