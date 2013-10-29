@@ -1050,12 +1050,17 @@ public class IdealTest {
 				zeroReal(), r1);
 		BooleanExpression nb3 = idealFactory.notLessThanEquals(commonIdealFactory.
 				zeroReal(), r1);
+		BooleanExpression nb4 = idealFactory.lessThanEquals(r1, commonIdealFactory.
+				zeroReal());
 		NumericExpression nb5 = commonIdealFactory.divide(
 				commonIdealFactory.zeroReal(), r1);
-		out.println("b1 = " + b1);
-		out.println("b2 = " + b2);
-		out.println("!b2 = " + nb2);
-
+		BooleanExpression nb6 = idealFactory.lessThan(r1, commonIdealFactory.
+				zeroReal());
+		out.println("b1=" +b1);
+		out.println("b2=" +b2);
+		
 		assertEquals(zero, nb5);
+		assertEquals(nb2, nb4);
+		assertEquals(nb3, nb6);
 	}
 }
