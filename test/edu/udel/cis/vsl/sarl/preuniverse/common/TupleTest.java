@@ -29,6 +29,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
+/**
+ * This class tests tuple functionality in the PreUniverse package.
+ * 
+ * @author malsulmi
+ */
+
 public class TupleTest {
 	private static PreUniverse universe;
 
@@ -70,39 +76,38 @@ public class TupleTest {
 
 	@Test
 	public void tupleTypeTest() {
-
-		SymbolicTupleType tupleType1 = universe.tupleType(
-				universe.stringObject("tupleType1"),
-				Arrays.asList(new SymbolicType[] { integerType, integerType,
-						realType }));
-		SymbolicTupleType tupleType2 = universe.tupleType(
-				universe.stringObject("tupleType1"),
-				Arrays.asList(new SymbolicType[] { integerType, integerType,
-						realType }));
-		SymbolicTupleType tupleType3;
+		// creating 1st tuple type
+		SymbolicTupleType tupleType1, tupleType2, tupleType3;
 		SymbolicTypeSequence sequence;
-		LinkedList<SymbolicType> members = new LinkedList<>();
+		LinkedList<SymbolicType> members;
+
+		tupleType1 = universe.tupleType(
+				universe.stringObject("tupleType1"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType,
+						realType }));
+		// creating 2nd tuple type
+		tupleType2 = universe.tupleType(
+				universe.stringObject("tupleType1"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType,
+						realType }));
+		members = new LinkedList<>();
 		members.add(integerType);
 		members.add(integerType);
 		members.add(realType);
+		// crating 3rd tuple type that uses members list
 		tupleType3 = universe.tupleType(universe.stringObject("tupleType1"),
 				members);
 
 		assertEquals(SymbolicTypeKind.TUPLE, tupleType1.typeKind());
 
 		sequence = tupleType1.sequence();
+		// doing some assertions
 		assertEquals(integerType, sequence.getType(0));
 		assertEquals(integerType, sequence.getType(1));
 		assertEquals(realType, sequence.getType(2));
 		assertEquals(universe.stringObject("tupleType1"), tupleType1.name());
-
 		assertEquals(tupleType1, tupleType2);
 		assertEquals(3, sequence.numTypes());
-
-		assertEquals(tupleType1, tupleType3);
-
-		members.remove();
-		members = null;
 		assertEquals(tupleType1, tupleType3);
 
 	}
@@ -111,11 +116,13 @@ public class TupleTest {
 	@Test(expected = SARLException.class)
 	public void tupleExceptionTest1() {
 
+		// creating a tuple type
 		SymbolicTupleType tupleType1 = universe.tupleType(
 				universe.stringObject("tupleType1"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType,
 						realType }));
 		@SuppressWarnings("unused")
+		// creating a tuple that uses tupleType1
 		SymbolicExpression tuple = universe.tuple(
 				tupleType1,
 				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
@@ -125,12 +132,14 @@ public class TupleTest {
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void tupleExceptionTest2() {
+		// creating a tuple type
 		SymbolicTupleType tupleType1 = universe.tupleType(
 				universe.stringObject("tupleType1"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType,
 						realType }));
 
 		@SuppressWarnings("unused")
+		// creating a tuple that uses tupleType1
 		SymbolicExpression tuple = universe.tuple(
 				tupleType1,
 				Arrays.asList(new SymbolicExpression[] { universe.rational(1),
@@ -144,18 +153,21 @@ public class TupleTest {
 		SymbolicTupleType tupleType1;
 		SymbolicExpression tuple, resultedTuple;
 		IntObject i1;
+
 		i1 = universe.intObject(1);
+		// creating a tuple type
 		tupleType1 = universe.tupleType(universe.stringObject("tupleType1"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType }));
+		// creating a tuple that uses tupleType1
 		tuple = universe.tuple(
 				tupleType1,
 				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
 						universe.integer(2) }));
-
+		// performing array write
 		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
 		assertEquals(tuple, resultedTuple);
 
-		// exception
+		// exception is expected
 		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
 
 	}
@@ -383,6 +395,7 @@ public class TupleTest {
 
 	@Test
 	public void testComplexTuples() {
+
 		NumericSymbolicConstant x_var, y_var;
 		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
 		SymbolicExpression tuple, expected, simplifiedTuple;
@@ -391,10 +404,14 @@ public class TupleTest {
 		Reasoner reasoner;
 		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
 
+		// initialization of symbolic constants
+
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), integerType);
 		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("y"), integerType);
+
+		// mixing the constant in numeric expressions
 
 		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
 
@@ -405,28 +422,37 @@ public class TupleTest {
 
 		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
 				x_plus_y, x_plus_y);
-
+		// creating tuple type
 		tupleType = universe.tupleType(
 				universe.stringObject("type1"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType,
 						integerType, integerType }));
+		// creating a tuple containing expressions
 		tuple = universe.tuple(
 				tupleType,
 				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y,
 						x_plus_2y, x_plus_y_multiply_x_plus_y }));
 
+		// initialization of boolean expressions
 		claim1 = universe.equals(x_var, universe.integer(5));
 		claim2 = universe.equals(y_var, universe.integer(3));
+
+		// combining claim1, claim2 into claim
 		claim = universe.and(claim1, claim2);
+
+		// using the claim in a reasoner
 		reasoner = reasonerUniverse.reasoner(claim);
 
+		// the expected tuple
 		expected = universe.tuple(
 				tupleType,
 				Arrays.asList(new NumericExpression[] { universe.integer(8),
 						universe.integer(2), universe.integer(11),
 						universe.integer(64) }));
-		simplifiedTuple = reasoner.simplify(tuple);
 
+		// Substitute the values of the constant
+		simplifiedTuple = reasoner.simplify(tuple);
+		// do an assertion to verify the previous operation
 		assertEquals(expected, simplifiedTuple);
 
 	}

@@ -1563,25 +1563,27 @@ public class CommonPreUniverse implements PreUniverse {
 				throw err("Element to append has illegal value:\n"
 						+ arrayOrElement);
 			SymbolicType arrayOrElementType = arrayOrElement.type();
-			// appending an array
 			if (arrayOrElementType.typeKind() == SymbolicTypeKind.ARRAY) {
 				if (arrayOrElement.operator() != SymbolicOperator.CONCRETE)
 					throw err("append invoked on non-concrete array:\n"
 							+ arrayOrElement);
-				/*
-				 * if (incompatible(concreteArray.type(),
-				 * arrayOrElement.type())) throw
-				 * err("Element(s) to append has incompatible type:\n" +
-				 * "Expected: " + concreteArray.type() + "\nSaw: " +
-				 * arrayOrElement.type());
-				 */
 				SymbolicType elementType = ((SymbolicArrayType) type)
 						.elementType();
+				SymbolicType typeForAppending = arrayOrElement.type();
+				SymbolicType elementTypeForSecondArray = ((SymbolicArrayType) typeForAppending)
+						.elementType();
+
+				if (incompatible(elementType, elementTypeForSecondArray))
+					throw err("Element(s) to append has incompatible type:\n"
+							+ "Expected: " + concreteArray.type() + "\nSaw: "
+							+ arrayOrElement.type());
+
 				@SuppressWarnings("unchecked")
 				SymbolicSequence<SymbolicExpression> appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
 						.argument(0);
 				for (int i = 0; i < appendedElements.size(); i++)
-					elements = elements.add(this.arrayRead(arrayOrElement, integer(i)));
+					elements = elements.add(this.arrayRead(arrayOrElement,
+							integer(i)));
 				type = arrayType(elementType, integer(elements.size()));
 
 				result = expression(SymbolicOperator.CONCRETE, type,
@@ -1589,7 +1591,7 @@ public class CommonPreUniverse implements PreUniverse {
 				return result;
 
 			} else {
-				// appending an element
+
 				SymbolicType elementType = ((SymbolicArrayType) type)
 						.elementType();
 
