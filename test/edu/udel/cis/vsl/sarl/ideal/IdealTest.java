@@ -1032,7 +1032,6 @@ public class IdealTest {
 	 * @param type
 	 * 				Symbolic Expressions of same numeric type
 	 */
-@Ignore
 	@Test
 	public void comparingRationalExpressions() {
 		NumericSymbolicConstant x2 = objectFactory.canonic(idealFactory
