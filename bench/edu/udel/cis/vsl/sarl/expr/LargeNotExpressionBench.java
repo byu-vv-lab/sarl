@@ -1,5 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2013 Stephen F. Siegel, University of Delaware.
+/** Copyright (c) 2013 Stephen F. Siegel, University of Delaware.
  * 
  * This file is part of SARL.
  * 
@@ -27,13 +26,13 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 /**
- * Benchmarks for general Expressions
+ * Benchmarks for large Not Expressions
  * @author schivi
  *
  */
-public class GenenralExpressionBenchmark {
+public class LargeNotExpressionBench {
 	/**
-	 * benchmark for computing a simple large boolean expression
+	 * benchmark for computing a simple large Not boolean expression
 	 * -checking for a close to linear relationship as the amount of expressions increase
 	 */
 	public static void main(String[] args) {
@@ -45,7 +44,7 @@ public class GenenralExpressionBenchmark {
 		int numexpr;
 		Collection<BooleanExpression> col1;
 
-		numexpr = 1000;
+		numexpr = 8000;
 		sUniverse = Universes.newIdealUniverse();
 		booleanType = sUniverse.booleanType();
 		BooleanExpression[] ExpressionList1 = {};
@@ -53,11 +52,13 @@ public class GenenralExpressionBenchmark {
 		for(int i = 0; i < numexpr; i++){
 			col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
 		}
-		start = System.currentTimeMillis();
-			@SuppressWarnings("unused")
 			BooleanExpression s1 = sUniverse.and(col1);
+			start = System.currentTimeMillis();
+			@SuppressWarnings("unused")
+			BooleanExpression s2 = sUniverse.not(s1);
 		end = System.currentTimeMillis();
 		mark = end - start;
 		System.out.println(mark);	
 			}
 }
+
