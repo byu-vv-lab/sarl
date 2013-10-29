@@ -1953,6 +1953,8 @@ public class CommonPreUniverse implements PreUniverse {
 			throw err("Argument arrayType to method arrayLambda was null");
 		if (function == null)
 			throw err("Argument function to method arrayLambda was null");
+		if (function.operator() != SymbolicOperator.LAMBDA)
+			throw err("Function must be LAMBDA type");
 		// TODO: Make sure the function takes an index (Integer) and outputs
 		// elementType
 		//
