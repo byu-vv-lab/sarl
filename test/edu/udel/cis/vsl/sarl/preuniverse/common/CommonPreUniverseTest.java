@@ -820,8 +820,34 @@ public class CommonPreUniverseTest {
 	//containing tuples.
 	//Written by Julian Piane
 	public void referencedTypeTuple(){
+		ReferenceExpression nullReference, identityReference, tupleReference;
+		SymbolicTupleType tupleType;
 		
 		
+		IntObject zeroInt = universe.intObject(0);
+		IntObject oneInt = universe.intObject(1);
+		IntObject twoInt = universe.intObject(2);
+		IntObject threeInt = universe.intObject(3);
+		
+		identityReference = universe.identityReference();
+		
+		tupleType = universe.tupleType(universe.stringObject("tupleType"), Arrays.asList(new SymbolicType[]{integerType,realType,integerType,realType}));
+		
+		//Test index 0
+		tupleReference = universe.tupleComponentReference(identityReference, zeroInt);
+		assertEquals(universe.referencedType(tupleType, tupleReference), integerType);
+		
+		//Test index 1
+		tupleReference = universe.tupleComponentReference(identityReference, oneInt);
+		assertEquals(universe.referencedType(tupleType, tupleReference), realType);
+		
+		//Test index 2
+		tupleReference = universe.tupleComponentReference(identityReference, twoInt);
+		assertEquals(universe.referencedType(tupleType, tupleReference), integerType);
+		
+		//Test index 3
+		tupleReference = universe.tupleComponentReference(identityReference, threeInt);
+		assertEquals(universe.referencedType(tupleType, tupleReference), realType);
 	}
 
 	@Test
@@ -865,15 +891,10 @@ public class CommonPreUniverseTest {
 
 		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
 
-		
 		assertEquals(universe.referencedType(tupleOfArrayType, offsetReference).typeKind(), tupleOfArrayType.typeKind());
 		
-		
-
 		//Array containing Tuple test
 		assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
-		
-		
 		
 		//ERROR TESTS
 		try{universe.referencedType(arrayOfTupleType, arrayInTupleReference);}
