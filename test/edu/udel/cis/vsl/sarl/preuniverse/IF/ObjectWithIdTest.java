@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -22,6 +21,8 @@ public class ObjectWithIdTest {
 
 	private static PreUniverse universe;
 
+	@SuppressWarnings("unused")
+	// stringObject is being used in test
 	private static SymbolicObject stringObject, objectWithId;
 
 	private static Collection<SymbolicObject> test;

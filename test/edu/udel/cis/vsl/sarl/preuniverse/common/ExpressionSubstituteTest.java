@@ -19,6 +19,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -45,6 +46,8 @@ public class ExpressionSubstituteTest {
 	private static SymbolicTupleType tupleType;
 
 	private static SymbolicUnionType unionType;
+	
+	private static SymbolicTypeSequence sequence;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

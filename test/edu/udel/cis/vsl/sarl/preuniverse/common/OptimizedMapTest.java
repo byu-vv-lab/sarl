@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -35,7 +34,7 @@ public class OptimizedMapTest {
 
 	private static char c;
 
-	private static Object nvalue, nkey;
+	private static Object nvalue;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
