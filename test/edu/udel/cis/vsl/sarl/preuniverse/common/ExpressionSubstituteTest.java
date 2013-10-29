@@ -27,8 +27,6 @@ public class ExpressionSubstituteTest {
 
 	private static PreUniverse universe;
 
-	private static SymbolicType realType, integerType, booleanType;
-
 	private static CollectionFactory factory1;
 
 	private static SymbolicTypeFactory typeFactory1;
@@ -43,11 +41,7 @@ public class ExpressionSubstituteTest {
 		universe = new CommonPreUniverse(test);
 		factory1 = test.collectionFactory();
 		typeFactory1 = test.typeFactory();
-
-		// initializing symbolic types
-		integerType = universe.integerType();
-		booleanType = universe.booleanType();
-		realType = universe.realType();
+		expression1 = universe.nullExpression();
 
 	}
 
@@ -65,11 +59,18 @@ public class ExpressionSubstituteTest {
 
 	@Test
 	public void expressionSubstituteConstructorTest() {
-
 		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
+
 		assertEquals(this.factory1, factory1);
 		assertEquals(this.universe, universe);
 		assertEquals(this.typeFactory1, typeFactory1);
 	}
 
+	@Test
+	public void expressionSubstituteNullTest() {
+		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
+
+		assertEquals(universe.substitute(expression1, newMap), expression1);
+
+	}
 }
