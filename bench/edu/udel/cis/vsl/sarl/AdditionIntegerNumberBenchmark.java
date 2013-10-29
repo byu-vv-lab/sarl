@@ -36,136 +36,121 @@ public class AdditionIntegerNumberBenchmark {
 
 
 
+public static void main(String args[]){	
 	
 	
-	
-	public void AddIntegerNumberBenchmark1() { 
 		
-		IntegerNumber a = factory.integer(bigZero);
-		IntegerNumber b = factory.integer(bigOne); 
+		IntegerNumber integerZero = factory.integer(bigZero);
+		IntegerNumber integerOne = factory.integer(bigOne); 
 		long x = System.nanoTime();
-		factory.add(a, b); 
+		factory.add(integerZero, integerOne); 
 		long y = System.nanoTime();
 
 		System.out.println(y-x);
 
-	}  
+	 
 	
 	
 	
-public void AddIntegerNumberBenchmark2() { 
 		
-		IntegerNumber a = factory.integer(bigTwo);
-		IntegerNumber b = factory.integer(bigTwo); 
-		long x = System.nanoTime();
-		factory.add(a, b); 
-		long y = System.nanoTime();
+		IntegerNumber integerTwo = factory.integer(bigTwo);
+		long x2 = System.nanoTime();
+		factory.add(integerTwo, integerTwo); 
+		long y2 = System.nanoTime();
 
-		System.out.println(y-x);
+		System.out.println(y2-x2);
 
-	}  
+	 
 
-public void AddIntegerNumberBenchmark5() { 
 	
-	IntegerNumber a = factory.integer(bigTen);
-	IntegerNumber b = factory.integer(bigTwo); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerTen = factory.integer(bigTen);
+	long x3 = System.nanoTime();
+	factory.add(integerTen, integerTwo); 
+	long y3 = System.nanoTime();
+
+	System.out.println(y3-x3);
+
+  
+	
+	IntegerNumber integerTwoThousand = factory.integer(bigTwoThousand);
+	IntegerNumber integerThirtyOne = factory.integer(bigThirtyOne); 
+	long x4 = System.nanoTime();
+	factory.add(integerTwoThousand, integerThirtyOne); 
+	long y4 = System.nanoTime();
+
+	System.out.println(y4-x4);
+
+  
+
+
+
+	
+	IntegerNumber integerThousand = factory.integer(bigThousand); 
+	long x5 = System.nanoTime();
+	factory.add(integerTwoThousand, integerThousand); 
+	long y5 = System.nanoTime();
+
+	System.out.println(y5-x5);
+
+  
+
+	
+	IntegerNumber integerA1 = factory.integer(bigA1);
+	IntegerNumber integerA2 = factory.integer(bigA2); 
+	long x6 = System.nanoTime();
+	factory.add(integerA1, integerA2); 
+	long y6 = System.nanoTime();
+
+	System.out.println(y6-x6);
+
+  
+
+
+	
+	IntegerNumber integerA3 = factory.integer(bigA3);
+	long x7 = System.nanoTime();
+	factory.add(integerA3, integerA2); 
+	long y7 = System.nanoTime();
+
+	System.out.println(y7-x7);
+
+ 
+
+
+	
+	IntegerNumber integerA4 = factory.integer(bigA4); 
+	long x8 = System.nanoTime();
+	factory.multiply(integerA4, integerA3); 
+	long y8 = System.nanoTime();
 
 	System.out.println(y-x);
 
-}  
-public void AddIntegerNumberBenchmar3() { 
+   
+
+
 	
-	IntegerNumber a = factory.integer(bigTwoThousand);
-	IntegerNumber b = factory.integer(bigThirtyOne); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerA5 = factory.integer(bigA5);
+	IntegerNumber integerA6 = factory.integer(bigA6); 
+	long x9 = System.nanoTime();
+	factory.add(integerA5, integerA6); 
+	long y9 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y9-x9);
 
-}  
+ 
 
-
-
-public void AddIntegerNumberBenchmar4() { 
 	
-	IntegerNumber a = factory.integer(bigTwoThousand);
-	IntegerNumber b = factory.integer(bigThousand); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerA7 = factory.integer(bigA7);
+	IntegerNumber integerA8 = factory.integer(bigA8); 
+	long x10 = System.nanoTime();
+	factory.add(integerA7, integerA8); 
+	long y10 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y10-x10);
 
-}  
-
-public void AddIntegerNumberBenchmark6() { 
-	
-	IntegerNumber a = factory.integer(bigA1);
-	IntegerNumber b = factory.integer(bigA2); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-}  
-
-
-public void AddIntegerNumberBenchmark7() { 
-	
-	IntegerNumber a = factory.integer(bigA3);
-	IntegerNumber b = factory.integer(bigA2); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-} 
-
-
-public void AddIntegerNumberBenchmark8() { 
-	
-	IntegerNumber a = factory.integer(bigA3);
-	IntegerNumber b = factory.integer(bigA4); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-}   
-
-
-public void AddIntegerNumberBenchmark9() { 
-	
-	IntegerNumber a = factory.integer(bigA5);
-	IntegerNumber b = factory.integer(bigA6); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-}  
-
-public void AddIntegerNumberBenchmark10() { 
-	
-	IntegerNumber a = factory.integer(bigA7);
-	IntegerNumber b = factory.integer(bigA8); 
-	long x = System.nanoTime();
-	factory.add(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-}  
+  
 	
 	
-	
+}	
 	
 }
