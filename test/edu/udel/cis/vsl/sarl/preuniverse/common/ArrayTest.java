@@ -948,18 +948,22 @@ public class ArrayTest {
 	// written by Mohammad Alsulmi
 	@Test
 	public void complexArrayTest() {
+		// Testing arrays with symbolic expressions and reasoning
+		
 		NumericSymbolicConstant x_var, y_var;
 		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
 		SymbolicExpression array, expected, simplifiedArray;
 		BooleanExpression claim1, claim2, claim;
 		Reasoner reasoner;
 		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
-
+		
+		// initialization of symbolic constants
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), integerType);
 		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("y"), integerType);
-
+		
+		// mixing the constant in numeric expressions
 		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
 
 		x_minus_y = (NumericExpression) universe.subtract(x_var, y_var);
@@ -969,31 +973,40 @@ public class ArrayTest {
 
 		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
 				x_plus_y, x_plus_y);
-
+		
+		// initialization of the array
 		array = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y,
 						x_plus_2y, x_plus_y_multiply_x_plus_y }));
-
+		
+		// initialization of boolean expressions 
 		claim1 = universe.equals(x_var, universe.integer(5));
 		claim2 = universe.equals(y_var, universe.integer(3));
+		
+		// combining claim1, claim2 into claim
 		claim = universe.and(claim1, claim2);
+		// using the claim in the reasoner
 		reasoner = reasonerUniverse.reasoner(claim);
-
+		// creating the expected result array
 		expected = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { universe.integer(8),
 						universe.integer(2), universe.integer(11),
 						universe.integer(64) }));
+		
+		// using the reasoner to substitute the values of expression in the original array
 		simplifiedArray = reasoner.simplify(array);
 
+		// doing assertion
 		assertEquals(expected, simplifiedArray);
 
 	}
 	// written by Mohammad Alsulmi
 	@Test
 	public void testComplexMixedArray() {
-		// Testing two levels of nested arrays
+		
+		// Testing nested arrays with symbolic expressions and reasoning
 		SymbolicArrayType arrayType;
 		SymbolicArrayType nestedType;
 		SymbolicExpression array1, array2;
@@ -1005,12 +1018,14 @@ public class ArrayTest {
 		BooleanExpression claim1, claim2, claim;
 		Reasoner reasoner;
 		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
-
+		
+		// initialization of symbolic constants
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), integerType);
 		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("y"), integerType);
 
+		// mixing the constant in numeric expressions
 		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
 
 		x_minus_y = (NumericExpression) universe.subtract(x_var, y_var);
@@ -1051,9 +1066,12 @@ public class ArrayTest {
 		// initialization of nested array type that contains the previous
 		// initialized array type
 		nestedType = universe.arrayType(arrayType);
-
+		
+		// initialization of boolean expressions
 		claim1 = universe.equals(x_var, universe.integer(5));
 		claim2 = universe.equals(y_var, universe.integer(3));
+		
+		// combining claim1, claim2 into claim
 		claim = universe.and(claim1, claim2);
 
 		try {
@@ -1069,7 +1087,9 @@ public class ArrayTest {
 			// it will create a two level nested array
 			nestedArray = universe.array(nestedType,
 					Arrays.asList(new SymbolicExpression[] { array3, array4 }));
+			// using the claim in a reasoner
 			reasoner = reasonerUniverse.reasoner(claim);
+			// Substitute the values of the constant
 			simplifiedArray = reasoner.simplify(nestedArray);
 
 			// do some assertions to ensure the data was inserted properly
