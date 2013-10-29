@@ -20,16 +20,28 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
  *  - elementType()
  *  - toStringBuffer()
  *  - isComplete()
- *  - canonizedChildren() - not yet tested
- *  - getPureType() - not yet tested
- *  - setPureType() - not yet tested.
  */
 
 public class CommonSymbolicArrayTypeTest {
 		
+	/**
+	 * Declaring array types for different SymbolicTypes
+	 */
 	CommonSymbolicArrayType intArrayType1, intArrayType11, intArrayType2, realArrayType1, realArrayType2;
+	
+	/**
+	 * Declaring Integer Types to be used in array types
+	 */
 	CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind;
+	
+	/**
+	 * Declaring Real Types to be used in array Type
+	 */
 	CommonSymbolicRealType idealRealKind, floatRealKind;
+	
+	/**
+	 * Declaring a Type Comparator to be used in comparing different array types
+	 */
 	TypeComparator typeComparator;
 
 	@BeforeClass
@@ -75,7 +87,7 @@ public class CommonSymbolicArrayTypeTest {
 	}
 	
 	/**
-	 * Testing if two types are equals, i.e. the have the same type and kins.
+	 * Testing if two types are equals, i.e. the have the same type and kinds.
 	 */
 	@Test
 	public void testTypeEquals() {
@@ -126,5 +138,15 @@ public class CommonSymbolicArrayTypeTest {
 	@Test
 	public void testTypeComparator(){
 		assertEquals(typeComparator.compare(intArrayType1, intArrayType11), 0);
+	}
+	
+	/**
+	 * Testing setting a pure type for an array type.
+	 */
+	@Test
+	public void testPureType(){
+		assertNull(intArrayType1.getPureType());
+		intArrayType1.setPureType(intArrayType1);
+		assertNotNull(intArrayType1.getPureType());
 	}
 }

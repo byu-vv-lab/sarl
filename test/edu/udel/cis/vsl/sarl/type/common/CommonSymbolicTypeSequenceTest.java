@@ -88,40 +88,9 @@ public class CommonSymbolicTypeSequenceTest {
 		//System.out.println(typeSequence.toString());
 	}
 	
-	
-	/**
-	 * a SymbolicTypeSequence is a finite and ordered sequence of SymbolicTypes
-	 * so the 1 element is < the 2 
-	 * (maybe == if similar elements, but here I added distinct elements)
-	 * and the 2 is < 3
-	 * we can test that using compare() in TypeComparator.
-	 */
-	@Test
-	public void testTypeComparator(){
-		/* Test won't work because the ordering isn't done automatically.
-		assertEquals(typeComparator.compare(typeSequence.getType(0), typeSequence.getType(1)), -1);
-		assertEquals(typeComparator.compare(typeSequence.getType(1), typeSequence.getType(2)), -1);
-		assertEquals(typeComparator.compare(typeSequence.getType(2), typeSequence.getType(3)), -1);
-		assertEquals(typeComparator.compare(typeSequence.getType(3), typeSequence.getType(4)), -1);
-		 */
-	
 
-	}
+	
 	/*
-	@Test
-	public void testCanonizeChildren() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCommonSymbolicTypeSequenceIterableOfQextendsSymbolicType() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCommonSymbolicTypeSequenceSymbolicTypeArray() {
-		fail("Not yet implemented");
-	}
 
 
 	@Test
