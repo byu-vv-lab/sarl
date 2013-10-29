@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.SARL;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
@@ -27,32 +26,29 @@ public class Appending {
 	public static void main(String[] args) {
 
 		NumericExpression elementsArray[];
-		LinkedList<NumericExpression> elementsList;
-		int maxSize = (int) Math.pow(2, 15);
+		int maxSize = (int) Math.pow(2, 13);
 		int size;
 		long startingTime, endingTime;
 		double totalTime;
-				
-		// the case of new append
-		System.out.println("Testing of array creation using new array append");
-		
+
+		// the case of appending one array into another
+		System.out.println("Evaluating the time for appending one array into another");
+
 		for (int i = 1; i <= maxSize; i = i * 2) {
 			size = i;
-			// starting the time
-			elementsList = new LinkedList<>();
-
 			elementsArray = new NumericExpression[0];
-			//elementsArray[0] = universe.integer(7);
-			//elementsArray[1] = universe.integer(7);
+			// creating the 1st array
 			array1 = universe.array(integerType, Arrays.asList(elementsArray));
-			//elementsList = new LinkedList<>();
+			
 			elementsArray = new NumericExpression[size];
 			for (int j = 0; j < size; j++) {
 				elementsArray[j] = universe.integer(j);
 			}
-			
+			// creating the 2nd array
 			array2 = universe.array(integerType, Arrays.asList(elementsArray));
+			// starting the time
 			startingTime = System.nanoTime();
+			// appending array2 into array1
 			universe.append(array1, array2);
 			// stopping the time
 			endingTime = System.nanoTime();
@@ -63,20 +59,21 @@ public class Appending {
 					+ " for size: " + size);
 
 		}
-		
-/*
+
 		System.out.println("Testing of array creation using old array append");
-		
-		// the case of append to an empty array
+
+		// the case of appending one element into one array
 
 		for (int i = 1; i <= maxSize; i = i * 2) {
 			size = i;
-			// starting the time
 			elementsArray = new NumericExpression[0];
 			NumericExpression a = universe.integer(100);
+			// creating the array
 			array1 = universe.array(integerType, Arrays.asList(elementsArray));
+			// starting the time
 			startingTime = System.nanoTime();
 			for (int j = 0; j < size; j++) {
+				// appending one element
 				array1 = universe.append(array1, a);
 			}
 			// stopping the time
@@ -89,8 +86,6 @@ public class Appending {
 
 		}
 
-
-*/
 	}
 
 }

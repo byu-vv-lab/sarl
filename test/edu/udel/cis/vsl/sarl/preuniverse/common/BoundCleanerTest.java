@@ -14,7 +14,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -34,10 +33,6 @@ public class BoundCleanerTest {
 
 	private NumericExpression oneR;
 
-	private SymbolicArrayType arrayIntegerType;
-
-	private SymbolicArrayType arrayRealType;
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
@@ -56,8 +51,8 @@ public class BoundCleanerTest {
 		realType = universe.realType();
 		zeroR = universe.zeroReal();
 		oneR = universe.oneReal();
-		arrayIntegerType = universe.arrayType(integerType);
-		arrayRealType = universe.arrayType(realType);
+		universe.arrayType(integerType);
+		universe.arrayType(realType);
 
 	}
 
