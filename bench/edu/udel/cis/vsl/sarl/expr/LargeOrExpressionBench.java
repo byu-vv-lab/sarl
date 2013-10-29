@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -69,6 +68,7 @@ public class LargeOrExpressionBench {
 		start = System.currentTimeMillis();
 			BooleanExpression s1 = sUniverse.and(col1);
 			BooleanExpression s2 = sUniverse.and(col2);
+			@SuppressWarnings("unused")
 			BooleanExpression s3 = sUniverse.or(s1,s2);
 		end = System.currentTimeMillis();
 		mark = end - start;

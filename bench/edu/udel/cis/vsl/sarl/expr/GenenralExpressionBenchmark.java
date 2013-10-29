@@ -54,6 +54,7 @@ public class GenenralExpressionBenchmark {
 			col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
 		}
 		start = System.currentTimeMillis();
+			@SuppressWarnings("unused")
 			BooleanExpression s1 = sUniverse.and(col1);
 		end = System.currentTimeMillis();
 		mark = end - start;
