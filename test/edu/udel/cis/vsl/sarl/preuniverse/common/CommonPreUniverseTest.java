@@ -664,7 +664,7 @@ public class CommonPreUniverseTest {
 			
 	}
 
-	@Test
+	@Test //Julian Piane
 	public void testArrayLambda() {
 		assertEquals(null, universe.arrayLambda(symbolicCompleteArrayType, nullExpression)); //Simple test for coverage.
 	}
@@ -694,7 +694,7 @@ public class CommonPreUniverseTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
+	@Test //Julian Piane
 	public void testNumProverValidCalls() {
 		assertEquals(universe.numProverValidCalls(), 0); //at the time of tests, universe.proverValidCount should be 0;
 	}
@@ -719,7 +719,7 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	@Ignore
+	@Ignore //Test written by Julian Piane
 	public void testDereference() {
 		SymbolicType doubleArrayType = universe.arrayType(arrayType); //int[]
 		SymbolicExpression arrayTypeExpression = universe.symbolicConstant(universe.stringObject("arrayTypeExpression"), doubleArrayType);
@@ -744,14 +744,88 @@ public class CommonPreUniverseTest {
 			assertEquals(e.getMessage(), "dereference given null value");
 		}
 	}
+	
+	@Test
+	//This test focuses on testing referencedType() solely with symbolic types
+	//containing unions.
+	//Written by Julian Piane
+	public void referencedTypeUnion(){
+		ReferenceExpression nullReference, identityReference, unionReference;
+		SymbolicUnionType unionType;
+		
+		IntObject zeroInt = universe.intObject(0);
+		IntObject oneInt = universe.intObject(1);
+		IntObject twoInt = universe.intObject(2);
+		IntObject threeInt = universe.intObject(3);
+		
+		identityReference = universe.identityReference();
+		
+		unionType = universe.unionType(universe.stringObject("UnionType"), Arrays.asList(new SymbolicType[]{integerType,realType, booleanType,arrayType}));
+		
+		unionReference = universe.unionMemberReference(identityReference, zeroInt);
+		//Test Index zero
+		assertEquals(universe.referencedType(unionType, unionReference), integerType);
+		
+		unionReference = universe.unionMemberReference(identityReference, oneInt);
+		//Test Index one
+		assertEquals(universe.referencedType(unionType, unionReference), realType);
+		
+		unionReference = universe.unionMemberReference(identityReference, twoInt);
+		//Test Index two
+		assertEquals(universe.referencedType(unionType, unionReference), booleanType);
+		
+		unionReference = universe.unionMemberReference(identityReference, threeInt);
+		//Test Index three
+		assertEquals(universe.referencedType(unionType, unionReference), arrayType);
+	}
+	
+	@Test
+	//This test focuses on testing referencedType() solely with symbolic types
+	//containing arrays.
+	//Written by Julian Piane
+	public void referencedTypeArray(){
+		ReferenceExpression nullReference, offsetReference, identityReference, arrayReference, twoDimensionalArrayReference;
+		NumericExpression zero, one,two, three;
+		
+		zero = universe.integer(0);
+		one = universe.integer(1);
+		two = universe.integer(2);
+		three = universe.integer(3);
+		
+		identityReference = universe.identityReference();
+		twoDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
+		
+		arrayReference = universe.arrayElementReference(identityReference, zero);
+		
+		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
+		
+		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
+		
+		try{universe.referencedType(twoDimensionalArrayType, arrayReference);}
+		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+	}
+	
+	@Test
+	//This test focuses on testing referencedType() solely with symbolic types
+	//containing tuples.
+	//Written by Julian Piane
+	public void referencedTypeTuple(){
+		
+		
+	}
 
 	@Test
-	//ReferencedType test. Written by Julian Piane 9/22/13
-	public void testReferencedType() {
+	//This test focuses on testing referencedType() solely with symbolic types
+	//containing mixed symbolic types containing any combination of unions, arrays and/or tuples
+	//Written by Julian Piane 9/22/13
+	public void referencedTypeMixed() {
 		//instantiate our types 
 		NumericExpression zero, one,two, three;
 		
 		IntObject zeroInt = universe.intObject(0);
+		IntObject oneInt = universe.intObject(1);
+		IntObject twoInt = universe.intObject(2);
+		IntObject threeInt = universe.intObject(3);
 
 		zero = universe.integer(0);
 		one = universe.integer(1);
@@ -759,38 +833,36 @@ public class CommonPreUniverseTest {
 		three = universe.integer(3);
 		
 		//Reference Expressions
-		ReferenceExpression nullReference, offsetReference, identityReference, unionReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference, arrayInTupleReference;
+		ReferenceExpression nullReference, offsetReference, identityReference, unionReference, arrayReference, twoDimensionalArrayReference, tupleInArrayReference;
 		nullReference = universe.nullReference();
 		identityReference = universe.identityReference();
-		arrayReference = universe.arrayElementReference(identityReference, zero);
-		twoDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
+		
+		
 		tupleInArrayReference = universe.arrayElementReference(identityReference, zero);
-		arrayInTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
 		offsetReference = universe.offsetReference(identityReference, zero);
 		unionReference = universe.unionMemberReference(identityReference, zeroInt);
-
+		
+		ReferenceExpression arrayInTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
+		
 		//Tuple containing array
 		SymbolicTupleType tupleOfArrayType = universe.tupleType(universe.stringObject("tupleOfArrayType"), Arrays.asList(new SymbolicType[]{arrayType}));
-
+		
 		//Tuple containing array test and offset test
 		assertEquals(universe.referencedType(tupleOfArrayType, arrayInTupleReference), arrayType);
-		assertEquals(universe.referencedType(tupleOfArrayType, offsetReference).typeKind(), tupleOfArrayType.typeKind());
-		
+				
 		//Array containing Tuple
 		SymbolicArrayType arrayOfTupleType = universe.arrayType(tupleOfArrayType);
+
+		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
+
+		
+		assertEquals(universe.referencedType(tupleOfArrayType, offsetReference).typeKind(), tupleOfArrayType.typeKind());
+		
+		
 
 		//Array containing Tuple test
 		assertEquals(universe.referencedType(arrayOfTupleType, tupleInArrayReference), tupleOfArrayType);
 		
-		//Two Dimensional Array
-		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
-		
-		//Union Type
-		SymbolicUnionType unionType = universe.unionType(universe.stringObject("UnionType"), Arrays.asList(new SymbolicType[]{integerType,realType}));
-
-		//Two Dimensional Array test and UnionTest
-		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
-		assertEquals(universe.referencedType(unionType, unionReference), integerType);
 		
 		
 		//ERROR TESTS
@@ -802,8 +874,7 @@ public class CommonPreUniverseTest {
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 		try{universe.referencedType(arrayOfTupleType, null);}
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
-		try{universe.referencedType(twoDimensionalArrayType, arrayReference);}
-		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		
 		try{universe.referencedType(tupleOfArrayType, tupleInArrayReference);}
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 		try{assertEquals(universe.referencedType(twoDimensionalArrayType, unionReference), arrayType);}
