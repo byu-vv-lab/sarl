@@ -29,26 +29,50 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
  */
 public abstract class CommonSymbolicObject implements SymbolicObject {
 
+	/**
+	 * If true, toString() will return toStringBufferLong, not toStringBuffer
+	 */
 	private final static boolean debug = false;
 
+	/**
+	 * Set upon construction, used in equals for kind comparison
+	 */
 	private SymbolicObjectKind kind;
 
+	/**
+	 * Cached hashCode, set upon first run of hashCode()
+	 */
 	private int hashCode;
 
+	/**
+	 * Tells whether hashCode is set or not
+	 */
 	private boolean hashed = false;
 
 	private int id = -1;
 
 	private RationalNumber order;
 
+	/**
+	 * Instantiates object and sets this.kind
+	 * @param kind
+	 */
 	protected CommonSymbolicObject(SymbolicObjectKind kind) {
 		this.kind = kind;
 	}
 
+	/**
+	 * set the order of the CommonSymbolicObject
+	 * @param number
+	 */
 	public void setOrder(RationalNumber number) {
 		order = number;
 	}
 
+	/**
+	 * @return
+	 * 		The order of the CommonSymbolicObject
+	 */
 	public RationalNumber getOrder() {
 		return order;
 	}
@@ -65,7 +89,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	void setId(int id) {
 		this.id = id;
 	}
-
+	
 	public int id() {
 		return id;
 	}
@@ -121,6 +145,10 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return false;
 	}
 
+	/**
+	 * Canonize the children of the ObjectFactory. Pull out the unique representatives of the objects.
+	 * @param factory
+	 */
 	public abstract void canonizeChildren(CommonObjectFactory factory);
 
 	/**
