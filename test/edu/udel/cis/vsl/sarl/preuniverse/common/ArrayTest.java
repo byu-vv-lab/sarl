@@ -902,6 +902,24 @@ public class ArrayTest {
 
 	}
 
+	//Written by Chris Heider
+		@Test
+		public void testArrayLambda() {
+			SymbolicCompleteArrayType arrayType;
+			NumericSymbolicConstant x;
+			SymbolicExpression function;
+			SymbolicExpression arrayL;
+			SymbolicExpression ans;
+			
+			arrayType = universe.arrayType(integerType, universe.integer(6));
+			x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
+			function = universe.lambda(x, universe.multiply(x, x));
+			arrayL = universe.arrayLambda(arrayType, function);
+			ans = universe.integer(4);
+			
+			
+			assertEquals(ans, universe.arrayRead(arrayL,universe.integer(2)));
+		}
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompleteArrays() {
