@@ -587,6 +587,10 @@ public class IdealTest {
 	 */
 	@Test
 	public void dividePoly() {
+		StringObject Zobj;
+		Zobj = objectFactory.stringObject("Z");
+		NumericSymbolicConstant z = objectFactory.canonic(idealFactory.symbolicConstant(Zobj,
+				typeFactory.integerType()));
 		NumericExpression p01 = idealFactory.multiply(x, x);
 		NumericExpression p02 = idealFactory.add(intTen, idealFactory.
 				multiply(intTen, x));
@@ -598,12 +602,27 @@ public class IdealTest {
 		NumericExpression p06 = idealFactory.add(x, intOne);
 		NumericExpression p07 = idealFactory.multiply(intTen, p01);
 		NumericExpression p08 = idealFactory.divide(x, intTen);
+		NumericExpression p09 = idealFactory.multiply(idealFactory.
+				multiply(idealFactory.subtract(x, intOne),idealFactory.
+						add(x, intOne)), idealFactory.add(idealFactory.
+								multiply(x,y), intTwo));
+		NumericExpression p10 = idealFactory.multiply(idealFactory.
+				multiply(idealFactory.subtract(x, intOne), z), idealFactory.
+				add(idealFactory.multiply(x, y), intThree));
+		NumericExpression p11 = idealFactory.multiply(idealFactory.
+						add(x, intOne), idealFactory.add(idealFactory.
+								multiply(x,y), intTwo));
+		NumericExpression p12 = idealFactory.multiply(z, idealFactory.
+				add(idealFactory.multiply(x, y), intThree));
+		NumericExpression p13 = idealFactory.divide(p11, p12);
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		Polynomial poly3 = (Polynomial) p03;
 		Polynomial poly4 = (Polynomial) p04;
 		Polynomial poly5 = (Polynomial) p05;
 		Polynomial poly6 = (Polynomial) p07;
+		Polynomial poly7 = (Polynomial) p09;
+		Polynomial poly8 = (Polynomial) p10;
 				
 		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
 		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
@@ -611,6 +630,7 @@ public class IdealTest {
 		Polynomial b4 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
 		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);
 		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);
+		Polynomial b7 = (Polynomial) commonIdealFactory.divide(poly7, poly8);
 				
 		assertEquals(intFive, b1);
 		assertEquals(p06, b2);
@@ -618,6 +638,7 @@ public class IdealTest {
 		assertEquals(intOne, b4);
 		assertEquals(intTen, b5);
 		assertEquals(p08, b6);
+		assertEquals(p13, b7);
 	}
 		
 	/**
@@ -937,7 +958,6 @@ public class IdealTest {
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
-		
 		out.println("Exp=" + n1);
 		out.println("Expr2=" +e9);
 		
