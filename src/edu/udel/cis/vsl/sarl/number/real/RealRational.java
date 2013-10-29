@@ -42,6 +42,13 @@ public class RealRational extends RealNumber implements RationalNumber {
 
 	private BigInteger denominator;
 
+	/**
+	 * Creates a rational number from supplied integer values
+	 * Includes testing to detect null values and denominators of zero
+	 * 
+	 * @param numerator
+	 * @param denominator
+	 */
 	public RealRational(BigInteger numerator, BigInteger denominator) {
 		assert numerator != null;
 		assert denominator != null;
@@ -49,8 +56,12 @@ public class RealRational extends RealNumber implements RationalNumber {
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-
+	
 	@Override
+	/**
+	 * Overrides the method signum.
+	 * Determines signum solely based on the value of the numerator.
+	 */
 	public int signum() {
 		return numerator.signum();
 	}
@@ -64,6 +75,10 @@ public class RealRational extends RealNumber implements RationalNumber {
 	}
 
 	@Override
+	/**
+	 * Overrides the method toString.
+	 * Returns a string representation of a RealRational and prints only the numerator for rationals with denominator equal to one.
+	 */
 	public String toString() {
 		if (denominator.equals(BigInteger.ONE)) {
 			return numerator.toString();
@@ -73,16 +88,30 @@ public class RealRational extends RealNumber implements RationalNumber {
 	}
 
 	@Override
+	/**
+	 * Overrides the atomString method.
+	 * Returns a toString representation enclosed in parentheses.
+	 */
 	public String atomString() {
 		return "(" + toString() + ")";
 	}
 
 	@Override
+	/**
+	 * Overrides the isZero method.
+	 * A rational is only zero when its numerator is zero.
+	 * This method simplifies isZero on RealRationals by only evaluating the numerator.
+	 */
 	public boolean isZero() {
 		return numerator == BigInteger.ZERO;
 	}
 
 	@Override
+	/**
+	 * Overrides the isOne method.
+	 * A rational is only one when its numerator and denominator are equal.
+	 * This method compares the two values with .equals
+	 */
 	public boolean isOne() {
 		return numerator.equals(denominator);
 	}

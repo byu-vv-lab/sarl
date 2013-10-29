@@ -44,6 +44,12 @@ public class Exponentiator<T> {
 
 	private static IntegerNumber two = numberFactory.integer(2);
 
+	/**
+	 * Constructor for the exponentiator class
+	 * 
+	 * @param multiplier
+	 * @param one
+	 */
 	public Exponentiator(BinaryOperator<T> multiplier, T one) {
 		this.multiplier = multiplier;
 		this.one = one;
@@ -53,6 +59,14 @@ public class Exponentiator<T> {
 	// e = b0*1 + b1*2 + b2*4 + b3*8 + b4*16 + ...
 	// binaryPower = a^1, a^2, a^4, a^8, a^16,...
 	// a^e = ...
+	
+	/**
+	 * Calculates the binary expansion of an exponential
+	 * 
+	 * @param base
+	 * @param exponent
+	 * @return
+	 */
 	public T exp(T base, IntegerNumber exponent) {
 		int signum = exponent.signum();
 

@@ -34,6 +34,11 @@ public class RealInteger extends RealNumber implements IntegerNumber {
 
 	private BigInteger value;
 
+	/**
+	 * Creates RealIntegers from BigIntegers and protects against null values.
+	 * 
+	 * @param value
+	 */
 	public RealInteger(BigInteger value) {
 		assert value != null;
 		this.value = value;

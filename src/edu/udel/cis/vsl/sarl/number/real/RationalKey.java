@@ -30,11 +30,21 @@ public class RationalKey {
 
 	BigInteger denominator;
 
+	/**
+	 * Constructs a RationalKey from BigInteger numerator and BigInteger denominator.
+	 * 
+	 * @param numerator
+	 * @param denominator
+	 */
 	RationalKey(BigInteger numerator, BigInteger denominator) {
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
 
+	/**
+	 * Checks if two RationalKeys are equivalent.
+	 * Fails if supplied object is not a RationalKey.
+	 */
 	public boolean equals(Object object) {
 		if (object instanceof RationalKey) {
 			RationalKey that = (RationalKey) object;
@@ -45,6 +55,9 @@ public class RationalKey {
 		return false;
 	}
 
+	/**
+	 * returns a composite hashcode of the sum of the numerator and denominaor's hashcodes.
+	 */
 	public int hashCode() {
 		return numerator.hashCode() + denominator.hashCode();
 	}
