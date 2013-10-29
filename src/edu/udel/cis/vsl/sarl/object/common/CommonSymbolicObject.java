@@ -158,6 +158,8 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 *            a string buffer
 	 */
 	protected void atomize(StringBuffer buffer) {
+		buffer.insert(0, '(');
+		buffer.append(')');
 	}
 
 	@Override

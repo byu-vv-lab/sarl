@@ -66,7 +66,6 @@ public class CommonStringObject extends CommonSymbolicObject implements
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer buffer = new StringBuffer(value);
-		if (atomize) this.atomize(buffer);
 		return buffer;
 	}
 

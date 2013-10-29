@@ -115,8 +115,6 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer buffer = new StringBuffer(Integer.toString(value));
-		if (atomize)
-			this.atomize(buffer);
 		return buffer;
 			
 	}

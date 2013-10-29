@@ -72,8 +72,6 @@ public class CommonCharObject extends CommonSymbolicObject implements
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer buffer = new StringBuffer(Character.toString(value));
-		if (atomize)
-			this.atomize(buffer);
 		return buffer;
 
 	}

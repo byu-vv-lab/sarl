@@ -82,7 +82,6 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer buffer = new StringBuffer(Boolean.toString(value));
-		if (atomize) this.atomize(buffer);
 		return buffer;
 	}
 
