@@ -4,6 +4,9 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
@@ -11,6 +14,8 @@ import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -30,6 +35,8 @@ public class ExpressionSubstituteTest {
 
 	private static ExpressionSubstituter expr1;
 
+	private static SymbolicExpression expression1;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem test = PreUniverses.newIdealFactorySystem();
@@ -41,8 +48,6 @@ public class ExpressionSubstituteTest {
 		integerType = universe.integerType();
 		booleanType = universe.booleanType();
 		realType = universe.realType();
-
-		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
 
 	}
 
@@ -58,11 +63,13 @@ public class ExpressionSubstituteTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Ignore
 	@Test
-	public void expressionSubstituteTest1() {
-		
+	public void expressionSubstituteConstructorTest() {
 
+		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
+		assertEquals(this.factory1, factory1);
+		assertEquals(this.universe, universe);
+		assertEquals(this.typeFactory1, typeFactory1);
 	}
 
 }
