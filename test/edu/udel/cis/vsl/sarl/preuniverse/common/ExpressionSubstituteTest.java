@@ -4,6 +4,7 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -33,22 +35,31 @@ public class ExpressionSubstituteTest {
 
 	private static ExpressionSubstituter expr1;
 
-	private static SymbolicExpression expression1, expression2;
+	private static SymbolicExpression expression1, expression2, expression3;
 
-	private static SymbolicType integerType, intArrayType;
+	private static SymbolicType integerType, intArrayType, functionType;
 
+	private static SymbolicTupleType tupleType;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem test = PreUniverses.newIdealFactorySystem();
 		universe = new CommonPreUniverse(test);
 		factory1 = test.collectionFactory();
 		typeFactory1 = test.typeFactory();
-		expression1 = universe.nullExpression();
+		
+		//initalize
 		integerType = universe.integerType();
 		intArrayType = universe.arrayType(integerType);
+		tupleType = universe.tupleType(
+				universe.stringObject("SequenceofInteger"),
+				Arrays.asList(new SymbolicType[] { integerType, integerType,
+						integerType }));
+		expression1 = universe.nullExpression();
 		expression2 = universe.symbolicConstant(
 				universe.stringObject("intArrayTypeExpression"), intArrayType);
-
+		expression3 = universe.symbolicConstant(
+				universe.stringObject("TupleTypeExpression"), tupleType);
 	}
 
 	@AfterClass
@@ -64,7 +75,7 @@ public class ExpressionSubstituteTest {
 	}
 
 	@Test
-	public void expressionSubstituteConstructorTest() {
+	public void expressionSubstituteTest() {
 		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
 		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
 
@@ -73,10 +84,14 @@ public class ExpressionSubstituteTest {
 		assertEquals(this.universe, universe);
 		assertEquals(this.typeFactory1, typeFactory1);
 
-		// subsitute method case Null expression
+		// case Null expression
 		assertEquals(expr1.substitute(expression1, newMap), expression1);
 
+		// case arraytype
 		assertEquals(expr1.substitute(expression2, newMap), expression2);
+		
+		// case tupletype
+		assertEquals(expr1.substitute(expression3, newMap), expression3);
 
 	}
 }
