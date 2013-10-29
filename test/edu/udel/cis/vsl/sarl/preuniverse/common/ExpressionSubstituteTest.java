@@ -21,6 +21,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -37,7 +38,7 @@ public class ExpressionSubstituteTest {
 	private static ExpressionSubstituter expr1;
 
 	private static SymbolicExpression expression1, expression2, expression3,
-			expression4, expression5,expression6;
+			expression4, expression5, expression6;
 
 	private static SymbolicType integerType, intArrayType, functionType,
 			realType, booleanType;
@@ -47,7 +48,7 @@ public class ExpressionSubstituteTest {
 	private static SymbolicUnionType unionType;
 
 	private static SymbolicTypeSequence sequence;
-	
+
 	private static SymbolicCompleteArrayType completeArrayType;
 
 	@BeforeClass
@@ -62,7 +63,8 @@ public class ExpressionSubstituteTest {
 		realType = universe.realType();
 		booleanType = universe.booleanType();
 		intArrayType = universe.arrayType(integerType);
-		completeArrayType = universe.arrayType(integerType,universe.integer(2));
+		completeArrayType = universe
+				.arrayType(integerType, universe.integer(2));
 		tupleType = universe.tupleType(
 				universe.stringObject("SequenceofInteger"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType,
@@ -72,6 +74,9 @@ public class ExpressionSubstituteTest {
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						booleanType, intArrayType }));
 		sequence = tupleType.sequence();
+		// SymbolicSequence<SymbolicExpression> elements =
+		// (SymbolicSequence<SymbolicExpression>) concreteArray
+		// .argument(0);
 		functionType = universe.functionType(sequence, realType);
 		expression1 = universe.nullExpression();
 		expression2 = universe.symbolicConstant(
@@ -83,7 +88,8 @@ public class ExpressionSubstituteTest {
 		expression5 = universe.symbolicConstant(
 				universe.stringObject("functionTypeExpression"), functionType);
 		expression6 = universe.symbolicConstant(
-				universe.stringObject("completeArrayTypeExpression"), completeArrayType);
+				universe.stringObject("completeArrayTypeExpression"),
+				completeArrayType);
 	}
 
 	@AfterClass
@@ -123,7 +129,7 @@ public class ExpressionSubstituteTest {
 
 		// case functionType
 		assertEquals(expr1.substitute(expression5, newMap), expression5);
-		
+
 		// case completeArrayType
 		assertEquals(expr1.substitute(expression6, newMap), expression6);
 	}
