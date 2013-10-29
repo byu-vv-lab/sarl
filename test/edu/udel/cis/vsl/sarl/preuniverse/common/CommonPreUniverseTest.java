@@ -664,11 +664,6 @@ public class CommonPreUniverseTest {
 			
 	}
 
-	@Test //Julian Piane
-	public void testArrayLambda() {
-		assertEquals(null, universe.arrayLambda(symbolicCompleteArrayType, nullExpression)); //Simple test for coverage.
-	}
-
 	@Test
 	/*
 	 * Tests the comparator() factory method.
