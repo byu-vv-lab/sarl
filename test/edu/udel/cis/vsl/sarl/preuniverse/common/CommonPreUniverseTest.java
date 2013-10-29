@@ -784,8 +784,9 @@ public class CommonPreUniverseTest {
 	//containing arrays.
 	//Written by Julian Piane
 	public void referencedTypeArray(){
-		ReferenceExpression nullReference, offsetReference, identityReference, arrayReference, twoDimensionalArrayReference;
+		ReferenceExpression nullReference, identityReference, arrayReference, twoDimensionalArrayReference;
 		NumericExpression zero, one,two, three;
+		SymbolicArrayType ArrayType;
 		
 		zero = universe.integer(0);
 		one = universe.integer(1);
@@ -797,12 +798,21 @@ public class CommonPreUniverseTest {
 		
 		arrayReference = universe.arrayElementReference(identityReference, zero);
 		
-		SymbolicArrayType twoDimensionalArrayType = universe.arrayType(arrayType);
+		ArrayType = universe.arrayType(arrayType);
+		//Two Dimensional Array Test
+		assertEquals(universe.referencedType(ArrayType, twoDimensionalArrayReference), arrayType);
 		
-		assertEquals(universe.referencedType(twoDimensionalArrayType, twoDimensionalArrayReference), arrayType);
-		
-		try{universe.referencedType(twoDimensionalArrayType, arrayReference);}
+		//Error testing
+		try{universe.referencedType(ArrayType, arrayReference);}
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
+		
+		ArrayType = universe.arrayType(ArrayType);
+		//Three Dimensional Array Test
+		assertEquals(universe.referencedType(ArrayType, twoDimensionalArrayReference), universe.arrayType(arrayType));
+		
+		ArrayType = universe.arrayType(ArrayType);
+		//Four Dimensional Array Test
+		assertEquals(universe.referencedType(ArrayType, twoDimensionalArrayReference), universe.arrayType(universe.arrayType(arrayType)));
 	}
 	
 	@Test
