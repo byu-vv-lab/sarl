@@ -49,6 +49,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 		this.comparator = new CollectionComparator();
 		emptyHashSet = objectFactory
 				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
+		//emptySortedSet = emptyHashSet;
 		emptyHashMap = objectFactory
 				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());
 		objectFactory.setCollectionComparator(comparator);
@@ -175,15 +176,13 @@ public class CommonCollectionFactory implements CollectionFactory {
 	}
 
 	@Override
-	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet(
-			Comparator<? super T> comparator) {
+	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet(Comparator<? super T> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
-			T element, Comparator<? super T> comparator) {
+	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(T element, Comparator<? super T> comparator) {
 		// TODO Auto-generated method stub
 		return null;
 	}

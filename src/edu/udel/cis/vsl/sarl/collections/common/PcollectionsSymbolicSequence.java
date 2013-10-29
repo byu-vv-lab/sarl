@@ -152,6 +152,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 			if (!expr.isCanonic()) {
 				PVector<T> newVector = pvector.subList(0, count);
+				
 				T canonic = factory.canonic(expr);
 
 				assert canonic != null;

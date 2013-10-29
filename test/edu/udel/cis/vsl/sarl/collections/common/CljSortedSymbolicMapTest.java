@@ -2,9 +2,10 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
-
 import java.util.Collection;
 import java.util.Comparator;
+
+import javax.naming.spi.ObjectFactory;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,18 +14,33 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
+import edu.udel.cis.vsl.sarl.expr.Expressions;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.type.Types;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 public class CljSortedSymbolicMapTest {
 
 	CommonObjectFactory fac;
 	
 	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
-
+	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
 	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 
 	//private static CollectionFactory collectionFactory = Collections.newCollectionFactory(objectFactory);
@@ -46,6 +62,8 @@ public class CljSortedSymbolicMapTest {
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test4;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test5;
+	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -61,6 +79,7 @@ public class CljSortedSymbolicMapTest {
 		test4 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 		test5 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 		
+		
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
@@ -74,7 +93,6 @@ public class CljSortedSymbolicMapTest {
 		test5 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(x, y);
 		test5 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(y, a);
 		test5 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
-		
 		this.fac = null;
 		this.fac = new CommonObjectFactory(new RealNumberFactory());
 		
@@ -95,9 +113,26 @@ public class CljSortedSymbolicMapTest {
 	}
 
 	@Test
-	public void testCanonizeChildren() {
-		assertFalse(test.isCanonic());
-		
+	public void testCanonizeChildren() 
+	{
+		/*SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		NumberFactory numFact = Numbers.REAL_FACTORY;
+		IntegerNumber FIVE = numFact.integer(5);
+		CommonObjectFactory objFactory = (CommonObjectFactory) Objects.newObjectFactory(numFact);
+		SymbolicObject symObj =  objFactory.numberObject(FIVE);
+		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objFactory);
+		CollectionFactory collectionFactory = Collections.newCollectionFactory(objFactory);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFactory, typeFactory, collectionFactory);
+		SymbolicExpression expr5 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
+		SymbolicExpression expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objFactory.numberObject(numFact.integer(2)));
+		SymbolicExpression expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objFactory.numberObject(numFact.integer(100)));
+		CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> canTest = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		canTest.put(expr5, expr2);
+		canTest.put(expr2, expr100);
+		canTest.put(expr100, expr2);
+		canTest.canoic();
+		canTest.canonizeChildren(objFactory);
+		assertTrue(canTest.isCanonic());*/
 	}
 
 	@Test

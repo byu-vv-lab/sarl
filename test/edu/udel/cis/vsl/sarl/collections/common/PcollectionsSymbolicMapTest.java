@@ -2,16 +2,55 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.pcollections.PMap;
+
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
+import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicMapTest {
+	
+	private static SymbolicExpression x = new ExpressionStub("5");
 
+	private static SymbolicExpression y = new ExpressionStub("4");
+	
+	private static SymbolicExpression a = new ExpressionStub("5");
+	
+	private static SymbolicExpression c = new ExpressionStub("3");
+
+	private static SymbolicExpression b = new ExpressionStub("9");
+	
+	private static SymbolicExpression z = new ExpressionStub("10");
+	
+	private static LinkedHashMap<SymbolicExpression, SymbolicExpression> map; 
+	
+	private static PMap<SymbolicExpression,SymbolicExpression> pmap;
+	
+	
+	
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> javaMap;
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap;
+	
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMap;
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSame;
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSmaller;
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainEmptyPMap;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		
 	}
 
 	@AfterClass
@@ -20,6 +59,31 @@ public class PcollectionsSymbolicMapTest {
 
 	@Before
 	public void setUp() throws Exception {
+		
+				map = new LinkedHashMap<SymbolicExpression,SymbolicExpression>();
+				javaMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
+		
+				plainPMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
+				plainPMapSame = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
+				plainPMapSmaller = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
+				plainEmptyPMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
+				
+				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(y, c);
+				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(b , c);
+				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(x, z);
+				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(z, b);
+				
+				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(y, c);
+				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(b , c);
+				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(x, z);
+				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(z, b);
+				
+				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(a, c);
+				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(z , y);
+				
+				/*pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(b , c);
+				pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(x, z);
+				pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(z, b);*/
 	}
 
 	@After
@@ -29,97 +93,121 @@ public class PcollectionsSymbolicMapTest {
 
 	@Test
 	public void testComputeHashCode() {
-		//fail("Not yet implemented");
+		int hash = plainPMap.computeHashCode();
+		assertEquals(plainPMap.hashCode(), hash);
 	}
 /*
 	@Test
 	public void testCanonizeChildren() {
 		fail("Not yet implemented");
 	}
-
-	@Test
-	public void testPcollectionsSymbolicMapPMapOfKV() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPcollectionsSymbolicMap() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPcollectionsSymbolicMapMapOfKV() {
-		fail("Not yet implemented");
-	}
+	*/
 
 	@Test
 	public void testGet() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.get(y).toString(),"3");
+		assertEquals(plainEmptyPMap.get(y),null);
 	}
 
 	@Test
 	public void testKeys() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.keys().toString(),"[4, 5, 9, 10]");
+		assertEquals(plainEmptyPMap.keys().toString(),"[]");
 	}
 
 	@Test
 	public void testValues() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.values().toString(),"[3, 10, 3, 9]");
+		assertEquals(plainEmptyPMap.values().toString(),"[]");
 	}
 
 	@Test
 	public void testEntries() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.entries().toString(),"[4=3, 5=10, 9=3, 10=9]");
+		assertEquals(plainEmptyPMap.entries().toString(),"[]");
 	}
 
 	@Test
 	public void testIterator() {
-		fail("Not yet implemented");
+		Iterator<SymbolicExpression> temp = plainPMap.iterator();
+		String testString = "[";
+		while(temp.hasNext())
+		{
+			testString = testString + temp.next().toString() + ",";	
+		}
+		testString = testString + "]";
+		assertEquals(testString, "[3,10,3,9,]");
+		
+		Iterator<SymbolicExpression> emptyTemp = plainEmptyPMap.iterator();
+		String testEmptyString = "[";
+		while(emptyTemp.hasNext())
+		{
+			testEmptyString = testEmptyString + emptyTemp.next().toString() + ",";	
+		}
+		testEmptyString = testEmptyString + "]";
+		assertEquals(testEmptyString, "[]");
 	}
 
 	@Test
 	public void testSize() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.size(),4);
+		assertEquals(plainEmptyPMap.size(),0);
 	}
 
 	@Test
 	public void testCollectionEqualsSymbolicCollectionOfV() {
-		fail("Not yet implemented");
+		assertFalse(plainPMap.collectionEquals(plainEmptyPMap));
+		assertFalse(plainEmptyPMap.collectionEquals(plainPMap));
+		assertFalse(plainPMap.collectionEquals(plainPMapSmaller));
+		assertFalse(plainPMapSmaller.collectionEquals(plainPMap));
+		assertTrue(plainPMap.collectionEquals(plainPMapSame));
+		assertTrue(plainPMapSame.collectionEquals(plainPMap));
 	}
 
 	@Test
 	public void testToStringBufferBoolean() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.toStringBuffer(true).toString(),"{4->3, 5->10, 9->3, 10->9}");
+		//assertEquals(plainPMap.toStringBuffer(true).toString(),"{4->3, 5->10, 9->3, 10->9}");
+		assertEquals(plainPMap.toStringBuffer().toString(),"{4->3,5->10,9->3,10->9}");
+		assertEquals(plainEmptyPMap.toStringBuffer().toString(),"{}");
 	}
 
 	@Test
 	public void testToStringBufferLong() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.toStringBufferLong().toString(),"UnsortedMap{4->3, 5->10, 9->3, 10->9}");
+		assertEquals(plainEmptyPMap.toStringBufferLong().toString(),"UnsortedMap{}");
 	}
 
 	@Test
 	public void testIsEmpty() {
-		fail("Not yet implemented");
+		assertFalse(plainPMap.isEmpty());
+		assertTrue(plainEmptyPMap.isEmpty());
 	}
 
 	@Test
 	public void testIsSorted() {
-		fail("Not yet implemented");
+		assertFalse(plainPMap.isSorted());
 	}
 
 	@Test
 	public void testPut() {
-		fail("Not yet implemented");
+		assertTrue(plainEmptyPMap.isEmpty());
+		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
+		assertFalse(plainEmptyPMap.isEmpty());
 	}
 
 	@Test
 	public void testRemove() {
-		fail("Not yet implemented");
+		assertTrue(plainEmptyPMap.isEmpty());
+		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
+		assertFalse(plainEmptyPMap.isEmpty());
+		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.remove(a);
+		assertTrue(plainEmptyPMap.isEmpty());
 	}
 
 	@Test
 	public void testComparator() {
-		fail("Not yet implemented");
+		assertEquals(plainPMap.comparator(),null);
 	}
-*/
+
 }

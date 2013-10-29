@@ -45,7 +45,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 		};
 	}
 
-	CljSortedSymbolicMap(Comparator<? super K> comparator) {
+	public CljSortedSymbolicMap(Comparator<? super K> comparator) {
 		super();
 		this.pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
 	}
@@ -122,6 +122,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 				pmap.comparator());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 		for (Entry<K, V> entry : entries()) {
@@ -130,7 +131,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 
 			if (!key.isCanonic() || !value.isCanonic()) {
 				if (key.isCanonic())
-					pmap = pmap.assoc(key, factory.canonic(value));
+					pmap = pmap.assoc(key, (V) factory.canonic((SymbolicExpression)value));
 				else {
 					pmap = pmap.without(key);
 					pmap = pmap.assoc(factory.canonic(key),

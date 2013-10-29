@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -29,6 +31,9 @@ public class CollectionComparatorTest {
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test4;
 	
+	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain;
+	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain2;
+	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain3;
 	
 	private static SymbolicExpression x = new ExpressionStub("5");
 
@@ -70,6 +75,17 @@ public class CollectionComparatorTest {
 		test3 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(x, y);
 		test3 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(y, a);
 		test3 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(b, z);
+		
+		
+		pSetPlain = new PcollectionsSymbolicSet<SymbolicExpression>();
+		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(a);
+		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(b);
+		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(z);
+		pSetPlain2 = new PcollectionsSymbolicSet<SymbolicExpression>();
+		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(a);
+		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(b);
+		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(z);
+		pSetPlain3 = new PcollectionsSymbolicSet<SymbolicExpression>();
 	}
 
 	@After
@@ -90,5 +106,9 @@ public class CollectionComparatorTest {
 		assertEquals(collectionComparator.compare(test, test2), -4);
 		assertEquals(collectionComparator.compare(test2, test), 4);
 		assertEquals(collectionComparator.compare(test, test3), 0);
+		assertEquals(collectionComparator.compare(pSetPlain, pSetPlain2), 0);
+		assertEquals(collectionComparator.compare(pSetPlain, pSetPlain3), 3);
 	}
+	
+	
 }

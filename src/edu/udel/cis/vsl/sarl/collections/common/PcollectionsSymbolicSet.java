@@ -105,7 +105,7 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 
 	@Override
 	public boolean isSorted() {
-		return false;
+		return true;
 	}
 
 	@Override

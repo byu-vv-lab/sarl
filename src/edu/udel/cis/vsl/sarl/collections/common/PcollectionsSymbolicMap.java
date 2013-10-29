@@ -36,7 +36,7 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 
 	private PMap<K, V> pmap;
 
-	PcollectionsSymbolicMap(PMap<K, V> pmap) {
+	public PcollectionsSymbolicMap(PMap<K, V> pmap) {
 		super();
 		this.pmap = pmap;
 	}
