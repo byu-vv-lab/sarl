@@ -275,7 +275,7 @@ public class ExpressionTest {
 	 * Tests for the CommonExpressionFactory Class
 	 * Tests for expression(SymbolicOperator operator,SymbolicType type, SymbolicObject[] arguments)
 	 */
-	public void commonExpressionFactoryExpression() {
+	public void commonExpressionFactoryExpressionWithArrays() {
 		SymbolicType referenceType;
 		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
@@ -308,7 +308,7 @@ public class ExpressionTest {
 	 * Tests for the CommonExpressionFactory Class
 	 * expression(SymbolicOperator operator,SymbolicType type, Collection<SymbolicObject> args) 
 	 */
-	public void commonExpressionFactoryExpression2() {
+	public void commonExpressionFactoryExpressionWithCollections() {
 		SymbolicType referenceType;
 		referenceType = of.canonic(stf.tupleType(of.stringObject("Ref"),
 				stf.sequence(new SymbolicType[] { integerType })));
