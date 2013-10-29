@@ -33,7 +33,9 @@ public class ExpressionSubstituteTest {
 
 	private static ExpressionSubstituter expr1;
 
-	private static SymbolicExpression expression1;
+	private static SymbolicExpression expression1, expression2;
+
+	private static SymbolicType integerType, intArrayType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -42,6 +44,10 @@ public class ExpressionSubstituteTest {
 		factory1 = test.collectionFactory();
 		typeFactory1 = test.typeFactory();
 		expression1 = universe.nullExpression();
+		integerType = universe.integerType();
+		intArrayType = universe.arrayType(integerType);
+		expression2 = universe.symbolicConstant(
+				universe.stringObject("intArrayTypeExpression"), intArrayType);
 
 	}
 
@@ -62,14 +68,15 @@ public class ExpressionSubstituteTest {
 		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
 		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
 
-		//constructor test
+		// constructor test
 		assertEquals(this.factory1, factory1);
 		assertEquals(this.universe, universe);
 		assertEquals(this.typeFactory1, typeFactory1);
-		
-		//subsitute method case Null expression
+
+		// subsitute method case Null expression
 		assertEquals(expr1.substitute(expression1, newMap), expression1);
-		
-		
+
+		assertEquals(expr1.substitute(expression2, newMap), expression2);
+
 	}
 }
