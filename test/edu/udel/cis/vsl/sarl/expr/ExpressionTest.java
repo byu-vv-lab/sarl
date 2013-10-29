@@ -267,6 +267,9 @@ public class ExpressionTest {
 		SymbolicExpression test2 = expressionFactory.expression(
 				SymbolicOperator.CONCRETE, referenceType1, oneSequence);
 		
+		assertEquals(test.operator(),SymbolicOperator.CONCRETE);
+		assertEquals(test.type(),referenceType1);
+		
 		assertEquals(test.toString(), "(Ref<int>)<0>");
 		assertEquals(test2.toString(), "(Ref<int>)<1>");
 	}
