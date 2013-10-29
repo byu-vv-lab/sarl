@@ -109,8 +109,6 @@ public class MakeTest {
 		array1 = universe.array(
 				type,
 				Arrays.asList(new SymbolicConstant[] { index }));
-
-
 		zero=universe.integer(0);
 		one = universe.integer(1);
 		two = universe.integer(2);
@@ -171,8 +169,8 @@ public class MakeTest {
 		//case LENGTH
 		//TODO:did not finish,need help
 		SymbolicExpression[] Args_Length={array1};
-		System.out.println(universe.length(Args_Length[0]));
-		//System.out.println(universe.make(SymbolicOperator.LENGTH, Integer, Args_Length));
+		//System.out.println(universe.length(Args_Length[0]));
+		//assertEquals(one,universe.make(SymbolicOperator.LENGTH, Integer, Args_Length));
 		//case MULTIPLY
 		//SymbolicObject[] testList =new SymbolicObject[] {one};
 		ArrayList<SymbolicObject> Args_MULTIPLY =new ArrayList<SymbolicObject>();
