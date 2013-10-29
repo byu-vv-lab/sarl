@@ -7,7 +7,15 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
+/**
+ * Benchmark test which takes x^2 + 2x and multiplies it by itself N times
+ * 
+ * @author revanthb
+ * 
+ */
 public class IdealMultiplyBenchmark {
+	
+	/** The number of times to multiply X */
 	public final static int N = 150;
 
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
@@ -23,13 +31,20 @@ public class IdealMultiplyBenchmark {
 	public static SymbolicExpression result = (NumericSymbolicConstant) universe
 			.symbolicConstant(universe.stringObject("result"), realType);
 	
-	
+	/**
+	 * Runs the test, prints the total time, takes no arguments.
+	 * 
+	 * @param args
+	 *            ignored
+	 */
 	public static void main(String[] args) {
 		long startTime = System.nanoTime(), stopTime;
 		double totalTime;
+		
 		result = universe.rational(1);
 		for (int i = 0; i < N; i++) {
 			result = universe.multiply((NumericExpression) s, (NumericExpression) result);
+			System.out.println(result);
 		}
 		stopTime = System.nanoTime();
 		totalTime = ((double) (stopTime - startTime)) / 1000000000.0;

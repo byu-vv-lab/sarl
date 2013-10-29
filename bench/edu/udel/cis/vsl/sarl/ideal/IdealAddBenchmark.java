@@ -7,7 +7,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 /**
- * Benchmark test which computes SOMETHING WITH ADDING
+ * Benchmark test which adds x to itself n times (x*n)
  * 
  * @author aepstein
  * 
@@ -37,6 +37,7 @@ public class IdealAddBenchmark {
 	public static void main(String[] args) {
 		long startTime = System.nanoTime(), stopTime;
 		double totalTime;
+		
 		result = x;
 		for (int i = 0; i < N; i++) {
 			result = universe.add((NumericExpression) x, (NumericExpression) result);
