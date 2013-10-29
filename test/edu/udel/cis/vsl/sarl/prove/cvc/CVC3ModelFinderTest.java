@@ -102,6 +102,7 @@ public class CVC3ModelFinderTest {
 				.newProver(universe.equals(universe.symbolicConstant(
 						universe.stringObject("y"), universe.integerType()),
 						universe.integer(6)));
+		
 		vc = cvcProverYIs6.validityChecker();
 
 		StringObject strY = universe.stringObject("y");
@@ -118,7 +119,9 @@ public class CVC3ModelFinderTest {
 		NumericExpression numExprSix = universe.integer(6);
 		//I believe this is where casting error was being thrown.
 		BooleanExpression predicate = universe.equals(numExprSix, symExprXplusY);
+		
 		ValidityResult result = cvcProverYIs6.validOrModel(predicate);
+		
 		assertEquals(ResultType.NO, result.getResultType());
 	}
 
@@ -130,10 +133,14 @@ public class CVC3ModelFinderTest {
 	@Test(expected = SARLInternalException.class)
 	public void createCVC3ModelFinder() {
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
+		
 		h.put(vc.falseExpr(), vc.falseExpr());
+		
 		CVC3TheoremProver prover = (CVC3TheoremProver) proverFactory
 				.newProver(universe.bool(true));
+		
 		prover.setOutput(out);
+		
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
 	}
 	
@@ -149,12 +156,16 @@ public class CVC3ModelFinderTest {
 	public void isApplyExpr() {
 		Expr varExpr = vc.varExpr("var",
 				cvcProver.translateType(universe.realType()));
-		Expr expr2 = cvcProver.translate(two);
-		Expr expr5 = cvcProver.translate(five);
+		Expr expr2 = cvcProver.translate(two); // NumericExpression two = universe.rational(2);
+		Expr expr5 = cvcProver.translate(five); // NumericExpression five = universe.rational(5);
+		
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
+		
 		h.put(varExpr, vc.funExpr(vc.minusOp(), expr2, expr5));
+		
 		CVC3TheoremProver prover = (CVC3TheoremProver) proverFactory
 				.newProver(universe.bool(true));
+		
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
 	}
 	
@@ -166,13 +177,18 @@ public class CVC3ModelFinderTest {
 
 	@Test
 	public void isBooleanExpr() {
-		Expr exprTrue = cvcProver.translate(booleanExprTrue);
+		Expr exprTrue = cvcProver.translate(booleanExprTrue); 
 		Expr exprFalse = cvcProver.translate(booleanExprFalse);
+		
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
+		
 		h.put(exprTrue, exprFalse);
-		BooleanExpression predicate = universe.equals(booleanExprTrue, booleanExprFalse);
+		
+		BooleanExpression predicate = universe.equals(booleanExprTrue, booleanExprFalse)
+				;
 		ValidityResult result = cvcProver.validOrModel(predicate);
 		ResultType resultType = result.getResultType();
+		
 		assertEquals(ResultType.NO, resultType);
 	}
 	
@@ -197,6 +213,7 @@ public class CVC3ModelFinderTest {
 		ValidityResult result = cvcProver.validOrModel(predicate);
 
 		ResultType resultType = result.getResultType();
+		
 		assertEquals(ResultType.NO, resultType);
 
 		ModelResult modelResult = (ModelResult) result;
@@ -215,6 +232,14 @@ public class CVC3ModelFinderTest {
 		// Verify that the result (counterExample) does not equal zero.
 		assertFalse(n.equals(numFactory.integer(0)));
 	}
+	
+	/**
+	 * test for CVC3ModelFinderTuple creates two lists of tuples and tuple types.
+	 * The test creates symbolic expressions using the symbolic operator TUPLE_WRITE
+	 * and .tupleType to create a predicate that is passed through validOrModel;
+	 * it then compares the result types of the validity result created using
+	 * the validOrModel and the predicate.
+	 */
 
 	@Test
 	public void CVC3ModelFinderTuple() {
@@ -222,10 +247,12 @@ public class CVC3ModelFinderTest {
 		NumericExpression fourInt = universe.integer(4);
 		NumericExpression eightInt = universe.integer(8);
 		SymbolicType intType = universe.integerType();
+		
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
 		tupleList.add(sevenInt);
 		tupleList.add(fourInt);
 		tupleList.add(eightInt);
+		
 		List<SymbolicType> tupleType = new ArrayList<SymbolicType>();
 		tupleType.add(intType);
 		tupleType.add(intType);
@@ -248,6 +275,12 @@ public class CVC3ModelFinderTest {
 
 		ModelResult model = (ModelResult) result;
 	}
+	
+	/**
+	 * test for CVC3ModelFinderWithContext gives the prover the assumption that y = 0.
+	 * The predicate is that "x = x + y" given the assumption that "y = 0". The assert
+	 * compares the result type of the predicate. 
+	 */
 
 	@Test
 	public void CVC3ModelFinderWithContext() {
@@ -260,6 +293,7 @@ public class CVC3ModelFinderTest {
 
 		StringObject strX = universe.stringObject("x");
 		StringObject strY = universe.stringObject("y");
+		
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,
 				universe.integerType());
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
@@ -272,8 +306,16 @@ public class CVC3ModelFinderTest {
 		ValidityResult result = cvcProverYIs0.validOrModel(predicate);
 
 		ResultType resultType = result.getResultType();
+		
 		assertEquals(ResultType.YES, resultType);
 	}
+	
+	/**
+	 * test for CVC3ModelFinderRational creates the assumption that y = 0, gives the prover the 
+	 * assumption that y = 0. Any X Int divided by zero since y is zero should return invalid.
+	 * The test uses 6 divided by 0 which should return invalid. The test also tests equality of 
+	 * two expressions and what they return.  
+	 */
 
 	@Test
 	public void CVC3ModelFinderRational() {
@@ -310,6 +352,7 @@ public class CVC3ModelFinderTest {
 		ModelResult model = (ModelResult) result;
 	}
 
+
 	@Test
 	public void CVC3ModelFinderTestDivideByOne() {
 		// Create the assumption y = 2.
@@ -318,6 +361,7 @@ public class CVC3ModelFinderTest {
 				universe.integerType());
 		BooleanExpression assumption = universe.equals(symConstYInt,
 				universe.integer(2));
+		
 		// Give the prover the assumption that y = 2.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
 				.newProver(assumption);
@@ -326,6 +370,7 @@ public class CVC3ModelFinderTest {
 		StringObject strX = universe.stringObject("x");
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX,
 				universe.integerType());
+		
 		// Any X divided by y should return x (false).
 		SymbolicExpression xDivideByY = expressionFactory.expression(
 				SymbolicOperator.DIVIDE, universe.integerType(), symConstXInt,
@@ -373,8 +418,10 @@ public class CVC3ModelFinderTest {
 		SymbolicType arrayIntType = universe.arrayType(universe.integerType());
 		SymbolicExpression a = universe.symbolicConstant(
 				universe.stringObject("a"), arrayIntType);
+		
 		NumericExpression one = universe.integer(1);
 		NumericExpression two = universe.integer(2);
+		
 		BooleanExpression predicate = universe.equals(
 				universe.arrayRead(a, one), two);
 		ValidityResult result = cvcProver.validOrModel(predicate);
@@ -390,8 +437,10 @@ public class CVC3ModelFinderTest {
 		SymbolicType arrayRealType = universe.arrayType(universe.realType());
 		SymbolicExpression a = universe.symbolicConstant(
 				universe.stringObject("a"), arrayRealType);
+		
 		NumericExpression one = universe.integer(1);
 		NumericExpression two = universe.rational(2);
+		
 		BooleanExpression predicate = universe.equals(
 				universe.arrayRead(a, one), two);
 		ValidityResult result = cvcProver.validOrModel(predicate);
