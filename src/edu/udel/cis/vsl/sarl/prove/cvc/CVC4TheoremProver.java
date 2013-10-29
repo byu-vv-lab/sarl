@@ -9,10 +9,13 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
 public class CVC4TheoremProver implements TheoremProver{
 
+	private PreUniverse model;
+	private PrintStream out = System.out;
+	private boolean showProverQueries = false;
+
 	@Override
 	public PreUniverse universe() {
-		// TODO Auto-generated method stub
-		return null;
+		return model;
 	}
 
 	@Override
@@ -29,8 +32,8 @@ public class CVC4TheoremProver implements TheoremProver{
 
 	@Override
 	public void setOutput(PrintStream out) {
-		// TODO Auto-generated method stub
-		
+		this.out = out;
+		showProverQueries = out != null;
 	}
 
 }
