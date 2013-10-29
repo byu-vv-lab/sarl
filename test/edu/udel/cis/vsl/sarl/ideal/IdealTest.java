@@ -598,7 +598,6 @@ public class IdealTest {
 		NumericExpression p06 = idealFactory.add(x, intOne);
 		NumericExpression p07 = idealFactory.multiply(intTen, p01);
 		NumericExpression p08 = idealFactory.divide(x, intTen);
-		
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		Polynomial poly3 = (Polynomial) p03;
@@ -1048,6 +1047,8 @@ public class IdealTest {
 		BooleanExpression b2 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
 		BooleanExpression nb2 = idealFactory.notLessThan(commonIdealFactory.
+				zeroReal(), r1);
+		BooleanExpression nb3 = idealFactory.notLessThanEquals(commonIdealFactory.
 				zeroReal(), r1);
 		NumericExpression nb5 = commonIdealFactory.divide(
 				commonIdealFactory.zeroReal(), r1);
