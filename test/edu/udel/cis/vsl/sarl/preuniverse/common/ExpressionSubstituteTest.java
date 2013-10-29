@@ -15,6 +15,7 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -36,7 +37,7 @@ public class ExpressionSubstituteTest {
 	private static ExpressionSubstituter expr1;
 
 	private static SymbolicExpression expression1, expression2, expression3,
-			expression4, expression5;
+			expression4, expression5,expression6;
 
 	private static SymbolicType integerType, intArrayType, functionType,
 			realType, booleanType;
@@ -46,6 +47,8 @@ public class ExpressionSubstituteTest {
 	private static SymbolicUnionType unionType;
 
 	private static SymbolicTypeSequence sequence;
+	
+	private static SymbolicCompleteArrayType completeArrayType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -59,6 +62,7 @@ public class ExpressionSubstituteTest {
 		realType = universe.realType();
 		booleanType = universe.booleanType();
 		intArrayType = universe.arrayType(integerType);
+		completeArrayType = universe.arrayType(integerType,universe.integer(2));
 		tupleType = universe.tupleType(
 				universe.stringObject("SequenceofInteger"),
 				Arrays.asList(new SymbolicType[] { integerType, integerType,
@@ -78,6 +82,8 @@ public class ExpressionSubstituteTest {
 				universe.stringObject("UnionTypeExpression"), unionType);
 		expression5 = universe.symbolicConstant(
 				universe.stringObject("functionTypeExpression"), functionType);
+		expression6 = universe.symbolicConstant(
+				universe.stringObject("completeArrayTypeExpression"), completeArrayType);
 	}
 
 	@AfterClass
@@ -117,5 +123,8 @@ public class ExpressionSubstituteTest {
 
 		// case functionType
 		assertEquals(expr1.substitute(expression5, newMap), expression5);
+		
+		// case completeArrayType
+		assertEquals(expr1.substitute(expression6, newMap), expression6);
 	}
 }
