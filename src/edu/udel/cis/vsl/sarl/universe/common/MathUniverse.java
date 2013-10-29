@@ -24,6 +24,8 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 	private NumericExpression pi;
 
 	private NumericExpression e;
+	
+	private NumericExpression i;
 
 	public MathUniverse(FactorySystem system) {
 		super(system);
@@ -41,6 +43,8 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 				stringObject("pi"), realType));
 		this.e = (NumericExpression) canonic(symbolicConstant(
 				stringObject("e"), realType));
+		this.i = (NumericExpression) canonic(symbolicConstant(
+				stringObject("i"), realType));
 	}
 
 	public NumericExpression sin(NumericExpression arg) {
@@ -67,6 +71,10 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 
 	public NumericExpression e() {
 		return e;
+	}
+	
+	public NumericExpression i() {
+		return i;
 	}
 	
 	public SymbolicExpression mathSimplify(SymbolicExpression expr) {
