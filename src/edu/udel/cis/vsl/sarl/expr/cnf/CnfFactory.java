@@ -128,8 +128,6 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	@Override
 	public BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1) {
-		if (arg0 == not(arg1))
-			return falseExpr;
 		if (arg0 == trueExpr)
 			return arg1;
 		if (arg1 == trueExpr)
@@ -158,6 +156,10 @@ public class CnfFactory implements BooleanExpressionFactory {
 	}
 
 	@Override
+	/**
+	 * Changes were made Oct 28 2013
+	 * -Recursive Or statements were replaced with for loops to reduce calls to the stack
+	 */
 	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {
 		if (arg0 == trueExpr || arg1 == trueExpr)
 			return trueExpr;
@@ -178,16 +180,20 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 			if (op0 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
-
-				for (BooleanExpression clause : c0.booleanSetArg(0))
-					result = and(result, or(clause, c1));
+				for (BooleanExpression clause : c0.booleanSetArg(0)){
+					for(BooleanExpression clause2 : c1.booleanSetArg(0)){
+						result = and(result, or(clause, clause2));
+					}
+				}
 				return result;
 			}
 			if (op1 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
-
-				for (BooleanExpression clause : c1.booleanSetArg(0))
-					result = and(result, or(c0, clause));
+				for (BooleanExpression clause : c1.booleanSetArg(0)){
+					for(BooleanExpression clause2 : c0.booleanSetArg(0)){
+						result = and(result, or(clause2, clause));
+					}
+				}
 				return result;
 			}
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {

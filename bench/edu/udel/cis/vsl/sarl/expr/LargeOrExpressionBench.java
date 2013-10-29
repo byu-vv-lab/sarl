@@ -28,44 +28,28 @@ public class LargeOrExpressionBench {
 	
 	public static void main(String[] args) {
 
-		
 		sUniverse = Universes.newIdealUniverse();
-		
 		booleanType = sUniverse.booleanType();
 				
-		
 		BooleanExpression[] ExpressionList1 = {};
 		Collection<BooleanExpression> col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
 		BooleanExpression[] ExpressionList2 = {};
 		Collection<BooleanExpression> col2= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList2));
-		for(int i = 0; i < 100; i++){
-	
+		for(int i = 0; i < 105; i++){
 			col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
-	
 		}
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < 105; i++){
 			col2.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(-i)), booleanType));
-			
 		}
-		
-		
-		
 		
 		start = System.currentTimeMillis();
-	
 			BooleanExpression s1 = sUniverse.and(col1);
 			BooleanExpression s2 = sUniverse.and(col2);
 			BooleanExpression s3 = sUniverse.or(s1,s2);
-			
-			
-			
 	
 		end = System.currentTimeMillis();
 		mark = end - start;
 		System.out.println(mark);
-		
-		//After ten runs with a total of 400 expressions.. average of 942ms
-		
-				
+			
 			}
 }
