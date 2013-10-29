@@ -2,8 +2,6 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import java.util.Arrays;
 
-import javax.swing.JSpinner.NumberEditor;
-
 import edu.udel.cis.vsl.sarl.SARL;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;

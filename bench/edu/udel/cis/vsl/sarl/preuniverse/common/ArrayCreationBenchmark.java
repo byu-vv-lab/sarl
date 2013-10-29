@@ -10,8 +10,17 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+/**
+ * 
+ * @author Mohammad Alsulmi (malsulmi) 
+ * 
+ * The purpose of this benchmark is to evaluate the performance of creating arrays and appending
+ * 
+ * Here, we try to measure the time required for creating arrays by either appending or regular creation
+ *
+ */
 
-public class ArrayBenchmark2 {
+public class ArrayCreationBenchmark {
 
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses
@@ -36,7 +45,7 @@ public class ArrayBenchmark2 {
 			size = i;
 			// starting the time
 			startingTime = System.nanoTime();
-			elementsList = new LinkedList();
+			elementsList = new LinkedList<NumericExpression>();
 			for (int j = 0; j < size; j++) {
 				elementsList.add(universe.integer(j));
 			}

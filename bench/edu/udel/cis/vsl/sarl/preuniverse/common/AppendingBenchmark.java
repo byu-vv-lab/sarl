@@ -10,8 +10,17 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+/**
+ * 
+ * @author Mohammad Alsulmi (malsulmi) 
+ * 
+ * The purpose of this benchmark is to evaluate append method in PreUniverse.
+ * 
+ * Here, we try to measure the time required for performing append() on two arrays.
+ *
+ */
 
-public class Appending {
+public class AppendingBenchmark {
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses
 			.newIdealFactorySystem();
