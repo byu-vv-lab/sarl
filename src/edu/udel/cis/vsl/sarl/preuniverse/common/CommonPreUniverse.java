@@ -1,8 +1,10 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -1742,6 +1744,9 @@ public class CommonPreUniverse implements PreUniverse {
 					}
 					// either indexNumber too big or entry is null
 					return arrayRead(origin, index);
+				}
+				else if(op == SymbolicOperator.ARRAY_LAMBDA){
+					return apply((SymbolicExpression)array.argument(0), Arrays.asList(index));
 				}
 			}
 			return expression(SymbolicOperator.ARRAY_READ,
