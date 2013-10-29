@@ -28,14 +28,34 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
+/**
+ * an implementation of SymbolicTypeSequcen, which is a finite, ordered
+ * sequence of SymbolicType.
+ * 
+ * @author alali
+ *
+ */
 public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		SymbolicTypeSequence {
 
+	/**
+	 * saving the hashCode for this class so that it is not computed
+	 * each time
+	 */
 	private final static int classCode = CommonSymbolicTypeSequence.class
 			.hashCode();
 
+	/**
+	 * An ArrayList to contain the elements of the SymbolicTypeSequence
+	 */
 	private ArrayList<SymbolicType> elements;
 
+	/**
+	 * a constructor to create a CommonSymbolicTypeSequence
+	 * using a list of SymblicType
+	 * 
+	 * @param types: any finite iterable<T> list of SymbolicType
+	 */
 	public CommonSymbolicTypeSequence(Iterable<? extends SymbolicType> types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>();
@@ -46,6 +66,12 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 		}
 	}
 
+	/**
+	 * A constructor to create a CommonSymbolicTypeSequence
+	 * from an array of SymbolicType
+	 * 
+	 * @param types: a finite array[T] of SymbolicType
+	 */
 	public CommonSymbolicTypeSequence(SymbolicType[] types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
 		elements = new ArrayList<SymbolicType>(types.length);

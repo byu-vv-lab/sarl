@@ -11,6 +11,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 
 public class CommonSymbolicPrimitiveTypeTest {
+	
 	CommonSymbolicPrimitiveType bool1, bool2, char1;
 
 	@BeforeClass
