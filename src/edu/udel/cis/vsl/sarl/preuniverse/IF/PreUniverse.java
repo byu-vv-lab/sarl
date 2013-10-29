@@ -1304,10 +1304,11 @@ public interface PreUniverse {
 	 * specified by the reference. Throws exception if the reference is not of
 	 * the correct form for the type of value.
 	 *  @param value
-	 *  		a SymbolicExpression which you would like to dereference from
+	 *              a SymbolicExpression which you would like to dereference from
 	 *  @param reference
-	 *  		a ReferenceExpression which is compatible with the value
-	 *  		and points to the sub-expression you would like to dereference.
+	 *              a ReferenceExpression which is compatible with the value
+	 *              and points to the sub-expression you would like to dereference.
+	 *  @return the ssub-expression inside value pointed to by reference.
 	 */
 	SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference);
@@ -1315,11 +1316,14 @@ public interface PreUniverse {
 	/**
 	 * Returns the type referenced by a reference into an object of the given
 	 * type. You can only use this method to get the type referenced into a
-	 * SymbolicType, not a SymbolicExpression. Example: if type is array-of-int
-	 * and the reference is an array element reference, this method returns int.
+	 * SymbolicType, not a SymbolicExpression. Example: if type is array-of-array-of-int
+	 * and the reference is an array element reference, this method returns array-of-int.
+	 * If the reference was an array element's array element, this method woud
+	 * return int.
 	 * 
 	 * @param type
-	 *            a symbolic type
+	 *            a symbolic type which contains a subtype you would like to get
+	 *            with your reference.
 	 * @param reference
 	 *            a reference that is compatible with that type, i.e., can
 	 *            reference into a value of that type
