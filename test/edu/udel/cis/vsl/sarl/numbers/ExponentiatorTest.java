@@ -31,4 +31,6 @@ public class ExponentiatorTest {
 		Exponentiator a = new Exponentiator();//needs params
 	}*/
 
+	IntegerNumber a = factory.integer(bigTen);
+	
 }
