@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -742,7 +743,9 @@ public class ExpressionTest {
 	 */
 	public void cnefDivide() {
 		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+
 		//NumericExpression testExpr = cnef.expression(xpyDxty.operator(), xpyDxty.type(), xpy,xty);
+
 		
 		assertEquals(cnef.divide(xpy, xty), xpyDxty);
 		//assertEquals(xpyDxty, testExpr);
