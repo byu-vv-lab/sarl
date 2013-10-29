@@ -33,102 +33,96 @@ public class GCDBenchmark {
 	private static BigInteger bigOneQuadrillion = new BigInteger("1000000000000000");
 	private static BigInteger bigTwoQuadrillion = new BigInteger("2000000000000000");
 	
-	
-	public void GCDBenchmark1() { 
+public static void main(String args[]){
 		
-		IntegerNumber a = factory.integer(bigThirty);
-		IntegerNumber b = factory.integer(bigTwenty); 
+		IntegerNumber integerThirty = factory.integer(bigThirty);
+		IntegerNumber integerTwenty = factory.integer(bigTwenty); 
 		long x = System.nanoTime();
-		factory.gcd(a, b); 
+		factory.gcd(integerThirty, integerTwenty); 
 		long y = System.nanoTime();
 
 		System.out.println(y-x);
 
-	} 
 	
 	
-public void GCDBenchmark2() { 
+	
 		
-		IntegerNumber a = factory.integer(bigOne);
-		IntegerNumber b = factory.integer(bigTwenty); 
-		long x = System.nanoTime();
-		factory.gcd(a, b); 
-		long y = System.nanoTime();
+		IntegerNumber integerOne = factory.integer(bigOne);
+		long x2 = System.nanoTime();
+		factory.gcd(integerOne, integerTwenty); 
+		long y2 = System.nanoTime();
 
-		System.out.println( y-x);
+		System.out.println( y2-x2);
 
-	} 
+	 
 
 
-public void GCDBenchmark3() { 
+
 	
-	IntegerNumber a = factory.integer(bigThousand);
-	IntegerNumber b = factory.integer(bigTwoThousand); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerThousand = factory.integer(bigThousand);
+	IntegerNumber integerTwoThousand = factory.integer(bigTwoThousand); 
+	long x3 = System.nanoTime();
+	 factory.gcd(integerThousand, integerTwoThousand); 
+	long y3 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.println(y3-x3);
 
-}
 
-public void GCDBenchmark4() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneMillion);
-	IntegerNumber b = factory.integer(bigTenMillion); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerOneMillion = factory.integer(bigOneMillion);
+	IntegerNumber integerTenMillion = factory.integer(bigTenMillion); 
+	long x4 = System.nanoTime();
+	 factory.gcd(integerOneMillion, integerTenMillion); 
+	long y4 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.println(y4-x4);
 
-}
 
-public void GCDBenchmark5() { 
+
 	
-	IntegerNumber a = factory.integer(bigFiftyMillion);
-	IntegerNumber b = factory.integer(bigOneHundredMillion); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerFiftyMillion = factory.integer(bigFiftyMillion);
+	IntegerNumber integerOneHundredMillion= factory.integer(bigOneHundredMillion); 
+	long x5 = System.nanoTime();
+	factory.gcd(integerFiftyMillion, integerOneHundredMillion); 
 
-	System.out.print(y-x);
+	long y5 = System.nanoTime();
 
-}
+	System.out.println(y5-x5);
 
-public void GCDBenchmark6() { 
+
+
 	
-	IntegerNumber a = factory.integer(bigOneBillion);
-	IntegerNumber b = factory.integer(bigFiveBillion); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerOneBillion = factory.integer(bigOneBillion);
+	IntegerNumber integerFiveBillion = factory.integer(bigFiveBillion); 
+	long x6 = System.nanoTime();
+	 factory.gcd(integerOneBillion, integerFiveBillion); 
+	long y6 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y6-x6);
 
-}
 
-public void GCDBenchmark7() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneTrillion);
-	IntegerNumber b = factory.integer(bigTenTrillion); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerOneTrillion = factory.integer(bigOneTrillion);
+	IntegerNumber integerTenTrillion = factory.integer(bigTenTrillion); 
+	long x7 = System.nanoTime();
+	 factory.gcd(integerOneTrillion,  integerTenTrillion); 
+	long y7 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y7-x7);
 
-}
 
-public void GCDBenchmark8() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneQuadrillion);
-	IntegerNumber b = factory.integer(bigTwoQuadrillion); 
-	long x = System.nanoTime();
-	 factory.gcd(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber integerOneQuadrillion = factory.integer(bigOneQuadrillion);
+	IntegerNumber integerTwoQuadrillion = factory.integer(bigTwoQuadrillion); 
+	long x8 = System.nanoTime();
+	 factory.gcd(integerOneQuadrillion, integerTwoQuadrillion); 
+	long y8 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y8-x8);
 
-}
+ 
+	}
 }
