@@ -1568,19 +1568,22 @@ public class CommonPreUniverse implements PreUniverse {
 				if (arrayOrElement.operator() != SymbolicOperator.CONCRETE)
 					throw err("append invoked on non-concrete array:\n"
 							+ arrayOrElement);
-				if (incompatible(concreteArray.type(), arrayOrElement.type()))
-					throw err("Element(s) to append has incompatible type:\n"
-							+ "Expected: " + concreteArray.type() + "\nSaw: "
-							+ arrayOrElement.type());
-
+				/*
+				 * if (incompatible(concreteArray.type(),
+				 * arrayOrElement.type())) throw
+				 * err("Element(s) to append has incompatible type:\n" +
+				 * "Expected: " + concreteArray.type() + "\nSaw: " +
+				 * arrayOrElement.type());
+				 */
 				SymbolicType elementType = ((SymbolicArrayType) type)
 						.elementType();
 				@SuppressWarnings("unchecked")
 				SymbolicSequence<SymbolicExpression> appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
 						.argument(0);
 				for (int i = 0; i < appendedElements.size(); i++)
-					elements = elements.add(appendedElements.get(i));
+					elements = elements.add(this.arrayRead(arrayOrElement, integer(i)));
 				type = arrayType(elementType, integer(elements.size()));
+
 				result = expression(SymbolicOperator.CONCRETE, type,
 						sequence(elements));
 				return result;
