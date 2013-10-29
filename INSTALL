@@ -20,7 +20,22 @@ the following:
   pcollections-2.1.2.jar
 Put these files somewhere on your system and untar the Jacoco archive.
 
-4. Download and build CVC3:
+3. Download dependent packages.
+	a. If you are using 64-bit mac os, download the tgz archives from http://vsl.cis.udel.edu/tools/vsl_depend_osx.tgz 
+	   and unzip it some where on your system. 
+
+	b. Otherwise, point your web browser to http://vsl.cis.udel.edu/tools and download
+	   the following:
+  			clj-ds.jar
+  			hamcrest-core-1.3.jar
+  			jacoco.tgz
+  			jsr166y.jar
+  			junit-4.11.jar
+  			pcollections-2.1.2.jar
+	    Put these files somewhere on your system and untar the Jacoco archive
+
+4. (If you have taken step 3.a, skip this step and go to step 5 immediately.)
+   Download and build CVC3:
    4a. Start by downloading
        http://www.cs.nyu.edu/acsys/cvc3/releases/2.4.1/cvc3-2.4.1.tar.gz,
        unzip and untar.  
@@ -42,10 +57,12 @@ Put these files somewhere on your system and untar the Jacoco archive.
 
 6. cd sarl
 
-7. Create a file named build.properties (in the same directory as the one
-containing build.xml) by copying and editing one of
-the examples in the properties directory.  Edit each entry to point to
-the corresponding items you downloaded and built in steps 3 and 4.
+7. Create a file named build.properties in the same directory as the one containing build.xml.
+	a. If you are using 64-bit mac os, copy and paste the content from properties/build.properties.osx.
+	   Edit the entry "root" to point to the corresponding directory that you download at step 3.a.
+	
+	b. Otherwise, copy and edit one of the examples in the properties directory. 
+	   Edit each entry to point to the corresponding items you downloaded in steps 3.b and 4.
 
 8. Type "ant" and everything should build without warnings or errors
 and produce sarl.jar.  Type "ant test" to run a JUnit test suite.  All
