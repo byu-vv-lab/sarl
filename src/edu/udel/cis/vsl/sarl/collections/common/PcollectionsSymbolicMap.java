@@ -41,7 +41,7 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 		this.pmap = pmap;
 	}
 
-	PcollectionsSymbolicMap() {
+	public PcollectionsSymbolicMap() {
 		super();
 		this.pmap = HashTreePMap.empty();
 	}

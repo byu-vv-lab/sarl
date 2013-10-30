@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import java.util.Collection;
 import java.util.Comparator;
 
-import javax.naming.spi.ObjectFactory;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,33 +12,33 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+/*import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.collections.Collections;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;*/
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.expr.Expressions;
+/*import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.Numbers;*/
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.object.Objects;
+//import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
-import edu.udel.cis.vsl.sarl.type.Types;
+/*import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;*/
 
 public class CljSortedSymbolicMapTest {
 
 	CommonObjectFactory fac;
 	
 	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
-	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
+	//private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
 	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 
 	//private static CollectionFactory collectionFactory = Collections.newCollectionFactory(objectFactory);

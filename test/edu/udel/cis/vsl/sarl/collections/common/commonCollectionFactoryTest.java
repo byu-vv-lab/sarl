@@ -10,13 +10,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pcollections.HashTreePSet;
+//import org.pcollections.HashTreePSet;
 
-import edu.udel.cis.vsl.sarl.IF.Transform;
+//import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
+//import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class commonCollectionFactoryTest {
@@ -26,7 +26,7 @@ public class commonCollectionFactoryTest {
 	CommonCollectionFactory collectionFactory;
 	
 	private static SymbolicExpression three = new ExpressionStub("3");	
-	private static SymbolicExpression four = new ExpressionStub("4");
+	//private static SymbolicExpression four = new ExpressionStub("4");
 	private static SymbolicExpression five = new ExpressionStub("5");
 	
 	@BeforeClass

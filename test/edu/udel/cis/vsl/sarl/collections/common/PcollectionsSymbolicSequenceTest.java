@@ -11,13 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
+
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicSequenceTest {
 
@@ -39,9 +35,9 @@ public class PcollectionsSymbolicSequenceTest {
 	private static SymbolicExpression five = new ExpressionStub("5");
 	private static SymbolicExpression three = new ExpressionStub("3");
 	private static SymbolicExpression otherfive = new ExpressionStub("5");
-	private static SymbolicExpression nine = new ExpressionStub("9");
+	//private static SymbolicExpression nine = new ExpressionStub("9");
 	private static SymbolicExpression ten = new ExpressionStub("10");
-	private static SymbolicExpression itsNull = new ExpressionStub("null");
+	//private static SymbolicExpression itsNull = new ExpressionStub("null");
 	
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> listSequence;//Sequence that will take in a Collection param
@@ -58,7 +54,6 @@ public class PcollectionsSymbolicSequenceTest {
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence;//Sequence that takes in a single element param
 	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence3;
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence;//Sequence that takes in no param
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence2;
@@ -391,8 +386,7 @@ public class PcollectionsSymbolicSequenceTest {
 		
 		assertEquals(plainSequence.toStringBufferLong().toString(),"Sequence<>");
 		assertEquals(plainSequence.toStringBufferLong().toString(),"Sequence<>");
-		
-		CommonObjectFactory temp = new CommonObjectFactory(new RealNumberFactory());
+
 		
 	}
 

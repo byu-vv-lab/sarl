@@ -2,24 +2,21 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+
 
 public class PcollectionsSymbolicMapTest {
 	
@@ -60,9 +57,14 @@ public class PcollectionsSymbolicMapTest {
 	@Before
 	public void setUp() throws Exception {
 		
+				pmap = HashTreePMap.empty();
 				map = new LinkedHashMap<SymbolicExpression,SymbolicExpression>();
 				javaMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
-		
+				pMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(pmap);
+				
+				pMap.put(y, b);
+				javaMap.put(y, b);
+				
 				plainPMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
 				plainPMapSame = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
 				plainPMapSmaller = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
@@ -95,6 +97,12 @@ public class PcollectionsSymbolicMapTest {
 	public void testComputeHashCode() {
 		int hash = plainPMap.computeHashCode();
 		assertEquals(plainPMap.hashCode(), hash);
+		
+		int javaHash = javaMap.computeHashCode();
+		assertEquals(javaMap.hashCode(), javaHash);
+		
+		int pMapHash = pMap.computeHashCode();
+		assertEquals(pMap.hashCode(), pMapHash);
 	}
 /*
 	@Test

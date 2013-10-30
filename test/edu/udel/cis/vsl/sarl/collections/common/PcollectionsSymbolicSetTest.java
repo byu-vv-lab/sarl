@@ -11,17 +11,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.pcollections.HashTreePMap;
+//import org.pcollections.HashTreePMap;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
-import edu.udel.cis.vsl.sarl.IF.Transform;
+//import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
+//import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+//import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
+//import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+//import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class PcollectionsSymbolicSetTest {
 
