@@ -20,17 +20,14 @@ public class CVC4TheoremProverFactoryTest {
 	
 	@Test
 	public void cvc4TheoremProverFactory() {
-		CVC4TheoremProverFactory cvc4tpf = new CVC4TheoremProverFactory(universe);
-		assertNotNull(cvc4tpf);
-	}
-	
-	@Test public void cvc4NewProver() {
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
 				universe.realType());
 		
 		BooleanExpression context = universe.equals(symConstYInt,
 				universe.rational(0));
-		TheoremProver tp = new CVC4TheoremProver(universe, context);
+		CVC4TheoremProverFactory cvc4tpf = new CVC4TheoremProverFactory(universe);
+		assertNotNull(cvc4tpf);
+		cvc4tpf.newProver(context);
 	}
 }
