@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,6 +29,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
@@ -52,6 +54,8 @@ public class CVC3ModelFinderTest {
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 
+	private static NumberFactory numberFactory = factorySystem.numberFactory();
+
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
 
@@ -72,7 +76,7 @@ public class CVC3ModelFinderTest {
 	// Types
 	private static SymbolicIntegerType intType = universe.integerType();
 	private static SymbolicRealType realType = universe.realType();
-	
+
 	// Instance fields: instantiated before each test is run...
 
 	private TheoremProverFactory proverFactory;
@@ -133,6 +137,44 @@ public class CVC3ModelFinderTest {
 		assertEquals(ResultType.NO, resultType);
 
 		ModelResult model = (ModelResult) result;
+	}
+
+	/**
+	 * Reads in an array index 0 and checks to see if it is equal to zero.
+	 * This predicate is then shown to be invalid because the element at array
+	 * index 0 does not have to be one. The element can be many values.
+	 */
+	@Test
+	public void arrayIndexModel() {
+		SymbolicType arrayType = universe.arrayType(realType);
+		SymbolicExpression a = universe.symbolicConstant(
+				universe.stringObject("a"), arrayType);
+
+		SymbolicExpression read = universe.arrayRead(a, universe.zeroInt());
+
+		BooleanExpression predicate = universe.equals(read,
+				universe.rational(1));
+
+		ValidityResult result = cvcProver.validOrModel(predicate);
+		ResultType resultType = result.getResultType();
+		assertEquals(ResultType.NO, resultType);
+		ModelResult model = (ModelResult) result;
+
+		Map<SymbolicConstant, SymbolicExpression> map = model.getModel();
+		assertEquals(1, map.size());
+
+		Entry<SymbolicConstant, SymbolicExpression> entry = map.entrySet()
+				.iterator().next();
+		SymbolicConstant key = entry.getKey();
+		assertEquals(a, key);
+
+		SymbolicExpression value = entry.getValue();
+		NumericExpression actualEntry = (NumericExpression) universe.arrayRead(
+				value, universe.zeroInt());
+		Number number = (RationalNumber) universe.extractNumber(actualEntry);
+		int compareResult = numberFactory.compare(number,
+				numberFactory.zeroRational());
+		assertNotEquals(0, compareResult);
 	}
 
 	/**
@@ -451,8 +493,8 @@ public class CVC3ModelFinderTest {
 				universe.stringObject("y"), realType);
 		SymbolicExpression s1 = expressionFactory.expression(
 				SymbolicOperator.ARRAY_WRITE, a.type(), a, x, y);
-		BooleanExpression predicate = universe.equals(
-				universe.arrayRead(a, x), y);
+		BooleanExpression predicate = universe.equals(universe.arrayRead(a, x),
+				y);
 		ValidityResult result = cvcProver.validOrModel(predicate);
 
 		assertEquals(ResultType.NO, result.getResultType());
