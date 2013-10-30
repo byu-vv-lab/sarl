@@ -19,6 +19,9 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonSymbolicTupleTypeTest 
 {
+	/**
+	 declaring all the required variables.
+	 */
 	CommonSymbolicTupleType tuple1, tuple2, tuple3;
 	
 	ObjectFactory objectFactory;
@@ -41,6 +44,9 @@ public class CommonSymbolicTupleTypeTest
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	/**
+	 initializing all the declared variables.
+	 */
 	@Before
 	public void setUp() throws Exception 
 	{
@@ -66,6 +72,10 @@ public class CommonSymbolicTupleTypeTest
 	}
 
 
+	/**
+	 in this test the hash code for two variables is compared with each other and 
+	 depending upon the variable they should be either similar or different. 
+	 */
 	@Test
 	public void testComputeHashCode() 
 	{
@@ -78,6 +88,9 @@ public class CommonSymbolicTupleTypeTest
 //		fail("Not yet implemented");
 //	}
 
+	/**
+	 this test checks whether a variable of one type is the same or different from a variable of another type. 
+	 */
 	@Test
 	public void testTypeEquals() 
 	{
@@ -90,6 +103,10 @@ public class CommonSymbolicTupleTypeTest
 //		fail("Not yet implemented");
 //	}
 
+	/**
+	 this test checks the string output of a variable. The string output of variables of the same type should match but 
+	 those of different types should not.
+	 */
 	@Test
 	public void testToStringBuffer() 
 	{
@@ -119,6 +136,9 @@ public class CommonSymbolicTupleTypeTest
 //		fail("Not yet implemented");
 //	}
 
+	/**
+	 here the pureType is always returned as null thus the pureType of each variable is the same. 
+	 */
 	@Test
 	public void testGetPureType() 
 	{
@@ -129,6 +149,10 @@ public class CommonSymbolicTupleTypeTest
 		assertEquals(tuple2.getPureType(), tuple3.getPureType());
 	}
 
+	/**
+	 here the method getPureType always returns null therefore something is assigned to the variable and checked whether 
+	 the method getPureType still returns null or not.  
+	 */
 	@Test
 	public void testSetPureType() 
 	{
