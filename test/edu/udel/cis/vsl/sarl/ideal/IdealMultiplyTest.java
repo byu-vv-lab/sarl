@@ -175,8 +175,7 @@ public class IdealMultiplyTest {
 	 * 
 	 * @param type
 	 * 				Constant
-	 */
-	
+	 */	
 	@Test
 	public void constantMultiply() {
 		Constant result = (Constant) idealFactory.multiply(constOnePointFive, constNegPointTwoFive);
@@ -233,6 +232,7 @@ public class IdealMultiplyTest {
 		assertEquals(p9, b6);
 		assertEquals(p10, b7);
 	}
+	
 	/**
 	 * Multiplies two rational numbers.
 	 * 
@@ -253,6 +253,7 @@ public class IdealMultiplyTest {
 		assertEquals(zero, n3);
 		assertEquals(three, n4);
 	}
+	
 	/**
 	 * Asserts true if (x^2 - y^2) = (x+y) * (x-y)
 	 * 

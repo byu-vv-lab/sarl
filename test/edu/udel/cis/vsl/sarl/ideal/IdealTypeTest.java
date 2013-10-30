@@ -164,6 +164,7 @@ public class IdealTypeTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Performs type casting from one type to another type, which is passed as an argument
 	 * 
@@ -222,6 +223,7 @@ public class IdealTypeTest {
 		
 		assertEquals(three, ne);
 	}
+	
 	/**
 	 * Checks whether the Constant is created correctly or not.
 	 * 
@@ -235,8 +237,6 @@ public class IdealTypeTest {
 		assertEquals(10, ((IntegerNumber) intTen.number()).intValue());
 	}
 	
-
-
 	/**
 	 * Asserts the Numeric Symbolic Constant x has the value "X"
 	 * 
@@ -250,6 +250,7 @@ public class IdealTypeTest {
 		assertEquals("X", x.name().getString());
 		assertEquals(typeFactory.integerType(), x.type());
 	}
+	
 	/**
 	 * Returns false if two Symbolic Constants are of different type
 	 * 
@@ -263,6 +264,7 @@ public class IdealTypeTest {
 		
 		assertFalse(x.equals(x2));
 	}
+	
 	/**
 	 * Returns SymbolicExpression of Real type with the value equal to 1
 	 */
@@ -272,6 +274,7 @@ public class IdealTypeTest {
 		
 		assertEquals(one, n2);
 	}
+	
 	/**
 	 * Returns a Zero Constant
 	 * 
@@ -298,9 +301,7 @@ public class IdealTypeTest {
 		
 		assertEquals(constZero, m);
 	}
-    
-
-
+	
 	/**
 	 * Returns a zero polynomial from the given type and term map
 	 * 

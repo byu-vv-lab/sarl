@@ -149,6 +149,7 @@ public class IdealPowerTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Asserts true if (x+1)^2 = x^2 + 2*x + 1
 	 * 

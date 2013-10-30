@@ -143,6 +143,7 @@ public class IdealBooleanTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Returns true if the first argument is 'not less than' the second argument and 
 	 * vice-versa.

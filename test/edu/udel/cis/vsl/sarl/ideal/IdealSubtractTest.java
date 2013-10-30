@@ -160,6 +160,7 @@ public class IdealSubtractTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Subtracts two polynomials
 	 * 
@@ -206,6 +207,7 @@ public class IdealSubtractTest {
 		assertEquals(p9, b7);
 		assertEquals(p11, b8);
 	}
+	
 	/**
 	 * Returns the subtraction of symbolic expression of same numeric type
 	 * 
@@ -233,6 +235,7 @@ public class IdealSubtractTest {
 		
 		assertEquals(subEleven, eleven);
 	}
+	
 	/**
 	 * Returns the expression by removing the constant term present in the passed argument.
 	 * 

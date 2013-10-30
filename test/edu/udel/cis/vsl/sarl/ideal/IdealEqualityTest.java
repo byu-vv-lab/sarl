@@ -153,6 +153,7 @@ public class IdealEqualityTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Returns true or false if the two symbolic Expressions are not equal or equal 
 	 * respectively
@@ -184,6 +185,7 @@ public class IdealEqualityTest {
 		assertEquals(m1, n0);
 		assertEquals(m2, n);
 	}
+	
 	/**
 	 * Compares two Rational Expressions
 	 * 
@@ -221,6 +223,7 @@ public class IdealEqualityTest {
 		assertEquals(nb2, nb4);
 		assertEquals(nb3, nb6);
 	}
+	
 	/**
 	 * Checks if two Symbolic Constants are equal
 	 * 
@@ -245,6 +248,7 @@ public class IdealEqualityTest {
 	public void symbolicConstantInequality1() {
 		assertFalse(x.equals(y));
 	}
+	
 	/**
 	 * Returns true or false if the two symbolic Expressions are equal or not equal 
 	 * respectively

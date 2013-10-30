@@ -247,6 +247,7 @@ public class IdealAddTest {
 		assertEquals(p10, b6);
 		assertEquals(p11, b7);
 	}
+	
 	/**
 	 * Displays the expression consisting of addition of three arguments
 	 * 

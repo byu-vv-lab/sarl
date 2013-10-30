@@ -88,6 +88,7 @@ public class IdealModulusTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Integer modulus. Assume numerator is nonnegative and denominator is
 	 * positive.

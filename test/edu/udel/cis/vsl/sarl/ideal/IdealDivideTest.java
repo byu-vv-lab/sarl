@@ -176,6 +176,7 @@ public class IdealDivideTest {
 	public void tearDown() throws Exception {
 		
 	}
+	
 	/**
 	 * Divides two polynomials
 	 * 
@@ -271,6 +272,7 @@ public class IdealDivideTest {
 		assertEquals(p08, b6);
 		assertEquals(p13, b7);
 	}
+	
 	/**
 	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
 	 * 
