@@ -14,8 +14,8 @@ public class IntegerBenchmark {
 	
 	static SymbolicConstant index = universe.symbolicConstant(
 			universe.stringObject("name"), universe.integerType());
-	static NumericExpression low = universe.integer(999);
-	static NumericExpression high = universe.integer(2000);
+	static NumericExpression low = universe.integer(1000);
+	static NumericExpression high = universe.integer(1000000);
 	static BooleanExpression trueExp = universe.bool(true);
 
 	public static void main(String[] args) {
