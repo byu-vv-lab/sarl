@@ -37,7 +37,7 @@ public class ExpressionSubstituteTest {
 	private static ExpressionSubstituter expr1;
 
 	private static SymbolicExpression expression1, expression2, expression3,
-			expression4, expression5, expression6, expression7;
+			expression4, expression5, expression6, expression7, expression8;
 
 	private static SymbolicType integerType, intArrayType, functionType,
 			functionType1, realType, booleanType;
@@ -95,7 +95,7 @@ public class ExpressionSubstituteTest {
 				completeArrayType);
 		expression7 = universe.symbolicConstant(
 				universe.stringObject("typesequenceExpression"), functionType1);
-
+		expression8 = universe.emptyArray(integerType);
 	}
 
 	@AfterClass
@@ -142,5 +142,7 @@ public class ExpressionSubstituteTest {
 		// case typesequence
 		assertEquals(expr1.substitute(expression7, newMap), expression7);
 
+		// expression collection
+		assertEquals(expr1.substitute(expression8, newMap), expression8);
 	}
 }
