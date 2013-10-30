@@ -10,6 +10,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.universe.Universes;
+
 
 public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse {
 
@@ -77,9 +79,64 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 		return i;
 	}
 	
+	
+	/*Breaking up the symbolic expression into the expressions that it is composed of
+	by calling the method recursively. An array of all of the (separated) arguments is
+	used to work through (continuing the recursion if necessary). By having each
+	expression separated, we can then look for patterns to be able to break down the 
+	expression further - a more simplified manner. 
+	
+	 EXPECTED PROBLEMS - passing in SymbolicObject arguments in the recursive call of
+	 a method taking in a SymbolicExpression.
+	  		To solve this, either making new methods for each type of SymbolicObject,
+	  		or distinguishing what is being passed next and deciding what to do (if
+	  		something should be done) from there.
+	  		
+	  We will need to utilize the universe.make method. This will be extremely useful
+	  for us.
+	  
+	  The first pattern we want to work on is exponentials for the 
+	  representations of our sine and cosine functions in terms of i and e. This will
+	  mean checking if the expression's operator is POWER, arg0 is i, and arg1 is an
+	  int. From here, we can take the exponent (mod 4) to find what i raised to any
+	  power would equate to. (Utilizing switch statments)
+	  	EXPECTED PROBLEM: i is not a real, so we need to create a new number type
+	  	
+	  Other patterns
+	  		a^b * a^c = a^(b+c)
+	  		(a^b)^c = a^(b*c)
+	  		a^b / a^c = a^(b-c)
+	  
+	  For our trig functions, we want to represent sine as:
+	  sine(x) = ((e^(ix) - e^(-ix)) / 2i)
+	  cosine(x) = ((e^(ix) + e^(-ix)) / 2)
+	  
+	  Other trig functions can come from sine and cosine, so these are our two
+	  big focuses in implementing here.
+	  For example, tan(x) = sine(x)/cosine(x)
+	  
+	*/
+	
+	
 	public SymbolicExpression mathSimplify(SymbolicExpression expr) {
-		// TODO
+		int n = expr.numArguments();
+		SymbolicExpression[] newArgs = new SymbolicExpression[n];
+		for(int i = 0; i < n; i++){
+			mathSimplify(expr.argument(i));
+		}
+		expr = universe.make(expr.operator(), expr.type(), newArgs);
 		
+		SymbolicExpression exprPrime;
+		
+		if (expr.operator().equals("POWER") && expr.argument(0) == i && isInt(expr.argument(1)){
+			//checking if it's i to some power
+			//switch statement depending on which power i is being raised to % 4.
+				//exponent = 0 --> 1
+				//exponent = 1 --> i
+				//exponent = 2 --> -1
+				//exponent = 3 --> -i
+		
+	}
 		return null;
 	}
 	
