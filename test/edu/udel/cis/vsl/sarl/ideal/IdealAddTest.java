@@ -37,6 +37,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
@@ -206,5 +207,59 @@ public class IdealAddTest {
 				SymbolicOperator.ADD, integer, five, three, one);
 				
 		assertEquals(e1, n1);
+	}
+	
+	/**
+	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * 
+	 * @return type
+	 * 				NumericPrimitive
+	 */
+	@Test
+	public void addToRational() {
+		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("x"),
+						typeFactory.realType()));
+		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("Y"),
+						typeFactory.realType()));	
+		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
+		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
+		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
+				monic); //3x^2 * y
+		NumericExpression polynomial = idealFactory.add(monomial, x2); //3x^2 * y + x^2
+		RationalExpression plusPrimitive = (RationalExpression) 
+				idealFactory.add(r1, x); //(x*y + x)/y 
+		RationalExpression plusPrimitivePower = (RationalExpression) 
+				idealFactory.add(r1, x2); //(x^2*y + x)/y 
+		RationalExpression plusMonic = (RationalExpression) 
+				idealFactory.add(r1, monic); //(x^2*y^2 + x)/y 
+		RationalExpression plusMonomial = (RationalExpression) 
+				idealFactory.add(r1, monomial); //(3*x^2*y^2 + x)/y 
+		RationalExpression plusPolynomial = (RationalExpression) 
+				idealFactory.add(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
+		NumericExpression result1 = idealFactory.multiply(x, y);
+		NumericExpression result2 = idealFactory.multiply(x2, y);
+		NumericExpression result3 = idealFactory.multiply(monic, y);
+		NumericExpression result4 = idealFactory.multiply(monomial, y);
+		NumericExpression result5 = idealFactory.multiply(polynomial, y);
+		
+		result1 = idealFactory.add(result1, x);
+		result1 = idealFactory.divide(result1, y); //(x*y + x)/y 
+		result2 = idealFactory.add(result2, x);
+		result2 = idealFactory.divide(result2, y); //(x^2*y + x)/y 
+		result3 = idealFactory.add(result3, x);
+		result3 = idealFactory.divide(result3, y); //(x^2*y^2 + x)/y 
+		result4 = idealFactory.add(result4, x);
+		result4 = idealFactory.divide(result4, y); //(3*x^2*y^2 + x)/y 
+		result5 = idealFactory.add(result5, x);
+		result5 = idealFactory.divide(result5, y); //(3*x^2*y^2 + x^2 * y + x)/y 
+		
+		assertEquals(result1, plusPrimitive);	
+		assertEquals(result2, plusPrimitivePower);	
+		assertEquals(result3, plusMonic);	
+		assertEquals(result4, plusMonomial);
+		assertEquals(result5, plusPolynomial);
 	}
 }
