@@ -217,6 +217,7 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	}
 
 	/**
+	 * Private method, only called within this class
 	 * Creates a SymbolicTypeSequence that contains the pureType of all the 
 	 * elements in the sequence
 	 * @param sequence, a sequence of SymbolicTypes

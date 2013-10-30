@@ -23,7 +23,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
+import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+import edu.udel.cis.vsl.sarl.expr.cnf.CnfFactory;
+import edu.udel.cis.vsl.sarl.expr.common.ExpressionComparator;
+import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
@@ -42,6 +49,11 @@ public class CommonSymbolicTypeFactoryTest {
 	 * creating a new typeFactory in order to instantiate concrete type objects.
 	 */
 	CommonSymbolicTypeFactory typeFactory, typeFactory2;
+	
+	/**
+	 * used to create ExpressionComparator.
+	 */
+	NumericExpressionFactory numericFactory;
 	/**
 	 * an ObjectFactory object that is used to instantiate the typeFactory, and typeFactory2
 	 */
@@ -51,7 +63,15 @@ public class CommonSymbolicTypeFactoryTest {
 	 */
 	NumberFactory numberFactory;
 	
+	/**
+	 * a CollectionFactory to be used to instantiate NumericExpressionFactory
+	 */
+	CollectionFactory collectionFactory;
 	
+	/**
+	 * a BooleanExpressionFactory to be used to instantiate NumericExpressionFacoty
+	 */
+	BooleanExpressionFactory booleanFactory;
 	/**
 	 * NumericPrimitive is an implementation of NumericExpression
 	 * we need this object to test CompleteArrayTypes
@@ -64,9 +84,20 @@ public class CommonSymbolicTypeFactoryTest {
 	SymbolicObject symbolicObject;
 	
 	/**
+	 * an ExpressionExpression to be used for comparing
+	 * CompleteArrayType
+	 */
+	ExpressionComparator expressionComparator;
+	
+	/**
 	 * integer types to be used in creating the SequenceType
 	 */
 	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
+	
+	/**
+	 * CompleteArrayTypes to be used in the factory testing
+	 */
+	CommonSymbolicCompleteArrayType completeArrayType1, completeArrayType2;
 	
 	/**
 	 * Real types to be used in creating the SequenceType
@@ -102,6 +133,12 @@ public class CommonSymbolicTypeFactoryTest {
 		objectFactory = Objects.newObjectFactory(numberFactory);
 		typeFactory = new CommonSymbolicTypeFactory(objectFactory);
 		typeFactory2 = (CommonSymbolicTypeFactory)Types.newTypeFactory(objectFactory);
+		collectionFactory = Collections.newCollectionFactory(objectFactory);
+		booleanFactory = new CnfFactory(typeFactory, objectFactory, collectionFactory);
+		numericFactory = new CommonIdealFactory(numberFactory, objectFactory, typeFactory, collectionFactory, booleanFactory);
+		expressionComparator = new ExpressionComparator(numericFactory.comparator(), objectFactory.comparator(), typeFactory.typeComparator());
+		completeArrayType1 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
+		completeArrayType2 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
 		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
@@ -256,6 +293,13 @@ public class CommonSymbolicTypeFactoryTest {
 	@Test
 	public void testTypeComparator(){
 		assertNotEquals(typeFactory.typeComparator().compare(idealIntKind, idealRealKind), 0);
+		assertNull(typeFactory.typeComparator().expressionComparator());
+		typeFactory.typeComparator().setExpressionComparator(expressionComparator);
+		assertNotNull(typeFactory.typeComparator().expressionComparator());
+		//assertNull(completeArrayType1.typeKind());
+		//System.out.println(completeArrayType1.typeKind());
+		//System.out.println(completeArrayType2.typeKind());
+		//typeFactory.typeComparator().compare(completeArrayType1, completeArrayType2);
 	}
 	
 	/**
@@ -302,18 +346,24 @@ public class CommonSymbolicTypeFactoryTest {
 		assertTrue((typeFactory.unionType(stringObject, 
 				typeFactory.sequence(typesList))) instanceof CommonSymbolicUnionType);
 	}
-
-	/*
-	@Test
-	public void testArrayTypeSymbolicTypeNumericExpression() {
-		fail("Not yet implemented");
-	}
-
 	
-
+	/**
+	 * Testing the pureType of different SymbolicTypes.
+	 * PureType returns the same type after removing the length.
+	 * So a SymbolicCompleteArrayType(t1) and SymbolicArrayType(t1)
+	 * should have the same pureType 
+	 */
 	@Test
 	public void testPureType() {
-		fail("Not yet implemented");
+		CommonSymbolicCompleteArrayType cArray = (CommonSymbolicCompleteArrayType) typeFactory.arrayType(boundedIntKind, numericPrimitive);
+		CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeFactory.sequence(typesList), floatRealKind);
+		assertEquals(typeFactory.pureType(boundedIntKind), boundedIntKind.getPureType());
+		assertEquals(typeFactory.pureType(floatRealKind), floatRealKind.getPureType());
+		assertEquals(typeFactory.pureType(cArray), cArray.getPureType());
+		assertEquals(typeFactory.pureType(cArray), typeFactory.arrayType(boundedIntKind));
+		assertNull(functionType.getPureType());
+		functionType.setPureType(functionType);
+		assertNotNull(functionType.getPureType());
+		assertEquals(functionType.getPureType(), typeFactory.pureType(functionType));
 	}
-*/
 }

@@ -13,7 +13,6 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
@@ -29,11 +28,15 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
  *	int computeHashCode()
  *	String extentString()
  *	NumericExpression extent()
- *	canonizeChildren(CommonObjectFactory factory)
+ *	canonizeChildren(CommonObjectFactory factory) // no need to test because this class has not children
  *	isComplete()
  *	
  */
 public class CommonSymbolicCompleteArrayTypeTest {
+	
+	/**
+	 * Declaring variables to be used in the test
+	 */
 	
 	CommonSymbolicCompleteArrayType completeArray2, completeArray3, completeArray33;
 	NumberFactory numberFactory;
@@ -50,6 +53,11 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	/**
+	 * 	instantiating variables that are used in the test
+	 *  
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		typeComparator = new TypeComparator();
@@ -116,21 +124,7 @@ public class CommonSymbolicCompleteArrayTypeTest {
 		assertEquals(completeArray2.extentString(), "[" + completeArray2.extent() + "]");
 	}
 	
-	/*
-	 * testing if two array types are equal using compareTo in TypeComparator;
-	 */
-	@Test
-	public void testTypeComparator(){
-		assertNull(typeComparator.expressionComparator());
-		typeComparator.setExpressionComparator(new ExpressionComparatorStub());
-		assertNotNull(typeComparator.expressionComparator());
-		// Failed, assertEquals(typeComparator.compare(completeArray3, completeArray33), 0);
-	}
 	
-	/*
-	@Test
-	public void testCommonSymbolicCompleteArrayType() {
-		fail("Not yet implemented");
-	}
-*/
+	//typeComparator test is done in CommonSymbolicTypeFactoryTest
+
 }

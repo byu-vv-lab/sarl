@@ -184,11 +184,15 @@ public interface SymbolicTypeFactory {
 
 	/**
 	 * @return typeSequenceComparator that is used 
-	 * when comparing two symbolic Tuble, Union, or Function types
+	 * when comparing two symbolic Tuple, Union, or Function types
 	 */
 	TypeSequenceComparator typeSequenceComparator();
 
 	/**
+	 * The pureType of t1 is t1 after removing the length
+	 * for example, CommonSymbolicCompleteArrayType(type1) should have the same pureType as
+	 * CommonSymbolicArrayType(type1)
+	 * 
 	 * @param type
 	 * @return the pure type of the type
 	 */
