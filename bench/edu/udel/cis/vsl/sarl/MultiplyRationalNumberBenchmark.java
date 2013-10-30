@@ -34,66 +34,63 @@ public class MultiplyRationalNumberBenchmark {
 
 	
 	
+public static void  main(String args []){ 
 	
-	public void MultiplyRationalNumberBenchmark1() { 
-		
-		RationalNumber a = factory.rational(bigOne,bigTwo);
-		RationalNumber b = factory.rational(bigOne,bigThree); 
+		RationalNumber rationalOneHalf = factory.rational(bigOne, bigTwo);
+		RationalNumber rationalOneThird = factory.rational(bigOne,bigThree); 
 		long x = System.nanoTime();
-		factory.multiply(a, b) ;
+		factory.multiply(rationalOneThird, rationalOneHalf) ;
 		long y = System.nanoTime();
 
 		System.out.println(y-x);
 
-	}  
+	 
 	
 	
-public void MultiplyRationalNumberBenchmark2() { 
 		
-		RationalNumber a = factory.rational(bigOne,bigTwenty);
-		RationalNumber b = factory.rational(bigOne,bigThirty); 
-		long x = System.nanoTime();
-		factory.multiply(a, b) ;
-		long y = System.nanoTime();
+		RationalNumber rationalOneTwenty = factory.rational(bigOne,bigTwenty);
+		RationalNumber rationalOneThirty = factory.rational(bigOne,bigThirty); 
+		long x2 = System.nanoTime();
+		factory.multiply(rationalOneTwenty, rationalOneThirty) ;
+		long y2 = System.nanoTime();
 
-		System.out.println(y-x); 
+		System.out.println(y2-x2); 
 		
 		
 
-	}   
+	  
 
 
 
-public void MultiplyRationalNumberBenchmark3() { 
 	
-	RationalNumber a = factory.rational(bigTwenty,bigThousand);
-	RationalNumber b = factory.rational(bigThirty,bigTwoThousand); 
-	long x = System.nanoTime();
-	factory.multiply(a, b) ;
-	long y = System.nanoTime();
+	RationalNumber rationalTwentyOverThousand = factory.rational(bigTwenty,bigThousand);
+	RationalNumber rationalThirtyOverTwoThousand= factory.rational(bigThirty,bigTwoThousand); 
+	long x3 = System.nanoTime();
+	factory.multiply(rationalTwentyOverThousand,rationalThirtyOverTwoThousand) ;
+	long y3 = System.nanoTime();
 
-	System.out.println(y-x);
-
-}  
+	System.out.println(y3-x3);
 
 
 
-public void MultiplyRationalNumberBenchmark4() { 
+
+
 	
-	RationalNumber a = factory.rational(bigA1,bigA2);
-	RationalNumber b = factory.rational(bigA3,bigA4); 
-	long x = System.nanoTime();
-	factory.multiply(a, b) ;
-	long y = System.nanoTime();
+	RationalNumber rationalA1overA2 = factory.rational(bigA1,bigA2);
+	RationalNumber rationalA3overA4 = factory.rational(bigA3,bigA4); 
+	long x4 = System.nanoTime();
+	factory.multiply(rationalA1overA2,rationalA3overA4) ;
+	long y4 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y4-x4);
 
-}  
-
-
+} 
 
 
 
+
+
+}
 
  
 
@@ -103,4 +100,3 @@ public void MultiplyRationalNumberBenchmark4() {
 	
 	
 	
-}
