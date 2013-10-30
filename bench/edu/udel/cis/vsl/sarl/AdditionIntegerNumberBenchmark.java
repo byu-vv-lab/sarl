@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl;
 
 import java.math.BigInteger;
 
-
 import edu.udel.cis.vsl.sarl.IF.number.*;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
@@ -31,7 +30,19 @@ public class AdditionIntegerNumberBenchmark {
 	private static BigInteger bigA6 = new BigInteger("23456782"); 
 	private static BigInteger bigA7 = new BigInteger("48456782345678"); 
 	private static BigInteger bigA8 = new BigInteger("23456782345678"); 
+	private static BigInteger bigOneMillion = new BigInteger("1000000");
+	private static BigInteger bigTenMillion = new BigInteger("10000000");
+	private static BigInteger bigFiftyMillion = new BigInteger("50000000");
+	private static BigInteger bigOneHundredMillion = new BigInteger("100000000");
+	private static BigInteger bigOneBillion = new BigInteger("1000000000");
+	private static BigInteger bigFiveBillion = new BigInteger("5000000000");
+	private static BigInteger bigOneTrillion = new BigInteger("1000000000000");
+	private static BigInteger bigTenTrillion = new BigInteger("10000000000000");
+	private static BigInteger bigOneQuadrillion = new BigInteger("1000000000000000");
+	private static BigInteger bigTwoQuadrillion = new BigInteger("2000000000000000");
 
+	
+	
 
 
 
@@ -146,7 +157,69 @@ public static void main(String args[]){
 	factory.add(integerA7, integerA8); 
 	long y10 = System.nanoTime();
 
-	System.out.println(y10-x10);
+	System.out.println(y10-x10); 
+	
+	
+	
+	IntegerNumber numberOneMillion = factory.integer(bigOneMillion);
+	IntegerNumber numberTenMillion = factory.integer(bigTenMillion); 
+	long x11 = System.nanoTime();
+	
+	factory.add(numberOneMillion,numberTenMillion);
+	long y11 = System.nanoTime();
+
+	System.out.print(y11-x11);
+
+
+
+	
+	IntegerNumber numberFiftyMillion = factory.integer(bigFiftyMillion);
+	IntegerNumber numberHundredMillion = factory.integer(bigOneHundredMillion); 
+	long x12 = System.nanoTime();
+	
+	factory.add(numberFiftyMillion,numberHundredMillion);
+	long y12 = System.nanoTime();
+
+	System.out.print(y12-x12);
+
+
+
+	
+	IntegerNumber numberOneBillion = factory.integer(bigOneBillion);
+	IntegerNumber numberFiveBillion = factory.integer(bigFiveBillion); 
+	long x13 = System.nanoTime();
+	
+	factory.add(numberOneBillion,numberFiveBillion);
+	long y13 = System.nanoTime();
+
+	System.out.print(y13-x13);
+
+
+
+	
+	IntegerNumber numberOneTrillion = factory.integer(bigOneTrillion);
+	IntegerNumber numberTenTrillion = factory.integer(bigTenTrillion); 
+	long x14 = System.nanoTime();
+	
+	factory.add(numberOneTrillion,numberTenTrillion);
+	long y14 = System.nanoTime();
+
+	System.out.print(y14-x14);
+
+
+
+	
+	IntegerNumber numberOneQuadrillion = factory.integer(bigOneQuadrillion);
+	IntegerNumber numberTwoQuadrillion = factory.integer(bigTwoQuadrillion); 
+	long x15 = System.nanoTime();
+	
+	factory.add(numberOneQuadrillion,numberTwoQuadrillion);
+	long y15 = System.nanoTime();
+
+	System.out.print(y15-x15);
+
+
+
 
   
 	
