@@ -266,10 +266,10 @@ public class ExpressionTest {
 				SymbolicOperator.CONCRETE, referenceType1, zeroSequence);
 		SymbolicExpression test2 = expressionFactory.expression(
 				SymbolicOperator.CONCRETE, referenceType1, oneSequence);
-		
 		assertEquals(test.operator(),SymbolicOperator.CONCRETE);
 		assertEquals(test.type(),referenceType1);
-		
+		assertEquals(test2.operator(),SymbolicOperator.CONCRETE);
+		assertEquals(test2.type(),referenceType1);
 		assertEquals(test.toString(), "(Ref<int>)<0>");
 		assertEquals(test2.toString(), "(Ref<int>)<1>");
 	}
@@ -303,6 +303,12 @@ public class ExpressionTest {
 		SymbolicExpression test3 = expressionFactory.expression(
 				SymbolicOperator.ADD, referenceType, args3);
 		
+		assertEquals(test1.type(),referenceType);
+		assertEquals(test1.operator(),SymbolicOperator.ADD);
+		assertEquals(test2.type(),referenceType);
+		assertEquals(test2.operator(),SymbolicOperator.ADD);
+		assertEquals(test3.type(),referenceType);
+		assertEquals(test3.operator(),SymbolicOperator.ADD);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
@@ -336,6 +342,12 @@ public class ExpressionTest {
 		SymbolicExpression test3 = expressionFactory.expression(
 				SymbolicOperator.ADD, referenceType, ExpressionList3);
 		
+		assertEquals(test1.type(),integerType);
+		assertEquals(test1.operator(),SymbolicOperator.ADD);
+		assertEquals(test2.type(),booleanType);
+		assertEquals(test2.operator(),SymbolicOperator.ADD);
+		assertEquals(test3.type(),referenceType);
+		assertEquals(test3.operator(),SymbolicOperator.ADD);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 		assertEquals(test3.toString(), "(Ref<int>)<1>+(Ref<int>)<1>");
