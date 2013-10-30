@@ -34,121 +34,88 @@ public class LCMBenchmark {
 	private static BigInteger bigTwoQuadrillion = new BigInteger("2000000000000000");
 
 	
+public static void  main(String args[]){ 
 	
-	
-	public void LCMBenchmark1() { 
 		
-		IntegerNumber a = factory.integer(bigThirty);
-		IntegerNumber b = factory.integer(bigTwenty); 
+		IntegerNumber numberThirty = factory.integer(bigThirty);
+		IntegerNumber numberTwenty = factory.integer(bigTwenty); 
 		long x = System.nanoTime();
-		factory.lcm(a, b); 
+		factory.lcm(numberTwenty, numberThirty); 
 		long y = System.nanoTime();
-		System.out.print("LCM");
+		
 		System.out.println(y-x);
 
-	} 
 	
 	
-public void LCMBenchmark2() { 
-		
-		IntegerNumber a = factory.integer(bigOne);
-		IntegerNumber b = factory.integer(bigTwenty); 
-		long x = System.nanoTime();
-		factory.lcm(a, b); 
-		long y = System.nanoTime();
-
-		System.out.println( y-x);
-
-	} 
-
-
-public void LCMBenchmark3() { 
 	
-	IntegerNumber a = factory.integer(bigThousand);
-	IntegerNumber b = factory.integer(bigTwoThousand); 
-	long x = System.nanoTime();
-	 factory.lcm(a, b); 
-	long y = System.nanoTime();
 
-	System.out.print(y-x);
+	IntegerNumber numberThousand = factory.integer(bigThousand);
+	IntegerNumber numberTwoThousand = factory.integer(bigTwoThousand); 
+	long x2 = System.nanoTime();
+	 factory.lcm(numberThousand, numberTwoThousand); 
+	long y2 = System.nanoTime();
 
-} 
+	System.out.print(y2-x2);
 
-public void LCMBenchmark4() { 
+
+
 	
-	IntegerNumber a = factory.integer(bigThousand);
-	IntegerNumber b = factory.integer(bigTwoThousand); 
-	long x = System.nanoTime();
+	IntegerNumber numberOneMillion = factory.integer(bigOneMillion);
+	IntegerNumber numberTenMillion = factory.integer(bigTenMillion); 
+	long x3 = System.nanoTime();
 	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
+	factory.lcm(numberOneMillion,numberTenMillion);
+	long y3 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y3-x3);
 
-}
 
-public void LCMBenchmark5() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneMillion);
-	IntegerNumber b = factory.integer(bigTenMillion); 
-	long x = System.nanoTime();
+	IntegerNumber numberFiftyMillion = factory.integer(bigFiftyMillion);
+	IntegerNumber numberHundredMillion = factory.integer(bigOneHundredMillion); 
+	long x4 = System.nanoTime();
 	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
+	factory.lcm(numberFiftyMillion,numberHundredMillion);
+	long y4 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y4-x4);
 
-}
 
-public void LCMBenchmark6() { 
+
 	
-	IntegerNumber a = factory.integer(bigFiftyMillion);
-	IntegerNumber b = factory.integer(bigOneHundredMillion); 
-	long x = System.nanoTime();
+	IntegerNumber numberOneBillion = factory.integer(bigOneBillion);
+	IntegerNumber numberFiveBillion = factory.integer(bigFiveBillion); 
+	long x5 = System.nanoTime();
 	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
+	factory.lcm(numberOneBillion,numberFiveBillion);
+	long y5 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y5-x5);
 
-}
 
-public void LCMBenchmark7() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneBillion);
-	IntegerNumber b = factory.integer(bigFiveBillion); 
-	long x = System.nanoTime();
+	IntegerNumber numberOneTrillion = factory.integer(bigOneTrillion);
+	IntegerNumber numberTenTrillion = factory.integer(bigTenTrillion); 
+	long x6 = System.nanoTime();
 	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
+	factory.lcm(numberOneTrillion,numberTenTrillion);
+	long y6 = System.nanoTime();
 
-	System.out.print(y-x);
+	System.out.print(y6-x6);
 
-}
 
-public void LCMBenchmark8() { 
+
 	
-	IntegerNumber a = factory.integer(bigOneTrillion);
-	IntegerNumber b = factory.integer(bigTenTrillion); 
-	long x = System.nanoTime();
+	IntegerNumber numberOneQuadrillion = factory.integer(bigOneQuadrillion);
+	IntegerNumber numberTwoQuadrillion = factory.integer(bigTwoQuadrillion); 
+	long x7 = System.nanoTime();
 	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
+	factory.lcm(numberOneQuadrillion,numberTwoQuadrillion);
+	long y7 = System.nanoTime();
 
-	System.out.print(y-x);
-
-}
-
-public void LCMBenchmark9() { 
-	
-	IntegerNumber a = factory.integer(bigOneQuadrillion);
-	IntegerNumber b = factory.integer(bigTwoQuadrillion); 
-	long x = System.nanoTime();
-	
-	factory.lcm(a,b);
-	long y = System.nanoTime();
-
-	System.out.print(y-x);
+	System.out.print(y7-x7);
 
 }
 }
