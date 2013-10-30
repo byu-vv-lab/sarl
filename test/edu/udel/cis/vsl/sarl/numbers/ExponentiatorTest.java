@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl.numbers;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigInteger;
+//import java.math.BigInteger;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.Exponentiator;
-import edu.udel.cis.vsl.sarl.util.BinaryOperator;
+//import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 public class ExponentiatorTest {
 	
@@ -35,19 +35,8 @@ public class ExponentiatorTest {
 	
 	@Test
 	public void compareResults(){
-		//do stuff
 		inOne = myXpo.exp( inTwo , inThree );
-		//assert equals inOne , 8
 		assertEquals( inOne , inEight );
 	}
-	
-/*
-	@Test
-	public void compareInts() {
-		BinaryOperator<T> myop = new BinaryOperator<T>;
-		Exponentiator a = new Exponentiator(myop, T);//needs params
-	}
-*/
-
 	
 }
