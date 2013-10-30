@@ -17,7 +17,6 @@ public class LCMBenchmark {
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 
 	
-	private static BigInteger bigOne = BigInteger.ONE;
 	private static BigInteger bigThirty = new BigInteger("30"); 
 	private static BigInteger bigTwenty = new BigInteger("20"); 
 	private static BigInteger bigThousand = new BigInteger("1000");  
