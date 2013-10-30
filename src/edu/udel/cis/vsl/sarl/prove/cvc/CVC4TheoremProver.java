@@ -1,5 +1,3 @@
-// import cvc3.Cvc3Exception;
-
 //package edu.udel.cis.vsl.sarl.prove.cvc;
 //
 //import java.io.PrintStream;
@@ -47,7 +45,7 @@
 //	private Expr cvcAssumption;
 //
 //	/**
-//	 * Mapping of SARL symbolic type to corresponding CVC3 type. Set in method
+//	 * Mapping of SARL symbolic type to corresponding CVC4 type. Set in method
 //	 * reset().
 //	 */
 //	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
@@ -62,9 +60,9 @@
 //	}
 //
 ///**
-// * Translate expr from SARL to CVC3. This results in two things: a CVC3
+// * Translate expr from SARL to CVC4. This results in two things: a CVC4
 // * expression (which is returned) and also side-effects: constraints added
-// * to the CVC3 assumption set, possibly involving auxiliary variables.
+// * to the CVC4 assumption set, possibly involving auxiliary variables.
 // * @param SymbolicExpression
 // * @returns Expr
 // */
@@ -124,6 +122,15 @@
 //		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
 //	}
 //
+//	/**
+//	 * Translates a multiplication SymbolicExpression (a*b) into an 
+//	 * equivalent CVC4 multiplication Expr based upon number of 
+//	 * arguments given. 
+//	 * 
+//	 * @param expr
+//	 * 			a SARL SymbolicExpression of form a*b
+//	 * @return CVC4 Expr
+//	 */
 //	private Expr translateMultiply(SymbolicExpression expr) {
 //		int numArgs = expr.numArguments();
 //		Expr result;
@@ -143,6 +150,11 @@
 //		return result;
 //	}
 //
+//	/**
+//	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC4 Expr 
+//	 * @param expr
+//	 * @return CVC4 representation of expr
+//	 */
 //	private Expr translateOr(SymbolicExpression expr) {
 //		int numArgs = expr.numArguments();
 //		Expr result;
@@ -159,7 +171,17 @@
 //					+ expr);
 //		return result;
 //	}
-//
+//	
+//	/**
+//	 * Translates which operation to perform based upon the given 
+//	 * SymbolicExpression and the SymbolicOperator provided.  Depending 
+//	 * upon the number of arguments given, a different conditional will
+//	 * be executed.  The result will be a CVC4 Expr. 
+//	 * 
+//	 * @param expr
+//	 * 			a SymbolicExpression 
+//	 * @return
+//	 */
 //	private Expr translateWork(SymbolicExpression expr) {
 //		int numArgs = expr.numArguments();
 //		Expr result;
@@ -317,40 +339,40 @@
 //				result = em.mkTupleType((vectorType) Arrays
 //						.asList(em.integerType(), result));
 //			break;
-//			//		case TUPLE:
-//			//			result = em
-//			//					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
-//			//							.sequence()));
-//			//			break;
-//			//		case FUNCTION:
-//			//			result = vc.funType(
-//			//					translateTypeSequence(((SymbolicFunctionType) type)
-//			//							.inputTypes()),
-//			//					translateType(((SymbolicFunctionType) type).outputType()));
-//			//			break;
-//			//		case UNION: {	
-//			//			SymbolicUnionType unionType = (SymbolicUnionType) type;
-//			//			List<String> constructors = new LinkedList<String>();
-//			//			List<List<String>> selectors = new LinkedList<List<String>>();
-//			//			List<List<Expr>> types = new LinkedList<List<Expr>>();
-//			//			SymbolicTypeSequence sequence = unionType.sequence();
-//			//			int index = 0;
-//			//
-//			//			for (SymbolicType t : sequence) {
-//			//				List<String> selectorList = new LinkedList<String>();
-//			//				List<Expr> typeList = new LinkedList<Expr>();
-//			//
-//			//				selectorList.add(selector(unionType, index));
-//			//				typeList.add(translateType(t).getExpr());
-//			//				selectors.add(selectorList);
-//			//				types.add(typeList);
-//			//				constructors.add(constructor(unionType, index));
-//			//				index++;
-//			//			}
-//			//			result = vc.dataType(unionType.name().getString(), constructors,
-//			//					selectors, types);
-//			//			break;
-//			//		}
+//		case TUPLE:
+//			result = em
+//					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
+//							.sequence()));
+//			break;
+//		case FUNCTION:
+//			result = vc.funType(
+//					translateTypeSequence(((SymbolicFunctionType) type)
+//							.inputTypes()),
+//					translateType(((SymbolicFunctionType) type).outputType()));
+//			break;
+//		case UNION: {	
+//			SymbolicUnionType unionType = (SymbolicUnionType) type;
+//			List<String> constructors = new LinkedList<String>();
+//			List<List<String>> selectors = new LinkedList<List<String>>();
+//			List<List<Expr>> types = new LinkedList<List<Expr>>();
+//			SymbolicTypeSequence sequence = unionType.sequence();
+//			int index = 0;
+//
+//			for (SymbolicType t : sequence) {
+//				List<String> selectorList = new LinkedList<String>();
+//				List<Expr> typeList = new LinkedList<Expr>();
+//
+//				selectorList.add(selector(unionType, index));
+//				typeList.add(translateType(t).getExpr());
+//				selectors.add(selectorList);
+//				types.add(typeList);
+//				constructors.add(constructor(unionType, index));
+//				index++;
+//			}
+//			result = vc.dataType(unionType.name().getString(), constructors,
+//					selectors, types);
+//			break;
+//		}
 //		default:
 //			throw new RuntimeException("Unknown type: " + type);
 //		}
@@ -370,8 +392,8 @@
 //	 */
 //	public ValidityResult valid(BooleanExpression symbolicPredicate)
 //	{
-//		Expr cvc3Predicate = translate(symbolicPredicate);
-//		Result result = smt.query(cvc3Predicate);
+//		Expr cvc4Predicate = translate(symbolicPredicate);
+//		Result result = smt.query(cvc4Predicate);
 //		smt.pop();
 //
 //		return (ValidityResult) result.asValidityResult();
