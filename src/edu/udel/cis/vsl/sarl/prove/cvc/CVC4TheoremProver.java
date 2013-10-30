@@ -1,3 +1,5 @@
+// import cvc3.Cvc3Exception;
+
 //package edu.udel.cis.vsl.sarl.prove.cvc;
 //
 //import java.io.PrintStream;
@@ -59,6 +61,13 @@
 //		smt.assertFormula(cvcAssumption); 
 //	}
 //
+///**
+// * Translate expr from SARL to CVC3. This results in two things: a CVC3
+// * expression (which is returned) and also side-effects: constraints added
+// * to the CVC3 assumption set, possibly involving auxiliary variables.
+// * @param SymbolicExpression
+// * @returns Expr
+// */
 //	public Expr translate(SymbolicExpression expr) {
 //		Expr result;
 //		result = translateWork(expr);
@@ -271,7 +280,15 @@
 //		}
 //		return result;
 //	}
-//
+//	/**
+//	 * Translates the symbolic type to a CVC4 type.
+//	 * 
+//	 * @param type
+//	 *            a SARL symbolic expression type
+//	 * @return the equivalent CVC4 type
+//	 * @throws Exception
+//	 *             if CVC4 throws an exception
+//	 */
 //	public Type translateType(SymbolicType type) throws Exception
 //	{
 //		Type result = typeMap.get(type);
@@ -345,7 +362,12 @@
 //	public PreUniverse universe() {
 //		return universe;
 //	}
-//
+//	/**
+//	 * Takes a BooleanExpression and passes it through translate. 
+//	 * The translated predicate is then queried via smt and pops the smt.
+//	 * @param expr
+//	 * @return ValidityResult from using translateResult
+//	 */
 //	public ValidityResult valid(BooleanExpression symbolicPredicate)
 //	{
 //		Expr cvc3Predicate = translate(symbolicPredicate);
