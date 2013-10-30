@@ -22,7 +22,8 @@ public class MultiplyIntegerNumberBenchmark {
 	private static BigInteger bigThousand = new BigInteger("1000");  
 	private static BigInteger bigTwoThousand = new BigInteger("2000"); 
 	private static BigInteger bigThirtyOne = new BigInteger("31"); 
-	private static BigInteger bigTen = new BigInteger("10"); 
+	private static BigInteger bigTen = new BigInteger("10");  
+	private static BigInteger bigTwenty = new BigInteger("20");
 	private static BigInteger bigA1 = new BigInteger("21220"); 
 	private static BigInteger bigA2 = new BigInteger("43784"); 
 	private static BigInteger bigA3 = new BigInteger("452222");  
@@ -32,106 +33,86 @@ public class MultiplyIntegerNumberBenchmark {
 
 
 	
+public static void main(String args[]) {
 	
-	
-	public void MultiplyIntegerNumberBenchmark1() { 
 		
-		IntegerNumber a = factory.integer(bigZero);
-		IntegerNumber b = factory.integer(bigOne); 
+		IntegerNumber numberZero = factory.integer(bigZero);
+		IntegerNumber numberOne = factory.integer(bigOne); 
 		long x = System.nanoTime();
-		factory.multiply(a, b); 
+		factory.multiply(numberZero, numberOne); 
 		long y = System.nanoTime();
 
 		System.out.println(y-x);
 
-	}  
+	  
 	
 	
 	
-public void MultiplyIntegerNumberBenchmark2() { 
 		
-		IntegerNumber a = factory.integer(bigTwo);
-		IntegerNumber b = factory.integer(bigTwo); 
-		long x = System.nanoTime();
-		factory.multiply(a, b); 
-		long y = System.nanoTime();
+		IntegerNumber numberTwo = factory.integer(bigTwo);
+		long x2 = System.nanoTime();
+		factory.multiply(numberTwo, numberTwo); 
+		long y2 = System.nanoTime();
 
-		System.out.println(y-x);
+		System.out.println(y2-x2);
 
-	}  
+	  
 
-public void MultiplyIntegerNumberBenchmark5() { 
 	
-	IntegerNumber a = factory.integer(bigTen);
-	IntegerNumber b = factory.integer(bigTwo); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber numberTen = factory.integer(bigTen);
+	IntegerNumber numberTwenty = factory.integer(bigTwenty); 
+	long x3 = System.nanoTime();
+	factory.multiply(numberTen, numberTwenty); 
+	long y3 = System.nanoTime();
 
-	System.out.println(y-x);
-
-}  
-public void MultiplyIntegerNumberBenchmar3() { 
+	System.out.println(y3-x3);
+ 
 	
-	IntegerNumber a = factory.integer(bigTwoThousand);
-	IntegerNumber b = factory.integer(bigThirtyOne); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber numberTwoThousand = factory.integer(bigTwoThousand);
+	IntegerNumber numberThousand = factory.integer(bigThousand); 
+	long x4 = System.nanoTime();
+	factory.multiply(numberTwoThousand, numberThousand); 
+	long y4 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y4-x4);
 
-}  
+ 
 
 
 
-public void MultiplyIntegerNumberBenchmar4() { 
 	
-	IntegerNumber a = factory.integer(bigTwoThousand);
-	IntegerNumber b = factory.integer(bigThousand); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-}  
-
-public void MultiplyIntegerNumberBenchmark6() { 
 	
-	IntegerNumber a = factory.integer(bigA1);
-	IntegerNumber b = factory.integer(bigA2); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
+ 
 
-	System.out.println(y-x);
-
-}  
-
-
-public void MultiplyIntegerNumberBenchmark7() { 
 	
-	IntegerNumber a = factory.integer(bigA3);
-	IntegerNumber b = factory.integer(bigA2); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber numberA1 = factory.integer(bigA1);
+	IntegerNumber numberA2 = factory.integer(bigA2); 
+	long x5 = System.nanoTime();
+	factory.multiply(numberA1, numberA2); 
+	long y5 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y5-x5);
 
-} 
+ 
 
 
-public void MultiplyIntegerNumberBenchmark8() { 
 	
-	IntegerNumber a = factory.integer(bigA3);
-	IntegerNumber b = factory.integer(bigA4); 
-	long x = System.nanoTime();
-	factory.multiply(a, b); 
-	long y = System.nanoTime();
+	IntegerNumber numberA3 = factory.integer(bigA3);
+	long x6 = System.nanoTime();
+	factory.multiply(numberA3, numberA2); 
+	long y6 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y6-x6);
+
+
+
+	
+	IntegerNumber numberA4 = factory.integer(bigA4); 
+	long x7 = System.nanoTime();
+	factory.multiply(numberA3, numberA4); 
+	long y7 = System.nanoTime();
+
+	System.out.println(y7-x7);
 
 }  
 	
