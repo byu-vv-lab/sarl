@@ -20,8 +20,6 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,8 +30,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
@@ -50,7 +46,6 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealAddTest {
 
-	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
@@ -62,7 +57,6 @@ public class IdealAddTest {
 	private RationalNumber ratNegPointTwoFive; // -1/4
 	private RationalNumber ratOnePointFive; // 3/2
 	private RationalNumber ratOnePointTwoFive; // 5/4
-	private RationalNumber ratThree; // 3
 	private Constant constOnePointFive; // real constant 3/2
 	private Constant constNegPointTwoFive; // real constant -1/4
 	private Constant intZero; // int constant 0
@@ -71,33 +65,17 @@ public class IdealAddTest {
 	private Constant intThree; // int constant 3
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
-	IntObject intObj3;
-	NumberObject numObj3;
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression five;
 	private NumericExpression one;
 	private RationalNumber realOne;
-
 	private RationalNumber realFive; 
 	private NumericExpression three; 
 	private RationalNumber realThree; 
-	private SymbolicType real;
 	private SymbolicType integer;
-	NumericExpression intHundred;
-	NumericExpression intTwenty;
-	NumericExpression e01; // Real 3 cast to integer 3
-	NumericExpression e1; // 5 IsReal
-	NumericExpression e2; // 5 + 3 ADD
-	NumericExpression e3; // 5 > 3, 5, 3 COND
-	NumericExpression e4; // 5 * 3 MULTIPLY
-	NumericExpression e5; // -5 NEGATIVE
-	NumericExpression e6; // 5 ^ 3 POWER
-	NumericExpression e7; // 5 - 3 SUBTRACT
-	NumericExpression e8; // DEFAULT
-	NumericExpression e9; // 5 + 3 + 1 ADD
-	NumericExpression e10; // 5 ^ 3   (3 - IntObject)
-
+	NumericExpression e1; // 5 + 3 + 1 ADD
+	
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -112,7 +90,6 @@ public class IdealAddTest {
 		ratOnePointFive = numberFactory.rational("1.5");
 		ratNegPointTwoFive = numberFactory.rational("-.25");
 		ratOnePointTwoFive = numberFactory.rational("1.25");
-		ratThree = numberFactory.rational("3");
 		intZero = idealFactory.intConstant(0);
 		constOnePointFive = idealFactory.constant(ratOnePointFive);
 		constNegPointTwoFive = idealFactory.constant(ratNegPointTwoFive);
@@ -120,16 +97,11 @@ public class IdealAddTest {
 		intTwo = idealFactory.intConstant(2);
 		intThree = idealFactory.intConstant(3);
 		intTen = idealFactory.intConstant(10);
-		typeFactory.integerType();
-		typeFactory.integerType();
-		intObj3 = objectFactory.intObject(3);
-		numObj3 = objectFactory.numberObject(ratThree);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
-		real = typeFactory.realType();
 		integer = typeFactory.integerType();
 		realOne = numberFactory.rational("1");
 		realFive = numberFactory.rational("5");
@@ -137,30 +109,8 @@ public class IdealAddTest {
 		five = commonIdealFactory.constant(realFive);
 		realThree = numberFactory.rational("3");
 		three = commonIdealFactory.constant(realThree);
-		intHundred = idealFactory.intConstant(100);
-		intTwenty = idealFactory.intConstant(20);
-		e01 = commonIdealFactory.expression(SymbolicOperator.CAST, 
-				real, three);
-		e1 = commonIdealFactory.constant(realFive);
-		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
-				three); // 5 + 3 ADD
-		e3 = commonIdealFactory.expression(SymbolicOperator.COND,
-				real, x, booleanFactory.trueExpr(), 
-				booleanFactory.falseExpr());
-		e4 = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer,
-				five, three); // 5 * 3 MULTIPLY
-		e5 = commonIdealFactory.expression(SymbolicOperator.NEGATIVE, integer,
-				five); // -5 NEGATIVE
-		e6 = commonIdealFactory.expression(SymbolicOperator.POWER, integer,
-				five, three); // 5 ^ 3 POWER
-		e7 = commonIdealFactory.expression(SymbolicOperator.SUBTRACT, integer,
-				five, three); // 5 - 3 SUBTRACT
-		e8 = commonIdealFactory.zeroReal(); // DEFAULT}
-		e9 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
+		e1 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
 				three, one); // 5 + 3 +1 ADD
-		e10 = commonIdealFactory.expression(SymbolicOperator.POWER, integer,
-				five, intObj3); // 5 ^ 3 POWER
-
 	}
 
 	@After
@@ -177,9 +127,7 @@ public class IdealAddTest {
 	@Test
 	public void constantAdd() {
 		Constant c3 = (Constant) idealFactory.add(constOnePointFive, constNegPointTwoFive);
-
-		out.println("constantAdd: " + constOnePointFive + " + " + constNegPointTwoFive + " = " + c3);
-		
+				
 		assertEquals(ratOnePointTwoFive, c3.number());
 	}
 	
@@ -193,8 +141,6 @@ public class IdealAddTest {
 	public void commutativity1() {
 		SymbolicExpression xpy = idealFactory.add(x, y);
 		SymbolicExpression ypx = idealFactory.add(y, x);
-		
-		out.println("commutativity1: " + xpy + " vs. " + ypx);
 		
 		assertEquals(xpy, ypx);
 	}
@@ -258,10 +204,7 @@ public class IdealAddTest {
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
-		
-		out.println("Exp=" + n1);
-		out.println("Expr2=" +e9);
-		
-		assertEquals(e9, n1);
+				
+		assertEquals(e1, n1);
 	}
 }
