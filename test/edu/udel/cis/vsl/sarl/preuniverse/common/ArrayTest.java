@@ -933,8 +933,8 @@ public class ArrayTest {
 		SymbolicCompleteArrayType arrayType;
 		NumericSymbolicConstant x;
 		SymbolicExpression function;
+		@SuppressWarnings("unused")
 		SymbolicExpression arrayL;
-		SymbolicExpression ans;
 		
 		arrayType = universe.arrayType(integerType, universe.integer(6));
 		x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
@@ -947,6 +947,7 @@ public class ArrayTest {
 	public void testArrayLambdaException2() {
 		SymbolicCompleteArrayType arrayType;
 		SymbolicExpression function;
+		@SuppressWarnings("unused")
 		SymbolicExpression arrayL;
 		
 		arrayType = universe.arrayType(integerType, universe.integer(6));
