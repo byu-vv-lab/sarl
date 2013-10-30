@@ -12,6 +12,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 
 public class CommonSymbolicPrimitiveTypeTest {
 	
+	/**
+	 declaring variables for CommonSymbolicPrimitiveType 
+	 */
 	CommonSymbolicPrimitiveType bool1, bool2, char1;
 
 	@BeforeClass
@@ -22,6 +25,9 @@ public class CommonSymbolicPrimitiveTypeTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	/**
+	 initializing the declared variables.
+	 */
 	@Before
 	public void setUp() throws Exception {
 		
@@ -66,7 +72,7 @@ public class CommonSymbolicPrimitiveTypeTest {
 	
 
 	/**
-	  
+	  this test aims check the output for the method getPureType and the PureType for boolean and character should be different.
 	 */
 	@Test
 	public void testGetPureType() 
