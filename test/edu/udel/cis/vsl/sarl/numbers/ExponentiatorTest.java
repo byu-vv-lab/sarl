@@ -19,8 +19,10 @@ public class ExponentiatorTest {
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 	//private static BigInteger bigTwo = new BigInteger("2");
 	//private static BigInteger bigThree = new BigInteger("3");
+	private static IntegerNumber inOne = factory.integer(1);
 	private static IntegerNumber inTwo = factory.integer(2);
 	private static IntegerNumber inThree = factory.integer(3);
+	private static IntegerNumber inEight = factory.integer(8);
 	private static Exponentiator<IntegerNumber> myXpo;
 	
 	@BeforeClass
@@ -34,7 +36,9 @@ public class ExponentiatorTest {
 	@Test
 	public void compareResults(){
 		//do stuff
-		myXpo.exp( inTwo , inThree );
+		inOne = myXpo.exp( inTwo , inThree );
+		//assert equals inOne , 8
+		assertEquals( inOne , inEight );
 	}
 	
 /*
