@@ -123,7 +123,7 @@ public static void main(String args[]){
 	factory.multiply(integerA4, integerA3); 
 	long y8 = System.nanoTime();
 
-	System.out.println(y-x);
+	System.out.println(y8-x8);
 
    
 
