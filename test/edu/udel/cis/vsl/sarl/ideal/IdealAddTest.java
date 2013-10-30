@@ -213,7 +213,7 @@ public class IdealAddTest {
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
 	 * @return type
-	 * 				NumericPrimitive
+	 * 				RationalExpression
 	 */
 	@Test
 	public void addToRational() {
