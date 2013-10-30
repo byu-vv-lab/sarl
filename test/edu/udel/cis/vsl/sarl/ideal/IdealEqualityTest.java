@@ -151,6 +151,7 @@ public class IdealEqualityTest {
 				commonIdealFactory.zeroReal(), r1);
 		BooleanExpression nb6 = idealFactory.lessThan(r1, commonIdealFactory.
 				zeroReal());
+		
 		out.println("b1=" +b1);
 		out.println("b2=" +b2);
 				
@@ -207,6 +208,7 @@ public class IdealEqualityTest {
 		BooleanExpression n1122 = commonIdealFactory.equals(n11, n22);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
+		
 		out.println("Equals=" +n1122);
 		
 		assertEquals(m1, n);
