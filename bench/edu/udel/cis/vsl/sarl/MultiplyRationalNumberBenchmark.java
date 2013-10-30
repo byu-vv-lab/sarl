@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 
 
+
 import edu.udel.cis.vsl.sarl.IF.number.*;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
@@ -28,6 +29,20 @@ public class MultiplyRationalNumberBenchmark {
 	private static BigInteger bigA2 = new BigInteger("43784"); 
 	private static BigInteger bigA3 = new BigInteger("452222");  
 	private static BigInteger bigA4 = new BigInteger("48273"); 
+	private static BigInteger bigOneMillion = new BigInteger("1000000");
+	private static BigInteger bigTwoMillion = new BigInteger("2000000");
+
+	private static BigInteger bigTenMillion = new BigInteger("10000000");
+	private static BigInteger bigFiftyMillion = new BigInteger("50000000");
+	private static BigInteger bigOneHundredMillion = new BigInteger("100000000");
+	private static BigInteger bigOneBillion = new BigInteger("1000000000");
+	private static BigInteger bigFiveBillion = new BigInteger("5000000000");
+
+	
+	
+
+
+
 
 
 
@@ -82,7 +97,35 @@ public static void  main(String args []){
 	factory.multiply(rationalA1overA2,rationalA3overA4) ;
 	long y4 = System.nanoTime();
 
-	System.out.println(y4-x4);
+	System.out.println(y4-x4); 
+	
+	
+	RationalNumber rationalOneMillion = factory.rational(bigOneMillion,bigTenMillion);
+	RationalNumber rationalTwoMillion = factory.rational(bigTwoMillion,bigFiftyMillion); 
+	long x5 = System.nanoTime();
+	factory.multiply( rationalOneMillion,rationalTwoMillion) ;
+	long y5 = System.nanoTime();
+
+	System.out.println(y5-x5); 
+	
+	
+	
+	RationalNumber rationalTenMillion = factory.rational(bigTenMillion,bigFiftyMillion);
+	RationalNumber rationalFiftyMillion = factory.rational(bigFiftyMillion,bigOneHundredMillion); 
+	long x6 = System.nanoTime();
+	factory.multiply( rationalTenMillion,rationalFiftyMillion) ;
+	long y6 = System.nanoTime();
+
+	System.out.println(y6-x6); 
+	
+	
+	RationalNumber rationalOneHundredMillion = factory.rational(bigOneHundredMillion,bigOneBillion);
+	RationalNumber rationalOnebillion = factory.rational(bigOneBillion,bigFiveBillion); 
+	long x7 = System.nanoTime();
+	factory.multiply( rationalOneHundredMillion,rationalOnebillion) ;
+	long y7 = System.nanoTime();
+
+	System.out.println(y7-x7);
 
 } 
 
