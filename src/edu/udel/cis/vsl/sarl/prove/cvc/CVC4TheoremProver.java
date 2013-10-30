@@ -275,13 +275,16 @@
 //		return result;
 //
 //	}
-//
+//	
+//	/**
+//	 * Translates expr from SARL to CVC4
+//	 */
 //	private Expr translate(SymbolicExpression expr) {
 //		Expr result;
 //		result = translateWork(expr);
 //		return result;
 //	}
-//*/
+//	
 //	@Override
 //	public PreUniverse universe() {
 //		return universe;
