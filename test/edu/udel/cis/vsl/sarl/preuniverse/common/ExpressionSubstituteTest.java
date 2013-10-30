@@ -21,7 +21,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -38,16 +37,16 @@ public class ExpressionSubstituteTest {
 	private static ExpressionSubstituter expr1;
 
 	private static SymbolicExpression expression1, expression2, expression3,
-			expression4, expression5, expression6;
+			expression4, expression5, expression6, expression7;
 
 	private static SymbolicType integerType, intArrayType, functionType,
-			realType, booleanType;
+			functionType1, realType, booleanType;
 
 	private static SymbolicTupleType tupleType;
 
 	private static SymbolicUnionType unionType;
 
-	private static SymbolicTypeSequence sequence;
+	private static SymbolicTypeSequence sequence, sequence1;
 
 	private static SymbolicCompleteArrayType completeArrayType;
 
@@ -58,7 +57,7 @@ public class ExpressionSubstituteTest {
 		factory1 = test.collectionFactory();
 		typeFactory1 = test.typeFactory();
 
-		// initalize
+		// SymbolicType
 		integerType = universe.integerType();
 		realType = universe.realType();
 		booleanType = universe.booleanType();
@@ -73,11 +72,15 @@ public class ExpressionSubstituteTest {
 				universe.stringObject("union1"),
 				Arrays.asList(new SymbolicType[] { integerType, realType,
 						booleanType, intArrayType }));
+
+		// SymbolicTypeSequence
 		sequence = tupleType.sequence();
-		// SymbolicSequence<SymbolicExpression> elements =
-		// (SymbolicSequence<SymbolicExpression>) concreteArray
-		// .argument(0);
+		sequence1 = universe.typeSequence(Arrays.asList(new SymbolicType[] {
+				integerType, realType, booleanType, intArrayType }));
 		functionType = universe.functionType(sequence, realType);
+		functionType1 = universe.functionType(sequence1, realType);
+
+		// SymbolicExpression
 		expression1 = universe.nullExpression();
 		expression2 = universe.symbolicConstant(
 				universe.stringObject("intArrayTypeExpression"), intArrayType);
@@ -90,6 +93,9 @@ public class ExpressionSubstituteTest {
 		expression6 = universe.symbolicConstant(
 				universe.stringObject("completeArrayTypeExpression"),
 				completeArrayType);
+		expression7 = universe.symbolicConstant(
+				universe.stringObject("typesequenceExpression"), functionType1);
+
 	}
 
 	@AfterClass
@@ -132,5 +138,9 @@ public class ExpressionSubstituteTest {
 
 		// case completeArrayType
 		assertEquals(expr1.substitute(expression6, newMap), expression6);
+
+		// case typesequence
+		assertEquals(expr1.substitute(expression7, newMap), expression7);
+
 	}
 }
