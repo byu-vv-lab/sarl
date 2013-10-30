@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
@@ -182,6 +183,14 @@ public class CommonObjectFactoryTest {
 	public void testNumberObject() {
 		assertEquals("1", this.fac.numberObject(new RealInteger(new BigInteger("1"))).toString());
 	}
+	
+	/**
+	 * Method to test thrown exception for CommonObjectFactory.numberObject()
+	 */
+	@Test(expected=SARLException.class)
+	public void testNumberObjectException() {
+		this.fac.numberObject(null);
+	}
 
 	/**
 	 * Method to test CommonObjectFactory.stringObject
@@ -189,6 +198,14 @@ public class CommonObjectFactoryTest {
 	@Test
 	public void testStringObject() {
 		assertEquals("string", this.fac.stringObject("string").toString());
+	}
+	
+	/**
+	 * Method to test thrown exception for CommonObjectFactory.stringObject()
+	 */
+	@Test(expected=SARLException.class)
+	public void testStringObjectException() {
+		this.fac.stringObject(null);
 	}
 
 	/**
@@ -239,6 +256,14 @@ public class CommonObjectFactoryTest {
 		
 		this.fac.canonic(tempint);
 		assertEquals(this.fac.objects().size(), originalcount+1);
+	}
+	
+	/**
+	 * Method to test thrown exception for CommonObjectFactory.canonic()
+	 */
+	@Test(expected=SARLException.class)
+	public void testCanonicException() {
+		this.fac.canonic(null);
 	}
 
 	/**

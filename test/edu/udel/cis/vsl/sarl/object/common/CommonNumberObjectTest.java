@@ -7,8 +7,10 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
@@ -53,6 +55,10 @@ public class CommonNumberObjectTest {
 	 * Initialized to a RealNumberFactory upon setUp
 	 */
 	NumberFactory realfactory;
+	/**
+	 * Initialized to a CommonObjectFactory upon setUp
+	 */
+	CommonObjectFactory objectfactory;
 	
 	/**
 	 * Initializes realint, newrealint, realreational, newrealrational, zero, one, negint, realfactory
@@ -62,6 +68,8 @@ public class CommonNumberObjectTest {
 	public void setUp() throws Exception {
 		//must create RealIntegers through factory for hash codes to be equal
 		//should make RealInteger constructor private, or implement hash code.
+		this.realfactory = new RealNumberFactory();
+		this.objectfactory = new CommonObjectFactory(this.realfactory);
 		this.realint =    new CommonNumberObject(new RealInteger(new BigInteger("12345678901234567890")));
 		this.newrealint = new CommonNumberObject(new RealInteger(new BigInteger("12345678901234567890")));
 		this.realrational = new CommonNumberObject(new RealRational(new BigInteger("1"), new BigInteger("2")));
@@ -69,20 +77,24 @@ public class CommonNumberObjectTest {
 		this.zero = new CommonNumberObject(new RealInteger(BigInteger.ZERO));
 		this.one = new CommonNumberObject(new RealInteger(BigInteger.ONE));
 		this.negint = new CommonNumberObject(new RealInteger(new BigInteger("-123")));
-		this.realfactory = new RealNumberFactory();
 	}
 
-//	@Test
-//	public void testComputeHashCode() {
-//		RationalNumber rat1 = this.realfactory.rational(new BigInteger("1"), new BigInteger("2"));
-//		RationalNumber rat2 = this.realfactory.rational(new BigInteger("1"), new BigInteger("2"));
-//		assertEquals(rat1., rat2.toString());
-//	}
+	/**
+	 * Test computeHashCode() and hashCode()
+	 */
+	@Test
+	public void testComputeHashCode() {
+		IntegerNumber num1 = this.realfactory.oneInteger();
+		IntegerNumber num2 = this.realfactory.oneInteger();
+		assertEquals(num1.hashCode(), num2.hashCode());
+	}
 
-//	@Test
-//	public void testIntrinsicEquals() {
-//		assertTrue(this.realint.intrinsicEquals(this.newrealint));
-//	}
+	@Test
+	public void testIntrinsicEquals() {
+		NumberObject num1 = this.objectfactory.numberObject(this.realfactory.number("1"));
+		NumberObject num2 = this.objectfactory.numberObject(this.realfactory.number("1"));
+		assertTrue(((CommonNumberObject)num1).intrinsicEquals((CommonNumberObject)num2));
+	}
 
 	/**
 	 * Verifies that toString returns the correct string representation of CommonNumberObjects
@@ -178,5 +190,23 @@ public class CommonNumberObjectTest {
 		assertEquals("12345678901234567890", this.realint.toStringBufferLong().toString());
 		assertEquals("1/2", this.realrational.toStringBufferLong().toString());
 	}
-
+	
+	/**
+	 * Test for CommonSymbolicObject.setOrder() and getOrder()
+	 */
+	@Test
+	public void testSetGetOrder() {
+		this.newrealint.setOrder( this.realfactory.oneRational() );
+		assertEquals("1", this.newrealint.getOrder().toString());
+	}
+	
+	/**
+	 * Test for CommonSymbolicObject.equals()
+	 */
+	@Test
+	public void testEquals() {
+		assertFalse(this.objectfactory.intObject(1).equals(this.objectfactory.booleanObject(false)));
+		assertFalse(this.objectfactory.intObject(1).equals(1));
+	}
+	
 }

@@ -57,6 +57,7 @@ public class CommonBooleanObjectTest {
 		
 		assertTrue(this.trueBooleanObject.intrinsicEquals(newTrueBooleanObject));
 		assertTrue(this.falseBooleanObject.intrinsicEquals(newFalseBooleanObject));
+		assertFalse(this.trueBooleanObject.intrinsicEquals(newFalseBooleanObject));
 	}
 
 //	CommonBooleanObject::canonizeChildren is empty
