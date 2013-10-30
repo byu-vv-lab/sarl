@@ -19,27 +19,27 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
-/*
+
 public class CVC4TheoremProver implements TheoremProver {
 
 	private PreUniverse universe;
 	private BooleanExpression context;
 	private PrintStream out = null;
 	private boolean showProverQueries = false;
-	private ExprManager em = new ExprManager();
-	private SmtEngine smt = new SmtEngine(em);
-	private Expr cvcAssumption;
+	//private ExprManager em = new ExprManager();
+	//private SmtEngine smt = new SmtEngine(em);
+	//private Expr cvcAssumption;
 
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
 		this.context = context;
-		cvcAssumption = translate(context);
-		smt.assertFormula(cvcAssumption);
+	//	cvcAssumption = translate(context);
+	//	smt.assertFormula(cvcAssumption);
 	
 	}
-
+/*
 	
 	private Expr bigArrayLength(Expr bigArray) {
 		Expr constant = em.mkConst(new Rational(0));
@@ -203,24 +203,24 @@ public class CVC4TheoremProver implements TheoremProver {
 		result = translateWork(expr);
 		return result;
 	}
-
+	*/
 	@Override
 	public PreUniverse universe() {
 		return universe;
 	}
-
+	
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public void setOutput(PrintStream out) {
 		this.out = out;
@@ -231,5 +231,5 @@ public class CVC4TheoremProver implements TheoremProver {
 	public String toString() {
 		return "CVC4TheoremProver";
 	}
-	
-}*/
+
+}
