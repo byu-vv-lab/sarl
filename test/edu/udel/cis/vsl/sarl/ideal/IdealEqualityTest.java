@@ -264,10 +264,9 @@ public class IdealEqualityTest {
 	public void equals() {
 		NumericExpression n11 = idealFactory.add(x, y);
 		NumericExpression n22 = idealFactory.subtract(x, y);
-		NumericExpression n1 = idealFactory.add(y, idealFactory.intConstant(2));
-		NumericExpression n2 = idealFactory.subtract(y,
-				idealFactory.intConstant(2));
-		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));		
+		NumericExpression n1 = idealFactory.add(y, intTwo);
+		NumericExpression n2 = idealFactory.subtract(y, intTwo);
+		NumericExpression n3 = idealFactory.add(y, intTwo);		
 		BooleanExpression n = commonIdealFactory.equals(n1, n2);
 		BooleanExpression n0 = commonIdealFactory.equals(n1, n3);
 		BooleanExpression n1122 = commonIdealFactory.equals(n11, n22);
