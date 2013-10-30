@@ -21,6 +21,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
+import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3ProcessEqualityTest {
@@ -43,7 +44,7 @@ public class CVC3ProcessEqualityTest {
 			.trueExpression();
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
-	private CVC3TheoremProver cvcProver;
+	private TheoremProver cvcProver;
 
 	/**
 	 * Set up each test. This method is run before each test.
@@ -60,7 +61,7 @@ public class CVC3ProcessEqualityTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
 	 * testProcessEqualityArrayCompleteEqual creates two equal lists of
 	 * symbolicExpressions and asserts that they are in fact equal
@@ -73,7 +74,7 @@ public class CVC3ProcessEqualityTest {
 		a1.add(0, two);
 		a1.add(1, one);
 		a1.add(2, five);
-		
+
 		List<SymbolicExpression> a2 = new ArrayList<SymbolicExpression>();
 		a2.add(0, two);
 		a2.add(1, one);
@@ -87,19 +88,19 @@ public class CVC3ProcessEqualityTest {
 
 		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
 	}
-	
+
 	/**
-	 * testProcessEqualityArrrayCompleteNotEqual creates two unequal lists of 
+	 * testProcessEqualityArrrayCompleteNotEqual creates two unequal lists of
 	 * symbolicExpressions and asserts whether the two ArrayLists are equal
 	 */
-	
+
 	@Test
 	public void testProcessEqualityArrayCompleteNotEqual() {
 
 		List<SymbolicExpression> a1 = new ArrayList<SymbolicExpression>();
 		a1.add(0, two);
 		a1.add(1, one);
-		
+
 		List<SymbolicExpression> a2 = new ArrayList<SymbolicExpression>();
 		a2.add(0, two);
 		a2.add(1, one);
@@ -113,32 +114,32 @@ public class CVC3ProcessEqualityTest {
 
 		assertEquals(ResultType.NO, cvcProver.valid(f).getResultType());
 	}
-	
+
 	@Test
-	public void testProcessEqualityArrayIncompleteEqual(){
+	public void testProcessEqualityArrayIncompleteEqual() {
 
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
-		
-		SymbolicExpression a1 = universe.symbolicConstant(universe
-				.stringObject("a"), incompleteArrayType);
-		SymbolicExpression a2 = universe.symbolicConstant(universe
-				.stringObject("a"), incompleteArrayType);
+
+		SymbolicExpression a1 = universe.symbolicConstant(
+				universe.stringObject("a"), incompleteArrayType);
+		SymbolicExpression a2 = universe.symbolicConstant(
+				universe.stringObject("a"), incompleteArrayType);
 
 		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
 				SymbolicOperator.EQUALS, boolType, a1, a2);
 
 		assertEquals(ResultType.YES, cvcProver.valid(f).getResultType());
 	}
-	
+
 	@Test
-	public void testProcessEqualityArrayIncompleteNotEqual(){
+	public void testProcessEqualityArrayIncompleteNotEqual() {
 
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
-		
-		SymbolicExpression a1 = universe.symbolicConstant(universe
-				.stringObject("a"), incompleteArrayType);
-		SymbolicExpression a2 = universe.symbolicConstant(universe
-				.stringObject("b"), incompleteArrayType);
+
+		SymbolicExpression a1 = universe.symbolicConstant(
+				universe.stringObject("a"), incompleteArrayType);
+		SymbolicExpression a2 = universe.symbolicConstant(
+				universe.stringObject("b"), incompleteArrayType);
 
 		BooleanExpression f = (BooleanExpression) expressionFactory.expression(
 				SymbolicOperator.EQUALS, boolType, a1, a2);
