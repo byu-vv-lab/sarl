@@ -2,10 +2,14 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
 
+
+import cvc3.Expr;
+/*
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.SmtEngine;
+*/
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -19,24 +23,24 @@ public class CVC4TheoremProver implements TheoremProver {
 	private BooleanExpression context;
 	private PrintStream out = null;
 	private boolean showProverQueries = false;
-	private ExprManager em = new ExprManager();
+/*	private ExprManager em = new ExprManager();
 	private SmtEngine smt = new SmtEngine(em);
 	private Expr cvcAssumption;
-
+*/
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
 		this.context = context;
-		cvcAssumption = translate(context);
-		smt.assertFormula(cvcAssumption);
+/*		cvcAssumption = translate(context);
+		smt.assertFormula(cvcAssumption); */
 	}
-
+/*
 	private Expr translateWork(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
 		Expr result;
-
-		// NEED TO WORK ON
+	
+			// NEED TO WORK ON
 		switch (expr.operator()) {
 		case ADD:
 			if (numArgs == 2)
@@ -121,14 +125,15 @@ public class CVC4TheoremProver implements TheoremProver {
 			throw new SARLInternalException("unreachable");
 		}
 		return result;
+	
 	}
 
 	private Expr translate(SymbolicExpression expr) {
 		Expr result;
-		result = translateWork(expr);
+	//	result = translateWork(expr);
 		return result;
 	}
-
+*/
 	@Override
 	public PreUniverse universe() {
 		return universe;
@@ -150,6 +155,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	public void setOutput(PrintStream out) {
 		this.out = out;
 		showProverQueries = out != null;
+	}
+	
+	@Override
+	public String toString() {
+		return "CVC4TheoremProver";
 	}
 
 }
