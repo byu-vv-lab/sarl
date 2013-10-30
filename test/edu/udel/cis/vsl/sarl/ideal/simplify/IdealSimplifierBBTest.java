@@ -16,6 +16,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 /**
  * Set of tests on IdealSimplifier based about assigning values to single variables
  * and a polynomial, and then confirming expected full and reduced contexts.
+ * 
  * @author danfried
  *
  */
