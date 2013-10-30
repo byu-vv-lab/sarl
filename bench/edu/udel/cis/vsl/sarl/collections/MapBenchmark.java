@@ -45,7 +45,7 @@ public class MapBenchmark {
 			PMap<SymbolicExpression,SymbolicExpression> pmap = HashTreePMap.empty();
 			PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap = new PcollectionsSymbolicMap<SymbolicExpression,SymbolicExpression>(pmap);
 			//set up for removing elemnts from the array
-			ArrayList removeList = new ArrayList(size[s]);
+			ArrayList<Integer> removeList = new ArrayList<Integer>(size[s]);
 			for(int l = 0; l < size[s]; l++)
 			{
 				removeList.add(l);
@@ -114,7 +114,7 @@ public class MapBenchmark {
 				}
 				pmapEndTime = System.nanoTime();
 				pmapDuration = pmapEndTime - pmapStartTime;
-				System.out.println("Removing "+size[s]+" elements from CljMap took "+pmapDuration/1000+" microseconds");
+				System.out.println("Removing "+size[s]+" elements from PcollectionMap took "+pmapDuration/1000+" microseconds");
 				//end remove pmap
 			}
 			

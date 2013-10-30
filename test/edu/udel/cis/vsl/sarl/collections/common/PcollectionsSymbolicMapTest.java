@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
-
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -45,6 +44,7 @@ public class PcollectionsSymbolicMapTest {
 	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSame;
 	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSmaller;
 	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainEmptyPMap;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		

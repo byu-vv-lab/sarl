@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
@@ -23,8 +25,10 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
@@ -42,6 +46,7 @@ public class BasicCollectionTest {
 	ExpressionFactory exprFact;
 	SymbolicTypeFactory typeFactory;
 	CollectionFactory collectionFactory;
+	CommonObjectFactory fac;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -75,6 +80,8 @@ public class BasicCollectionTest {
 		someOtherCollection = new BasicCollection<SymbolicExpression>(collectionList1);
 		someThirdCollection = new BasicCollection<SymbolicExpression>(collectionList2);
 		someEmptyCollection = new BasicCollection<SymbolicExpression>(emptyList);
+		this.fac = null;
+		this.fac = new CommonObjectFactory(new RealNumberFactory());
 	}
 
 	@After
@@ -115,4 +122,9 @@ public class BasicCollectionTest {
 		assertEquals(someCollection.toStringBufferLong().toString(),"Collection{5, 2, 100}");
 	}
 
+	@Test(expected=SARLInternalException.class)
+	public void testCanonizeChildren(){
+		someCollection.canonizeChildren(this.fac);
+	}
+	
 }

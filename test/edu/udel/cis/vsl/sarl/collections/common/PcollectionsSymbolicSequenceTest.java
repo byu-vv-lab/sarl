@@ -11,8 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 
 public class PcollectionsSymbolicSequenceTest {
@@ -58,6 +58,15 @@ public class PcollectionsSymbolicSequenceTest {
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence;//Sequence that takes in no param
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence2;
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence3;
+	
+	Transform<SymbolicExpression,SymbolicExpression> transform= new Transform<SymbolicExpression,SymbolicExpression>()
+    {
+		public ExpressionStub apply(SymbolicExpression x){
+			String temp = x.toString() + "00";
+			return new ExpressionStub(temp);
+		}
+	};
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
@@ -341,15 +350,10 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.add(five).add(three).setExtend(0, ten, empty).toStringBuffer(true).toString(),"<10,3>");
 	}
 
-	/*@Test
+	@Test
 	public void testApply() {
-		Iterable<SymbolicExpression> test = new LinkedList<SymbolicExpression>();
-		((LinkedList<SymbolicExpression>) test).add(ten);
-		((LinkedList<SymbolicExpression>) test).add(nine);
-		((LinkedList<SymbolicExpression>) test).add(three);
-		listSequence = (PcollectionsSymbolicSequence<SymbolicExpression>) listSequence.apply((Transform<SymbolicExpression,SymbolicExpression>) test);
-		System.out.println(listSequence.symbolicObjectKind());
-	}*/
+		assertEquals(listSequence.apply(transform).toString(),"<500,300,500>");
+	}
 	
 
 	@Test

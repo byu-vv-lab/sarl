@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
+import edu.udel.cis.vsl.sarl.IF.Transform;
 //import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 //import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
@@ -25,6 +26,8 @@ import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 
 public class PcollectionsSymbolicSetTest {
 
+	
+	
 	private static PSet<SymbolicExpression> pTree;
 	private static Collection<SymbolicExpression> collectionSet;
 	
@@ -44,6 +47,14 @@ public class PcollectionsSymbolicSetTest {
 	private static SymbolicExpression otherfive = new ExpressionStub("5");
 	private static SymbolicExpression nine = new ExpressionStub("9");
 	private static SymbolicExpression ten = new ExpressionStub("10");
+	
+    Transform<SymbolicExpression,SymbolicExpression> transform= new Transform<SymbolicExpression,SymbolicExpression>()
+    {
+		public ExpressionStub apply(SymbolicExpression x){
+			String temp = x.toString() + "00";
+			return new ExpressionStub(temp);
+		}
+	};
 	
 	public static String iteratorString(PcollectionsSymbolicSet<SymbolicExpression> T)
 	{
@@ -103,13 +114,6 @@ public class PcollectionsSymbolicSetTest {
 		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(otherfive);
 		pSetPlain3 = new PcollectionsSymbolicSet<SymbolicExpression>();
 		//pSetPlain3 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain3.add(five);
-		
-		/*Transform<SymbolicExpression,SymbolicExpression> tform = new Transform<SymbolicExpression,SymbolicExpression>{
-			
-			public SymbolicExpression apply(SymbolicExpression x){
-				return new SymbolicExpression("x * 5");
-			}
-		}*/
 		
 	}
 
@@ -276,10 +280,10 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain3.removeAll(pSetCollection2).toString(), "{}");
 	}
 
-	/*@Test
+	@Test(expected=UnsupportedOperationException.class)
 	public void testKeepOnly() {
-		
-	}*/
+		pSetPlain.keepOnly(pSetCollection);
+	}
 
 	@Test
 	public void testComparator() {
@@ -288,9 +292,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.comparator(),null);
 	}
 
-	/*@Test
+	@Test
 	public void testApply() {
-		
-	}*/
+		assertEquals(pSetPlain.apply(transform).toString(),"{300,500}");
+	}
 
 }
