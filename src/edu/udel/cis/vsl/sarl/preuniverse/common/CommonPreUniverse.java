@@ -2319,6 +2319,78 @@ public class CommonPreUniverse implements PreUniverse {
 					+ reference);// unreachable
 		}
 	}
+	
+	//@Override
+	/*
+	 * Written by Julian Piane
+	 * This is an improved version of referenceTest which allows for SymbolicTypes of infinite embedded size
+	 * It still needs to undergo further testing however before it is finalized.
+	 */
+	public SymbolicType referencedTypeImproved(SymbolicType type,
+			ReferenceExpression reference) {
+		
+		while(reference != null && type != null)
+		{
+			switch (reference.referenceKind()) {
+			case NULL:
+				throw new SARLException(
+						"Cannot compute referencedType of the null reference expression:\n"
+								+ type + "\n" + reference);
+			case IDENTITY:
+				return type;
+			case ARRAY_ELEMENT: {
+				ArrayElementReference ref = (ArrayElementReference) reference;
+				reference = (ReferenceExpression)ref.getParent();
+			
+
+				if (type instanceof SymbolicArrayType)
+					type = ((SymbolicArrayType) type).elementType();
+				else
+					throw new SARLException("Incompatible type and reference:\n"
+							+ type + "\n" + reference);
+			}
+			break;
+			case TUPLE_COMPONENT: {
+				TupleComponentReference ref = (TupleComponentReference) reference;
+				reference = ref.getParent();
+
+				if (type instanceof SymbolicTupleType)
+					type = ((SymbolicTupleType) type).sequence().getType(
+							ref.getIndex().getInt());
+				else
+					throw new SARLException("Incompatible type and reference:\n"
+							+ type + "\n" + reference);
+			}
+			break;
+			case UNION_MEMBER: {
+				UnionMemberReference ref = (UnionMemberReference) reference;
+				reference = ref.getParent();
+
+				if (type instanceof SymbolicUnionType)
+					type = ((SymbolicUnionType) type).sequence().getType(
+							ref.getIndex().getInt());
+				else
+					throw new SARLException("Incompatible type and reference:\n"
+							+ type + "\n" + reference);
+			}
+			break;
+			case OFFSET: {
+				OffsetReference ref = (OffsetReference) reference;
+				reference = ref.getParent();
+
+				return type;
+			}
+			default:
+				throw new SARLInternalException("Unknown reference kind: "
+						+ reference);// unreachable
+			}
+		}
+		if (reference == null)
+			throw new SARLException("referencedType given null reference");
+		if (type == null)
+			throw new SARLException("referencedType given null type");
+		return null;
+	}
 
 	@Override
 	public ReferenceExpression identityReference() {
