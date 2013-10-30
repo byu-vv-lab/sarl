@@ -187,8 +187,7 @@ public class IdealSubtractTest {
 		Polynomial poly4 = (Polynomial) p4;
 		Polynomial poly5 = (Polynomial) p5;
 		Polynomial poly6 = (Polynomial) p6;
-		Polynomial poly7 = (Polynomial) p7;
-								
+		Polynomial poly7 = (Polynomial) p7;								
 		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
 		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);
 		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);
@@ -251,12 +250,12 @@ public class IdealSubtractTest {
 				idealFactory.multiply(x, x)), idealFactory.multiply(intTen, x));
 		Polynomial poly1 = (Polynomial) n;
 		Polynomial poly2 = (Polynomial) m;
-		Polynomial poly3 = (Polynomial) o;
-		
+		Polynomial poly3 = (Polynomial) o;		
 		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
 		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
 		Polynomial b3 = commonIdealFactory.subtractConstantTerm(poly3);
 		Polynomial b4 = commonIdealFactory.subtractConstantTerm(constZero);
+		
 		out.println("Constant Term Subtraction1=" + b3);
 		
 		assertEquals(x, b1);
@@ -277,8 +276,7 @@ public class IdealSubtractTest {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),intOne);
 		NumericExpression p2 = intZero;
 		NumericExpression n = idealFactory.minus(p1);
-		NumericExpression m = idealFactory.minus(p2);
-		
+		NumericExpression m = idealFactory.minus(p2);		
 		NumericExpression m1 = commonIdealFactory.minus(p2);
 		NumericExpression n1 = commonIdealFactory.minus(p1);
 		

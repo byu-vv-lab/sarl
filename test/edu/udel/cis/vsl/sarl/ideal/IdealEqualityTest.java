@@ -170,13 +170,13 @@ public class IdealEqualityTest {
 		NumericExpression n22 = idealFactory.subtract(x, y);
 		NumericExpression n1 = idealFactory.add(y, intTwo);
 		NumericExpression n2 = idealFactory.subtract(y,	intTwo);
-		NumericExpression n3 = idealFactory.add(y, intTwo);
-		
+		NumericExpression n3 = idealFactory.add(y, intTwo);		
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
 		BooleanExpression n0 = commonIdealFactory.neq(n1, n3);
 		BooleanExpression n1122 = commonIdealFactory.neq(n11, n22);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
+		
 		out.println("neq=" + n0);
 		out.println("neq1=" + n);
 		out.println("neq2=" + n1122);		
@@ -196,9 +196,7 @@ public class IdealEqualityTest {
 				.symbolicConstant(Xobj, typeFactory.realType()));
 		NumericSymbolicConstant y2 = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));
-		
-		
+						typeFactory.realType()));		
 		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x2, y2);
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
@@ -215,6 +213,7 @@ public class IdealEqualityTest {
 				commonIdealFactory.zeroReal(), r1);
 		BooleanExpression nb6 = idealFactory.lessThan(r1, commonIdealFactory.
 				zeroReal());
+		
 		out.println("b1=" +b1);
 		out.println("b2=" +b2);
 		
@@ -264,13 +263,13 @@ public class IdealEqualityTest {
 		NumericExpression n1 = idealFactory.add(y, idealFactory.intConstant(2));
 		NumericExpression n2 = idealFactory.subtract(y,
 				idealFactory.intConstant(2));
-		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));
-		
+		NumericExpression n3 = idealFactory.add(y, idealFactory.intConstant(2));		
 		BooleanExpression n = commonIdealFactory.equals(n1, n2);
 		BooleanExpression n0 = commonIdealFactory.equals(n1, n3);
 		BooleanExpression n1122 = commonIdealFactory.equals(n11, n22);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
+		
 		out.println("Equals=" + n0);
 		out.println("Equals1=" + n);
 		out.println("Equals2=" + n1122);				

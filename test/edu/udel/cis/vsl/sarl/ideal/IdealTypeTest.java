@@ -178,9 +178,7 @@ public class IdealTypeTest {
 		NumericExpression n1 = idealFactory.multiply(five, three);
 		NumericExpression o1 = idealFactory.minus(five);
 		NumericExpression p1 = idealFactory.power(five, three);
-		NumericExpression q1 = idealFactory.subtract(five, three);
-				
-		
+		NumericExpression q1 = idealFactory.subtract(five, three);		
 		NumericExpression n22 = commonIdealFactory.cast(n11, real);
 		NumericExpression m = commonIdealFactory.cast(e2, real); // ADD
 		NumericExpression n = commonIdealFactory.cast(e4, real); // MULTIPLY
@@ -190,6 +188,7 @@ public class IdealTypeTest {
 		NumericExpression q = commonIdealFactory.cast(e7, real); // SUBTRACT
 		NumericExpression r = commonIdealFactory.cast(e3, real);
 		NumericExpression s = commonIdealFactory.cast(e01, integer);
+		
 		out.println("n22=" + n22);
 		out.println("ADD=" + m);
 		out.println("MULTIPLY=" + n);
@@ -216,9 +215,9 @@ public class IdealTypeTest {
 	 */
 	@Test
 	public void number(){
-		NumberObject n = objectFactory.numberObject(ratThree);
-		
+		NumberObject n = objectFactory.numberObject(ratThree);		
 		NumericExpression ne = commonIdealFactory.number(n);
+		
 		out.println("Number=" +ne);
 		
 		assertEquals(three, ne);
@@ -294,9 +293,9 @@ public class IdealTypeTest {
 	 */
 	@Test
 	public void monomial() {
-		Monic monic = (Monic) idealFactory.multiply(x, x);
-		
+		Monic monic = (Monic) idealFactory.multiply(x, x);		
 		Monomial m = commonIdealFactory.monomial(constZero, monic);
+		
 		assertEquals(constZero, m);
 	}
     
@@ -314,10 +313,10 @@ public class IdealTypeTest {
 	 */
 	@Test
 	public void polynomial() {
-		Monomial monomial = idealFactory.monomial(intTen, (Monic) x);
-		
+		Monomial monomial = idealFactory.monomial(intTen, (Monic) x);		
 		SymbolicMap<Monic, Monomial> termMap = commonIdealFactory.emptyMap();
 		Polynomial b = commonIdealFactory.polynomial(termMap, monomial);
+		
 		out.println("Zero Polynomial=" + b);
 		
 		assertEquals(intZero, b);

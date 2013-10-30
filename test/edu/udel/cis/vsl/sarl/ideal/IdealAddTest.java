@@ -230,8 +230,7 @@ public class IdealAddTest {
 		Polynomial poly4 = (Polynomial) p5;
 		Polynomial poly5 = (Polynomial) p7;
 		Polynomial poly6 = (Polynomial) p8;
-		Polynomial poly7 = (Polynomial) x;
-						
+		Polynomial poly7 = (Polynomial) x;						
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
 		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
@@ -258,6 +257,7 @@ public class IdealAddTest {
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
 				SymbolicOperator.ADD, integer, five, three, one);
+		
 		out.println("Exp=" + n1);
 		out.println("Expr2=" +e9);
 		

@@ -214,8 +214,7 @@ public class IdealMultiplyTest {
 		Polynomial poly3 = (Polynomial) p3;
 		Polynomial poly4 = (Polynomial) p6;
 		Polynomial poly5 = (Polynomial) x2;
-		Polynomial poly6 = (Polynomial) x;
-		
+		Polynomial poly6 = (Polynomial) x;		
 		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
 		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);
@@ -223,6 +222,7 @@ public class IdealMultiplyTest {
 		Polynomial b5 = commonIdealFactory.multiply(poly5, poly5);
 		Polynomial b6 = commonIdealFactory.multiply(poly5, poly6);
 		Polynomial b7 = commonIdealFactory.multiply(poly6, intTen);
+		
 		out.println("Multiply_Polynomial=" + b1);
 		
 		assertEquals(p5, b1);

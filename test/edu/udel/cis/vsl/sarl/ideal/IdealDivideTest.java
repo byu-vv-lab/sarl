@@ -193,14 +193,14 @@ public class IdealDivideTest {
 		NumericExpression n7 = idealFactory.multiply(zero, three);
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
-		NumericExpression np = idealFactory.divide(n, m);
-		
+		NumericExpression np = idealFactory.divide(n, m);		
 		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
 		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
 		NumericExpression b3 = commonIdealFactory.divide(n1, n4);
 		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
 		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
 		NumericExpression p1 = commonIdealFactory.divide(n, m);
+		
 		out.println("b1=" + b1);
 		
 		assertEquals(np, p1);
@@ -254,8 +254,7 @@ public class IdealDivideTest {
 		Polynomial poly5 = (Polynomial) p05;
 		Polynomial poly6 = (Polynomial) p07;
 		Polynomial poly7 = (Polynomial) p09;
-		Polynomial poly8 = (Polynomial) p10;
-				
+		Polynomial poly8 = (Polynomial) p10;				
 		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
 		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
 		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);
@@ -286,9 +285,7 @@ public class IdealDivideTest {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.realType()));
 		IntObject exp3 = objectFactory.intObject(3);
-		IntObject exp2 = objectFactory.intObject(2);
-		
-		
+		IntObject exp2 = objectFactory.intObject(2);		
 		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
 				power(x, exp3));
 		NumericExpression complex2 = commonIdealFactory.multiply(thirtyFive, idealFactory.

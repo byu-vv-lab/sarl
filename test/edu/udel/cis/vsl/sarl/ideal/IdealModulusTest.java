@@ -109,12 +109,12 @@ public class IdealModulusTest {
 		NumericExpression n1 = idealFactory.subtract(idealFactory.multiply(x, x),
 				intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
-		NumericExpression ne1 = idealFactory.modulo(n1, n2);
-		
+		NumericExpression ne1 = idealFactory.modulo(n1, n2);		
 		NumericExpression n = commonIdealFactory.modulo(n1, n2);
 		NumericExpression m = commonIdealFactory.modulo(intZero, n2);
 		NumericExpression p = commonIdealFactory.modulo(n1, intOne);
 		NumericExpression q = commonIdealFactory.modulo(constOnePointFive, constOne);
+		
 		out.println("modulo=" + q);
 		
 		assertEquals(ne1, n);
