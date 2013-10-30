@@ -2,18 +2,19 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
 
-
 import cvc3.Expr;
 /*
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
+import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.SmtEngine;
 */
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
@@ -36,6 +37,25 @@ public class CVC4TheoremProver implements TheoremProver {
 		smt.assertFormula(cvcAssumption); */
 	}
 /*
+	private Expr translateMultiply(SymbolicExpression expr) {
+		int numArgs = expr.numArguments();
+		Expr result;
+
+		if (numArgs == 1) {
+			result = em.mkConst(new Rational(1));
+			for (SymbolicExpression operand : (SymbolicCollection<?>) expr
+					.argument(0))
+				result = em.mkExpr(Kind.MULT, result, translate(operand));
+		} else if (numArgs == 2)
+			result = em.mkExpr(Kind.MULT,
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
+		else
+			throw new SARLInternalException(
+					"Wrong number of arguments to multiply: " + expr);
+		return result;
+	}
+
 	private Expr translateWork(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
 		Expr result;
@@ -94,6 +114,14 @@ public class CVC4TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(0)),
 					translate((SymbolicExpression) expr.argument(1)));
 			break;
+		case MODULO:
+			result = em.mkExpr(Kind.INTS_MODULUS,
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
+			break;
+		case MULTIPLY:
+			result = translateMultiply(expr);
+			break;
 		case NEGATIVE:
 			result = em.mkExpr(Kind.UMINUS,
 					translate((SymbolicExpression) expr.argument(0)));
@@ -120,7 +148,7 @@ public class CVC4TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(0)),
 					translate((SymbolicExpression) expr.argument(1)));
 			break;
-		
+
 		default:
 			throw new SARLInternalException("unreachable");
 		}
