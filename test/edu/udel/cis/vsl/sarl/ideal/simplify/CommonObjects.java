@@ -55,11 +55,11 @@ public class CommonObjects {
 	
 	static IdentitySimplifierFactory identitySimplifierFactory;
 	
-	static IdealSimplifier idealSimplifier;
+	static IdealSimplifier idealSimplifier, idealSimp2;
 	
 	static Simplifier simp1ifier_xeq5;
 	
-	static BooleanExpression xeq5, trueExpr, falseExpr, assumption; //assumption is not initialized, as uses will vary greatly
+	static BooleanExpression p, q, claim1, pThanQ, xeq5, yeq6, trueExpr, falseExpr, assumption; //assumption is not initialized, as uses will vary greatly
 	
 	static SymbolicExpression symbExpr_xpy; // x + y
 	
@@ -173,6 +173,7 @@ public class CommonObjects {
 		yInt = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("yInt"), integerType);
 		xeq5 = preUniv.equals(x, rat5);
+		yeq6 = preUniv.equals(y, rat6);
 		simp1ifier_xeq5 = idealSimplifierFactory.newSimplifier(xeq5);
 		//not sure if xsqd is necessary
 		//xsqd = preUniv.multiply(x, x);
@@ -218,6 +219,9 @@ public class CommonObjects {
 		num10000Int = numFact.integer("10000");
 		trueExpr = preUniv.bool(true);
 		falseExpr = preUniv.bool(false);
+		p = preUniv.falseExpression();
+		q = preUniv.falseExpression();
+		pThanQ = preUniv.implies(p, q);
 	}
 
 }
