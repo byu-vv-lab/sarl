@@ -21,7 +21,6 @@ public class MultiplyIntegerNumberBenchmark {
 	private static BigInteger bigTwo = new BigInteger("2"); 
 	private static BigInteger bigThousand = new BigInteger("1000");  
 	private static BigInteger bigTwoThousand = new BigInteger("2000"); 
-	private static BigInteger bigThirtyOne = new BigInteger("31"); 
 	private static BigInteger bigTen = new BigInteger("10");  
 	private static BigInteger bigTwenty = new BigInteger("20");
 	private static BigInteger bigA1 = new BigInteger("21220"); 
