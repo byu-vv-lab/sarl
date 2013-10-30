@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl;
 
 import java.math.BigInteger;
 
-
 import edu.udel.cis.vsl.sarl.IF.number.*;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
@@ -27,7 +26,16 @@ public class MultiplyIntegerNumberBenchmark {
 	private static BigInteger bigA2 = new BigInteger("43784"); 
 	private static BigInteger bigA3 = new BigInteger("452222");  
 	private static BigInteger bigA4 = new BigInteger("48273"); 
+	private static BigInteger bigFiftyMillion = new BigInteger("50000000");
+	private static BigInteger bigOneHundredMillion = new BigInteger("100000000");
+	private static BigInteger bigOneBillion = new BigInteger("1000000000");
+	private static BigInteger bigFiveBillion = new BigInteger("5000000000");
+	private static BigInteger bigOneTrillion = new BigInteger("1000000000000");
+	private static BigInteger bigTenTrillion = new BigInteger("10000000000000");
+	private static BigInteger bigOneQuadrillion = new BigInteger("1000000000000000");
+	private static BigInteger bigTwoQuadrillion = new BigInteger("2000000000000000");
 
+	
 
 
 
@@ -111,7 +119,51 @@ public static void main(String args[]) {
 	factory.multiply(numberA3, numberA4); 
 	long y7 = System.nanoTime();
 
-	System.out.println(y7-x7);
+	System.out.println(y7-x7); 
+	
+
+	IntegerNumber integerFiftyMillion = factory.integer(bigFiftyMillion);
+	IntegerNumber integerOneHundredMillion= factory.integer(bigOneHundredMillion); 
+	long x8 = System.nanoTime();
+	factory.multiply(integerFiftyMillion, integerOneHundredMillion); 
+
+	long y8 = System.nanoTime();
+
+	System.out.println(y8-x8);
+
+
+
+	
+	IntegerNumber integerOneBillion = factory.integer(bigOneBillion);
+	IntegerNumber integerFiveBillion = factory.integer(bigFiveBillion); 
+	long x9 = System.nanoTime();
+	 factory.multiply(integerOneBillion, integerFiveBillion); 
+	long y9 = System.nanoTime();
+
+	System.out.print(y9-x9);
+
+
+
+	
+	IntegerNumber integerOneTrillion = factory.integer(bigOneTrillion);
+	IntegerNumber integerTenTrillion = factory.integer(bigTenTrillion); 
+	long x10 = System.nanoTime();
+	 factory.multiply(integerOneTrillion,  integerTenTrillion); 
+	long y10 = System.nanoTime();
+
+	System.out.print(y10-x10);
+
+
+
+	
+	IntegerNumber integerOneQuadrillion = factory.integer(bigOneQuadrillion);
+	IntegerNumber integerTwoQuadrillion = factory.integer(bigTwoQuadrillion); 
+	long x11 = System.nanoTime();
+	 factory.multiply(integerOneQuadrillion, integerTwoQuadrillion); 
+	long y11 = System.nanoTime();
+
+	System.out.print(y11-x11);
+
 
 }  
 	
