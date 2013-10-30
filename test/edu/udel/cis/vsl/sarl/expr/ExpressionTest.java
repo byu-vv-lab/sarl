@@ -899,6 +899,11 @@ public class ExpressionTest {
 		// This line causes an Assertion Error. Why?
 		//BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
+		assertEquals(lessThan.numArguments(), 2);
+		// These 2 asserts fail
+		//assertEquals(lessThan.argument(0), xpy);
+		//assertEquals(lessThan.argument(1), xty);
+		assertEquals(lessThan.operator(), SymbolicOperator.LESS_THAN);
 		assertEquals(lessThan, sUniverse.lessThan(xpy, xty));
 		assertEquals(lessThan, idealFactory.lessThan(xpy, xty));
 		//assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
@@ -915,6 +920,7 @@ public class ExpressionTest {
 		//BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		// No notLessThan method for sUniverse?
+		assertEquals(notLessThan.numArguments(), 2);
 		//assertEquals(notLessThan, sUniverse.notLessThan(xpy, xty));
 		assertEquals(notLessThan, idealFactory.notLessThan(xpy, xty));
 		//assertEquals(notLessThanH, sUniverse.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
@@ -931,6 +937,7 @@ public class ExpressionTest {
 		//BooleanExpression notLessThanEqualsH = cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		// No notLessThanEquals method for sUniverse?
+		assertEquals(notLessThanEquals.numArguments(), 2);
 		//assertEquals(notLessThanEquals, sUniverse.notLessThanEquals(xpy, xty));
 		assertEquals(notLessThanEquals, idealFactory.notLessThanEquals(xpy, xty));
 		//assertEquals(notLessThanEqualsH, sUniverse.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
@@ -983,6 +990,11 @@ public class ExpressionTest {
 		//NumericExpression expr1H = cnef.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
 		
 		//assertEquals(expr1, testExpr);
+		// these 4 tests fail.
+		//assertEquals(expr1.numArguments(),2);
+		//assertEquals(expr1.argument(0), xpy);
+		//assertEquals(expr1.argument(1), xty);
+		//assertEquals(expr1.operator(), SymbolicOperator.SUBTRACT);
 		assertEquals(expr1, sUniverse.subtract(xpy, xty));
 		assertEquals(expr1, idealFactory.subtract(xpy, xty));
 		//assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
