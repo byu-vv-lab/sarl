@@ -12,11 +12,16 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.Exponentiator;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 public class ExponentiatorTest {
 	
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
-	private static BigInteger bigTen = new BigInteger("10");
+	//private static BigInteger bigTwo = new BigInteger("2");
+	//private static BigInteger bigThree = new BigInteger("3");
+	private static IntegerNumber inTwo = factory.integer(2);
+	private static IntegerNumber inThree = factory.integer(3);
+	private static Exponentiator<IntegerNumber> myXpo;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -25,12 +30,20 @@ public class ExponentiatorTest {
 	@Before
 	public void setUp() throws Exception {
 	}
-
-	/*@Test
+	
+	@Test
+	public void compareResults(){
+		//do stuff
+		myXpo.exp( inTwo , inThree );
+	}
+	
+/*
+	@Test
 	public void compareInts() {
-		Exponentiator a = new Exponentiator();//needs params
-	}*/
+		BinaryOperator<T> myop = new BinaryOperator<T>;
+		Exponentiator a = new Exponentiator(myop, T);//needs params
+	}
+*/
 
-	IntegerNumber a = factory.integer(bigTen);
 	
 }
