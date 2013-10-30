@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 
 /**
  * Test class for CommonBooleanObject

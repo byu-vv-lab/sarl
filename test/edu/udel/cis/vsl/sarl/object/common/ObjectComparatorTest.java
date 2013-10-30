@@ -2,8 +2,6 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Array;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -21,9 +19,7 @@ import edu.udel.cis.vsl.sarl.object.common.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.object.common.ExpressionStub;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.collections.common.BasicCollection;
 import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
-import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 
 /**
