@@ -15,6 +15,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 
 public class CommonSymbolicFunctionTypeTest 
 {
+	/**
+	 declaring all the required variables.
+	 */
 	CommonSymbolicFunctionType function, function1, function2;
 	
 	CommonSymbolicTypeSequence typeSequence;
@@ -33,6 +36,9 @@ public class CommonSymbolicFunctionTypeTest
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	/**
+	 initializing all the declared variables.
+	 */
 	@Before
 	public void setUp() throws Exception 
 	{
@@ -95,8 +101,14 @@ public class CommonSymbolicFunctionTypeTest
 	@Test
 	public void testOutputType() 
 	{
+//		System.out.println(function.outputType());
+//		System.out.println(function1.outputType());
+//		System.out.println(function2.outputType());
 		assertTrue(function.outputType().isInteger());
 		assertFalse(function2.outputType().isInteger());
+		assertTrue(function2.outputType().isReal());
+		assertEquals(function.outputType(), function1.outputType());
+		assertNotEquals(function1.outputType(), function2.outputType());
 	}
 
 	/**
@@ -130,6 +142,9 @@ public class CommonSymbolicFunctionTypeTest
 		assertNotEquals(function.inputTypes().numTypes(), 5);
 	}
 	
+	/**
+	 here the pureType is always returned as null thus the pureType of each variable is the same. 
+	 */
 	@Test
 	public void testGetPureType() 
 	{
@@ -140,6 +155,10 @@ public class CommonSymbolicFunctionTypeTest
 		assertEquals(function1.getPureType(), function2.getPureType());
 	}
 
+	/**
+	 here the method getPureType always returns null therefore something is assigned to the variable and checked whether 
+	 the method getPureType still returns null or not. 
+	 */
 	@Test
 	public void testSetPureType() 
 	{
