@@ -1,7 +1,8 @@
-package edu.udel.cis.vsl.sarl;
+package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import java.util.LinkedList;
 
+import edu.udel.cis.vsl.sarl.SARL;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
