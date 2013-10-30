@@ -3,6 +3,8 @@ package edu.udel.cis.vsl.sarl;
 
 
 
+import java.util.Random;
+
 import edu.udel.cis.vsl.sarl.IF.number.*;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
@@ -14,110 +16,76 @@ public class GaussianBenchmark {
 
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 
-	
+
 
 	
 	
-	
-	public void GaussianBenchmark1() { 
+public static void main(String args[]){	
 		
-		int a = 30;
-		int b = 20;  
-		RationalNumber[][] matrix = new RationalNumber[a][b];
+		 
+		Random rand = new Random();
+	
+		int row = 2; 
+		int columns = 2;
+		RationalNumber[][] matrix = new RationalNumber[2][2];
+		for(int i=0;i<row;i++){ 
+			for(int j=0;j<columns;j++){ 
+				matrix[i][j] = factory.integerToRational(
+								factory.integer(
+								rand.nextInt(10))); 
+						
 
+			}
+		}
+ 
+		
 		long x = System.nanoTime();
 		factory.gaussianElimination(matrix);
 		long y = System.nanoTime();
+		System.out.print(y-x);
 
-		System.out.println(y-x);
+	 
 
-	} 
-	
-	
-public void GaussianBenchmark2() { 
+		int row2 = 10; 
+		int columns2 = 10;
+		RationalNumber[][] matrix2 = new RationalNumber[10][10];
+		for(int i=0;i<row2;i++){ 
+			for(int j=0;j<columns2;j++){ 
+				matrix2[i][j] = factory.integerToRational(
+								factory.integer(
+								rand.nextInt(10))); 
+						
+
+			}
+		}
+ 
 		
-		int a = 2;
-		int b = 2; 
-		RationalNumber[][] matrix = new RationalNumber[a][b];
-
-		long x = System.nanoTime();
-		factory.gaussianElimination(matrix);
-		long y = System.nanoTime();
-
-		System.out.println(y-x);
-
-	} 
-
-public void GaussianBenchmark3() { 
+		long x2 = System.nanoTime();
+		factory.gaussianElimination(matrix2);
+		long y2 = System.nanoTime();
+		System.out.print(y2-x2);
 	
-	int a = 10;
-	int b = 10;  
-	RationalNumber[][] matrix = new RationalNumber[a][b];
-
-	long x = System.nanoTime();
-	factory.gaussianElimination(matrix);
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-} 
+ 
 
 
-public void GaussianBenchmar4() { 
-	
-	int a = 100;
-	int b = 100;  
-	RationalNumber[][] matrix = new RationalNumber[a][b];
 
-	long x = System.nanoTime();
-	factory.gaussianElimination(matrix);
-	long y = System.nanoTime();
+int row3 = 100; 
+int columns3 = 100;
+RationalNumber[][] matrix3 = new RationalNumber[100][100];
+for(int i=0;i<row3;i++){ 
+	for(int j=0;j<columns3;j++){ 
+		matrix3[i][j] = factory.integerToRational(
+						factory.integer(
+						rand.nextInt(10))); 
+				
 
-	System.out.println(y-x);
-
-} 
-
-
-public void GaussianBenchmark5() { 
-	
-	int a = 200;
-	int b = 400;  
-	RationalNumber[][] matrix = new RationalNumber[a][b];
-
-	long x = System.nanoTime();
-	factory.gaussianElimination(matrix);
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-} 
-
-
-public void GaussianBenchmark6() { 
-	
-	int a = 1000;
-	int b = 1000;  
-	RationalNumber[][] matrix = new RationalNumber[a][b];
-
-	long x = System.nanoTime();
-	factory.gaussianElimination(matrix);
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-} 
-
-public void GaussianBenchmark7() { 
-	
-	int a = 10000;
-	int b = 10000;  
-	RationalNumber[][] matrix = new RationalNumber[a][b];
-
-	long x = System.nanoTime();
-	factory.gaussianElimination(matrix);
-	long y = System.nanoTime();
-
-	System.out.println(y-x);
-
-} 
+	}
 }
+
+
+long x3 = System.nanoTime();
+factory.gaussianElimination(matrix3);
+long y3 = System.nanoTime();
+
+System.out.println(y3-x3);
+}}
