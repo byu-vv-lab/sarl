@@ -87,5 +87,7 @@ long x3 = System.nanoTime();
 factory.gaussianElimination(matrix3);
 long y3 = System.nanoTime();
 
-System.out.println(y3-x3);
+System.out.println(y3-x3); 
+
+//end of gaussian
 }}
