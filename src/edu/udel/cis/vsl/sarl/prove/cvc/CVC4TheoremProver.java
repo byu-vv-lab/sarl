@@ -9,13 +9,14 @@ import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.SmtEngine;
 */
-
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
@@ -35,17 +36,60 @@ public class CVC4TheoremProver implements TheoremProver {
 		assert context != null;
 		this.universe = universe;
 		this.context = context;
-	//	cvcAssumption = translate(context);
-	//	smt.assertFormula(cvcAssumption);
-	
+		//cvcAssumption = translate(context);
+		//smt.assertFormula(cvcAssumption);
 	}
-/*
+
 	
-	private Expr bigArrayLength(Expr bigArray) {
-		Expr constant = em.mkConst(new Rational(0));
-		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, constant);
+	/**
+	 * Symbolic expressions of incomplete array type are represented by ordered
+	 * pairs (length, array). This method tells whether the given symbolic
+	 * expression type requires such a representation.
+	 * 
+	 * @param type
+	 *            any symbolic type
+	 * @return true iff the type is an incomplete array type
+	 */
+	private boolean isBigArrayType(SymbolicType type) {
+		return type instanceof SymbolicArrayType
+				&& !((SymbolicArrayType) type).isComplete();
 	}
-	
+
+	/**
+	 * Like above, but takes SymbolicExpression as input.
+	 * 
+	 * @param expr
+	 * @return true iff the type of expr is an incomplete array type
+	 */
+	private boolean isBigArray(SymbolicExpression expr) {
+		return isBigArrayType(expr.type());
+	}
+
+	/**
+	 * This method takes any Expr that is of incomplete array type and returns
+	 * the length.
+	 * 
+	 * @param bigArray
+	 *            CVC4 Expr of bigArray
+	 * @return length of CVC4 Expr of incomplete array type
+	 */
+//	private Expr bigArrayLength(Expr bigArray) {
+//		Expr constant = em.mkConst(new Rational(0));
+//		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, constant);
+//	}
+
+	/**
+	 * This methods takes any Expr that is of incomplete array type and returns
+	 * the value.
+	 * 
+	 * @param bigArray
+	 *            CVC4 Expr of bigArray
+	 * @return value of CVC4 Expr of incomplete array type
+	 */
+/*	private Expr bigArrayValue(Expr bigArray) {
+		Expr index = em.mkConst(new Rational(1));
+		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
+	}
 
 	private Expr translateMultiply(SymbolicExpression expr) {
 		int numArgs = expr.numArguments();
@@ -127,6 +171,11 @@ public class CVC4TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(0)),
 					translate((SymbolicExpression) expr.argument(1)));
 			break;
+		case INT_DIVIDE:
+			result = em.mkExpr(Kind.INTS_DIVISION,
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
+			break;
 		case LENGTH:
 			result = bigArrayLength(translate((SymbolicExpression) expr
 					.argument(0)));
@@ -175,14 +224,16 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		}
 		case TUPLE_READ:
-			result = em.mkExpr(Kind.TUPLE_SELECT, 
-					translate((SymbolicExpression) expr.argument(0)),
-					em.mkConst(new Rational(((IntObject) expr.argument(1)).getInt())));
+			result = em.mkExpr(Kind.TUPLE_SELECT,
+					translate((SymbolicExpression) expr.argument(0)), em
+							.mkConst(new Rational(
+									((IntObject) expr.argument(1)).getInt())));
 			break;
 		case TUPLE_WRITE:
 			result = em.mkExpr(Kind.TUPLE_UPDATE,
-					translate((SymbolicExpression) expr.argument(0)),
-					em.mkConst(new Rational(((IntObject) expr.argument(1)).getInt())),
+					translate((SymbolicExpression) expr.argument(0)), em
+							.mkConst(new Rational(
+									((IntObject) expr.argument(1)).getInt())),
 					translate((SymbolicExpression) expr.argument(2)));
 			break;
 		case SUBTRACT:
@@ -203,24 +254,24 @@ public class CVC4TheoremProver implements TheoremProver {
 		result = translateWork(expr);
 		return result;
 	}
-	*/
+*/
 	@Override
 	public PreUniverse universe() {
 		return universe;
 	}
-	
+
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void setOutput(PrintStream out) {
 		this.out = out;
@@ -231,5 +282,5 @@ public class CVC4TheoremProver implements TheoremProver {
 	public String toString() {
 		return "CVC4TheoremProver";
 	}
-
+	
 }
