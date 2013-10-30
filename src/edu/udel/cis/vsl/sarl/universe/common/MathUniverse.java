@@ -118,8 +118,8 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 	*/
 	
 	
-	public SymbolicExpression mathSimplify(SymbolicExpression expr) {
-		int n = expr.numArguments();
+	public SymbolicExpression mathSimplify(SymbolicExpression expr){ {
+		/*int n = expr.numArguments();
 		SymbolicExpression[] newArgs = new SymbolicExpression[n];
 		for(int i = 0; i < n; i++){
 			mathSimplify(expr.argument(i));
@@ -138,10 +138,12 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 		
 	}
 		return null;
+	*/
 	}
 	
 	// continue along these lines.
 	
 	// add tests that determine if you are using the trig identities correctly.
 
+}
 }
