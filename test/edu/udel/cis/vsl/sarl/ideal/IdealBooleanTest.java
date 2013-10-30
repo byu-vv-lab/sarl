@@ -27,13 +27,8 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
@@ -54,34 +49,9 @@ public class IdealBooleanTest {
 	private BooleanExpressionFactory booleanFactory;
 	private CommonIdealFactory commonIdealFactory;
 
-	private RationalNumber ratThree; // 3
 	private Constant intOne; // int constant 1
 	StringObject Xobj; // "X"
-	IntObject intObj3;
-	NumberObject numObj3;
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression five;
-	private NumericExpression one;
-	private RationalNumber realOne;
-	private RationalNumber realFive; 
-	private NumericExpression three; 
-	private RationalNumber realThree; 
-	private SymbolicType real;
-	private SymbolicType integer;
-	NumericExpression intHundred;
-	NumericExpression intTwenty;
-	NumericExpression e01; // Real 3 cast to integer 3
-	NumericExpression e1; // 5 IsReal
-	NumericExpression e2; // 5 + 3 ADD
-	NumericExpression e3; // 5 > 3, 5, 3 COND
-	NumericExpression e4; // 5 * 3 MULTIPLY
-	NumericExpression e5; // -5 NEGATIVE
-	NumericExpression e6; // 5 ^ 3 POWER
-	NumericExpression e7; // 5 - 3 SUBTRACT
-	NumericExpression e8; // DEFAULT
-	NumericExpression e9; // 5 + 3 + 1 ADD
-	NumericExpression e10; // 5 ^ 3   (3 - IntObject)
 
 	@Before
 	public void setUp() throws Exception {
@@ -94,49 +64,10 @@ public class IdealBooleanTest {
 		booleanFactory = system.booleanFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
-		ratThree = numberFactory.rational("3");
 		intOne = idealFactory.intConstant(1);
-		typeFactory.integerType();
-		typeFactory.integerType();
-		intObj3 = objectFactory.intObject(3);
-		numObj3 = objectFactory.numberObject(ratThree);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
-		y = objectFactory.canonic(idealFactory.symbolicConstant(
-				objectFactory.stringObject("Y"), typeFactory.integerType()));
-		real = typeFactory.realType();
-		integer = typeFactory.integerType();
-		realOne = numberFactory.rational("1");
-		realFive = numberFactory.rational("5");
-		one = commonIdealFactory.constant(realOne);
-		five = commonIdealFactory.constant(realFive);
-		realThree = numberFactory.rational("3");
-		three = commonIdealFactory.constant(realThree);
-		intHundred = idealFactory.intConstant(100);
-		intTwenty = idealFactory.intConstant(20);
-		e01 = commonIdealFactory.expression(SymbolicOperator.CAST, 
-				real, three);
-		e1 = commonIdealFactory.constant(realFive);
-		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
-				three); // 5 + 3 ADD
-		e3 = commonIdealFactory.expression(SymbolicOperator.COND,
-				real, x, booleanFactory.trueExpr(), 
-				booleanFactory.falseExpr());
-		e4 = commonIdealFactory.expression(SymbolicOperator.MULTIPLY, integer,
-				five, three); // 5 * 3 MULTIPLY
-		e5 = commonIdealFactory.expression(SymbolicOperator.NEGATIVE, integer,
-				five); // -5 NEGATIVE
-		e6 = commonIdealFactory.expression(SymbolicOperator.POWER, integer,
-				five, three); // 5 ^ 3 POWER
-		e7 = commonIdealFactory.expression(SymbolicOperator.SUBTRACT, integer,
-				five, three); // 5 - 3 SUBTRACT
-		e8 = commonIdealFactory.zeroReal(); // DEFAULT}
-		e9 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
-				three, one); // 5 + 3 +1 ADD
-		e10 = commonIdealFactory.expression(SymbolicOperator.POWER, integer,
-				five, intObj3); // 5 ^ 3 POWER
-
 	}
 
 	@After
