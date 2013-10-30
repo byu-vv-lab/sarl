@@ -70,6 +70,7 @@ public class IdealDivideTest {
 	private NumericExpression thirtyFive;
 	private NumericExpression zero;
 	private RationalNumber realZero;
+	private RationalNumber realOne;
 	private RationalNumber realFifteen;
 	private RationalNumber realFive; 
 	private NumericExpression three; 
@@ -101,6 +102,7 @@ public class IdealDivideTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
+		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");
 		realFive = numberFactory.rational("5");
 		realSeven = numberFactory.rational("7");
@@ -245,5 +247,47 @@ public class IdealDivideTest {
 		NumericExpression result = commonIdealFactory.subtract(result1, result2);
 		
 		assertEquals(result, complex);
+	}
+	
+	/**
+	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
+	 * 
+	 * @param type
+	 * 				Symbolic Expressions of same numeric type
+	 * 
+	 *  [(x+1)(x-1)(xy+3)]/[(x-1)*(xy+5)*z] = [(x+1)(xy+3)]/[(xy+5)*z]?
+	 */
+	@Test
+	public void factoringRational() {
+		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("x"),
+						typeFactory.realType()));
+		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("y"),
+						typeFactory.realType()));
+		NumericSymbolicConstant z = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("z"),
+						typeFactory.realType()));
+		NumericExpression xPlus1 = idealFactory.add(x, 
+				idealFactory.constant(realOne)); //(x+1)
+		NumericExpression xMinus1 = idealFactory.subtract(x, 
+				idealFactory.constant(realOne)); //(x-1)
+		NumericExpression xy = idealFactory.multiply(x, y); //xy
+		NumericExpression xyPlusThree = idealFactory.add(xy, 
+				idealFactory.constant(realThree)); //xy+3
+		NumericExpression xyPlusFive = idealFactory.add(xy, 
+				idealFactory.constant(realFive)); //xy+5
+		NumericExpression numerator = idealFactory.multiply(
+				idealFactory.multiply(xPlus1, xMinus1), xyPlusThree); //(x+1)(x-1)(xy+3)
+		NumericExpression denominator = idealFactory.multiply(
+				idealFactory.multiply(xMinus1, xyPlusFive), z); //(x-1)*(xy+5)*z		
+		NumericExpression resultNumer = idealFactory.multiply(xPlus1, 
+				xyPlusThree); //(x+1)(xy+3)
+		NumericExpression resultDenom = idealFactory.multiply(xyPlusFive, 
+				z); //(xy+5)*z
+		NumericExpression r1 = idealFactory.divide(numerator, denominator);
+		NumericExpression result = idealFactory.divide(resultNumer, resultDenom);
+		
+		assertEquals(result, r1);
 	}
 }
