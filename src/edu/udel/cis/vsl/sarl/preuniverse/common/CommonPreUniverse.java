@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -1364,9 +1363,8 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public BooleanExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		// edited by malsulmi
-		// by adding && arg1.isNumeric() to the condition
-		if (arg0.isNumeric() && arg1.isNumeric())
+		
+		if (arg0.isNumeric()&& arg1.isNumeric())
 			return numericFactory.equals((NumericExpression) arg0,
 					(NumericExpression) arg1);
 		return equals(arg0, arg1, 0);
