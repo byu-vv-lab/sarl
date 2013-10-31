@@ -51,7 +51,10 @@ public class BoundsObjectMakeConstantTest {
 	@Test(expected = RuntimeException.class)
 	public void makeConstantNullTest() {
 		boundObj = BoundsObject.newTightBound(xpy, num0);
+		assertTrue(boundObj.isConsistent());
+		assertEquals(num0, boundObj.constant());
 		boundObj.makeConstant(null);
+		//out.println(boundObj.constant());
 	}
 	
 	/**
@@ -61,7 +64,9 @@ public class BoundsObjectMakeConstantTest {
 	@Test
 	public void makeConstantMixedIntegralTest(){
 		boundObj = BoundsObject.newTightBound(xpyInt, num0);
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num10000);
+		assertEquals(num10000Int, boundObj.constant());
 	}
 	
 	/**
@@ -71,7 +76,9 @@ public class BoundsObjectMakeConstantTest {
 	@Test
 	public void makeConstantIntegralTest(){
 		boundObj = BoundsObject.newTightBound(xpy, num0);
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num0Int);
+		assertEquals(num0Int, boundObj.constant());
 	}
 	
 	/**
@@ -81,7 +88,9 @@ public class BoundsObjectMakeConstantTest {
 	@Test
 	public void makeConstantIntegralTest2(){
 		boundObj = BoundsObject.newTightBound(xpy, num0);
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num0);
+		assertEquals(num0, boundObj.constant());
 	}
 	
 	/**
@@ -91,7 +100,9 @@ public class BoundsObjectMakeConstantTest {
 	@Test 
 	public void makeConstantIntegralTest3(){
 		boundObj = BoundsObject.newTightBound(xpyInt, num0);
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num0Int);
+		assertEquals(num0Int, boundObj.constant());
 	}
 	
 	/**
@@ -114,14 +125,20 @@ public class BoundsObjectMakeConstantTest {
 	public void makeConstantIntRealTest(){
 		boundObj = BoundsObject.newTightBound(symbExpr_xpyInt, num10000Int);
 		assertTrue(boundObj.isIntegral());
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num10pt5);
 	}
 	
-	@Ignore
+	/**
+	 * Tests makeConstant, when an integral is passed as an argument for a BoundsObject
+	 * with an rational Symbolic Expression.
+	 */
 	@Test
 	public void makeConstantIntRatTest(){
-		boundObj = BoundsObject.newTightBound(symbExpr_xpyInt, num10000Int);
+		boundObj = BoundsObject.newTightBound(symbExpr_xpy, num10000Int);
+		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num10000Int);
+		assertEquals(num10000Int, boundObj.constant());
 	}
 
 }
