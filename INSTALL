@@ -96,14 +96,22 @@ This is not used by Eclipse, but you will want to use Ant to
 build the jar file.
 
 7. The platform-specific information are handled in Eclipse by
-defining Classpath variables.  Navigate to Preferences->Java->Build
-Path->Classpath Variables->New and define a new variable called
-"CVC3". To define it, navigate to and select the file libcvc3.jar
-you created by building CVC3.  Create a new variable
-"CLJ-DS" to point to the clj-ds.jar file.  Create a new variable
-"PCOLLECTIONS" to point to the PCollections jar file.  You may
-optionally define variable for the source directories of all the above.
-This can help with debugging.
+defining Classpath variables.  
+
+	a. (Recommended) If you have put all dependent packages as Step 3.a above,
+	   you only need to modify one classpath variables. Go to 
+	   Preferences -> Java -> Build Path -> Classpath Variables, 
+	   and edit the entry “VSL_DEPEND” to point to the directory 
+	   where you put the dependent packages.
+
+	b. Otherwise, navigate to Preferences->Java->Build Path
+	   ->Classpath Variables->New and define a new variable called
+	   "CVC3". To define it, navigate to and select the file libcvc3.jar
+	   you created by building CVC3.  Create a new variable
+	   "CLJ-DS" to point to the clj-ds.jar file.  Create a new variable
+	   "PCOLLECTIONS" to point to the PCollections jar file.  You may
+	   optionally define variable for the source directories of all the above.
+	   This can help with debugging.
 
 8. Do a clean build.  Everything should compile.  Generate the sarl.jar
 by right-clicking (or ctrl-click on OS X) the build.xml file and
