@@ -57,6 +57,8 @@ public class CommonPreUniverseTest {
 	private static SymbolicType realType;
 	private static SymbolicType booleanType;
 	private static SymbolicType arrayType, realArray;
+	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
+	private static SymbolicUnionType union1;
 	// Factories
 	private static ObjectFactory objectFactory;
 	private static ExpressionFactory expressionFactory;
@@ -64,19 +66,16 @@ public class CommonPreUniverseTest {
 	private static NumericExpressionFactory numericFactory;
 	private static SymbolicTypeFactory typeFactory;
 	private static NumberFactory numberFactory;
-	// SymbolicObjects
+	// SymbolicObjects & SymbolicExpressions
 	private static Comparator<SymbolicObject> objectComparator;
-	private static SymbolicExpression nullExpression;
-	private static SymbolicCompleteArrayType symbolicCompleteArrayType;
-	// SymbolicExpressions
 	private static SymbolicConstant symbolicConstant;
+	private static SymbolicExpression nullExpression;
 	private static NumericExpression numericExpression;
 	// Collections
 	private static Collection<SymbolicObject> objectCollection;
 	private static ArrayList<NumericExpression> emptyNumericList;
 	private static ArrayList<NumericExpression> numericList;
 	
-	private static SymbolicUnionType union1;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -187,12 +186,6 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.and(booleanList2), falseExpr); // test partial false
 		assertEquals(universe.and(booleanList3), falseExpr); // test all false
 		assertEquals(universe.and(booleanEmptyList), trueExpr); // test empty is true
-	}	
-
-	@Test
-	@Ignore
-	public void testUnionTypeStringObjectIterableOfQextendsSymbolicType() {
-		fail("Not yet implemented");
 	}
 
 	/**
@@ -438,12 +431,6 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.equiv(boolA, boolA), testTrue); //test for identical
 	}
 
-	@Test
-	@Ignore
-	public void testSubstituteSymbolicExpressionSymbolicConstantSymbolicExpression() {
-		fail("Not yet implemented");
-	}
-
 	/**
 	 * @author blutuu
 	 * 
@@ -668,11 +655,6 @@ public class CommonPreUniverseTest {
 			
 	}
 
-	@Test //Julian Piane
-	public void testArrayLambda() {
-		assertEquals(null, universe.arrayLambda(symbolicCompleteArrayType, nullExpression)); //Simple test for coverage.
-	}
-
 	@Test
 	/*
 	 * Tests the comparator() factory method.
@@ -686,16 +668,6 @@ public class CommonPreUniverseTest {
 		assertEquals(objectComparator, resultComparator); //generic test for equality
 		assertTrue(resultComparator.equals(objectComparator)); //test if same attributes
 		assertTrue(resultComparator == objectComparator); //test if same instance
-	}
-
-	@Test
-	@Ignore
-	public void testIntegerBigInteger() {
-//		NumericExpression BigInt1, BigInt2;
-//		long x = 2;
-//		BigInt1=universe.integer((int) Math.pow(x,10));
-		
-		fail("Not yet implemented");
 	}
 
 	@Test //Julian Piane
