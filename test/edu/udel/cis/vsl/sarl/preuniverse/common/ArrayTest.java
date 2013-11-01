@@ -72,7 +72,7 @@ public class ArrayTest {
 
 	/**
 	 * Main function that tests for successful completion of denseArrayWrite()
-	 * Written by Jordan Saints on 9/16/13
+	 * Written by Jordan Saints
 	 */
 	@Test
 	public void testDenseArrayWriteSuccess() {
@@ -144,7 +144,7 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #1 that tests failure branch (1 of 2) of
-	 * denseArrayWrite() Written by Jordan Saints on 9/16/13
+	 * denseArrayWrite() Written by Jordan Saints
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam1Exception() {
@@ -165,7 +165,7 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #2 that tests failure branch (2 of 2) of
-	 * denseArrayWrite() Written by Jordan Saints on 9/16/13
+	 * denseArrayWrite() Written by Jordan Saints
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam2Exception() {
