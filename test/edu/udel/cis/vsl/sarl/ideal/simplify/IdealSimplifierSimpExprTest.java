@@ -107,6 +107,8 @@ public class IdealSimplifierSimpExprTest {
 		expr4 = preUniv.multiply(rat200, xx);
 		out.println(expr4);
 		
+		// 5x^4y^3 + 500x^2 -> 5*5^4y^3 + 500*5^2 = 3125y^3+12500
+		
 		numExpr = preUniv.subtract(preUniv.subtract(expr1, expr3), preUniv.subtract(expr2, expr4));
 		
 		symExpr = numExpr;
