@@ -117,12 +117,16 @@ public class CVC3TranslateFunctionTest {
 	 */
 
 	@Ignore @Test
-	/* TODO This test is tied completely to CVC3, which is not good because we won't
-	 * be able to re-use this test when we switch to another prover later. Instead, 
-	 * you should write the test in a black-box way: create a lambda expression, 
-	 * design some queries about it, and see if the prover gets the right answer on all the queries.
-	 * Don't check if a specific translation to a certain prover has the exact form you expect.
-	 * Moreover, this test does not adhere to our coding standards. 
+	/* TODO This test fails because vc.eqExpr(expr, vc.exprFromString("(LAMBDA (e: INT): f)(1)"))
+	 * is not a valid expression for CVC3. Please use a valid expression instead.
+	 * 
+	 * Notice: The tests in this package (edu.udel.cis.vsl.sarl.prove.cvc) are 
+	 * tied completely to CVC3, which is not good because we won't
+	 * be able to re-use these tests when we switch to another prover later. 
+	 * Instead, you should write the tests in a black-box way: 
+	 * create a lambda expression, design some queries about it, and 
+	 * see if the prover gets the right answer on all the queries.
+	 * Moreover, the tests do not adhere to our coding standards. 
 	 * Please log on to Sakai and go to the CISC475 site, 
 	 * and go to the Wiki, you will see the coding standards there.
 	 */
