@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -50,8 +51,10 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Primitive;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
+import edu.udel.cis.vsl.sarl.number.real.Exponentiator;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
  * <pre>
@@ -150,6 +153,10 @@ public class CommonIdealFactory implements IdealFactory {
 
 	private PrimitivePowerMultiplier primitivePowerMultipler;
 
+	private Exponentiator<NumericExpression> integerExponentiator;
+
+	private Exponentiator<NumericExpression> realExponentiator;
+
 	public CommonIdealFactory(NumberFactory numberFactory,
 			ObjectFactory objectFactory, SymbolicTypeFactory typeFactory,
 			CollectionFactory collectionFactory,
@@ -175,6 +182,27 @@ public class CommonIdealFactory implements IdealFactory {
 		this.monomialAdder = new MonomialAdder(this);
 		this.monomialNegater = new MonomialNegater(this);
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
+		this.integerExponentiator = new Exponentiator<NumericExpression>(
+				new BinaryOperator<NumericExpression>() {
+
+					@Override
+					public NumericExpression apply(NumericExpression x,
+							NumericExpression y) {
+						return multiply((Polynomial) x, (Polynomial) y);
+					}
+
+				}, oneInt);
+		this.realExponentiator = new Exponentiator<NumericExpression>(
+				new BinaryOperator<NumericExpression>() {
+
+					@Override
+					public NumericExpression apply(NumericExpression x,
+							NumericExpression y) {
+						return multiplyRational((RationalExpression) x,
+								(RationalExpression) y);
+					}
+
+				}, oneReal);
 	}
 
 	@Override
@@ -1161,12 +1189,59 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
+	 * Exponentiation with exponent positive concrete IntegerNumber.
+	 * 
+	 * @param base
+	 *            any numeric expression
+	 * @param exponent
+	 *            the exponent, which must be positive
+	 * @return the result of raising base to the power exponent
+	 */
+	private NumericExpression powerNumber(NumericExpression base,
+			IntegerNumber exponent) {
+		if (base.type().isReal())
+			return realExponentiator.exp(base, exponent);
+		else
+			return integerExponentiator.exp(base, exponent);
+	}
+
+	/**
+	 * Raises base to exponent power, where exponent may be any kind of number.
+	 * Handles special case where exponent is a concrete integer number.
+	 * 
 	 * TODO: (a^b)^c=a^(bc). (a^b)(a^c)=a^(b+c)
 	 * 
 	 */
 	@Override
 	public NumericExpression power(NumericExpression base,
 			NumericExpression exponent) {
+		Number exponentNumber = extractNumber(exponent);
+
+		if (exponentNumber != null) {
+			if (exponentNumber instanceof IntegerNumber) {
+				IntegerNumber exponentInteger = (IntegerNumber) exponentNumber;
+				int signum = exponentNumber.signum();
+
+				if (signum > 0)
+					return powerNumber(base, exponentInteger);
+				else {
+					boolean isInteger = base.type().isInteger();
+
+					if (signum < 0) {
+						if (isInteger)
+							throw new SARLException(
+									"Power expression with integer base and negative exponent:\n"
+											+ base + "\n" + exponent);
+						return invert((RationalExpression) powerNumber(base,
+								numberFactory.negate(exponentInteger)));
+					} else {
+						if (base.isZero())
+							throw new SARLException("0^0 is undefined");
+						return isInteger ? oneInt : oneReal;
+					}
+				}
+			}
+		}
 		return expression(SymbolicOperator.POWER, base.type(), base, exponent);
 	}
 
