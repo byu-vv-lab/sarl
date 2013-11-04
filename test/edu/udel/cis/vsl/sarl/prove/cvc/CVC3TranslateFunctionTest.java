@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cvc3.Expr;
@@ -115,7 +116,16 @@ public class CVC3TranslateFunctionTest {
 	 * assesses the validity of the validity checker when using the translation.
 	 */
 
-	@Test
+	@Ignore @Test
+	/* TODO This test is tied completely to CVC3, which is not good because we won't
+	 * be able to re-use this test when we switch to another prover later. Instead, 
+	 * you should write the test in a black-box way: create a lambda expression, 
+	 * design some queries about it, and see if the prover gets the right answer on all the queries.
+	 * Don't check if a specific translation to a certain prover has the exact form you expect.
+	 * Moreover, this test does not adhere to our coding standards. 
+	 * Please log on to Sakai and go to the CISC475 site, 
+	 * and go to the Wiki, you will see the coding standards there.
+	 */
 	public void testTranslateFunctionLambda() {
 
 		List<SymbolicType> types = new ArrayList<SymbolicType>();
