@@ -1409,10 +1409,22 @@ public class CommonIdealFactory implements IdealFactory {
 		NumericExpression difference = subtract(arg1, arg0);
 		Number number = extractNumber(difference);
 
-		if (number == null)
+		if (number == null) {
+			Polynomial zeroThing = difference instanceof Polynomial ? (Polynomial) difference
+					: ((RationalExpression) difference).numerator(this);
+
+			if (zeroThing instanceof Monomial) {
+				Monic monic = ((Monomial) difference).monic(this);
+
+				zeroThing = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
+						.primitive(this) : monic;
+			} else {
+				// TODO: divide by leading coefficient of polynomial if real?
+				// use factorization?
+			}
 			return booleanFactory.booleanExpression(SymbolicOperator.EQUALS,
-					zero(arg0.type()), difference);
-		else
+					zero(arg0.type()), zeroThing);
+		} else
 			return number.signum() == 0 ? trueExpr : falseExpr;
 	}
 

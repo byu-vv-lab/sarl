@@ -755,6 +755,14 @@ public class IdealSimplifier extends CommonSimplifier {
 				.negate(info.numberFactory.divide(offset, coefficient));
 		Number value;
 		BoundsObject bound = aBoundMap.get(pseudo);
+		
+		// TODO: if a monomial==0 then you know at least
+		// one of the primitives==0.  This is a disjunction
+		// over the primitive powers occurring in the monomial.
+		// if there is only one primitive ...
+		// alternatively, could do this as soon as the
+		// expression monomial==0 is created; see equals method
+		// in the ideal factory
 
 		if (pseudo.type().isInteger()) {
 			if (info.numberFactory.isIntegral(rationalValue)) {
@@ -780,6 +788,11 @@ public class IdealSimplifier extends CommonSimplifier {
 	private boolean extractNEQ0Bounds(Polynomial fp,
 			Map<Polynomial, BoundsObject> aBoundMap,
 			Map<BooleanExpression, Boolean> aBooleanMap) {
+		// some ideas: if a monomial!=0 then all of the primitives!=0.
+		// this is a conjunction of formulas over the primitives.
+		
+		// if a pseudo is non-zero, you could tighten its
+		// bounds.
 		return true;
 	}
 
