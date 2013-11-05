@@ -53,28 +53,57 @@ package edu.udel.cis.vsl.sarl.expr;
 			int numexpr;
 			Collection<BooleanExpression> col1;
 			Collection<BooleanExpression> col2;
-			
-			numexpr = 105;
+		numexpr = 7000;
 			sUniverse = Universes.newIdealUniverse();
 			booleanType = sUniverse.booleanType();
 			BooleanExpression[] ExpressionList1 = {};
+			
+			
+			BooleanExpression tester5 = (sUniverse.not((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(-1)), booleanType)));
+			
+			//part1 -- similar expressions are at the end of the expression
 			col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
 			BooleanExpression[] ExpressionList2 = {};
+			
 			col2= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList2));
-			col2.add(sUniverse.not((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(1)), booleanType)));
+			
 			for(int i = 0; i < numexpr; i++){
 				col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
 			}
-			for(int i = 0; i < numexpr; i++){
-				col2.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(-i)), booleanType));
-			}
+			col1.add(tester5);
+
+			BooleanExpression s1 = sUniverse.or(col1);
+
 			start = System.currentTimeMillis();
-				BooleanExpression s1 = sUniverse.and(col1);
-				BooleanExpression s2 = sUniverse.and(col2);
-				@SuppressWarnings("unused")
-				BooleanExpression s3 = sUniverse.or(s1,s2);
+
+			BooleanExpression s3 = sUniverse.or(sUniverse.not(tester5),s1);
+
 			end = System.currentTimeMillis();
 			mark = end - start;
 			System.out.println(mark);
+			System.out.println(s3);
+			
+			
+			//part2 --  expressions are at the beginning of the collections
+			col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
+			col1.add(tester5);
+			col2= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList2));
+
+			for(int i = 0; i < numexpr; i++){
+				col1.add((BooleanExpression) sUniverse.symbolicConstant(sUniverse.stringObject(Integer.toString(i)), booleanType));
+			}
+
+
+			BooleanExpression d1 = sUniverse.or(col1);
+		
+			start = System.currentTimeMillis();
+
+				BooleanExpression d2= sUniverse.or(sUniverse.not(tester5),d1);
+
+			end = System.currentTimeMillis();
+			mark = end - start;
+			System.out.println(mark);
+			System.out.println(d2);
+			
 				}
 	}
