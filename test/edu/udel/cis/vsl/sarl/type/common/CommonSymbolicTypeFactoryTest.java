@@ -296,10 +296,7 @@ public class CommonSymbolicTypeFactoryTest {
 		assertNull(typeFactory.typeComparator().expressionComparator());
 		typeFactory.typeComparator().setExpressionComparator(expressionComparator);
 		assertNotNull(typeFactory.typeComparator().expressionComparator());
-		//assertNull(completeArrayType1.typeKind());
-		//System.out.println(completeArrayType1.typeKind());
-		//System.out.println(completeArrayType2.typeKind());
-		//typeFactory.typeComparator().compare(completeArrayType1, completeArrayType2);
+		assertEquals(typeFactory.typeComparator().compare(completeArrayType1, completeArrayType2), 0);
 	}
 	
 	/**
