@@ -137,10 +137,10 @@ public class CommonSymbolicTypeFactoryTest {
 		booleanFactory = new CnfFactory(typeFactory, objectFactory, collectionFactory);
 		numericFactory = new CommonIdealFactory(numberFactory, objectFactory, typeFactory, collectionFactory, booleanFactory);
 		expressionComparator = new ExpressionComparator(numericFactory.comparator(), objectFactory.comparator(), typeFactory.typeComparator());
+		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
 		completeArrayType1 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
 		completeArrayType2 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
 		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
-		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
 		typesList = new ArrayList<CommonSymbolicType>();
