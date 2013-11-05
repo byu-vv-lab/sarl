@@ -20,6 +20,8 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +32,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
@@ -47,6 +50,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealAddTest {
 
+	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
@@ -68,14 +72,20 @@ public class IdealAddTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression five;
-	private NumericExpression one;
-	private RationalNumber realOne;
-	private RationalNumber realFive; 
-	private NumericExpression three; 
+	//private NumericExpression five;
+	//private NumericExpression zero;
+	//private NumericExpression one;
+	//private RationalNumber realZero;
+	//private RationalNumber realOne;
+	//private RationalNumber realFive; 
+	//private NumericExpression three; 
 	private RationalNumber realThree; 
 	private SymbolicType integer;
+	//private SymbolicType real;
 	NumericExpression e1; // 5 + 3 + 1 ADD
+	IntObject intObj1;
+	IntObject intObj3;
+	IntObject intObj5;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -104,14 +114,19 @@ public class IdealAddTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		integer = typeFactory.integerType();
-		realOne = numberFactory.rational("1");
-		realFive = numberFactory.rational("5");
-		one = commonIdealFactory.constant(realOne);
-		five = commonIdealFactory.constant(realFive);
+		//realZero = numberFactory.rational("0");
+		//realOne = numberFactory.rational("1");
+		//realFive = numberFactory.rational("5");
+		//zero = commonIdealFactory.constant(realZero);
+		//one = commonIdealFactory.constant(realOne);
+		//five = commonIdealFactory.constant(realFive);
 		realThree = numberFactory.rational("3");
-		three = commonIdealFactory.constant(realThree);
-		e1 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
-				three, one); // 5 + 3 +1 ADD
+		//three = commonIdealFactory.constant(realThree);
+		intObj1 = objectFactory.intObject(1);
+		intObj3 = objectFactory.intObject(3);
+		intObj5 = objectFactory.intObject(5);
+		e1 = idealFactory.expression(SymbolicOperator.ADD, integer, intObj5,
+				intObj3, intObj1); // 5 + 3 +1 ADD
 	}
 
 	@After
@@ -204,8 +219,9 @@ public class IdealAddTest {
 	@Test
 	public void expression() {
 		NumericPrimitive n1 = commonIdealFactory.expression(
-				SymbolicOperator.ADD, integer, five, three, one);
-				
+				SymbolicOperator.ADD, integer, intObj5, intObj3, intObj1);
+		out.println("n1=" + n1);
+						
 		assertEquals(e1, n1);
 	}
 	
