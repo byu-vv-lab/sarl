@@ -21,7 +21,9 @@ the following:
 Put these files somewhere on your system and untar the Jacoco archive.
 
 3. Download dependent packages.
-	a. If you are using 64-bit mac os, download the tgz archives from http://vsl.cis.udel.edu/tools/vsl_depend_osx.tgz 
+	a. If you are using 64-bit mac os, 64-bit linux or 32-bit linux, 
+	   download the tgz archives of VSL_dependent 
+	   from http://vsl.cis.udel.edu/tools/vsl_depend 
 	   and unzip it some where on your system. 
 
 	b. Otherwise, point your web browser to http://vsl.cis.udel.edu/tools and download
@@ -58,7 +60,8 @@ Put these files somewhere on your system and untar the Jacoco archive.
 6. cd sarl
 
 7. Create a file named build.properties in the same directory as the one containing build.xml.
-	a. If you are using 64-bit mac os, copy and paste the content from properties/build.properties.osx.
+	a. If you are using 64-bit mac os, 64-bit linux or 32-bit linux,  
+	   copy and paste the content from properties/build.properties.osx.
 	   Edit the entry "root" to point to the corresponding directory that you download at step 3.a.
 	
 	b. Otherwise, copy and edit one of the examples in the properties directory. 
