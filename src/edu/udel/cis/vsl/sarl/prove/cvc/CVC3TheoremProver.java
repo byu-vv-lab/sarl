@@ -183,6 +183,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
+		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
 		intDivisionStack
 				.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
@@ -195,6 +196,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Single element list used by processEquality and translateFunction
+	 * 
 	 * @param element
 	 * @return the element as a list
 	 */
@@ -206,8 +208,9 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Renaming function for keeping unique names between constants
-	 * Example: new(x) = x; new(x) = x'1; etc.
+	 * Renaming function for keeping unique names between constants Example:
+	 * new(x) = x; new(x) = x'1; etc.
+	 * 
 	 * @param root
 	 * @return root's new name
 	 */
@@ -227,6 +230,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Creates a "default" CVC3 Expr with a given CVC3 Type
+	 * 
 	 * @param type
 	 * @return the CVC3 Expr
 	 */
@@ -277,9 +281,10 @@ public class CVC3TheoremProver implements TheoremProver {
 		return type instanceof SymbolicArrayType
 				&& !((SymbolicArrayType) type).isComplete();
 	}
-	
+
 	/**
 	 * Like above, but takes SymbolicExpression as input.
+	 * 
 	 * @param expr
 	 * @return true iff the type of expr is an incomplete array type
 	 */
@@ -288,14 +293,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * This method takes in the length and value of an Expr
-	 * and returns the ordered pair represented by an incomplete 
-	 * array type. 
+	 * This method takes in the length and value of an Expr and returns the
+	 * ordered pair represented by an incomplete array type.
 	 * 
 	 * @param length
-	 * 			CVC3 Expr of length
+	 *            CVC3 Expr of length
 	 * @param value
-	 * 			CVC3 Expr of value
+	 *            CVC3 Expr of value
 	 * @return CVC3 tuple of an ordered pair (length, array)
 	 */
 	private Expr bigArray(Expr length, Expr value) {
@@ -307,22 +311,23 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * This method takes any Expr that is of incomplete array type
-	 * and returns the length. 
+	 * This method takes any Expr that is of incomplete array type and returns
+	 * the length.
+	 * 
 	 * @param bigArray
-	 * 			CVC3 Expr of bigArray
+	 *            CVC3 Expr of bigArray
 	 * @return length of CVC3 Expr of incomplete array type
 	 */
 	private Expr bigArrayLength(Expr bigArray) {
 		return vc.tupleSelectExpr(bigArray, 0);
 	}
-	
+
 	/**
-	 * This methods takes any Expr that is of incomplete array type
-	 * and returns the value. 
+	 * This methods takes any Expr that is of incomplete array type and returns
+	 * the value.
 	 * 
 	 * @param bigArray
-	 * 			CVC3 Expr of bigArray
+	 *            CVC3 Expr of bigArray
 	 * @return value of CVC3 Expr of incomplete array type
 	 */
 	private Expr bigArrayValue(Expr bigArray) {
@@ -331,6 +336,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Formats the name of unionType during type translation.
+	 * 
 	 * @param unionType
 	 * @param index
 	 * @return the newly formatted name of the unionType
@@ -341,6 +347,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Formats the name of unionType during type translation.
+	 * 
 	 * @param unionType
 	 * @param index
 	 * @return the newly formatted name of the unionType
@@ -350,11 +357,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * This methods takes any SymbolicCollection and returns a linked list
-	 * of Expr for cvc3.
+	 * This methods takes any SymbolicCollection and returns a linked list of
+	 * Expr for cvc3.
 	 * 
 	 * @param collection
-	 * 			SymbolicCollection given to the translation.
+	 *            SymbolicCollection given to the translation.
 	 * @return linkedlist of CVC3 Expr
 	 */
 	private List<Expr> translateCollection(SymbolicCollection<?> collection) {
@@ -366,11 +373,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translate a given SymbolicTypeSequence to an equivalent
-	 * linkedlist of Types in CVC3.
+	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
+	 * Types in CVC3.
 	 * 
 	 * @param sequence
-	 * 			SymbolicTypeSequence given to the translation.
+	 *            SymbolicTypeSequence given to the translation.
 	 * @return linkedlist of CVC3 types.
 	 */
 	private List<Type> translateTypeSequence(SymbolicTypeSequence sequence) {
@@ -384,6 +391,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates a symbolic expression of functional type. In CVC3, functions
 	 * have type Op; expressions have type Expr.
+	 * 
 	 * @param expr
 	 * @return the function expression as a CVC3 Op
 	 */
@@ -414,10 +422,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		this.functionMap.put(expr, result);
 		return result;
 	}
-	
+
 	/**
-	 * Translates any concrete SymbolicExpression with concrete type
-	 * to equivalent CVC3 Expr using the validitychecker. 
+	 * Translates any concrete SymbolicExpression with concrete type to
+	 * equivalent CVC3 Expr using the validitychecker.
+	 * 
 	 * @param expr
 	 * @return the CVC3 equivalent Expr
 	 */
@@ -468,6 +477,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * quantified (forall, exists) expression.
 	 * 
 	 * Precondition: ?
+	 * 
 	 * @param symbolicConstant
 	 * @param isBoundVariable
 	 * @return the CVC3 equivalent Expr
@@ -488,12 +498,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a multiplication SymbolicExpression (a*b) into an 
-	 * equivalent CVC3 multiplication Expr based upon number of 
-	 * arguments given. 
+	 * Translates a multiplication SymbolicExpression (a*b) into an equivalent
+	 * CVC3 multiplication Expr based upon number of arguments given.
 	 * 
 	 * @param expr
-	 * 			a SARL SymbolicExpression of form a*b
+	 *            a SARL SymbolicExpression of form a*b
 	 * @return CVC3 Expr
 	 */
 	private Expr translateMultiply(SymbolicExpression expr) {
@@ -516,7 +525,9 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC3 Expr 
+	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC3
+	 * Expr
+	 * 
 	 * @param expr
 	 * @return CVC3 representation of expr
 	 */
@@ -631,6 +642,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Checks whether an index is in the bounds of an array SymbolicExpression
 	 * by passing in the arguments to the validity checker
+	 * 
 	 * @param arrayExpression
 	 * @param index
 	 */
@@ -699,16 +711,17 @@ public class CVC3TheoremProver implements TheoremProver {
 				.writeExpr(array, index, value);
 		return result;
 	}
-	
+
 	/**
-	 * Translates a multiple array-write (or array update) SARL symbolic expression
-	 * to equivalent CVC3 expression. 
+	 * Translates a multiple array-write (or array update) SARL symbolic
+	 * expression to equivalent CVC3 expression.
 	 * 
 	 * @param expr
-	 * 			an array update expression array [WITH i:=newValue]...[WITH i:=newValue]
+	 *            an array update expression array [WITH i:=newValue]...[WITH
+	 *            i:=newValue]
 	 * @return the equivalent CVC3 Expr
 	 * @throws Cvc3Exception
-	 * 			by CVC3
+	 *             by CVC3
 	 */
 	private Expr translateDenseArrayWrite(SymbolicExpression expr)
 			throws Cvc3Exception {
@@ -734,14 +747,14 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translate a multiple tuple-write (or tuple update) SARL symbolic expression
-	 * to equivalent CVC3 expression.
+	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
+	 * expression to equivalent CVC3 expression.
 	 * 
 	 * @param expr
-	 * 			a tuple update expression 
+	 *            a tuple update expression
 	 * @return the equivalent CVC3 Expr
 	 * @throws Cvc3Exception
-	 *			by CVC3
+	 *             by CVC3
 	 */
 	private Expr translateDenseTupleWrite(SymbolicExpression expr)
 			throws Cvc3Exception {
@@ -764,11 +777,12 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates SymbolicExpressions of the type "exists" and "for all" into
 	 * the CVC3 equivalent Expr
+	 * 
 	 * @param expr
-	 * 			a "exists" or "for all" expression
+	 *            a "exists" or "for all" expression
 	 * @return the equivalent CVC3 Expr
 	 * @throws Cvc3Exception
-	 * 			by CVC3
+	 *             by CVC3
 	 */
 	private Expr translateQuantifier(SymbolicExpression expr)
 			throws Cvc3Exception {
@@ -790,17 +804,17 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Processes the equality of two arrays.  Arrays can be of complete type or
-	 * incomplete type.  
+	 * Processes the equality of two arrays. Arrays can be of complete type or
+	 * incomplete type.
 	 * 
 	 * @param type1
-	 * 			a SARL SymbolicType
+	 *            a SARL SymbolicType
 	 * @param type2
-	 * 			a SARL SymbolicType
+	 *            a SARL SymbolicType
 	 * @param cvcExpression1
-	 * 			a CVC3 array
+	 *            a CVC3 array
 	 * @param cvcExpression2
-	 * 			a CVC3 array
+	 *            a CVC3 array
 	 * @return
 	 */
 	private Expr processEquality(SymbolicType type1, SymbolicType type2,
@@ -848,11 +862,12 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * Translates a SymbolicExpression that represents a == b into the CVC3
 	 * equivalent Expr
+	 * 
 	 * @param expr
-	 * 			the equals type expression
+	 *            the equals type expression
 	 * @return the equivalent CVC3 Expr
 	 * @throws Cvc3Exception
-	 * 			by CVC3
+	 *             by CVC3
 	 */
 	private Expr translateEquality(SymbolicExpression expr)
 			throws Cvc3Exception {
@@ -974,20 +989,20 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * Processes all the side-effect Types of a given SymbolicTypeSequence.
 	 * 
 	 * @param sequence
-	 * 			a SymbolicTypeSequence of an object with SymbolicObjectKind 
-	 * 			TYPE_SEQUENCE
+	 *            a SymbolicTypeSequence of an object with SymbolicObjectKind
+	 *            TYPE_SEQUENCE
 	 */
 	private void sideEffectTypeSequence(SymbolicTypeSequence sequence) {
 		for (SymbolicType t : sequence)
 			sideEffectType(t);
 	}
-	
+
 	/**
-	 * Processes the side-effects of all SymbolicExpressions in a given 
+	 * Processes the side-effects of all SymbolicExpressions in a given
 	 * SymbolicCollection.
 	 * 
 	 * @param collection
-	 * 			a SymbolicCollection of SymbolicExpressions
+	 *            a SymbolicCollection of SymbolicExpressions
 	 */
 	private void sideEffectCollection(SymbolicCollection<?> collection) {
 		for (SymbolicExpression expr : collection)
@@ -995,12 +1010,12 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Processes all the side-effect Types of a given SymbolicType. 
+	 * Processes all the side-effect Types of a given SymbolicType.
 	 * 
 	 * @param type
-	 * 			a SymbolicType of an object with SymbolicObjectKind TYPE
+	 *            a SymbolicType of an object with SymbolicObjectKind TYPE
 	 * @throws Cvc3Exception
-	 * 			by CVC3
+	 *             by CVC3
 	 */
 	private void sideEffectType(SymbolicType type) throws Cvc3Exception {
 		SymbolicTypeKind kind = type.typeKind();
@@ -1034,10 +1049,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Processes what kind of SymbolicObject the SymbolicObject is that 
-	 * has been given. 
+	 * Processes what kind of SymbolicObject the SymbolicObject is that has been
+	 * given.
+	 * 
 	 * @param object
-	 * 			a SymbolicObject
+	 *            a SymbolicObject
 	 */
 	private void sideEffectObject(SymbolicObject object) {
 		SymbolicObjectKind kind = object.symbolicObjectKind();
@@ -1067,11 +1083,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Processes the side-effect of a given SymbolicExpression based upon
-	 * the SymbolicOperator. 
+	 * Processes the side-effect of a given SymbolicExpression based upon the
+	 * SymbolicOperator.
 	 * 
 	 * @param expr
-	 * 			a SymbolicExpression
+	 *            a SymbolicExpression
 	 */
 	private void sideEffect(SymbolicExpression expr) {
 		SymbolicOperator operator = expr.operator();
@@ -1088,13 +1104,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates which operation to perform based upon the given 
-	 * SymbolicExpression and the SymbolicOperator provided.  Depending 
-	 * upon the number of arguments given, a different conditional will
-	 * be executed.  The result will be a CVC3 Expr. 
+	 * Translates which operation to perform based upon the given
+	 * SymbolicExpression and the SymbolicOperator provided. Depending upon the
+	 * number of arguments given, a different conditional will be executed. The
+	 * result will be a CVC3 Expr.
 	 * 
 	 * @param expr
-	 * 			a SymbolicExpression 
+	 *            a SymbolicExpression
 	 * @return
 	 */
 	private Expr translateWork(SymbolicExpression expr) {
@@ -1273,12 +1289,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
-	
+
 	/**
-	 * queryCVC3 gets called by valid, prints out predicate and context, and
-	 * the CVC3 assumptions and CVC3 predicate. 
-	 * Passes the symbolicPredicate through translate and uses the cvcPredicate
-	 * for the validitychecker.
+	 * queryCVC3 gets called by valid, prints out predicate and context, and the
+	 * CVC3 assumptions and CVC3 predicate. Passes the symbolicPredicate through
+	 * translate and uses the cvcPredicate for the validitychecker.
 	 * 
 	 * @param symbolicPredicate
 	 * @return QueryResult
@@ -1340,11 +1355,11 @@ public class CVC3TheoremProver implements TheoremProver {
 		intDivisionStack.removeLast();
 		translationStack.removeLast();
 	}
-	
+
 	/**
 	 * translateResult takes a QueryResult and processes the equality between
 	 * said QueryResult and the result types (valid, invalid, unknown, abort)
-	 * and returns the SARL validity results. 
+	 * and returns the SARL validity results.
 	 * 
 	 * @param result
 	 * @return ValidityResult
@@ -1373,10 +1388,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	// Public methods...
-	
+
 	/**
-	 * expressionMap gets called from testValid. Returns the 
-	 * expressionMap which maps SARL symbolic expressions to CVC3 expressions
+	 * expressionMap gets called from testValid. Returns the expressionMap which
+	 * maps SARL symbolic expressions to CVC3 expressions
+	 * 
 	 * @return Map of SARL symbolic expressions and CVC3 expressions
 	 */
 
@@ -1385,36 +1401,40 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * opMap gets called from CVC3ModelFinder. Returns the opMap that
-	 * maps operations and their symbolic constants.
+	 * opMap gets called from CVC3ModelFinder. Returns the opMap that maps
+	 * operations and their symbolic constants.
+	 * 
 	 * @return Map of operations and symbolic constants
 	 */
-	
+
 	public Map<Op, SymbolicConstant> opMap() {
 		return opMap;
 	}
-	
+
 	/**
-	 * varMap gets called from CVC3ModelFinder. Returns the varMap
-	 * that maps CVC3 variables and their symbolic constants.
+	 * varMap gets called from CVC3ModelFinder. Returns the varMap that maps
+	 * CVC3 variables and their symbolic constants.
+	 * 
 	 * @return Map of CVC3 variables and symbolic constants
 	 */
 
 	public Map<Expr, SymbolicConstant> varMap() {
 		return varMap;
 	}
-	
+
 	/**
 	 * Returns the validityChecker
-	 * @return ValidityChecker 
+	 * 
+	 * @return ValidityChecker
 	 */
 
 	public ValidityChecker validityChecker() {
 		return vc;
 	}
-	
+
 	/**
-	 * Returns the queries and results 
+	 * Returns the queries and results
+	 * 
 	 * @return PrintSteam
 	 */
 
@@ -1546,21 +1566,22 @@ public class CVC3TheoremProver implements TheoremProver {
 		this.expressionMap.put(expr, result);
 		return result;
 	}
-	
+
 	/**
 	 * Outputs the boolean value of showProverQueries
+	 * 
 	 * @return boolean value, true if out in setOutput is not equal to null
 	 */
 
 	public boolean showProverQueries() {
 		return showProverQueries;
 	}
-	
+
 	/**
-	 * Takes a BooleanExpression and passes it through queryCVC3 
-	 * to return a QueryResult. The QueryResult is then passed through
-	 * translateResult that gives us a QueryResult that is checked whether
-	 * it is valid, invalid, to abort, or if the QueryResult is unknown.
+	 * Takes a BooleanExpression and passes it through queryCVC3 to return a
+	 * QueryResult. The QueryResult is then passed through translateResult that
+	 * gives us a QueryResult that is checked whether it is valid, invalid, to
+	 * abort, or if the QueryResult is unknown.
 	 * 
 	 * @param expr
 	 * @return ValidityResult from using translateResult
@@ -1568,7 +1589,8 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	@Override
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
-		QueryResult result = queryCVC3(symbolicPredicate);
+		QueryResult result = queryCVC3((BooleanExpression) universe
+				.cleanBoundVariables(symbolicPredicate));
 
 		popCVC3();
 		return translateResult(result);
@@ -1615,10 +1637,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 ** Deletes ValidityChecker 
+	 ** Deletes ValidityChecker
+	 * 
 	 * @throws CVC3Exception
 	 */
-	
+
 	@Override
 	protected void finalize() {
 		intDivisionStack.removeLast();
