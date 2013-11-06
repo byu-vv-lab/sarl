@@ -239,24 +239,6 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Returns a new bound variable with given root name and type. The name of
-	 * the variable will be the concatenation of root with a string of the form
-	 * "'n".
-	 * 
-	 * @param root
-	 *            root of name to give to this variable
-	 * @param type
-	 *            CVC3 type of this variable
-	 * @return the new bound variable
-	 */
-	private Expr newBoundVariable(String root, Type type) {
-		String name = newCvcName(root);
-		Expr result = vc.boundVarExpr(name, name, type);
-
-		return result;
-	}
-
-	/**
 	 * Returns new bound variable with a generic name "i" followed by a
 	 * distiguishing suffix.
 	 * 
@@ -265,7 +247,10 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @return the new bound variable
 	 */
 	private Expr newBoundVariable(Type type) {
-		return newBoundVariable("i", type);
+		String name = newCvcName("i");
+		Expr result = vc.boundVarExpr(name, name, type);
+
+		return result;
 	}
 
 	/**
@@ -489,7 +474,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (isBoundVariable) {
-			result = newBoundVariable(root, type);
+			result = vc.boundVarExpr(root, root, type);
 		} else {
 			result = vc.varExpr(newCvcName(root), type);
 		}
@@ -1390,59 +1375,6 @@ public class CVC3TheoremProver implements TheoremProver {
 	// Public methods...
 
 	/**
-	 * expressionMap gets called from testValid. Returns the expressionMap which
-	 * maps SARL symbolic expressions to CVC3 expressions
-	 * 
-	 * @return Map of SARL symbolic expressions and CVC3 expressions
-	 */
-
-	public Map<SymbolicExpression, Expr> expressionMap() {
-		return expressionMap;
-	}
-
-	/**
-	 * opMap gets called from CVC3ModelFinder. Returns the opMap that maps
-	 * operations and their symbolic constants.
-	 * 
-	 * @return Map of operations and symbolic constants
-	 */
-
-	public Map<Op, SymbolicConstant> opMap() {
-		return opMap;
-	}
-
-	/**
-	 * varMap gets called from CVC3ModelFinder. Returns the varMap that maps
-	 * CVC3 variables and their symbolic constants.
-	 * 
-	 * @return Map of CVC3 variables and symbolic constants
-	 */
-
-	public Map<Expr, SymbolicConstant> varMap() {
-		return varMap;
-	}
-
-	/**
-	 * Returns the validityChecker
-	 * 
-	 * @return ValidityChecker
-	 */
-
-	public ValidityChecker validityChecker() {
-		return vc;
-	}
-
-	/**
-	 * Returns the queries and results
-	 * 
-	 * @return PrintSteam
-	 */
-
-	public PrintStream out() {
-		return out;
-	}
-
-	/**
 	 * Translates the symbolic type to a CVC3 type.
 	 * 
 	 * @param type
@@ -1451,7 +1383,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @throws Cvc3Exception
 	 *             if CVC3 throws an exception
 	 */
-	public Type translateType(SymbolicType type) throws Cvc3Exception {
+	Type translateType(SymbolicType type) throws Cvc3Exception {
 		Type result = typeMap.get(type);
 
 		if (result != null)
@@ -1543,7 +1475,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 *            any SARL expression
 	 * @return the CVC3 expression resulting from translation
 	 */
-	public Expr translate(SymbolicExpression expr) {
+	Expr translate(SymbolicExpression expr) {
 		Expr result;
 		Iterator<Map<SymbolicExpression, Expr>> iter = translationStack
 				.descendingIterator();
@@ -1565,6 +1497,71 @@ public class CVC3TheoremProver implements TheoremProver {
 		translationStack.getLast().put(expr, result);
 		this.expressionMap.put(expr, result);
 		return result;
+	}
+
+	/**
+	 * Cleans bound variables (i.e., renames bound variables as needed so each
+	 * has unique name) and translates. Here for testing purposes only.
+	 * 
+	 * @param expr
+	 *            any symbolic expression
+	 * @return cleaned and translated expression
+	 */
+	Expr cleanAndTranslate(SymbolicExpression expr) {
+		return translate(universe.cleanBoundVariables(expr));
+	}
+
+	/**
+	 * expressionMap gets called from testValid. Returns the expressionMap which
+	 * maps SARL symbolic expressions to CVC3 expressions
+	 * 
+	 * @return Map of SARL symbolic expressions and CVC3 expressions
+	 */
+
+	public Map<SymbolicExpression, Expr> expressionMap() {
+		return expressionMap;
+	}
+
+	/**
+	 * opMap gets called from CVC3ModelFinder. Returns the opMap that maps
+	 * operations and their symbolic constants.
+	 * 
+	 * @return Map of operations and symbolic constants
+	 */
+
+	public Map<Op, SymbolicConstant> opMap() {
+		return opMap;
+	}
+
+	/**
+	 * varMap gets called from CVC3ModelFinder. Returns the varMap that maps
+	 * CVC3 variables and their symbolic constants.
+	 * 
+	 * @return Map of CVC3 variables and symbolic constants
+	 */
+
+	public Map<Expr, SymbolicConstant> varMap() {
+		return varMap;
+	}
+
+	/**
+	 * Returns the validityChecker
+	 * 
+	 * @return ValidityChecker
+	 */
+
+	public ValidityChecker validityChecker() {
+		return vc;
+	}
+
+	/**
+	 * Returns the queries and results
+	 * 
+	 * @return PrintSteam
+	 */
+
+	public PrintStream out() {
+		return out;
 	}
 
 	/**

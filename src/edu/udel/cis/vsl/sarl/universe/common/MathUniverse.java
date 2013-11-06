@@ -10,7 +10,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
-import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse {
 
@@ -126,10 +125,10 @@ public class MathUniverse extends CommonSymbolicUniverse implements PreUniverse 
 		 * //exponent = 0 --> 1 //exponent = 1 --> i //exponent = 2 --> -1
 		 * //exponent = 3 --> -i
 		 * 
-		 * } 
+		 * }
 		 */
-	return null;
-	
+		return null;
+
 	}
 
 	// continue along these lines.
