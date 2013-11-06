@@ -84,7 +84,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * The printwriter used to print the queries and results. Initialized by
 	 * constructor.
 	 */
-	private PrintStream out = null;
+	private PrintStream out = System.out;
 
 	/** The CVC3 object used to check queries. */
 	private ValidityChecker vc = ValidityChecker.create();
@@ -475,6 +475,8 @@ public class CVC3TheoremProver implements TheoremProver {
 
 		if (isBoundVariable) {
 			result = vc.boundVarExpr(root, root, type);
+			translationStack.getLast().put(symbolicConstant, result);
+			this.expressionMap.put(symbolicConstant, result);
 		} else {
 			result = vc.varExpr(newCvcName(root), type);
 		}

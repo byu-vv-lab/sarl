@@ -252,6 +252,9 @@ public class BoundCleaner {
 		SymbolicOperator operator = expression.operator();
 		SymbolicType type = expression.type();
 
+		// TODO: problem can still have same name as free variable!
+		// free variable may even be defined after this one.
+
 		if (operator == SymbolicOperator.EXISTS
 				|| operator == SymbolicOperator.FORALL
 				|| operator == SymbolicOperator.LAMBDA
@@ -266,10 +269,9 @@ public class BoundCleaner {
 			SymbolicConstant newBoundVariable;
 
 			if (count == null) {
-				count = 1;
-				newBoundVariable = boundVariable;
-				newName = name;
-			} else {
+				count = 0;
+			}
+			{
 				SingletonMap<SymbolicExpression, SymbolicExpression> substitutionMap;
 
 				newName = name + "'" + count;

@@ -20,7 +20,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 public class BoundCleanerTest {
-	
+
 	private static PrintStream out = System.out;
 
 	private PreUniverse universe;
@@ -77,23 +77,23 @@ public class BoundCleanerTest {
 		BooleanExpression all1 = universe.forall(x, xlt1);
 		BooleanExpression xgt0 = universe.lessThan(zeroR, x);
 		BooleanExpression all2 = universe.forall(x, xgt0);
-		BooleanExpression all12 = universe.and(all1,all2);
+		BooleanExpression all12 = universe.and(all1, all2);
 		SymbolicExpression result1, result2, result12;
 
+		// TODO figure out how to make the following real tests...
 		result1 = universe.cleanBoundVariables(all1);
 		out.println(result1);
-		assertEquals(all1, result1);
-		// TODO figure out how to make the following real tests...
 		result2 = universe.cleanBoundVariables(all2);
 		out.println(result2);
 		result12 = universe.cleanBoundVariables(all12);
 		out.println(result12);
 	}
-	
+
 	/**
 	 * This will clean: forall x . (x<1 && (exists x . x>0))
 	 */
-	@Test public void cleanNest() {
+	@Test
+	public void cleanNest() {
 		NumericSymbolicConstant x = (NumericSymbolicConstant) universe
 				.symbolicConstant(universe.stringObject("x"), realType);
 		BooleanExpression xlt1 = universe.lessThan(x, oneR);
@@ -103,7 +103,7 @@ public class BoundCleanerTest {
 		BooleanExpression all1 = universe.forall(x, and1);
 		SymbolicExpression result = universe.cleanBoundVariables(all1);
 		SymbolicExpression result2 = universe.cleanBoundVariables(all1);
-		
+
 		out.println(result);
 		assertEquals(result, result2);
 	}

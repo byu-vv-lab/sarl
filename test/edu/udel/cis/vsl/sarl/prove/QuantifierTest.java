@@ -23,6 +23,8 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 /**
  * Tests translation of expressions involving quantifiers.
  * 
+ * Examples to be turned into tests:
+ * 
  * <pre>
  * all x:INT.x=3  ---> NO
  * exists x:INT.x=3 ---> YES
@@ -69,8 +71,13 @@ public class QuantifierTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		provers = new LinkedList<TheoremProver>();
-		provers.add(Prove.newCVC3TheoremProverFactory(universe).newProver(
-				context));
+		{
+			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
+					.newProver(context);
+
+			prover.setOutput(System.out); // for debugging
+			provers.add(prover);
+		}
 		// add more provers here
 	}
 
@@ -82,15 +89,25 @@ public class QuantifierTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Checks that the result of applying the prover to the given predicate is
+	 * as expected.
+	 * 
+	 * @param expected
+	 *            expected result type (YES, NO, or MAYBE)
+	 * @param predicate
+	 *            boolean expression to be checked for validity
+	 */
 	private void check(ResultType expected, BooleanExpression predicate) {
-		for (TheoremProver prover : provers)
+		for (TheoremProver prover : provers) {
 			assertEquals(prover.toString(), expected, prover.valid(predicate)
 					.getResultType());
+		}
 	}
 
 	/**
 	 * Checks whether "all x:INT.x=3" is valid. Answer should be NO. Note that
-	 * the prover should confuse the bound x with the free x which is 5.
+	 * the prover should not confuse the bound x with the free x which is 5.
 	 */
 	@Test
 	public void simpleForall1() {
@@ -99,11 +116,52 @@ public class QuantifierTest {
 
 	/**
 	 * Checks whether "all x:INT.x=5" is valid. Answer should be NO. Note that
-	 * the prover should confuse the bound x with the free x which is 5.
+	 * the prover should not confuse the bound x with the free x which is 5.
 	 */
 	@Test
 	public void simpleForall2() {
 		check(ResultType.NO, universe.forall(x, universe.equals(x, five)));
 	}
 
+	/**
+	 * Checks whether "exists x:INT.x=3" is valid. Answer should be YES. Note
+	 * the bound x should not be confused with the free x.
+	 */
+	@Test
+	public void exists1() {
+		check(ResultType.YES, universe.exists(x, universe.equals(x, three)));
+	}
+
+	/**
+	 * Checks whether "(all x:INT.x=3) || (exists x:INT.x=3)" is valid. Answer
+	 * should be YES.
+	 */
+	@Test
+	public void allOrExists() {
+		check(ResultType.YES, universe.or(
+				universe.forall(x, universe.equals(x, three)),
+				universe.exists(x, universe.equals(x, three))));
+	}
+
+	/**
+	 * Checks whether "all x:INT.(exists x:INT.x=3)" is valid. Answer should be
+	 * YES.
+	 */
+	@Test
+	public void allExists1() {
+		check(ResultType.YES,
+				universe.forall(x,
+						universe.exists(x, universe.equals(x, three))));
+	}
+
+	/**
+	 * Checks whether "exists x:INT.(all x:INT.x=3)" is valid. Answer should be
+	 * NO.
+	 */
+	@Test
+	public void existsAll1() {
+		check(ResultType.NO,
+				universe.exists(x,
+						universe.forall(x, universe.equals(x, three))));
+	}
 }
