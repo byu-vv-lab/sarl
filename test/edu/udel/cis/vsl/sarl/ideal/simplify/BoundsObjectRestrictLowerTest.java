@@ -101,7 +101,7 @@ public class BoundsObjectRestrictLowerTest {
 		assertEquals(true, boundObj.strictLower);
 		boundObj.restrictLower(numNeg2000, false);
 		assertEquals(numNeg2000, boundObj.lower);
-		assertFalse(boundObj.strictLower);
+		assertTrue(boundObj.strictLower);
 		//out.println(boundObj.strictLower);
 	}
 	
