@@ -1,7 +1,5 @@
 package edu.udel.cis.vsl.sarl.prove;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
