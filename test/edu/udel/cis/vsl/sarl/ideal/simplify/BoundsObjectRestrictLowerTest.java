@@ -47,7 +47,10 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerNullTest() {
 		boundObj = BoundsObject.newLowerBound(xpy, num0, true);
+		assertEquals(num0, boundObj.lower);
 		boundObj.restrictLower(null, true);
+		assertNotNull(boundObj.lower);
+		assertEquals(num0, boundObj.lower);
 	}
 	
 	/**
@@ -56,7 +59,10 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerNotNullTest() {
 		boundObj = BoundsObject.newLowerBound(xpy, num0, true);
+		assertEquals(num0, boundObj.lower);
 		boundObj.restrictLower(numNeg2000, true);
+		assertEquals(num0, boundObj.lower); //bound should not change, as numNeg2000 < num0
+		assertEquals(1, boundObj.lower.compareTo(numNeg2000));
 	}
 	
 	/**
@@ -66,7 +72,10 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerFromNullTest() {
 		boundObj = BoundsObject.newUpperBound(xpy, num0, true);
+		assertNull(boundObj.lower);
 		boundObj.restrictLower(numNeg2000, true);
+		assertNotNull(boundObj.lower);
+		assertEquals(numNeg2000, boundObj.lower);
 	}
 	
 	/**
@@ -76,7 +85,9 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowererTest() {
 		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, true);
+		assertEquals(numNeg2000, boundObj.lower);
 		boundObj.restrictLower(num0, true);
+		assertEquals(num0, boundObj.lower);
 		//out.println(boundObj);
 	}
 	
@@ -87,8 +98,11 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerEqualTest() {
 		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, true);
+		assertEquals(true, boundObj.strictLower);
 		boundObj.restrictLower(numNeg2000, false);
-		//out.println(boundObj);
+		assertEquals(numNeg2000, boundObj.lower);
+		assertFalse(boundObj.strictLower);
+		//out.println(boundObj.strictLower);
 	}
 	
 	/**
@@ -98,8 +112,11 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerEqualTest2() {
 		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, false);
+		assertFalse(boundObj.strictLower);
 		boundObj.restrictLower(numNeg2000, true);
-		//out.println(boundObj);
+		assertEquals(numNeg2000, boundObj.lower);
+		assertTrue(boundObj.strictLower);
+		//out.println(boundObj.strictLower);
 	}
 	
 	/**
@@ -109,8 +126,23 @@ public class BoundsObjectRestrictLowerTest {
 	@Test
 	public void restrictLowerEqualTest3() {
 		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, true);
+		assertTrue(boundObj.strictLower);
 		boundObj.restrictLower(numNeg2000, true);
+		assertTrue(boundObj.strictLower);
 		//out.println(boundObj);
+	}
+	
+	/**
+	 * Tests BoundsObject.restrictLower when a valid bound is given as parameter 
+	 * that equal to the existing lower bound, with the same strictness
+	 */
+	@Test
+	public void restrictLowerEqualTest4() {
+		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, false);
+		assertFalse(boundObj.strictLower);
+		boundObj.restrictLower(numNeg2000, false);
+		assertFalse(boundObj.strictLower);
+		//out.println(boundObj.strictLower);
 	}
 
 }
