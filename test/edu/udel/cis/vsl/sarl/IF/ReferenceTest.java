@@ -51,7 +51,7 @@ public class ReferenceTest {
 
 	private IntObject oneObj = universe.intObject(1);
 
-	//private IntObject twoObj = universe.intObject(2);
+	// private IntObject twoObj = universe.intObject(2);
 
 	private NumericExpression zero = universe.integer(0);
 
