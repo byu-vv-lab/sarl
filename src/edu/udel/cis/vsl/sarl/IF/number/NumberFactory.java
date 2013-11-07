@@ -238,7 +238,7 @@ public interface NumberFactory {
 	RationalNumber rational(Number number);
 
 	/**
-	 * Returns a positive value if arg0>arg1, 0 if arg0 equals arg1, -1 if
+	 * Returns a positive value  of 1 if arg0>arg1, 0 if arg0 equals arg1, -1 if
 	 * arg0<arg1.
 	 */
 	int compare(Number arg0, Number arg1);
