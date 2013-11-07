@@ -95,7 +95,7 @@ public class BoundsObjectRestrictUpperTest {
 		boundObj = BoundsObject.newUpperBound(xpy, numNeg2000, true);
 		assertTrue(boundObj.strictUpper);
 		boundObj.restrictUpper(numNeg2000, false);
-		assertFalse(boundObj.strictUpper);
+		assertTrue(boundObj.strictUpper);
 		//out.println(boundObj);
 	}
 	
