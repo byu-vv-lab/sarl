@@ -52,7 +52,7 @@ public class LargeOrExpressionBench {
 		Collection<BooleanExpression> col1;
 		Collection<BooleanExpression> col2;
 		
-		numexpr = 105;
+		numexpr = 250;
 		sUniverse = Universes.newIdealUniverse();
 		booleanType = sUniverse.booleanType();
 		BooleanExpression[] ExpressionList1 = {};

@@ -25,7 +25,6 @@ import java.util.Collection;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 /**
  * Benchmarks for large exists operations
@@ -39,7 +38,6 @@ public class LargeExistsExpressionBench {
 	 */
 	public static void main(String[] args) {
 		SymbolicUniverse sUniverse;
-		SymbolicType booleanType;
 		long start;
 		long end;
 		long mark;
@@ -49,7 +47,6 @@ public class LargeExistsExpressionBench {
 
 		numexpr = 1000;
 		sUniverse = Universes.newIdealUniverse();
-		booleanType = sUniverse.booleanType();
 		BooleanExpression[] ExpressionList1 = {};
 		c1 = (SymbolicConstant) sUniverse.falseExpression();
 		col1= new ArrayList<BooleanExpression>(Arrays.asList(ExpressionList1));
@@ -58,7 +55,6 @@ public class LargeExistsExpressionBench {
 		}
 			BooleanExpression s1 = sUniverse.and(col1);
 			start = System.currentTimeMillis();
-			@SuppressWarnings("unused")
 			BooleanExpression s2 = sUniverse.exists(c1,s1);
 			System.out.println(s2);
 		end = System.currentTimeMillis();
