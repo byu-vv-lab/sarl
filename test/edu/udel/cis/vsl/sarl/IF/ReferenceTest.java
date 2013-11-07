@@ -51,7 +51,7 @@ public class ReferenceTest {
 
 	private IntObject oneObj = universe.intObject(1);
 
-	private IntObject twoObj = universe.intObject(2);
+	//private IntObject twoObj = universe.intObject(2);
 
 	private NumericExpression zero = universe.integer(0);
 
@@ -73,7 +73,7 @@ public class ReferenceTest {
 
 	private SymbolicArrayType arrayType = universe.arrayType(realType);
 
-	private SymbolicArrayType array2dType = universe.arrayType(arrayType);
+	//private SymbolicArrayType array2dType = universe.arrayType(arrayType);
 
 	private SymbolicTupleType tupleType = universe.tupleType(
 			universe.stringObject("tuple"),
@@ -245,7 +245,7 @@ public class ReferenceTest {
 	@Test
 	public void offset() {
 		OffsetReference or0 = universe.offsetReference(identityReference, zero);
-		OffsetReference or1 = universe.offsetReference(identityReference, one);
+		//OffsetReference or1 = universe.offsetReference(identityReference, one);
 
 		assertEquals(x, universe.dereference(x, or0));
 	}
