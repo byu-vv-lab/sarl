@@ -48,8 +48,8 @@ public class SimplifyFPTest {
 	 */
 	@Test
 	public void assumptionTest() {
-		out.println(idealSimplifier.simplifyExpression(xSqrLess1));
-		out.println(idealSimplifier.apply(xSqrP1));
+		assertEquals("xInt^2+-1", idealSimplifier.simplifyExpression(xSqrLess1).toString());
+		assertEquals("xInt^2+1", idealSimplifier.apply(xSqrP1).toString());
 		//out.println("xx - 1 :  " + xSqrLess1.toString());
 		//IdealSimplifier.
 	}

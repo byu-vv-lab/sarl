@@ -10,8 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-
 /**
  * Testing on IdealSimplifier on the basis of boolean
  * and BooleanExpressions for assumptions.

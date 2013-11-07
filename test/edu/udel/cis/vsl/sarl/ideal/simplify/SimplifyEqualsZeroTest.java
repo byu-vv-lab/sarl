@@ -10,10 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-
 /**
  * Testing on IdealSimplifier with expressions that have a variable and its respective terms drop
  * due to being set equal to 0.  Aims to confirm that remaining terms, be they constant or variable, agree with expectations.
