@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -52,6 +53,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.util.SingletonList;
 import edu.udel.cis.vsl.sarl.util.Util;
 
 public class CVC3ModelFinder {
@@ -128,8 +130,8 @@ public class CVC3ModelFinder {
 	}
 
 	/**
-	 *  Prints the expression to the given print stream.
-	 *  
+	 * Prints the expression to the given print stream.
+	 * 
 	 * @param expr
 	 * @param out
 	 */
@@ -163,10 +165,10 @@ public class CVC3ModelFinder {
 
 	// TODO: find some way to share code with CommonSimpifier
 	// rather than copying the code.
-	
+
 	/**
-	 * Simplifies the type of every SymbolicType in a sequence and then
-	 * returns the simplified sequence.
+	 * Simplifies the type of every SymbolicType in a sequence and then returns
+	 * the simplified sequence.
 	 * 
 	 * @param SymbolicTypeSequence
 	 */
@@ -191,7 +193,7 @@ public class CVC3ModelFinder {
 		}
 		return sequence;
 	}
-	
+
 	/**
 	 * Returns a new CommonSymbolicTypeSequence with the given
 	 * SymbolicTypeSequence that has been simplified.
@@ -204,10 +206,10 @@ public class CVC3ModelFinder {
 		return new CommonSymbolicTypeSequence(
 				simplifyTypeSequenceWork(sequence));
 	}
-	
+
 	/**
-	 * If types are of ARRAY, TUPLE, FUNCTION, OR  UNION, it simplifies the type.
-	 *  
+	 * If types are of ARRAY, TUPLE, FUNCTION, OR UNION, it simplifies the type.
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -301,7 +303,7 @@ public class CVC3ModelFinder {
 			Op op = expr.getOp();
 			Expr opExpr = op.getExpr();
 			String opKind = opExpr.getKind();
-			
+
 			if (opKind.equals("_TUPLE_SELECT")) {
 				int index = opExpr.getChild(0).getRational().getInteger();
 				Expr argExpr = expr.getChild(0);
@@ -376,10 +378,37 @@ public class CVC3ModelFinder {
 	private SymbolicExpression backTranslateArrayLiteral(Expr expr, int length,
 			SymbolicType elementType) {
 		LinkedList<SymbolicExpression> elements = new LinkedList<SymbolicExpression>();
+		Expr body = expr.getBody();
+		Expr var = (Expr) expr.getVars().get(0);
+		List<Expr> varList = new SingletonList<Expr>(var);
+
+		// out.print("back translate array literal: ");
+		// printExpr(expr, out);
+		// out.println();
+		// out.println("Children: ");
+		// for (Object o : expr.getChildren()) {
+		// out.print("  ");
+		// printExpr((Expr) o, out);
+		// out.println();
+		// out.flush();
+		// }
+		// out.println("Done with children.");
+		// out.print("Body: ");
+		// printExpr(expr.getBody(), out);
+		// out.println();
+		// for (Object o : expr.getVars()) {
+		// out.print("  var: ");
+		// printExpr((Expr) o, out);
+		// out.println();
+		// out.flush();
+		// }
+		// out.flush();
 
 		for (int i = 0; i < length; i++) {
 			Expr indexExpr = vc.ratExpr(i);
-			Expr elementExpr = vc.readExpr(expr, indexExpr);
+			Expr elementExpr = body.subst(varList, new SingletonList<Expr>(
+					indexExpr));
+			// Expr elementExpr = vc.readExpr(expr, indexExpr);
 			SymbolicExpression element;
 
 			elementExpr = vc.simplify(elementExpr);
@@ -540,9 +569,9 @@ public class CVC3ModelFinder {
 	}
 
 	/**
-	 * Returns the default value for a SymbolicType (e.g. default for 
-	 * INTEGER is a zeroInt(), default for BOOLEAN is false, etc.)
-	 *  
+	 * Returns the default value for a SymbolicType (e.g. default for INTEGER is
+	 * a zeroInt(), default for BOOLEAN is false, etc.)
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -624,10 +653,10 @@ public class CVC3ModelFinder {
 		}
 		return universe.array(elementType, sequence);
 	}
-	
+
 	/**
-	 * Maps a SymbolicExpression value to a SymbolicConstant key in model
-	 *  or throws exception if expr is not in the varMap.
+	 * Maps a SymbolicExpression value to a SymbolicConstant key in model or
+	 * throws exception if expr is not in the varMap.
 	 * 
 	 * @param expr
 	 * @param value
@@ -788,11 +817,11 @@ public class CVC3ModelFinder {
 						+ value);
 			assign(key, sarlValue);
 		}
-	} 
-	
+	}
+
 	/**
 	 * Returns the model variable which is set upon instantiation of this class.
-	 * The model is a Map of SymbolicConstant to SymbolicExpression and 
+	 * The model is a Map of SymbolicConstant to SymbolicExpression and
 	 * represents the counterexample of an proof.
 	 * 
 	 * @return a CVC3 Model
