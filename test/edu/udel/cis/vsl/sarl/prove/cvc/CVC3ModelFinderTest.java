@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -136,7 +137,9 @@ public class CVC3ModelFinderTest {
 		ResultType resultType = result.getResultType();
 		assertEquals(ResultType.NO, resultType);
 
-		ModelResult model = (ModelResult) result;
+		ModelResult modelResult = (ModelResult) result;
+		Map<SymbolicConstant, SymbolicExpression> model = modelResult.getModel();
+		assertNotNull(model);
 	}
 
 	/**
@@ -225,6 +228,7 @@ public class CVC3ModelFinderTest {
 				.newProver(universe.bool(true));
 		prover.setOutput(out);
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
+		assertNotNull(c);
 	}
 
 	/**
@@ -258,6 +262,7 @@ public class CVC3ModelFinderTest {
 		CVC3TheoremProver prover = (CVC3TheoremProver) proverFactory
 				.newProver(universe.bool(true));
 		CVC3ModelFinder c = new CVC3ModelFinder(prover, h);
+		assertNotNull(c);
 	}
 
 	/**
@@ -351,7 +356,11 @@ public class CVC3ModelFinderTest {
 
 		assertEquals(ResultType.NO, resultType);
 
-		ModelResult model = (ModelResult) result;
+		ModelResult modelResult = (ModelResult) result;
+		
+		Map<SymbolicConstant, SymbolicExpression> model = modelResult.getModel();
+		
+		assertNotNull(model);
 	}
 
 	@Test
@@ -412,7 +421,9 @@ public class CVC3ModelFinderTest {
 		ResultType resultType = result.getResultType();
 		assertEquals(ResultType.NO, resultType);
 
-		ModelResult model = (ModelResult) result;
+		ModelResult modelResult = (ModelResult) result;
+		Map<SymbolicConstant, SymbolicExpression> model = modelResult.getModel();
+		assertNotNull(model);
 	}
 
 	@Test
@@ -437,10 +448,10 @@ public class CVC3ModelFinderTest {
 				symConstYInt);
 
 		BooleanExpression predicate = universe.equals(xDivideByY, symConstXInt);
-		// ValidityResult result = cvcProver.validOrModel(predicate);
+		 ValidityResult result = cvcProver.validOrModel(predicate);
 
-		// ResultType resultType = result.getResultType();
-		// assertEquals(ResultType.NO, resultType);
+		ResultType resultType = result.getResultType();
+		assertEquals(ResultType.NO, resultType);
 	}
 
 	@Test
@@ -458,6 +469,8 @@ public class CVC3ModelFinderTest {
 
 		SymbolicExpression applyExpr = expressionFactory.expression(
 				SymbolicOperator.APPLY, typeFactory.booleanType(), args);
+		
+		assertNotNull(applyExpr);
 	}
 
 	@Test
@@ -476,6 +489,8 @@ public class CVC3ModelFinderTest {
 
 		SymbolicExpression applyExpr = expressionFactory.expression(
 				SymbolicOperator.APPLY, function.type(), function, collect);
+		
+		assertNotNull(applyExpr);
 	}
 
 	@Test
@@ -496,21 +511,22 @@ public class CVC3ModelFinderTest {
 	}
 
 	@Test
-	public void AssignArrayRealType() {
+	public void assignArrayRealType() {
 		SymbolicType arrayRealType = universe.arrayType(universe.realType());
 		SymbolicExpression a = universe.symbolicConstant(
 				universe.stringObject("a"), arrayRealType);
 		NumericExpression x = universe.integer(1);
 		SymbolicConstant y = universe.symbolicConstant(
 				universe.stringObject("y"), realType);
-		SymbolicExpression s1 = expressionFactory.expression(
-				SymbolicOperator.ARRAY_WRITE, a.type(), a, x, y);
 		BooleanExpression predicate = universe.equals(universe.arrayRead(a, x),
 				y);
 		ValidityResult result = cvcProver.validOrModel(predicate);
 
 		assertEquals(ResultType.NO, result.getResultType());
-		ModelResult model = (ModelResult) result;
+		ModelResult modelResult = (ModelResult) result;
+		
+		Map<SymbolicConstant, SymbolicExpression> model = modelResult.getModel();
+		assertNotNull(model);
 	}
 
 	@Test
@@ -546,6 +562,8 @@ public class CVC3ModelFinderTest {
 
 		Map<SymbolicConstant, SymbolicExpression> model = modelResult
 				.getModel();
+		
+		assertNotNull(model);
 	}
 
 	@Ignore
