@@ -8,7 +8,6 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -45,7 +44,10 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperNullTest() {
 		boundObj = BoundsObject.newUpperBound(xpy, num0, true);
+		assertEquals(num0, boundObj.upper);
 		boundObj.restrictUpper(null, true);
+		assertNotNull(boundObj.upper);
+		assertEquals(num0, boundObj.upper);
 	}
 	
 	/**
@@ -54,7 +56,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperNotNullTest() {
 		boundObj = BoundsObject.newUpperBound(xpy, num0, true);
+		assertEquals(num0, boundObj.upper);
 		boundObj.restrictUpper(numNeg2000, true);
+		assertEquals(numNeg2000, boundObj.upper);
 	}
 	
 	/**
@@ -64,7 +68,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperFromNullTest() {
 		boundObj = BoundsObject.newLowerBound(xpy, numNeg2000, true);
+		assertNull(boundObj.upper);
 		boundObj.restrictUpper(num0, true);
+		assertEquals(num0, boundObj.upper);
 	}
 	
 	/**
@@ -74,7 +80,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUppererTest() {
 		boundObj = BoundsObject.newUpperBound(xpy, num10000, true);
+		assertEquals(num10000, boundObj.upper);
 		boundObj.restrictUpper(num0, true);
+		assertEquals(num0, boundObj.upper);
 		//out.println(boundObj);
 	}
 	
@@ -85,7 +93,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperEqualTest() {
 		boundObj = BoundsObject.newUpperBound(xpy, numNeg2000, true);
+		assertTrue(boundObj.strictUpper);
 		boundObj.restrictUpper(numNeg2000, false);
+		assertFalse(boundObj.strictUpper);
 		//out.println(boundObj);
 	}
 	
@@ -96,7 +106,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperEqualTest2() {
 		boundObj = BoundsObject.newUpperBound(xpy, numNeg2000, false);
+		assertFalse(boundObj.strictUpper);
 		boundObj.restrictUpper(numNeg2000, true);
+		assertTrue(boundObj.strictUpper);
 		//out.println(boundObj);
 	}
 	
@@ -107,7 +119,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperEqualTest3() {
 		boundObj = BoundsObject.newUpperBound(xpy, numNeg2000, true);
+		assertTrue(boundObj.strictUpper);
 		boundObj.restrictUpper(numNeg2000, true);
+		assertTrue(boundObj.strictUpper);
 		//out.println(boundObj);
 	}
 	
@@ -118,7 +132,9 @@ public class BoundsObjectRestrictUpperTest {
 	@Test
 	public void restrictUpperEqualTest4() {
 		boundObj = BoundsObject.newUpperBound(xpy, numNeg2000, false);
+		assertFalse(boundObj.strictUpper);
 		boundObj.restrictUpper(num0, false);
+		assertFalse(boundObj.strictUpper);
 		//out.println(boundObj);
 	}
 
