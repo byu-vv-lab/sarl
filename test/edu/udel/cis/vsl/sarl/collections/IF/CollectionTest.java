@@ -49,10 +49,10 @@ public class CollectionTest {
 		collectionFactory.setElementComparator(elementComparator);
 		collectionFactory.init();
 		comparator = collectionFactory.comparator();
-		collectionMap = mapCreate.emptySortedMap();
-		collectionMap = collectionMap.put(a, b);
-		collectionMap = collectionMap.put(x, b);
-		collectionMap = collectionMap.put(b, y);
+		//collectionMap = mapCreate.emptySortedMap();
+		//collectionMap = collectionMap.put(a, b);
+		//collectionMap = collectionMap.put(x, b);
+		//collectionMap = collectionMap.put(b, y);
 	}
 
 	@Before
