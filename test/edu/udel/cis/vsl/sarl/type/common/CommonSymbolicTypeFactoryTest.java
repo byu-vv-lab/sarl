@@ -354,6 +354,7 @@ public class CommonSymbolicTypeFactoryTest {
 	public void testPureType() {
 		CommonSymbolicCompleteArrayType cArray = (CommonSymbolicCompleteArrayType) typeFactory.arrayType(boundedIntKind, numericPrimitive);
 		CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeFactory.sequence(typesList), floatRealKind);
+		
 		assertEquals(typeFactory.pureType(boundedIntKind), boundedIntKind.getPureType());
 		assertEquals(typeFactory.pureType(floatRealKind), floatRealKind.getPureType());
 		assertEquals(typeFactory.pureType(cArray), cArray.getPureType());

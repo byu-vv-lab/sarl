@@ -49,8 +49,9 @@ public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 	}
 
 	/**
-	 * Returns true since we are assuming that has the same kind as this, and
-	 * there is only one primitive type of this kind.
+	 * @return true 
+	 * because the type of any CommonSymbolicType is TYPE, 
+	 * which is the same as the type of CommonSymbolicPrimitiveType; TYPE.
 	 */
 	@Override
 	protected boolean typeEquals(CommonSymbolicType that) {
