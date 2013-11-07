@@ -12,15 +12,11 @@ import org.junit.Test;
 
 import cvc3.Type;
 import cvc3.ValidityChecker;
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -35,8 +31,8 @@ public class CVC3TranslateTypeTest {
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
-	private static ExpressionFactory expressionFactory = factorySystem
-			.expressionFactory();
+//	private static ExpressionFactory expressionFactory = factorySystem
+//			.expressionFactory();
 	// types
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();

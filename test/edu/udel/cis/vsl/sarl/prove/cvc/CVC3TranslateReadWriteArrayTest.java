@@ -53,10 +53,10 @@ public class CVC3TranslateReadWriteArrayTest {
 	// SymbolicConstants
 	private static SymbolicConstant x = universe.symbolicConstant(
 			universe.stringObject("x"), intType);
-	private static SymbolicConstant y = universe.symbolicConstant(
-			universe.stringObject("y"), intType);
-	private static SymbolicConstant z = universe.symbolicConstant(
-			universe.stringObject("z"), intType);
+//	private static SymbolicConstant y = universe.symbolicConstant(
+//			universe.stringObject("y"), intType);
+//	private static SymbolicConstant z = universe.symbolicConstant(
+//			universe.stringObject("z"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
