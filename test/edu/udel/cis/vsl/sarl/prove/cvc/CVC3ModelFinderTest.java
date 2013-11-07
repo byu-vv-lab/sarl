@@ -235,7 +235,19 @@ public class CVC3ModelFinderTest {
 	 * to create a CVC3ModelFinder.
 	 */
 
-	@Test
+	/**
+	 * TODO The reason of the NullPointerException is that this test is not
+	 * designed in the right way. CVCModelFinder is not supposed to be called here.
+	 * Instead, it is called in TheoremProver.ValidOrModel() when the validity result
+	 * is invalid and a counterexample is to be established.
+	 * So this test should be ignored.
+	 * Moreover, tests for theorem provers should avoid directly dealing with a specific 
+	 * prover, which prevents it to be reused for testing new theorem provers.
+	 * Please refer to sarl.prove.TheoremProverTestTemplate.java, where it shows how to
+	 * design reusable tests for theorem provers. The trick is to declare theorem provers
+	 * as TheoremProver (not a specific prover) and invoke only methods of the interface TheoremProver.
+	 */
+	@Ignore @Test
 	public void isApplyExpr() {
 		Expr varExpr = vc.varExpr("var",
 				cvcProver.translateType(universe.realType()));
