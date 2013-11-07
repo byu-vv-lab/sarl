@@ -9,7 +9,6 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -49,6 +48,7 @@ public class BoundsObjectNewUpperTest {
 	@Test
 	public void newUpperTest() {
 		boundObj = BoundsObject.newUpperBound(x, num0, true);
+		assertEquals(num0, boundObj.upper);
 	}
 
 }

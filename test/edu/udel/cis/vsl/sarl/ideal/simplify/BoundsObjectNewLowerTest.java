@@ -48,6 +48,7 @@ public class BoundsObjectNewLowerTest {
 	@Test
 	public void newLowerTest() {
 		boundObj = BoundsObject.newLowerBound(x, num0, true);
+		assertEquals(num0, boundObj.lower);
 	}
 
 }
