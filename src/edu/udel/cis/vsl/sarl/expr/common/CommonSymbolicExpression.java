@@ -52,8 +52,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	// Constructors...
 
 	/**
-	 * Main Constructor that takes an array of SymbolicObjects.  Other constructors are converted
-	 * into this format.
+	 * Main Constructor that takes an array of SymbolicObjects. Other
+	 * constructors are converted into this format.
 	 * 
 	 * @param operator
 	 * @param type
@@ -71,7 +71,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Constructor with a single SymbolicObject converted to array of SymbolicObjects
+	 * Constructor with a single SymbolicObject converted to array of
+	 * SymbolicObjects
 	 * 
 	 * @param kind
 	 * @param type
@@ -83,7 +84,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Constructor with two SymbolicObjects converted to array of SymbolicObjects
+	 * Constructor with two SymbolicObjects converted to array of
+	 * SymbolicObjects
 	 * 
 	 * @param kind
 	 * @param type
@@ -96,7 +98,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Constructor with three SymbolicObjects converted to array of SymbolicObjects
+	 * Constructor with three SymbolicObjects converted to array of
+	 * SymbolicObjects
 	 * 
 	 * @param kind
 	 * @param type
@@ -111,7 +114,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Constructor with a Collection of SymbolicObjects which is converted to array format.
+	 * Constructor with a Collection of SymbolicObjects which is converted to
+	 * array format.
 	 * 
 	 * @param kind
 	 * @param type
@@ -144,12 +148,15 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		CommonSymbolicExpression that = (CommonSymbolicExpression) o;
 
 		return this.getClass().equals(o.getClass())
-				&& operator == that.operator && type.equals(that.type)
+				&& operator == that.operator
+				&& ((type == null && that.type == null) || type
+						.equals(that.type))
 				&& Arrays.equals(arguments, that.arguments);
 	}
 
 	/**
-	 * Returns the type HashCode if not Null and all the Expressions arguments' Hashcodes
+	 * Returns the type HashCode if not Null and all the Expressions arguments'
+	 * Hashcodes
 	 */
 	@Override
 	protected int computeHashCode() {
@@ -188,12 +195,12 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * String Representation of an array of SymbolicObjects
-	 * -call to toStringBufferLong() for individual string representations
+	 * String Representation of an array of SymbolicObjects -call to
+	 * toStringBufferLong() for individual string representations
 	 * 
 	 * @param objects
-	 @param buffer
-	 * 		string buffer to which computed result should be appended
+	 * @param buffer
+	 *            string buffer to which computed result should be appended
 	 */
 	private StringBuffer toStringBufferLong(SymbolicObject[] objects) {
 		StringBuffer buffer = new StringBuffer("{");
@@ -231,23 +238,22 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * accumulates the operator opString to every operand in the following format
-	 * opString = " " + opString + " ";
+	 * accumulates the operator opString to every operand in the following
+	 * format opString = " " + opString + " ";
 	 * 
 	 * @param buffer
-	 * 		string buffer to which computed result should be appended
+	 *            string buffer to which computed result should be appended
 	 * @param opString
-	 * 		the string representation of the operator, e.g. "+"
+	 *            the string representation of the operator, e.g. "+"
 	 * @param operands
-	 * 		collection of Symbolic Objects
+	 *            collection of Symbolic Objects
 	 * @param atomizeArgs
-	 * 		should each argument be atomized (surrounded by parens if
+	 *            should each argument be atomized (surrounded by parens if
 	 */
 	private void accumulate(StringBuffer buffer, String opString,
 			SymbolicCollection<?> operands, boolean atomizeArgs) {
 		boolean first = true;
 
-		
 		for (SymbolicExpression arg : operands) {
 			if (first)
 				first = false;
@@ -261,16 +267,16 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	 * Computes string representation of a binary operator expression
 	 * 
 	 * @param buffer
-	 *       string buffer to which computed result should be appended
+	 *            string buffer to which computed result should be appended
 	 * @param opString
-	 * 	  	the string representation of the operator, e.g. "+"
+	 *            the string representation of the operator, e.g. "+"
 	 * @param arg0
-	 * 		object to be represented
+	 *            object to be represented
 	 * @param arg1
-	 * 		object to be represented
+	 *            object to be represented
 	 * @param atomizeArgs
-	 * 		should each argument be atomized (surrounded by parens if
-	 *      necessary)?
+	 *            should each argument be atomized (surrounded by parens if
+	 *            necessary)?
 	 */
 	private void processBinary(StringBuffer buffer, String opString,
 			SymbolicObject arg0, SymbolicObject arg1, boolean atomizeArgs) {
@@ -314,14 +320,15 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return toStringBuffer1(atomize);
 	}
 
-	
 	/**
-	 * Returns a string representation of this object as a StringBuffer. Use this instead of "toString()" for 
- 		performance reasons if you are going to be building up big strings.
-	 * 	
-	 * @param atomize	if true, place parentheses around the string if necessary in order to include this as a term in 
-	 a larger expression
-	 * @return	result StringBuffer
+	 * Returns a string representation of this object as a StringBuffer. Use
+	 * this instead of "toString()" for performance reasons if you are going to
+	 * be building up big strings.
+	 * 
+	 * @param atomize
+	 *            if true, place parentheses around the string if necessary in
+	 *            order to include this as a term in a larger expression
+	 * @return result StringBuffer
 	 */
 	public StringBuffer toStringBuffer1(boolean atomize) {
 		StringBuffer result = new StringBuffer();
@@ -517,8 +524,8 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		case OR:
 			processFlexibleBinary(result, " || ", false, atomize);
-//			if (atomize)
-//				atomize(result);
+			// if (atomize)
+			// atomize(result);
 			return result;
 		case POWER:
 			result.append(arguments[0].toStringBuffer(true));

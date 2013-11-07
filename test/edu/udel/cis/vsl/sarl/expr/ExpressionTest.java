@@ -1001,7 +1001,6 @@ public class ExpressionTest {
 		//assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
 	}
 	
-	@Ignore // remember to remove this
 	@Test
 	public void standardSimplifierFactory() {
 		//This test fails with a Null Pointer Exception.
