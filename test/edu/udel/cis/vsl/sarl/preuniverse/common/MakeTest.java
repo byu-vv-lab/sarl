@@ -95,7 +95,7 @@ public class MakeTest {
 		NumericExpression zero,one,two,three,low,high;
 		NumericSymbolicConstant x_var,y_var;
 		BooleanExpression resultTrue, resultFalse;
-		SymbolicExpression y_minus_x,x_minus_y,array1;
+		SymbolicExpression y_minus_x,x_minus_y;
 		resultTrue=universe.bool(true);
 		resultFalse=universe.bool(false);
 		SymbolicType Integer,Bool;// For testing nullExpression() method
@@ -106,9 +106,9 @@ public class MakeTest {
 		Bool = universe.booleanType();
 		//Real = universe.realType();
 
-		array1 = universe.array(
-				type,
-				Arrays.asList(new SymbolicConstant[] { index }));
+//		array1 = universe.array(
+//				type,
+//				Arrays.asList(new SymbolicConstant[] { index }));
 		zero=universe.integer(0);
 		one = universe.integer(1);
 		two = universe.integer(2);
@@ -168,7 +168,7 @@ public class MakeTest {
 		assertEquals(universe.make(SymbolicOperator.FORALL,Bool,Args_FORALL),testResult1);
 		//case LENGTH
 		//TODO:did not finish,need help
-		SymbolicExpression[] Args_Length={array1};
+		//SymbolicExpression[] Args_Length={array1};
 		//System.out.println(universe.length(Args_Length[0]));
 		//assertEquals(one,universe.make(SymbolicOperator.LENGTH, Integer, Args_Length));
 		//case MULTIPLY
