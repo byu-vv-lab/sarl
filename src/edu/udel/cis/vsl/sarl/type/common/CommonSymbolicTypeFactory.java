@@ -40,7 +40,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * an implementation of SymbolicTypeFactory, 
+ * an implementation of {@link SymbolicTypeFactory} 
  * 
  * @author alali
  *
