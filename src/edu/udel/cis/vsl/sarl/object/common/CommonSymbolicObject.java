@@ -49,8 +49,14 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 */
 	private boolean hashed = false;
 
+	/**
+	 * Unique id of the canonic symbolic object
+	 */
 	private int id = -1;
 
+	/**
+	 * The order of the object, used for comparisons
+	 */
 	private RationalNumber order;
 
 	/**
