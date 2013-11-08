@@ -55,11 +55,8 @@ public class ArrayTest {
 		// Instantiate Types
 		integerType = universe.integerType();
 		realType = universe.realType();
-		intArrayType = universe.arrayType(integerType); // creates an array of
-														// ints
-		doubleIntArrayType = universe.arrayType(intArrayType); // creates an
-																// array of
-																// int[]s
+		intArrayType = universe.arrayType(integerType); //array of ints
+		doubleIntArrayType = universe.arrayType(intArrayType); //array of int[]s
 
 		// Instantiate NumberExpressions
 		two = universe.integer(2);
@@ -71,7 +68,7 @@ public class ArrayTest {
 	}
 
 	/**
-	 * Main function that tests for successful completion of denseArrayWrite()
+	 * Main function that tests for successful completion of denseArrayWrite().
 	 * Written by Jordan Saints
 	 */
 	@Test
@@ -92,48 +89,33 @@ public class ArrayTest {
 		SymbolicExpression denseResult = universe.denseArrayWrite(
 				intArrayTypeExpression, expressionsToWrite);
 
-		// Test by comparing to normal write operation in arrayWrite()
-		// USAGE: universe.arrayWrite(array to write to, index in array to write
-		// at, value to write @ that index)
+		// USAGE: universe.arrayWrite(array to write to, index in array to
+		// write at, value to write @ that index)
+		
+		// TEST by comparing to normal write operation in arrayWrite()
+		// add a 2 at index 2 in arrayTypeExpression array
 		SymbolicExpression writeResult = universe.arrayWrite(
-				intArrayTypeExpression, two, two); // adds a 2 at index 2 in
-													// arrayTypeExpression array
-		writeResult = universe.arrayWrite(writeResult, four, two); // replace
-																	// writeResult's
-																	// entry at
-																	// index 4
-																	// (NumExpr
-																	// four)
-																	// with a 2
-																	// (NumExpr
-																	// two)
+				intArrayTypeExpression, two, two);
+		// replace entry at index 4 (NumExpr four) with a 2 (NumExpr two)
+		writeResult = universe.arrayWrite(writeResult, four, two);
 		assertEquals(writeResult, denseResult); // test if arrays are equal
 
-		// Test denseResult's type
-		assertEquals(universe.arrayType(integerType), intArrayType); // check
-																		// that
-																		// arrayType
-																		// is
-																		// actually
-																		// correct
-																		// type
-																		// to
-																		// begin
-																		// with
-		assertEquals(intArrayType, denseResult.type()); // check that
-														// denseResult is of
-														// arrayType
+		// TEST denseResult's type
+		// check that arrayType is actually correct type to begin with
+		assertEquals(universe.arrayType(integerType), intArrayType);
+		// check that denseResult is of arrayType
+		assertEquals(intArrayType, denseResult.type());
 
-		// Test denseResult's arguments
+		// TEST denseResult's arguments
 		assertEquals(2, denseResult.numArguments()); // test total numArguments
+		// get sequence of expressions
 		@SuppressWarnings("unchecked")
-		SymbolicSequence<SymbolicExpression> expressions = (SymbolicSequence<SymbolicExpression>) denseResult
-				.argument(1); // get sequence of expressions
-		assertEquals(5, expressions.size()); // the 2 trailing null SymExprs
-												// will be chopped off
-												// ("made dense")
+		SymbolicSequence<SymbolicExpression> expressions =
+			(SymbolicSequence<SymbolicExpression>) denseResult.argument(1);
+		// the 2 trailing null SymExprs will be chopped off ("made dense")
+		assertEquals(5, expressions.size());
 
-		// Test denseResult's expressions sequence against known values in
+		// TEST denseResult's expressions sequence against known values in
 		// expressionsToWrite List
 		assertEquals(nullExpression, expressions.get(0));
 		assertEquals(nullExpression, expressions.get(1));
@@ -144,7 +126,7 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #1 that tests failure branch (1 of 2) of
-	 * denseArrayWrite() Written by Jordan Saints
+	 * denseArrayWrite(). Written by Jordan Saints
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam1Exception() {
@@ -165,7 +147,7 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #2 that tests failure branch (2 of 2) of
-	 * denseArrayWrite() Written by Jordan Saints
+	 * denseArrayWrite(). Written by Jordan Saints
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam2Exception() {
