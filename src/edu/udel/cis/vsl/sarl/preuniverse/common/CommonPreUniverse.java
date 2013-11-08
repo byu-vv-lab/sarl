@@ -1226,13 +1226,7 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	@Override
 	public BooleanExpression or(Iterable<? extends BooleanExpression> args) {
-		// TODO: move work to CnfFactory where it can be done right.
-		// change this to just call the method there.
-		BooleanExpression result = falseExpr;
-
-		for (BooleanExpression arg : args)
-			result = or(result, arg);
-		return result;
+		return booleanFactory.or(args);
 	}
 
 	/**

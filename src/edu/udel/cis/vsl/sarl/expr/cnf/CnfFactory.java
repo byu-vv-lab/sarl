@@ -230,7 +230,18 @@ public class CnfFactory implements BooleanExpressionFactory {
 			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}
 	}
-
+	
+	/**
+	 * Assume nothing about the list of args.
+	 */
+	@Override
+	public BooleanExpression or(Iterable<? extends BooleanExpression> args) {
+		BooleanExpression result = falseExpr;
+		for (BooleanExpression arg : args)
+			result = or(result, arg);
+		return result;
+	}
+	
 	@Override
 	public BooleanExpression not(BooleanExpression arg) {
 		CnfExpression cnf = (CnfExpression) arg;

@@ -150,6 +150,19 @@ public interface BooleanExpressionFactory {
 	 * @return disjunction of arg0 and arg1
 	 */
 	BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1);
+	
+	/**
+	 * Returns a symbolic expression which represents the disjunction of the
+	 * expressions in the given array args. Each expression in args must have
+	 * boolean type. args must be non-null, and may have any length, including
+	 * 0. If the length of args is 0, the resulting expression is equivalent to
+	 * "false".
+	 * 
+	 * @param args
+	 *            a sequence of expressions of boolean type
+	 * @return the disjunction of the expressions in args
+	 */
+	BooleanExpression or(Iterable<? extends BooleanExpression> args);
 
 	/**
 	 * Returns a symbolic expression representing the logical negation of the
@@ -207,5 +220,6 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression exists(SymbolicConstant boundVariable,
 			BooleanExpression predicate);
+
 
 }
