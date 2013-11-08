@@ -3,24 +3,18 @@ package edu.udel.cis.vsl.sarl.ideal.simplify;
 import static org.junit.Assert.*;
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
 
-import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.ideal.Ideal;
-import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
+
+/**
+ * 
+ * @author mbrahma
+ *
+ */
 
 public class IdealSimplifierTest {
 
@@ -52,27 +46,35 @@ public class IdealSimplifierTest {
 	}
 	
 	@Test
-	public void getFullContextTextTest(){
+	public void getFullContextTextTestnull(){
 		
-		idealSimplifier = idealSimplifierFactory.newSimplifier(xeq5);
-		BooleanExpression boolXEq5 = idealSimplifier.getFullContext();
-		assertEquals(xeq5,boolXEq5);
-		 
+		idealSimplifier = idealSimplifierFactory.newSimplifier(null);
+		BooleanExpression boolNull = idealSimplifier.getFullContext();
+		assertEquals(null,boolNull);
+	
+	}
+	
+	public void getFullContextTextTestTrivial(){
+		
+	idealSimplifier = idealSimplifierFactory.newSimplifier(xeq5);
+	BooleanExpression boolXEq5 = idealSimplifier.getFullContext();
+	assertEquals(xeq5,boolXEq5);
+	
+	}
+	
+	public void getFullContextTestTrivial1(){
 		boolArg1 = preUniv.lessThanEquals(rat25, preUniv.multiply(x, x));
 		IdealSimplifier simpEq1 =idealSimplifierFactory.newSimplifier(boolArg1);
 		BooleanExpression boolSimpEq1 = simpEq1.getFullContext();
 		assertEquals(preUniv.lessThanEquals(rat0, preUniv.add(ratNeg25, preUniv.multiply(x, x))), boolSimpEq1);
-		
-		
+	}
+	
+	public void getFullContextTestTrivial2(){
 		boolArg2 = preUniv.lessThanEquals(rat2, preUniv.multiply(x,x));
 		IdealSimplifier simpEq2 =idealSimplifierFactory.newSimplifier(boolArg2);
 		BooleanExpression boolSimpEq2 = simpEq2.getFullContext();
 		assertEquals(boolArg2, boolSimpEq2);
-	
 	}
-	
-	
-	
 	/*@Test
 	public void getFullReducedQuadTest(){
 		boolArg1 = preUniv.lessThanEquals(twenty_five, xpyInt);

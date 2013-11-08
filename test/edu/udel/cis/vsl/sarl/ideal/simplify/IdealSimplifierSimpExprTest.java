@@ -1,25 +1,6 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.idealSimplifierFactory;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.onePxPxSqdP3x4th;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.out;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.preUniv;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat0;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat2;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat20;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat200;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat25;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat3;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat4;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat5;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat6;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.ratNeg25;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.ratNeg300;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.x;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xx;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xy;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.y;
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.z;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -29,6 +10,10 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+
+/**
+ * @author mbrahma
+ */
 
 public class IdealSimplifierSimpExprTest {
 	
@@ -43,7 +28,6 @@ public class IdealSimplifierSimpExprTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		CommonObjects.setUp();
-		
 	}
 
 	@After
@@ -61,7 +45,7 @@ public class IdealSimplifierSimpExprTest {
 		assertEquals(rat0, idealSimp.simplifyExpression(symExpr));
 	}
 	
-/*	@Test(expected=ArithmeticException.class)
+	@Test(expected=ArithmeticException.class)
 	public void simplifyExpressionIllegalArg(){
 		numExpr = preUniv.divide(x,rat0);
 		symExpr = numExpr;
@@ -71,7 +55,7 @@ public class IdealSimplifierSimpExprTest {
 		idealSimp = idealSimplifierFactory.newSimplifier(assumption);
 		
 		assertEquals(rat0, idealSimp.simplifyExpression(symExpr));
-	}*/
+	}
 	
 	@Test
 	public void simplifyExpressionTrivial() {
@@ -89,21 +73,21 @@ public class IdealSimplifierSimpExprTest {
 	
 	@Test
 	public void simplifyExpressionAddition(){
-		NumericExpression one;
+		/*NumericExpression one = preUniv.multiply(xy, rat5);
 		NumericExpression two;
-		NumericExpression three = preUniv.rational(1081392);
+		NumericExpression three = preUniv.multiply(preUniv.power(x, 27),preUniv.power(z, 9));
 		NumericExpression four = preUniv.multiply(rat6, ratNeg25);
-		NumericExpression five = preUniv.multiply(preUniv.power(x, 27),preUniv.power(z, 9));
-		NumericExpression six;
+		NumericExpression five =  preUniv.rational(0.75);
+		NumericExpression six = preUniv.multiply(preUniv.power(xy, 4), rat5);
 		NumericExpression seven;
-		NumericExpression eight;
+		NumericExpression eight = preUniv.multiply(rat6,preUniv.multiply(preUniv.power(x, 27),preUniv.power(z, 9)));
 		NumericExpression nine;
-		NumericExpression ten;
+		NumericExpression ten = preUniv.rational(1081392);
 		NumericExpression eleven;
 		NumericExpression twelve;
 		NumericExpression thirteen;
 		NumericExpression fourteen;
-		NumericExpression fifteen;
+		NumericExpression fifteen = preUniv.rational(1081392);*/
 		//expr1=	preUniv.add(one, preUniv.add(two, three));
 		//expr2=	preUniv.add(four, preUniv.add(five, six));
 		//expr3=	preUniv.add(seven, preUniv.add(eight, nine));
@@ -135,6 +119,7 @@ public class IdealSimplifierSimpExprTest {
 		
 		numExpect = preUniv.add(preUniv.rational(12500), preUniv.multiply(preUniv.rational(3125), preUniv.power(y, 3)));
 		
+		out.println(numExpect);
 		expected = numExpect;
 		// Step through the problem to see how it is breaking down the problem
 		//should be 2500 not 12500
@@ -143,7 +128,7 @@ public class IdealSimplifierSimpExprTest {
 	}
 
 	@Test
-	public void simplifyExpressionDivide() {
+	public void simplifyExpressionDivide(){
 		NumericExpression num = preUniv.add(preUniv.multiply(rat6, x), preUniv.multiply(preUniv.multiply(rat2,  x), preUniv.power(y, 2)));
 		
 		NumericExpression denom = preUniv.multiply(rat2, x);
