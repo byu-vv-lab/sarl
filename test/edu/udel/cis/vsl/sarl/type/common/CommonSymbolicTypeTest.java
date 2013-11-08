@@ -10,20 +10,33 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+/**
+ 
+  Testing CommonSymbolicType
+  A SymbolicType could be of different kinds: 
+			Real, Array, Tuple, Boolean, Char, Function,
+		Union, or Integer.
+	 
+ * 
+ * @author alali
+ *
+ */
 public class CommonSymbolicTypeTest {
-	/*Testing CommonSymbolicType
-	 * A SymbolicType could be of different kinds: 
-	 * 				Real, Array, Tuple, Boolean, Char, Function,
-	 *   						Union, or Integer.
-	 */
-		CommonSymbolicType realType, integerType, arrayType, functionType, tupleType, booleanType;
+	
+		/**
+		 * creating different SymbolicTypes
+		 */
+		CommonSymbolicType realType, realType2, integerType, arrayType, 
+		functionType, tupleType, booleanType;
 		
 		ObjectFactory objectFactory;
 		SymbolicTypeFactory typeFactory;
+		
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -35,8 +48,11 @@ public class CommonSymbolicTypeTest {
 	@Before
 	public void setUp() throws Exception {
 		realType = new CommonSymbolicRealType(RealKind.IDEAL);
+		realType2 = new CommonSymbolicRealType(RealKind.FLOAT);
 		integerType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		objectFactory = Objects.newObjectFactory(Numbers.REAL_FACTORY);
+		booleanType = new CommonSymbolicPrimitiveType(SymbolicTypeKind.BOOLEAN);
+		
 	}
 
 	@After
@@ -44,65 +60,110 @@ public class CommonSymbolicTypeTest {
 	}
 
 
+	/**
+	 * Tests the equality of two types by calling typeEquals()
+	 * 
+	 */
 	@Test
 	public void testIntrinsicEquals() {
-		//fail("Not yet implemented");
+		assertTrue(realType.intrinsicEquals(realType));
+		assertFalse(realType.intrinsicEquals(realType2));
+		assertFalse(realType.intrinsicEquals(integerType));
+		assertFalse(realType.intrinsicEquals(null));
 	}
-/*
-	@Test
-	public void testCommonSymbolicType() {
-		fail("Not yet implemented");
-	}
+	
 
-	@Test
-	public void testTypeEquals() {
-		fail("Not yet implemented");
-	}
-
+	/**
+	 * Testing the kind of a SymbolicType
+	 */
 	@Test
 	public void testTypeKind() {
-		fail("Not yet implemented");
+		assertEquals(realType.typeKind(), SymbolicTypeKind.REAL);
 	}
+	
 
+	/**
+	 * testing a type if it is INTEGER kind.
+	 */
 	@Test
 	public void testIsInteger() {
-		fail("Not yet implemented");
+		assertTrue(integerType.isInteger());
+		assertFalse(realType.isInteger());
 	}
-
-	@Test
-	public void testIsBoolean() {
-		fail("Not yet implemented");
-	}
-
+	
+	/**
+	 * testing a type if it is REAL kind.
+	 */
 	@Test
 	public void testIsReal() {
-		fail("Not yet implemented");
+		assertTrue(realType.isReal());
+		assertFalse(integerType.isReal());
 	}
+	
+	/**
+	 * testing a type if it is a BOOLEAN kind.
+	 */
+	@Test
+	public void testIsBoolean() {
+		assertTrue(booleanType.isBoolean());
+		assertFalse(realType.isBoolean());
+	}
+	
 
+	/**
+	 * testing a type if it is numeric, i.e. INTEGER or REAL
+	 */
 	@Test
 	public void testIsNumeric() {
-		fail("Not yet implemented");
+		assertTrue(integerType.isNumeric());
+		assertTrue(realType.isNumeric());
+		assertFalse(booleanType.isNumeric());
 	}
-
+	
+	/**
+	 * tests if a type is HERBRAND
+	 * in CommonSymbolicType, it is assumed that all types are NOT herbrand.
+	 * it is overridden in the concrete classes.
+	 */
 	@Test
 	public void testIsHerbrand() {
-		fail("Not yet implemented");
+		assertFalse(booleanType.isHerbrand());
 	}
+	
 
+	/**
+	 * tests if a type is IDEAL
+	 * in CommonSymbolicType, it is assumed that all types are NOT ideal
+	 * so, the method must be overridden by the concrete classes that are ideal
+	 */
 	@Test
 	public void testIsIdeal() {
-		fail("Not yet implemented");
+		assertFalse(booleanType.isIdeal());
 	}
+	
 
+	/**
+	 * tests a string representation of the type
+	 */
 	@Test
 	public void testToStringBufferLong() {
-		fail("Not yet implemented");
+		assertEquals(realType.toStringBufferLong().toString(), "real");
 	}
-
+	
+	/**
+	 * tests the returned pureType of this type
+	 */
 	@Test
 	public void testGetPureType() {
-		fail("Not yet implemented");
+		assertTrue(realType.getPureType() instanceof CommonSymbolicRealType);
 	}
+
+
+
+/*
+
+
+	
 */
 
 

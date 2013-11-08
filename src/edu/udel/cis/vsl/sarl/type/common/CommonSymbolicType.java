@@ -23,10 +23,16 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
+ * an abstract representation of the {@link SymbolicType}
+ * 
+ * @author alali
  */
 public abstract class CommonSymbolicType extends CommonSymbolicObject implements
 		SymbolicType {
 
+	/**
+	 * contains the kind of this type
+	 */
 	private SymbolicTypeKind kind;
 
 	/**
