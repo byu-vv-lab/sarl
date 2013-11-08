@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.object.common;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 
 /**
  * Test stub for TypeComparator

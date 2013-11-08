@@ -252,7 +252,6 @@ public class CommonObjectFactoryTest {
 		//make something canonic and check to make sure its added to the list
 		int originalcount = this.fac.objects().size();
 		IntObject tempint = this.fac.intObject(2);
-		IntObject tempint2 = this.fac.intObject(2);
 		
 		this.fac.canonic(tempint);
 		assertEquals(this.fac.objects().size(), originalcount+1);

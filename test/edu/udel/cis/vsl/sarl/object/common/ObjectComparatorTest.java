@@ -10,7 +10,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+//import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -102,9 +102,9 @@ public class ObjectComparatorTest {
 		IntObject int0 = obFac.intObject(0);
 		IntObject int2 = obFac.intObject(0);
 		
-		NumberObject num0 = obFac.oneIntegerObj();
-		NumberObject num1 = obFac.zeroIntegerObj();
-		NumberObject num2 = obFac.oneIntegerObj();
+		//NumberObject num0 = obFac.oneIntegerObj();
+		//NumberObject num1 = obFac.zeroIntegerObj();
+		//NumberObject num2 = obFac.oneIntegerObj();
 		
 		StringObject string0 = obFac.stringObject("string0");
 		StringObject string1 = obFac.stringObject("string0");
