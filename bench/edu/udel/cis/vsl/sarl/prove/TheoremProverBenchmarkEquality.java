@@ -6,8 +6,6 @@ import java.util.List;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -51,7 +49,6 @@ public class TheoremProverBenchmarkEquality {
 	public static void main(String[] args) {
 
 		long startTime = System.nanoTime(), stopTime;
-		double totalTime;
 
 		System.out.println("Building constants...");
 		List<NumericSymbolicConstant> expressions = new ArrayList<NumericSymbolicConstant>();
