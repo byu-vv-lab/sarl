@@ -180,6 +180,11 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 			if (op0 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
+				
+				// TODO: THERE seems to be a bug here.
+				// HOW do you know c1 is an "and" expression?????
+				// You don't!  Ditto below.
+				
 				for (BooleanExpression clause : c0.booleanSetArg(0)) {
 					for (BooleanExpression clause2 : c1.booleanSetArg(0)) {
 						result = and(result, or(clause, clause2));
@@ -189,6 +194,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 			}
 			if (op1 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
+				
 				for (BooleanExpression clause : c1.booleanSetArg(0)) {
 					for (BooleanExpression clause2 : c0.booleanSetArg(0)) {
 						result = and(result, or(clause2, clause));
