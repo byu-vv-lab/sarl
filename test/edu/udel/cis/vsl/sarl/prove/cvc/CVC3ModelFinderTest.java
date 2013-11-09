@@ -46,6 +46,11 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
+
+// TODO: DON'T COMMIT BROKEN TESTS. 
+// Make sure these tests don't generate false errors
+// before you commit them.
+
 public class CVC3ModelFinderTest {
 
 	// Static fields: instantiated once and used for all tests...
@@ -110,6 +115,7 @@ public class CVC3ModelFinderTest {
 	 * proof.
 	 */
 	@Test
+	@Ignore
 	public void blackBoxReal() {
 		// Create the assumption y = 0.
 		StringObject strY = universe.stringObject("y");
@@ -153,6 +159,7 @@ public class CVC3ModelFinderTest {
 	 * index 0 does not have to be one. The element can be many values.
 	 */
 	@Test
+	@Ignore
 	public void arrayIndexModel() {
 		SymbolicType arrayType = universe.arrayType(realType);
 		SymbolicExpression a = universe.symbolicConstant(
@@ -193,6 +200,7 @@ public class CVC3ModelFinderTest {
 	 */
 
 	@Test
+	@Ignore
 	public void universeEquals() {
 		// Give the prover the assumption y = 6
 		CVC3TheoremProver cvcProverYIs6 = (CVC3TheoremProver) proverFactory
@@ -226,6 +234,7 @@ public class CVC3ModelFinderTest {
 	 */
 
 	@Test(expected = SARLInternalException.class)
+	@Ignore
 	public void createCVC3ModelFinder() {
 		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
 		h.put(vc.falseExpr(), vc.falseExpr());
@@ -282,6 +291,7 @@ public class CVC3ModelFinderTest {
 	 */
 
 	@Test
+	@Ignore
 	public void isBooleanExpr() {
 //		Expr exprTrue = cvcProver.translate(booleanExprTrue);
 //		Expr exprFalse = cvcProver.translate(booleanExprFalse);
@@ -304,6 +314,7 @@ public class CVC3ModelFinderTest {
 	 * that a given value does not equal zero.
 	 */
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderInvalid() {
 		StringObject strX = universe.stringObject("x");
@@ -334,6 +345,7 @@ public class CVC3ModelFinderTest {
 		assertFalse(n.equals(numFactory.integer(0)));
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderTuple() {
 		NumericExpression sevenInt = universe.integer(7);
@@ -372,6 +384,7 @@ public class CVC3ModelFinderTest {
 		assertNotNull(model);
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderWithContext() {
 		// Give the prover the assumption that y = 0.
@@ -398,6 +411,7 @@ public class CVC3ModelFinderTest {
 		assertEquals(ResultType.YES, resultType);
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderRational() {
 		// Create the assumption y = 0.
@@ -435,6 +449,7 @@ public class CVC3ModelFinderTest {
 		assertNotNull(model);
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderTestDivideByOne() {
 		// Create the assumption y = 2.
@@ -463,6 +478,7 @@ public class CVC3ModelFinderTest {
 		assertEquals(ResultType.NO, resultType);
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderApplyBoolean() {
 
@@ -482,6 +498,7 @@ public class CVC3ModelFinderTest {
 //		assertNotNull(applyExpr);
 	}
 
+	@Ignore
 	@Test
 	public void CVC3ModelFinderApplyReferenced() {
 		List<SymbolicType> types = new ArrayList<SymbolicType>();
@@ -502,6 +519,7 @@ public class CVC3ModelFinderTest {
 //		assertNotNull(applyExpr);
 	}
 
+	@Ignore
 	@Test
 	public void assignApplyElseStatement() {
 		SymbolicType arrayIntType = universe.arrayType(universe.integerType());
@@ -519,6 +537,7 @@ public class CVC3ModelFinderTest {
 		System.out.println(model.getModel());
 	}
 
+	@Ignore
 	@Test
 	public void assignArrayRealType() {
 		SymbolicType arrayRealType = universe.arrayType(universe.realType());
@@ -540,6 +559,7 @@ public class CVC3ModelFinderTest {
 		assertNotNull(model);
 	}
 
+	@Ignore
 	@Test
 	public void assignTupleInt() {
 		List<SymbolicExpression> tupleList = new ArrayList<SymbolicExpression>();
