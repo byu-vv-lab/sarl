@@ -128,6 +128,7 @@ public class CommonObjectFactory implements ObjectFactory {
 			SymbolicObject result = objectMap.get(object);
 
 			if (result == null) {
+				((CommonSymbolicObject) object).canonizeChildren(this);
 				((CommonSymbolicObject) object).setId(objectList.size());
 				objectMap.put(object, object);
 				objectList.add(object);
@@ -225,5 +226,5 @@ public class CommonObjectFactory implements ObjectFactory {
 	public int numObjects() {
 		return objectList.size();
 	}
-	
+
 }

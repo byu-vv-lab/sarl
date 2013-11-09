@@ -592,7 +592,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	public void canonizeChildren(CommonObjectFactory factory) {
 		int numArgs = arguments.length;
 
-		if (!type.isCanonic())
+		if (type != null && !type.isCanonic())
 			type = factory.canonic(type);
 		for (int i = 0; i < numArgs; i++) {
 			SymbolicObject arg = arguments[i];
