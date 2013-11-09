@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.SARL;
@@ -55,8 +56,9 @@ public class ArrayTest {
 		// Instantiate Types
 		integerType = universe.integerType();
 		realType = universe.realType();
-		intArrayType = universe.arrayType(integerType); //array of ints
-		doubleIntArrayType = universe.arrayType(intArrayType); //array of int[]s
+		intArrayType = universe.arrayType(integerType); // array of ints
+		doubleIntArrayType = universe.arrayType(intArrayType); // array of
+																// int[]s
 
 		// Instantiate NumberExpressions
 		two = universe.integer(2);
@@ -91,7 +93,7 @@ public class ArrayTest {
 
 		// USAGE: universe.arrayWrite(array to write to, index in array to
 		// write at, value to write @ that index)
-		
+
 		// TEST by comparing to normal write operation in arrayWrite()
 		// add a 2 at index 2 in arrayTypeExpression array
 		SymbolicExpression writeResult = universe.arrayWrite(
@@ -110,8 +112,8 @@ public class ArrayTest {
 		assertEquals(2, denseResult.numArguments()); // test total numArguments
 		// get sequence of expressions
 		@SuppressWarnings("unchecked")
-		SymbolicSequence<SymbolicExpression> expressions =
-			(SymbolicSequence<SymbolicExpression>) denseResult.argument(1);
+		SymbolicSequence<SymbolicExpression> expressions = (SymbolicSequence<SymbolicExpression>) denseResult
+				.argument(1);
 		// the 2 trailing null SymExprs will be chopped off ("made dense")
 		assertEquals(5, expressions.size());
 
@@ -621,6 +623,12 @@ public class ArrayTest {
 	}
 
 	// written by Mohammad Alsulmi
+	// TODO: FIX ME. You can't use the same method append
+	// to both (1) add an element to an array, and (2) concatenate
+	// two arrays. You have to use two different methods, with
+	// two different names. How about calling the second one
+	// "concatenate".
+	@Ignore
 	@Test
 	public void testAppendTwoArrays() {
 
@@ -884,7 +892,7 @@ public class ArrayTest {
 
 	}
 
-	//Written by Chris Heider
+	// Written by Chris Heider
 	@Test
 	public void testArrayLambda() {
 		SymbolicCompleteArrayType arrayType;
@@ -895,21 +903,23 @@ public class ArrayTest {
 		SymbolicExpression arrayL1;
 		SymbolicExpression arrayL2;
 		SymbolicExpression ans;
-		
+
 		arrayType = universe.arrayType(integerType, universe.integer(6));
-		x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
+		x = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
 		function1 = universe.lambda(x, universe.multiply(x, x));
 		arrayL1 = universe.arrayLambda(arrayType, function1);
-		p = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("p"), integerType);
-		function2 = universe.lambda(p, universe.add(p,p));
+		p = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("p"), integerType);
+		function2 = universe.lambda(p, universe.add(p, p));
 		arrayL2 = universe.arrayLambda(arrayType, function2);
 		ans = universe.integer(4);
-			
-		assertEquals(ans, universe.arrayRead(arrayL1,universe.integer(2)));
-		assertEquals(ans, universe.arrayRead(arrayL2,universe.integer(2)));
+
+		assertEquals(ans, universe.arrayRead(arrayL1, universe.integer(2)));
+		assertEquals(ans, universe.arrayRead(arrayL2, universe.integer(2)));
 	}
-	
-	//Written by Chris Heider
+
+	// Written by Chris Heider
 	@Test(expected = SARLException.class)
 	public void testArrayLambdaException1() {
 		SymbolicCompleteArrayType arrayType;
@@ -917,26 +927,27 @@ public class ArrayTest {
 		SymbolicExpression function;
 		@SuppressWarnings("unused")
 		SymbolicExpression arrayL;
-		
+
 		arrayType = universe.arrayType(integerType, universe.integer(6));
-		x = (NumericSymbolicConstant) universe.symbolicConstant(universe.stringObject("x"), integerType);
+		x = (NumericSymbolicConstant) universe.symbolicConstant(
+				universe.stringObject("x"), integerType);
 		function = universe.multiply(x, x);
 		arrayL = universe.arrayLambda(arrayType, function);
 	}
-	
-	//Written by Chris Heider
+
+	// Written by Chris Heider
 	@Test(expected = SARLException.class)
 	public void testArrayLambdaException2() {
 		SymbolicCompleteArrayType arrayType;
 		SymbolicExpression function;
 		@SuppressWarnings("unused")
 		SymbolicExpression arrayL;
-		
+
 		arrayType = universe.arrayType(integerType, universe.integer(6));
 		function = universe.nullExpression();
 		arrayL = universe.arrayLambda(arrayType, function);
 	}
-	
+
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompleteArrays() {
@@ -984,20 +995,20 @@ public class ArrayTest {
 	@Test
 	public void complexArrayTest() {
 		// Testing arrays with symbolic expressions and reasoning
-		
+
 		NumericSymbolicConstant x_var, y_var;
 		NumericExpression x_plus_y, x_minus_y, x_plus_2y, x_plus_y_multiply_x_plus_y;
 		SymbolicExpression array, expected, simplifiedArray;
 		BooleanExpression claim1, claim2, claim;
 		Reasoner reasoner;
 		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
-		
+
 		// initialization of symbolic constants
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), integerType);
 		y_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("y"), integerType);
-		
+
 		// mixing the constant in numeric expressions
 		x_plus_y = (NumericExpression) universe.add(x_var, y_var);
 
@@ -1008,17 +1019,17 @@ public class ArrayTest {
 
 		x_plus_y_multiply_x_plus_y = (NumericExpression) universe.multiply(
 				x_plus_y, x_plus_y);
-		
+
 		// initialization of the array
 		array = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y,
 						x_plus_2y, x_plus_y_multiply_x_plus_y }));
-		
-		// initialization of boolean expressions 
+
+		// initialization of boolean expressions
 		claim1 = universe.equals(x_var, universe.integer(5));
 		claim2 = universe.equals(y_var, universe.integer(3));
-		
+
 		// combining claim1, claim2 into claim
 		claim = universe.and(claim1, claim2);
 		// using the claim in the reasoner
@@ -1029,18 +1040,20 @@ public class ArrayTest {
 				Arrays.asList(new NumericExpression[] { universe.integer(8),
 						universe.integer(2), universe.integer(11),
 						universe.integer(64) }));
-		
-		// using the reasoner to substitute the values of expression in the original array
+
+		// using the reasoner to substitute the values of expression in the
+		// original array
 		simplifiedArray = reasoner.simplify(array);
 
 		// doing assertion
 		assertEquals(expected, simplifiedArray);
 
 	}
+
 	// written by Mohammad Alsulmi
 	@Test
 	public void testComplexMixedArray() {
-		
+
 		// Testing nested arrays with symbolic expressions and reasoning
 		SymbolicArrayType arrayType;
 		SymbolicArrayType nestedType;
@@ -1053,7 +1066,7 @@ public class ArrayTest {
 		BooleanExpression claim1, claim2, claim;
 		Reasoner reasoner;
 		SymbolicUniverse reasonerUniverse = SARL.newStandardUniverse();
-		
+
 		// initialization of symbolic constants
 		x_var = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), integerType);
@@ -1075,10 +1088,10 @@ public class ArrayTest {
 		arrayType = universe.arrayType(integerType);
 
 		// creating first array
-		array1 =  universe.array(integerType,
+		array1 = universe.array(integerType,
 				Arrays.asList(new NumericExpression[] { x_plus_y, x_minus_y }));
 		// creating second array
-		array2 =  universe.array(
+		array2 = universe.array(
 				integerType,
 				Arrays.asList(new NumericExpression[] { x_plus_2y,
 						x_plus_y_multiply_x_plus_y, x_minus_y }));
@@ -1101,11 +1114,11 @@ public class ArrayTest {
 		// initialization of nested array type that contains the previous
 		// initialized array type
 		nestedType = universe.arrayType(arrayType);
-		
+
 		// initialization of boolean expressions
 		claim1 = universe.equals(x_var, universe.integer(5));
 		claim2 = universe.equals(y_var, universe.integer(3));
-		
+
 		// combining claim1, claim2 into claim
 		claim = universe.and(claim1, claim2);
 

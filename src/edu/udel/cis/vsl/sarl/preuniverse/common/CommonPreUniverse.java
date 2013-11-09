@@ -125,7 +125,7 @@ public class CommonPreUniverse implements PreUniverse {
 
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
-	 */ 
+	 */
 	private ExpressionSubstituter2 substituter;
 
 	/**
@@ -410,28 +410,29 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	/**
-	 * Compares two arguments to check compatibility first, then passes 
-	 * those arguments to a case/switch. Each case checks the equality 
-	 * of the two arguments based on the following types:
+	 * Compares two arguments to check compatibility first, then passes those
+	 * arguments to a case/switch. Each case checks the equality of the two
+	 * arguments based on the following types:
 	 * <ul>
 	 * <li>BOOLEAN:</li>
 	 * <li>CHAR:</li>
 	 * <li>INTEGER:</li>
 	 * <li>REAL:</li>
-	 * <li>ARRAY:<li>
-	 * <li>FUNCTION: Takes a sequence and checks the content and 
-	 * equality of its elements</li>
+	 * <li>ARRAY:
+	 * <li>
+	 * <li>FUNCTION: Takes a sequence and checks the content and equality of its
+	 * elements</li>
 	 * <li>TUPLE:</li>
 	 * <li>UNION:</li>
 	 * </ul>
+	 * 
 	 * @param arg0
-	 * 			SymbolicType
+	 *            SymbolicType
 	 * @param arg1
-	 * 			SymbolicType
+	 *            SymbolicType
 	 * @param quantifierDepth
-	 * 			int
-	 * @return
-	 * 			BooleanExpression
+	 *            int
+	 * @return BooleanExpression
 	 */
 	private BooleanExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1, int quantifierDepth) {
@@ -1359,8 +1360,8 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public BooleanExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-		
-		if (arg0.isNumeric()&& arg1.isNumeric())
+
+		if (arg0.isNumeric() && arg1.isNumeric())
 			return numericFactory.equals((NumericExpression) arg0,
 					(NumericExpression) arg1);
 		return equals(arg0, arg1, 0);
@@ -1538,33 +1539,44 @@ public class CommonPreUniverse implements PreUniverse {
 				arrayType(elementType, integer(count)), sequence(elements));
 	}
 
-	/*
-	 * @Override public SymbolicExpression append(SymbolicExpression
-	 * concreteArray, SymbolicExpression element) { SymbolicType type =
-	 * concreteArray.type();
-	 * 
-	 * if (type.typeKind() != SymbolicTypeKind.ARRAY) throw
-	 * err("argument concreteArray not array type:\n" + concreteArray); if
-	 * (concreteArray.operator() != SymbolicOperator.CONCRETE) { throw
-	 * err("append invoked on non-concrete array:\n" + concreteArray); } else {
-	 * 
-	 * @SuppressWarnings("unchecked") SymbolicSequence<SymbolicExpression>
-	 * elements = (SymbolicSequence<SymbolicExpression>) concreteArray
-	 * .argument(0); SymbolicType elementType = ((SymbolicArrayType)
-	 * type).elementType(); SymbolicExpression result;
-	 * 
-	 * if (element == null || element.isNull()) throw
-	 * err("Element to append has illegal value:\n" + element); if
-	 * (incompatible(elementType, element.type())) throw
-	 * err("Element to append has incompatible type:\n" + "Expected: " +
-	 * elementType + "\nSaw: " + element.type()); elements =
-	 * elements.add(element); type = arrayType(elementType,
-	 * integer(elements.size())); result = expression(SymbolicOperator.CONCRETE,
-	 * type, sequence(elements)); return result; } }
-	 */
 	@Override
 	public SymbolicExpression append(SymbolicExpression concreteArray,
-			SymbolicExpression arrayOrElement) {
+			SymbolicExpression element) {
+		SymbolicType type = concreteArray.type();
+
+		if (type.typeKind() != SymbolicTypeKind.ARRAY)
+			throw err("argument concreteArray not array type:\n"
+					+ concreteArray);
+		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
+			throw err("append invoked on non-concrete array:\n" + concreteArray);
+		} else {
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+					.argument(0);
+			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
+			SymbolicExpression result;
+
+			if (element == null || element.isNull())
+				throw err("Element to append has illegal value:\n" + element);
+			if (incompatible(elementType, element.type()))
+				throw err("Element to append has incompatible type:\n"
+						+ "Expected: " + elementType + "\nSaw: "
+						+ element.type());
+			elements = elements.add(element);
+			type = arrayType(elementType, integer(elements.size()));
+			result = expression(SymbolicOperator.CONCRETE, type,
+					sequence(elements));
+			return result;
+		}
+	}
+
+	// TODO: this method is erroneous. It throws an exception if
+	// the second argument is not a non-concrete-array. The original
+	// does not. Also, you cannot have one method that works for
+	// an array OR element. What if the user wants an array of arrays?
+	// Then the array will be an element.
+	public SymbolicExpression appendEXPERIMENT(
+			SymbolicExpression concreteArray, SymbolicExpression arrayOrElement) {
 		SymbolicType type = concreteArray.type();
 
 		if (type.typeKind() != SymbolicTypeKind.ARRAY)
@@ -1738,9 +1750,9 @@ public class CommonPreUniverse implements PreUniverse {
 					}
 					// either indexNumber too big or entry is null
 					return arrayRead(origin, index);
-				}
-				else if(op == SymbolicOperator.ARRAY_LAMBDA){
-					return apply((SymbolicExpression)array.argument(0), Arrays.asList(index));
+				} else if (op == SymbolicOperator.ARRAY_LAMBDA) {
+					return apply((SymbolicExpression) array.argument(0),
+							Arrays.asList(index));
 				}
 			}
 			return expression(SymbolicOperator.ARRAY_READ,
@@ -2313,18 +2325,17 @@ public class CommonPreUniverse implements PreUniverse {
 					+ reference);// unreachable
 		}
 	}
-	
-	//@Override
+
+	// @Override
 	/*
-	 * Written by Julian Piane
-	 * This is an improved version of referenceTest which allows for SymbolicTypes of infinite embedded size
-	 * It still needs to undergo further testing however before it is finalized.
+	 * Written by Julian Piane This is an improved version of referenceTest
+	 * which allows for SymbolicTypes of infinite embedded size It still needs
+	 * to undergo further testing however before it is finalized.
 	 */
 	public SymbolicType referencedTypeImproved(SymbolicType type,
 			ReferenceExpression reference) {
-		
-		while(reference != null && type != null)
-		{
+
+		while (reference != null && type != null) {
 			switch (reference.referenceKind()) {
 			case NULL:
 				throw new SARLException(
@@ -2334,16 +2345,16 @@ public class CommonPreUniverse implements PreUniverse {
 				return type;
 			case ARRAY_ELEMENT: {
 				ArrayElementReference ref = (ArrayElementReference) reference;
-				reference = (ReferenceExpression)ref.getParent();
-			
+				reference = (ReferenceExpression) ref.getParent();
 
 				if (type instanceof SymbolicArrayType)
 					type = ((SymbolicArrayType) type).elementType();
 				else
-					throw new SARLException("Incompatible type and reference:\n"
-							+ type + "\n" + reference);
+					throw new SARLException(
+							"Incompatible type and reference:\n" + type + "\n"
+									+ reference);
 			}
-			break;
+				break;
 			case TUPLE_COMPONENT: {
 				TupleComponentReference ref = (TupleComponentReference) reference;
 				reference = ref.getParent();
@@ -2352,10 +2363,11 @@ public class CommonPreUniverse implements PreUniverse {
 					type = ((SymbolicTupleType) type).sequence().getType(
 							ref.getIndex().getInt());
 				else
-					throw new SARLException("Incompatible type and reference:\n"
-							+ type + "\n" + reference);
+					throw new SARLException(
+							"Incompatible type and reference:\n" + type + "\n"
+									+ reference);
 			}
-			break;
+				break;
 			case UNION_MEMBER: {
 				UnionMemberReference ref = (UnionMemberReference) reference;
 				reference = ref.getParent();
@@ -2364,10 +2376,11 @@ public class CommonPreUniverse implements PreUniverse {
 					type = ((SymbolicUnionType) type).sequence().getType(
 							ref.getIndex().getInt());
 				else
-					throw new SARLException("Incompatible type and reference:\n"
-							+ type + "\n" + reference);
+					throw new SARLException(
+							"Incompatible type and reference:\n" + type + "\n"
+									+ reference);
 			}
-			break;
+				break;
 			case OFFSET: {
 				OffsetReference ref = (OffsetReference) reference;
 				reference = ref.getParent();
