@@ -180,26 +180,22 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 			if (op0 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
-				
-				// TODO: THERE seems to be a bug here.
-				// HOW do you know c1 is an "and" expression?????
-				// You don't!  Ditto below.
-				
-				for (BooleanExpression clause : c0.booleanSetArg(0)) {
-					for (BooleanExpression clause2 : c1.booleanSetArg(0)) {
-						result = and(result, or(clause, clause2));
-					}
+
+				if (op1 == SymbolicOperator.AND) {
+					for (BooleanExpression clause0 : c0.booleanSetArg(0))
+						for (BooleanExpression clause1 : c1.booleanSetArg(0))
+							result = and(result, or(clause0, clause1));
+				} else {
+					for (BooleanExpression clause0 : c0.booleanSetArg(0))
+						result = and(result, or(clause0, c1));
 				}
 				return result;
 			}
 			if (op1 == SymbolicOperator.AND) {
 				BooleanExpression result = trueExpr;
-				
-				for (BooleanExpression clause : c1.booleanSetArg(0)) {
-					for (BooleanExpression clause2 : c0.booleanSetArg(0)) {
-						result = and(result, or(clause2, clause));
-					}
-				}
+
+				for (BooleanExpression clause1 : c1.booleanSetArg(0))
+					result = and(result, or(c0, clause1));
 				return result;
 			}
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {
@@ -227,16 +223,16 @@ public class CnfFactory implements BooleanExpressionFactory {
 				SymbolicSet<BooleanExpression> set1 = c1.booleanSetArg(0);
 				BooleanExpression notC0 = not(c0);
 				c2 = set1.add(c0);
-				for (BooleanExpression clause : set1) 
+				for (BooleanExpression clause : set1)
 					if (clause.equals(notC0))
-						return (trueExpr);	
+						return (trueExpr);
 				return booleanExpression(op1, c2);
 				// return booleanExpression(op1, c1.booleanSetArg(0).add(c0));
 			}
 			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}
 	}
-	
+
 	/**
 	 * Assume nothing about the list of args.
 	 */
@@ -247,7 +243,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 			result = or(result, arg);
 		return result;
 	}
-	
+
 	@Override
 	public BooleanExpression not(BooleanExpression arg) {
 		CnfExpression cnf = (CnfExpression) arg;
