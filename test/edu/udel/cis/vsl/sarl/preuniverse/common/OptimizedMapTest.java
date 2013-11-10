@@ -57,14 +57,28 @@ public class OptimizedMapTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
+	/**
+	 * Tests the method put(SymbolicExpression expression, Map<SymbolicConstant, SymbolicExpression> Map)
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void optimizedMapPutTest() {
 
 		nMap.put(key, hello);
 
 	}
-
+	
+	/**
+	 * Tests the method isEmpty() and size() for default constructor 
+	 * in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void optimizedMapTest() {
 		temp = nMap.isEmpty();
@@ -77,14 +91,28 @@ public class OptimizedMapTest {
 		assertEquals(nMap.containsValue(nvalue), false);
 
 	}
-
+	
+	/**
+	 * Tests the method remove(SymbolicExpression symbolicExpression)
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void optimizedMapRemoveTest() {
 
 		nMap.remove(key);
 
 	}
-
+	
+	/**
+	 * Tests the method entrySet()
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void optimizedMapEntrySetTest() {
 
@@ -92,6 +120,13 @@ public class OptimizedMapTest {
 
 	}
 
+	/**
+	 * Tests the method values()
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void optimizedMapValuesTest() {
 
@@ -99,6 +134,13 @@ public class OptimizedMapTest {
 
 	}
 
+	/**
+	 * Tests the method keySet()
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void optimizedMapKeysetTest() {
 
@@ -106,6 +148,13 @@ public class OptimizedMapTest {
 
 	}
 
+	/**
+	 * Tests the method clear()
+	 * for exception thrown in class OptimizedMap.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void optimizedMapClearTest() {
 
