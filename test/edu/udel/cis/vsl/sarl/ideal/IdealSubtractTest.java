@@ -36,6 +36,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -66,6 +67,7 @@ public class IdealSubtractTest {
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression one;
 	private RationalNumber realOne;
+	private RationalNumber realThree; 
 
 	@Before
 	public void setUp() throws Exception {
@@ -92,6 +94,7 @@ public class IdealSubtractTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realOne = numberFactory.rational("1");
+		realThree = numberFactory.rational("3");
 		one = commonIdealFactory.constant(realOne);
 	}
 
@@ -224,5 +227,55 @@ public class IdealSubtractTest {
 		
 		assertEquals(n, n1);
 		assertEquals(m, m1);
+	}
+	
+	/**
+	 * Subtract various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * 
+	 * @return type
+	 * 				RationalExpression
+	 */
+	@Test
+	public void subToRational() {
+		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("x"),
+						typeFactory.realType()));
+		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("Y"),
+						typeFactory.realType()));	
+		
+		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
+		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
+		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
+				monic); //3x^2 * y
+		NumericExpression polynomial = idealFactory.add(monomial, x2); //3x^2 * y + x^2
+		RationalExpression subPrimitive = (RationalExpression) 
+				idealFactory.subtract(r1, x); //(x - x*y)/y 
+		RationalExpression subPrimitivePower = (RationalExpression) 
+				idealFactory.subtract(r1, x2); //(x - x^2*y)/y 
+		RationalExpression plusMonic = (RationalExpression) 
+				idealFactory.add(r1, monic); //(x^2*y^2 + x)/y 
+		RationalExpression plusMonomial = (RationalExpression) 
+				idealFactory.add(r1, monomial); //(3*x^2*y^2 + x)/y 
+		RationalExpression plusPolynomial = (RationalExpression) 
+				idealFactory.add(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
+		
+		NumericExpression result1 = idealFactory.divide(idealFactory.
+				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y 
+		NumericExpression result2 = idealFactory.divide(idealFactory.
+				subtract(x, idealFactory.multiply(x2, y)), y); //(x^2*y + x)/y 
+		NumericExpression result3 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monic, y), x), y); //(x^2*y^2 + x)/y 
+		NumericExpression result4 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monomial, y), x), y); //(3*x^2*y^2 + x)/y 
+		NumericExpression result5 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(polynomial, y), x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
+		
+		assertEquals(result1, subPrimitive);	
+		assertEquals(result2, subPrimitivePower);	
+		assertEquals(result3, plusMonic);	
+		assertEquals(result4, plusMonomial);
+		assertEquals(result5, plusPolynomial);
 	}
 }
