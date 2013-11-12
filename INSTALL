@@ -46,14 +46,24 @@ Project Wizard as usual, naming it "SARL".  The .project, .classpath,
 and other Eclipse meta-data are already in the SVN archive, saving you
 a bunch of work.
 
-6. Do a clean build.  Everything should compile.  Generate the sarl.jar
+6. Navigate to Preferences -> Java -> Build Path -> ClassPath 
+Variables, and then select “New…” to create a classpath variable VSL, 
+and specify its value to be /opt/vsl.
+
+7. Navigate to Preferences -> Run/Debug ->
+String Substitution -> New…, and then define an entry 
+vsl_lib and set its value to be /opt/vsl/lib.
+
+8. Do a clean build.  Everything should compile.  Generate the sarl.jar
 by right-clicking (or ctrl-click on OS X) the build.xml file and
 Run As->Ant Build.  
 
-7. Go to Run->Run Configurations....  Create a new JUnit configuration.
-Name it SARL Tests.  Select "Run all tests in the selected project..."
+9. Go to Run->Run Configurations.... Create a new JUnit configuration.
+Name it SARL Tests. Select "Run all tests in the selected project..."
 and navigate to the folder "test" in the SARL project.
-The Test runner should be JUnit 4.  Under the Arguments tab, type
+The Test runner should be JUnit 4. Under the Arguments tab, type
 "-ea" (without the quotes) in the VM arguments area (to enable assertion
-checking).     Under the Environment tab, add an entry
-DYLD_LIBRARY_PATH = /opt/vsl/lib (OS X) or LD_LIBRARY_PATH = /opt/vsl/lib (linux).
+checking).     Under the Environment tab, create an entry 
+DYLD_LIBRARY_PATH (OS X) or LD_LIBRARY_PATH (linux), 
+specify its value by clicking Variables… and choose vsl_lib from the list, 
+or you may type ${vsl_lib} in the value entry.
