@@ -254,28 +254,29 @@ public class IdealSubtractTest {
 				idealFactory.subtract(r1, x); //(x - x*y)/y 
 		RationalExpression subPrimitivePower = (RationalExpression) 
 				idealFactory.subtract(r1, x2); //(x - x^2*y)/y 
-		RationalExpression plusMonic = (RationalExpression) 
-				idealFactory.add(r1, monic); //(x^2*y^2 + x)/y 
-		RationalExpression plusMonomial = (RationalExpression) 
-				idealFactory.add(r1, monomial); //(3*x^2*y^2 + x)/y 
-		RationalExpression plusPolynomial = (RationalExpression) 
-				idealFactory.add(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
+		RationalExpression subMonic = (RationalExpression) 
+				idealFactory.subtract(r1, monic); //(x - x^2*y^2)/y 
+		RationalExpression subMonomial = (RationalExpression) 
+				idealFactory.subtract(r1, monomial); //(x - 3*x^2*y^2)/y 
+		RationalExpression subPolynomial = (RationalExpression) 
+				idealFactory.subtract(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
 		
 		NumericExpression result1 = idealFactory.divide(idealFactory.
 				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y 
 		NumericExpression result2 = idealFactory.divide(idealFactory.
 				subtract(x, idealFactory.multiply(x2, y)), y); //(x^2*y + x)/y 
 		NumericExpression result3 = idealFactory.divide(idealFactory.
-				add(idealFactory.multiply(monic, y), x), y); //(x^2*y^2 + x)/y 
+				subtract(x, idealFactory.multiply(monic, y)), y); //(x^2*y^2 + x)/y 
 		NumericExpression result4 = idealFactory.divide(idealFactory.
-				add(idealFactory.multiply(monomial, y), x), y); //(3*x^2*y^2 + x)/y 
+				subtract(x, idealFactory.multiply(monomial, y)), y); //(3*x^2*y^2 + x)/y 
 		NumericExpression result5 = idealFactory.divide(idealFactory.
-				add(idealFactory.multiply(polynomial, y), x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
+				add(idealFactory.minus(idealFactory.multiply(polynomial, y)),
+						x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
 		
 		assertEquals(result1, subPrimitive);	
 		assertEquals(result2, subPrimitivePower);	
-		assertEquals(result3, plusMonic);	
-		assertEquals(result4, plusMonomial);
-		assertEquals(result5, plusPolynomial);
+		assertEquals(result3, subMonic);	
+		assertEquals(result4, subMonomial);
+		assertEquals(result5, subPolynomial);
 	}
 }
