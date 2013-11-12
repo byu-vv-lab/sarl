@@ -244,6 +244,31 @@ public class IdealMultiplyTest {
 		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
 				monic); //3x^2 * y
 		NumericExpression polynomial = idealFactory.add(monomial, x2); //3x^2 * y + x^2
+		RationalExpression mulPrimitive = (RationalExpression) 
+				idealFactory.multiply(r1, x); //(x*x)/y 
+		RationalExpression mulPrimitivePower = (RationalExpression) 
+				idealFactory.multiply(r1, x2); //(x*x^2)/y 
+		RationalExpression mulMonic = (RationalExpression) 
+				idealFactory.multiply(r1, monic); //(x^3) 
+		RationalExpression mulMonomial = (RationalExpression) 
+				idealFactory.multiply(r1, monomial); //(3*x^3) 
+		RationalExpression mulPolynomial = (RationalExpression) 
+				idealFactory.multiply(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
 		
+		NumericExpression result1 = idealFactory.divide(idealFactory.
+				multiply(x, x), y); //(x*x)/y 
+		NumericExpression result2 = idealFactory.divide(idealFactory.
+				multiply(x2, x), y); //(x^2*x)/y 
+		NumericExpression result3 = idealFactory.multiply(x2, x); //(x^3) 
+		NumericExpression result4 = idealFactory.multiply(realThree, idealFactory.multiply(x2, x)); //(3*x3) 
+		NumericExpression result5 = idealFactory.divide(idealFactory.
+				add(idealFactory.minus(idealFactory.multiply(polynomial, y)),
+						x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
+		
+		assertEquals(result1, mulPrimitive);	
+		assertEquals(result2, mulPrimitivePower);	
+		assertEquals(result3, mulMonic);	
+		assertEquals(result4, mulMonomial);
+		assertEquals(result5, mulPolynomial);
 	}
 }
