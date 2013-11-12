@@ -96,7 +96,6 @@ public class IdealPowerTest {
 	 * @param type
 	 * 				SymbolicExpression of numeric type
 	 */
-	@Ignore
 	@Test
 	public void bigPower() {
 		int exponent = 100;
