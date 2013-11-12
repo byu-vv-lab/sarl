@@ -261,16 +261,11 @@ public class IdealAddTest {
 		NumericExpression result4 = idealFactory.multiply(monomial, y);
 		NumericExpression result5 = idealFactory.multiply(polynomial, y);
 		
-		result1 = idealFactory.add(result1, x);
-		result1 = idealFactory.divide(result1, y); //(x*y + x)/y 
-		result2 = idealFactory.add(result2, x);
-		result2 = idealFactory.divide(result2, y); //(x^2*y + x)/y 
-		result3 = idealFactory.add(result3, x);
-		result3 = idealFactory.divide(result3, y); //(x^2*y^2 + x)/y 
-		result4 = idealFactory.add(result4, x);
-		result4 = idealFactory.divide(result4, y); //(3*x^2*y^2 + x)/y 
-		result5 = idealFactory.add(result5, x);
-		result5 = idealFactory.divide(result5, y); //(3*x^2*y^2 + x^2 * y + x)/y 
+		result1 = idealFactory.divide(idealFactory.add(result1, x), y); //(x*y + x)/y 
+		result2 = idealFactory.divide(idealFactory.add(result2, x), y); //(x^2*y + x)/y 
+		result3 = idealFactory.divide(idealFactory.add(result3, x), y); //(x^2*y^2 + x)/y 
+		result4 = idealFactory.divide(idealFactory.add(result4, x), y); //(3*x^2*y^2 + x)/y 
+		result5 = idealFactory.divide(idealFactory.add(result5, x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
 		
 		assertEquals(result1, plusPrimitive);	
 		assertEquals(result2, plusPrimitivePower);	
