@@ -24,7 +24,6 @@ import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
