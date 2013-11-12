@@ -8,8 +8,8 @@ public class ExpressionComparatorStub implements Comparator<SymbolicExpression> 
 
 	@Override
 	public int compare(SymbolicExpression o1, SymbolicExpression o2) {
-		String name1 = ((ExpressionStub) o1).toString();
-		String name2 = ((ExpressionStub) o2).toString();
+		String name1 = ((SymbolicExpression) o1).toString();
+		String name2 = ((SymbolicExpression) o2).toString();
 
 		return name1.compareTo(name2);
 	}

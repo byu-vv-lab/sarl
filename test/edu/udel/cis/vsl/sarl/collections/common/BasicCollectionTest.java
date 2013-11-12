@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -22,6 +21,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -55,6 +55,18 @@ public class BasicCollectionTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	public SymbolicExpression createExpression(int expression){
+		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		NumberFactory numFact = Numbers.REAL_FACTORY;
+		IntegerNumber expr = numFact.integer(expression);
+		ObjectFactory objFact = Objects.newObjectFactory(numFact);
+		SymbolicObject symObj =  objFact.numberObject(expr);
+		SymbolicTypeFactory typeFact = Types.newTypeFactory(objFact);
+		CollectionFactory collectionFact = Collections.newCollectionFactory(objFact);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFact, typeFact, collectionFact);
+		return exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
+	}
+	
 	@Before
 	public void setUp() throws Exception {
 		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
@@ -68,6 +80,12 @@ public class BasicCollectionTest {
 		expr5 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
 		expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(2)));
 		expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(100)));
+		SymbolicExpression five = new ExpressionStub("5");
+		SymbolicExpression twenty = createExpression(20);
+		
+		assertTrue(objectFactory.canonic(twenty).isCanonic());
+		
+		
 		collectionList1 = new LinkedList<SymbolicExpression>();
 		collectionList1.add(expr5);
 		collectionList1.add(expr2);

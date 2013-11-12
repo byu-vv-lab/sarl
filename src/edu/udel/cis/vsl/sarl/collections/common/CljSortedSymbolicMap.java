@@ -125,6 +125,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 	@SuppressWarnings("unchecked")
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
+		
 		for (Entry<K, V> entry : entries()) {
 			K key = entry.getKey();
 			V value = entry.getValue();
@@ -133,6 +134,7 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 				if (key.isCanonic())
 					pmap = pmap.assoc(key, (V) factory.canonic((SymbolicExpression)value));
 				else {
+					
 					pmap = pmap.without(key);
 					pmap = pmap.assoc(factory.canonic(key),
 							factory.canonic(value));

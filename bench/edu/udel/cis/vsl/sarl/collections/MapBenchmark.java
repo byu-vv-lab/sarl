@@ -16,44 +16,45 @@ public class MapBenchmark {
 	
 	public static void main(String args[])
 	{
-		int[] size = new int[2];
-		size[0] = 500;
-		size[1] = 600;
-		/*size[2] = 300;
-		size[3] = 400;
-		size[4] = 500;
+		//int[] size = new int[1];
+		//size[0] = 1000;
+		//size[1] = 200;
+		//size[2] = 300;
+		//size[3] = 400;
+		/*size[4] = 500;
 		size[5] = 600;*/
 		/*size[6] = 100000;
 		size[7] = 250000;
 		size[8] = 500000;
 		size[9] = 750000;
 		size[10] = 1000000;*/
-		for(int s = 0; s < size.length; s++)
-		{	SymbolicExpression[] keyVals = new SymbolicExpression[size[s]];
-			for(int b = 0; b < size[s]; b++)
-			{
-				keyVals[b] = new ExpressionStub(""+b+"");
-			}
-			
-			Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
-			CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> cljMap = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-			PMap<SymbolicExpression,SymbolicExpression> pmap = HashTreePMap.empty();
-			PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap = new PcollectionsSymbolicMap<SymbolicExpression,SymbolicExpression>(pmap);
-			//set up for removing elemnts from the array
-			ArrayList<Integer> removeList = new ArrayList<Integer>(size[s]);
-			for(int l = 0; l < size[s]; l++)
-			{
-				removeList.add(l);
-			}
-			Collections.shuffle(removeList);
-			int[] removeElements = new int[removeList.size()];
-			for(int m = 0; m < removeList.size();m++)
-			{
-				removeElements[m] = (int) removeList.get(m);
-			}
-			//end set up
+		/*for(int s = 0; s < size.length; s++)
+		{	
 			for(int t = 0; t < 5; t++)
 			{
+				SymbolicExpression[] keyVals = new SymbolicExpression[size[s]];
+				for(int b = 0; b < size[s]; b++)
+				{
+					keyVals[b] = new ExpressionStub(""+b+"");
+				}
+				
+				Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
+				CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> cljMap = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+				PMap<SymbolicExpression,SymbolicExpression> pmap = HashTreePMap.empty();
+				PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap = new PcollectionsSymbolicMap<SymbolicExpression,SymbolicExpression>(pmap);
+				//set up for removing elemnts from the array
+				ArrayList<Integer> removeList = new ArrayList<Integer>(size[s]);
+				for(int l = 0; l < size[s]; l++)
+				{
+					removeList.add(l);
+				}
+				Collections.shuffle(removeList);
+				int[] removeElements = new int[removeList.size()];
+				for(int m = 0; m < removeList.size();m++)
+				{
+					removeElements[m] = (int) removeList.get(m);
+				}
+				//end set up
 				//start add to clj
 				long cljStartTime = System.nanoTime();
 				for(int k = 0;k < size[s]; k++)
@@ -116,9 +117,11 @@ public class MapBenchmark {
 				//end remove pmap
 				System.out.println("pMap size = "+cljMap.size());
 				System.out.println('\n');
+				cljMap = null;
+				pMap = null;
 			}
 			
-		}
+		}*/
 	
 	}
 	
