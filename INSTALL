@@ -10,11 +10,31 @@ openjdk-7-jdk.
 2. Install Apache ant, if you don't already have it
 (http://ant.apache.org).
 
-3. Download the tgz archives of vsl_$os$-1.0.tgz from
+3. Download the tgz archive of VSL dependencies from 
    http://vsl.cis.udel.edu/tools/vsl_depend,
-   choose the right .tgz according to your platform (64-bit mac osx, 64-bit linux 
-   or 32-bit linux) and unzip it put the folder /vsl at /opt/vsl on your system. 
+   choosing the right .tgz according to your platform:
+	
+	vsl_linux32-1.0.tgz	- 32-bit linux
+	vsl_linux64-1.0.tgz	- 64-bit linux
+	vsl_osx64-1.0.tgz	- 64-bit osx
+	
+   Unzip the .tgz file and you will have the folder vsl.
+   Move vsl to /opt (you might need to use “sudo” for this.
+   Also, if you don't already have a directory called /opt, 
+   you will have to create it with mkdir /opt).
 
+   Suppose that you put the .tgz file (or .tar file if your browser
+   unzipped it automatically to a .tar file) in the directory $Download.
+   You can use the following commands:
+
+   		$ cd $Download
+   		$ tar xzf YourTgzOrTarFile vsl
+   		$ sudo mv vsl /opt
+
+   Now you can type "ls /opt/vsl", and the output should be
+
+   		README.txt    lib        licenses    src
+   		
 4. svn checkout svn://vsl.cis.udel.edu/sarl/trunk sarl
 
 5. cd sarl
