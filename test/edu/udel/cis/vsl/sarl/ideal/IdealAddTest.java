@@ -239,6 +239,7 @@ public class IdealAddTest {
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
 						typeFactory.realType()));	
+		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
 		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
 		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
@@ -255,17 +256,17 @@ public class IdealAddTest {
 				idealFactory.add(r1, monomial); //(3*x^2*y^2 + x)/y 
 		RationalExpression plusPolynomial = (RationalExpression) 
 				idealFactory.add(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
-		NumericExpression result1 = idealFactory.multiply(x, y);
-		NumericExpression result2 = idealFactory.multiply(x2, y);
-		NumericExpression result3 = idealFactory.multiply(monic, y);
-		NumericExpression result4 = idealFactory.multiply(monomial, y);
-		NumericExpression result5 = idealFactory.multiply(polynomial, y);
 		
-		result1 = idealFactory.divide(idealFactory.add(result1, x), y); //(x*y + x)/y 
-		result2 = idealFactory.divide(idealFactory.add(result2, x), y); //(x^2*y + x)/y 
-		result3 = idealFactory.divide(idealFactory.add(result3, x), y); //(x^2*y^2 + x)/y 
-		result4 = idealFactory.divide(idealFactory.add(result4, x), y); //(3*x^2*y^2 + x)/y 
-		result5 = idealFactory.divide(idealFactory.add(result5, x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
+		NumericExpression result1 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(x, y), x), y); //(x*y + x)/y 
+		NumericExpression result2 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(x2, y), x), y); //(x^2*y + x)/y 
+		NumericExpression result3 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monic, y), x), y); //(x^2*y^2 + x)/y 
+		NumericExpression result4 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monomial, y), x), y); //(3*x^2*y^2 + x)/y 
+		NumericExpression result5 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(polynomial, y), x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
 		
 		assertEquals(result1, plusPrimitive);	
 		assertEquals(result2, plusPrimitivePower);	
