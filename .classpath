@@ -9,5 +9,6 @@
 	<classpathentry kind="var" path="VSL/lib/clj-ds.jar"/>
 	<classpathentry kind="var" path="VSL/lib/libcvc3.jar" sourcepath="/VSL/src/cvc3-2.4.1-sources.jar"/>
 	<classpathentry kind="var" path="VSL/lib/pcollections-2.1.2.jar" sourcepath="/VSL_DEPEND/src/pcollections-2.1.2-sources.jar"/>
+	<classpathentry kind="var" path="VSL/lib/CVC4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
