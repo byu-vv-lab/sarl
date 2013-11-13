@@ -234,8 +234,6 @@ public class CnfFactoryTest {
 	 * 
 	 */
 	@Test
-	// TODO: this is one really big test. It should be broken down
-	// into many small tests.
 	public void orTest() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("p");
