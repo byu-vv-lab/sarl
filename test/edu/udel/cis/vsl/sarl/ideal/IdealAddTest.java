@@ -252,6 +252,16 @@ public class IdealAddTest {
 		assertEquals(p10, b6);
 	}
 	
+	@Test
+	public void addPrimitiveToConstant() {
+		NumericExpression p11 = idealFactory.add(x, intOne);
+		Polynomial poly = (Polynomial) x;
+		
+		Polynomial b6 = commonIdealFactory.add(poly, intOne);
+		
+		assertEquals(p11, b6);
+	}
+	
 	/**
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
