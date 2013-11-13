@@ -65,26 +65,26 @@ public class IdealTypeTest {
 
 	private RationalNumber ratZero; // 0
 	private RationalNumber ratThree; // 3
-	private Constant constZero;
+	private Constant constZero; // real constant 0
 	private Constant intNegOne; // int constant -1
 	private Constant intZero; // int constant 0
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
-	IntObject intObj3;
+	IntObject intObj3; // integer object 3
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression five;
-	private NumericExpression oneTwoFive;
-	private NumericExpression one;
-	private RationalNumber realOne;
-	private RationalNumber realFive; 
-	private NumericExpression three; 
-	private RationalNumber realThree; 
-	private RationalNumber realOneTwoFive;
-	private SymbolicType real;
-	private SymbolicType integer;
-	NumericExpression intHundred;
-	NumericExpression intTwenty;
+	private NumericExpression five; // real constant 5
+	private NumericExpression oneTwoFive; // real constant 125
+	private NumericExpression one; // rel constant 1
+	private RationalNumber realOne; // real 1
+	private RationalNumber realFive; // real 5
+	private NumericExpression three; // real constant 3
+	private RationalNumber realThree; // real 3
+	private RationalNumber realOneTwoFive; // real 125
+	private SymbolicType real; // type real
+	private SymbolicType integer; // type integer
+	NumericExpression intHundred; // int constant 100
+	NumericExpression intTwenty; // int constant 20
 	NumericExpression e01; // Real 3 cast to integer 3
 	NumericExpression e2; // 5 + 3 ADD
 	NumericExpression e3; // 5 > 3, 5, 3 COND
@@ -128,7 +128,7 @@ public class IdealTypeTest {
 		realThree = numberFactory.rational("3");
 		three = commonIdealFactory.constant(realThree);
 		e01 = commonIdealFactory.expression(SymbolicOperator.CAST, 
-				real, three);
+				real, three); // real 3 cast to integer 3
 		e2 = commonIdealFactory.expression(SymbolicOperator.ADD, integer, five,
 				three); // 5 + 3 ADD
 		e3 = commonIdealFactory.expression(SymbolicOperator.COND,
