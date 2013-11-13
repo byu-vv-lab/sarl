@@ -149,7 +149,7 @@ public class IdealDivideTest {
 		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
 		NumericExpression p1 = commonIdealFactory.divide(n, m);
 		
-		out.println("b1=" + b1);
+		//out.println("b1=" + b1);
 		
 		assertEquals(np, p1);
 		assertEquals(intTen, b1);
@@ -316,5 +316,24 @@ public class IdealDivideTest {
 				monic); //3x^2 * y
 		NumericExpression polynomial = idealFactory.add(idealFactory.
 				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
-	
+		RationalExpression divPrimitive = (RationalExpression) 
+				idealFactory.divide(r1, x); //1/y 
+		RationalExpression divPrimitivePower = (RationalExpression) 
+				idealFactory.divide(r1, x2); //1/(x*y)
+		RationalExpression divMonic = (RationalExpression) 
+				idealFactory.divide(monic, r1); //(x*y^2) 
+		RationalExpression divMonomial = (RationalExpression) 
+				idealFactory.divide(idealFactory.divide(monomial, 
+						idealFactory.constant(realThree)), r1); //(x*y^2) 
+		RationalExpression divPolynomial = (RationalExpression) 
+				idealFactory.divide(polynomial, r1); //x^3 + (x^3/y)
+		
+		NumericExpression result1 = idealFactory.divide(y, y2); //1/y 
+		NumericExpression result2 = idealFactory.multiply(idealFactory.
+				divide(x, x2), idealFactory.divide(y, y2)); //1/(x*y) 
+		NumericExpression result3 = idealFactory.multiply(y2, x); //(x*y^2) 
+		NumericExpression result4 = idealFactory.add(result3, 
+				idealFactory.multiply(x, y)); //(x*y^2) + (x*y) 
+		
+	}
 }
