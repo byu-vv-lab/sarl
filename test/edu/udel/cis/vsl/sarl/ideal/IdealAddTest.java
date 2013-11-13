@@ -177,6 +177,25 @@ public class IdealAddTest {
 		assertEquals(p11, b7);
 	}
 	
+	@Test
+	public void addPolyToPoly(){
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p3 = idealFactory.multiply(intZero, x);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+				idealFactory.multiply(x, x)), intTwo);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly3 = (Polynomial) p3;
+		
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		
+		assertEquals(p4, b1);
+		assertEquals(p2, b2);
+	}
+	
 	/**
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
@@ -187,10 +206,10 @@ public class IdealAddTest {
 	public void addToRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // 'X' of type real
+						typeFactory.realType())); // value 'X' of type real
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType())); // 'Y' of type real
+						typeFactory.realType())); // value 'Y' of type real
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
 		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
