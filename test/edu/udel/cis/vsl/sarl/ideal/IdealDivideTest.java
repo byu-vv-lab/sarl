@@ -258,6 +258,16 @@ public class IdealDivideTest {
 		assertEquals(p08, b3);
 	}
 	
+	@Test
+	public void dividePrimitivePowerToItself() {
+		NumericExpression p01 = idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) p01;
+		
+		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
+		
+		assertEquals(intOne, b3);
+	}
+	
 	/**
 	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
 	 * 
