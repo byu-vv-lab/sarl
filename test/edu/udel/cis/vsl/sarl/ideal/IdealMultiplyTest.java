@@ -203,6 +203,19 @@ public class IdealMultiplyTest {
 		assertEquals(intZero, b2);
 	}
 	
+	@Test
+	public void mulPolyToMonomial() {
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p6 = idealFactory.multiply(intTen, x);
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression p7 = idealFactory.add(idealFactory.multiply(intTen, idealFactory.multiply(x2, x)), p6);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly4 = (Polynomial) p6;
+		
+		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);
+		assertEquals(p7, b3);
+	}
+	
 	/**
 	 * Multiplies two rational numbers.
 	 * 
