@@ -276,13 +276,28 @@ public class CnfFactoryTest {
 		assertEquals(bef.or(bef.not(p), r), (bef.or(bef.not(p), bef.and(p, r))));
 		assertEquals(testingtrue, bef.or(p, bef.not(p)));
 		assertEquals(testingtrue, bef.or(bef.not(p), p));
+		assertEquals(testingfalse, bef.not(bef.or(bef.not(p), p)));
+		assertEquals(q, bef.or(qandtrue, pandfalse));
+	}
+	
+	@Test
+	public void andTrueExprTest() {
+		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression testingfalse = sUniverse.bool(false);
+
+		BooleanExpression falseExpr = bef.falseExpr();
+		BooleanExpression trueExpr = bef.trueExpr();
+		
+		
 		assertEquals(testingtrue, bef.and(testingtrue, testingtrue));
 		assertEquals(testingtrue, bef.and(trueExpr, testingtrue));
 		assertEquals(testingfalse, bef.and(trueExpr, testingfalse));
 		assertEquals(testingfalse, bef.and(testingfalse, trueExpr));
 		assertEquals(testingfalse, bef.and(falseExpr, testingtrue));
 		assertEquals(testingfalse, bef.and(testingtrue, falseExpr));
-		assertEquals(q, bef.or(qandtrue, pandfalse));
+	
 	}
 	
 	
