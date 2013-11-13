@@ -55,7 +55,7 @@ public class IdealSubtractTest {
 	private CommonIdealFactory commonIdealFactory;
 
 	private RationalNumber ratZero; // 0
-	private Constant constZero;
+	private Constant constZero; // real constant 0
 	private Constant intNegOne; // int constant -1
 	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
@@ -65,9 +65,9 @@ public class IdealSubtractTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression one;
-	private RationalNumber realOne;
-	private RationalNumber realThree; 
+	private NumericExpression one; // real constant 1
+	private RationalNumber realOne; // real 1
+	private RationalNumber realThree; // real 3
 
 	@Before
 	public void setUp() throws Exception {
@@ -221,7 +221,7 @@ public class IdealSubtractTest {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),intOne);
 		NumericExpression p2 = intZero;
 		NumericExpression n = idealFactory.minus(p1);
-		NumericExpression m = idealFactory.minus(p2);		
+		NumericExpression m = idealFactory.minus(intZero);		
 		NumericExpression m1 = commonIdealFactory.minus(p2);
 		NumericExpression n1 = commonIdealFactory.minus(p1);
 		
@@ -239,10 +239,10 @@ public class IdealSubtractTest {
 	public void subToRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
+						typeFactory.realType())); // value 'X' of real type
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));	
+						typeFactory.realType())); // value 'Y' of real type
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
 		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
