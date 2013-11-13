@@ -227,6 +227,18 @@ public class IdealAddTest {
 		assertEquals(p9, b4);
 	}
 	
+	@Test
+	public void addPrimitivePowerToItself() {
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		Polynomial poly5 = (Polynomial) p7;
+		NumericExpression p8 = idealFactory.multiply(idealFactory.
+				multiply(x, x), intTwo);
+		
+		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
+		
+		assertEquals(p8, b5);
+	}
+	
 	/**
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
