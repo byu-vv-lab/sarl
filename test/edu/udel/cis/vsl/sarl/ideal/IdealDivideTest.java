@@ -230,6 +230,21 @@ public class IdealDivideTest {
 		assertEquals(intFive, b1);
 	}
 	
+	@Test
+	public void dividePolyToMonomial() {
+		NumericExpression p01 = idealFactory.multiply(x, x);
+		NumericExpression p04 = idealFactory.multiply(intTen, x);
+		NumericExpression p05 = idealFactory.add(p04, idealFactory.
+				multiply(intTen, p01));
+		NumericExpression p06 = idealFactory.add(x, intOne);
+		Polynomial poly4 = (Polynomial) p04;
+		Polynomial poly5 = (Polynomial) p05;
+		
+		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
+		
+		assertEquals(p06, b2);
+	}
+	
 	/**
 	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
 	 * 
