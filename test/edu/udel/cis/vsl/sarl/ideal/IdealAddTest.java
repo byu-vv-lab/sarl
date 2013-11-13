@@ -196,6 +196,22 @@ public class IdealAddTest {
 		assertEquals(p2, b2);
 	}
 	
+	@Test
+	public void addPolyToMonomial() {
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+				intTen, x), idealFactory.add(idealFactory.multiply(
+						intTwo, idealFactory.multiply(x, x)), intOne));
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly4 = (Polynomial) p5;
+		
+		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
+		
+		assertEquals(p6, b3);
+	}
+	
 	/**
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
