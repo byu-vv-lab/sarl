@@ -162,13 +162,13 @@ public class IdealMultiplyTest {
 		Polynomial poly4 = (Polynomial) p6;
 		Polynomial poly5 = (Polynomial) x2;
 		Polynomial poly6 = (Polynomial) x;		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
-		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
-		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);
-		Polynomial b4 = commonIdealFactory.multiply(poly4, poly5);
-		Polynomial b5 = commonIdealFactory.multiply(poly5, poly5);
-		Polynomial b6 = commonIdealFactory.multiply(poly5, poly6);
-		Polynomial b7 = commonIdealFactory.multiply(poly6, intTen);
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);//pp
+		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);//pp
+		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);//mp
+		Polynomial b4 = commonIdealFactory.multiply(poly4, poly5);//ppm
+		Polynomial b5 = commonIdealFactory.multiply(poly5, poly5);//pppp
+		Polynomial b6 = commonIdealFactory.multiply(poly5, poly6);//ppp
+		Polynomial b7 = commonIdealFactory.multiply(poly6, intTen);//cp
 		
 		out.println("Multiply_Polynomial=" + b1);
 		
@@ -179,6 +179,28 @@ public class IdealMultiplyTest {
 		assertEquals(x4, b5);
 		assertEquals(p9, b6);
 		assertEquals(p10, b7);
+	}
+	
+	@Test
+	public void mulPolyToPoly() {
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo,
+						idealFactory.multiply(x, x)), intOne);
+		NumericExpression p3 = idealFactory.multiply(intZero, x);
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression x4 = idealFactory.multiply(x2, x2);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.
+				intConstant(3), idealFactory.multiply(x, x)), intOne);
+		NumericExpression p5 = idealFactory.add(idealFactory.
+				multiply(intTwo, x4), p4);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly3 = (Polynomial) p3;
+		
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
+		assertEquals(p5, b1);
+		assertEquals(intZero, b2);
 	}
 	
 	/**
