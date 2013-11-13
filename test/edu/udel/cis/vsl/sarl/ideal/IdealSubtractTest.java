@@ -168,6 +168,46 @@ public class IdealSubtractTest {
 		assertEquals(p1, b2);
 	}
 	
+	@Test
+	public void subPolyToMonomial() {
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+				intTen, x), idealFactory.add(idealFactory.multiply(
+						intTwo, idealFactory.multiply(x, x)), intOne));
+		Polynomial poly5 = (Polynomial) p5;
+		Polynomial poly6 = (Polynomial) p6;
+		
+		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);
+		
+		assertEquals(p2, b3);
+	}
+	
+	@Test
+	public void subMonomialToMonomial() {
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		Polynomial poly5 = (Polynomial) p5;
+		
+		NumericExpression b3 = commonIdealFactory.subtract(poly5, poly5);
+		
+		assertEquals(intZero, b3);
+	}
+	
+	@Test
+	public void subPrimitivePowerToMonomial() {
+		NumericExpression p5 = idealFactory.multiply(intTen, x);
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p10 = idealFactory.subtract(idealFactory.
+				multiply(x, x), idealFactory.multiply(intTen, x));
+		Polynomial poly5 = (Polynomial) p5;
+		Polynomial poly7 = (Polynomial) p7;
+		
+		NumericExpression b5 = commonIdealFactory.subtract(poly7, poly5);
+		
+		assertEquals(p10, b5);
+	}
+	
 	/**
 	 * Returns the subtraction of symbolic expression of same numeric type
 	 * 
