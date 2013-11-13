@@ -20,8 +20,6 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,12 +27,9 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
@@ -42,7 +37,6 @@ import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.common.NumericPrimitive;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -50,7 +44,6 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealAddTest {
 
-	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
@@ -59,9 +52,9 @@ public class IdealAddTest {
 	private BooleanExpressionFactory booleanFactory;
 	private CommonIdealFactory commonIdealFactory;
 
-	private RationalNumber ratNegPointTwoFive; // -1/4
-	private RationalNumber ratOnePointFive; // 3/2
-	private RationalNumber ratOnePointTwoFive; // 5/4
+	private RationalNumber ratNegPointTwoFive; // -0.25 (-1/4)
+	private RationalNumber ratOnePointFive; // 1.5 (3/2)
+	private RationalNumber ratOnePointTwoFive; // 1.25 (5/4)
 	private Constant constOnePointFive; // real constant 3/2
 	private Constant constNegPointTwoFive; // real constant -1/4
 	private Constant intZero; // int constant 0
@@ -72,21 +65,8 @@ public class IdealAddTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	//private NumericExpression five;
-	//private NumericExpression zero;
-	//private NumericExpression one;
-	//private RationalNumber realZero;
-	//private RationalNumber realOne;
-	//private RationalNumber realFive; 
-	//private NumericExpression three; 
-	private RationalNumber realThree; 
-	private SymbolicType integer;
-	//private SymbolicType real;
-	NumericExpression e1; // 5 + 3 + 1 ADD
-	IntObject intObj1;
-	IntObject intObj3;
-	IntObject intObj5;
-	
+	private RationalNumber realThree; // real 3
+		
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -113,20 +93,7 @@ public class IdealAddTest {
 				typeFactory.integerType()));
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
-		integer = typeFactory.integerType();
-		//realZero = numberFactory.rational("0");
-		//realOne = numberFactory.rational("1");
-		//realFive = numberFactory.rational("5");
-		//zero = commonIdealFactory.constant(realZero);
-		//one = commonIdealFactory.constant(realOne);
-		//five = commonIdealFactory.constant(realFive);
 		realThree = numberFactory.rational("3");
-		//three = commonIdealFactory.constant(realThree);
-		intObj1 = objectFactory.intObject(1);
-		intObj3 = objectFactory.intObject(3);
-		intObj5 = objectFactory.intObject(5);
-		e1 = idealFactory.expression(SymbolicOperator.ADD, integer, intObj5,
-				intObj3, intObj1); // 5 + 3 +1 ADD
 	}
 
 	@After
@@ -155,8 +122,8 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void commutativity1() {
-		SymbolicExpression xpy = idealFactory.add(x, y);
-		SymbolicExpression ypx = idealFactory.add(y, x);
+		SymbolicExpression xpy = idealFactory.add(x, y); // x + y
+		SymbolicExpression ypx = idealFactory.add(y, x); // y + x
 		
 		assertEquals(xpy, ypx);
 	}
@@ -211,21 +178,6 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Displays the expression consisting of addition of three arguments
-	 * 
-	 * @return type
-	 * 				NumericPrimitive
-	 */
-	@Test
-	public void expression() {
-		NumericPrimitive n1 = commonIdealFactory.expression(
-				SymbolicOperator.ADD, integer, intObj5, intObj3, intObj1);
-		out.println("n1=" + n1);
-						
-		assertEquals(e1, n1);
-	}
-	
-	/**
 	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
 	 * @return type
@@ -235,10 +187,10 @@ public class IdealAddTest {
 	public void addToRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
+						typeFactory.realType())); // 'X' of type real
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));	
+						typeFactory.realType())); // 'Y' of type real
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
 		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
