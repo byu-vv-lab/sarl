@@ -20,8 +20,6 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +44,6 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealDivideTest {
 
-	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
@@ -335,5 +332,10 @@ public class IdealDivideTest {
 		NumericExpression result4 = idealFactory.add(result3, 
 				idealFactory.multiply(x, y)); //(x*y^2) + (x*y) 
 		
+		assertEquals(result1, divPrimitive);	
+		assertEquals(result2, divPrimitivePower);	
+		assertEquals(result3, divMonic);	
+		assertEquals(result3, divMonomial);
+		assertEquals(result4, divPolynomial);
 	}
 }
