@@ -208,12 +208,27 @@ public class IdealMultiplyTest {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
 		NumericExpression p6 = idealFactory.multiply(intTen, x);
 		NumericExpression x2 = idealFactory.multiply(x, x);
-		NumericExpression p7 = idealFactory.add(idealFactory.multiply(intTen, idealFactory.multiply(x2, x)), p6);
+		NumericExpression p7 = idealFactory.add(idealFactory.multiply(intTen, 
+				idealFactory.multiply(x2, x)), p6);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly4 = (Polynomial) p6;
 		
 		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);
 		assertEquals(p7, b3);
+	}
+	
+	@Test
+	public void mulMonomialToPrimitivePower() {
+		NumericExpression p6 = idealFactory.multiply(intTen, x);
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression p8 = idealFactory.multiply(intTen, idealFactory.
+				multiply(x2, x));
+		Polynomial poly4 = (Polynomial) p6;
+		Polynomial poly5 = (Polynomial) x2;
+		
+		Polynomial b4 = commonIdealFactory.multiply(poly4, poly5);
+		
+		assertEquals(p8, b4);
 	}
 	
 	/**
