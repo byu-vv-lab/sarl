@@ -37,6 +37,7 @@ import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -233,7 +234,8 @@ public class IdealDivideTest {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.realType()));
 		IntObject exp3 = objectFactory.intObject(3);
-		IntObject exp2 = objectFactory.intObject(2);		
+		IntObject exp2 = objectFactory.intObject(2);
+		
 		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
 				power(x, exp3));
 		NumericExpression complex2 = commonIdealFactory.multiply(thirtyFive, idealFactory.
@@ -290,4 +292,29 @@ public class IdealDivideTest {
 		
 		assertEquals(result, r1);
 	}
+	
+	/**
+	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * 
+	 * @return type
+	 * 				RationalExpression
+	 */
+	@Test
+	public void divideToRational() {
+		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("x"),
+						typeFactory.realType()));
+		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
+				.symbolicConstant(objectFactory.stringObject("Y"),
+						typeFactory.realType()));	
+		
+		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
+		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
+		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
+		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
+				monic); //3x^2 * y
+		NumericExpression polynomial = idealFactory.add(idealFactory.
+				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
+	
 }
