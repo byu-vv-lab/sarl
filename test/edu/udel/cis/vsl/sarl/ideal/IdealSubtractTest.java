@@ -218,15 +218,13 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void minus() {
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x),intOne);
-		NumericExpression p2 = intZero;
-		NumericExpression n = idealFactory.minus(p1);
-		NumericExpression m = idealFactory.minus(intZero);		
-		NumericExpression m1 = commonIdealFactory.minus(p2);
+		NumericExpression p1 = idealFactory.subtract(idealFactory.multiply(x, x),intOne);
+		NumericExpression p2 = idealFactory.subtract(intOne, idealFactory.multiply(x, x));
+		NumericExpression m1 = commonIdealFactory.minus(intZero);
 		NumericExpression n1 = commonIdealFactory.minus(p1);
 		
-		assertEquals(n, n1);
-		assertEquals(m, m1);
+		assertEquals(p2, n1);
+		assertEquals(intZero, m1);
 	}
 	
 	/**
