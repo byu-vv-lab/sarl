@@ -178,6 +178,18 @@ public class IdealAddTest {
 	}
 	
 	@Test
+	public void addMonicToMonic() {
+		NumericExpression p1 = idealFactory.multiply(x, y);
+		NumericExpression p2 = idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, y));
+		Polynomial poly1 = (Polynomial) p1;
+		
+		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
+		
+		assertEquals(p2, b1);
+	}
+	
+	@Test
 	public void addPolyToPrimitivePower() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
 		NumericExpression p2 = idealFactory.multiply(idealFactory.
