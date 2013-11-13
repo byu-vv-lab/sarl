@@ -61,8 +61,8 @@ public class IdealEqualityTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression zero;
-	private RationalNumber realZero;
+	private NumericExpression zero; // real constant 0
+	private RationalNumber realZero; // real 0
 
 	@Before
 	public void setUp() throws Exception {
@@ -114,10 +114,7 @@ public class IdealEqualityTest {
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
 		
-		out.println("neq=" + n0);
-		out.println("neq1=" + n);
 		out.println("neq2=" + n1122);		
-		
 		assertEquals(m1, n0);
 		assertEquals(m2, n);
 	}
@@ -131,10 +128,11 @@ public class IdealEqualityTest {
 	@Test
 	public void comparingRationalExpressions() {
 		NumericSymbolicConstant x2 = objectFactory.canonic(idealFactory
-				.symbolicConstant(Xobj, typeFactory.realType()));
+				.symbolicConstant(Xobj, typeFactory.realType())); //value 'X' of real type
 		NumericSymbolicConstant y2 = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));		
+						typeFactory.realType())); // value 'Y' of real type
+		
 		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x2, y2);
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
@@ -154,7 +152,6 @@ public class IdealEqualityTest {
 		
 		out.println("b1=" +b1);
 		out.println("b2=" +b2);
-				
 		assertEquals(zero, nb5);
 		assertEquals(nb2, nb4);
 		assertEquals(nb3, nb6);
@@ -210,7 +207,6 @@ public class IdealEqualityTest {
 		BooleanExpression m2 = booleanFactory.symbolic(true);
 		
 		out.println("Equals=" +n1122);
-		
 		assertEquals(m1, n);
 		assertEquals(m2, n0);
 	}
