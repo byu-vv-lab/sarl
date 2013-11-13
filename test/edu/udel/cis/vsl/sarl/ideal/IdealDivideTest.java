@@ -154,68 +154,6 @@ public class IdealDivideTest {
 		assertEquals(zero, b5);
 	}
 	
-	/**
-	 * Also divides two polynomials
-	 * 
-	 * @param type
-	 * 				Polynomial
-	 */
-	@Test
-	public void dividePoly() {
-		StringObject Zobj;
-		Zobj = objectFactory.stringObject("Z"); // string object 'Z'
-		
-		NumericSymbolicConstant z = objectFactory.canonic(idealFactory.symbolicConstant(Zobj,
-				typeFactory.integerType()));
-		NumericExpression p01 = idealFactory.multiply(x, x);
-		NumericExpression p02 = idealFactory.add(intTen, idealFactory.
-				multiply(intTen, x));
-		NumericExpression p03 = idealFactory.add(intTwo, idealFactory.
-				multiply(intTwo, x));
-		NumericExpression p04 = idealFactory.multiply(intTen, x);
-		NumericExpression p05 = idealFactory.add(p04, idealFactory.
-				multiply(intTen, p01));
-		NumericExpression p06 = idealFactory.add(x, intOne);
-		NumericExpression p07 = idealFactory.multiply(intTen, p01);
-		NumericExpression p08 = idealFactory.divide(x, intTen);
-		NumericExpression p09 = idealFactory.multiply(idealFactory.
-				multiply(idealFactory.subtract(x, intOne),idealFactory.
-						add(x, intOne)), idealFactory.add(idealFactory.
-								multiply(x,y), intTwo));
-		NumericExpression p10 = idealFactory.multiply(idealFactory.
-				multiply(idealFactory.subtract(x, intOne), z), idealFactory.
-				add(idealFactory.multiply(x, y), intThree));
-		NumericExpression p11 = idealFactory.multiply(idealFactory.
-						add(x, intOne), idealFactory.add(idealFactory.
-								multiply(x,y), intTwo));
-		NumericExpression p12 = idealFactory.multiply(z, idealFactory.
-				add(idealFactory.multiply(x, y), intThree));
-		NumericExpression p13 = idealFactory.divide(p11, p12);
-		Polynomial poly1 = (Polynomial) p01;
-		Polynomial poly2 = (Polynomial) p02;
-		Polynomial poly3 = (Polynomial) p03;
-		Polynomial poly4 = (Polynomial) p04;
-		Polynomial poly5 = (Polynomial) p05;
-		Polynomial poly6 = (Polynomial) p07;
-		Polynomial poly7 = (Polynomial) p09;
-		Polynomial poly8 = (Polynomial) p10;				
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);//pp
-		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);//pm
-		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);//mpp
-		Polynomial b4 = (Polynomial) commonIdealFactory.divide(poly1, poly1);//pppp
-		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);//mp
-		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);//pc
-		Polynomial b7 = (Polynomial) commonIdealFactory.divide(poly7, poly8);
-				
-		assertEquals(intFive, b1);
-		assertEquals(p06, b2);
-		assertEquals(intTen, b3);
-		assertEquals(intOne, b4);
-		assertEquals(intTen, b5);
-		assertEquals(p08, b6);
-		assertEquals(p13, b7);
-	}
-	
 	@Test
 	public void dividePolyToPoly() {
 		NumericExpression p02 = idealFactory.add(intTen, idealFactory.
