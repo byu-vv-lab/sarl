@@ -61,21 +61,21 @@ public class IdealDivideTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression fifteen;
-	private NumericExpression five;
-	private NumericExpression seven;
-	private NumericExpression twentyOne;
-	private NumericExpression thirtyFive;
-	private NumericExpression zero;
-	private RationalNumber realZero;
-	private RationalNumber realOne;
-	private RationalNumber realFifteen;
-	private RationalNumber realFive; 
-	private NumericExpression three; 
-	private RationalNumber realThree; 
-	private RationalNumber realSeven;
-	private RationalNumber realTwentyOne;
-	private RationalNumber realThirtyFive;
+	private NumericExpression fifteen; // real constant 15
+	private NumericExpression five; // real constant 5
+	private NumericExpression seven; // real constant 7
+	private NumericExpression twentyOne; // real constant 21
+	private NumericExpression thirtyFive; // real constant 35
+	private NumericExpression zero; // real constant 0
+	private RationalNumber realZero; // real 0
+	private RationalNumber realOne; // real 1
+	private RationalNumber realFifteen; // real 15
+	private RationalNumber realFive; // real 5
+	private NumericExpression three; // real 3
+	private RationalNumber realThree; // real 3
+	private RationalNumber realSeven; // real 7
+	private RationalNumber realTwentyOne; // real 21
+	private RationalNumber realThirtyFive; // real 35
 	
 	@Before
 	public void setUp() throws Exception {
@@ -146,8 +146,6 @@ public class IdealDivideTest {
 		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
 		NumericExpression p1 = commonIdealFactory.divide(n, m);
 		
-		//out.println("b1=" + b1);
-		
 		assertEquals(np, p1);
 		assertEquals(intTen, b1);
 		assertEquals(intZero, b2);
@@ -165,7 +163,8 @@ public class IdealDivideTest {
 	@Test
 	public void dividePoly() {
 		StringObject Zobj;
-		Zobj = objectFactory.stringObject("Z");
+		Zobj = objectFactory.stringObject("Z"); // string object 'Z'
+		
 		NumericSymbolicConstant z = objectFactory.canonic(idealFactory.symbolicConstant(Zobj,
 				typeFactory.integerType()));
 		NumericExpression p01 = idealFactory.multiply(x, x);
@@ -229,9 +228,9 @@ public class IdealDivideTest {
 	@Test
 	public void complexRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
-				typeFactory.realType()));
-		IntObject exp3 = objectFactory.intObject(3);
-		IntObject exp2 = objectFactory.intObject(2);
+				typeFactory.realType())); // value 'X' of type real
+		IntObject exp3 = objectFactory.intObject(3); // integer object '3'
+		IntObject exp2 = objectFactory.intObject(2); // integer object '2'
 		
 		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
 				power(x, exp3));
@@ -260,13 +259,14 @@ public class IdealDivideTest {
 	public void factoringRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
+						typeFactory.realType())); // value 'X' of type real
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("y"),
-						typeFactory.realType()));
+						typeFactory.realType())); // value 'Y' of type real
 		NumericSymbolicConstant z = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("z"),
-						typeFactory.realType()));
+						typeFactory.realType())); // value 'Z' of type real
+		
 		NumericExpression xPlus1 = idealFactory.add(x, 
 				idealFactory.constant(realOne)); //(x+1)
 		NumericExpression xMinus1 = idealFactory.subtract(x, 
@@ -300,10 +300,10 @@ public class IdealDivideTest {
 	public void divideToRational() {
 		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
+						typeFactory.realType())); // value 'X' of type real
 		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
 				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));	
+						typeFactory.realType())); // value 'Y' of type real
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
 		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
