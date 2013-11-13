@@ -152,6 +152,7 @@ public class IdealMultiplyTest {
 		
 		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
 		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
+		
 		assertEquals(p5, b1);
 		assertEquals(intZero, b2);
 	}
@@ -159,62 +160,62 @@ public class IdealMultiplyTest {
 	@Test
 	public void mulPolyToMonomial() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
-		NumericExpression p6 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(intTen, x);
 		NumericExpression x2 = idealFactory.multiply(x, x);
-		NumericExpression p7 = idealFactory.add(idealFactory.multiply(intTen, 
-				idealFactory.multiply(x2, x)), p6);
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(intTen, 
+				idealFactory.multiply(x2, x)), p2);
 		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly4 = (Polynomial) p6;
+		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b3 = commonIdealFactory.multiply(poly4, poly1);
-		assertEquals(p7, b3);
+		Polynomial b1 = commonIdealFactory.multiply(poly2, poly1);
+		assertEquals(p3, b1);
 	}
 	
 	@Test
 	public void mulMonomialToPrimitivePower() {
-		NumericExpression p6 = idealFactory.multiply(intTen, x);
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
 		NumericExpression x2 = idealFactory.multiply(x, x);
-		NumericExpression p8 = idealFactory.multiply(intTen, idealFactory.
+		NumericExpression p2 = idealFactory.multiply(intTen, idealFactory.
 				multiply(x2, x));
-		Polynomial poly4 = (Polynomial) p6;
-		Polynomial poly5 = (Polynomial) x2;
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) x2;
 		
-		Polynomial b4 = commonIdealFactory.multiply(poly4, poly5);
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
 		
-		assertEquals(p8, b4);
+		assertEquals(p2, b1);
 	}
 	
 	@Test
 	public void mulPrimitivePowerToItself() {
 		NumericExpression x2 = idealFactory.multiply(x, x);
 		NumericExpression x4 = idealFactory.multiply(x2, x2);
-		Polynomial poly5 = (Polynomial) x2;
+		Polynomial poly1 = (Polynomial) x2;
 		
-		Polynomial b5 = commonIdealFactory.multiply(poly5, poly5);
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly1);
 		
-		assertEquals(x4, b5);
+		assertEquals(x4, b1);
 	}
 	
 	@Test
 	public void mulPrimitivePowerToPrimitive() {
 		NumericExpression x2 = idealFactory.multiply(x, x);
-		NumericExpression p9 = idealFactory.multiply(x, x2);
-		Polynomial poly5 = (Polynomial) x2;
-		Polynomial poly6 = (Polynomial) x;
+		NumericExpression p1 = idealFactory.multiply(x, x2);
+		Polynomial poly1 = (Polynomial) x2;
+		Polynomial poly2 = (Polynomial) x;
 				
-		Polynomial b6 = commonIdealFactory.multiply(poly5, poly6);
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
 		
-		assertEquals(p9, b6);
+		assertEquals(p1, b1);
 	}
 	
 	@Test
 	public void mulConstantToPrimitive() {
-		Polynomial poly6 = (Polynomial) x;
-		NumericExpression p10 = idealFactory.multiply(intTen, x);
+		Polynomial poly1 = (Polynomial) x;
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
 		
-		Polynomial b7 = commonIdealFactory.multiply(poly6, intTen);
+		Polynomial b1 = commonIdealFactory.multiply(poly1, intTen);
 		
-		assertEquals(p10, b7);
+		assertEquals(p1, b1);
 	}
 	
 	/**
