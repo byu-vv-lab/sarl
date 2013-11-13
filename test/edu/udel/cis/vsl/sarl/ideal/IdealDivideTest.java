@@ -268,6 +268,27 @@ public class IdealDivideTest {
 		assertEquals(intOne, b3);
 	}
 	
+	@Test
+	public void divideMonomialToPrimitive() {
+		NumericExpression p04 = idealFactory.multiply(intTen, x);
+		Polynomial poly4 = (Polynomial) p04;
+		
+		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);
+		
+		assertEquals(intTen, b5);
+	}
+	
+	@Test
+	public void dividePrimitiveToConstant() {
+		NumericExpression p01 = idealFactory.multiply(x, x);
+		NumericExpression p04 = idealFactory.multiply(intTen, x);
+		NumericExpression p08 = idealFactory.divide(p01, p04);
+		
+		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);
+		
+		assertEquals(p08, b6);
+	}
+	
 	/**
 	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
 	 * 
