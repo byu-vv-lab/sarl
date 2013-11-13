@@ -108,91 +108,91 @@ public class IdealSubtractTest {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
 		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(intThree, 
 				idealFactory.multiply(x, x)), intTwo);
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		Polynomial poly2 = (Polynomial) p2;
-		Polynomial poly4 = (Polynomial) p4;
+		NumericExpression p4 = idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) p2;
+		Polynomial poly2 = (Polynomial) p3;
 		
 		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
-		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);
+		NumericExpression b2 = commonIdealFactory.subtract(poly2, poly1);
 		
-		assertEquals(p7, b1);
+		assertEquals(p4, b1);
 		assertEquals(p1, b2);
 	}
 	
 	@Test
 	public void subPolyToMonomial() {
-		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p5 = idealFactory.multiply(intTen, x);
-		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+		NumericExpression p2 = idealFactory.multiply(intTen, x);
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(
 				intTen, x), idealFactory.add(idealFactory.multiply(
 						intTwo, idealFactory.multiply(x, x)), intOne));
-		Polynomial poly5 = (Polynomial) p5;
-		Polynomial poly6 = (Polynomial) p6;
+		Polynomial poly1 = (Polynomial) p2;
+		Polynomial poly2 = (Polynomial) p3;
 		
-		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);
+		NumericExpression b1 = commonIdealFactory.subtract(poly2, poly1);
 		
-		assertEquals(p2, b3);
+		assertEquals(p1, b1);
 	}
 	
 	@Test
 	public void subMonomialToMonomial() {
-		NumericExpression p5 = idealFactory.multiply(intTen, x);
-		Polynomial poly5 = (Polynomial) p5;
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b3 = commonIdealFactory.subtract(poly5, poly5);
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly1);
 		
-		assertEquals(intZero, b3);
+		assertEquals(intZero, b1);
 	}
 	
 	@Test
 	public void subPrimitivePowerToMonomial() {
-		NumericExpression p5 = idealFactory.multiply(intTen, x);
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p10 = idealFactory.subtract(idealFactory.
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(x, x);
+		NumericExpression p3 = idealFactory.subtract(idealFactory.
 				multiply(x, x), idealFactory.multiply(intTen, x));
-		Polynomial poly5 = (Polynomial) p5;
-		Polynomial poly7 = (Polynomial) p7;
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b5 = commonIdealFactory.subtract(poly7, poly5);
+		NumericExpression b1 = commonIdealFactory.subtract(poly2, poly1);
 		
-		assertEquals(p10, b5);
+		assertEquals(p3, b1);
 	}
 	
 	@Test
 	public void subPrimitivePowerToItself() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		Polynomial poly7 = (Polynomial) p7;
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b6 = commonIdealFactory.subtract(poly7, poly7);
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly1);
 		
-		assertEquals(intZero, b6);
+		assertEquals(intZero, b1);
 	}
 	
 	@Test
 	public void subPrimitivePowerToConstant() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p9 = idealFactory.subtract(idealFactory.
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.subtract(idealFactory.
 				multiply(x, x), intOne);
-		Polynomial poly7 = (Polynomial) p7;
+		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly7, intOne);
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, intOne);
 		
-		assertEquals(p9, b1);
+		assertEquals(p2, b1);
 	}
 	
 	@Test
 	public void subPrimitivePowerToPrimitive() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p11 = idealFactory.subtract(idealFactory.
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.subtract(idealFactory.
 				multiply(x, x), x);
-		Polynomial poly7 = (Polynomial) p7;
+		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b8 = commonIdealFactory.subtract(poly7, x);
+		NumericExpression b2 = commonIdealFactory.subtract(poly1, x);
 		
-		assertEquals(p11, b8);
+		assertEquals(p2, b2);
 	}
 	
 	/**
