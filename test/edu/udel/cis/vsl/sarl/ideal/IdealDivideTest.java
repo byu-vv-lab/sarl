@@ -199,12 +199,12 @@ public class IdealDivideTest {
 		Polynomial poly6 = (Polynomial) p07;
 		Polynomial poly7 = (Polynomial) p09;
 		Polynomial poly8 = (Polynomial) p10;				
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
-		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);
-		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);
-		Polynomial b4 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
-		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);
-		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);//pp
+		Polynomial b2 = (Polynomial) commonIdealFactory.divide(poly5, poly4);//pm
+		Polynomial b3 = (Polynomial) commonIdealFactory.divide(poly6, poly1);//mpp
+		Polynomial b4 = (Polynomial) commonIdealFactory.divide(poly1, poly1);//pppp
+		Polynomial b5 = (Polynomial) commonIdealFactory.divide(poly4, x);//mp
+		Polynomial b6 = (Polynomial) commonIdealFactory.divide(x, intTen);//pc
 		Polynomial b7 = (Polynomial) commonIdealFactory.divide(poly7, poly8);
 				
 		assertEquals(intFive, b1);
@@ -214,6 +214,20 @@ public class IdealDivideTest {
 		assertEquals(intTen, b5);
 		assertEquals(p08, b6);
 		assertEquals(p13, b7);
+	}
+	
+	@Test
+	public void dividePolyToPoly() {
+		NumericExpression p02 = idealFactory.add(intTen, idealFactory.
+				multiply(intTen, x));
+		NumericExpression p03 = idealFactory.add(intTwo, idealFactory.
+				multiply(intTwo, x));
+		Polynomial poly2 = (Polynomial) p02;
+		Polynomial poly3 = (Polynomial) p03;
+		
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly3);
+		
+		assertEquals(intFive, b1);
 	}
 	
 	/**
