@@ -164,6 +164,20 @@ public class IdealAddTest {
 	}
 	
 	@Test
+	public void addMonomialToMonic() {
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(x, y);
+		NumericExpression p3 = idealFactory.multiply(x, idealFactory.
+				add(intTen, y));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		
+		assertEquals(p3, b1);
+	}
+	
+	@Test
 	public void addPolyToPrimitivePower() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
 		NumericExpression p2 = idealFactory.multiply(idealFactory.
