@@ -289,6 +289,35 @@ public class IdealDivideTest {
 		assertEquals(p08, b6);
 	}
 	
+	@Test
+	public void factorization() {
+		StringObject Zobj;
+		Zobj = objectFactory.stringObject("Z"); // string object 'Z'
+		
+		NumericSymbolicConstant z = objectFactory.canonic(idealFactory.symbolicConstant(Zobj,
+				typeFactory.integerType()));
+		
+		NumericExpression p09 = idealFactory.multiply(idealFactory.
+				multiply(idealFactory.subtract(x, intOne),idealFactory.
+						add(x, intOne)), idealFactory.add(idealFactory.
+								multiply(x,y), intTwo));
+		NumericExpression p10 = idealFactory.multiply(idealFactory.
+				multiply(idealFactory.subtract(x, intOne), z), idealFactory.
+				add(idealFactory.multiply(x, y), intThree));
+		NumericExpression p11 = idealFactory.multiply(idealFactory.
+				add(x, intOne), idealFactory.add(idealFactory.
+						multiply(x,y), intTwo));
+		NumericExpression p12 = idealFactory.multiply(z, idealFactory.
+		add(idealFactory.multiply(x, y), intThree));
+		NumericExpression p13 = idealFactory.divide(p11, p12);
+		Polynomial poly7 = (Polynomial) p09;
+		Polynomial poly8 = (Polynomial) p10;
+		
+		Polynomial b7 = (Polynomial) commonIdealFactory.divide(poly7, poly8);
+		
+		assertEquals(p13, b7);
+	}
+	
 	/**
 	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
 	 * 
