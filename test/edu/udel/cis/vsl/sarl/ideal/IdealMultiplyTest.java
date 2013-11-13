@@ -254,6 +254,16 @@ public class IdealMultiplyTest {
 		assertEquals(p9, b6);
 	}
 	
+	@Test
+	public void mulConstantToPrimitive() {
+		Polynomial poly6 = (Polynomial) x;
+		NumericExpression p10 = idealFactory.multiply(intTen, x);
+		
+		Polynomial b7 = commonIdealFactory.multiply(poly6, intTen);
+		
+		assertEquals(p10, b7);
+	}
+	
 	/**
 	 * Multiplies two rational numbers.
 	 * 
