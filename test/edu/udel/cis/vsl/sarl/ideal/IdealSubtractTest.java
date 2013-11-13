@@ -208,6 +208,40 @@ public class IdealSubtractTest {
 		assertEquals(p10, b5);
 	}
 	
+	@Test
+	public void subPrimitivePowerToItself() {
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		Polynomial poly7 = (Polynomial) p7;
+		
+		NumericExpression b6 = commonIdealFactory.subtract(poly7, poly7);
+		
+		assertEquals(intZero, b6);
+	}
+	
+	@Test
+	public void subPrimitivePowerToConstant() {
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p9 = idealFactory.subtract(idealFactory.
+				multiply(x, x), intOne);
+		Polynomial poly7 = (Polynomial) p7;
+		
+		NumericExpression b1 = commonIdealFactory.subtract(poly7, intOne);
+		
+		assertEquals(p9, b1);
+	}
+	
+	@Test
+	public void subPrimitivePowerToPrimitive() {
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		NumericExpression p11 = idealFactory.subtract(idealFactory.
+				multiply(x, x), x);
+		Polynomial poly7 = (Polynomial) p7;
+		
+		NumericExpression b8 = commonIdealFactory.subtract(poly7, x);
+		
+		assertEquals(p11, b8);
+	}
+	
 	/**
 	 * Returns the subtraction of symbolic expression of same numeric type
 	 * 
