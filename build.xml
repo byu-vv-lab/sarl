@@ -38,6 +38,7 @@
 	<path id="src.compile.classpath">
 		<pathelement location="${src.dir}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
 	</path>
@@ -52,6 +53,7 @@
 		<jar destfile="${jar-path}">
 			<fileset dir="${bin.dir}" />
 			<zipfileset includes="**/*.class" src="${cvc3.lib.jar}" />
+			<zipfileset includes="**/*.class" src="${cvc4.lib.jar}" />
 			<zipfileset includes="**/*.class" src="${pcollections.jar}" />
 			<zipfileset includes="**/*.class" src="${clj-ds.jar}" />
 			<manifest>
@@ -68,6 +70,7 @@
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${hamcrest.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
 	</path>
@@ -78,6 +81,7 @@
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${hamcrest.jar}" />
 		<pathelement location="${cvc3.lib.jar}" />
+		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
 	</path>
