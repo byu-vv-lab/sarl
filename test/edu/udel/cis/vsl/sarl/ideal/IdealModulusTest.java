@@ -52,11 +52,11 @@ public class IdealModulusTest {
 	private BooleanExpressionFactory booleanFactory;
 	private CommonIdealFactory commonIdealFactory;
 
-	private Constant constOnePointFive; // real constant 3/2
-	private Constant constOne;
+	private Constant constOnePointFive; // real constant 1.5 (3/2)
+	private Constant constOne; // real constant 1
 	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
-	private RationalNumber ratOnePointFive; // 3/2
+	private RationalNumber ratOnePointFive; // 1.5 (3/2)
 	private RationalNumber ratOne; // 1
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
