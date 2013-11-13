@@ -149,68 +149,68 @@ public class IdealAddTest {
 	
 	@Test
 	public void addPolyToMonomial() {
-		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p5 = idealFactory.multiply(intTen, x);
-		NumericExpression p6 = idealFactory.add(idealFactory.multiply(
+		NumericExpression p2 = idealFactory.multiply(intTen, x);
+		NumericExpression p3 = idealFactory.add(idealFactory.multiply(
 				intTen, x), idealFactory.add(idealFactory.multiply(
 						intTwo, idealFactory.multiply(x, x)), intOne));
+		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
-		Polynomial poly4 = (Polynomial) p5;
 		
-		Polynomial b3 = commonIdealFactory.add(poly2, poly4);
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		
-		assertEquals(p6, b3);
+		assertEquals(p3, b1);
 	}
 	
 	@Test
 	public void addPolyToPrimitivePower() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p8 = idealFactory.multiply(idealFactory.
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.multiply(idealFactory.
 				multiply(x, x), intTwo);
-		NumericExpression p9 = idealFactory.multiply(idealFactory.
+		NumericExpression p3 = idealFactory.multiply(idealFactory.
 				multiply(x, x), intThree);
-		Polynomial poly5 = (Polynomial) p7;
-		Polynomial poly6 = (Polynomial) p8;
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b4 = commonIdealFactory.add(poly5, poly6);
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		
-		assertEquals(p9, b4);
+		assertEquals(p3, b1);
 	}
 	
 	@Test
 	public void addPrimitivePowerToItself() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		Polynomial poly5 = (Polynomial) p7;
-		NumericExpression p8 = idealFactory.multiply(idealFactory.
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.multiply(idealFactory.
 				multiply(x, x), intTwo);
+		Polynomial poly1 = (Polynomial) p1;
+				
+		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
 		
-		Polynomial b5 = commonIdealFactory.add(poly5, poly5);
-		
-		assertEquals(p8, b5);
+		assertEquals(p2, b1);
 	}
 	
 	@Test
 	public void addPrimitivePowerToPrimitive() {
-		NumericExpression p7 = idealFactory.multiply(x, x);
-		NumericExpression p10 = idealFactory.add(x, idealFactory.
+		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.add(x, idealFactory.
 				multiply(x, x));
-		Polynomial poly5 = (Polynomial) p7;
-		Polynomial poly7 = (Polynomial) x;
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) x;
 		
-		Polynomial b6 = commonIdealFactory.add(poly5, poly7);
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		
-		assertEquals(p10, b6);
+		assertEquals(p2, b1);
 	}
 	
 	@Test
 	public void addPrimitiveToConstant() {
-		NumericExpression p11 = idealFactory.add(x, intOne);
-		Polynomial poly = (Polynomial) x;
+		NumericExpression p1 = idealFactory.add(x, intOne);
+		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b6 = commonIdealFactory.add(poly, intOne);
+		Polynomial b1 = commonIdealFactory.add(poly1, intOne);
 		
-		assertEquals(p11, b6);
+		assertEquals(p1, b1);
 	}
 	
 	/**
