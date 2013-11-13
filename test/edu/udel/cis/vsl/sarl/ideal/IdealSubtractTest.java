@@ -131,14 +131,14 @@ public class IdealSubtractTest {
 		Polynomial poly5 = (Polynomial) p5;
 		Polynomial poly6 = (Polynomial) p6;
 		Polynomial poly7 = (Polynomial) p7;								
-		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
-		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);
-		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);
-		NumericExpression b4 = commonIdealFactory.subtract(poly5, poly5);
-		NumericExpression b5 = commonIdealFactory.subtract(poly7, poly5);
-		NumericExpression b6 = commonIdealFactory.subtract(poly7, poly7);
-		NumericExpression b7 = commonIdealFactory.subtract(poly7, intOne);
-		NumericExpression b8 = commonIdealFactory.subtract(poly7, x);
+		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);//pp
+		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);//pp
+		NumericExpression b3 = commonIdealFactory.subtract(poly6, poly5);//pm
+		NumericExpression b4 = commonIdealFactory.subtract(poly5, poly5);//mm
+		NumericExpression b5 = commonIdealFactory.subtract(poly7, poly5);//ppm
+		NumericExpression b6 = commonIdealFactory.subtract(poly7, poly7);//pppp
+		NumericExpression b7 = commonIdealFactory.subtract(poly7, intOne);//ppc
+		NumericExpression b8 = commonIdealFactory.subtract(poly7, x);//ppp
 		
 		assertEquals(p7, b1);
 		assertEquals(p1, b2);
@@ -148,6 +148,24 @@ public class IdealSubtractTest {
 		assertEquals(intZero, b6);
 		assertEquals(p9, b7);
 		assertEquals(p11, b8);
+	}
+	
+	@Test
+	public void subPolyToPoly() {
+		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
+		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+				idealFactory.multiply(x, x)), intOne);
+		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+				idealFactory.multiply(x, x)), intTwo);
+		NumericExpression p7 = idealFactory.multiply(x, x);
+		Polynomial poly2 = (Polynomial) p2;
+		Polynomial poly4 = (Polynomial) p4;
+		
+		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
+		NumericExpression b2 = commonIdealFactory.subtract(poly4, poly2);
+		
+		assertEquals(p7, b1);
+		assertEquals(p1, b2);
 	}
 	
 	/**
