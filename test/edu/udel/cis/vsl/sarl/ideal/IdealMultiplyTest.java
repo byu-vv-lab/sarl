@@ -231,6 +231,17 @@ public class IdealMultiplyTest {
 		assertEquals(p8, b4);
 	}
 	
+	@Test
+	public void mulPrimitivePowerToItself() {
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression x4 = idealFactory.multiply(x2, x2);
+		Polynomial poly5 = (Polynomial) x2;
+		
+		Polynomial b5 = commonIdealFactory.multiply(poly5, poly5);
+		
+		assertEquals(x4, b5);
+	}
+	
 	/**
 	 * Multiplies two rational numbers.
 	 * 
