@@ -119,7 +119,7 @@ public class IdealMultiplyTest {
 	}
 
 	/**
-	 * Multiplies two Constants
+	 * Multiplies two Constants and returns a Constant
 	 * 
 	 * @param type
 	 * 				Constant
@@ -134,6 +134,21 @@ public class IdealMultiplyTest {
 		assertEquals(expected, result.number());
 	}
 	
+	/**
+	 * Multiplies two polynomials by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of two polynomials (passed as arguments).
+	 */
 	@Test
 	public void mulPolyToPoly() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -157,6 +172,21 @@ public class IdealMultiplyTest {
 		assertEquals(intZero, b2);
 	}
 	
+	/**
+	 * Multiplies a polynomial with a monomial by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of a polynomial and a monomial (passed as arguments).
+	 */
 	@Test
 	public void mulPolyToMonomial() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -171,6 +201,21 @@ public class IdealMultiplyTest {
 		assertEquals(p3, b1);
 	}
 	
+	/**
+	 * Multiplies a monomial with a primitive power by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of a monomial and a primitive power (passed as arguments).
+	 */
 	@Test
 	public void mulMonomialToPrimitivePower() {
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
@@ -185,6 +230,21 @@ public class IdealMultiplyTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Multiplies two primitive powers by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of two primitive powers (passed as arguments).
+	 */
 	@Test
 	public void mulPrimitivePowerToItself() {
 		NumericExpression x2 = idealFactory.multiply(x, x);
@@ -196,6 +256,21 @@ public class IdealMultiplyTest {
 		assertEquals(x4, b1);
 	}
 	
+	/**
+	 * Multiplies a primitive power and a primitive by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of a primitive power and a primitive (passed as arguments).
+	 */
 	@Test
 	public void mulPrimitivePowerToPrimitive() {
 		NumericExpression x2 = idealFactory.multiply(x, x);
@@ -208,6 +283,21 @@ public class IdealMultiplyTest {
 		assertEquals(p1, b1);
 	}
 	
+	/**
+	 * Multiplies a Constant and a Primitive by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Primitive
+	 * @param p2
+	 *            a Constant
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication of a constant and a primitive (passed as arguments).
+	 */
 	@Test
 	public void mulConstantToPrimitive() {
 		Polynomial poly1 = (Polynomial) x;
