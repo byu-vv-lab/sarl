@@ -20,6 +20,8 @@ package edu.udel.cis.vsl.sarl.ideal;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
+import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -41,6 +44,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class IdealBooleanTest {
 
+	private static PrintStream out = System.out;
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
@@ -50,9 +54,12 @@ public class IdealBooleanTest {
 	private CommonIdealFactory commonIdealFactory;
 
 	private Constant intOne; // int constant 1
+	private Constant intTwo; // int constant 2
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
-
+	StringObject Yobj; // "Y"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
+	
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -65,8 +72,12 @@ public class IdealBooleanTest {
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		intOne = idealFactory.intConstant(1);
+		intTwo = idealFactory.intConstant(2);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
+				typeFactory.integerType()));
+		Yobj = objectFactory.stringObject("Y");
+		y = objectFactory.canonic(idealFactory.symbolicConstant(Yobj,
 				typeFactory.integerType()));
 	}
 
@@ -120,4 +131,19 @@ public class IdealBooleanTest {
 		assertEquals(n, n01);
 		assertEquals(m, n02);
 	}
+	
+	@Test
+	public void equals() {
+		NumericExpression n1 = idealFactory.add(x, intOne);
+		
+		BooleanExpression b0 = commonIdealFactory.equals(x, n1);
+		BooleanExpression b1 = commonIdealFactory.equals(x, x);
+		out.println("n2=" +b1);
+		RationalExpression r1 = (RationalExpression) idealFactory.
+				divide(idealFactory.multiply(intTwo, x), y);	// x/y	
+		RationalExpression r2 = (RationalExpression) idealFactory.
+				divide(x, y);	// x/y
+		BooleanExpression b2 = commonIdealFactory.equals(r2, r1);
+	}
+	
 }
