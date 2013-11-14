@@ -135,15 +135,24 @@ public class IdealBooleanTest {
 	@Test
 	public void equals() {
 		NumericExpression n1 = idealFactory.add(x, intOne);
+		NumericExpression n2 = idealFactory.add(idealFactory.
+				multiply(intOne, idealFactory.multiply(x, x)), x);
+		NumericExpression n3 = idealFactory.add(idealFactory.
+				multiply(intTwo, idealFactory.multiply(x, y)), x);
+		NumericExpression r1 = idealFactory.
+				divide(idealFactory.add(x, y), x);	// (x-y)/y	
+		BooleanExpression m = booleanFactory.symbolic(true);
+		BooleanExpression n = booleanFactory.symbolic(false);
 		
 		BooleanExpression b0 = commonIdealFactory.equals(x, n1);
-		BooleanExpression b1 = commonIdealFactory.equals(x, x);
-		out.println("n2=" +b1);
-		RationalExpression r1 = (RationalExpression) idealFactory.
-				divide(idealFactory.multiply(intTwo, x), y);	// x/y	
-		RationalExpression r2 = (RationalExpression) idealFactory.
-				divide(x, y);	// x/y
-		BooleanExpression b2 = commonIdealFactory.equals(r2, r1);
+		BooleanExpression b1 = commonIdealFactory.equals(x, n2);
+		BooleanExpression b2 = commonIdealFactory.equals(x, n3);
+		BooleanExpression b3 = commonIdealFactory.equals(x, x);
+		BooleanExpression b4 = commonIdealFactory.equals(intOne, r1);
+		
+		out.println("A=" +b2);
+		assertEquals(n, b0);
+		assertEquals(m, b3);
 	}
 	
 }
