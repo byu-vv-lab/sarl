@@ -18,14 +18,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+//import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+//import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -36,33 +36,33 @@ public class AffineExpressionTest {
 
 	private static NumericSymbolicConstant y;
 
-	private static NumericExpression xpy;
+	//private static NumericExpression xpy;
 	// /////////////////////////////////////////////////////
 	private static ObjectFactory objectFactory;
 	private static SymbolicTypeFactory typeFactory;
 	private static CollectionFactory collectionFactory;
-	private static NumericExpressionFactory numericExpressionFactory;
+	//private static NumericExpressionFactory numericExpressionFactory;
 
 	private static BooleanExpressionFactory booleanFactory;
-	private static RealNumberFactory realNumberFactory;
+	//private static RealNumberFactory realNumberFactory;
 	private static CommonIdealFactory commonIdealFactory;
 
 	private static IdealFactory idealFactory;
-	private static IdealFactory polyconstant;
+	//private static IdealFactory polyconstant;
 
 	private static SymbolicType realType;
-	private static SymbolicType integerType;
+	//private static SymbolicType integerType;
 
-	private static NumericExpression one, two, three;
+	//private static NumericExpression one, two, three;
 	private static Constant c10;
 	private static SymbolicType real;
 
 	private static edu.udel.cis.vsl.sarl.IF.number.Number offset;
 	private static edu.udel.cis.vsl.sarl.IF.number.Number coefficient;
-	private static NumericExpression xxxx;
-	private static NumericExpression threexxxx;
+	//private static NumericExpression xxxx;
+	//private static NumericExpression threexxxx;
 	private static NumericExpression onePxPxsqPthreexquad;
-	private static NumericExpression xx;
+	//private static NumericExpression xx;
 
 	private static PrintStream out = System.out;
 
@@ -77,19 +77,19 @@ public class AffineExpressionTest {
 		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("y"), realType);
 		xpy = preUniv.add(x, y);
-		one = preUniv.rational(1); // 1.0
-		two = preUniv.rational(2); // 2.0
-		three = preUniv.rational(3);
+		//one = preUniv.rational(1); // 1.0
+		//two = preUniv.rational(2); // 2.0
+		//three = preUniv.rational(3);
 		// //////////
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		collectionFactory = system.collectionFactory();
-		numericExpressionFactory = system.numericFactory();
+		//numericExpressionFactory = system.numericFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		polyconstant = (IdealFactory) system.numericFactory();
+		//polyconstant = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		realNumberFactory = (RealNumberFactory) system.numberFactory();
+		//realNumberFactory = (RealNumberFactory) system.numberFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		// ////////////////////////////////////////
@@ -168,10 +168,10 @@ public class AffineExpressionTest {
 			assertEquals(test.equals(test), true);
 			// /////////////////////
 			xx = preUniv.power(x, 2); // x^2
-			xxxx = preUniv.power(x, 4); // x^4
-			threexxxx = preUniv.multiply(three, xxxx);
-			onePxPxsqPthreexquad = preUniv.add(one,
-					preUniv.add(x, preUniv.add(xx, threexxxx)));
+			//xxxx = preUniv.power(x, 4); // x^4
+			//threexxxx = preUniv.multiply(three, xxxx);
+			//onePxPxsqPthreexquad = preUniv.add(one,
+			//		preUniv.add(x, preUniv.add(xx, threexxxx)));
 			AffineExpression working = new AffineExpression(
 					(Polynomial) onePxPxsqPthreexquad, offset, coefficient);
 			out.println(onePxPxsqPthreexquad.toString());
