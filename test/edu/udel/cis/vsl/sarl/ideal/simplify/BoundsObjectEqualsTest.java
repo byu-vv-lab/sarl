@@ -92,7 +92,7 @@ public class BoundsObjectEqualsTest {
 		boundObj.equals(boundObj2);
 		assertEquals(boundObj.upper(), boundObj2.upper());
 	}
-	
+	//TODO: Inspect for bug in upper/lower equals when .equals is called on a boundsobject with a null bound....
 	/**
 	 * Testing of BoundsObject.equals method:
 	 * Provides coverage of False branch for 
