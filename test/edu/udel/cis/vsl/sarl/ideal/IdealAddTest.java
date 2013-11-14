@@ -128,6 +128,21 @@ public class IdealAddTest {
 		assertEquals(xpy, ypx);
 	}
 	
+	/**
+	 * Adds two polynomials by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of two polynomials (passed as arguments).
+	 */
 	@Test
 	public void addPolyToPoly(){
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -147,6 +162,21 @@ public class IdealAddTest {
 		assertEquals(p2, b2);
 	}
 	
+	/**
+	 * Adds a monomial and a polynomial by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a monomial and a polynomial (passed as arguments).
+	 */
 	@Test
 	public void addPolyToMonomial() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
@@ -163,6 +193,21 @@ public class IdealAddTest {
 		assertEquals(p3, b1);
 	}
 	
+	/**
+	 * Adds a monomial and a monic by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a monomial and a monic (passed as arguments).
+	 */
 	@Test
 	public void addMonomialToMonic() {
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
@@ -177,6 +222,21 @@ public class IdealAddTest {
 		assertEquals(p3, b1);
 	}
 	
+	/**
+	 * Adds two monics by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of two monics (passed as arguments).
+	 */
 	@Test
 	public void addMonicToMonic() {
 		NumericExpression p1 = idealFactory.multiply(x, y);
@@ -189,6 +249,21 @@ public class IdealAddTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Adds a primitive and a monic by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a monic and a primitive (passed as arguments).
+	 */
 	@Test
 	public void addPrimitiveToMonic() {
 		NumericExpression p1 = idealFactory.multiply(x, y);
@@ -202,6 +277,21 @@ public class IdealAddTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Adds a constant to a monic by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a Constant
+	 * 
+	 * @param type
+	 * 				Polynomial and an Integer Constant
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a constant and a monic (passed as arguments).
+	 */
 	@Test
 	public void addConstantToMonic() {
 		NumericExpression p1 = idealFactory.multiply(x, y);
@@ -214,6 +304,21 @@ public class IdealAddTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Adds a polynomial with a primitive power by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a polynomial and a primitive power (passed as arguments).
+	 */
 	@Test
 	public void addPolyToPrimitivePower() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
@@ -229,6 +334,21 @@ public class IdealAddTest {
 		assertEquals(p3, b1);
 	}
 	
+	/**
+	 * Adds two primitive powers by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of two primitive powers (passed as arguments).
+	 */
 	@Test
 	public void addPrimitivePowerToItself() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
@@ -241,6 +361,21 @@ public class IdealAddTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Adds a primitive power with a primitive by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a primitive power and a primitive (passed as arguments).
+	 */
 	@Test
 	public void addPrimitivePowerToPrimitive() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
@@ -254,6 +389,21 @@ public class IdealAddTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Adds a primitive power with a constant by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Constant
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a primitive power and a constant (passed as arguments).
+	 */
 	@Test
 	public void addPrimitiveToConstant() {
 		NumericExpression p1 = idealFactory.add(x, intOne);
