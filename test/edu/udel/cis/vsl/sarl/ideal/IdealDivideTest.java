@@ -122,7 +122,7 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides two polynomials
+	 * Divides two polynomials, a polynomial with monic, monomial, a monomial with a monic, a monic with a primitivepower and a constant
 	 * 
 	 * @param type
 	 * 				the SymbolicExpression of numeric type of a Polynomial
@@ -154,6 +154,21 @@ public class IdealDivideTest {
 		assertEquals(zero, b5);
 	}
 	
+	/**
+	 * Divides two polynomials by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of two polynomials (passed as arguments).
+	 */
 	@Test
 	public void dividePolyToPoly() {
 		NumericExpression p01 = idealFactory.add(intTen, idealFactory.
@@ -168,6 +183,21 @@ public class IdealDivideTest {
 		assertEquals(intFive, b1);
 	}
 	
+	/**
+	 * Divides a polynomial with a monomial by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of a polynomial with a monomial (passed as arguments).
+	 */
 	@Test
 	public void dividePolyToMonomial() {
 		NumericExpression p01 = idealFactory.multiply(x, x);
@@ -183,6 +213,21 @@ public class IdealDivideTest {
 		assertEquals(p04, b1);
 	}
 	
+	/**
+	 * Divides a monomial with a primitive power by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of a monomial with a primitive power (passed as arguments).
+	 */
 	@Test
 	public void divideMonomialToPrimitivePower() {
 		NumericExpression p01 = idealFactory.multiply(x, x);
@@ -196,6 +241,21 @@ public class IdealDivideTest {
 		assertEquals(p03, b1);
 	}
 	
+	/**
+	 * Divides two primitive powers by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of two primitive powers (passed as arguments).
+	 */
 	@Test
 	public void dividePrimitivePowerToItself() {
 		NumericExpression p01 = idealFactory.multiply(x, x);
@@ -206,6 +266,21 @@ public class IdealDivideTest {
 		assertEquals(intOne, b1);
 	}
 	
+	/**
+	 * Divides a monomial with a primitive by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of a monomial with a primitive (passed as arguments).
+	 */
 	@Test
 	public void divideMonomialToPrimitive() {
 		NumericExpression p01 = idealFactory.multiply(intTen, x);
@@ -216,6 +291,21 @@ public class IdealDivideTest {
 		assertEquals(intTen, b1);
 	}
 	
+	/**
+	 * Divides a primitive with a constant by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Primitive
+	 * @param p2
+	 *            a Constant
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of a primitive with a constant (passed as arguments).
+	 */
 	@Test
 	public void dividePrimitiveToConstant() {
 		NumericExpression p01 = idealFactory.multiply(x, x);
@@ -227,6 +317,20 @@ public class IdealDivideTest {
 		assertEquals(p03, b3);
 	}
 	
+	/**
+	 * Divides two polynomials by removing the common factors between them
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial by removing the common factors.
+	 */
 	@Test
 	public void factorization() {
 		StringObject Zobj;
@@ -331,7 +435,7 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * Divide various levels of numbers (primitive, monic, poly, etc.) with a rational number
 	 * 
 	 * @return type
 	 * 				RationalExpression
