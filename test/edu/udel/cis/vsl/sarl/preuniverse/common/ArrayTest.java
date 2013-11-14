@@ -416,7 +416,7 @@ public class ArrayTest {
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
-	public void TestArrayReadException() {
+	public void testArrayReadException() {
 		// testing the fail when pass a null array to arrayRead()
 		SymbolicExpression array, resultedArray;
 		NumericExpression one, two, three, five;
@@ -434,7 +434,7 @@ public class ArrayTest {
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
-	public void TestArrayReadException2() {
+	public void testArrayReadException2() {
 		// testing the fail when pass a null index to arrayRead()
 
 		SymbolicExpression array, resultedArray;
@@ -453,7 +453,7 @@ public class ArrayTest {
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
-	public void TestArrayReadException3() {
+	public void testArrayReadException3() {
 		// testing the fail when pass a non array type to arrayRead()
 		// here we use a tuple instead of array
 		@SuppressWarnings("unused")
@@ -474,7 +474,7 @@ public class ArrayTest {
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
-	public void TestArrayReadException4() {
+	public void testArrayReadException4() {
 		// testing the fail when pass a negative index to arrayRead()
 		@SuppressWarnings("unused")
 		SymbolicExpression array, resultedArray;
