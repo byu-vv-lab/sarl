@@ -247,43 +247,6 @@ public class CVC3ModelFinderTest {
 	}
 
 	/**
-	 * Test for isApplyExpr creates three expressions; a varExpr, and two
-	 * expression values. It then creates a HashMap that maps the varExpr to a
-	 * funExpr that uses minusOp() with the two expression values. It then uses
-	 * a CVC3TheoremProver created and the HashMap with the varExpr and minusOP
-	 * to create a CVC3ModelFinder.
-	 */
-
-	/**
-	 * TODO The reason of the NullPointerException is that this test is not
-	 * designed in the right way. CVCModelFinder is not supposed to be called here.
-	 * Instead, it is called in TheoremProver.ValidOrModel() when the validity result
-	 * is invalid and a counterexample is to be established.
-	 * So this test should be ignored.
-	 * Moreover, tests for theorem provers should avoid directly dealing with a specific 
-	 * prover, which prevents it to be reused for testing new theorem provers.
-	 * Please refer to sarl.prove.TheoremProverTestTemplate.java, where it shows how to
-	 * design reusable tests for theorem provers. The trick is to declare theorem provers
-	 * as TheoremProver (not a specific prover) and invoke only methods of the interface TheoremProver.
-	 */
-	@Ignore @Test
-	public void isApplyExpr() {
-//		Expr varExpr = vc.varExpr("var",
-//				cvcProver.translateType(universe.realType()));
-//		Expr expr2 = cvcProver.translate(two);
-//		Expr expr5 = cvcProver.translate(five);
-//		HashMap<Expr, Expr> h = new HashMap<Expr, Expr>();
-//		h.put(varExpr, vc.funExpr(vc.minusOp(), expr2, expr5));
-//		TheoremProver prover = (CVC3TheoremProver) proverFactory
-//				.newProver(universe.bool(true));
-//		SymbolicConstant var = universe
-//				.symbolicConstant(universe.stringObject("var"), realType);
-		
-//		assertEquals(prover.validOrModel());
-//		assertNotNull(c);
-	}
-
-	/**
 	 * Test for isBooleanExpr creates two CVC boolean expressions, creates a
 	 * Hashmap and inserts the two expressions. The test creates a
 	 * CVC3TheoremProver and uses the created Hashmap and TheoremProver to
