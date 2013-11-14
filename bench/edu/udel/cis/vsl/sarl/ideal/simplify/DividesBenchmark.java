@@ -1,9 +1,9 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.Collection;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -220,8 +220,8 @@ public class DividesBenchmark {
 		//div == x * n
 		assumption = preUniv.divides(xInt, divInt);
 		
-		NumericExpression[] polyList = {};
-		Collection<NumericExpression> divCol = new ArrayList<NumericExpression> (Arrays.asList(polyList));
+		//NumericExpression[] polyList = {};
+		//Collection<NumericExpression> divCol = new ArrayList<NumericExpression> (Arrays.asList(polyList));
 		
 		int size = 3;
 		
