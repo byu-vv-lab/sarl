@@ -88,16 +88,6 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		return "[]";
 	}
 
-	// public String toString() {
-	// String result = "";
-	// SymbolicType type;
-	//
-	// for (type = this; type instanceof CommonSymbolicArrayType; type =
-	// ((CommonSymbolicArrayType) type)
-	// .elementType())
-	// result += ((CommonSymbolicArrayType) type).extentString();
-	// return type + result;
-	// }
 
 	/**
 	 * Nice human-readable representation of the array type. Example
