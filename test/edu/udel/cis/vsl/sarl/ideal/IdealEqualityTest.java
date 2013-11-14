@@ -91,8 +91,8 @@ public class IdealEqualityTest {
 	}
 	
 	/**
-	 * Returns true or false if the two symbolic Expressions are not equal or equal 
-	 * respectively
+	 * Returns true or false if the two symbolic Expressions are not equal 
+	 * or equal respectively
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -120,7 +120,8 @@ public class IdealEqualityTest {
 	}
 	
 	/**
-	 * Compares two Rational Expressions
+	 * Compares two Rational Expressions. Does the less than, not less than, 
+	 * not less than equals, less than equals comparisons
 	 * 
 	 * @param type
 	 * 				Symbolic Expressions of same numeric type
@@ -158,7 +159,8 @@ public class IdealEqualityTest {
 	}
 	
 	/**
-	 * Checks if two Symbolic Constants are equal
+	 * Checks if two Symbolic Constants are equal. One is created globally 
+	 * and the other locally.
 	 * 
 	 * @param type
 	 * 				NumericSymbolicConstant
@@ -172,7 +174,9 @@ public class IdealEqualityTest {
 	}
 
 	/**
-	 * Checks if two Symbolic Constants are not equal
+	 * Checks if two Symbolic Constants are equal or not. 
+	 * Here both have different values. So they are not equal. 
+	 * Hence this method returns false.
 	 * 
 	 * @param type
 	 * 				NumericSymbolicConstant
@@ -183,8 +187,8 @@ public class IdealEqualityTest {
 	}
 	
 	/**
-	 * Returns true or false if the two symbolic Expressions are equal or not equal 
-	 * respectively
+	 * Returns true or false if the two symbolic Expressions are equal or 
+	 * not equal respectively
 	 * 
 	 * @param type
 	 * 				NumericExpression

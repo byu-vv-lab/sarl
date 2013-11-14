@@ -122,7 +122,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides two polynomials, a polynomial with monic, monomial, a monomial with a monic, a monic with a primitivepower and a constant
+	 * Divides two polynomials, a polynomial with monic, monomial, 
+	 * a monomial with a monic, a monic with a primitivepower and a constant
 	 * 
 	 * @param type
 	 * 				the SymbolicExpression of numeric type of a Polynomial
@@ -155,8 +156,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides two polynomials by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides two polynomials by forming the factorization and by factoring 
+	 * out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -167,7 +168,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of two polynomials (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				two polynomials (passed as arguments).
 	 */
 	@Test
 	public void dividePolyToPoly() {
@@ -184,8 +186,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides a polynomial with a monomial by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides a polynomial with a monomial by forming the factorization and 
+	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -196,7 +198,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of a polynomial with a monomial (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				a polynomial with a monomial (passed as arguments).
 	 */
 	@Test
 	public void dividePolyToMonomial() {
@@ -214,8 +217,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides a monomial with a primitive power by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides a monomial with a primitive power by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -226,7 +229,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of a monomial with a primitive power (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				a monomial with a primitive power (passed as arguments).
 	 */
 	@Test
 	public void divideMonomialToPrimitivePower() {
@@ -242,8 +246,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides two primitive powers by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides two primitive powers by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -254,7 +258,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of two primitive powers (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				two primitive powers (passed as arguments).
 	 */
 	@Test
 	public void dividePrimitivePowerToItself() {
@@ -267,8 +272,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides a monomial with a primitive by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides a monomial with a primitive by forming the factorization and 
+	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -279,7 +284,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of a monomial with a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				a monomial with a primitive (passed as arguments).
 	 */
 	@Test
 	public void divideMonomialToPrimitive() {
@@ -292,8 +298,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides a primitive with a constant by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Divides a primitive with a constant by forming the factorization and 
+	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Primitive
@@ -304,7 +310,8 @@ public class IdealDivideTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the division of a primitive with a constant (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				a primitive with a constant (passed as arguments).
 	 */
 	@Test
 	public void dividePrimitiveToConstant() {
@@ -361,7 +368,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
+	 * Returns a rational expression by canceling out the common factors that 
+	 * are present in both numerator and denominator.
 	 * 
 	 * @param type
 	 * 				Symbolic Expressions of same numeric type
@@ -392,7 +400,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Returns a rational expression by canceling out the common factors that are present in both numerator and denominator.
+	 * Returns a rational expression by canceling out the common factors that 
+	 * are present in both numerator and denominator.
 	 * 
 	 * @param type
 	 * 				Symbolic Expressions of same numeric type
@@ -435,7 +444,8 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divide various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * Divide various levels of numbers (primitive, monic, poly, etc.) with 
+	 * a rational number
 	 * 
 	 * @return type
 	 * 				RationalExpression

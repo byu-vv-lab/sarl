@@ -153,7 +153,8 @@ public class IdealTypeTest {
 	}
 	
 	/**
-	 * Performs type casting from one type to another type, which is passed as an argument
+	 * Performs type casting from one type to another type, which is passed as 
+	 * an argument
 	 * 
 	 * @param type
 	 * 				NumericExpression along with the new type

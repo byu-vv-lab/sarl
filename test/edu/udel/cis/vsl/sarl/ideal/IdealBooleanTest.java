@@ -76,8 +76,8 @@ public class IdealBooleanTest {
 	}
 	
 	/**
-	 * Returns true if the first argument is 'not less than' the second argument and 
-	 * vice-versa.
+	 * Returns true if the first argument is 'not less than' the second 
+	 * argument and vice-versa.
 	 * 
 	 * @param type
 	 * 				NumericExpression
@@ -99,8 +99,8 @@ public class IdealBooleanTest {
 	}
 
 	/**
-	 * Returns true if the first argument is 'not less than or equal' to the second argument 
-	 * and vice-versa.
+	 * Returns true if the first argument is 'not less than or equal' 
+	 * to the second argument and vice-versa.
 	 * 
 	 * @param type
 	 * 				NumericExpression

@@ -102,10 +102,10 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds two Constants
+	 * Adds two constants of real type.
 	 * 
 	 * @param type
-	 * 				Constant
+	 * 				Real Constants
 	 */
 	@Test
 	public void constantAdd() {
@@ -115,7 +115,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Shows that the commutative property holds for two Numeric Symbolic Constants
+	 * Shows that the commutative property holds for two Numeric Symbolic 
+	 * Constants
 	 * 
 	 * @param type
 	 * 				NumericSymbolicConstant
@@ -129,8 +130,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds two polynomials by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds two polynomials by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -141,7 +142,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of two polynomials (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of two 
+	 * 				polynomials (passed as arguments).
 	 */
 	@Test
 	public void addPolyToPoly(){
@@ -163,8 +165,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a monomial and a polynomial by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a monomial and a polynomial by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -175,7 +177,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a monomial and a polynomial (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				monomial and a polynomial (passed as arguments).
 	 */
 	@Test
 	public void addPolyToMonomial() {
@@ -194,8 +197,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a monomial and a monic by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a monomial and a monic by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -206,7 +209,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a monomial and a monic (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				monomial and a monic (passed as arguments).
 	 */
 	@Test
 	public void addMonomialToMonic() {
@@ -223,8 +227,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds two monics by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds two monics by forming the factorization and by factoring out the 
+	 * common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monic
@@ -235,7 +239,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of two monics (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of two 
+	 * 				monics (passed as arguments).
 	 */
 	@Test
 	public void addMonicToMonic() {
@@ -250,8 +255,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a primitive and a monic by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a primitive and a monic by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monic
@@ -262,7 +267,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a monic and a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				monic and a primitive (passed as arguments).
 	 */
 	@Test
 	public void addPrimitiveToMonic() {
@@ -278,8 +284,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a constant to a monic by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a constant to a monic by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monic
@@ -290,7 +296,8 @@ public class IdealAddTest {
 	 * 				Polynomial and an Integer Constant
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a constant and a monic (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				constant and a monic (passed as arguments).
 	 */
 	@Test
 	public void addConstantToMonic() {
@@ -305,8 +312,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a polynomial with a primitive power by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a polynomial with a primitive power by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -317,7 +324,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a polynomial and a primitive power (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				polynomial and a primitive power (passed as arguments).
 	 */
 	@Test
 	public void addPolyToPrimitivePower() {
@@ -335,8 +343,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds two primitive powers by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds two primitive powers by forming the factorization and by factoring 
+	 * out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -347,7 +355,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of two primitive powers (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of two 
+	 * 				primitive powers (passed as arguments).
 	 */
 	@Test
 	public void addPrimitivePowerToItself() {
@@ -362,8 +371,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a primitive power with a primitive by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a primitive power with a primitive by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -374,7 +383,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a primitive power and a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				primitive power and a primitive (passed as arguments).
 	 */
 	@Test
 	public void addPrimitivePowerToPrimitive() {
@@ -390,8 +400,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds a primitive power with a constant by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Adds a primitive power with a constant by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -402,7 +412,8 @@ public class IdealAddTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of a primitive power and a constant (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				primitive power and a constant (passed as arguments).
 	 */
 	@Test
 	public void addPrimitiveToConstant() {
@@ -415,7 +426,8 @@ public class IdealAddTest {
 	}
 	
 	/**
-	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * Adds various levels of numbers (primitive, monic, poly, etc.) with a 
+	 * rational number
 	 * 
 	 * @return type
 	 * 				RationalExpression

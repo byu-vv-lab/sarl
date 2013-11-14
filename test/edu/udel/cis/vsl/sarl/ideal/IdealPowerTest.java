@@ -90,7 +90,10 @@ public class IdealPowerTest {
 	}
 
 	/**
-	 * gives the result for [(x+y)^100] / [(x+y)^99] as (x+y)
+	 * gives the result for [(x+y)^100] / [(x+y)^99] as (x+y). Will compute
+	 * the values for [(x+y)^100] first and also compute the value for
+	 * [(x+y)^99], divide both of them and remove the common factors which will
+	 * be equal to (x + y).
 	 * 
 	 * @param type
 	 * 				SymbolicExpression of numeric type

@@ -104,8 +104,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts two polynomials by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts two polynomials by forming the factorization and by factoring 
+	 * out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -116,7 +116,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of two polynomials (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of two polynomials (passed as arguments).
 	 */
 	@Test
 	public void subPolyToPoly() {
@@ -137,8 +138,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts a polynomial with a monomial by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts a polynomial with a monomial by forming the factorization and 
+	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -149,7 +150,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of a polynomial with a monomial (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a polynomial with a monomial (passed as arguments).
 	 */
 	@Test
 	public void subPolyToMonomial() {
@@ -168,8 +170,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts two monomials by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts two monomials by forming the factorization and by factoring 
+	 * out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -180,7 +182,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of two monomials (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of two monomials (passed as arguments).
 	 */
 	@Test
 	public void subMonomialToMonomial() {
@@ -193,8 +196,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts a primitive power with a monomial by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts a primitive power with a monomial by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -205,7 +208,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a monomial (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a primitive power with a monomial (passed as arguments).
 	 */
 	@Test
 	public void subPrimitivePowerToMonomial() {
@@ -222,8 +226,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts two primitive powers by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts two primitive powers by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -234,7 +238,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of two primitive powers (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of two primitive powers (passed as arguments).
 	 */
 	@Test
 	public void subPrimitivePowerToItself() {
@@ -247,8 +252,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts a primitive power with a constant by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts a primitive power with a constant by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -259,7 +264,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a constant (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a primitive power with a constant (passed as arguments).
 	 */
 	@Test
 	public void subPrimitivePowerToConstant() {
@@ -274,8 +280,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtracts a primitive power with a primitive by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Subtracts a primitive power with a primitive by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -286,7 +292,8 @@ public class IdealSubtractTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a primitive power with a primitive (passed as arguments).
 	 */
 	@Test
 	public void subPrimitivePowerToPrimitive() {
@@ -329,7 +336,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Returns the expression by removing the constant term present in the passed argument.
+	 * Returns the expression by removing the constant term present in the 
+	 * passed argument.
 	 * 
 	 * @param type
 	 * 				Polynomial
@@ -378,7 +386,8 @@ public class IdealSubtractTest {
 	}
 	
 	/**
-	 * Subtract various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * Subtract various levels of numbers (primitive, monic, poly, etc.) with 
+	 * a rational number
 	 * 
 	 * @return type
 	 * 				RationalExpression

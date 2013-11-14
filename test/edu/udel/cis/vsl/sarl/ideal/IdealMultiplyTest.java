@@ -119,7 +119,8 @@ public class IdealMultiplyTest {
 	}
 
 	/**
-	 * Multiplies two Constants and returns a Constant
+	 * Multiplies two Constants of type real and returns a Constant with 
+	 * the same type
 	 * 
 	 * @param type
 	 * 				Constant
@@ -135,8 +136,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies two polynomials by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies two polynomials by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -147,7 +148,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of two polynomials (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of two polynomials (passed as arguments).
 	 */
 	@Test
 	public void mulPolyToPoly() {
@@ -173,8 +175,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies a polynomial with a monomial by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies a polynomial with a monomial by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -185,7 +187,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of a polynomial and a monomial (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a polynomial and a monomial (passed as arguments).
 	 */
 	@Test
 	public void mulPolyToMonomial() {
@@ -202,8 +205,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies a monomial with a primitive power by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies a monomial with a primitive power by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Monomial
@@ -214,7 +217,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of a monomial and a primitive power (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a monomial and a primitive power (passed as arguments).
 	 */
 	@Test
 	public void mulMonomialToPrimitivePower() {
@@ -231,8 +235,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies two primitive powers by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies two primitive powers by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -243,7 +247,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of two primitive powers (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of two primitive powers (passed as arguments).
 	 */
 	@Test
 	public void mulPrimitivePowerToItself() {
@@ -257,8 +262,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies a primitive power and a primitive by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies a primitive power and a primitive by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a PrimitivePower
@@ -269,7 +274,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of a primitive power and a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a primitive power and a primitive (passed as arguments).
 	 */
 	@Test
 	public void mulPrimitivePowerToPrimitive() {
@@ -284,8 +290,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies a Constant and a Primitive by forming the factorization and by factoring out the common
-	 * factors that are produced from the two factorizations.
+	 * Multiplies a Constant and a Primitive by forming the factorization and 
+	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
 	 *            a Primitive
@@ -296,7 +302,8 @@ public class IdealMultiplyTest {
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the multiplication of a constant and a primitive (passed as arguments).
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a constant and a primitive (passed as arguments).
 	 */
 	@Test
 	public void mulConstantToPrimitive() {
@@ -309,8 +316,7 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiplies two rational numbers.
-	 * 
+	 * Multiplies two rational numbers. 
 	 * Also checks if the first or second argument is zero or one.
 	 * 
 	 * @param type
@@ -351,7 +357,8 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with a rational number
+	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with 
+	 * a rational number
 	 * 
 	 * @return type
 	 * 				RationalExpression
