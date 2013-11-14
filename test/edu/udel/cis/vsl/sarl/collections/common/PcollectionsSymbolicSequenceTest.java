@@ -13,7 +13,22 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
+import edu.udel.cis.vsl.sarl.expr.Expressions;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.type.Types;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 public class PcollectionsSymbolicSequenceTest {
 
@@ -66,6 +81,17 @@ public class PcollectionsSymbolicSequenceTest {
 			return new ExpressionStub(temp);
 		}
 	};
+	
+	/*public static SymbolicExpression createExpression(int expression){
+		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		NumberFactory numFact = Numbers.REAL_FACTORY;
+		IntegerNumber expr = numFact.integer(expression);
+		ObjectFactory objFact = Objects.newObjectFactory(numFact);
+		SymbolicObject symObj =  objFact.numberObject(expr);
+		SymbolicTypeFactory typeFact = Types.newTypeFactory(objFact);
+		CollectionFactory collectionFact = Collections.newCollectionFactory(objFact);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFact, typeFact, collectionFact);
+	}*/	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -159,11 +185,11 @@ public class PcollectionsSymbolicSequenceTest {
 		int testHashPlain = plainSequence.hashCode();
 		assertEquals(plainSequence.hashCode(),testHashPlain);
 	}
-/*
+
 	@Test
 	public void testCanonizeChildren() {
-		fail("Not yet implemented");
-	}*/
+		
+	}
 
 	@Test
 	public void testCollectionEquals() {

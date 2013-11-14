@@ -102,14 +102,16 @@ public class commonCollectionFactoryTest {
 		//collectionFactory.setElementComparator(elementComparator);
 		//collectionFactory.init();
 		//assertEquals(collectionFactory.emptySequence().size(),0);
-	}
+	}*/
 	
 	@Test
 	public void testEmptySortedMap() {
-		fail("Not yet implemented");
+		collectionFactory.init();
+		//System.out.println(collectionFactory.emptySortedMap().put(three, five).toString());
+		assertEquals(collectionFactory.emptySortedMap().toString(),"{}");
 	}
 	
-	@Test
+	/*@Test
 	public void testEmptyHashMap() {
 		fail("Not yet implemented");
 	}

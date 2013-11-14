@@ -164,15 +164,13 @@ public class CljSortedSymbolicMapTest {
 	@Test
 	public void testCanonizeChildren() 
 	{
-		/*assertFalse(canonicTest.isCanonic());
+		assertFalse(canonicTest.isCanonic());
 		assertFalse(twenty.isCanonic());
 		assertTrue(forty.isCanonic());
-		//canonicTest.canonizeChildren(objectFactory);
-		//assertTrue(twenty.isCanonic());
 		canonicTest = objectFactory.canonic(canonicTest);
 		assertTrue(canonicTest.isCanonic());
 		assertTrue(twenty.isCanonic());
-		assertTrue(forty.isCanonic());*/
+		assertTrue(forty.isCanonic());
 		
 	}
 
