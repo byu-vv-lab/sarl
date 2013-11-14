@@ -1,4 +1,11 @@
-/* @author Gunjan Majmudar */
+/**
+ * Tests the method substitute(SymbolicExpression expression,
+ * Map<SymbolicConstant, SymbolicExpression> Map) in class
+ * ExpressionSubsitute.java
+ * 
+ * @author Gunjan Majmudar
+ * 
+ */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
@@ -110,6 +117,16 @@ public class ExpressionSubstituteTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Tests the method substitute(SymbolicExpression expression,
+	 * Map<SymbolicConstant, SymbolicExpression> Map) in class
+	 * ExpressionSubsitute.java Cases covered were Null expression, arrayType,
+	 * tupleType, unionType, functionType, completeArrayType type sequence and
+	 * collection
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@SuppressWarnings("static-access")
 	@Test
 	public void expressionSubstituteTest() {

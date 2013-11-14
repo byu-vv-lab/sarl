@@ -1,9 +1,16 @@
-/* @author Gunjan Majmudar */
+/**
+ * Tests the method equals(SymbolicExpression symbolicExpression1,
+ * SymbolicExpression symbolicExpression2) for case NumericExpression in
+ * PreUniverse.java and method compatible(functionType functionTypeI,
+ * functionType functionTypeII) in PreUniverse.java
+ * 
+ * @author Gunjan Majmudar
+ * 
+ */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import static org.junit.Assert.assertEquals;
-
 
 import java.util.Arrays;
 
@@ -11,9 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -69,6 +74,13 @@ public class FunctionCaseEqualsTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Tests the method compatible(functionType functionTypeI, functionType
+	 * functionTypeII) in PreUniverse.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void functionTypeCompatibleTest() {
 		SymbolicTupleType tupleType1 = universe.tupleType(
@@ -96,6 +108,14 @@ public class FunctionCaseEqualsTest {
 		assertEquals(trueExpr, value2);
 	}
 
+	/**
+	 * Tests the method equals(SymbolicExpression symbolicExpression1,
+	 * SymbolicExpression symbolicExpression2) for case NumericExpression in
+	 * PreUniverse.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void equalsNumericTest() {
 
@@ -104,13 +124,6 @@ public class FunctionCaseEqualsTest {
 		value = universe.equals(value3, value4);
 
 		assertEquals(trueExpr, value);
-
-	}
-
-	@Ignore
-	@Test
-	public void symbolicEqualsTest() {
-
 	}
 
 }

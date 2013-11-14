@@ -1,4 +1,9 @@
-/* @author Gunjan Majmudar */
+/**
+ * Tests the methods in class OptimizedMap.java
+ * 
+ * @author Gunjan Majmudar
+ * 
+ */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
@@ -57,10 +62,10 @@ public class OptimizedMapTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * Tests the method put(SymbolicExpression expression, Map<SymbolicConstant, SymbolicExpression> Map)
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method put(SymbolicExpression expression, Map<SymbolicConstant,
+	 * SymbolicExpression> Map) for exception thrown in class OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -71,10 +76,10 @@ public class OptimizedMapTest {
 		nMap.put(key, hello);
 
 	}
-	
+
 	/**
-	 * Tests the method isEmpty() and size() for default constructor 
-	 * in class OptimizedMap.java
+	 * Tests the method isEmpty() and size() for default constructor in class
+	 * OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -91,10 +96,10 @@ public class OptimizedMapTest {
 		assertEquals(nMap.containsValue(nvalue), false);
 
 	}
-	
+
 	/**
-	 * Tests the method remove(SymbolicExpression symbolicExpression)
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method remove(SymbolicExpression symbolicExpression) for
+	 * exception thrown in class OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -105,10 +110,10 @@ public class OptimizedMapTest {
 		nMap.remove(key);
 
 	}
-	
+
 	/**
-	 * Tests the method entrySet()
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method entrySet() for exception thrown in class
+	 * OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -121,8 +126,7 @@ public class OptimizedMapTest {
 	}
 
 	/**
-	 * Tests the method values()
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method values() for exception thrown in class OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -135,8 +139,7 @@ public class OptimizedMapTest {
 	}
 
 	/**
-	 * Tests the method keySet()
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method keySet() for exception thrown in class OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
@@ -149,8 +152,7 @@ public class OptimizedMapTest {
 	}
 
 	/**
-	 * Tests the method clear()
-	 * for exception thrown in class OptimizedMap.java
+	 * Tests the method clear() for exception thrown in class OptimizedMap.java
 	 * 
 	 * @author Gunjan Majmudar
 	 * 
