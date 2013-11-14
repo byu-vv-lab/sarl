@@ -23,16 +23,37 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * an implementation of {@link SymbolicIntegerType}
+ * 
+ * @author mohammedalali
+ *
+ */
 public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		SymbolicIntegerType {
 
+	/**
+	 * a constant to store the hashCode of this object,
+	 * so that it will be calculated once and saved.
+	 */
 	private final static int classCode = CommonSymbolicIntegerType.class
 			.hashCode();
-
+	/**
+	 * the integerKind of this integerType
+	 */
 	private IntegerKind integerKind;
 
+	/**
+	 * stores the short name of this integerType
+	 */
 	private StringBuffer name;
 
+	/**
+	 * a constructor to create a new CommonSymbolicIntegerType
+	 * 
+	 * @param kind
+	 * 			the kind of this integerType
+	 */
 	public CommonSymbolicIntegerType(IntegerKind kind) {
 		super(SymbolicTypeKind.INTEGER);
 		this.integerKind = kind;
@@ -53,6 +74,10 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		return classCode ^ integerKind.hashCode();
 	}
 
+	/**
+	 * this method is empty because CommonSymbolicIntegerType
+	 * doesn't have children
+	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 	}
@@ -90,6 +115,10 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		return integerKind == IntegerKind.IDEAL;
 	}
 
+	/**
+	 * @return the same object because no lengths are used in 
+	 * CommonSymbolicIntegerType
+	 */
 	@Override
 	public SymbolicType getPureType() {
 		return this;
