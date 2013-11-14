@@ -156,10 +156,6 @@ public class CnfFactory implements BooleanExpressionFactory {
 	}
 
 	@Override
-	/**
-	 * Changes were made Oct 28 2013
-	 * -Recursive Or statements were replaced with for loops to reduce calls to the stack
-	 */
 	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {
 		if (arg0 == trueExpr || arg1 == trueExpr)
 			return trueExpr;
