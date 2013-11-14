@@ -35,7 +35,6 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -150,7 +149,9 @@ public class IdealBooleanTest {
 		BooleanExpression b3 = commonIdealFactory.equals(x, x);
 		BooleanExpression b4 = commonIdealFactory.equals(intOne, r1);
 		
-		out.println("A=" +b2);
+		out.println("b1=" +b1);
+		out.println("b2=" +b2);
+		out.println("b4=" +b4);
 		assertEquals(n, b0);
 		assertEquals(m, b3);
 	}

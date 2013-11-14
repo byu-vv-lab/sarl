@@ -64,7 +64,6 @@ public class IdealSubtractTest {
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression one; // real constant 1
 	private RationalNumber realOne; // real 1
 	private RationalNumber realThree; // real 3
@@ -91,8 +90,6 @@ public class IdealSubtractTest {
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
-		y = objectFactory.canonic(idealFactory.symbolicConstant(
-				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realOne = numberFactory.rational("1");
 		realThree = numberFactory.rational("3");
 		one = commonIdealFactory.constant(realOne);

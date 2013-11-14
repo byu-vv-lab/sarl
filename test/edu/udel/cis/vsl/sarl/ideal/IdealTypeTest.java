@@ -72,7 +72,6 @@ public class IdealTypeTest {
 	StringObject Xobj; // "X"
 	IntObject intObj3; // integer object 3
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression five; // real constant 5
 	private NumericExpression oneTwoFive; // real constant 125
 	private NumericExpression one; // rel constant 1
@@ -83,8 +82,6 @@ public class IdealTypeTest {
 	private RationalNumber realOneTwoFive; // real 125
 	private SymbolicType real; // type real
 	private SymbolicType integer; // type integer
-	NumericExpression intHundred; // int constant 100
-	NumericExpression intTwenty; // int constant 20
 	NumericExpression e01; // Real 3 cast to integer 3
 	NumericExpression e2; // 5 + 3 ADD
 	NumericExpression e3; // 5 > 3, 5, 3 COND
@@ -115,8 +112,6 @@ public class IdealTypeTest {
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
-		y = objectFactory.canonic(idealFactory.symbolicConstant(
-				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		real = typeFactory.realType();
 		integer = typeFactory.integerType();
 		realOne = numberFactory.rational("1");

@@ -65,7 +65,6 @@ public class IdealMultiplyTest {
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen;
 	private NumericExpression five;
 	private NumericExpression zero;
@@ -99,8 +98,6 @@ public class IdealMultiplyTest {
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
-		y = objectFactory.canonic(idealFactory.symbolicConstant(
-				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
 		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");

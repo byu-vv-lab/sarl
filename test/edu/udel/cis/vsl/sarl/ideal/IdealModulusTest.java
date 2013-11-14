@@ -60,8 +60,7 @@ public class IdealModulusTest {
 	private RationalNumber ratOne; // 1
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-
+	
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
