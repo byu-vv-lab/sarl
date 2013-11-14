@@ -44,6 +44,7 @@ public class BoundsObjectEnlargeUpperTest {
 	@Ignore
 	@Test
 	public void enlargeUpperToNull(){
+		boundObj = BoundsObject.newUpperBound(xInt, null, true);
 		
 	}
 	
