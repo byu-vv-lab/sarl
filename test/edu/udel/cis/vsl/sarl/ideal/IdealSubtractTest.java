@@ -102,7 +102,22 @@ public class IdealSubtractTest {
 	public void tearDown() throws Exception {
 		
 	}
-		
+	
+	/**
+	 * Subtracts two polynomials by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of two polynomials (passed as arguments).
+	 */
 	@Test
 	public void subPolyToPoly() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
@@ -121,6 +136,21 @@ public class IdealSubtractTest {
 		assertEquals(p1, b2);
 	}
 	
+	/**
+	 * Subtracts a polynomial with a monomial by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of a polynomial with a monomial (passed as arguments).
+	 */
 	@Test
 	public void subPolyToMonomial() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
@@ -137,6 +167,21 @@ public class IdealSubtractTest {
 		assertEquals(p1, b1);
 	}
 	
+	/**
+	 * Subtracts two monomials by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of two monomials (passed as arguments).
+	 */
 	@Test
 	public void subMonomialToMonomial() {
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
@@ -147,6 +192,21 @@ public class IdealSubtractTest {
 		assertEquals(intZero, b1);
 	}
 	
+	/**
+	 * Subtracts a primitive power with a monomial by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a monomial (passed as arguments).
+	 */
 	@Test
 	public void subPrimitivePowerToMonomial() {
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
@@ -161,6 +221,21 @@ public class IdealSubtractTest {
 		assertEquals(p3, b1);
 	}
 	
+	/**
+	 * Subtracts two primitive powers by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of two primitive powers (passed as arguments).
+	 */
 	@Test
 	public void subPrimitivePowerToItself() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
@@ -171,6 +246,21 @@ public class IdealSubtractTest {
 		assertEquals(intZero, b1);
 	}
 	
+	/**
+	 * Subtracts a primitive power with a constant by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Constant
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a constant (passed as arguments).
+	 */
 	@Test
 	public void subPrimitivePowerToConstant() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
@@ -183,6 +273,21 @@ public class IdealSubtractTest {
 		assertEquals(p2, b1);
 	}
 	
+	/**
+	 * Subtracts a primitive power with a primitive by forming the factorization and by factoring out the common
+	 * factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction of a primitive power with a primitive (passed as arguments).
+	 */
 	@Test
 	public void subPrimitivePowerToPrimitive() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
