@@ -27,44 +27,113 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
+/**
+ * CnfExpression is a class that extends CommonSymbolicExpression superclass
+ * and implements BooleanExpression interface. CnfExpression is used to create
+ * CnfExpressions. Also contains getter methods for the arguments in CnfExpression.
+ * 
+ * @author siegel
+ *
+ */
 public class CnfExpression extends CommonSymbolicExpression implements
 		BooleanExpression {
 
+	/**
+	 * One of several constructors that build a CnfExpression.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param args
+	 * 	args is a Collection of Symbolic Objects
+	 */
 	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			Collection<SymbolicObject> args) {
 		super(kind, type, args);
 		assert type.isBoolean();
 	}
 
+	/**
+	 * One of several constructors that build a CnfExpression.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param args
+	 * 	args is an array of Symbolic Objects
+	 */
 	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject[] args) {
 		super(kind, type, args);
 		assert type.isBoolean();
 	}
 
+	/**
+	 * One of several constructors that build a CnfExpression.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg
+	 * 	arg is a Symbolic Object
+	 */
 	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg) {
 		super(kind, type, arg);
 		assert type.isBoolean();
 	}
 
+	/**
+	 * One of several constructors that build a CnfExpression.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg0
+	 *  arg0 is a Symbolic Objects
+	 * @param arg1
+	 * 	arg1 is a Symbolic Objects
+	 */
 	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1) {
 		super(kind, type, arg0, arg1);
 		assert type.isBoolean();
 	}
 
+	/**
+	 * One of several constructors that build a CnfExpression.
+	 * 
+	 * @param kind
+	 * @param type
+	 * @param arg0
+	 *  arg0 is a Symbolic Objects
+	 * @param arg1
+	 * 	arg1 is a Symbolic Objects
+	 * @param arg1
+	 * 	arg2 is a Symbolic Objects
+	 */
 	protected CnfExpression(SymbolicOperator kind, SymbolicType type,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
 		super(kind, type, arg0, arg1, arg2);
 		assert type.isBoolean();
 	}
 
+	/**
+	 * Getter method that returns the BooleanExpression at argument i.
+	 * 
+	 * @param i
+	 * 
+	 * @return BooleanExpression
+	 */
 	@Override
 	public BooleanExpression booleanArg(int i) {
 		return (BooleanExpression) argument(i);
 	}
 
+	/**
+	 * Getter method that returns the BooleanExpression at argument i when
+	 * arguments is a collect.
+	 * 
+	 * @param i
+	 * 
+	 * @return BooleanExpression
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public SymbolicCollection<BooleanExpression> booleanCollectionArg(int i) {
@@ -85,5 +154,4 @@ public class CnfExpression extends CommonSymbolicExpression implements
 	public SymbolicSet<BooleanExpression> booleanSetArg(int i) {
 		return (SymbolicSet<BooleanExpression>) argument(i);
 	}
-
 }
