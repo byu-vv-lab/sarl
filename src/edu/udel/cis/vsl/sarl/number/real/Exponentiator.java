@@ -35,7 +35,7 @@ import edu.udel.cis.vsl.sarl.util.BinaryOperator;
  * @param <T>
  */
 public class Exponentiator<T> {
-//Commit test
+
 	private BinaryOperator<T> multiplier;
 
 	private T one;
