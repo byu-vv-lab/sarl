@@ -30,7 +30,7 @@ public class CommonSymbolicUnionTypeTest {
 	 */
 	ObjectFactory objectFactory;
 	/**
-	 * a NumboerFactory that is used to instantiate the objectFactory
+	 * a numberFactory is used to instantiate the objectFactory
 	 */
 	NumberFactory numberFactory;
 	
@@ -81,8 +81,9 @@ public class CommonSymbolicUnionTypeTest {
 		typesArray[2] = idealIntKind;
 		typesArray[3] = boundedIntKind;
 		
-		//initialization of all the variables.
 		typeSequence = new CommonSymbolicTypeSequence(typesArray);
+		
+		//initialization of all the variables.
 		unionType = new CommonSymbolicUnionType(objectFactory.stringObject("myUnion"),
 				typeSequence);
 		unionType2 = new CommonSymbolicUnionType(objectFactory.stringObject("myUnion2"),
