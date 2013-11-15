@@ -128,8 +128,9 @@ public class CommonObjectFactory implements ObjectFactory {
 			SymbolicObject result = objectMap.get(object);
 
 			if (result == null) {
-				((CommonSymbolicObject) object).setId(objectList.size());
 				((CommonSymbolicObject) object).canonizeChildren(this);
+				// that changed objectList, objectMap.
+				((CommonSymbolicObject) object).setId(objectList.size());
 				objectMap.put(object, object);
 				objectList.add(object);
 				return object;
