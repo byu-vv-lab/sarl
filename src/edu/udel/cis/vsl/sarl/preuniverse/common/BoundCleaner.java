@@ -314,11 +314,10 @@ public class BoundCleaner {
 					case EXPRESSION_COLLECTION:
 						newArg = cleanCollection((SymbolicCollection<?>) arg);
 						break;
-					case TYPE:
-						throw new SARLInternalException("unreachable");
 					case TYPE_SEQUENCE:
 						newArg = cleanTypeSequence((SymbolicTypeSequence) arg);
-					default:
+						break;
+					default: // includes case TYPE, which should be unreachable
 						throw new SARLInternalException("unreachable");
 					}
 					if (newArg != arg) {
