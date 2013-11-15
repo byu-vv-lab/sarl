@@ -199,12 +199,17 @@ public class BoundsObject implements Interval {
 		if (object instanceof BoundsObject) {
 			BoundsObject that = (BoundsObject) object;
 			
-			return expression.equals(that.expression)
-					&& ((upper == null && that.upper == null) || upper
-							.equals(that.upper))
+			if((upper == null || that.upper == null) && (upper != null || that.upper != null))
+				return false;
+			
+			if((lower == null || that.lower == null) && (lower != null || that.lower != null))
+				return false;
+			
+			
+			else return expression.equals(that.expression)
+					&& ((upper == null && that.upper == null) || upper.equals(that.upper))
 					&& strictUpper == that.strictUpper
-					&& ((lower == null && that.lower == null) || lower
-							.equals(that.lower))
+					&& ((lower == null && that.lower == null) || lower.equals(that.lower))
 					&& strictLower == that.strictLower;
 		}
 		return false;
