@@ -1,4 +1,9 @@
-/* @author Gunjan Majmudar */
+/**
+ * Tests the pureType in class preuniverse.java
+ * 
+ * @author Gunjan Majmudar
+ * 
+ */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
@@ -47,6 +52,12 @@ public class PureTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Tests the typeKind() method for pureType in class preuniverse.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void pureTypeKindTest() {
 
@@ -60,6 +71,12 @@ public class PureTypeTest {
 		assertEquals(pureType1.equals(pureType2), true);
 	}
 
+	/**
+	 * Tests the symbolicObjectKind() for pureType in class preuniverse.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void pureTypeObjectKindTest() {
 
