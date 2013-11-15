@@ -257,6 +257,10 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = em.mkExpr(Kind.UMINUS,
 					translate((SymbolicExpression) expr.argument(0)));
 			break;
+		case NEQ:
+			result = em.mkExpr(Kind.NOT,
+					translateEquality((SymbolicExpression) expr.argument(0)));
+			break;
 		case NOT:
 			result = em.mkExpr(Kind.NOT,
 					translate((SymbolicExpression) expr.argument(0)));
@@ -302,6 +306,10 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
+	private Expr translateEquality(SymbolicExpression argument) {
+		return null;
+	}
+
 	/**
 	 * Translates the symbolic type to a CVC4 type.
 	 * 
