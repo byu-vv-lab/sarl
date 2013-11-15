@@ -198,7 +198,7 @@ public class BoundsObject implements Interval {
 	public boolean equals(Object object) {
 		if (object instanceof BoundsObject) {
 			BoundsObject that = (BoundsObject) object;
-
+			
 			return expression.equals(that.expression)
 					&& ((upper == null && that.upper == null) || upper
 							.equals(that.upper))
