@@ -24,16 +24,34 @@ public class CommonSymbolicTupleTypeTest
 	 */
 	CommonSymbolicTupleType tuple1, tuple2, tuple3;
 	
+	/**
+	 an ObjectFactory object that is used to instantiate the variables that is tuple1, tuple2, tuple3. 
+	 */
 	ObjectFactory objectFactory;
 	
+	/**
+	 a numberFactory is used to instantiate the objectFactory 
+	 */
 	NumberFactory numberFactory;
 
+	/**
+	 typeSequence is used to assign the array of CommonSymbolicType to the variables that is tuple1, tuple2, tuple3. 
+	 */
 	CommonSymbolicTypeSequence typeSequence;
 	
+	/**
+	 integer types to be used in creating the typeSequence 
+	 */
 	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
 	
+	/**
+	 real types to be used in creating the typeSequence 
+	 */
 	CommonSymbolicRealType idealRealKind, floatRealKind;
 	
+	/**
+	 types is an ArrayList which is used in creating typeSequence 
+	 */
 	ArrayList<CommonSymbolicType> types;
 	
 	@BeforeClass
@@ -44,9 +62,6 @@ public class CommonSymbolicTupleTypeTest
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	/**
-	 initializing all the declared variables.
-	 */
 	@Before
 	public void setUp() throws Exception 
 	{
@@ -56,12 +71,20 @@ public class CommonSymbolicTupleTypeTest
 		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
+		
+		//initializing the ArrayList
 		types = new ArrayList<CommonSymbolicType>();
+		
+		//adding the real or integer type to the list
 		types.add(idealIntKind);
 		types.add(boundedIntKind);
 		types.add(idealRealKind);
 		types.add(floatRealKind);
+		
+		//assigning the ArrayList to another variable
 		typeSequence = new CommonSymbolicTypeSequence(types);
+		
+		//initializing the variables
 		tuple1 = new CommonSymbolicTupleType(objectFactory.stringObject("Tuple"), typeSequence);
 		tuple2 = new CommonSymbolicTupleType(objectFactory.stringObject("Tuple"), typeSequence);
 		tuple3 = new CommonSymbolicTupleType(objectFactory.stringObject("Tuple3"), typeSequence);
@@ -124,17 +147,31 @@ public class CommonSymbolicTupleTypeTest
 		assertNotEquals(tuple3.toStringBuffer(false).toString(),"Tuple<int,bounded,real,float>");
 	}
 
-//	@Test
-//	public void testName() 
-//	{
-//		fail("Not yet implemented");
-//	}
+	/**
+	 this test checks the name assigned to each variable with other variables. 
+	 */
+	@Test
+	public void testName() 
+	{
+//		System.out.println(tuple1.name());
+//		System.out.println(tuple2.name());
+//		System.out.println(tuple3.name());
+		assertEquals(tuple1.name(), tuple2.name());
+		assertNotEquals(tuple2.name(), tuple3.name());
+	}
 
-//	@Test
-//	public void testSequence() 
-//	{
-//		fail("Not yet implemented");
-//	}
+	/**
+	 this test checks the typeSequence assigned to each variable. 
+	 */
+	@Test
+	public void testSequence() 
+	{
+//		System.out.println(tuple1.sequence());
+//		System.out.println(tuple2.sequence());
+//		System.out.println(tuple3.sequence());
+		assertEquals(tuple1.sequence(), tuple2.sequence());
+		assertEquals(tuple2.sequence(), tuple3.sequence());
+	}
 
 	/**
 	 here the pureType is always returned as null thus the pureType of each variable is the same. 
