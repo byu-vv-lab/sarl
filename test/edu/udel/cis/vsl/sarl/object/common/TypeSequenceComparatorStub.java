@@ -3,8 +3,6 @@ package edu.udel.cis.vsl.sarl.object.common;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
-
 /**
  * Test stub for TypeSequenceComparator
  * @author justin
