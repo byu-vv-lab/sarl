@@ -20,12 +20,24 @@ public class CommonSymbolicFunctionTypeTest
 	 */
 	CommonSymbolicFunctionType function, function1, function2;
 	
+	/**
+	 typeSequence is used to assign the array of CommonSymbolicType to the variables that is tuple1, tuple2, tuple3. 
+	 */
 	CommonSymbolicTypeSequence typeSequence;
 	
+	/**
+	 integer types to be used in creating typeSequence 
+	 */
 	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
 	
+	/**
+	 real types to be used in creating typeSequence
+	 */
 	CommonSymbolicRealType idealRealKind, floatRealKind;
 	
+	/**
+	 types is an ArrayList which is used in creating typeSequence
+	 */
 	ArrayList<CommonSymbolicType> types;
 	
 	@BeforeClass
@@ -36,9 +48,6 @@ public class CommonSymbolicFunctionTypeTest
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	/**
-	 initializing all the declared variables.
-	 */
 	@Before
 	public void setUp() throws Exception 
 	{
@@ -46,12 +55,20 @@ public class CommonSymbolicFunctionTypeTest
 		boundedIntKind = new CommonSymbolicIntegerType(IntegerKind.BOUNDED);
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
+		
+		//initializing the ArrayList
 		types = new ArrayList<CommonSymbolicType>();
+		
+		//adding the real or integer type to the list
 		types.add(idealIntKind);
 		types.add(boundedIntKind);
 		types.add(idealRealKind);
 		types.add(floatRealKind);
+		
+		//assigning the ArrayList to another variable
 		typeSequence = new CommonSymbolicTypeSequence(types);
+		
+		//initializing the variables
 		function = new CommonSymbolicFunctionType(typeSequence, idealIntKind);
 		function1 = new CommonSymbolicFunctionType(typeSequence, idealIntKind);
 		function2 = new CommonSymbolicFunctionType(typeSequence, floatRealKind);
