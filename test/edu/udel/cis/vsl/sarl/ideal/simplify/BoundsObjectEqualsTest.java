@@ -100,10 +100,15 @@ public class BoundsObjectEqualsTest {
 	 * by providing one null upper bound and 
 	 * one non-null upper bound.
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void equalsMixedNullTest(){
+		//out.println("FAIL HERE:");
 		boundObj = BoundsObject.newUpperBound(x, null, true);
 		boundObj2 = BoundsObject.newUpperBound(x, num0, true);
+		boundObj.equals(boundObj);
+		boundObj2.equals(boundObj2);
+		//out.println("bO1.upper: " + boundObj.upper);
+		//out.println("bO2.upper: " + boundObj2.upper);
 		boundObj.equals(boundObj2);
 		assertNull(boundObj.upper());
 		assertNotNull(boundObj2.upper());
@@ -162,7 +167,7 @@ public class BoundsObjectEqualsTest {
 	 * by providing one null lower bound and 
 	 * one non-null lower bound.
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void equalsMixedNullLowerTest(){
 		boundObj = BoundsObject.newLowerBound(x, null, true);
 		boundObj2 = BoundsObject.newLowerBound(x, num0, true);
