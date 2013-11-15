@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Stephen F. Siegel, University of Delaware.
+ * 
+ * This file is part of SARL.
+ * 
+ * SARL is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ * 
+ * SARL is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+ * License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package edu.udel.cis.vsl.sarl.expr.cnf;
 
 import static org.junit.Assert.assertEquals;
@@ -82,10 +100,11 @@ public class CnfFactoryTest {
 	static BooleanSymbolicConstant r = factory
 			.booleanSymbolicConstant(objectFactory.stringObject("r"));
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
+	/**
+	 * setUp() initializes many of the variables used in the following tests.
+	 * 
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		sUniverse = Universes.newIdealUniverse();
@@ -100,6 +119,11 @@ public class CnfFactoryTest {
 
 	}
 
+	/**
+	 * tearDown()
+	 * 
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
@@ -270,6 +294,9 @@ public class CnfFactoryTest {
 		assertEquals(q, bef.or(qandtrue, pandfalse));
 	}
 	
+	/**
+	 * Tests CnfFactory and(bool boolExpr1, bool boolExpr2) method.
+	 */
 	@Test
 	public void andTrueExprTest() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
@@ -290,7 +317,9 @@ public class CnfFactoryTest {
 	
 	}
 	
-	
+	/**
+	 * Tests CnfFactory or(bool boolExpr1, bool boolExpr2) method.
+	 */
 	@Test
 	public void orTrueExprTest() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
