@@ -42,12 +42,12 @@ public class CommonSymbolicUnionTypeTest {
 	CommonSymbolicType typesArray[];
 	
 	/**
-	 * integer types to be used in creating the SequenceType
+	 integer types to be used in creating the SequenceType
 	 */
 	CommonSymbolicIntegerType idealIntKind, boundedIntKind;
 	
 	/**
-	 * Real types to be used in creating the SequenceType
+	 real types to be used in creating the SequenceType
 	 */
 	CommonSymbolicRealType idealRealKind, floatRealKind;
 	
