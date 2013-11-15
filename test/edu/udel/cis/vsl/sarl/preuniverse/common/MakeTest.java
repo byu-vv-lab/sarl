@@ -89,7 +89,19 @@ public class MakeTest {
 	public void tearDown() throws Exception {
 	}
 
-	//@Ignore
+	/**
+	 * Tests the method SymbolicExpression make(SymbolicOperator operator, SymbolicType type,SymbolicObject[] arguments);
+	 * @param operator
+	 *            a symbolic operator
+	 * @param type
+	 *            the type which the resulting expression should have (since it
+	 *            may not be unambiguous)
+	 * @param arguments
+	 *            arguments which should be appropriate for the specified
+	 *            operator
+	 * @author Boyang Luo
+	 * 
+	 */
 	@Test
 	public void testMake(){
 		NumericExpression zero,one,two,three,low,high;
