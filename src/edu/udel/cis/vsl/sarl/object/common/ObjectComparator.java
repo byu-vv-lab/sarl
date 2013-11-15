@@ -25,6 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
@@ -165,7 +166,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 			case INT:
 				return ((IntObject) o1).getInt() - ((IntObject) o2).getInt();
 			case NUMBER:
-				return ((Number) o1).compareTo((Number) o2);
+				return ((NumberObject) o1).getNumber().compareTo(((NumberObject) o2).getNumber());
 			case STRING:
 				return ((StringObject) o1).getString().compareTo(
 						((StringObject) o2).getString());
