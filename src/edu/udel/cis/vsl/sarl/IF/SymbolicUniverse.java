@@ -531,13 +531,45 @@ public interface SymbolicUniverse {
 
 	/** The symbolic expression representing the real number 1. */
 	NumericExpression oneReal();
-
+	
+	/**
+	 * 
+	 * @param value
+	 * 				an Java int
+	 * @return
+	 * 			a concrete rational representation of this integer value. 
+	 * 			basically returns (value/1), which is a rational
+	 */
 	NumericExpression rational(int value);
-
+	
+	/**
+	 * 
+	 * @param value
+	 * 				a Java long
+	 * @return
+	 * 			a concrete rational representation of this long value. 
+	 * 			basically returns (value/1), which is a rational
+	 */
 	NumericExpression rational(long value);
 
+	/**
+	 * 
+	 * @param value
+	 * 				a Java BigInteger
+	 * @return
+	 * 			a concrete rational representation of this BigInteger value. 
+	 * 			basically returns (value/1), which is a rational
+	 */
 	NumericExpression rational(BigInteger value);
 
+	/**
+	 * 
+	 * @param value
+	 * 				a Java float 
+	 * @return
+	 * 			a concrete rational representation of this float value. 
+	 * 			basically returns (value/1), which is a rational
+	 */
 	NumericExpression rational(float value);
 
 	/**
@@ -566,8 +598,30 @@ public interface SymbolicUniverse {
 	 */
 	NumericExpression rational(int numerator, int denominator);
 
+	/**
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
+	 * 
+	 * @param numerator
+	 *            a Java long
+	 * @param denominator
+	 *            a Java long
+	 * @return the real number formed by dividing numerator by denominator, as a
+	 *         symbolic expression
+	 */
 	NumericExpression rational(long numerator, long denominator);
-
+	
+	/**
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
+	 * 
+	 * @param numerator
+	 *            a Java BigInteger
+	 * @param denominator
+	 *            a Java BigInteger
+	 * @return the real number formed by dividing numerator by denominator, as a
+	 *         symbolic expression
+	 */
 	NumericExpression rational(BigInteger numerator, BigInteger denominator);
 
 	// General Numbers...
@@ -602,7 +656,7 @@ public interface SymbolicUniverse {
 	/**
 	 * Attempts to extract a concrete numeric value from the given expression,
 	 * using the assumption if necessary to simplify the expression. For
-	 * example, if the assumtion is "N=5" and the expression is "N", this method
+	 * example, if the assumption is "N=5" and the expression is "N", this method
 	 * will probably return the number 5. If it cannot obtain a concrete value
 	 * for whatever reason, it will return null.
 	 * 
@@ -652,7 +706,7 @@ public interface SymbolicUniverse {
 
 	/**
 	 * Returns a symbolic expression which is the result of adding the two given
-	 * symbolic exprssions. The two given expressions must have the same
+	 * symbolic expressions. The two given expressions must have the same
 	 * (numeric) type: either both integers, or both real.
 	 * 
 	 * @param arg0
@@ -689,7 +743,7 @@ public interface SymbolicUniverse {
 
 	/**
 	 * Returns a symbolic expression which is the result of multiplying the two
-	 * given symbolic exprssions. The two given expressions must have the same
+	 * given symbolic expressions. The two given expressions must have the same
 	 * (numeric) type: either both integers, or both real.
 	 * 
 	 * @param arg0
@@ -991,7 +1045,7 @@ public interface SymbolicUniverse {
 			BooleanExpression predicate);
 
 	/**
-	 * Returns the existenially quantified expression exists(x).e.
+	 * Returns the existentially quantified expression exists(x).e.
 	 * 
 	 * @param boundVariable
 	 *            the bound variable x
