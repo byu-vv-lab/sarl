@@ -40,7 +40,7 @@ public class ExponentiatorTest {
 	/* TODO This test fails because the variable myXpo is never
 	 * initialized before referenced.
 	 * */
-	public void ExponentiatorTest(){
+	public void ExpTest(){
 		inOne = myXpo.exp( inTwo , inThree );
 		assertEquals( inOne , inEight );
 	}
