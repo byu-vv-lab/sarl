@@ -126,7 +126,7 @@ public class CommonPreUniverse implements PreUniverse {
 	/**
 	 * The object used to perform substitutions on symbolic expressions.
 	 */
-	private ExpressionSubstituter2 substituter;
+	private ExpressionSubstituter substituter;
 
 	/**
 	 * The object used to give quantified (bound) variables unique names.
@@ -187,7 +187,7 @@ public class CommonPreUniverse implements PreUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		substituter = new ExpressionSubstituter2(this, collectionFactory,
+		substituter = new ExpressionSubstituter(this, collectionFactory,
 				typeFactory);
 		cleaner = new BoundCleaner(this, collectionFactory, typeFactory,
 				substituter);

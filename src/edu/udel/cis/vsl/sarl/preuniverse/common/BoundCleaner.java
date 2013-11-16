@@ -55,7 +55,7 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  */
 public class BoundCleaner {
 
-	private ExpressionSubstituter2 substituter;
+	private ExpressionSubstituter substituter;
 
 	private CollectionFactory collectionFactory;
 
@@ -74,7 +74,7 @@ public class BoundCleaner {
 
 	public BoundCleaner(PreUniverse universe,
 			CollectionFactory collectionFactory,
-			SymbolicTypeFactory typeFactory, ExpressionSubstituter2 substituter) {
+			SymbolicTypeFactory typeFactory, ExpressionSubstituter substituter) {
 		this.universe = universe;
 		this.collectionFactory = collectionFactory;
 		this.typeFactory = typeFactory;

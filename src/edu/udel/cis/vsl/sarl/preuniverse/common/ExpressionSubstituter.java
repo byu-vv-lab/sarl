@@ -18,14 +18,18 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
@@ -76,12 +80,14 @@ public class ExpressionSubstituter {
 	 */
 	private SymbolicCollection<?> substituteGenericCollection(
 			SymbolicCollection<?> set,
-			Map<SymbolicExpression, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
 		Iterator<? extends SymbolicExpression> iter = set.iterator();
 
 		while (iter.hasNext()) {
 			SymbolicExpression oldElement = iter.next();
-			SymbolicExpression newElement = substitute(oldElement, map);
+			SymbolicExpression newElement = substituteExpression(oldElement,
+					map, boundStack);
 
 			if (newElement != oldElement) {
 				Collection<SymbolicExpression> newSet = new LinkedList<SymbolicExpression>();
@@ -93,7 +99,8 @@ public class ExpressionSubstituter {
 				}
 				newSet.add(newElement);
 				while (iter.hasNext())
-					newSet.add(substitute(iter.next(), map));
+					newSet.add(substituteExpression(iter.next(), map,
+							boundStack));
 				return collectionFactory.basicCollection(newSet);
 			}
 		}
@@ -114,13 +121,15 @@ public class ExpressionSubstituter {
 	 */
 	private SymbolicSequence<?> substituteSequence(
 			SymbolicSequence<?> sequence,
-			Map<SymbolicExpression, SymbolicExpression> map) {
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
 		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
 		int count = 0;
 
 		while (iter.hasNext()) {
 			SymbolicExpression oldElement = iter.next();
-			SymbolicExpression newElement = substitute(oldElement, map);
+			SymbolicExpression newElement = substituteExpression(oldElement,
+					map, boundStack);
 
 			if (newElement != oldElement) {
 				@SuppressWarnings("unchecked")
@@ -129,7 +138,8 @@ public class ExpressionSubstituter {
 
 				newSequence = newSequence.add(newElement);
 				while (iter.hasNext())
-					newSequence = newSequence.add(substitute(iter.next(), map));
+					newSequence = newSequence.add(substituteExpression(
+							iter.next(), map, boundStack));
 				return newSequence;
 			}
 			count++;
@@ -151,17 +161,21 @@ public class ExpressionSubstituter {
 	 * @return a collection in which substitution has been applied to each
 	 *         element using the given map
 	 */
-	private SymbolicCollection<?> substitute(SymbolicCollection<?> collection,
-			Map<SymbolicExpression, SymbolicExpression> map) {
+	private SymbolicCollection<?> substituteCollection(
+			SymbolicCollection<?> collection,
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
 		SymbolicCollectionKind kind = collection.collectionKind();
 
 		if (kind == SymbolicCollectionKind.SEQUENCE)
-			return substituteSequence((SymbolicSequence<?>) collection, map);
-		return substituteGenericCollection(collection, map);
+			return substituteSequence((SymbolicSequence<?>) collection, map,
+					boundStack);
+		return substituteGenericCollection(collection, map, boundStack);
 	}
 
-	private SymbolicType substitute(SymbolicType type,
-			Map<SymbolicExpression, SymbolicExpression> map) {
+	private SymbolicType substituteType(SymbolicType type,
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
 		switch (type.typeKind()) {
 		case BOOLEAN:
 		case INTEGER:
@@ -170,13 +184,14 @@ public class ExpressionSubstituter {
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
 			SymbolicType elementType = arrayType.elementType();
-			SymbolicType newElementType = substitute(elementType, map);
+			SymbolicType newElementType = substituteType(elementType, map,
+					boundStack);
 
 			if (arrayType.isComplete()) {
 				NumericExpression extent = ((SymbolicCompleteArrayType) arrayType)
 						.extent();
-				NumericExpression newExtent = (NumericExpression) substitute(
-						extent, map);
+				NumericExpression newExtent = (NumericExpression) substituteExpression(
+						extent, map, boundStack);
 
 				if (elementType != newElementType || extent != newExtent)
 					return typeFactory.arrayType(newElementType, newExtent);
@@ -189,9 +204,10 @@ public class ExpressionSubstituter {
 		case FUNCTION: {
 			SymbolicFunctionType functionType = (SymbolicFunctionType) type;
 			SymbolicTypeSequence inputs = functionType.inputTypes();
-			SymbolicTypeSequence newInputs = substitute(inputs, map);
+			SymbolicTypeSequence newInputs = substituteTypeSequence(inputs,
+					map, boundStack);
 			SymbolicType output = functionType.outputType();
-			SymbolicType newOutput = substitute(output, map);
+			SymbolicType newOutput = substituteType(output, map, boundStack);
 
 			if (inputs != newInputs || output != newOutput)
 				return typeFactory.functionType(newInputs, newOutput);
@@ -200,7 +216,8 @@ public class ExpressionSubstituter {
 		case TUPLE: {
 			SymbolicTupleType tupleType = (SymbolicTupleType) type;
 			SymbolicTypeSequence fields = tupleType.sequence();
-			SymbolicTypeSequence newFields = substitute(fields, map);
+			SymbolicTypeSequence newFields = substituteTypeSequence(fields,
+					map, boundStack);
 
 			if (fields != newFields)
 				return typeFactory.tupleType(tupleType.name(), newFields);
@@ -210,7 +227,8 @@ public class ExpressionSubstituter {
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
 			SymbolicTypeSequence members = unionType.sequence();
-			SymbolicTypeSequence newMembers = substitute(members, map);
+			SymbolicTypeSequence newMembers = substituteTypeSequence(members,
+					map, boundStack);
 
 			if (members != newMembers)
 				return typeFactory.unionType(unionType.name(), newMembers);
@@ -221,12 +239,14 @@ public class ExpressionSubstituter {
 		}
 	}
 
-	private SymbolicTypeSequence substitute(SymbolicTypeSequence sequence,
-			Map<SymbolicExpression, SymbolicExpression> map) {
+	private SymbolicTypeSequence substituteTypeSequence(
+			SymbolicTypeSequence sequence,
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
 		int count = 0;
 
 		for (SymbolicType t : sequence) {
-			SymbolicType newt = substitute(t, map);
+			SymbolicType newt = substituteType(t, map, boundStack);
 
 			if (t != newt) {
 				int numTypes = sequence.numTypes();
@@ -236,7 +256,8 @@ public class ExpressionSubstituter {
 					newTypes[i] = sequence.getType(i);
 				newTypes[count] = newt;
 				for (int i = count + 1; i < numTypes; i++)
-					newTypes[i] = substitute(sequence.getType(i), map);
+					newTypes[i] = substituteType(sequence.getType(i), map,
+							boundStack);
 				return typeFactory.sequence(newTypes);
 			}
 			count++;
@@ -247,67 +268,109 @@ public class ExpressionSubstituter {
 	/**
 	 * If no changes takes place, result returned will be == given expression.
 	 */
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			Map<SymbolicExpression, SymbolicExpression> map) {
-		SymbolicExpression newValue = map.get(expression);
+	private SymbolicExpression substituteExpression(
+			SymbolicExpression expression,
+			Map<SymbolicExpression, SymbolicExpression> map,
+			Deque<SymbolicConstant> boundStack) {
+		SymbolicOperator operator = expression.operator();
 
-		if (newValue != null)
-			return newValue;
-		if (expression.isNull())
+		// no substitution into bound variables...
+		if (operator == SymbolicOperator.SYMBOLIC_CONSTANT
+				&& boundStack.contains(expression))
 			return expression;
-		else {
-			int numArgs = expression.numArguments();
+		if (operator == SymbolicOperator.EXISTS
+				|| operator == SymbolicOperator.FORALL
+				|| operator == SymbolicOperator.LAMBDA
+				|| operator == SymbolicOperator.ARRAY_LAMBDA) {
 			SymbolicType type = expression.type();
-			SymbolicType newType = substitute(type, map);
-			SymbolicObject[] newArgs = type == newType ? null
-					: new SymbolicObject[numArgs];
+			SymbolicType newType = substituteType(type, map, boundStack);
+			SymbolicConstant arg0 = (SymbolicConstant) expression.argument(0);
+			SymbolicExpression arg1 = (SymbolicExpression) expression
+					.argument(1);
+			SymbolicExpression newArg1;
 
-			for (int i = 0; i < numArgs; i++) {
-				SymbolicObject arg = expression.argument(i);
-				SymbolicObjectKind kind = arg.symbolicObjectKind();
+			boundStack.push(arg0);
+			newArg1 = substituteExpression(arg1, map, boundStack);
+			boundStack.pop();
+			if (type == newType && arg1 == newArg1)
+				return expression;
+			else
+				return universe.make(operator, newType, new SymbolicObject[] {
+						arg0, newArg1 });
+		} else {
+			SymbolicExpression newValue = map.get(expression);
 
-				switch (kind) {
-				case BOOLEAN:
-				case INT:
-				case NUMBER:
-				case STRING:
-					// no substitutions into those primitive objects
-					if (newArgs != null)
-						newArgs[i] = arg;
-					break;
-				default:
-					SymbolicObject newArg;
+			if (newValue != null)
+				return newValue;
+			if (expression.isNull())
+				return expression;
+			else {
+				int numArgs = expression.numArguments();
+				SymbolicType type = expression.type();
+				SymbolicType newType = substituteType(type, map, boundStack);
+				SymbolicObject[] newArgs = type == newType ? null
+						: new SymbolicObject[numArgs];
+
+				for (int i = 0; i < numArgs; i++) {
+					SymbolicObject arg = expression.argument(i);
+					SymbolicObjectKind kind = arg.symbolicObjectKind();
 
 					switch (kind) {
-					case EXPRESSION:
-						newArg = substitute((SymbolicExpression) arg, map);
+					case BOOLEAN:
+					case INT:
+					case NUMBER:
+					case STRING:
+						// no substitutions into those primitive objects
+						if (newArgs != null)
+							newArgs[i] = arg;
 						break;
-					case EXPRESSION_COLLECTION:
-						newArg = substitute((SymbolicCollection<?>) arg, map);
-						break;
-					case TYPE: // currently unreachable, no expressions have TYPE arg
-						newArg = substitute((SymbolicType) arg, map);
-						break;
-					case TYPE_SEQUENCE:
-						newArg = substitute((SymbolicTypeSequence) arg, map);
 					default:
-						throw new SARLInternalException("unreachable");
-					}
-					if (newArg != arg) {
-						if (newArgs == null) {
-							newArgs = new SymbolicObject[numArgs];
+						SymbolicObject newArg;
 
-							for (int j = 0; j < i; j++)
-								newArgs[j] = expression.argument(j);
+						switch (kind) {
+						case EXPRESSION:
+							newArg = substituteExpression(
+									(SymbolicExpression) arg, map, boundStack);
+							break;
+						case EXPRESSION_COLLECTION:
+							newArg = substituteCollection(
+									(SymbolicCollection<?>) arg, map,
+									boundStack);
+							break;
+						case TYPE: // currently unreachable, no expressions have
+									// TYPE arg
+							newArg = substituteType((SymbolicType) arg, map,
+									boundStack);
+							break;
+						case TYPE_SEQUENCE:
+							newArg = substituteTypeSequence(
+									(SymbolicTypeSequence) arg, map, boundStack);
+						default:
+							throw new SARLInternalException("unreachable");
 						}
+						if (newArg != arg) {
+							if (newArgs == null) {
+								newArgs = new SymbolicObject[numArgs];
+
+								for (int j = 0; j < i; j++)
+									newArgs[j] = expression.argument(j);
+							}
+						}
+						if (newArgs != null)
+							newArgs[i] = newArg;
 					}
-					if (newArgs != null)
-						newArgs[i] = newArg;
 				}
+				if (newType == type && newArgs == null)
+					return expression;
+				return universe.make(operator, newType, newArgs);
 			}
-			if (newType == type && newArgs == null)
-				return expression;
-			return universe.make(expression.operator(), newType, newArgs);
 		}
 	}
+
+	public SymbolicExpression substitute(SymbolicExpression expression,
+			Map<SymbolicExpression, SymbolicExpression> map) {
+		return substituteExpression(expression, map,
+				new ArrayDeque<SymbolicConstant>());
+	}
+
 }
