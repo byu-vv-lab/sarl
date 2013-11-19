@@ -106,6 +106,10 @@ public class CommonSymbolicTupleTypeTest
 		assertNotEquals(tuple1.computeHashCode(), tuple3.computeHashCode());
 	}
 
+	/**
+	 * this test checks whether the variables are canonizable or not,
+	 * here they are not and return false.
+	 */
 	@Test
 	public void testCanonizeChildren() 
 	{
