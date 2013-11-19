@@ -345,6 +345,7 @@ public class ExpressionSubstituter {
 						case TYPE_SEQUENCE:
 							newArg = substituteTypeSequence(
 									(SymbolicTypeSequence) arg, map, boundStack);
+							break;
 						default:
 							throw new SARLInternalException("unreachable");
 						}
