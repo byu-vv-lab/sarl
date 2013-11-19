@@ -23,9 +23,17 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * @author jthakkar
+ *
+ *implementation for SymbolicCompleteArrayType
+ */
 public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 		implements SymbolicCompleteArrayType {
 
+	/**
+	 * extent is used to specify the length of a Complete Array
+	 */
 	private NumericExpression extent;
 
 	CommonSymbolicCompleteArrayType(SymbolicType elementType,
