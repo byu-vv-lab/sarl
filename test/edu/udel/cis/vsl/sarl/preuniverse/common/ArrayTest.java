@@ -31,7 +31,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 /**
  * This class tests array functionality in the PreUniverse package.
  * 
- * @author jsaints
+ * @author jsaints and malsulmi
  */
 public class ArrayTest {
 
@@ -171,8 +171,14 @@ public class ArrayTest {
 		universe.denseArrayWrite(doubleIntArrayTypeExpression,
 				expressionsToWrite);
 	}
+	/**
+	 * Tests the method length(SymbolicExpression array) with an exception
+	 * for a case when passing a null reference
+	 * 	  
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testLengthExceptions() {
 
@@ -189,8 +195,14 @@ public class ArrayTest {
 		length = universe.length(array);
 
 	}
+	/**
+	 * Tests the method length(SymbolicExpression array) with an exception
+	 * for a case when passing a non array type
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testLengthExceptions2() {
 		// exception for non array type
@@ -207,8 +219,14 @@ public class ArrayTest {
 		length = universe.length(tuple);
 
 	}
+	/**
+	 * Tests the method length(SymbolicExpression array) to make sure
+	 * it returns 0 when passing an empty array
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void emptyArrayTest() {
 		// get an empty array with size 0
@@ -216,8 +234,14 @@ public class ArrayTest {
 		NumericExpression zero = universe.integer(0);
 		assertEquals(zero, universe.length(array));
 	}
+	/**
+	 * Tests the method removeElementAt(SymbolicExpression array, int position) 
+	 * which will remove a specific element at a specific position
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testRemoveElementAt() {
 		SymbolicExpression array, expected, resultedArray;
@@ -235,8 +259,14 @@ public class ArrayTest {
 		assertEquals(expected, resultedArray);
 
 	}
+	/**
+	 * Tests the method removeElementAt(SymbolicExpression array, int position) with an exception case
+	 * of passing a non array type
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testRemoveElementAtException() {
 
@@ -254,6 +284,13 @@ public class ArrayTest {
 		resultedArray = universe.removeElementAt(tuple, 0);
 
 	}
+	/**
+	 * Tests the method removeElementAt(SymbolicExpression array, int position) with an exception case
+	 * of passing index out of range
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
@@ -274,7 +311,14 @@ public class ArrayTest {
 
 	}
 
-	// written by Mohammad Alsulmi
+	/**
+	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
+	 * with a regular case 
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
+
 	@Test
 	public void testArrayWrite() {
 		SymbolicExpression array, resultedArray, expected;
@@ -293,6 +337,14 @@ public class ArrayTest {
 		resultedArray = universe.arrayWrite(array, one, two);
 		assertEquals(expected, resultedArray);
 	}
+
+	/**
+	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
+	 * with a case of pass null array
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
