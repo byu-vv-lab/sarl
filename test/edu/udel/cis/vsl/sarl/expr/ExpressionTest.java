@@ -68,7 +68,7 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
 
 import java.util.List;
 /**
- * ExpressionTest tests methods found in edu.udel.cis.vs.sarl.expr.comm package.
+ * ExpressionTest tests methods found in edu.udel.cis.vsl.sarl.expr.comm package.
  * 
  * @author Siegel
  *
