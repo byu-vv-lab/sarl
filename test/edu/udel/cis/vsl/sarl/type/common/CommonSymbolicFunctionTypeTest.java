@@ -91,10 +91,19 @@ public class CommonSymbolicFunctionTypeTest
 				
 	}
 
-//	@Test
-//	public void testCanonizeChildren() {
-//		fail("Not yet implemented");
-//	}
+	/**
+	 * this test checks whether the variables are canonizable or not,
+	 * here they are not and return false. 
+	 */
+	@Test
+	public void testCanonizeChildren() 
+	{
+//		System.out.println(function.isCanonic());
+//		System.out.println(function1.isCanonic());
+//		System.out.println(function2.isCanonic());
+		assertEquals(function.isCanonic(), function1.isCanonic());
+		assertEquals(function1.isCanonic(), function2.isCanonic());
+	}
 
 	/**
 	 this test checks whether one type of function is similar to another type of function or not.  
