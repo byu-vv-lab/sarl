@@ -22,9 +22,18 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * @author jthakkar
+ *
+ *an implementation for SymbolicArrayType
+ */
 public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		SymbolicArrayType {
 
+	/**
+	 * a constant to store the hashCode of this object,
+	 * so that it will be calculated once and saved.
+	 */
 	private final static int classCode = CommonSymbolicArrayType.class
 			.hashCode();
 
