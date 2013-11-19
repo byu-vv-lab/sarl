@@ -64,7 +64,8 @@ public class CommonSymbolicPrimitiveTypeTest {
 	
 
 	/**
-	 *  
+	 * this test checks whether the variables are canonizable or not,
+	 * here they are not and return false.  
 	 */
 	@Test
 	public void testCanonizeChildren() 
