@@ -5,7 +5,7 @@
  * 
  */
 
-package edu.udel.cis.vsl.sarl.preuniverse.common;
+package edu.udel.cis.vsl.sarl.preuniverse;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,6 +20,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 
 public class PureTypeTest {
 

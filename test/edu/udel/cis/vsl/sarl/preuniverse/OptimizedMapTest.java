@@ -5,7 +5,7 @@
  * 
  */
 
-package edu.udel.cis.vsl.sarl.preuniverse.common;
+package edu.udel.cis.vsl.sarl.preuniverse;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 import edu.udel.cis.vsl.sarl.preuniverse.common.OptimizedMap;
 
 public class OptimizedMapTest {
@@ -47,6 +48,7 @@ public class OptimizedMapTest {
 		universe = new CommonPreUniverse(test);
 		hello = universe.stringExpression("Hello");
 		key = universe.character(c);
+		nvalue = universe.objects();
 		Map<SymbolicConstant, SymbolicExpression> newMap = new HashMap<SymbolicConstant, SymbolicExpression>();
 		nMap = new OptimizedMap(newMap);
 	}

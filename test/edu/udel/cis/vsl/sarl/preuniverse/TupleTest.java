@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.preuniverse.common;
+package edu.udel.cis.vsl.sarl.preuniverse;
 
 import static org.junit.Assert.assertEquals;
 

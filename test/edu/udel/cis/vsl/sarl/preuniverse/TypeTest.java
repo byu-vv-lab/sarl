@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.preuniverse.common;
+package edu.udel.cis.vsl.sarl.preuniverse;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
