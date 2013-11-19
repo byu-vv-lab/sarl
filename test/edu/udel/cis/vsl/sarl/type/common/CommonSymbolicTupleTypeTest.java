@@ -106,10 +106,15 @@ public class CommonSymbolicTupleTypeTest
 		assertNotEquals(tuple1.computeHashCode(), tuple3.computeHashCode());
 	}
 
-//	@Test
-//	public void testCanonizeChildren() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	public void testCanonizeChildren() 
+	{
+//		System.out.println(tuple1.isCanonic());
+//		System.out.println(tuple2.isCanonic());
+//		System.out.println(tuple3.isCanonic());
+		assertEquals(tuple1.isCanonic(), tuple2.isCanonic());
+		assertEquals(tuple2.isCanonic(), tuple3.isCanonic());
+	}
 
 	/**
 	 this test checks whether a variable of one type is the same or different from a variable of another type. 
