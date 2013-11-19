@@ -62,13 +62,20 @@ public class CommonSymbolicPrimitiveTypeTest {
 		assertEquals(bool1.typeEquals(char1), char1.typeEquals(bool2));
 	}
 	
-/*
+
+	/**
+	 *  
+	 */
 	@Test
 	public void testCanonizeChildren() 
 	{
-		
+//		System.out.println(bool1.isCanonic());
+//		System.out.println(bool2.isCanonic());
+//		System.out.println(char1.isCanonic());
+		assertEquals(bool1.isCanonic(), bool2.isCanonic());
+		assertEquals(bool2.isCanonic(), char1.isCanonic());
 	}
-*/
+
 	
 
 	/**
