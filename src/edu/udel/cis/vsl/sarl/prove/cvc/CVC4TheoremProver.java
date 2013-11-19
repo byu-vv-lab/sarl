@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Stephen F. Siegel, University of Delaware.
+ * 
+ * This file is part of SARL.
+ * 
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
@@ -26,7 +44,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -34,15 +51,42 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
+/**
+ * An implementation of TheoremProver using the automated theorem prover CVC4.
+ * Transforms a theorem proving query into the language of CVC4, invokes CVC4
+ * through its JNI interface, and interprets the output.
+ */
 public class CVC4TheoremProver implements TheoremProver {
 
+	/**
+	 * The symbolic universe used for managing symbolic expressions. Initialized
+	 * by constructor and never changes.
+	 */
 	private PreUniverse universe;
-	private BooleanExpression context;
-	private PrintStream out = null;
+	
+	/**
+	 * Print the queries and results each time valid is called. Initialized by
+	 * constructor.
+	 */
 	private boolean showProverQueries = false;
+	// TODO not used locally?
+
+	/**
+	 * The printwriter used to print the queries and results. Initialized by
+	 * constructor.
+	 */
+	private PrintStream out = System.out;
+	// TODO not used locally?
+	
+	/**
+	 * The CVC4 object used for creating CVC4 Exprs
+	 */
 	private ExprManager em = new ExprManager();
+	
+	/**
+	 * The CVC4 object that checks queries
+	 */
 	private SmtEngine smt = new SmtEngine(em);
-	private Expr cvcAssumption;
 
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC4 type. Set in method
@@ -50,10 +94,23 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
 
+	/**
+	 * The assumption under which this prover is operating.
+	 */
+	private BooleanExpression context;
+	// TODO not used locally?
+
+	/**
+	 * The translation of the context to a CVC4 expression.
+	 */
+	private Expr cvcAssumption;
+
+	
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
+		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
 		cvcAssumption = translate(context);
 		smt.assertFormula(cvcAssumption); 
@@ -81,10 +138,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            any symbolic type
 	 * @return true iff the type is an incomplete array type
 	 */
-	private boolean isBigArrayType(SymbolicType type) {
-		return type instanceof SymbolicArrayType
-				&& !((SymbolicArrayType) type).isComplete();
-	}
+//	private boolean isBigArrayType(SymbolicType type) {
+//		return type instanceof SymbolicArrayType
+//				&& !((SymbolicArrayType) type).isComplete();
+//	}
+	// TODO this isn't used locally. we should either use or remove
 
 	/**
 	 * Like above, but takes SymbolicExpression as input.
@@ -92,9 +150,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @param expr
 	 * @return true iff the type of expr is an incomplete array type
 	 */
-	private boolean isBigArray(SymbolicExpression expr) {
-		return isBigArrayType(expr.type());
-	}
+//	private boolean isBigArray(SymbolicExpression expr) {
+//		return isBigArrayType(expr.type());
+//	}
+	// TODO this isn't used locally. we should either use or remove
 
 	/**
 	 * This method takes any Expr that is of incomplete array type and returns
@@ -117,10 +176,12 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            CVC4 Expr of bigArray
 	 * @return value of CVC4 Expr of incomplete array type
 	 */
-	private Expr bigArrayValue(Expr bigArray) {
-		Expr index = em.mkConst(new Rational(1));
-		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
-	}
+//	private Expr bigArrayValue(Expr bigArray) {
+//		Expr index = em.mkConst(new Rational(1));
+//		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
+//	}
+	// TODO this isn't used locally. we should either use or remove
+
 
 	/**
 	 * Translates a multiplication SymbolicExpression (a*b) into an 
@@ -160,7 +221,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (numArgs == 1)
-			// NEEDS TO BE ADDED FOR ONE ARG
+			// TODO NEEDS TO BE ADDED FOR ONE ARG
 			return null;
 		else if (numArgs == 2)
 			result = em.mkExpr(Kind.OR,
@@ -186,7 +247,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		int numArgs = expr.numArguments();
 		Expr result;
 
-		// NEED TO WORK ON
+		// TODO NEED TO WORK ON
 		switch (expr.operator()) {
 		case ADD:
 			if (numArgs == 2)
@@ -194,11 +255,15 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(0)),
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
-				// NEEDS TO BE ADDED FOR ONE ARG
-				return null;
+				result = em.mkExpr(Kind.PLUS,
+						translate((SymbolicExpression) expr.argument(0)));
 			else
+			{
+				result = null;
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for ADD");
+			}
+
 			break;
 		case AND:
 			if (numArgs == 2)
@@ -206,11 +271,14 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(0)),
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
-				// NEEDS TO BE ADDED FOR ONE ARG
-				return null;
+				result = em.mkExpr(Kind.AND,
+						translate((SymbolicExpression) expr.argument(0)));
 			else
+			{
+				result = null;
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for AND: " + expr);
+			}
 			break;
 		case CAST:
 			result = this.translate((SymbolicExpression) expr.argument(0));
@@ -347,17 +415,17 @@ public class CVC4TheoremProver implements TheoremProver {
 				result = em.mkTupleType((vectorType) Arrays
 						.asList(em.integerType(), result));
 			break;
-//		case TUPLE:
-//			result = em
-//					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
-//							.sequence()));
-//			break;
-//		case FUNCTION:
-//			result = vc.funType(
-//					translateTypeSequence(((SymbolicFunctionType) type)
-//							.inputTypes()),
-//					translateType(((SymbolicFunctionType) type).outputType()));
-//			break;
+		case TUPLE:
+			result = em.mkTupleType((vectorType) 
+					translateTypeSequence(((SymbolicTupleType) type).sequence()));
+			break;
+		case FUNCTION:
+			result = em.mkFunctionType((vectorType)
+					translateTypeSequence(((SymbolicFunctionType) type)
+							.inputTypes()),
+					translateType(((SymbolicFunctionType) type).outputType()));
+			break;
+			// TODO cvc4 union type?
 //		case UNION: {	
 //			SymbolicUnionType unionType = (SymbolicUnionType) type;
 //			List<String> constructors = new LinkedList<String>();
@@ -387,6 +455,22 @@ public class CVC4TheoremProver implements TheoremProver {
 		typeMap.put(type, result);
 		return result;
 	}
+	
+	/**
+	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
+	 * Types in CVC4.
+	 * 
+	 * @param sequence
+	 *            SymbolicTypeSequence given to the translation.
+	 * @return linkedlist of CVC4 types.
+	 */
+	private List<Type> translateTypeSequence(SymbolicTypeSequence sequence) {
+		List<Type> result = new LinkedList<Type>();
+
+		for (SymbolicType t : sequence)
+			result.add(t == null ? null : translateType(t));
+		return result;
+	}
 
 	@Override
 	public PreUniverse universe() {
@@ -409,7 +493,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
-		// TODO Auto-generated method stub
+		// TODO 
 		return null;
 	}
 
