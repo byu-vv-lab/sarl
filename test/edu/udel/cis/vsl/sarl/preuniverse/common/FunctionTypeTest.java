@@ -1,4 +1,9 @@
-/* @author Gunjan Majmudar */
+/**
+ * Tests the FunctionType in class preuniverse.java
+ * 
+ * @author Gunjan Majmudar
+ * 
+ */
 
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
@@ -51,6 +56,13 @@ public class FunctionTypeTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Tests methods typeKind() isReal() isCanonic() isInteger() for
+	 * FunctionType in class preuniverse.java
+	 * 
+	 * @author Gunjan Majmudar
+	 * 
+	 */
 	@Test
 	public void functionKindTest() {
 		SymbolicTupleType tupleType1 = universe.tupleType(
@@ -74,6 +86,13 @@ public class FunctionTypeTest {
 
 	}
 
+	/**
+	 * Tests method compatible(functionType1, functionType2) for FunctionType in
+	 * class preuniverse.java
+	 * 
+	 * @author Mohammad Alsulmi
+	 * 
+	 */
 	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithFunction() {
