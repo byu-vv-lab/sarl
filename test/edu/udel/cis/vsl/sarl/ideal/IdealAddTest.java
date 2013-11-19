@@ -43,9 +43,26 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * IdealAddTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using additions
- * @author cboucher
- *
+ * The class IdealAddTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using additions among various combinations such as:
+ * 
+ * <ul>
+ * <li>Polynomial + Polynomial</li>
+ * <li>Polynomial + Monomial</li>
+ * <li>Monomial + Monomial</li>
+ * <li>Monomial + Monic</li>
+ * <li>Monimc + Monic</li>
+ * <li>Monic + PrimitivePower</li>
+ * <li>PrimitivePower + PrimitivePower</li>
+ * <li>Primitive + PrimitivePower</li>
+ * <li>Constant + Primitive</li>
+ * <li>RationalExpression + Polynomial</li>
+ * <li>RationalExpression + Monomial</li>
+ * <li>RationalExpression + Monic</li>
+ * <li>RationalExpression + Primitive</li>
+ * <li>RationalExpression + PrimitivePower</li>
+ * </ul>
+ * 
  */
 public class IdealAddTest {
 
