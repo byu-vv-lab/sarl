@@ -28,17 +28,24 @@ import edu.udel.cis.vsl.sarl.IF.object.IntObject;
  * 
  */
 public interface PrimitivePower extends Monic {
+
 	/**
-	 * Returns the Primitive part of a PrimitivePower
-	 * @param factory
-	 * @return Primitive
+	 * Creates a numeric primitive expression using an idealFactory
+	 * 
+	 * @param factory - the ideal factory owning this polynomial
+	 * 
+	 * @return
+	 * 			a numeric primitive expression
 	 */
 	Primitive primitive(IdealFactory factory);
 
 	/**
-	 * Returns the integer exponent part of a PrimitivePower
-	 * @param factory
-	 * @return IntObject
+	 * The exponent part of a primitive power which is an integer is returned.
+	 * 
+	 * @param factory - the ideal factory owning this polynomial
+	 * 
+	 * @return
+	 * 			the integer exponent part of a PrimitivePower
 	 */
 	IntObject primitivePowerExponent(IdealFactory factory);
 
