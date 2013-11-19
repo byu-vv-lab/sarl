@@ -20,7 +20,7 @@ public class MathSimplifier extends CommonSimplifier{
 	private SymbolicExpression cosFunction;
 	private MathUniverse mathUniverse;
 	
-	public MathSimplifier (MathUniverse mathUniverse) {
+	public MathSimplifier (MathUniverse mathUniverse, SymbolicExpression sinFunction, SymbolicExpression cosFunction) {
 		super(mathUniverse);
 		this.mathUniverse = mathUniverse;
 		this.sinFunction = sinFunction;//making method for sin 
