@@ -41,6 +41,11 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * IdealBooleanTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using booleans
+ * @author cboucher
+ *
+ */
 public class IdealBooleanTest {
 
 	private static PrintStream out = System.out;

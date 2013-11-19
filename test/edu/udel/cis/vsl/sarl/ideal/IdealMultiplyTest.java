@@ -43,7 +43,11 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-
+/**
+ * IdealMultiplyTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using multiplications
+ * @author cboucher
+ *
+ */
 public class IdealMultiplyTest {
 
 	private static PrintStream out = System.out;

@@ -42,7 +42,11 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-
+/**
+ * IdealSubtractTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using subtractions
+ * @author cboucher
+ *
+ */
 public class IdealSubtractTest {
 
 	private static PrintStream out = System.out;

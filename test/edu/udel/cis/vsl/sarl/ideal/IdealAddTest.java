@@ -42,6 +42,11 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * IdealAddTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using additions
+ * @author cboucher
+ *
+ */
 public class IdealAddTest {
 
 	private NumberFactory numberFactory;
