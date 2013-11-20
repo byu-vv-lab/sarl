@@ -220,11 +220,14 @@ public class IdealSubtractTest {
 	@Test
 	public void subMonomialToMonomial() {
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(intOne, x);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.intConstant(9), x);
 		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly1);
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
 		
-		assertEquals(intZero, b1);
+		assertEquals(p3, b1);
 	}
 	
 	/**
