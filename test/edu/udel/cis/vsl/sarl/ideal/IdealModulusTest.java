@@ -41,8 +41,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 /**
- * IdealModulusTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using modulus
- * @author cboucher
+ * The class IdealModulusTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using modulus
+ * 
+ * This class returns a polynomial which is of the form numerator % denominator
+ * 
+ * Example: (2u)%2 = (u%1)2 = 0
  *
  */
 public class IdealModulusTest {
@@ -97,8 +101,6 @@ public class IdealModulusTest {
 	 * positive.
 	 * 
 	 * (ad)%(bd) = (a%b)d
-	 * 
-	 * Ex: (2u)%2 = (u%1)2 = 0
 	 * 
 	 * @param numerator
 	 *            a nonnegative integer polynomial
