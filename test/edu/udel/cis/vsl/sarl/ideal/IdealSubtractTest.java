@@ -51,6 +51,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Polynomial - Monomial</li>
  * <li>Monomial - Monomial</li>
  * <li>Monomial - Monic</li>
+ * <li>PrimitivePower - Monomial</li>
  * <li>Monimc - Monic</li>
  * <li>Monic - PrimitivePower</li>
  * <li>PrimitivePower - PrimitivePower</li>
@@ -85,6 +86,7 @@ public class IdealSubtractTest {
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression one; // real constant 1
 	private RationalNumber realOne; // real 1
 	private RationalNumber realThree; // real 3
@@ -111,6 +113,8 @@ public class IdealSubtractTest {
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
+		y = objectFactory.canonic(idealFactory.symbolicConstant(
+				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realOne = numberFactory.rational("1");
 		realThree = numberFactory.rational("3");
 		one = commonIdealFactory.constant(realOne);
@@ -262,11 +266,14 @@ public class IdealSubtractTest {
 	@Test
 	public void subPrimitivePowerToItself() {
 		NumericExpression p1 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.multiply(y, y);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.add(x, y), idealFactory.subtract(x, y));
 		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly1);
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
 		
-		assertEquals(intZero, b1);
+		assertEquals(p3, b1);
 	}
 	
 	/**
