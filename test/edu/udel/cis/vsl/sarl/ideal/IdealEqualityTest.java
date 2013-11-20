@@ -46,8 +46,9 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 /**
- * IdealEqualityTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using equalities
- * @author cboucher
+ * The class IdealEqualityTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using equalities
+ * 
  *
  */
 public class IdealEqualityTest {
@@ -61,6 +62,7 @@ public class IdealEqualityTest {
 	private BooleanExpressionFactory booleanFactory;
 	private CommonIdealFactory commonIdealFactory;
 
+	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
@@ -79,6 +81,7 @@ public class IdealEqualityTest {
 		booleanFactory = system.booleanFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
+		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
@@ -111,9 +114,8 @@ public class IdealEqualityTest {
 		NumericExpression n22 = idealFactory.subtract(x, y);
 		NumericExpression n1 = idealFactory.add(y, intTwo);
 		NumericExpression n2 = idealFactory.subtract(y,	intTwo);
-		NumericExpression n3 = idealFactory.add(y, intTwo);		
 		BooleanExpression n = commonIdealFactory.neq(n1, n2);
-		BooleanExpression n0 = commonIdealFactory.neq(n1, n3);
+		BooleanExpression n0 = commonIdealFactory.neq(n1, n1);
 		BooleanExpression n1122 = commonIdealFactory.neq(n11, n22);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
@@ -203,19 +205,26 @@ public class IdealEqualityTest {
 	 */
 	@Test
 	public void equals() {
-		NumericExpression n11 = idealFactory.add(x, y);
-		NumericExpression n22 = idealFactory.subtract(x, y);
-		NumericExpression n1 = idealFactory.add(y, intTwo);
-		NumericExpression n2 = idealFactory.subtract(y, intTwo);
-		NumericExpression n3 = idealFactory.add(y, intTwo);		
-		BooleanExpression n = commonIdealFactory.equals(n1, n2);
-		BooleanExpression n0 = commonIdealFactory.equals(n1, n3);
-		BooleanExpression n1122 = commonIdealFactory.equals(n11, n22);
-		BooleanExpression m1 = booleanFactory.symbolic(false);
-		BooleanExpression m2 = booleanFactory.symbolic(true);
+		NumericExpression n1 = idealFactory.add(x, intOne);
+		NumericExpression n2 = idealFactory.add(idealFactory.
+				multiply(intOne, idealFactory.multiply(x, x)), x);
+		NumericExpression n3 = idealFactory.add(idealFactory.
+				multiply(intTwo, idealFactory.multiply(x, y)), x);
+		NumericExpression r1 = idealFactory.
+				divide(idealFactory.add(x, y), x);	// (x-y)/y	
+		BooleanExpression m = booleanFactory.symbolic(true);
+		BooleanExpression n = booleanFactory.symbolic(false);
 		
-		out.println("Equals=" +n1122);
-		assertEquals(m1, n);
-		assertEquals(m2, n0);
+		BooleanExpression b0 = commonIdealFactory.equals(x, n1);
+		BooleanExpression b1 = commonIdealFactory.equals(x, n2);
+		BooleanExpression b2 = commonIdealFactory.equals(x, n3);
+		BooleanExpression b3 = commonIdealFactory.equals(x, x);
+		BooleanExpression b4 = commonIdealFactory.equals(intOne, r1);
+		
+		out.println("b1=" +b1);
+		out.println("b2=" +b2);
+		out.println("b4=" +b4);
+		assertEquals(n, b0);
+		assertEquals(m, b3);
 	}
 }
