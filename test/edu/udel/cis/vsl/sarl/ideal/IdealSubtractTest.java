@@ -231,6 +231,36 @@ public class IdealSubtractTest {
 	}
 	
 	/**
+	 * Subtracts a monomial with a monic by forming the factorization and by factoring 
+	 * out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a monomial with a monic (passed as arguments).
+	 */
+	@Test
+	public void subMonomialToMonic() {
+		NumericExpression p1 = idealFactory.multiply(intTen, idealFactory.multiply(x, y));
+		NumericExpression p2 = idealFactory.multiply(x, y);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(idealFactory.
+				intConstant(9), x), y);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		
+		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		
+		assertEquals(p3, b1);
+	}
+	
+	/**
 	 * Subtracts a primitive power with a monomial by forming the factorization 
 	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
