@@ -51,6 +51,8 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Polynomial / Monomial</li>
  * <li>Monomial / Monomial</li>
  * <li>Monomial / Monic</li>
+ * <li>Monomial / PrimitivePower</li>
+ * <li>Monomial / Primitive</li>
  * <li>Monimc / Monic</li>
  * <li>Monic / PrimitivePower</li>
  * <li>PrimitivePower / PrimitivePower</li>
@@ -239,6 +241,34 @@ public class IdealDivideTest {
 	}
 	
 	/**
+	 * Divides two monomials by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				two monomials (passed as arguments).
+	 */
+	@Test
+	public void divideMonomialToMonomial() {
+		NumericExpression p01 = idealFactory.multiply(intTen, x);
+		NumericExpression p02 = idealFactory.multiply(intTwo, x);
+		Polynomial poly1 = (Polynomial) p01;
+		Polynomial poly2 = (Polynomial) p02;
+		
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		
+		assertEquals(intFive, b1);
+	}
+	
+	/**
 	 * Divides a monomial with a primitive power by forming the factorization 
 	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
@@ -268,32 +298,6 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * Divides two primitive powers by forming the factorization and by 
-	 * factoring out the common factors that are produced from the two factorizations.
-	 * 
-	 * @param p1
-	 *            a PrimitivePower
-	 * @param p2
-	 *            a PrimitivePower
-	 * 
-	 * @param type
-	 * 				Polynomial
-	 * 
-	 * @return
-	 * 				a polynomial of type Polynomial which is the division of 
-	 * 				two primitive powers (passed as arguments).
-	 */
-	@Test
-	public void dividePrimitivePowerToItself() {
-		NumericExpression p01 = idealFactory.multiply(x, x);
-		Polynomial poly1 = (Polynomial) p01;
-		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
-		
-		assertEquals(intOne, b1);
-	}
-	
-	/**
 	 * Divides a monomial with a primitive by forming the factorization and 
 	 * by factoring out the common factors that are produced from the two factorizations.
 	 * 
@@ -317,6 +321,32 @@ public class IdealDivideTest {
 		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, x);
 		
 		assertEquals(intTen, b1);
+	}
+	
+	/**
+	 * Divides two primitive powers by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a PrimitivePower
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				two primitive powers (passed as arguments).
+	 */
+	@Test
+	public void dividePrimitivePowerToItself() {
+		NumericExpression p01 = idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) p01;
+		
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
+		
+		assertEquals(intOne, b1);
 	}
 	
 	/**
