@@ -38,8 +38,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 /**
- * IdealPowerTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using exponentials
- * @author cboucher
+ * The class IdealPowerTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using exponentials
+ * 
+ * This class has a method bigPower which finds the result for 
+ *            [(x+y)^100] / [(x+y)^99] as (x+y) by removing all the common factors
+ * This test method is one of the good benchmarks by which we can evaluate the performance.
  *
  */
 public class IdealPowerTest {
