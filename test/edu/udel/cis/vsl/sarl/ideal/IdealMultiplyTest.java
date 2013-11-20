@@ -87,6 +87,7 @@ public class IdealMultiplyTest {
 	private Constant intTen; // int constant 10
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen;
 	private NumericExpression five;
 	private NumericExpression zero;
@@ -120,6 +121,8 @@ public class IdealMultiplyTest {
 		Xobj = objectFactory.stringObject("X");
 		x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
 				typeFactory.integerType()));
+		y = objectFactory.canonic(idealFactory.symbolicConstant(
+				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
 		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");
@@ -248,6 +251,35 @@ public class IdealMultiplyTest {
 				
 		Polynomial b1 = commonIdealFactory.multiply(poly1, poly1);
 		assertEquals(p2, b1);
+	}
+	
+	/**
+	 * Multiplies a monomial to a monic by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a monomial to a monic (passed as arguments).
+	 */
+	@Test
+	public void mulMonomialToMonic() {
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(x, y);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, intTen), 
+				idealFactory.multiply(x, y));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+				
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		assertEquals(p3, b1);
 	}
 	
 	/**
