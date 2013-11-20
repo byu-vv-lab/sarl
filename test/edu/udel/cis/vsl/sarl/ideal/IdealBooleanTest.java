@@ -42,8 +42,22 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * IdealBooleanTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using booleans
- * @author cboucher
+ * The class IdealBooleanTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using booleans
+ * 
+ * This class usually compares two expressions and returns a boolean value. The expressions
+ * can be polynomials, rational expressions, monomials, monics, primitive powers, primitives etc.
+ * 
+ * The comparisons usually comprises of:
+ * 
+ * <ul>
+ * <li>less than</li>
+ * <li>less than equals</li>
+ * <li>equals</li>
+ * <li>not equals</li>
+ * <li>not less than</li>
+ * <li>not less than equals</li>
+ * </ul>
  *
  */
 public class IdealBooleanTest {
