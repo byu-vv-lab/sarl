@@ -52,7 +52,8 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Polynomial * Monomial</li>
  * <li>Monomial * Monomial</li>
  * <li>Monomial * Monic</li>
- * <li>Monimc * Monic</li>
+ * <li>Monomial * PrimitivePower</li>
+ * <li>Monic * Monic</li>
  * <li>Monic * PrimitivePower</li>
  * <li>PrimitivePower * PrimitivePower</li>
  * <li>Primitive * PrimitivePower</li>
@@ -220,6 +221,33 @@ public class IdealMultiplyTest {
 		
 		Polynomial b1 = commonIdealFactory.multiply(poly2, poly1);
 		assertEquals(p3, b1);
+	}
+	
+	/**
+	 * Multiplies two monomials by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of two monomials (passed as arguments).
+	 */
+	@Test
+	public void mulMonomialToMonomial() {
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(idealFactory.intConstant(100), 
+				idealFactory.multiply(x, x));
+		Polynomial poly1 = (Polynomial) p1;
+				
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly1);
+		assertEquals(p2, b1);
 	}
 	
 	/**
