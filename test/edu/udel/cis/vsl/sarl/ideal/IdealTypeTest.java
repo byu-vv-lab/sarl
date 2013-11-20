@@ -52,8 +52,20 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 /**
- * IdealTypeTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package using types
- * @author cboucher
+ * The class IdealTypeTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * using types
+ * 
+ * This class does the following:
+ * 
+ * <ul>
+ * <li>Casts the expressions from one type to another</li>
+ * <li>Create constant</li>
+ * <li>Create a symbolic constant</li>
+ * <li>Create a zero polynomial</li>
+ * <li>Create a monomial</li>
+ * <li>Create a real zero</li>
+ * <li>Create a real one</li>
+ * </ul>
  *
  */
 public class IdealTypeTest {
