@@ -333,6 +333,32 @@ public class IdealSubtractTest {
 	}
 	
 	/**
+	 * Subtracts a constant with a primitive by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Constant
+	 * @param p2
+	 *            a Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the subtraction 
+	 * 				of a constant with a primitive (passed as arguments).
+	 */
+	@Test
+	public void subConstantToPrimitive() {
+		NumericExpression p1 = idealFactory.subtract(intOne, x);
+		Polynomial poly1 = (Polynomial) x;
+		
+		NumericExpression b2 = commonIdealFactory.subtract(intOne, poly1);
+		
+		assertEquals(p1, b2);
+	}
+	
+	/**
 	 * Returns the subtraction of symbolic expression of same numeric type
 	 * 
 	 * @param type
