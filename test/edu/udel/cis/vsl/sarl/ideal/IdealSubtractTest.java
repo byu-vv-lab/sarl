@@ -55,13 +55,23 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Monimc - Monic</li>
  * <li>Monic - PrimitivePower</li>
  * <li>PrimitivePower - PrimitivePower</li>
- * <li>Primitive - PrimitivePower</li>
+ * <li>PrimitivePower - Primitive</li>
+ * <li>PrimitivePower - Constant</li>
  * <li>Constant - Primitive</li>
  * <li>RationalExpression - Polynomial</li>
  * <li>RationalExpression - Monomial</li>
  * <li>RationalExpression - Monic</li>
  * <li>RationalExpression - Primitive</li>
  * <li>RationalExpression - PrimitivePower</li>
+ * </ul>
+ * 
+ * This class also contains the following methods:
+ * 
+ * <ul>
+ * <li>Primitive Subtract</li>
+ * <li>Primitive Negative Subtract</li>
+ * <li>minus</li>
+ * <li>Constant term subtraction in the given expression</li>
  * </ul>
  *
  */
