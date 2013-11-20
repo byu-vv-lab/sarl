@@ -49,9 +49,12 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <ul>
  * <li>Polynomial + Polynomial</li>
  * <li>Polynomial + Monomial</li>
+ * <li>Polynomial + PrimitvePower</li>
  * <li>Monomial + Monomial</li>
  * <li>Monomial + Monic</li>
  * <li>Monic + Monic</li>
+ * <li>Monic + Primitve</li>
+ * <li>Monic + Constant</li>
  * <li>Monic + PrimitivePower</li>
  * <li>PrimitivePower + PrimitivePower</li>
  * <li>Primitive + PrimitivePower</li>
