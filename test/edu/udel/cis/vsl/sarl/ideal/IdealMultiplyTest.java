@@ -283,6 +283,35 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
+	 * Multiplies two monics by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of two monics (passed as arguments).
+	 */
+	@Test
+	public void mulMonicToMonic() {
+		NumericExpression p1 = idealFactory.multiply(idealFactory.multiply(x, y), x);
+		NumericExpression p2 = idealFactory.multiply(x, y);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, idealFactory.multiply(x, x)), 
+				idealFactory.multiply(y, y));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+				
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		assertEquals(p3, b1);
+	}
+	
+	/**
 	 * Multiplies a monomial with a primitive power by forming the factorization 
 	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
