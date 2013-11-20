@@ -51,7 +51,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Polynomial + Monomial</li>
  * <li>Monomial + Monomial</li>
  * <li>Monomial + Monic</li>
- * <li>Monimc + Monic</li>
+ * <li>Monic + Monic</li>
  * <li>Monic + PrimitivePower</li>
  * <li>PrimitivePower + PrimitivePower</li>
  * <li>Primitive + PrimitivePower</li>
@@ -216,6 +216,33 @@ public class IdealAddTest {
 		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
+	}
+	
+	/**
+	 * Adds two monomials by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monomial
+	 * @param p2
+	 *            a Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of two 
+	 * 				monomials (passed as arguments).
+	 */
+	@Test
+	public void addMonomialToMonomial() {
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
+		NumericExpression p2 = idealFactory.multiply(idealFactory.intConstant(20), x);
+		Polynomial poly1 = (Polynomial) p1;
+				
+		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
+		
+		assertEquals(p2, b1);
 	}
 	
 	/**
