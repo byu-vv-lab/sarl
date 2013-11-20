@@ -302,8 +302,8 @@ public class IdealMultiplyTest {
 	public void mulMonicToMonic() {
 		NumericExpression p1 = idealFactory.multiply(idealFactory.multiply(x, y), x);
 		NumericExpression p2 = idealFactory.multiply(x, y);
-		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, idealFactory.multiply(x, x)), 
-				idealFactory.multiply(y, y));
+		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, 
+				idealFactory.multiply(x, x)), idealFactory.multiply(y, y));
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 				
@@ -333,6 +333,36 @@ public class IdealMultiplyTest {
 		NumericExpression x2 = idealFactory.multiply(x, x);
 		NumericExpression p2 = idealFactory.multiply(intTen, idealFactory.
 				multiply(x2, x));
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) x2;
+		
+		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		
+		assertEquals(p2, b1);
+	}
+	
+	/**
+	 * Multiplies a monic with a primitive power by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monoic
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the multiplication 
+	 * 				of a monic and a primitive power (passed as arguments).
+	 */
+	@Test
+	public void mulMonicToPrimitivePower() {
+		NumericExpression p1 = idealFactory.multiply(x, y);
+		NumericExpression x2 = idealFactory.multiply(x, x);
+		NumericExpression p2 = idealFactory.multiply(idealFactory.multiply(x, idealFactory.
+				multiply(x, x)), y);
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) x2;
 		
