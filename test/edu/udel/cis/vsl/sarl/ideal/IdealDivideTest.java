@@ -297,6 +297,34 @@ public class IdealDivideTest {
 	}
 	
 	/**
+	 * Divides two monics by forming the factorization 
+	 * and by factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the division of 
+	 * 				two monics (passed as arguments).
+	 */
+	@Test
+	public void divideMonicToMonic() {
+		NumericExpression p01 = idealFactory.multiply(x, idealFactory.multiply(x, y));
+		NumericExpression p02 = idealFactory.multiply(x, y);
+		Polynomial poly1 = (Polynomial) p01;
+		Polynomial poly2 = (Polynomial) p02;
+		
+		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		
+		assertEquals(x, b1);
+	}
+	
+	/**
 	 * Divides a monomial with a primitive power by forming the factorization 
 	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
