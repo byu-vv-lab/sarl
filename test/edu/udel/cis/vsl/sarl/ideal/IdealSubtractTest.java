@@ -31,13 +31,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -81,10 +78,7 @@ public class IdealSubtractTest {
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
-	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private RationalNumber ratZero; // 0
 	private Constant constZero; // real constant 0
@@ -107,11 +101,7 @@ public class IdealSubtractTest {
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratZero = numberFactory.rational("0");
 		constZero = idealFactory.constant(ratZero);
 		intZero = idealFactory.intConstant(0);
@@ -127,7 +117,7 @@ public class IdealSubtractTest {
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realOne = numberFactory.rational("1");
 		realThree = numberFactory.rational("3");
-		one = commonIdealFactory.constant(realOne);
+		one = idealFactory.constant(realOne);
 	}
 
 	@After
@@ -162,8 +152,8 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p2;
 		Polynomial poly2 = (Polynomial) p3;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(p2, p1);
-		NumericExpression b2 = commonIdealFactory.subtract(poly2, poly1);
+		NumericExpression b1 = idealFactory.subtract(p2, p1);
+		NumericExpression b2 = idealFactory.subtract(poly2, poly1);
 		
 		assertEquals(p4, b1);
 		assertEquals(p1, b2);
@@ -196,7 +186,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p2;
 		Polynomial poly2 = (Polynomial) p3;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly2, poly1);
+		NumericExpression b1 = idealFactory.subtract(poly2, poly1);
 		
 		assertEquals(p1, b1);
 	}
@@ -225,7 +215,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -255,7 +245,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -285,7 +275,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -315,7 +305,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly2, poly1);
+		NumericExpression b1 = idealFactory.subtract(poly2, poly1);
 		
 		assertEquals(p3, b1);
 	}
@@ -344,7 +334,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -373,7 +363,7 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, poly2);
+		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -401,7 +391,7 @@ public class IdealSubtractTest {
 				multiply(x, x), intOne);
 		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b1 = commonIdealFactory.subtract(poly1, intOne);
+		NumericExpression b1 = idealFactory.subtract(poly1, intOne);
 		
 		assertEquals(p2, b1);
 	}
@@ -429,7 +419,7 @@ public class IdealSubtractTest {
 				multiply(x, x), x);
 		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b2 = commonIdealFactory.subtract(poly1, x);
+		NumericExpression b2 = idealFactory.subtract(poly1, x);
 		
 		assertEquals(p2, b2);
 	}
@@ -455,7 +445,7 @@ public class IdealSubtractTest {
 		NumericExpression p1 = idealFactory.subtract(intOne, x);
 		Polynomial poly1 = (Polynomial) x;
 		
-		NumericExpression b2 = commonIdealFactory.subtract(intOne, poly1);
+		NumericExpression b2 = idealFactory.subtract(intOne, poly1);
 		
 		assertEquals(p1, b2);
 	}
@@ -468,8 +458,8 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void primitiveSubtract() {
-		NumericExpression subNine = commonIdealFactory.subtract(intTen, intOne);
-		Constant nine = commonIdealFactory.intConstant(9);
+		NumericExpression subNine = idealFactory.subtract(intTen, intOne);
+		Constant nine = idealFactory.intConstant(9);
 		
 		assertEquals(subNine, nine);
 	}
@@ -482,8 +472,8 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void primitiveNegSubtract() {
-		NumericExpression subEleven = commonIdealFactory.subtract(intTen, intNegOne);
-		Constant eleven = commonIdealFactory.intConstant(11);
+		NumericExpression subEleven = idealFactory.subtract(intTen, intNegOne);
+		Constant eleven = idealFactory.intConstant(11);
 		
 		assertEquals(subEleven, eleven);
 	}
@@ -507,10 +497,10 @@ public class IdealSubtractTest {
 		Polynomial poly1 = (Polynomial) n;
 		Polynomial poly2 = (Polynomial) m;
 		Polynomial poly3 = (Polynomial) o;		
-		Polynomial b1 = commonIdealFactory.subtractConstantTerm(poly1);
-		Polynomial b2 = commonIdealFactory.subtractConstantTerm(poly2);
-		Polynomial b3 = commonIdealFactory.subtractConstantTerm(poly3);
-		Polynomial b4 = commonIdealFactory.subtractConstantTerm(constZero);
+		Polynomial b1 = idealFactory.subtractConstantTerm(poly1);
+		Polynomial b2 = idealFactory.subtractConstantTerm(poly2);
+		Polynomial b3 = idealFactory.subtractConstantTerm(poly3);
+		Polynomial b4 = idealFactory.subtractConstantTerm(constZero);
 		
 		out.println("Constant Term Subtraction1=" + b3);
 		
@@ -531,8 +521,8 @@ public class IdealSubtractTest {
 	public void minus() {
 		NumericExpression p1 = idealFactory.subtract(idealFactory.multiply(x, x),intOne);
 		NumericExpression p2 = idealFactory.subtract(intOne, idealFactory.multiply(x, x));
-		NumericExpression m1 = commonIdealFactory.minus(intZero);
-		NumericExpression n1 = commonIdealFactory.minus(p1);
+		NumericExpression m1 = idealFactory.minus(intZero);
+		NumericExpression n1 = idealFactory.minus(p1);
 		
 		assertEquals(p2, n1);
 		assertEquals(intZero, m1);
