@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cvc3.Cvc3Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -38,7 +37,7 @@ import edu.nyu.acsys.CVC4.vectorType;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
@@ -47,9 +46,13 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
@@ -233,6 +236,70 @@ public class CVC4TheoremProver implements TheoremProver {
 //	}
 	// TODO this isn't used locally. we should either use or remove
 
+	/**
+	 * This methods takes any SymbolicCollection and returns a linked list of
+	 * Expr for cvc4.
+	 * 
+	 * @param collection
+	 *            SymbolicCollection given to the translation.
+	 * @return linkedlist of CVC4 Expr
+	 */
+	private List<Expr> translateCollection(SymbolicCollection<?> collection) {
+		List<Expr> result = new LinkedList<Expr>();
+
+		for (SymbolicExpression expr : collection)
+			result.add(expr == null ? null : translate(expr));
+		return result;
+	}
+	
+	/**
+	 * Translates any concrete SymbolicExpression with concrete type to
+	 * equivalent CVC4 Expr using the ExprManager.
+	 * 
+	 * @param expr
+	 * @return the CVC4 equivalent Expr
+	 */
+	private Expr translateConcrete(SymbolicExpression expr) {
+		SymbolicType type = expr.type();
+		SymbolicTypeKind kind = type.typeKind();
+		SymbolicObject object = expr.argument(0);
+		Expr result;
+
+		switch (kind) {
+		case ARRAY: {
+			NumericExpression extentExpression = ((SymbolicCompleteArrayType) type)
+					.extent();
+			IntegerNumber extentNumber = (IntegerNumber) universe
+					.extractNumber(extentExpression);
+			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
+			int size = sequence.size();
+			Type cvcType = translateType(type);
+
+			assert extentNumber != null && extentNumber.intValue() == size;
+			result = newAuxVariable(cvcType);
+			for (int i = 0; i < size; i++)
+				result = em
+						.mkExpr(Kind.STORE, result,
+								em.mkConst(new Rational(i)),
+								translate(sequence.get(i)));
+			break;
+		}
+		case BOOLEAN:
+			result = ((BooleanObject) object).getBoolean() ? em.mkConst(true)
+					: em.mkConst(false);
+			break;
+		case INTEGER:
+		case REAL:
+			result = em.mkConst(((NumberObject) object).getNumber().toString());
+			break;
+		case TUPLE:
+			result = em.mkExpr(Kind.TUPLE, (Expr)translateCollection((SymbolicSequence<?>) object));
+			break;
+		default:
+			throw new SARLInternalException("Unknown concrete object: " + expr);
+		}
+		return result;
+	}
 
 	/**
 	 * Translates a multiplication SymbolicExpression (a*b) into an 
