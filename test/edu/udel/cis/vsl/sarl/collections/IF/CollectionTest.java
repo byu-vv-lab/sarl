@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.Collections;
-import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
+//import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.ObjectFactoryStub;
 
@@ -32,12 +32,12 @@ public class CollectionTest {
 
 	private static SymbolicExpression y = new ExpressionStub("y");
 	
-	private static SymbolicExpression a = new ExpressionStub("5");
+	//private static SymbolicExpression a = new ExpressionStub("5");
 
-	private static SymbolicExpression b = new ExpressionStub("9");
+	//private static SymbolicExpression b = new ExpressionStub("9");
  
-	private static CommonCollectionFactory mapCreate;
-	private static SymbolicMap<SymbolicExpression, SymbolicExpression> collectionMap;
+	//private static CommonCollectionFactory mapCreate;
+	//private static SymbolicMap<SymbolicExpression, SymbolicExpression> collectionMap;
 
 	/**
 	 * TODO mapCreate is never initialized and causes the NullPointerException.
