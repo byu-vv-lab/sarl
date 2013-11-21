@@ -53,7 +53,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 	/** Whether or not Functions check for instances of (p || !p) 
 	 * A value of False will increase performance
 	 */
-	private Boolean simplify = false; 
+	private Boolean simplify = true; 
 
 	public CnfFactory(SymbolicTypeFactory typeFactory,
 			ObjectFactory objectFactory, CollectionFactory collectionFactory) {
