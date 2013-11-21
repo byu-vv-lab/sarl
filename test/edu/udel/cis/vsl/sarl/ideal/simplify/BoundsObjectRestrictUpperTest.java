@@ -17,6 +17,8 @@ import org.junit.Test;
 public class BoundsObjectRestrictUpperTest {
 
 	/**
+	 * Calls the setUp() method in CommonObjects to make use of consolidated SARL object 
+	 * declarations and initializations for testing of "Simplify" module.
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass

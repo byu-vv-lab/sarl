@@ -104,9 +104,8 @@ public class CommonObjects {
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
 	
-	static BoundsObject boundObj;
+	static BoundsObject boundObj, boundObj2, boundObj3;
 	
-	static BoundsObject boundObj2;
 	
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3,
 	num5, numNeg2000, num10000, num0, num10pt5;
