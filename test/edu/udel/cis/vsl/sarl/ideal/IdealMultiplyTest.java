@@ -32,13 +32,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -72,10 +69,7 @@ public class IdealMultiplyTest {
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
-	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private RationalNumber ratNegPointTwoFive; // -1/4
 	private RationalNumber ratOnePointFive; // 3/2
@@ -105,11 +99,7 @@ public class IdealMultiplyTest {
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratOnePointFive = numberFactory.rational("1.5");
 		ratNegPointTwoFive = numberFactory.rational("-.25");
 		intZero = idealFactory.intConstant(0);
@@ -127,12 +117,12 @@ public class IdealMultiplyTest {
 		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");
 		realFive = numberFactory.rational("5");
-		zero = commonIdealFactory.constant(realZero);
-		one = commonIdealFactory.constant(realOne);
-		fifteen = commonIdealFactory.constant(realFifteen);
-		five = commonIdealFactory.constant(realFive);
+		zero = idealFactory.constant(realZero);
+		one = idealFactory.constant(realOne);
+		fifteen = idealFactory.constant(realFifteen);
+		five = idealFactory.constant(realFive);
 		realThree = numberFactory.rational("3");
-		three = commonIdealFactory.constant(realThree);
+		three = idealFactory.constant(realThree);
 	}
 
 	@After
@@ -189,8 +179,8 @@ public class IdealMultiplyTest {
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
-		Polynomial b2 = commonIdealFactory.multiply(poly1, poly3);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
+		Polynomial b2 = idealFactory.multiply(poly1, poly3);
 		
 		assertEquals(p5, b1);
 		assertEquals(intZero, b2);
@@ -222,7 +212,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly2, poly1);
+		Polynomial b1 = idealFactory.multiply(poly2, poly1);
 		assertEquals(p3, b1);
 	}
 	
@@ -249,7 +239,7 @@ public class IdealMultiplyTest {
 				idealFactory.multiply(x, x));
 		Polynomial poly1 = (Polynomial) p1;
 				
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly1);
+		Polynomial b1 = idealFactory.multiply(poly1, poly1);
 		assertEquals(p2, b1);
 	}
 	
@@ -278,7 +268,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 				
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
 		assertEquals(p3, b1);
 	}
 	
@@ -307,7 +297,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 				
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
 		assertEquals(p3, b1);
 	}
 	
@@ -336,7 +326,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) x2;
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
 		
 		assertEquals(p2, b1);
 	}
@@ -366,7 +356,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) x2;
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
 		
 		assertEquals(p2, b1);
 	}
@@ -393,7 +383,7 @@ public class IdealMultiplyTest {
 		NumericExpression x4 = idealFactory.multiply(x2, x2);
 		Polynomial poly1 = (Polynomial) x2;
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly1);
+		Polynomial b1 = idealFactory.multiply(poly1, poly1);
 		
 		assertEquals(x4, b1);
 	}
@@ -421,7 +411,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) x2;
 		Polynomial poly2 = (Polynomial) x;
 				
-		Polynomial b1 = commonIdealFactory.multiply(poly1, poly2);
+		Polynomial b1 = idealFactory.multiply(poly1, poly2);
 		
 		assertEquals(p1, b1);
 	}
@@ -447,7 +437,7 @@ public class IdealMultiplyTest {
 		Polynomial poly1 = (Polynomial) x;
 		NumericExpression p1 = idealFactory.multiply(intTen, x);
 		
-		Polynomial b1 = commonIdealFactory.multiply(poly1, intTen);
+		Polynomial b1 = idealFactory.multiply(poly1, intTen);
 		
 		assertEquals(p1, b1);
 	}
@@ -461,10 +451,10 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void rationalMultiply() {
-		NumericExpression n1 = commonIdealFactory.multiply(three, five);
-		NumericExpression n2 = commonIdealFactory.multiply(three, zero);
-		NumericExpression n3 = commonIdealFactory.multiply(zero, five);
-		NumericExpression n4 = commonIdealFactory.multiply(three, one);
+		NumericExpression n1 = idealFactory.multiply(three, five);
+		NumericExpression n2 = idealFactory.multiply(three, zero);
+		NumericExpression n3 = idealFactory.multiply(zero, five);
+		NumericExpression n4 = idealFactory.multiply(three, one);
 		
 		assertEquals(fifteen, n1);
 		assertEquals(zero, n2);
