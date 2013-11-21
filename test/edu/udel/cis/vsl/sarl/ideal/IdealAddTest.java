@@ -54,6 +54,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Monomial + PrimitivePower</li>
  * <li>Monomial + Monic</li>
  * <li>Monic + Monic</li>
+ * <li>Monic + PrimitvePower</li>
  * <li>Monic + Primitve</li>
  * <li>Monic + Constant</li>
  * <li>Monic + PrimitivePower</li>
@@ -335,6 +336,36 @@ public class IdealAddTest {
 		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
 		
 		assertEquals(p2, b1);
+	}
+	
+	/**
+	 * Adds a primitive power and a monic by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Monic
+	 * @param p2
+	 *            a PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a polynomial of type Polynomial which is the sum of a 
+	 * 				monic and a primitive power (passed as arguments).
+	 */
+	@Test
+	public void addPrimitivePowerToMonic() {
+		NumericExpression p1 = idealFactory.multiply(x, y);
+		NumericExpression p2 = idealFactory.multiply(x, x);
+		NumericExpression p3 = idealFactory.multiply(idealFactory.
+				add(x, y), x);
+		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly2 = (Polynomial) p2;
+		
+		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		
+		assertEquals(p3, b1);
 	}
 	
 	/**
