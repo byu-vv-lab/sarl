@@ -176,13 +176,17 @@ public class CommonObjectFactoryTest {
 		assertEquals("1", this.fac.oneRealObj().toString());
 	}
 
+	// TODO: Use a number Factory to create your RealInteger:
+	
 	/**
 	 * Method to test CommonObjectFactory.numberObject
 	 */
+	/*
 	@Test
 	public void testNumberObject() {
 		assertEquals("1", this.fac.numberObject(new RealInteger(new BigInteger("1"))).toString());
 	}
+	*/
 	
 	/**
 	 * Method to test thrown exception for CommonObjectFactory.numberObject()

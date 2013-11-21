@@ -58,10 +58,15 @@ public class CommonNumberObjectTest {
 	 */
 	CommonObjectFactory objectfactory;
 	
+	
+	// TODO: commenting out below. You should use a number Factory
+	// to create your RealIntegers.
+	
 	/**
 	 * Initializes realint, newrealint, realreational, newrealrational, zero, one, negint, realfactory
 	 * @throws Exception
 	 */
+	/*
 	@Before
 	public void setUp() throws Exception {
 		//must create RealIntegers through factory for hash codes to be equal
@@ -76,7 +81,7 @@ public class CommonNumberObjectTest {
 		this.one = new CommonNumberObject(new RealInteger(BigInteger.ONE));
 		this.negint = new CommonNumberObject(new RealInteger(new BigInteger("-123")));
 	}
-
+*/
 	/**
 	 * Test computeHashCode() and hashCode()
 	 */
