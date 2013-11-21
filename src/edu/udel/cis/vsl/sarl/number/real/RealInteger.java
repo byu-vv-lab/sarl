@@ -29,6 +29,9 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
  * Because we are using the flyweight pattern, two RealIntegers will represent
  * the same integer iff they are the same (==) object. Hence we keep the equals
  * and hashCode methods inherited from Object.
+ * 
+ * Also note, that because the flyweight pattern is being used, we don't want
+ * to use the 'new' keyword (as the hash codes won't match). 
  */
 public class RealInteger extends RealNumber implements IntegerNumber {
 
@@ -39,7 +42,7 @@ public class RealInteger extends RealNumber implements IntegerNumber {
 	 * 
 	 * @param value
 	 */
-	public RealInteger(BigInteger value) {
+	private RealInteger(BigInteger value) {
 		assert value != null;
 		this.value = value;
 	}
