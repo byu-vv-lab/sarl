@@ -36,7 +36,6 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -77,7 +76,6 @@ public class IdealAddTest {
 	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private RationalNumber ratNegPointTwoFive; // -0.25 (-1/4)
 	private RationalNumber ratOnePointFive; // 1.5 (3/2)
@@ -103,8 +101,6 @@ public class IdealAddTest {
 		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratOnePointFive = numberFactory.rational("1.5");
 		ratNegPointTwoFive = numberFactory.rational("-.25");
 		ratOnePointTwoFive = numberFactory.rational("1.25");
@@ -184,8 +180,8 @@ public class IdealAddTest {
 		Polynomial poly2 = (Polynomial) p2;
 		Polynomial poly3 = (Polynomial) p3;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
-		Polynomial b2 = commonIdealFactory.add(poly3, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b2 = idealFactory.add(poly3, poly2);
 		
 		assertEquals(p4, b1);
 		assertEquals(p2, b2);
@@ -218,7 +214,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -245,7 +241,7 @@ public class IdealAddTest {
 		NumericExpression p2 = idealFactory.multiply(idealFactory.intConstant(20), x);
 		Polynomial poly1 = (Polynomial) p1;
 				
-		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
+		Polynomial b1 = idealFactory.add(poly1, poly1);
 		
 		assertEquals(p2, b1);
 	}
@@ -275,7 +271,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -305,7 +301,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -333,7 +329,7 @@ public class IdealAddTest {
 				idealFactory.multiply(x, y));
 		Polynomial poly1 = (Polynomial) p1;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
+		Polynomial b1 = idealFactory.add(poly1, poly1);
 		
 		assertEquals(p2, b1);
 	}
@@ -363,7 +359,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -392,7 +388,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) x;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p2, b1);
 	}
@@ -420,7 +416,7 @@ public class IdealAddTest {
 				multiply(x, y), intOne);
 		Polynomial poly1 = (Polynomial) p1;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, intOne);
+		Polynomial b1 = idealFactory.add(poly1, intOne);
 		
 		assertEquals(p2, b1);
 	}
@@ -451,7 +447,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p3, b1);
 	}
@@ -479,7 +475,7 @@ public class IdealAddTest {
 				multiply(x, x), intTwo);
 		Polynomial poly1 = (Polynomial) p1;
 				
-		Polynomial b1 = commonIdealFactory.add(poly1, poly1);
+		Polynomial b1 = idealFactory.add(poly1, poly1);
 		
 		assertEquals(p2, b1);
 	}
@@ -508,7 +504,7 @@ public class IdealAddTest {
 		Polynomial poly1 = (Polynomial) p1;
 		Polynomial poly2 = (Polynomial) x;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, poly2);
+		Polynomial b1 = idealFactory.add(poly1, poly2);
 		
 		assertEquals(p2, b1);
 	}
@@ -534,7 +530,7 @@ public class IdealAddTest {
 		NumericExpression p1 = idealFactory.add(x, intOne);
 		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b1 = commonIdealFactory.add(poly1, intOne);
+		Polynomial b1 = idealFactory.add(poly1, intOne);
 		
 		assertEquals(p1, b1);
 	}
