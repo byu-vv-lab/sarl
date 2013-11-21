@@ -10,7 +10,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-//import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -102,9 +102,9 @@ public class ObjectComparatorTest {
 		IntObject int0 = obFac.intObject(0);
 		IntObject int2 = obFac.intObject(0);
 		
-		//NumberObject num0 = obFac.oneIntegerObj();
-		//NumberObject num1 = obFac.zeroIntegerObj();
-		//NumberObject num2 = obFac.oneIntegerObj();
+		NumberObject num0 = obFac.oneIntegerObj();
+		NumberObject num1 = obFac.zeroIntegerObj();
+		NumberObject num2 = obFac.oneIntegerObj();
 		
 		StringObject string0 = obFac.stringObject("string0");
 		StringObject string1 = obFac.stringObject("string0");
@@ -134,22 +134,29 @@ public class ObjectComparatorTest {
 		SymbolicCollection<SymbolicExpression> col2 = colFac.basicCollection(exprarr2);
 		
 		assertNotEquals(0, this.com.compare(string0, int0));
-		assertEquals(0, this.com.compare(bool1, bool2));
+		
+		assertEquals(0, this.com.compare(bool1, bool2)); 
 		assertEquals(1, this.com.compare(bool2, bool3));
 		assertEquals(-1, this.com.compare(bool3, bool2));
 		assertEquals(0, this.com.compare(bool3, bool4));
+		
 		assertNotEquals(0, this.com.compare(int1, int0));
 		assertEquals(0, this.com.compare(int2, int0));
-		//assertEquals(0, this.com.compare(num2, num0));
-		//assertNotEquals(0, this.com.compare(num1, num0));
+		
+		assertEquals(0, this.com.compare(num2, num0));
+		assertNotEquals(0, this.com.compare(num1, num0));
+		
 		assertEquals(0, this.com.compare(string1, string0));
 		assertNotEquals(0, this.com.compare(string2, string1));
+		
 		assertEquals(0, this.com.compare(exp0, exp1));
 		assertNotEquals(0, this.com.compare(exp0, exp2));
+		
 		assertEquals(0, this.com.compare(typ0, typ1));
 		assertNotEquals(0,this.com.compare(typ0, typ2));
 		assertEquals(0, this.com.compare(typs1, typs2));
 		assertNotEquals(0, this.com.compare(typs0, typs1));
+		
 		assertNotEquals(0, this.com.compare(col0, col1));
 		assertEquals(0, this.com.compare(col1, col2));
 	}
