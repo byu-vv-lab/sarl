@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cvc3.Cvc3Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -37,6 +38,7 @@ import edu.nyu.acsys.CVC4.vectorType;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
@@ -93,6 +95,24 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * reset().
 	 */
 	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
+	
+	/**
+	 * Map from the root name (e.g., name of a symbolic constant) to the number
+	 * of distinct CVC4 variables declared with that root. Since in CVC4 the
+	 * names must be unique, the CVC4 name will be modified by appending the
+	 * string "'n" where n is the value from this map, to all but the first
+	 * instance of the root. I.e., the CVC4 names corresponding to "x" will be:
+	 * x, x'1, x'2, ...
+	 * 
+	 * The names are for symbolic constants of all kinds, including functions.
+	 */
+	private Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
+	
+	/**
+	 * Mapping of SARL symbolic expression to corresponding CVC4 expresssion.
+	 * Set in method reset().
+	 */
+	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
 
 	/**
 	 * The assumption under which this prover is operating.
@@ -114,6 +134,37 @@ public class CVC4TheoremProver implements TheoremProver {
 		this.context = context;
 		cvcAssumption = translate(context);
 		smt.assertFormula(cvcAssumption); 
+	}
+	
+	/**
+	 * Renaming function for keeping unique names between constants Example:
+	 * new(x) = x; new(x) = x'1; etc.
+	 * 
+	 * @param root
+	 * @return root's new name
+	 */
+	private String newCvcName(String root) {
+		Integer count = nameCountMap.get(root);
+
+		if (count == null) {
+			nameCountMap.put(root, 1);
+			return root;
+		} else {
+			String result = root + "'" + count;
+
+			nameCountMap.put(root, nameCountMap.put(root, count + 1));
+			return result;
+		}
+	}
+	
+	/**
+	 * Creates a "default" CVC4 Expr with a given CVC3 Type
+	 * 
+	 * @param type
+	 * @return the CVC3 Expr
+	 */
+	private Expr newAuxVariable(Type type) {
+		return em.mkVar(newCvcName("_x"), type);
 	}
 
 /**
@@ -377,6 +428,34 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr translateEquality(SymbolicExpression argument) {
 		return null;
 	}
+	
+	/**
+	 * Translates a symbolic constant to CVC3 variable. Special handling is
+	 * required if the symbolic constant is used as a bound variable in a
+	 * quantified (forall, exists) expression.
+	 * 
+	 * Precondition: ?
+	 * 
+	 * @param symbolicConstant
+	 * @param isBoundVariable
+	 * @return the CVC3 equivalent Expr
+	 */
+//	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
+//			boolean isBoundVariable) throws Cvc3Exception {
+//		Type type = translateType(symbolicConstant.type());
+//		String root = symbolicConstant.name().getString();
+//		Expr result;
+//
+//		if (isBoundVariable) {
+//			result = em.mkBoundVar(root, type); //result = vc.boundVarExpr(root, root, type);
+//			translationStack.getLast().put(symbolicConstant, result);
+//			this.expressionMap.put(symbolicConstant, result);
+//		} else {
+//			result = em.mkVar(newCvcName(root), type); //result = vc.varExpr(newCvcName(root), type);
+//		}
+//		varMap.put(result, symbolicConstant);
+//		return result;
+//	}
 
 	/**
 	 * Translates the symbolic type to a CVC4 type.
