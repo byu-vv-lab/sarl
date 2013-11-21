@@ -31,11 +31,8 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -55,10 +52,7 @@ public class IdealModulusTest {
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
-	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private Constant constOnePointFive; // real constant 1.5 (3/2)
 	private Constant constOne; // real constant 1
@@ -75,11 +69,7 @@ public class IdealModulusTest {
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		ratOnePointFive = numberFactory.rational("1.25");
 		constOnePointFive = idealFactory.constant(ratOnePointFive);
 		ratOne = numberFactory.rational("1");
@@ -116,10 +106,10 @@ public class IdealModulusTest {
 				intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
 		NumericExpression ne1 = idealFactory.modulo(n1, n2);		
-		NumericExpression n = commonIdealFactory.modulo(n1, n2);
-		NumericExpression m = commonIdealFactory.modulo(intZero, n2);
-		NumericExpression p = commonIdealFactory.modulo(n1, intOne);
-		NumericExpression q = commonIdealFactory.modulo(constOnePointFive, constOne);
+		NumericExpression n = idealFactory.modulo(n1, n2);
+		NumericExpression m = idealFactory.modulo(intZero, n2);
+		NumericExpression p = idealFactory.modulo(n1, intOne);
+		NumericExpression q = idealFactory.modulo(constOnePointFive, constOne);
 		
 		out.println("modulo=" + q);
 		
