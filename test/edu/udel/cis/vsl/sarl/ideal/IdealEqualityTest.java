@@ -35,12 +35,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -67,10 +65,8 @@ public class IdealEqualityTest {
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
@@ -86,11 +82,8 @@ public class IdealEqualityTest {
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		Xobj = objectFactory.stringObject("X");
@@ -99,7 +92,7 @@ public class IdealEqualityTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
-		zero = commonIdealFactory.constant(realZero);
+		zero = idealFactory.constant(realZero);
 	}
 
 	@After
@@ -124,9 +117,9 @@ public class IdealEqualityTest {
 		NumericExpression n22 = idealFactory.subtract(x, y);
 		NumericExpression n1 = idealFactory.add(y, intTwo);
 		NumericExpression n2 = idealFactory.subtract(y,	intTwo);
-		BooleanExpression n = commonIdealFactory.neq(n1, n2);
-		BooleanExpression n0 = commonIdealFactory.neq(n1, n1);
-		BooleanExpression n1122 = commonIdealFactory.neq(n11, n22);
+		BooleanExpression n = idealFactory.neq(n1, n2);
+		BooleanExpression n0 = idealFactory.neq(n1, n1);
+		BooleanExpression n1122 = idealFactory.neq(n11, n22);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
 		
@@ -150,21 +143,21 @@ public class IdealEqualityTest {
 				.symbolicConstant(objectFactory.stringObject("Y"),
 						typeFactory.realType())); // value 'Y' of real type
 		
-		RationalExpression r1 = (RationalExpression) commonIdealFactory.divide(x2, y2);
+		RationalExpression r1 = (RationalExpression) idealFactory.divide(x2, y2);
 		BooleanExpression b1 = booleanFactory.booleanExpression(
 				SymbolicOperator.LESS_THAN_EQUALS, r1,
-				commonIdealFactory.zeroReal());
+				idealFactory.zeroReal());
 		BooleanExpression b2 = booleanFactory.booleanExpression(
-				SymbolicOperator.LESS_THAN, commonIdealFactory.zeroReal(), r1);
-		BooleanExpression nb2 = idealFactory.notLessThan(commonIdealFactory.
+				SymbolicOperator.LESS_THAN, idealFactory.zeroReal(), r1);
+		BooleanExpression nb2 = idealFactory.notLessThan(idealFactory.
 				zeroReal(), r1);
-		BooleanExpression nb3 = idealFactory.notLessThanEquals(commonIdealFactory.
+		BooleanExpression nb3 = idealFactory.notLessThanEquals(idealFactory.
 				zeroReal(), r1);
-		BooleanExpression nb4 = idealFactory.lessThanEquals(r1, commonIdealFactory.
+		BooleanExpression nb4 = idealFactory.lessThanEquals(r1, idealFactory.
 				zeroReal());
-		NumericExpression nb5 = commonIdealFactory.divide(
-				commonIdealFactory.zeroReal(), r1);
-		BooleanExpression nb6 = idealFactory.lessThan(r1, commonIdealFactory.
+		NumericExpression nb5 = idealFactory.divide(
+				idealFactory.zeroReal(), r1);
+		BooleanExpression nb6 = idealFactory.lessThan(r1, idealFactory.
 				zeroReal());
 		
 		out.println("b1=" +b1);
@@ -225,11 +218,11 @@ public class IdealEqualityTest {
 		BooleanExpression m = booleanFactory.symbolic(true);
 		BooleanExpression n = booleanFactory.symbolic(false);
 		
-		BooleanExpression b0 = commonIdealFactory.equals(x, n1);
-		BooleanExpression b1 = commonIdealFactory.equals(x, n2);
-		BooleanExpression b2 = commonIdealFactory.equals(x, n3);
-		BooleanExpression b3 = commonIdealFactory.equals(x, x);
-		BooleanExpression b4 = commonIdealFactory.equals(intOne, r1);
+		BooleanExpression b0 = idealFactory.equals(x, n1);
+		BooleanExpression b1 = idealFactory.equals(x, n2);
+		BooleanExpression b2 = idealFactory.equals(x, n3);
+		BooleanExpression b3 = idealFactory.equals(x, x);
+		BooleanExpression b4 = idealFactory.equals(intOne, r1);
 		
 		out.println("b1=" +b1);
 		out.println("b2=" +b2);
