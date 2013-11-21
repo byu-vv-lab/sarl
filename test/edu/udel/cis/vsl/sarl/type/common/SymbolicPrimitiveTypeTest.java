@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 
-public class CommonSymbolicPrimitiveTypeTest {
+public class SymbolicPrimitiveTypeTest {
 	
 	/**
 	 declaring variables for CommonSymbolicPrimitiveType 

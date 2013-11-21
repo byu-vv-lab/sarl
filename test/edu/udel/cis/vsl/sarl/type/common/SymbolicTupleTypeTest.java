@@ -17,7 +17,7 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
-public class CommonSymbolicTupleTypeTest 
+public class SymbolicTupleTypeTest 
 {
 	/**
 	 declaring all the required variables.

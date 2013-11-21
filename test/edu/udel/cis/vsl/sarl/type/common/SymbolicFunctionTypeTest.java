@@ -13,7 +13,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 
-public class CommonSymbolicFunctionTypeTest 
+public class SymbolicFunctionTypeTest 
 {
 	/**
 	 declaring all the required variables.

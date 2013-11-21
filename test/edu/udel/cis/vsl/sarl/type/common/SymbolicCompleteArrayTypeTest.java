@@ -32,7 +32,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
  *	isComplete()
  *	
  */
-public class CommonSymbolicCompleteArrayTypeTest {
+public class SymbolicCompleteArrayTypeTest {
 	
 	/**
 	 * Declaring variables to be used in the test
@@ -125,6 +125,6 @@ public class CommonSymbolicCompleteArrayTypeTest {
 	}
 	
 	
-	//typeComparator test is done in CommonSymbolicTypeFactoryTest
+	//typeComparator test is done in SymbolicTypeFactoryTest
 
 }

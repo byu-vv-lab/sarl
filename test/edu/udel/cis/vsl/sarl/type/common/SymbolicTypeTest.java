@@ -26,7 +26,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * @author alali
  *
  */
-public class CommonSymbolicTypeTest {
+public class SymbolicTypeTest {
 	
 		/**
 		 * creating different SymbolicTypes

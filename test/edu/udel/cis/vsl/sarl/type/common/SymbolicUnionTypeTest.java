@@ -23,7 +23,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
  * @author jthakkar
  *
  */
-public class CommonSymbolicUnionTypeTest {
+public class SymbolicUnionTypeTest {
 	
 	/**
 	 * an ObjectFactory object that is used to instantiate the variables that is unionType and unionType2.

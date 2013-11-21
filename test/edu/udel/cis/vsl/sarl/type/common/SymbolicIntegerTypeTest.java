@@ -23,7 +23,7 @@ import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
  *	- isIdeal()
  *	- SymbolicType getPureType()
  */
-public class CommonSymbolicIntegerTypeTest {
+public class SymbolicIntegerTypeTest {
 	
 		CommonSymbolicIntegerType idealIntKind, idealIntKind2, boundedIntKind, herbrandIntKind;
 		TypeComparator typeComparator;

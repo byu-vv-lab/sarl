@@ -43,7 +43,7 @@ import edu.udel.cis.vsl.sarl.type.Types;
  * @author alali
  *
  */
-public class CommonSymbolicTypeFactoryTest {
+public class SymbolicTypeFactoryTest {
 	
 	/**
 	 * creating a new typeFactory in order to instantiate concrete type objects.
