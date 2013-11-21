@@ -427,16 +427,16 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates an array-read expression a[i] into equivalent CVC3 expression
+	 * Translates an array-read expression a[i] into equivalent CVC4 expression
 	 * 
 	 * @param expr
 	 *            a SARL symbolic expression of form a[i]
-	 * @return an equivalent CVC3 expression
-	 * @throws Cvc3Exception
-	 *             by CVC3
+	 * @return an equivalent CVC4 expression
+	 * @throws Exception
+	 *             by CVC4
 	 */
 	private Expr translateArrayRead(SymbolicExpression expr)
-			throws Cvc3Exception {
+			throws Exception {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		NumericExpression indexExpression = (NumericExpression) expr
@@ -454,16 +454,16 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	/**
 	 * Translates an array-write (or array update) SARL symbolic expression to
-	 * equivalent CVC3 expression.
+	 * equivalent CVC4 expression.
 	 * 
 	 * @param expr
 	 *            an array update expression array[WITH i:=newValue].
-	 * @return the equivalent CVC3 Expr
-	 * @throws Cvc3Exception
-	 *             by CVC3
+	 * @return the equivalent CVC4 Expr
+	 * @throws Exception
+	 *             by CVC4
 	 */
 	private Expr translateArrayWrite(SymbolicExpression expr)
-			throws Cvc3Exception {
+			throws Exception {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		NumericExpression indexExpression = (NumericExpression) expr
