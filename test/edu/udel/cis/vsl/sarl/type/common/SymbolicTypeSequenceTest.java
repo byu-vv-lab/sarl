@@ -27,7 +27,7 @@ public class SymbolicTypeSequenceTest {
 	/**
 	 * Declaring two TypeSequences to be used for testing
 	 */
-	CommonSymbolicTypeSequence typeSequence, typeSequence2, typeSequence3, typeSequecn4;
+	CommonSymbolicTypeSequence typeSequence, typeSequence2, typeSequence3, typeSequence4;
 	
 	/**
 	 * Declaring two IntegerTypes to be added in the typeSequence
@@ -104,7 +104,7 @@ public class SymbolicTypeSequenceTest {
 		typeSequence = new CommonSymbolicTypeSequence(typesList);
 		typeSequence2 = new CommonSymbolicTypeSequence(typesList2);
 		typeSequence3 = new CommonSymbolicTypeSequence(typesArray);
-		typeSequecn4 = new CommonSymbolicTypeSequence(typesArray2);
+		typeSequence4 = new CommonSymbolicTypeSequence(typesArray2);
 		//System.out.println(2);
 	}
 
@@ -156,8 +156,8 @@ public class SymbolicTypeSequenceTest {
 		//System.out.println(3);
 		assertFalse(typeSequence.intrinsicEquals(typeSequence2));
 		assertTrue(typeSequence.intrinsicEquals(typeSequence3));
-		assertFalse(typeSequecn4.intrinsicEquals(typeSequence));
-		assertFalse(typeSequecn4.intrinsicEquals(boundedIntKind));
+		assertFalse(typeSequence4.intrinsicEquals(typeSequence));
+		assertFalse(typeSequence4.intrinsicEquals(boundedIntKind));
 	}
 	
 	/**
@@ -168,10 +168,19 @@ public class SymbolicTypeSequenceTest {
 		assertEquals(typeSequence.toString(), typeSequence3.toString());
 	}
 	
-	/*
-	@Test
-	public void testIterator(){
-		assertEquals(((ArrayList<CommonSymbolicType>)typeSequence.iterator()).size(), 4);
-	}
+	
+	/**
+	 * this test checks the type of the first element in the sequence 
 	 */
+	@Test
+	public void testIterator()
+	{
+//		System.out.println(typeSequence.iterator().next());
+//		System.out.println(typeSequence2.iterator().next());
+//		System.out.println(typeSequence3.iterator().next());
+//		System.out.println(typeSequence4.iterator().next());
+		assertEquals(typeSequence.iterator().next(), typeSequence3.iterator().next());
+		assertEquals(typeSequence3.iterator().next(), typeSequence4.iterator().next());
+		assertNotEquals(typeSequence.iterator().next(), typeSequence2.iterator().next());
+	}
 }
