@@ -43,7 +43,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -192,10 +191,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Creates a "default" CVC4 Expr with a given CVC3 Type
+	 * Creates a "default" CVC4 Expr with a given CVC4 Type
 	 * 
 	 * @param type
-	 * @return the CVC3 Expr
+	 * @return the CVC4 Expr
 	 */
 	private Expr newAuxVariable(Type type) {
 		return em.mkVar(newCvcName("_x"), type);
@@ -581,8 +580,8 @@ public class CVC4TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(0)));
 			break;
 		case NEQ:
-			result = em.mkExpr(Kind.NOT,
-					translateEquality((SymbolicExpression) expr.argument(0)));
+			result = em.mkExpr(Kind.DISTINCT,
+					translate((SymbolicExpression) expr.argument(0)));
 			break;
 		case NOT:
 			result = em.mkExpr(Kind.NOT,
@@ -630,10 +629,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	private Expr translateEquality(SymbolicExpression argument) {
-		return null;
-	}
-
 	/**
 	* Translates a symbolic constant to CVC4 variable. Special handling is
 	* required if the symbolic constant is used as a bound variable in a
@@ -652,11 +647,11 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (isBoundVariable) {
-			result = em.mkBoundVar(root, type); //CVC3: result = vc.boundVarExpr(root, root, type);
+			result = em.mkBoundVar(root, type); //CVC4: result = vc.boundVarExpr(root, root, type);
 			translationStack.getLast().put(symbolicConstant, result);
 			this.expressionMap.put(symbolicConstant, result);
 		} else {
-			result = em.mkVar(newCvcName(root), type); //CVC3: result = vc.varExpr(newCvcName(root), type);
+			result = em.mkVar(newCvcName(root), type); //CVC4: result = vc.varExpr(newCvcName(root), type);
 		}
 		varMap.put(result, symbolicConstant);
 		return result;
