@@ -78,7 +78,10 @@ public class QuantifierTest {
 			prover.setOutput(System.out); // for debugging
 			provers.add(prover);
 		}
-		// add more provers here
+		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
+				.newProver(context);
+		cvc4prover.setOutput(System.out); // for debugging
+		provers.add(cvc4prover);
 	}
 
 	@Before
