@@ -30,8 +30,6 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
@@ -70,9 +68,7 @@ public class IdealDivideTest {
 	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
-	private BooleanExpressionFactory booleanFactory;
 
 	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
@@ -105,9 +101,7 @@ public class IdealDivideTest {
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		booleanFactory = system.booleanFactory();
 		intZero = idealFactory.intConstant(0);
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
