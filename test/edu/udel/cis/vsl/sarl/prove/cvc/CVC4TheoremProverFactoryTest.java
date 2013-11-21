@@ -18,7 +18,6 @@ public class CVC4TheoremProverFactoryTest {
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
 	
-	@Ignore
 	@Test
 	public void cvc4TheoremProverFactory() {
 		StringObject strY = universe.stringObject("y");
