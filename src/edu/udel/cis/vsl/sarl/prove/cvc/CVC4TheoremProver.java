@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cvc3.Cvc3Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -33,6 +34,7 @@ import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.SmtEngine;
 import edu.nyu.acsys.CVC4.Type;
 import edu.nyu.acsys.CVC4.Exception;
+import edu.nyu.acsys.CVC4.vectorExpr;
 import edu.nyu.acsys.CVC4.vectorType;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
@@ -68,7 +70,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * by constructor and never changes.
 	 */
 	private PreUniverse universe;
-	
+
 	/**
 	 * Print the queries and results each time valid is called. Initialized by
 	 * constructor.
@@ -82,12 +84,12 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private PrintStream out = System.out;
 	// TODO not used locally?
-	
+
 	/**
 	 * The CVC4 object used for creating CVC4 Exprs
 	 */
 	private ExprManager em = new ExprManager();
-	
+
 	/**
 	 * The CVC4 object that checks queries
 	 */
@@ -98,7 +100,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * reset().
 	 */
 	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
-	
+
 	/**
 	 * Map from the root name (e.g., name of a symbolic constant) to the number
 	 * of distinct CVC4 variables declared with that root. Since in CVC4 the
@@ -110,7 +112,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The names are for symbolic constants of all kinds, including functions.
 	 */
 	private Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
-	
+
 	/**
 	 * Mapping of SARL symbolic expression to corresponding CVC4 expresssion.
 	 * Set in method reset().
@@ -128,7 +130,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr cvcAssumption;
 
-	
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
 		assert context != null;
@@ -136,9 +137,9 @@ public class CVC4TheoremProver implements TheoremProver {
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
 		cvcAssumption = translate(context);
-		smt.assertFormula(cvcAssumption); 
+		smt.assertFormula(cvcAssumption);
 	}
-	
+
 	/**
 	 * Renaming function for keeping unique names between constants Example:
 	 * new(x) = x; new(x) = x'1; etc.
@@ -159,7 +160,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			return result;
 		}
 	}
-	
+
 	/**
 	 * Creates a "default" CVC4 Expr with a given CVC3 Type
 	 * 
@@ -170,13 +171,14 @@ public class CVC4TheoremProver implements TheoremProver {
 		return em.mkVar(newCvcName("_x"), type);
 	}
 
-/**
- * Translate expr from SARL to CVC4. This results in two things: a CVC4
- * expression (which is returned) and also side-effects: constraints added
- * to the CVC4 assumption set, possibly involving auxiliary variables.
- * @param SymbolicExpression
- * @returns Expr
- */
+	/**
+	 * Translate expr from SARL to CVC4. This results in two things: a CVC4
+	 * expression (which is returned) and also side-effects: constraints added
+	 * to the CVC4 assumption set, possibly involving auxiliary variables.
+	 * 
+	 * @param SymbolicExpression
+	 * @returns Expr
+	 */
 	public Expr translate(SymbolicExpression expr) {
 		Expr result;
 		result = translateWork(expr);
@@ -192,11 +194,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            any symbolic type
 	 * @return true iff the type is an incomplete array type
 	 */
-//	private boolean isBigArrayType(SymbolicType type) {
-//		return type instanceof SymbolicArrayType
-//				&& !((SymbolicArrayType) type).isComplete();
-//	}
-	// TODO this isn't used locally. we should either use or remove
+	private boolean isBigArrayType(SymbolicType type) {
+		return type instanceof SymbolicArrayType
+				&& !((SymbolicArrayType) type).isComplete();
+	}
 
 	/**
 	 * Like above, but takes SymbolicExpression as input.
@@ -204,10 +205,27 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @param expr
 	 * @return true iff the type of expr is an incomplete array type
 	 */
-//	private boolean isBigArray(SymbolicExpression expr) {
-//		return isBigArrayType(expr.type());
-//	}
-	// TODO this isn't used locally. we should either use or remove
+	private boolean isBigArray(SymbolicExpression expr) {
+		return isBigArrayType(expr.type());
+	}
+	
+	/**
+	 * This method takes in the length and value of an Expr and returns the
+	 * ordered pair represented by an incomplete array type.
+	 * 
+	 * @param length
+	 *            CVC4 Expr of length
+	 * @param value
+	 *            CVC4 Expr of value
+	 * @return CVC4 tuple of an ordered pair (length, array)
+	 */
+	private Expr bigArray(Expr length, Expr value) {
+		List<Expr> list = new LinkedList<Expr>();
+
+		list.add(length);
+		list.add(value);
+		return em.mkExpr(Kind.TUPLE, (vectorExpr)list);
+	}
 
 	/**
 	 * This method takes any Expr that is of incomplete array type and returns
@@ -230,11 +248,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            CVC4 Expr of bigArray
 	 * @return value of CVC4 Expr of incomplete array type
 	 */
-//	private Expr bigArrayValue(Expr bigArray) {
-//		Expr index = em.mkConst(new Rational(1));
-//		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
-//	}
-	// TODO this isn't used locally. we should either use or remove
+	private Expr bigArrayValue(Expr bigArray) {
+		Expr index = em.mkConst(new Rational(1));
+		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
+	}
 
 	/**
 	 * This methods takes any SymbolicCollection and returns a linked list of
@@ -251,7 +268,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			result.add(expr == null ? null : translate(expr));
 		return result;
 	}
-	
+
 	/**
 	 * Translates any concrete SymbolicExpression with concrete type to
 	 * equivalent CVC4 Expr using the ExprManager.
@@ -293,7 +310,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = em.mkConst(((NumberObject) object).getNumber().toString());
 			break;
 		case TUPLE:
-			result = em.mkExpr(Kind.TUPLE, (Expr)translateCollection((SymbolicSequence<?>) object));
+			result = em.mkExpr(Kind.TUPLE,
+					(vectorExpr) translateCollection((SymbolicSequence<?>) object));
 			break;
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
@@ -302,12 +320,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a multiplication SymbolicExpression (a*b) into an 
-	 * equivalent CVC4 multiplication Expr based upon number of 
-	 * arguments given. 
+	 * Translates a multiplication SymbolicExpression (a*b) into an equivalent
+	 * CVC4 multiplication Expr based upon number of arguments given.
 	 * 
 	 * @param expr
-	 * 			a SARL SymbolicExpression of form a*b
+	 *            a SARL SymbolicExpression of form a*b
 	 * @return CVC4 Expr
 	 */
 	private Expr translateMultiply(SymbolicExpression expr) {
@@ -330,7 +347,9 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC4 Expr 
+	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC4
+	 * Expr
+	 * 
 	 * @param expr
 	 * @return CVC4 representation of expr
 	 */
@@ -350,15 +369,88 @@ public class CVC4TheoremProver implements TheoremProver {
 					+ expr);
 		return result;
 	}
-	
+
 	/**
-	 * Translates which operation to perform based upon the given 
-	 * SymbolicExpression and the SymbolicOperator provided.  Depending 
-	 * upon the number of arguments given, a different conditional will
-	 * be executed.  The result will be a CVC4 Expr. 
+	 * Checks whether an index is in the bounds of an array SymbolicExpression
+	 * by passing in the arguments to the validity checker
+	 * 
+	 * @param arrayExpression
+	 * @param index
+	 */
+	private void assertIndexInBounds(SymbolicExpression arrayExpression,
+			NumericExpression index) {
+		NumericExpression length = universe.length(arrayExpression);
+		BooleanExpression predicate = universe.lessThan(index, length);
+		Expr cvcPredicate;
+
+		predicate = universe.and(
+				universe.lessThanEquals(universe.zeroInt(), index), predicate);
+		cvcPredicate = translate(predicate);
+		smt.assertFormula(cvcPredicate);
+	}
+
+	/**
+	 * Translates an array-read expression a[i] into equivalent CVC3 expression
 	 * 
 	 * @param expr
-	 * 			a SymbolicExpression 
+	 *            a SARL symbolic expression of form a[i]
+	 * @return an equivalent CVC3 expression
+	 * @throws Cvc3Exception
+	 *             by CVC3
+	 */
+	private Expr translateArrayRead(SymbolicExpression expr)
+			throws Cvc3Exception {
+		SymbolicExpression arrayExpression = (SymbolicExpression) expr
+				.argument(0);
+		NumericExpression indexExpression = (NumericExpression) expr
+				.argument(1);
+		Expr array, index, result;
+
+		assertIndexInBounds(arrayExpression, indexExpression);
+		array = translate(arrayExpression);
+		index = translate((SymbolicExpression) expr.argument(1));
+		if (isBigArray(arrayExpression))
+			array = bigArrayValue(array);
+		result = em.mkExpr(Kind.SELECT, array, index);
+		return result;
+	}
+
+	/**
+	 * Translates an array-write (or array update) SARL symbolic expression to
+	 * equivalent CVC3 expression.
+	 * 
+	 * @param expr
+	 *            an array update expression array[WITH i:=newValue].
+	 * @return the equivalent CVC3 Expr
+	 * @throws Cvc3Exception
+	 *             by CVC3
+	 */
+	private Expr translateArrayWrite(SymbolicExpression expr)
+			throws Cvc3Exception {
+		SymbolicExpression arrayExpression = (SymbolicExpression) expr
+				.argument(0);
+		NumericExpression indexExpression = (NumericExpression) expr
+				.argument(1);
+		Expr array, index, value, result;
+
+		assertIndexInBounds(arrayExpression, indexExpression);
+		array = translate(arrayExpression);
+		index = translate(indexExpression);
+		value = translate((SymbolicExpression) expr.argument(2));
+		result = isBigArray(arrayExpression) ? bigArray(bigArrayLength(array),
+				em.mkExpr(Kind.STORE, bigArrayValue(array), index, value)) : em
+				.mkExpr(Kind.STORE, array, index, value);
+		return result;
+	}
+
+	/**
+	 * Translates which operation to perform based upon the given
+	 * SymbolicExpression and the SymbolicOperator provided. Depending upon the
+	 * number of arguments given, a different conditional will be executed. The
+	 * result will be a CVC4 Expr.
+	 * 
+	 * @param expr
+	 *            a SymbolicExpression
 	 * @return
 	 */
 	private Expr translateWork(SymbolicExpression expr) {
@@ -375,8 +467,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			else if (numArgs == 1)
 				result = em.mkExpr(Kind.PLUS,
 						translate((SymbolicExpression) expr.argument(0)));
-			else
-			{
+			else {
 				result = null;
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for ADD");
@@ -391,15 +482,23 @@ public class CVC4TheoremProver implements TheoremProver {
 			else if (numArgs == 1)
 				result = em.mkExpr(Kind.AND,
 						translate((SymbolicExpression) expr.argument(0)));
-			else
-			{
+			else {
 				result = null;
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for AND: " + expr);
 			}
 			break;
+		case ARRAY_READ:
+			result = translateArrayRead(expr);
+			break;
+		case ARRAY_WRITE:
+			result = translateArrayWrite(expr);
+			break;
 		case CAST:
 			result = this.translate((SymbolicExpression) expr.argument(0));
+			break;
+		case CONCRETE:
+			result = translateConcrete(expr);
 			break;
 		case COND:
 			result = em.mkExpr(Kind.ITE,
@@ -460,8 +559,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			if (exponent instanceof IntObject)
 				result = em.mkExpr(Kind.POW,
 						translate((SymbolicExpression) expr.argument(0)), em
-						.mkConst(new Rational(((IntObject) exponent)
-								.getInt())));
+								.mkConst(new Rational(((IntObject) exponent)
+										.getInt())));
 			else
 				result = em.mkExpr(Kind.POW,
 						translate((SymbolicExpression) expr.argument(0)),
@@ -471,15 +570,15 @@ public class CVC4TheoremProver implements TheoremProver {
 		case TUPLE_READ:
 			result = em.mkExpr(Kind.TUPLE_SELECT,
 					translate((SymbolicExpression) expr.argument(0)), em
-					.mkConst(new Rational(
-							((IntObject) expr.argument(1)).getInt())));
+							.mkConst(new Rational(
+									((IntObject) expr.argument(1)).getInt())));
 			break;
 		case TUPLE_WRITE:
 			result = em.mkExpr(Kind.TUPLE_UPDATE,
 					translate((SymbolicExpression) expr.argument(0)), em
-					.mkConst(new Rational(
-							((IntObject) expr.argument(1)).getInt())),
-							translate((SymbolicExpression) expr.argument(2)));
+							.mkConst(new Rational(
+									((IntObject) expr.argument(1)).getInt())),
+					translate((SymbolicExpression) expr.argument(2)));
 			break;
 		case SUBTRACT:
 			result = em.mkExpr(Kind.MINUS,
@@ -492,10 +591,11 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
+
 	private Expr translateEquality(SymbolicExpression argument) {
 		return null;
 	}
-	
+
 	/**
 	 * Translates a symbolic constant to CVC3 variable. Special handling is
 	 * required if the symbolic constant is used as a bound variable in a
@@ -507,22 +607,24 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @param isBoundVariable
 	 * @return the CVC3 equivalent Expr
 	 */
-//	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
-//			boolean isBoundVariable) throws Cvc3Exception {
-//		Type type = translateType(symbolicConstant.type());
-//		String root = symbolicConstant.name().getString();
-//		Expr result;
-//
-//		if (isBoundVariable) {
-//			result = em.mkBoundVar(root, type); //result = vc.boundVarExpr(root, root, type);
-//			translationStack.getLast().put(symbolicConstant, result);
-//			this.expressionMap.put(symbolicConstant, result);
-//		} else {
-//			result = em.mkVar(newCvcName(root), type); //result = vc.varExpr(newCvcName(root), type);
-//		}
-//		varMap.put(result, symbolicConstant);
-//		return result;
-//	}
+	// private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
+	// boolean isBoundVariable) throws Cvc3Exception {
+	// Type type = translateType(symbolicConstant.type());
+	// String root = symbolicConstant.name().getString();
+	// Expr result;
+	//
+	// if (isBoundVariable) {
+	// result = em.mkBoundVar(root, type); //result = vc.boundVarExpr(root,
+	// root, type);
+	// translationStack.getLast().put(symbolicConstant, result);
+	// this.expressionMap.put(symbolicConstant, result);
+	// } else {
+	// result = em.mkVar(newCvcName(root), type); //result =
+	// vc.varExpr(newCvcName(root), type);
+	// }
+	// varMap.put(result, symbolicConstant);
+	// return result;
+	// }
 
 	/**
 	 * Translates the symbolic type to a CVC4 type.
@@ -533,8 +635,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @throws Exception
 	 *             if CVC4 throws an exception
 	 */
-	public Type translateType(SymbolicType type) throws Exception
-	{
+	public Type translateType(SymbolicType type) throws Exception {
 		Type result = typeMap.get(type);
 
 		if (result != null)
@@ -558,50 +659,53 @@ public class CVC4TheoremProver implements TheoremProver {
 					translateType(((SymbolicArrayType) type).elementType()));
 			if (!(type instanceof SymbolicCompleteArrayType))
 				// tuple:<extent,array>
-				result = em.mkTupleType((vectorType) Arrays
-						.asList(em.integerType(), result));
+				result = em.mkTupleType((vectorType) Arrays.asList(
+						em.integerType(), result));
 			break;
 		case TUPLE:
-			result = em.mkTupleType((vectorType) 
-					translateTypeSequence(((SymbolicTupleType) type).sequence()));
+			result = em
+					.mkTupleType((vectorType) translateTypeSequence(((SymbolicTupleType) type)
+							.sequence()));
 			break;
 		case FUNCTION:
-			result = em.mkFunctionType((vectorType)
-					translateTypeSequence(((SymbolicFunctionType) type)
-							.inputTypes()),
-					translateType(((SymbolicFunctionType) type).outputType()));
+			result = em
+					.mkFunctionType(
+							(vectorType) translateTypeSequence(((SymbolicFunctionType) type)
+									.inputTypes()),
+							translateType(((SymbolicFunctionType) type)
+									.outputType()));
 			break;
-			// TODO cvc4 union type?
-//		case UNION: {	
-//			SymbolicUnionType unionType = (SymbolicUnionType) type;
-//			List<String> constructors = new LinkedList<String>();
-//			List<List<String>> selectors = new LinkedList<List<String>>();
-//			List<List<Expr>> types = new LinkedList<List<Expr>>();
-//			SymbolicTypeSequence sequence = unionType.sequence();
-//			int index = 0;
-//
-//			for (SymbolicType t : sequence) {
-//				List<String> selectorList = new LinkedList<String>();
-//				List<Expr> typeList = new LinkedList<Expr>();
-//
-//				selectorList.add(selector(unionType, index));
-//				typeList.add(translateType(t).getExpr());
-//				selectors.add(selectorList);
-//				types.add(typeList);
-//				constructors.add(constructor(unionType, index));
-//				index++;
-//			}
-//			result = vc.dataType(unionType.name().getString(), constructors,
-//					selectors, types);
-//			break;
-//		}
+		// TODO cvc4 union type?
+		// case UNION: {
+		// SymbolicUnionType unionType = (SymbolicUnionType) type;
+		// List<String> constructors = new LinkedList<String>();
+		// List<List<String>> selectors = new LinkedList<List<String>>();
+		// List<List<Expr>> types = new LinkedList<List<Expr>>();
+		// SymbolicTypeSequence sequence = unionType.sequence();
+		// int index = 0;
+		//
+		// for (SymbolicType t : sequence) {
+		// List<String> selectorList = new LinkedList<String>();
+		// List<Expr> typeList = new LinkedList<Expr>();
+		//
+		// selectorList.add(selector(unionType, index));
+		// typeList.add(translateType(t).getExpr());
+		// selectors.add(selectorList);
+		// types.add(typeList);
+		// constructors.add(constructor(unionType, index));
+		// index++;
+		// }
+		// result = vc.dataType(unionType.name().getString(), constructors,
+		// selectors, types);
+		// break;
+		// }
 		default:
 			throw new RuntimeException("Unknown type: " + type);
 		}
 		typeMap.put(type, result);
 		return result;
 	}
-	
+
 	/**
 	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
 	 * Types in CVC4.
@@ -622,14 +726,15 @@ public class CVC4TheoremProver implements TheoremProver {
 	public PreUniverse universe() {
 		return universe;
 	}
+
 	/**
-	 * Takes a BooleanExpression and passes it through translate. 
-	 * The translated predicate is then queried via smt and pops the smt.
+	 * Takes a BooleanExpression and passes it through translate. The translated
+	 * predicate is then queried via smt and pops the smt.
+	 * 
 	 * @param expr
 	 * @return ValidityResult from using translateResult
 	 */
-	public ValidityResult valid(BooleanExpression symbolicPredicate)
-	{
+	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Expr cvc4Predicate = translate(symbolicPredicate);
 		Result result = smt.query(cvc4Predicate);
 		smt.pop();
@@ -639,7 +744,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
-		// TODO 
+		// TODO
 		return null;
 	}
 
