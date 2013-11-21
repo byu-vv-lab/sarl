@@ -36,7 +36,6 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -74,7 +73,6 @@ public class IdealDivideTest {
 	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
@@ -110,8 +108,6 @@ public class IdealDivideTest {
 		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		intZero = idealFactory.intConstant(0);
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
@@ -130,14 +126,14 @@ public class IdealDivideTest {
 		realSeven = numberFactory.rational("7");
 		realTwentyOne = numberFactory.rational("21");
 		realThirtyFive = numberFactory.rational("35");
-		zero = commonIdealFactory.constant(realZero);
-		fifteen = commonIdealFactory.constant(realFifteen);
-		five = commonIdealFactory.constant(realFive);
-		seven = commonIdealFactory.constant(realSeven);
-		twentyOne = commonIdealFactory.constant(realTwentyOne);
-		thirtyFive = commonIdealFactory.constant(realThirtyFive);
+		zero = idealFactory.constant(realZero);
+		fifteen = idealFactory.constant(realFifteen);
+		five = idealFactory.constant(realFive);
+		seven = idealFactory.constant(realSeven);
+		twentyOne = idealFactory.constant(realTwentyOne);
+		thirtyFive = idealFactory.constant(realThirtyFive);
 		realThree = numberFactory.rational("3");
-		three = commonIdealFactory.constant(realThree);
+		three = idealFactory.constant(realThree);
 	}
 
 	@After
@@ -164,12 +160,12 @@ public class IdealDivideTest {
 		NumericExpression n = idealFactory.add(x, y);
 		NumericExpression m = idealFactory.subtract(x, y);
 		NumericExpression np = idealFactory.divide(n, m);		
-		NumericExpression b1 = commonIdealFactory.divide(n1, n2);
-		NumericExpression b2 = commonIdealFactory.divide(n3, n2);
-		NumericExpression b3 = commonIdealFactory.divide(n1, n4);
-		NumericExpression b4 = commonIdealFactory.divide(n5, n6);
-		NumericExpression b5 = commonIdealFactory.divide(n7, n6);
-		NumericExpression p1 = commonIdealFactory.divide(n, m);
+		NumericExpression b1 = idealFactory.divide(n1, n2);
+		NumericExpression b2 = idealFactory.divide(n3, n2);
+		NumericExpression b3 = idealFactory.divide(n1, n4);
+		NumericExpression b4 = idealFactory.divide(n5, n6);
+		NumericExpression b5 = idealFactory.divide(n7, n6);
+		NumericExpression p1 = idealFactory.divide(n, m);
 		
 		assertEquals(np, p1);
 		assertEquals(intTen, b1);
@@ -204,7 +200,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly2);
 		
 		assertEquals(intFive, b1);
 	}
@@ -235,7 +231,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p02;
 		Polynomial poly2 = (Polynomial) p03;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly1);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly2, poly1);
 		
 		assertEquals(p04, b1);
 	}
@@ -263,7 +259,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly2);
 		
 		assertEquals(intFive, b1);
 	}
@@ -291,7 +287,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly2);
 		
 		assertEquals(intTen, b1);
 	}
@@ -319,7 +315,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly2);
 		
 		assertEquals(x, b1);
 	}
@@ -348,7 +344,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly1);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly2, poly1);
 		
 		assertEquals(p03, b1);
 	}
@@ -376,7 +372,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly2, poly1);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly2, poly1);
 		
 		assertEquals(y, b1);
 	}
@@ -402,7 +398,7 @@ public class IdealDivideTest {
 		NumericExpression p01 = idealFactory.multiply(intTen, x);
 		Polynomial poly1 = (Polynomial) p01;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, x);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, x);
 		
 		assertEquals(intTen, b1);
 	}
@@ -428,7 +424,7 @@ public class IdealDivideTest {
 		NumericExpression p01 = idealFactory.multiply(x, x);
 		Polynomial poly1 = (Polynomial) p01;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly1);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly1);
 		
 		assertEquals(intOne, b1);
 	}
@@ -455,7 +451,7 @@ public class IdealDivideTest {
 		NumericExpression p02 = idealFactory.multiply(intTen, x);
 		NumericExpression p03 = idealFactory.divide(p01, p02);
 		
-		Polynomial b3 = (Polynomial) commonIdealFactory.divide(x, intTen);
+		Polynomial b3 = (Polynomial) idealFactory.divide(x, intTen);
 		
 		assertEquals(p03, b3);
 	}
@@ -498,7 +494,7 @@ public class IdealDivideTest {
 		Polynomial poly1 = (Polynomial) p01;
 		Polynomial poly2 = (Polynomial) p02;
 		
-		Polynomial b1 = (Polynomial) commonIdealFactory.divide(poly1, poly2);
+		Polynomial b1 = (Polynomial) idealFactory.divide(poly1, poly2);
 		
 		assertEquals(p05, b1);
 	}
@@ -520,17 +516,17 @@ public class IdealDivideTest {
 		IntObject exp3 = objectFactory.intObject(3); // integer object '3'
 		IntObject exp2 = objectFactory.intObject(2); // integer object '2'
 		
-		NumericExpression complex1 = commonIdealFactory.multiply(twentyOne, idealFactory.
+		NumericExpression complex1 = idealFactory.multiply(twentyOne, idealFactory.
 				power(x, exp3));
-		NumericExpression complex2 = commonIdealFactory.multiply(thirtyFive, idealFactory.
+		NumericExpression complex2 = idealFactory.multiply(thirtyFive, idealFactory.
 				power(x, exp2));
-		NumericExpression numer = commonIdealFactory.subtract(complex1, complex2);		
-		NumericExpression denom = commonIdealFactory.multiply(x, seven);
-		NumericExpression complex = commonIdealFactory.divide(numer, denom);
-		NumericExpression result1 = commonIdealFactory.multiply(idealFactory.power(x, 
+		NumericExpression numer = idealFactory.subtract(complex1, complex2);		
+		NumericExpression denom = idealFactory.multiply(x, seven);
+		NumericExpression complex = idealFactory.divide(numer, denom);
+		NumericExpression result1 = idealFactory.multiply(idealFactory.power(x, 
 				exp2), three);
-		NumericExpression result2 = commonIdealFactory.multiply(x, five);
-		NumericExpression result = commonIdealFactory.subtract(result1, result2);
+		NumericExpression result2 = idealFactory.multiply(x, five);
+		NumericExpression result = idealFactory.subtract(result1, result2);
 		
 		assertEquals(result, complex);
 	}
