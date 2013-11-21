@@ -10,10 +10,21 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 
+/** Testing SymbolicRealType
+ * Three realKinds: ideal, herbrand, and float;
+ */
 public class SymbolicRealTypeTest {
 	
-		CommonSymbolicRealType idealRealKind, idealRealKind2, herbrandRealKind, floatRealKind;
-		TypeComparator typeComparator;
+	/**
+	 * creating RealType objects to be used in the test
+	 */
+	CommonSymbolicRealType idealRealKind, idealRealKind2, herbrandRealKind, floatRealKind;
+	
+	/**
+	 * creating typeComparator to be used to compare two realTypes
+	 */
+	TypeComparator typeComparator;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -21,7 +32,11 @@ public class SymbolicRealTypeTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
-
+	
+	/**
+	 * instantiating objects to be used in the test
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		typeComparator = new TypeComparator();
@@ -35,7 +50,9 @@ public class SymbolicRealTypeTest {
 	public void tearDown() throws Exception {
 	}
 
-
+	/**
+	 * Testing the kind of each realType using realKind()
+	 */
 	@Test
 	public void testRealKind() {
 		assertEquals(herbrandRealKind.realKind(), RealKind.HERBRAND);
@@ -43,31 +60,40 @@ public class SymbolicRealTypeTest {
 		assertEquals(idealRealKind.realKind(), RealKind.IDEAL);
 	}
 	
+	/**
+	 * testing if two realTypes are equal, i.e. they have the same kind
+	 */
 	@Test
 	public void testTypeEquals() {
 		assertTrue(idealRealKind.typeEquals(idealRealKind2));
 	}
 	
+	/**
+	 * testing the hashCode of different realType
+	 */
 	@Test
 	public void testComputeHashCode() {
 		assertEquals(idealRealKind.computeHashCode(), idealRealKind2.computeHashCode());
 	}
-
 	
-
+	/**
+	 * Testing if this realType is herbrand
+	 */
 	@Test
 	public void testIsHerbrand() {
 		assertTrue(herbrandRealKind.isHerbrand());
-		
 	}
 	
+	/**
+	 * testing if this realType is Ideal
+	 */
 	@Test
 	public void testIsIdeal() {
 		assertTrue(idealRealKind.isIdeal());
 		assertTrue(idealRealKind2.isIdeal());
 	}
 	
-	/*
+	/**
 	 * testing if two realTypes are equal using the compareTo in TypeComparator;
 	 */
 	@Test
@@ -104,11 +130,10 @@ public class SymbolicRealTypeTest {
 		assertEquals(idealRealKind.getPureType(), idealRealKind2.getPureType());
 		assertNotEquals(floatRealKind.getPureType(), herbrandRealKind.getPureType());		
 	}
-	
 
-	
-
-
+	/**
+	 * Testing the toStringBuffer() which is a representation of the realType
+	 */
 	@Test
 	public void testToStringBuffer() {
         CommonSymbolicRealType ideal1 = new CommonSymbolicRealType(RealKind.IDEAL);
