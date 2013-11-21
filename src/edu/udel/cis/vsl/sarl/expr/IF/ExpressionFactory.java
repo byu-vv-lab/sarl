@@ -212,6 +212,14 @@ public interface ExpressionFactory {
 	UnionMemberReference unionMemberReference(
 			ReferenceExpression unionReference, IntObject memberIndex);
 
+	/**
+	 * Given a ReferenceExpression and a NumericExpression offset, 
+	 * returns an offsetReference. (reference+offset)
+	 * @param reference
+	 * @param offset
+	 * 
+	 * @return OffsetReference
+	 */
 	OffsetReference offsetReference(ReferenceExpression reference,
 			NumericExpression offset);
 }
