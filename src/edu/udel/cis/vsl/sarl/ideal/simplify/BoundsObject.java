@@ -319,7 +319,7 @@ public class BoundsObject implements Interval {
 	 * @param thatStrict Strictness of new, less restrictive bound.
 	 * @return If the existing lower bound of -infty (value of null), no changes to the BoundsObject are made.
 	 */
-	private void enlargeLower(Number thatLower, boolean thatStrict) {
+	public void enlargeLower(Number thatLower, boolean thatStrict) {
 		if (lower == null)
 			return;
 		if (thatLower == null) {
@@ -342,7 +342,7 @@ public class BoundsObject implements Interval {
 	 * @param thatStrict Strictness of new, less restrictive bound.
 	 * @return If the existing upper bound is +infty (value of null), no changes to the BoundsObject are made.
 	 */
-	private void enlargeUpper(Number thatUpper, boolean thatStrict) {
+	public void enlargeUpper(Number thatUpper, boolean thatStrict) {
 		if (upper == null)
 			return;
 		if (thatUpper == null) {
