@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Ignore;
 import org.junit.Test;
