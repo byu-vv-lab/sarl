@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import cvc3.Cvc3Exception;
+import cvc3.Op;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -40,7 +41,9 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
@@ -94,6 +97,28 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The CVC4 object that checks queries
 	 */
 	private SmtEngine smt = new SmtEngine(em);
+	
+	/**
+	 * Map from SARL expressions of funcional type to corresponding CVC4
+	 * operators. In SARL, a function is a kind of symbolic expression. In CVC4,
+	 * this concept is represented as an instance of "OpMut" (Operator Mutable),
+	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
+	 * separate map is needed.
+	 */
+	private Map<SymbolicExpression, Op> functionMap = new HashMap<SymbolicExpression, Op>();
+	
+	/**
+	 * Mapping of CVC4 variables to their corresponding symbolic constants.
+	 * Needed in order to construct model when there is a counter example.
+	 */
+	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
+	
+	/**
+	 * Mapping of CVC4 "Op"s to their corresponding symbolic constants. A CVC4
+	 * "Op" is used to represent a function. In SARL, a function is represented
+	 * by a symbolic constant of function type. This is used for finding models.
+	 */
+	private Map<Op, SymbolicConstant> opMap = new HashMap<Op, SymbolicConstant>();
 
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC4 type. Set in method
@@ -119,6 +144,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
 
+	/**
+	 * Stack of SymbolicExpressions and their translations as Exprs
+	 */
+	private LinkedList<Map<SymbolicExpression, Expr>> translationStack = new LinkedList<Map<SymbolicExpression, Expr>>();
+	
 	/**
 	 * The assumption under which this prover is operating.
 	 */
@@ -345,6 +375,14 @@ public class CVC4TheoremProver implements TheoremProver {
 					"Wrong number of arguments to multiply: " + expr);
 		return result;
 	}
+	
+	/**
+	 * Translates a symbolic expression of functional type. In CVC4, functions
+	 * have type Op; expressions have type Expr.
+	 * 
+	 * @param expr
+	 * @return the function expression as a CVC4 Op
+	 */
 
 	/**
 	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC4
@@ -597,34 +635,32 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a symbolic constant to CVC3 variable. Special handling is
-	 * required if the symbolic constant is used as a bound variable in a
-	 * quantified (forall, exists) expression.
-	 * 
-	 * Precondition: ?
-	 * 
-	 * @param symbolicConstant
-	 * @param isBoundVariable
-	 * @return the CVC3 equivalent Expr
-	 */
-	// private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
-	// boolean isBoundVariable) throws Cvc3Exception {
-	// Type type = translateType(symbolicConstant.type());
-	// String root = symbolicConstant.name().getString();
-	// Expr result;
-	//
-	// if (isBoundVariable) {
-	// result = em.mkBoundVar(root, type); //result = vc.boundVarExpr(root,
-	// root, type);
-	// translationStack.getLast().put(symbolicConstant, result);
-	// this.expressionMap.put(symbolicConstant, result);
-	// } else {
-	// result = em.mkVar(newCvcName(root), type); //result =
-	// vc.varExpr(newCvcName(root), type);
-	// }
-	// varMap.put(result, symbolicConstant);
-	// return result;
-	// }
+	* Translates a symbolic constant to CVC4 variable. Special handling is
+	* required if the symbolic constant is used as a bound variable in a
+	* quantified (forall, exists) expression.
+	* 
+	* Precondition: ?
+	* 
+	* @param symbolicConstant
+	* @param isBoundVariable
+	* @return the CVC4 equivalent Expr
+	*/
+	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
+			boolean isBoundVariable) throws Exception {
+		Type type = translateType(symbolicConstant.type());
+		String root = symbolicConstant.name().getString();
+		Expr result;
+
+		if (isBoundVariable) {
+			result = em.mkBoundVar(root, type); //CVC3: result = vc.boundVarExpr(root, root, type);
+			translationStack.getLast().put(symbolicConstant, result);
+			this.expressionMap.put(symbolicConstant, result);
+		} else {
+			result = em.mkVar(newCvcName(root), type); //CVC3: result = vc.varExpr(newCvcName(root), type);
+		}
+		varMap.put(result, symbolicConstant);
+		return result;
+	}
 
 	/**
 	 * Translates the symbolic type to a CVC4 type.
