@@ -169,11 +169,18 @@ public class CommonSymbolicTypeSequenceTest {
 	}
 	
 	
-//	@Test
-//	public void testIterator()
-//	{
-//		System.out.println(typeSequence.iterator());
-//		System.out.println(typeSequence4.iterator());
-//	}
-	 
+	/**
+	 * this test checks the type of the first element in the sequence 
+	 */
+	@Test
+	public void testIterator()
+	{
+//		System.out.println(typeSequence.iterator().next());
+//		System.out.println(typeSequence2.iterator().next());
+//		System.out.println(typeSequence3.iterator().next());
+//		System.out.println(typeSequence4.iterator().next());
+		assertEquals(typeSequence.iterator().next(), typeSequence3.iterator().next());
+		assertEquals(typeSequence3.iterator().next(), typeSequence4.iterator().next());
+		assertNotEquals(typeSequence.iterator().next(), typeSequence2.iterator().next());
+	}
 }
