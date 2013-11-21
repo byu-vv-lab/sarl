@@ -31,6 +31,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.common.CommonModelResult;
 import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.cvc.CVC4TheoremProverFactory;
 
 public class Prove {
 
@@ -46,6 +47,11 @@ public class Prove {
 	public static TheoremProverFactory newCVC3TheoremProverFactory(
 			PreUniverse universe) {
 		return new CVC3TheoremProverFactory(universe);
+	}
+	
+	public static TheoremProverFactory newCVC4TheoremProverFactory(
+			PreUniverse universe) {
+		return new CVC4TheoremProverFactory(universe);
 	}
 
 	public static ValidityResult validityResult(ResultType type) {
