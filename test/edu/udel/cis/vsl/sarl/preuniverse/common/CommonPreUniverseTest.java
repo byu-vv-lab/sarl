@@ -120,6 +120,9 @@ public class CommonPreUniverseTest {
 		
 	}
 
+	/**
+	 * Test for zero() method in Preuniverse. Checks cases for intType and realType
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testZero() {
@@ -135,6 +138,9 @@ public class CommonPreUniverseTest {
 		assertEquals(commonUniverse.zero(realType), numericFactory.zeroReal());
 	}
 	
+	/**
+	 * Test for exception in zero() method in Preuniverse
+	 */
 	@Test(expected = SARLInternalException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testZeroErr(){
