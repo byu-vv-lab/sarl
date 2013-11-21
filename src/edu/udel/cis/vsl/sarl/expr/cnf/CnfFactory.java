@@ -49,6 +49,11 @@ public class CnfFactory implements BooleanExpressionFactory {
 	private SymbolicType _booleanType;
 
 	private BooleanExpression trueExpr, falseExpr;
+	
+	/** Whether or not Functions check for instances of (p || !p) 
+	 * A value of False will increase performance
+	 */
+	private Boolean simplify = false; 
 
 	public CnfFactory(SymbolicTypeFactory typeFactory,
 			ObjectFactory objectFactory, CollectionFactory collectionFactory) {
@@ -65,6 +70,14 @@ public class CnfFactory implements BooleanExpressionFactory {
 	private SymbolicSet<SymbolicExpression> hashSet(SymbolicExpression x,
 			SymbolicExpression y) {
 		return collectionFactory.singletonHashSet(x).add(y);
+	}
+	
+	/**
+	 * Getter method, so that tests can be skipped if simplify is not active
+	 * @return boolean: whether or not to simplify p || !p events
+	 */
+	public boolean getSimplify() {
+		return simplify;
 	}
 
 	// Public functions specified in BooleanExpressionFactory...
@@ -197,33 +210,38 @@ public class CnfFactory implements BooleanExpressionFactory {
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set0 = c0.booleanSetArg(0);
 				SymbolicSet<BooleanExpression> set1 = c1.booleanSetArg(0);
-
-				c2 = set0.addAll(set1);
-				for (BooleanExpression clause : set0)
-					if (set1.contains(not(clause)))
-						return trueExpr;
-				return booleanExpression(op0, c2);
-				// return booleanExpression(op0,
-				// c0.booleanSetArg(0).addAll(c1.booleanSetArg(0)));
+				if (simplify) {
+					c2 = set0.addAll(set1);
+					for (BooleanExpression clause : set0)
+						if (set1.contains(not(clause)))
+							return trueExpr;
+					return booleanExpression(op0, c2);
+				} else
+					return booleanExpression(op0, set0.addAll(set1));
 			}
 			if (op0 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set0 = c0.booleanSetArg(0);
-				BooleanExpression notC1 = not(c1);
-				c2 = set0.add(c1);
-				for (BooleanExpression clause : set0)
-					if (clause.equals(notC1))
-						return (trueExpr);
-				return booleanExpression(op0, c2);
+				if (simplify) {
+					BooleanExpression notC1 = not(c1);
+					c2 = set0.add(c1);
+					for (BooleanExpression clause : set0)
+						if (clause.equals(notC1))
+							return (trueExpr);
+					return booleanExpression(op0, c2);
+				} else
+					return booleanExpression(op0, set0.add(c1));
 			}
 			if (op1 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set1 = c1.booleanSetArg(0);
-				BooleanExpression notC0 = not(c0);
-				c2 = set1.add(c0);
-				for (BooleanExpression clause : set1)
-					if (clause.equals(notC0))
-						return (trueExpr);
-				return booleanExpression(op1, c2);
-				// return booleanExpression(op1, c1.booleanSetArg(0).add(c0));
+				if (simplify) {
+					BooleanExpression notC0 = not(c0);
+					c2 = set1.add(c0);
+					for (BooleanExpression clause : set1)
+						if (clause.equals(notC0))
+							return (trueExpr);
+					return booleanExpression(op1, c2);
+				} else
+					return booleanExpression(op1, set1.add(c0));
 			}
 			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}

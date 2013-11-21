@@ -251,7 +251,7 @@ public class CnfFactoryTest {
 	 */
 	@Test
 	public void orTest() {
-		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
+		CnfFactory bef = (CnfFactory) Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("p");
 		StringObject qobject = sUniverse.stringObject("q");
 		StringObject robject = sUniverse.stringObject("r");
@@ -271,8 +271,10 @@ public class CnfFactoryTest {
 		BooleanExpression testingfalse = sUniverse.bool(false);
 
 		// testing for various combinations of true and false and and or results
+		if(bef.getSimplify()){
 		assertEquals(trueExpr, (bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
 		assertEquals(trueExpr, bef.or(qortrue, porfalse));
+		}
 		// System.out.println(bef.and(p, bef.not(p)));
 
 		
