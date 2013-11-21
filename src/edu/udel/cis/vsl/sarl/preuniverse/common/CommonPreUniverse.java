@@ -2257,7 +2257,8 @@ public class CommonPreUniverse implements PreUniverse {
 	/*
 	 * //Using newimproved version
 	 * 
-	 * @Override public SymbolicType referencedType(SymbolicType type,
+	 * @Override 
+	 * public SymbolicType referencedType(SymbolicType type,
 	 * ReferenceExpression reference) { if (reference == null) throw new
 	 * SARLException("referencedType given null reference"); if (type == null)
 	 * throw new SARLException("referencedType given null type"); switch
@@ -2293,7 +2294,7 @@ public class CommonPreUniverse implements PreUniverse {
 	 * unreachable } }
 	 */
 
-	// @Override
+	@Override
 	/*
 	 * Written by Julian Piane This is an improved version of referenceTest
 	 * which allows for SymbolicTypes of infinite embedded size It still needs
