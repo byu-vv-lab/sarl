@@ -1570,75 +1570,61 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
-	// TODO: this method is erroneous. It throws an exception if
-	// the second argument is not a non-concrete-array. The original
-	// does not. Also, you cannot have one method that works for
-	// an array OR element. What if the user wants an array of arrays?
-	// Then the array will be an element.
-	public SymbolicExpression appendEXPERIMENT(
-			SymbolicExpression concreteArray, SymbolicExpression arrayOrElement) {
-		SymbolicType type = concreteArray.type();
-
-		if (type.typeKind() != SymbolicTypeKind.ARRAY)
-			throw err("argument concreteArray not array type:\n"
-					+ concreteArray);
-		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
-			throw err("append invoked on non-concrete array:\n" + concreteArray);
-		} else {
-			@SuppressWarnings("unchecked")
-			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
-					.argument(0);
-
-			SymbolicExpression result;
-
-			if (arrayOrElement == null || arrayOrElement.isNull())
-				throw err("Element to append has illegal value:\n"
-						+ arrayOrElement);
-			SymbolicType arrayOrElementType = arrayOrElement.type();
-			if (arrayOrElementType.typeKind() == SymbolicTypeKind.ARRAY) {
-				if (arrayOrElement.operator() != SymbolicOperator.CONCRETE)
-					throw err("append invoked on non-concrete array:\n"
-							+ arrayOrElement);
-				SymbolicType elementType = ((SymbolicArrayType) type)
-						.elementType();
-				SymbolicType typeForAppending = arrayOrElement.type();
-				SymbolicType elementTypeForSecondArray = ((SymbolicArrayType) typeForAppending)
-						.elementType();
-
-				if (incompatible(elementType, elementTypeForSecondArray))
-					throw err("Element(s) to append has incompatible type:\n"
-							+ "Expected: " + concreteArray.type() + "\nSaw: "
-							+ arrayOrElement.type());
-
-				@SuppressWarnings("unchecked")
-				SymbolicSequence<SymbolicExpression> appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
-						.argument(0);
-				for (int i = 0; i < appendedElements.size(); i++)
-					elements = elements.add(this.arrayRead(arrayOrElement,
-							integer(i)));
-				type = arrayType(elementType, integer(elements.size()));
-
-				result = expression(SymbolicOperator.CONCRETE, type,
-						sequence(elements));
-				return result;
-
-			} else {
-
-				SymbolicType elementType = ((SymbolicArrayType) type)
-						.elementType();
-
-				if (incompatible(elementType, arrayOrElement.type()))
-					throw err("Element to append has incompatible type:\n"
-							+ "Expected: " + elementType + "\nSaw: "
-							+ arrayOrElement.type());
-				elements = elements.add(arrayOrElement);
-				type = arrayType(elementType, integer(elements.size()));
-				result = expression(SymbolicOperator.CONCRETE, type,
-						sequence(elements));
-				return result;
-			}
-		}
-	}
+	/*
+	 * // TODO: this method is erroneous. It throws an exception if // the
+	 * second argument is not a non-concrete-array. The original // does not.
+	 * Also, you cannot have one method that works for // an array OR element.
+	 * What if the user wants an array of arrays? // Then the array will be an
+	 * element. public SymbolicExpression appendEXPERIMENT( SymbolicExpression
+	 * concreteArray, SymbolicExpression arrayOrElement) { SymbolicType type =
+	 * concreteArray.type();
+	 * 
+	 * if (type.typeKind() != SymbolicTypeKind.ARRAY) throw
+	 * err("argument concreteArray not array type:\n" + concreteArray); if
+	 * (concreteArray.operator() != SymbolicOperator.CONCRETE) { throw
+	 * err("append invoked on non-concrete array:\n" + concreteArray); } else {
+	 * 
+	 * @SuppressWarnings("unchecked") SymbolicSequence<SymbolicExpression>
+	 * elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+	 * .argument(0);
+	 * 
+	 * SymbolicExpression result;
+	 * 
+	 * if (arrayOrElement == null || arrayOrElement.isNull()) throw
+	 * err("Element to append has illegal value:\n" + arrayOrElement);
+	 * SymbolicType arrayOrElementType = arrayOrElement.type(); if
+	 * (arrayOrElementType.typeKind() == SymbolicTypeKind.ARRAY) { if
+	 * (arrayOrElement.operator() != SymbolicOperator.CONCRETE) throw
+	 * err("append invoked on non-concrete array:\n" + arrayOrElement);
+	 * SymbolicType elementType = ((SymbolicArrayType) type) .elementType();
+	 * SymbolicType typeForAppending = arrayOrElement.type(); SymbolicType
+	 * elementTypeForSecondArray = ((SymbolicArrayType) typeForAppending)
+	 * .elementType();
+	 * 
+	 * if (incompatible(elementType, elementTypeForSecondArray)) throw
+	 * err("Element(s) to append has incompatible type:\n" + "Expected: " +
+	 * concreteArray.type() + "\nSaw: " + arrayOrElement.type());
+	 * 
+	 * @SuppressWarnings("unchecked") SymbolicSequence<SymbolicExpression>
+	 * appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
+	 * .argument(0); for (int i = 0; i < appendedElements.size(); i++) elements
+	 * = elements.add(this.arrayRead(arrayOrElement, integer(i))); type =
+	 * arrayType(elementType, integer(elements.size()));
+	 * 
+	 * result = expression(SymbolicOperator.CONCRETE, type, sequence(elements));
+	 * return result;
+	 * 
+	 * } else {
+	 * 
+	 * SymbolicType elementType = ((SymbolicArrayType) type) .elementType();
+	 * 
+	 * if (incompatible(elementType, arrayOrElement.type())) throw
+	 * err("Element to append has incompatible type:\n" + "Expected: " +
+	 * elementType + "\nSaw: " + arrayOrElement.type()); elements =
+	 * elements.add(arrayOrElement); type = arrayType(elementType,
+	 * integer(elements.size())); result = expression(SymbolicOperator.CONCRETE,
+	 * type, sequence(elements)); return result; } } }
+	 */
 
 	@Override
 	public SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
@@ -2268,63 +2254,44 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
-	@Override
-	public SymbolicType referencedType(SymbolicType type,
-			ReferenceExpression reference) {
-		if (reference == null)
-			throw new SARLException("referencedType given null reference");
-		if (type == null)
-			throw new SARLException("referencedType given null type");
-		switch (reference.referenceKind()) {
-		case NULL:
-			throw new SARLException(
-					"Cannot compute referencedType of the null reference expression:\n"
-							+ type + "\n" + reference);
-		case IDENTITY:
-			return type;
-		case ARRAY_ELEMENT: {
-			ArrayElementReference ref = (ArrayElementReference) reference;
-			SymbolicType parentType = referencedType(type, ref.getParent());
-
-			if (parentType instanceof SymbolicArrayType)
-				return ((SymbolicArrayType) parentType).elementType();
-			else
-				throw new SARLException("Incompatible type and reference:\n"
-						+ type + "\n" + reference);
-		}
-		case TUPLE_COMPONENT: {
-			TupleComponentReference ref = (TupleComponentReference) reference;
-			SymbolicType parentType = referencedType(type, ref.getParent());
-
-			if (parentType instanceof SymbolicTupleType)
-				return ((SymbolicTupleType) parentType).sequence().getType(
-						ref.getIndex().getInt());
-			else
-				throw new SARLException("Incompatible type and reference:\n"
-						+ type + "\n" + reference);
-		}
-		case UNION_MEMBER: {
-			UnionMemberReference ref = (UnionMemberReference) reference;
-			SymbolicType parentType = referencedType(type, ref.getParent());
-
-			if (parentType instanceof SymbolicUnionType)
-				return ((SymbolicUnionType) parentType).sequence().getType(
-						ref.getIndex().getInt());
-			else
-				throw new SARLException("Incompatible type and reference:\n"
-						+ type + "\n" + reference);
-		}
-		case OFFSET: {
-			OffsetReference ref = (OffsetReference) reference;
-			SymbolicType parentType = referencedType(type, ref.getParent());
-
-			return parentType;
-		}
-		default:
-			throw new SARLInternalException("Unknown reference kind: "
-					+ reference);// unreachable
-		}
-	}
+	/*
+	 * //Using newimproved version
+	 * 
+	 * @Override public SymbolicType referencedType(SymbolicType type,
+	 * ReferenceExpression reference) { if (reference == null) throw new
+	 * SARLException("referencedType given null reference"); if (type == null)
+	 * throw new SARLException("referencedType given null type"); switch
+	 * (reference.referenceKind()) { case NULL: throw new SARLException(
+	 * "Cannot compute referencedType of the null reference expression:\n" +
+	 * type + "\n" + reference); case IDENTITY: return type; case ARRAY_ELEMENT:
+	 * { ArrayElementReference ref = (ArrayElementReference) reference;
+	 * SymbolicType parentType = referencedType(type, ref.getParent());
+	 * 
+	 * if (parentType instanceof SymbolicArrayType) return ((SymbolicArrayType)
+	 * parentType).elementType(); else throw new
+	 * SARLException("Incompatible type and reference:\n" + type + "\n" +
+	 * reference); } case TUPLE_COMPONENT: { TupleComponentReference ref =
+	 * (TupleComponentReference) reference; SymbolicType parentType =
+	 * referencedType(type, ref.getParent());
+	 * 
+	 * if (parentType instanceof SymbolicTupleType) return ((SymbolicTupleType)
+	 * parentType).sequence().getType( ref.getIndex().getInt()); else throw new
+	 * SARLException("Incompatible type and reference:\n" + type + "\n" +
+	 * reference); } case UNION_MEMBER: { UnionMemberReference ref =
+	 * (UnionMemberReference) reference; SymbolicType parentType =
+	 * referencedType(type, ref.getParent());
+	 * 
+	 * if (parentType instanceof SymbolicUnionType) return ((SymbolicUnionType)
+	 * parentType).sequence().getType( ref.getIndex().getInt()); else throw new
+	 * SARLException("Incompatible type and reference:\n" + type + "\n" +
+	 * reference); } case OFFSET: { OffsetReference ref = (OffsetReference)
+	 * reference; SymbolicType parentType = referencedType(type,
+	 * ref.getParent());
+	 * 
+	 * return parentType; } default: throw new
+	 * SARLInternalException("Unknown reference kind: " + reference);//
+	 * unreachable } }
+	 */
 
 	// @Override
 	/*
@@ -2332,7 +2299,7 @@ public class CommonPreUniverse implements PreUniverse {
 	 * which allows for SymbolicTypes of infinite embedded size It still needs
 	 * to undergo further testing however before it is finalized.
 	 */
-	public SymbolicType referencedTypeImproved(SymbolicType type,
+	public SymbolicType referencedType(SymbolicType type,
 			ReferenceExpression reference) {
 
 		while (reference != null && type != null) {
