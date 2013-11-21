@@ -35,7 +35,6 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
-import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -69,7 +68,6 @@ public class IdealBooleanTest {
 	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-	private CommonIdealFactory commonIdealFactory;
 
 	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
@@ -87,8 +85,6 @@ public class IdealBooleanTest {
 		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		commonIdealFactory = new CommonIdealFactory(numberFactory,
-				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		Xobj = objectFactory.stringObject("X");
@@ -118,8 +114,8 @@ public class IdealBooleanTest {
 	public void notLessThan() {
 		NumericExpression n1 = idealFactory.subtract(x,intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);		
-		BooleanExpression n = commonIdealFactory.notLessThan(n2, n1);
-		BooleanExpression nn = commonIdealFactory.notLessThan(n1, n2);
+		BooleanExpression n = idealFactory.notLessThan(n2, n1);
+		BooleanExpression nn = idealFactory.notLessThan(n1, n2);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
 		
@@ -143,8 +139,8 @@ public class IdealBooleanTest {
 		NumericExpression n2 = idealFactory.add(x, intOne);
 		BooleanExpression m = booleanFactory.symbolic(true);
 		BooleanExpression n = booleanFactory.symbolic(false);				
-		BooleanExpression n01 = commonIdealFactory.notLessThanEquals(n1, n2);
-		BooleanExpression n02 = commonIdealFactory.notLessThanEquals(n2, n1);
+		BooleanExpression n01 = idealFactory.notLessThanEquals(n1, n2);
+		BooleanExpression n02 = idealFactory.notLessThanEquals(n2, n1);
 		
 		assertEquals(n, n01);
 		assertEquals(m, n02);
@@ -162,11 +158,11 @@ public class IdealBooleanTest {
 		BooleanExpression m = booleanFactory.symbolic(true);
 		BooleanExpression n = booleanFactory.symbolic(false);
 		
-		BooleanExpression b0 = commonIdealFactory.equals(x, n1);
-		BooleanExpression b1 = commonIdealFactory.equals(x, n2);
-		BooleanExpression b2 = commonIdealFactory.equals(x, n3);
-		BooleanExpression b3 = commonIdealFactory.equals(x, x);
-		BooleanExpression b4 = commonIdealFactory.equals(intOne, r1);
+		BooleanExpression b0 = idealFactory.equals(x, n1);
+		BooleanExpression b1 = idealFactory.equals(x, n2);
+		BooleanExpression b2 = idealFactory.equals(x, n3);
+		BooleanExpression b3 = idealFactory.equals(x, x);
+		BooleanExpression b4 = idealFactory.equals(intOne, r1);
 		
 		out.println("b1=" +b1);
 		out.println("b2=" +b2);
