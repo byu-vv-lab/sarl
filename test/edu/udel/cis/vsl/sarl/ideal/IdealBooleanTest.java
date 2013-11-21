@@ -29,9 +29,7 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
@@ -62,10 +60,8 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 public class IdealBooleanTest {
 
 	private static PrintStream out = System.out;
-	private NumberFactory numberFactory;
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
-	private CollectionFactory collectionFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
 
@@ -79,10 +75,8 @@ public class IdealBooleanTest {
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
-		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
-		collectionFactory = system.collectionFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
 		intOne = idealFactory.intConstant(1);
