@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.numbers;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.PrintStream;
 import java.math.BigInteger;
 
 import org.junit.Before;
@@ -16,8 +15,6 @@ import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealRational;
 
 public class NumberFactoryTest {
-
-	private static PrintStream out = System.out;
 
 	private static NumberFactory factory = Numbers.REAL_FACTORY;
 
