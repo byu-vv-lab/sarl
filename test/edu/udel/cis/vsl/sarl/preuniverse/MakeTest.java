@@ -65,7 +65,7 @@ public class MakeTest {
 	}
 
 	/**
-	 * Tests the method SymbolicExpression make(SymbolicOperator operator,
+	 * Tests all different operator for SymbolicExpression make(SymbolicOperator operator,
 	 * SymbolicType type,SymbolicObject[] arguments);
 	 * 
 	 * @param operator
