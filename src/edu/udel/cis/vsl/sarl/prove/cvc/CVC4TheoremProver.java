@@ -25,8 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cvc3.Cvc3Exception;
-import cvc3.Op;
+
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -96,29 +95,13 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The CVC4 object that checks queries
 	 */
 	private SmtEngine smt = new SmtEngine(em);
-	
-	/**
-	 * Map from SARL expressions of funcional type to corresponding CVC4
-	 * operators. In SARL, a function is a kind of symbolic expression. In CVC4,
-	 * this concept is represented as an instance of "OpMut" (Operator Mutable),
-	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
-	 * separate map is needed.
-	 */
-	private Map<SymbolicExpression, Op> functionMap = new HashMap<SymbolicExpression, Op>();
-	
+		
 	/**
 	 * Mapping of CVC4 variables to their corresponding symbolic constants.
 	 * Needed in order to construct model when there is a counter example.
 	 */
 	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
 	
-	/**
-	 * Mapping of CVC4 "Op"s to their corresponding symbolic constants. A CVC4
-	 * "Op" is used to represent a function. In SARL, a function is represented
-	 * by a symbolic constant of function type. This is used for finding models.
-	 */
-	private Map<Op, SymbolicConstant> opMap = new HashMap<Op, SymbolicConstant>();
-
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC4 type. Set in method
 	 * reset().
