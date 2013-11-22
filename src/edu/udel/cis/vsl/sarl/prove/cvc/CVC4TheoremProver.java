@@ -587,6 +587,12 @@ public class CVC4TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(1)),
 					translate((SymbolicExpression) expr.argument(2)));
 			break;
+		case DENSE_ARRAY_WRITE:
+			result = translateDenseArrayWrite(expr);
+			break;
+		case DENSE_TUPLE_WRITE:
+			result = translateDenseTupleWrite(expr);
+			break;
 		case DIVIDE: // real division
 			result = em.mkExpr(Kind.DIVISION,
 					translate((SymbolicExpression) expr.argument(0)),
