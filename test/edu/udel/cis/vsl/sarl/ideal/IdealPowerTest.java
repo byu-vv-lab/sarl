@@ -24,6 +24,7 @@ import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -53,6 +54,7 @@ public class IdealPowerTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 		
+	private Constant intZero; // int constant 0
 	private Constant intOne; // int constant 1
 	private Constant intTwo; // int constant 2
 	StringObject Xobj; // "X"
@@ -65,6 +67,7 @@ public class IdealPowerTest {
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
+		intZero = idealFactory.zeroInt();
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
 		Xobj = objectFactory.stringObject("X");
@@ -77,6 +80,17 @@ public class IdealPowerTest {
 	@After
 	public void tearDown() throws Exception {
 		
+	}
+	
+	/**
+	 * Creates a numeric expression 0^0, which should return a SARLException
+	 * Not sure how to assert the expectation of an exception, will look into this shortly
+	 */
+	@Ignore
+	@Test
+	public void zeroToZero() {
+		@SuppressWarnings("unused")
+		NumericExpression ztz = idealFactory.power(intZero, intZero);
 	}
 	
 	/**
