@@ -68,7 +68,7 @@ public class CVC3ProcessEqualityTest {
 	 */
 
 	@Test
-	public void testProcessEqualityArrayCompleteEqual() {
+	public void processEqualityArrayCompleteEqual() {
 
 		List<SymbolicExpression> a1 = new ArrayList<SymbolicExpression>();
 		a1.add(0, two);
@@ -95,7 +95,7 @@ public class CVC3ProcessEqualityTest {
 	 */
 
 	@Test
-	public void testProcessEqualityArrayCompleteNotEqual() {
+	public void processEqualityArrayCompleteNotEqual() {
 
 		List<SymbolicExpression> a1 = new ArrayList<SymbolicExpression>();
 		a1.add(0, two);
@@ -116,7 +116,7 @@ public class CVC3ProcessEqualityTest {
 	}
 
 	@Test
-	public void testProcessEqualityArrayIncompleteEqual() {
+	public void processEqualityArrayIncompleteEqual() {
 
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
 
@@ -132,7 +132,7 @@ public class CVC3ProcessEqualityTest {
 	}
 
 	@Test
-	public void testProcessEqualityArrayIncompleteNotEqual() {
+	public void processEqualityArrayIncompleteNotEqual() {
 
 		SymbolicType incompleteArrayType = universe.arrayType(realType);
 

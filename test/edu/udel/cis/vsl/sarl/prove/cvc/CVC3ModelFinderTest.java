@@ -46,11 +46,6 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
-
-// TODO: DON'T COMMIT BROKEN TESTS. 
-// Make sure these tests don't generate false errors
-// before you commit them.
-
 public class CVC3ModelFinderTest {
 
 	// Static fields: instantiated once and used for all tests...
@@ -279,7 +274,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderInvalid() {
+	public void cvc3ModelFinderInvalid() {
 		StringObject strX = universe.stringObject("x");
 		SymbolicIntegerType sInt = universe.integerType();
 		SymbolicConstant symConstXInt = universe.symbolicConstant(strX, sInt);
@@ -310,7 +305,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderTuple() {
+	public void cvc3ModelFinderTuple() {
 		NumericExpression sevenInt = universe.integer(7);
 		NumericExpression fourInt = universe.integer(4);
 		NumericExpression eightInt = universe.integer(8);
@@ -349,7 +344,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderWithContext() {
+	public void cvc3ModelFinderWithContext() {
 		// Give the prover the assumption that y = 0.
 		CVC3TheoremProver cvcProverYIs0 = (CVC3TheoremProver) proverFactory
 				.newProver(universe.equals(universe.symbolicConstant(
@@ -376,7 +371,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderRational() {
+	public void cvc3ModelFinderRational() {
 		// Create the assumption y = 0.
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
@@ -414,7 +409,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderTestDivideByOne() {
+	public void cvc3ModelFinderTestDivideByOne() {
 		// Create the assumption y = 2.
 		StringObject strY = universe.stringObject("y");
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
@@ -443,7 +438,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderApplyBoolean() {
+	public void cvc3ModelFinderApplyBoolean() {
 
 //		SymbolicTypeFactory typeFactory = factorySystem.typeFactory();
 		ObjectFactory objectFactory = factorySystem.objectFactory();
@@ -463,7 +458,7 @@ public class CVC3ModelFinderTest {
 
 	@Ignore
 	@Test
-	public void CVC3ModelFinderApplyReferenced() {
+	public void cvc3ModelFinderApplyReferenced() {
 		List<SymbolicType> types = new ArrayList<SymbolicType>();
 		types.add(intType);
 
