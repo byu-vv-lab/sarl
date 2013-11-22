@@ -753,8 +753,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		int index = 0;
 
 		for (Expr value : values) {
-			// TODO: WHY unreachable??? -Prof. Siegel
-			if (value != null) // Branch is unreachable
+			if (value != null) 
 				result = vc.tupleUpdateExpr(result, index, value);
 			index++;
 		}
