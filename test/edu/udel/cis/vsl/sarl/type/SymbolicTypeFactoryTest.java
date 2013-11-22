@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.type.common;
+package edu.udel.cis.vsl.sarl.type;
 
 import static org.junit.Assert.*;
 
@@ -19,10 +19,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
@@ -36,6 +38,15 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.Types;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicPrimitiveType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicRealType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTupleType;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
 
 /**
  * Testing CommonSymbolicTypeFactory, which creates all types.
@@ -48,7 +59,7 @@ public class SymbolicTypeFactoryTest {
 	/**
 	 * creating a new typeFactory in order to instantiate concrete type objects.
 	 */
-	CommonSymbolicTypeFactory typeFactory, typeFactory2;
+	SymbolicTypeFactory typeFactory, typeFactory2;
 	
 	/**
 	 * used to create ExpressionComparator.
@@ -97,7 +108,7 @@ public class SymbolicTypeFactoryTest {
 	/**
 	 * CompleteArrayTypes to be used in the factory testing
 	 */
-	CommonSymbolicCompleteArrayType completeArrayType1, completeArrayType2;
+	SymbolicCompleteArrayType completeArrayType1, completeArrayType2;
 	
 	/**
 	 * Real types to be used in creating the SequenceType
@@ -107,12 +118,12 @@ public class SymbolicTypeFactoryTest {
 	/**
 	 * an ArrayList on SymbolicType to be used in creating the SequenceType
 	 */
-	ArrayList<CommonSymbolicType> typesList;
+	ArrayList<SymbolicType> typesList;
 	
 	/**
 	 * an array of SymbolicTypes to be used in creating the SequenceType
 	 */
-	CommonSymbolicType typesArray[];
+	SymbolicType typesArray[];
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -141,13 +152,12 @@ public class SymbolicTypeFactoryTest {
 		idealIntKind = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
 		idealRealKind = new CommonSymbolicRealType(RealKind.IDEAL);
 		floatRealKind = new CommonSymbolicRealType(RealKind.FLOAT);
-		numericPrimitive = new NumericPrimitive(SymbolicOperator.CONCRETE, idealIntKind, symbolicObject);
-		completeArrayType1 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
-		completeArrayType2 = new CommonSymbolicCompleteArrayType(boundedIntKind, numericPrimitive);
-		typesList = new ArrayList<CommonSymbolicType>();
-		typesArray = new CommonSymbolicType[4];
-		//to be used in CommonSymblicCompleteArrayType
 		symbolicObject = objectFactory.numberObject(numberFactory.integer(4));
+		numericPrimitive = new NumericPrimitive(SymbolicOperator.CONCRETE, idealIntKind, symbolicObject);
+		completeArrayType1 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
+		completeArrayType2 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
+		typesList = new ArrayList<SymbolicType>();
+		typesArray = new SymbolicType[4];
 		
 		//a list of CommonSymbolicType 
 		typesList.add(idealRealKind);
@@ -167,8 +177,6 @@ public class SymbolicTypeFactoryTest {
 	public void tearDown() throws Exception {
 		
 	}
-
-
 
 	/**
 	 * Checks the return of objectFactory() if it is really an ObjectFactory
@@ -263,9 +271,6 @@ public class SymbolicTypeFactoryTest {
 	public void testBooleanType() {
 		assertTrue(typeFactory.booleanType() instanceof CommonSymbolicPrimitiveType);
 		assertTrue(typeFactory.booleanType().isBoolean());
-		
-		//Failure
-		//assertEquals(typeFactory.booleanType().symbolicObjectKind(), SymbolicObjectKind.BOOLEAN);
 	}	
 	
 	/**
@@ -295,7 +300,7 @@ public class SymbolicTypeFactoryTest {
 		assertNotEquals(typeFactory.typeComparator().compare(idealIntKind, idealRealKind), 0);
 		assertNull(typeFactory.typeComparator().expressionComparator());
 		typeFactory.typeComparator().setExpressionComparator(expressionComparator);
-		assertNotNull(typeFactory.typeComparator().expressionComparator());
+		assertNotNull(typeFactory.typeComparator().expressionComparator());		
 		assertEquals(typeFactory.typeComparator().compare(completeArrayType1, completeArrayType2), 0);
 	}
 	
@@ -336,12 +341,17 @@ public class SymbolicTypeFactoryTest {
 				typeFactory.sequence(typesArray))) instanceof CommonSymbolicTupleType);
 	}
 	
+	/**
+	 * testing the return of unionType() if it is of type SymbolicUnionType.
+	 */
 	@Test
 	public void testUnionType() {
 		StringObject stringObject = objectFactory.stringObject("myUnion");
 		
+		
 		assertTrue((typeFactory.unionType(stringObject, 
-				typeFactory.sequence(typesList))) instanceof CommonSymbolicUnionType);
+				typeFactory.sequence(typesList))) instanceof SymbolicUnionType);
+				
 	}
 	
 	/**
