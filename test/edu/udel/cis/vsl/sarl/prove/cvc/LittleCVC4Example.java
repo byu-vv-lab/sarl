@@ -8,6 +8,7 @@ import edu.nyu.acsys.CVC4.FunctionType;
 import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.RealType;
+import edu.nyu.acsys.CVC4.SExpr;
 import edu.nyu.acsys.CVC4.SmtEngine;
 
 public class LittleCVC4Example {
@@ -33,6 +34,10 @@ public class LittleCVC4Example {
 		out.println("Starting little CVC4 example...");
 		em = new ExprManager();
 		smt = new SmtEngine(em);
+		// the following is necessary if you are going to make
+		// multiple verify calls with the same SmtEngine:
+		// (this may change in the future)
+		smt.setOption("incremental", new SExpr(true));
 		realType = em.realType();
 		fType = em.mkFunctionType(realType, realType);
 		zero = em.mkConst(new Rational(0));
