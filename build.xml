@@ -105,6 +105,7 @@
 		<jacoco:coverage>
 			<junit fork="true" forkmode="once" timeout="300000">
 				<jvmarg value="-ea" />
+				<sysproperty key="java.library.path" value="${libdir}"/>
 				<classpath refid="test.execute.classpath" />
 				<formatter type="brief" usefile="false" />
 				<formatter type="xml" />

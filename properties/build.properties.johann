@@ -1,6 +1,0 @@
-cvc3.jni.dir=/VSL/Tools/lib/cvc3-dynamic-libs
-cvc3.lib.jar=/VSL/Tools/lib/libcvc3.jar
-clj-ds.classes=/VSL/Tools/lib/clj-ds.jar
-pcollections.jar=/VSL/Tools/lib/pcollections.jar
-junit.jar=/VSL/Tools/lib/junit.jar
-jacoco.jar=/VSL/Tools/src/jacoco/lib/jacocoant.jar
