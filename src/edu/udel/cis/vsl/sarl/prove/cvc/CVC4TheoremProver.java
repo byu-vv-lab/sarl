@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cvc3.Cvc3Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
@@ -48,6 +47,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -263,6 +263,28 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr bigArrayValue(Expr bigArray) {
 		Expr index = em.mkConst(new Rational(1));
 		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
+	}
+	
+	/**
+	 * Formats the name of unionType during type translation.
+	 * 
+	 * @param unionType
+	 * @param index
+	 * @return the newly formatted name of the unionType
+	 */
+	private String selector(SymbolicUnionType unionType, int index) {
+		return unionType.name().toString() + "_extract_" + index;
+	}
+	
+	/**
+	 * Formats the name of unionType during type translation.
+	 * 
+	 * @param unionType
+	 * @param index
+	 * @return the newly formatted name of the unionType
+	 */
+	private String constructor(SymbolicUnionType unionType, int index) {
+		return unionType.name().toString() + "_inject_" + index;
 	}
 
 	/**
@@ -522,6 +544,57 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
+	
+	/**
+	 * UNION_EXTRACT: 2 arguments: arg0 is an IntObject giving the index of a
+	 * member type of a union type; arg1 is a symbolic expression whose type is
+	 * the union type. The resulting expression has type the specified member
+	 * type. This essentially pulls the expression out of the union and casts it
+	 * to the member type. If arg1 does not belong to the member type (as
+	 * determined by a UNION_TEST expression), the value of this expression is
+	 * undefined.
+	 * 
+	 * Get the type of arg1. It is a union type. Get arg0 and call it i. Get the
+	 * name of the i-th component of the union type. It must have a globally
+	 * unique name. That is the selector. Translate arg1.
+	 * 
+	 * Every symbolic union type has a name, so name of selector could be
+	 * unionName_i.
+	 * 
+	 * @param expr
+	 *            a "union extract" expression
+	 * @return the CVC4 translation of that expression
+	 */
+	private Expr translateUnionExtract(SymbolicExpression expr) {
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
+		int index = ((IntObject) expr.argument(0)).getInt();
+		String selector = selector(unionType, index);
+		Expr selectorExpr = em.mkConst(selector);
+		Expr result = em.mkExpr(Kind.APPLY_SELECTOR, selectorExpr, translate(arg));
+		return result;
+	}
+
+	/**
+	 * UNION_TEST: 2 arguments: arg0 is an IntObject giving the index of a
+	 * member type of the union type; arg1 is a symbolic expression whose type
+	 * is the union type. This is a boolean-valued expression whose value is
+	 * true iff arg1 belongs to the specified member type of the union type.
+	 * 
+	 * @param expr
+	 *            a "union test" expression
+	 * @return the CVC4 translation of that expression
+	 */
+	private Expr translateUnionTest(SymbolicExpression expr) {
+		int index = ((IntObject) expr.argument(0)).getInt();
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
+		String constructor = constructor(unionType, index);
+		Expr constructorExpr = em.mkConst(constructor);
+		Expr result = em.mkExpr(Kind.APPLY_TESTER, constructorExpr, translate(arg));
+
+		return result;
+	}
 
 
 	/**
@@ -654,6 +727,11 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) exponent));
 			break;
 		}
+		case SUBTRACT:
+			result = em.mkExpr(Kind.MINUS,
+					translate((SymbolicExpression) expr.argument(0)),
+					translate((SymbolicExpression) expr.argument(1)));
+			break;
 		case TUPLE_READ:
 			result = em.mkExpr(Kind.TUPLE_SELECT,
 					translate((SymbolicExpression) expr.argument(0)), em
@@ -667,12 +745,12 @@ public class CVC4TheoremProver implements TheoremProver {
 									((IntObject) expr.argument(1)).getInt())),
 					translate((SymbolicExpression) expr.argument(2)));
 			break;
-		case SUBTRACT:
-			result = em.mkExpr(Kind.MINUS,
-					translate((SymbolicExpression) expr.argument(0)),
-					translate((SymbolicExpression) expr.argument(1)));
+		case UNION_EXTRACT:
+			result = translateUnionExtract(expr);
 			break;
-
+		case UNION_TEST:
+			result = translateUnionTest(expr);
+			break;
 		default:
 			throw new SARLInternalException("unreachable");
 		}
