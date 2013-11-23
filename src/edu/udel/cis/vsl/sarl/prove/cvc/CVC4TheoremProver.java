@@ -25,14 +25,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
-import edu.nyu.acsys.CVC4.Result;
 import edu.nyu.acsys.CVC4.Rational;
+import edu.nyu.acsys.CVC4.Result;
 import edu.nyu.acsys.CVC4.SmtEngine;
 import edu.nyu.acsys.CVC4.Type;
-import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.vectorExpr;
 import edu.nyu.acsys.CVC4.vectorType;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -41,19 +44,19 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -264,7 +267,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr index = em.mkConst(new Rational(1));
 		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, index);
 	}
-	
+
 	/**
 	 * Formats the name of unionType during type translation.
 	 * 
@@ -275,7 +278,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	private String selector(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_extract_" + index;
 	}
-	
+
 	/**
 	 * Formats the name of unionType during type translation.
 	 * 
@@ -329,7 +332,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			assert extentNumber != null && extentNumber.intValue() == size;
 			result = newAuxVariable(cvcType);
 			for (int i = 0; i < size; i++)
-				result = em.mkExpr(Kind.STORE, result,
+				result = em
+						.mkExpr(Kind.STORE, result,
 								em.mkConst(new Rational(i)),
 								translate(sequence.get(i)));
 			break;
@@ -482,7 +486,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				.mkExpr(Kind.STORE, array, index, value);
 		return result;
 	}
-	
+
 	/**
 	 * Translates a multiple array-write (or array update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -506,8 +510,9 @@ public class CVC4TheoremProver implements TheoremProver {
 		int index = 0;
 
 		for (Expr value : values) {
-			if (value != null) 
-				result = em.mkExpr(Kind.STORE, result, em.mkConst(new Rational(index)), value);
+			if (value != null)
+				result = em.mkExpr(Kind.STORE, result,
+						em.mkConst(new Rational(index)), value);
 			index++;
 		}
 		assertIndexInBounds(arrayExpression, universe.integer(index - 1));
@@ -515,7 +520,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = bigArray(bigArrayLength(origin), result);
 		return result;
 	}
-	
+
 	/**
 	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -544,7 +549,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * UNION_EXTRACT: 2 arguments: arg0 is an IntObject giving the index of a
 	 * member type of a union type; arg1 is a symbolic expression whose type is
@@ -571,7 +576,8 @@ public class CVC4TheoremProver implements TheoremProver {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		String selector = selector(unionType, index);
 		Expr selectorExpr = em.mkConst(selector);
-		Expr result = em.mkExpr(Kind.APPLY_SELECTOR, selectorExpr, translate(arg));
+		Expr result = em.mkExpr(Kind.APPLY_SELECTOR, selectorExpr,
+				translate(arg));
 		return result;
 	}
 
@@ -591,11 +597,11 @@ public class CVC4TheoremProver implements TheoremProver {
 		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
 		String constructor = constructor(unionType, index);
 		Expr constructorExpr = em.mkConst(constructor);
-		Expr result = em.mkExpr(Kind.APPLY_TESTER, constructorExpr, translate(arg));
+		Expr result = em.mkExpr(Kind.APPLY_TESTER, constructorExpr,
+				translate(arg));
 
 		return result;
 	}
-
 
 	/**
 	 * Translates which operation to perform based upon the given
@@ -634,6 +640,8 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(0)),
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
+				// TODO: this is wrong: if AND has one argument, it is a 
+				// SymbolicSequence.   See documentation for SymbolicExpression.
 				result = em.mkExpr(Kind.AND,
 						translate((SymbolicExpression) expr.argument(0)));
 			else {

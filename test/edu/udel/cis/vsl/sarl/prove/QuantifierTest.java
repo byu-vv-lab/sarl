@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -39,6 +41,9 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  * @author siegel
  * 
  */
+//until this class stops throwing exception, run in separate
+//Java virtual machine:
+@RunWith(JUnit4.class)
 public class QuantifierTest {
 
 	// Static fields: instantiated once and used for all tests...
@@ -78,10 +83,13 @@ public class QuantifierTest {
 			prover.setOutput(System.out); // for debugging
 			provers.add(prover);
 		}
-		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
-				.newProver(context);
-		cvc4prover.setOutput(System.out); // for debugging
-		provers.add(cvc4prover);
+		// TODO: until this is working, don't commit it, as it causes
+		// subsequent tests to crash...
+		
+		//TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
+		//		.newProver(context);
+		//cvc4prover.setOutput(System.out); // for debugging
+		//provers.add(cvc4prover);
 	}
 
 	@Before

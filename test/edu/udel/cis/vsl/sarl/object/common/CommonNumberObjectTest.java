@@ -6,6 +6,8 @@ import java.math.BigInteger;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -19,6 +21,7 @@ import edu.udel.cis.vsl.sarl.number.real.RealRational;
  * @author jtirrell
  *
  */
+@RunWith(JUnit4.class)
 public class CommonNumberObjectTest {
 
 	/**
