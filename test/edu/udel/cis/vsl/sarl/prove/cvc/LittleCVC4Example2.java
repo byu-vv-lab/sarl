@@ -52,7 +52,7 @@ public class LittleCVC4Example2 {
 		out.println("Does x=0? " + smt.query(xeq0));
 		
 		
-		out.println("Why is it invalid? " + smt.getValue(xeq0));
+		out.println("Show me the value of x: " + smt.getValue(x));
 		
 		// answer should be "invalid"
 		// Assertion failed: (clazz != NULL && jenv->ExceptionOccurred() ==
