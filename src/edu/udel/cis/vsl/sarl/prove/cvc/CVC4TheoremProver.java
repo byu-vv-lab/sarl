@@ -1193,14 +1193,15 @@ public class CVC4TheoremProver implements TheoremProver {
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Expr cvc4Predicate = translate(symbolicPredicate);
 	    Result result = smt.query(cvc4Predicate);
-		smt.pop();
-
+		
+	    popCVC4();
 		return translateResult(result);
 	}
 
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		// TODO
+		popCVC4();
 		return null;
 	}
 
