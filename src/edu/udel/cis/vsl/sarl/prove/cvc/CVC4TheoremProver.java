@@ -41,6 +41,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
@@ -58,7 +59,6 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
-import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
  * An implementation of TheoremProver using the automated theorem prover CVC4.
@@ -211,6 +211,21 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr newAuxVariable(Type type) {
 		return em.mkVar(newCvcName("_x"), type);
+	}
+
+	/**
+	 * Returns new bound variable with a generic name "i" followed by a
+	 * distiguishing suffix.
+	 * 
+	 * @param type
+	 *            the type of the new bound variable
+	 * @return the new bound variable
+	 */
+	private Expr newBoundVariable(Type type) {
+		String name = newCvcName("i");
+		Expr result = em.mkBoundVar(name, type);
+
+		return result;
 	}
 
 	/**
@@ -401,20 +416,15 @@ public class CVC4TheoremProver implements TheoremProver {
 			String name = newCvcName(((SymbolicConstant) expr).name()
 					.getString());
 			result = em.mkVar(name, this.translateType(expr.type()));
-			//CVC3: result = vc.createOp(name, this.translateType(expr.type()));
 			opMap.put(result, (SymbolicConstant) expr);
 			break;
 		}
 		case LAMBDA:
 			result = em.mkExpr(
 					Kind.LAMBDA,
-					(Expr)newSingletonList(translateSymbolicConstant(
+					(Expr) newSingletonList(translateSymbolicConstant(
 							(SymbolicConstant) expr.argument(0), true)),
 					translate((SymbolicExpression) expr.argument(1)));
-			// result = vc.lambdaExpr(
-			// newSingletonList(translateSymbolicConstant(
-			// (SymbolicConstant) expr.argument(0), true)),
-			// translate((SymbolicExpression) expr.argument(1)));
 			break;
 		default:
 			throw new SARLInternalException(
@@ -617,6 +627,74 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	private Expr processEquality(SymbolicType type1, SymbolicType type2,
+			Expr cvcExpression1, Expr cvcExpression2) {
+		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
+			// length are equal and forall i (0<=i<length).a[i]=b[i].
+			SymbolicArrayType arrayType1 = (SymbolicArrayType) type1;
+			SymbolicArrayType arrayType2 = (SymbolicArrayType) type2;
+			Expr extent1, extent2, array1, array2, readExpr1, readExpr2;
+			Expr result, index, indexRangeExpr, elementEqualsExpr, forallExpr;
+
+			if (arrayType1 instanceof SymbolicCompleteArrayType) {
+				extent1 = translate(((SymbolicCompleteArrayType) arrayType1)
+						.extent());
+				array1 = cvcExpression1;
+			} else {
+				extent1 = bigArrayLength(cvcExpression1);
+				array1 = bigArrayValue(cvcExpression1);
+			}
+			if (arrayType2 instanceof SymbolicCompleteArrayType) {
+				extent2 = translate(((SymbolicCompleteArrayType) arrayType2)
+						.extent());
+				array2 = cvcExpression2;
+			} else {
+				extent2 = bigArrayLength(cvcExpression2);
+				array2 = bigArrayValue(cvcExpression2);
+			}
+			result = em.mkExpr(Kind.EQUAL, extent1, extent2);
+			index = newBoundVariable(em.integerType());
+			indexRangeExpr = em.mkExpr(Kind.AND,
+					em.mkExpr(Kind.GEQ, index, em.mkConst(new Rational(0))),
+					em.mkExpr(Kind.LT, index, extent1));
+			readExpr1 = em.mkExpr(Kind.SELECT, array1, index);
+			readExpr2 = em.mkExpr(Kind.SELECT, array2, index);
+			elementEqualsExpr = processEquality(arrayType1.elementType(),
+					arrayType2.elementType(), readExpr1, readExpr2);
+			forallExpr = em.mkExpr(Kind.FORALL, (Expr)newSingletonList(index),
+					em.mkExpr(Kind.IMPLIES, indexRangeExpr, elementEqualsExpr));
+			result = em.mkExpr(result, forallExpr);
+			return result;
+		} else {
+			return em.mkExpr(Kind.EQUAL, cvcExpression1, cvcExpression2);
+		}
+	}
+
+	/**
+	 * Translates a SymbolicExpression that represents a == b into the CVC4
+	 * equivalent Expr
+	 * 
+	 * @param expr
+	 *            the equals type expression
+	 * @return the equivalent CVC4 Expr
+	 * @throws Exception
+	 *             by CVC4
+	 */
+	private Expr translateEquality(SymbolicExpression expr) throws Exception {
+		SymbolicExpression leftExpression = (SymbolicExpression) expr
+				.argument(0);
+		SymbolicExpression rightExpression = (SymbolicExpression) expr
+				.argument(1);
+		SymbolicType type1 = leftExpression.type();
+		SymbolicType type2 = rightExpression.type();
+		Expr cvcExpression1 = translate(leftExpression);
+		Expr cvcExpression2 = translate(rightExpression);
+		Expr result = processEquality(type1, type2, cvcExpression1,
+				cvcExpression2);
+
+		return result;
+	}
+
 	/**
 	 * UNION_EXTRACT: 2 arguments: arg0 is an IntObject giving the index of a
 	 * member type of a union type; arg1 is a symbolic expression whose type is
@@ -707,8 +785,8 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(0)),
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
-				// TODO: this is wrong: if AND has one argument, it is a 
-				// SymbolicSequence.   See documentation for SymbolicExpression.
+				// TODO: this is wrong: if AND has one argument, it is a
+				// SymbolicSequence. See documentation for SymbolicExpression.
 				result = em.mkExpr(Kind.AND,
 						translate((SymbolicExpression) expr.argument(0)));
 			else {
@@ -717,25 +795,32 @@ public class CVC4TheoremProver implements TheoremProver {
 						"Expected 1 or 2 arguments for AND: " + expr);
 			}
 			break;
-//		case ARRAY_LAMBDA: {
-//			SymbolicExpression function = (SymbolicExpression) expr.argument(0);
-//			SymbolicOperator op0 = function.operator();
-//			Expr var, body;
-//
-//			if (op0 == SymbolicOperator.LAMBDA) {
-//				var = translate((SymbolicConstant) function.argument(0));
-//				body = translate((SymbolicExpression) function.argument(1));
-//			} else {
-//				// create new SymbolicConstantIF _SARL_i
-//				// create new APPLY expression apply(f,i)
-//				// need universe.
-//				// or just assert forall i.a[i]=f(i)
-//				throw new UnsupportedOperationException("TO DO");
-//			}
-//		// TO DO: figure out equivalent to arrayLiteral
-//		//result = vc.arrayLiteral(var, body);
-//			break;
-//		}
+		case APPLY:
+			result = em
+					.mkExpr(Kind.FUNCTION,
+							translateFunction((SymbolicExpression) expr
+									.argument(0)),
+							(vectorExpr) translateCollection((SymbolicCollection<?>) expr
+									.argument(1)));
+			break;
+		case ARRAY_LAMBDA: {
+			SymbolicExpression function = (SymbolicExpression) expr.argument(0);
+			SymbolicOperator op0 = function.operator();
+			Expr var, body;
+
+			if (op0 == SymbolicOperator.LAMBDA) {
+				var = translate((SymbolicConstant) function.argument(0));
+				body = translate((SymbolicExpression) function.argument(1));
+			} else {
+				// create new SymbolicConstantIF _SARL_i
+				// create new APPLY expression apply(f,i)
+				// need universe.
+				// or just assert forall i.a[i]=f(i)
+				throw new UnsupportedOperationException("TO DO");
+			}
+			result = em.mkExpr(Kind.SELECT, var, body);
+			break;
+		}
 		case ARRAY_READ:
 			result = translateArrayRead(expr);
 			break;
@@ -764,6 +849,9 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = em.mkExpr(Kind.DIVISION,
 					translate((SymbolicExpression) expr.argument(0)),
 					translate((SymbolicExpression) expr.argument(1)));
+			break;
+		case EQUALS:
+			result = translateEquality(expr);
 			break;
 		case INT_DIVIDE:
 			result = em.mkExpr(Kind.INTS_DIVISION,
@@ -825,6 +913,9 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = em.mkExpr(Kind.MINUS,
 					translate((SymbolicExpression) expr.argument(0)),
 					translate((SymbolicExpression) expr.argument(1)));
+			break;
+		case SYMBOLIC_CONSTANT:
+			result = translateSymbolicConstant((SymbolicConstant) expr, false);
 			break;
 		case TUPLE_READ:
 			result = em.mkExpr(Kind.TUPLE_SELECT,
