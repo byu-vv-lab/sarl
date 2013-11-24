@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cvc3.Cvc3Exception;
 import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
@@ -746,6 +747,19 @@ public class CVC4TheoremProver implements TheoremProver {
 				translate(arg));
 
 		return result;
+	}
+	
+	/**
+	 * Pops the CVC4 stack. This means all the assertions made between the last
+	 * push and now will go away.
+	 */
+	private void popCVC4() {
+		try {
+			smt.pop();
+		} catch (Cvc3Exception e) {
+			throw new SARLInternalException("CVC4 error: " + e);
+		}
+		translationStack.removeLast();
 	}
 
 	/**
