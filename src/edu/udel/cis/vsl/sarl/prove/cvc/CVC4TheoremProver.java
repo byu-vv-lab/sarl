@@ -21,11 +21,12 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cvc3.Cvc3Exception;
+import cvc3.QueryResult;
 import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
@@ -59,6 +60,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
 /**
@@ -226,20 +228,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		String name = newCvcName("i");
 		Expr result = em.mkBoundVar(name, type);
 
-		return result;
-	}
-
-	/**
-	 * Translate expr from SARL to CVC4. This results in two things: a CVC4
-	 * expression (which is returned) and also side-effects: constraints added
-	 * to the CVC4 assumption set, possibly involving auxiliary variables.
-	 * 
-	 * @param SymbolicExpression
-	 * @returns Expr
-	 */
-	public Expr translate(SymbolicExpression expr) {
-		Expr result;
-		result = translateWork(expr);
 		return result;
 	}
 
@@ -756,7 +744,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	private void popCVC4() {
 		try {
 			smt.pop();
-		} catch (Cvc3Exception e) {
+		} catch (Exception e) {
 			throw new SARLInternalException("CVC4 error: " + e);
 		}
 		translationStack.removeLast();
@@ -974,18 +962,45 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (isBoundVariable) {
-			result = em.mkBoundVar(root, type); // CVC4: result =
-												// vc.boundVarExpr(root, root,
-												// type);
+			result = em.mkBoundVar(root, type); 
 			translationStack.getLast().put(symbolicConstant, result);
 			this.expressionMap.put(symbolicConstant, result);
 		} else {
-			result = em.mkVar(newCvcName(root), type); // CVC4: result =
-														// vc.varExpr(newCvcName(root),
-														// type);
+			result = em.mkVar(newCvcName(root), type); 
 		}
 		varMap.put(result, symbolicConstant);
 		return result;
+	}
+	
+	/**
+	 * translateResult takes a QueryResult and processes the equality between
+	 * said QueryResult and the result types (valid, invalid, unknown, abort)
+	 * and returns the SARL validity results.
+	 * 
+	 * @param result
+	 * @return ValidityResult
+	 */
+
+	private ValidityResult translateResult(Result result) {
+		if (showProverQueries) {
+			out.println("CVC3 result      " + universe.numValidCalls() + ": "
+					+ result);
+			out.flush();
+		}
+		// unfortunately QueryResult is not an enum...
+		if (result.equals(QueryResult.VALID)) {
+			return Prove.RESULT_YES;
+		} else if (result.equals(QueryResult.INVALID)) {
+			return Prove.RESULT_NO;
+		} else if (result.equals(QueryResult.UNKNOWN)) {
+			return Prove.RESULT_MAYBE;
+		} else if (result.equals(QueryResult.ABORT)) {
+			out.println("Warning: Query aborted by CVC3.");
+			return Prove.RESULT_MAYBE;
+		} else {
+			out.println("Warning: Unknown CVC3 query result: " + result);
+			return Prove.RESULT_MAYBE;
+		}
 	}
 
 	/**
@@ -1067,6 +1082,65 @@ public class CVC4TheoremProver implements TheoremProver {
 		typeMap.put(type, result);
 		return result;
 	}
+	
+	/**
+	 * Translate expr from SARL to CVC4. This results in a CVC3
+	 * expression (which is returned).
+	 *  
+	 * Attempts to re-use previous cached translation results.
+	 * 
+	 * Protocol: look through the translationStack. If you find an entry for
+	 * expr, return it.
+	 * 
+	 * Otherwise, look in the (permanent) expressionMap. If you find an entry
+	 * for expr there, that means it was translated while processesing some
+	 * previous query. You can re-use the result, but you still have to process
+	 * expr for side effects. Side effects arise while translating integer
+	 * division or modulus expressions. A side effect adds some constraint(s) to
+	 * the CVC4 assumption set, and these constraints need to be added to the
+	 * current assumption set.
+	 * 
+	 * @param expr
+	 *            any SARL expression
+	 * @return the CVC4 expression resulting from translation
+	 */
+	
+	Expr translate(SymbolicExpression expr) {
+		Expr result;
+		Iterator<Map<SymbolicExpression, Expr>> iter = translationStack
+				.descendingIterator();
+
+		while (iter.hasNext()) {
+			Map<SymbolicExpression, Expr> map = iter.next();
+
+			result = map.get(expr);
+			if (result != null)
+				return result;
+		}
+		result = expressionMap.get(expr);
+		if (result != null) {
+			translationStack.getLast().put(expr, result);
+			return result;
+		}
+		result = translateWork(expr);
+		translationStack.getLast().put(expr, result);
+		this.expressionMap.put(expr, result);
+		return result;
+	}
+
+//	/**
+//	 * Translate expr from SARL to CVC4. This results in two things: a CVC4
+//	 * expression (which is returned) and also side-effects: constraints added
+//	 * to the CVC4 assumption set, possibly involving auxiliary variables.
+//	 * 
+//	 * @param SymbolicExpression
+//	 * @returns Expr
+//	 */
+//	public Expr translate(SymbolicExpression expr) {
+//		Expr result;
+//		result = translateWork(expr);
+//		return result;
+//	}
 
 	/**
 	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
@@ -1088,6 +1162,26 @@ public class CVC4TheoremProver implements TheoremProver {
 	public PreUniverse universe() {
 		return universe;
 	}
+	
+	/**
+	 * Returns the queries and results
+	 * 
+	 * @return PrintSteam
+	 */
+
+	public PrintStream out() {
+		return out;
+	}
+
+	/**
+	 * Outputs the boolean value of showProverQueries
+	 * 
+	 * @return boolean value, true if out in setOutput is not equal to null
+	 */
+
+	public boolean showProverQueries() {
+		return showProverQueries;
+	}
 
 	/**
 	 * Takes a BooleanExpression and passes it through translate. The translated
@@ -1098,10 +1192,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Expr cvc4Predicate = translate(symbolicPredicate);
-		Result result = smt.query(cvc4Predicate);
+	    Result result = smt.query(cvc4Predicate);
 		smt.pop();
 
-		return (ValidityResult) result.asValidityResult();
+		return translateResult(result);
 	}
 
 	@Override
