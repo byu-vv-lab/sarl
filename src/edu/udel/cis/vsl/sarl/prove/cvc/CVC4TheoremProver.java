@@ -58,6 +58,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
+import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
  * An implementation of TheoremProver using the automated theorem prover CVC4.
@@ -95,6 +96,22 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The CVC4 object that checks queries
 	 */
 	private SmtEngine smt = new SmtEngine(em);
+
+	/**
+	 * Map from SARL expressions of funcional type to corresponding CVC4
+	 * operators. In SARL, a function is a kind of symbolic expression. In CVC4,
+	 * this concept is represented as an instance of "OpMut" (Operator Mutable),
+	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
+	 * separate map is needed.
+	 */
+	private Map<SymbolicExpression, Expr> functionMap = new HashMap<SymbolicExpression, Expr>();
+
+	/**
+	 * Mapping of CVC4 "Op"s to their corresponding symbolic constants. A CVC4
+	 * "Op" is used to represent a function. In SARL, a function is represented
+	 * by a symbolic constant of function type. This is used for finding models.
+	 */
+	private Map<Expr, SymbolicConstant> opMap = new HashMap<Expr, SymbolicConstant>();
 
 	/**
 	 * Mapping of CVC4 variables to their corresponding symbolic constants.
@@ -150,6 +167,19 @@ public class CVC4TheoremProver implements TheoremProver {
 		this.context = context;
 		cvcAssumption = translate(context);
 		smt.assertFormula(cvcAssumption);
+	}
+
+	/**
+	 * Single element list used by processEquality and translateFunction
+	 * 
+	 * @param element
+	 * @return the element as a list
+	 */
+	private <E> List<E> newSingletonList(E element) {
+		List<E> result = new LinkedList<E>();
+
+		result.add(element);
+		return result;
 	}
 
 	/**
@@ -351,6 +381,46 @@ public class CVC4TheoremProver implements TheoremProver {
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
 		}
+		return result;
+	}
+
+	/**
+	 * Translates a symbolic expression of functional type. In CVC4, functions
+	 * have type Op; expressions have type Expr.
+	 * 
+	 * @param expr
+	 * @return the function expression as a CVC4 Op
+	 */
+	private Expr translateFunction(SymbolicExpression expr) {
+		Expr result = functionMap.get(expr);
+
+		if (result != null)
+			return result;
+		switch (expr.operator()) {
+		case SYMBOLIC_CONSTANT: {
+			String name = newCvcName(((SymbolicConstant) expr).name()
+					.getString());
+			result = em.mkVar(name, this.translateType(expr.type()));
+			//CVC3: result = vc.createOp(name, this.translateType(expr.type()));
+			opMap.put(result, (SymbolicConstant) expr);
+			break;
+		}
+		case LAMBDA:
+			result = em.mkExpr(
+					Kind.LAMBDA,
+					(Expr)newSingletonList(translateSymbolicConstant(
+							(SymbolicConstant) expr.argument(0), true)),
+					translate((SymbolicExpression) expr.argument(1)));
+			// result = vc.lambdaExpr(
+			// newSingletonList(translateSymbolicConstant(
+			// (SymbolicConstant) expr.argument(0), true)),
+			// translate((SymbolicExpression) expr.argument(1)));
+			break;
+		default:
+			throw new SARLInternalException(
+					"unknown kind of expression of functional type: " + expr);
+		}
+		this.functionMap.put(expr, result);
 		return result;
 	}
 
@@ -647,6 +717,25 @@ public class CVC4TheoremProver implements TheoremProver {
 						"Expected 1 or 2 arguments for AND: " + expr);
 			}
 			break;
+//		case ARRAY_LAMBDA: {
+//			SymbolicExpression function = (SymbolicExpression) expr.argument(0);
+//			SymbolicOperator op0 = function.operator();
+//			Expr var, body;
+//
+//			if (op0 == SymbolicOperator.LAMBDA) {
+//				var = translate((SymbolicConstant) function.argument(0));
+//				body = translate((SymbolicExpression) function.argument(1));
+//			} else {
+//				// create new SymbolicConstantIF _SARL_i
+//				// create new APPLY expression apply(f,i)
+//				// need universe.
+//				// or just assert forall i.a[i]=f(i)
+//				throw new UnsupportedOperationException("TO DO");
+//			}
+//		// TO DO: figure out equivalent to arrayLiteral
+//		//result = vc.arrayLiteral(var, body);
+//			break;
+//		}
 		case ARRAY_READ:
 			result = translateArrayRead(expr);
 			break;
@@ -914,6 +1003,17 @@ public class CVC4TheoremProver implements TheoremProver {
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		// TODO
 		return null;
+	}
+
+	/**
+	 * opMap gets called from CVC4ModelFinder. Returns the opMap that maps
+	 * operations and their symbolic constants.
+	 * 
+	 * @return Map of operations and symbolic constants
+	 */
+
+	public Map<Expr, SymbolicConstant> opMap() {
+		return opMap;
 	}
 
 	@Override
