@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cvc3.QueryResult;
 import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
@@ -615,7 +614,48 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
+	
+	/**
+	 * Translates SymbolicExpressions of the type "exists" and "for all" into
+	 * the CVC4 equivalent Expr
+	 * 
+	 * @param expr
+	 *            a "exists" or "for all" expression
+	 * @return the equivalent CVC4 Expr
+	 * @throws Exception
+	 *             by CVC4
+	 */
+	private Expr translateQuantifier(SymbolicExpression expr)
+			throws Exception {
+		Expr variable = this.translateSymbolicConstant(
+				(SymbolicConstant) (expr.argument(0)), true);
+		Expr predicate = translate((SymbolicExpression) expr.argument(1));
+		SymbolicOperator kind = expr.operator();
 
+		if (kind == SymbolicOperator.FORALL) {
+			return em.mkExpr(Kind.FORALL, variable, predicate);
+		} else if (kind == SymbolicOperator.EXISTS) {
+			return em.mkExpr(Kind.EXISTS, variable, predicate);
+		} else { 
+			throw new SARLInternalException(
+					"Cannot translate quantifier into CVC4: " + expr);
+		}
+	}
+
+	/**
+	 * Processes the equality of two arrays. Arrays can be of complete type or
+	 * incomplete type.
+	 * 
+	 * @param type1
+	 *            a SARL SymbolicType
+	 * @param type2
+	 *            a SARL SymbolicType
+	 * @param cvcExpression1
+	 *            a CVC4 array
+	 * @param cvcExpression2
+	 *            a CVC4 array
+	 * @return
+	 */
 	private Expr processEquality(SymbolicType type1, SymbolicType type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
 		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
@@ -855,6 +895,12 @@ public class CVC4TheoremProver implements TheoremProver {
 		case EQUALS:
 			result = translateEquality(expr);
 			break;
+		case EXISTS:
+			result = translateQuantifier(expr);
+			break;
+		case FORALL:
+			result = translateQuantifier(expr);
+			break;
 		case INT_DIVIDE:
 			result = em.mkExpr(Kind.INTS_DIVISION,
 					translate((SymbolicExpression) expr.argument(0)),
@@ -988,14 +1034,11 @@ public class CVC4TheoremProver implements TheoremProver {
 			out.flush();
 		}
 		// unfortunately QueryResult is not an enum...
-		if (result.equals(QueryResult.VALID)) {
+		if (result.equals(Result.Validity.VALID)) {
 			return Prove.RESULT_YES;
-		} else if (result.equals(QueryResult.INVALID)) {
+		} else if (result.equals(Result.Validity.INVALID)) {
 			return Prove.RESULT_NO;
-		} else if (result.equals(QueryResult.UNKNOWN)) {
-			return Prove.RESULT_MAYBE;
-		} else if (result.equals(QueryResult.ABORT)) {
-			out.println("Warning: Query aborted by CVC3.");
+		} else if (result.equals(Result.Validity.VALIDITY_UNKNOWN)) {
 			return Prove.RESULT_MAYBE;
 		} else {
 			out.println("Warning: Unknown CVC3 query result: " + result);
