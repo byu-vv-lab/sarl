@@ -754,6 +754,28 @@ public class CVC4TheoremProver implements TheoremProver {
 				translate(arg));
 		return result;
 	}
+	
+	/**
+	 * UNION_INJECT: injects an element of a member type into a union type that
+	 * includes that member type. 2 arguments: arg0 is an IntObject giving the
+	 * index of the member type of the union type; arg1 is a symbolic expression
+	 * whose type is the member type. The union type itself is the type of the
+	 * UNION_INJECT expression.
+	 * 
+	 * @param expr
+	 *            a "union inject" expression
+	 * @return the CVC4 translation of that expression
+	 */
+	private Expr translateUnionInject(SymbolicExpression expr) {
+		int index = ((IntObject) expr.argument(0)).getInt();
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		SymbolicUnionType unionType = (SymbolicUnionType) expr.type();
+		String constructor = constructor(unionType, index);
+		Expr constructExpr = em.mkConst(constructor);
+		Expr result;
+		result = em.mkExpr(Kind.APPLY_CONSTRUCTOR, constructExpr, translate(arg));
+		return result;
+	}
 
 	/**
 	 * UNION_TEST: 2 arguments: arg0 is an IntObject giving the index of a
@@ -773,7 +795,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr constructorExpr = em.mkConst(constructor);
 		Expr result = em.mkExpr(Kind.APPLY_TESTER, constructorExpr,
 				translate(arg));
-
 		return result;
 	}
 	
@@ -981,6 +1002,9 @@ public class CVC4TheoremProver implements TheoremProver {
 		case UNION_EXTRACT:
 			result = translateUnionExtract(expr);
 			break;
+		case UNION_INJECT:
+			result = translateUnionInject(expr);
+			break;
 		case UNION_TEST:
 			result = translateUnionTest(expr);
 			break;
@@ -1029,7 +1053,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	private ValidityResult translateResult(Result result) {
 		if (showProverQueries) {
-			out.println("CVC3 result      " + universe.numValidCalls() + ": "
+			out.println("CVC4 result      " + universe.numValidCalls() + ": "
 					+ result);
 			out.flush();
 		}
@@ -1041,7 +1065,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		} else if (result.equals(Result.Validity.VALIDITY_UNKNOWN)) {
 			return Prove.RESULT_MAYBE;
 		} else {
-			out.println("Warning: Unknown CVC3 query result: " + result);
+			out.println("Warning: Unknown CVC4 query result: " + result);
 			return Prove.RESULT_MAYBE;
 		}
 	}
@@ -1127,7 +1151,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 	
 	/**
-	 * Translate expr from SARL to CVC4. This results in a CVC3
+	 * Translate expr from SARL to CVC4. This results in a CVC4
 	 * expression (which is returned).
 	 *  
 	 * Attempts to re-use previous cached translation results.
