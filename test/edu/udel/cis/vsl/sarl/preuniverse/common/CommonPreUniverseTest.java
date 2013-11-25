@@ -122,6 +122,8 @@ public class CommonPreUniverseTest {
 
 	/**
 	 * Test for zero() method in Preuniverse. Checks cases for intType and realType
+	 * 
+	 * @author jdimarco
 	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
@@ -140,6 +142,8 @@ public class CommonPreUniverseTest {
 	
 	/**
 	 * Test for exception in zero() method in Preuniverse
+	 * 
+	 * @author jdimarco
 	 */
 	@Test(expected = SARLInternalException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
@@ -160,6 +164,11 @@ public class CommonPreUniverseTest {
 		commonUniverse.zero(unionType);
 	}
 
+	/**
+	 * Test for universe.add() of Boolean List
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written Jeff DiMarco (jdimarco) 9/24/13
 	public void testAndIterableOfQextendsBooleanExpression() {
@@ -209,6 +218,11 @@ public class CommonPreUniverseTest {
 		assertEquals(object, objectFactory.numObjects());
 	}
 
+	/**
+	 * Test simple case for objectFactory.objectWithId() method
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testObjectWithId() {
@@ -318,6 +332,12 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.multiply(numericList), testResult);
 	}
 
+	/**
+	 * Test for universe.minus() method.
+	 * Tests for concrete cases as well as symbolic usage.
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testMinus() {
@@ -358,6 +378,11 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.minus(negativeSeventeen), seventeen); // test -(-17) =  17
 	}
 
+	/**
+	 * Test for universe.bool()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/17/13
 	public void testBoolBooleanObject() {
@@ -369,6 +394,12 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.bool(booleanObject1), booleanExpression1); // trivial check of return type
 	}
 
+	/**
+	 * Test for universe.or() for Boolean List
+	 * Tests cases for all false, all true, and partially true/false
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco (jdimarco) 9/20/13
 	public void testOrIterableOfQextendsBooleanExpression() {
@@ -648,6 +679,11 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.equals(symbolicExpr5, symbolicExpr6), falseExpression);
 	}
 
+	/**
+	 * Test for universe.extractBoolean()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test
 	// Test written by Jeff DiMarco(jdimarco) 9/20/13
 	public void testExtractBoolean() {
@@ -898,6 +934,11 @@ public class CommonPreUniverseTest {
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 	}
 
+	/**
+	 * Test for universe.assign()
+	 * 
+	 * @author jdimarco, jpaine
+	 */
 	@Test
 	// Test written by Jeff DiMarco/Julian Piane (jdimarco) 9/25/13
 	public void testAssign() {
@@ -925,6 +966,11 @@ public class CommonPreUniverseTest {
 		catch(Exception e){assertEquals(e.getClass(), SARLException.class);}
 	}
 	
+	/**
+	 * Test for reference parameter nullReference() exception case of universe.assign()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException1() {
@@ -942,6 +988,11 @@ public class CommonPreUniverseTest {
 		universe.assign(u_ten, nref, u_ten); // test for SARLException
 	}
 	
+	/**
+	 * Test for subValue null exception in universe.assign()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException2() {
@@ -960,6 +1011,11 @@ public class CommonPreUniverseTest {
 		universe.assign(u_ten, iref, null); // test for SARLException
 	}
 	
+	/**
+	 * Test for reference parameter null exception case in universe.assign()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException3() {
@@ -978,6 +1034,11 @@ public class CommonPreUniverseTest {
 		universe.assign(null, nref, u_ten); // test for SARLException
 	}
 	
+	/**
+	 * Test for reference parameter null exception case in universe.assign()
+	 * 
+	 * @author jdimarco
+	 */
 	@Test (expected = SARLException.class)
 	// Test written by Jeff DiMarco (jdimarco) 9/25/13
 	public void testAssignException4() {
