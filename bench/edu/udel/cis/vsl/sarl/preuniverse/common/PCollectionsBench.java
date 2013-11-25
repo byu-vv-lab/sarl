@@ -5,12 +5,11 @@ import org.pcollections.TreePVector;
 public class PCollectionsBench {
 
     /**
-     * @param args
+     * @author Mohammad Alsulmi (malsulmi)
      */
     public static void main(String[] args) {
         PVector<String> ve;
-        // System.out.print("jjj");
-        int maxSize = (int) Math.pow(2, 30);
+        int maxSize = (int) Math.pow(2, 28);
         for (int i = 1; i <= maxSize; i = i * 2) {
             ve = TreePVector.empty();
             int size = i;
