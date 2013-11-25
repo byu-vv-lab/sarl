@@ -28,7 +28,6 @@ import java.util.Map;
 
 import edu.nyu.acsys.CVC4.Datatype;
 import edu.nyu.acsys.CVC4.DatatypeConstructor;
-import edu.nyu.acsys.CVC4.DatatypeSelfType;
 import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
@@ -36,7 +35,6 @@ import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.Result;
 import edu.nyu.acsys.CVC4.Result.Validity;
-import edu.nyu.acsys.CVC4.SelectorType;
 import edu.nyu.acsys.CVC4.SmtEngine;
 import edu.nyu.acsys.CVC4.Type;
 import edu.nyu.acsys.CVC4.vectorExpr;
