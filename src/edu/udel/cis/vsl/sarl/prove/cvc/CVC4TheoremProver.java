@@ -26,12 +26,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import edu.nyu.acsys.CVC4.Datatype;
+import edu.nyu.acsys.CVC4.DatatypeConstructor;
+import edu.nyu.acsys.CVC4.DatatypeSelfType;
 import edu.nyu.acsys.CVC4.Exception;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.Result;
+import edu.nyu.acsys.CVC4.Result.Validity;
+import edu.nyu.acsys.CVC4.SelectorType;
 import edu.nyu.acsys.CVC4.SmtEngine;
 import edu.nyu.acsys.CVC4.Type;
 import edu.nyu.acsys.CVC4.vectorExpr;
@@ -80,14 +85,12 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * constructor.
 	 */
 	private boolean showProverQueries = false;
-	// TODO not used locally?
 
 	/**
 	 * The printwriter used to print the queries and results. Initialized by
 	 * constructor.
 	 */
 	private PrintStream out = System.out;
-	// TODO not used locally?
 
 	/**
 	 * The CVC4 object used for creating CVC4 Exprs
@@ -154,7 +157,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The assumption under which this prover is operating.
 	 */
 	private BooleanExpression context;
-	// TODO not used locally?
 
 	/**
 	 * The translation of the context to a CVC4 expression.
@@ -469,8 +471,9 @@ public class CVC4TheoremProver implements TheoremProver {
 		Expr result;
 
 		if (numArgs == 1)
-			// TODO NEEDS TO BE ADDED FOR ONE ARG
-			return null;
+			result = em.mkExpr(Kind.OR, (vectorExpr)
+					translateCollection((SymbolicCollection<?>) expr
+					.argument(0)));
 		else if (numArgs == 2)
 			result = em.mkExpr(Kind.OR,
 					translate((SymbolicExpression) expr.argument(0)),
@@ -551,7 +554,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				.mkExpr(Kind.STORE, array, index, value);
 		return result;
 	}
-
+	
 	/**
 	 * Translates a multiple array-write (or array update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -585,7 +588,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = bigArray(bigArrayLength(origin), result);
 		return result;
 	}
-
+	
 	/**
 	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -825,7 +828,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		int numArgs = expr.numArguments();
 		Expr result;
 
-		// TODO NEED TO WORK ON
 		switch (expr.operator()) {
 		case ADD:
 			if (numArgs == 2)
@@ -848,10 +850,10 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(0)),
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
-				// TODO: this is wrong: if AND has one argument, it is a
-				// SymbolicSequence. See documentation for SymbolicExpression.
-				result = em.mkExpr(Kind.AND,
-						translate((SymbolicExpression) expr.argument(0)));
+				result = em.mkExpr(Kind.AND, 
+						(vectorExpr) translateCollection((SymbolicCollection<?>) 
+								expr.argument(0)));
+						
 			else {
 				result = null;
 				throw new SARLInternalException(
@@ -1108,41 +1110,55 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		case TUPLE:
 			result = em
-					.mkTupleType((vectorType) translateTypeSequence(((SymbolicTupleType) type)
+					.mkTupleType((vectorType) 
+							translateTypeSequence(((SymbolicTupleType) type)
 							.sequence()));
 			break;
 		case FUNCTION:
 			result = em
-					.mkFunctionType(
-							(vectorType) translateTypeSequence(((SymbolicFunctionType) type)
+					.mkFunctionType((vectorType)
+							translateTypeSequence(((SymbolicFunctionType) type)
 									.inputTypes()),
 							translateType(((SymbolicFunctionType) type)
 									.outputType()));
 			break;
-		// TODO cvc4 union type?
-		// case UNION: {
-		// SymbolicUnionType unionType = (SymbolicUnionType) type;
-		// List<String> constructors = new LinkedList<String>();
-		// List<List<String>> selectors = new LinkedList<List<String>>();
-		// List<List<Expr>> types = new LinkedList<List<Expr>>();
-		// SymbolicTypeSequence sequence = unionType.sequence();
-		// int index = 0;
-		//
-		// for (SymbolicType t : sequence) {
-		// List<String> selectorList = new LinkedList<String>();
-		// List<Expr> typeList = new LinkedList<Expr>();
-		//
-		// selectorList.add(selector(unionType, index));
-		// typeList.add(translateType(t).getExpr());
-		// selectors.add(selectorList);
-		// types.add(typeList);
-		// constructors.add(constructor(unionType, index));
-		// index++;
-		// }
-		// result = vc.dataType(unionType.name().getString(), constructors,
-		// selectors, types);
-		// break;
-		// }
+		case UNION: {
+			SymbolicUnionType unionType = (SymbolicUnionType) type;
+			List<String> constructors = new LinkedList<String>();
+			List<List<String>> selectors = new LinkedList<List<String>>();
+			List<List<Type>> types = new LinkedList<List<Type>>();
+			SymbolicTypeSequence sequence = unionType.sequence();
+			int index = 0;
+
+			for (SymbolicType t : sequence) {
+				List<String> selectorList = new LinkedList<String>();
+				List<Type> typeList = new LinkedList<Type>();
+
+				selectorList.add(selector(unionType, index));
+				typeList.add(translateType(t));
+				selectors.add(selectorList);
+				types.add(typeList);
+				constructors.add(constructor(unionType, index));
+				index++;
+			}
+			Datatype cvc4Union = new Datatype(unionType.name().getString());
+			for (String constructor : constructors)
+				for (List<String> selectorList : selectors)
+					for (List<Type> typeList : types)
+					{
+						DatatypeConstructor cons = new 
+								DatatypeConstructor(constructor);
+						
+						for (String selector : selectorList)
+							for (Type t : typeList)
+								cons.addArg(selector, t);
+						
+						cvc4Union.addConstructor(cons);
+					}
+
+			result = em.mkDatatypeType(cvc4Union);
+			break;
+		}
 		default:
 			throw new RuntimeException("Unknown type: " + type);
 		}
@@ -1259,17 +1275,79 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Expr cvc4Predicate = translate(symbolicPredicate);
-	    Result result = smt.query(cvc4Predicate);
-		
-	    popCVC4();
+		Result result = smt.query(cvc4Predicate);
+		smt.pop();
+
 		return translateResult(result);
 	}
 
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
-		// TODO
+		Result cvcResult = queryCVC4(predicate);
+
+		if (cvcResult.equals(Validity.INVALID)) {
+//			Map<?, ?> cvcModel;
+//			Map<SymbolicConstant, SymbolicExpression> model;
+			
+			// TODO set model
+			
+			
+//			return Prove.modelResult(model);
+		}
+		
 		popCVC4();
-		return null;
+		return translateResult(cvcResult);
+	}
+	
+	/**
+	 * queryCVC4 gets called by valid, prints out predicate and context, and the
+	 * CVC4 assumptions and CVC4 predicate. Passes the symbolicPredicate through
+	 * translate and uses the cvcPredicate for the validitychecker.
+	 * 
+	 * @param symbolicPredicate
+	 * @return Result
+	 * @throws Exception
+	 */
+
+	private Result queryCVC4(BooleanExpression symbolicPredicate) {
+		Result result = null;
+		int numValidCalls = -1;
+
+		universe.incrementProverValidCount();
+		if (showProverQueries) {
+			numValidCalls = universe.numValidCalls();
+			out.println();
+			out.print("SARL context " + numValidCalls + ": ");
+			out.println(context);
+			out.print("SARL predicate  " + numValidCalls + ": ");
+			out.println(symbolicPredicate);
+			out.flush();
+		}
+		try {
+			Expr cvcPredicate;
+
+			this.smt.push();
+			translationStack.add(new HashMap<SymbolicExpression, Expr>());
+			cvcPredicate = translate(symbolicPredicate);
+			if (showProverQueries) {
+				out.println();
+				out.print("CVC4 assumptions " + numValidCalls + ": ");
+				vectorExpr assertions = smt.getAssertions();
+				for (int i = 0; i < assertions.size(); i++)
+					out.println(assertions.get(i));
+				
+				out.print("CVC4 predicate   " + numValidCalls + ": ");
+				out.println(cvcPredicate);
+				out.flush();
+			}
+			result = smt.assertFormula(cvcPredicate);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new SARLInternalException(
+					"Error in parsing the symbolic expression or querying CVC4:\n"
+							+ e);
+		}
+		return result;
 	}
 
 	/**
