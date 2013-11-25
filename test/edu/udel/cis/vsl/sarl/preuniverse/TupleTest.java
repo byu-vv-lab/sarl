@@ -73,6 +73,13 @@ public class TupleTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+	/**
+	 * Tests the method universe.tupleType() that is used to create multiple types 
+	 * and then compare these types with each other
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	@Test
 	public void tupleTypeTest() {
@@ -111,8 +118,14 @@ public class TupleTest {
 		assertEquals(tupleType1, tupleType3);
 
 	}
+	/**
+	 * Tests the method universe.tuple() for creating tuples with an exception
+	 * of creating tuples that doesn't match a previously created tuple type
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void tupleExceptionTest1() {
 
@@ -128,8 +141,14 @@ public class TupleTest {
 				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
 						universe.integer(2) }));
 	}
+	/**
+	 * Tests the method universe.tuple() for creating tuples with an exception
+	 * of creating tuples that doesn't match a previously created tuple type
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void tupleExceptionTest2() {
 		// creating a tuple type
@@ -146,8 +165,14 @@ public class TupleTest {
 						universe.integer(2), universe.integer(2) }));
 
 	}
+	/**
+	 * Tests the method universe.tupleWrite(IntObject position, SymbolicExpression element ) for writing an element to tuple
+	 *  with an exception of passing non compatible element to a tuple
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void tupleWriteTest() {
 		SymbolicTupleType tupleType1;
@@ -163,7 +188,7 @@ public class TupleTest {
 				tupleType1,
 				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
 						universe.integer(2) }));
-		// performing array write
+		// performing tuple write
 		resultedTuple = universe.tupleWrite(tuple, i1, universe.integer(2));
 		assertEquals(tuple, resultedTuple);
 
@@ -171,8 +196,14 @@ public class TupleTest {
 		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
 
 	}
+	/**
+	 * Tests the method universe.compatible(SymbolicType type1, SymbolicType type2 ) 
+	 * to compare two different symbolic types and return whether they are equal 
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithTuple() {
 
@@ -238,7 +269,13 @@ public class TupleTest {
 
 	}
 
-	// written by Mohammad Alsulmi
+	/**
+	 * Tests the method universe.tuple( ) with creating complicated tuple types
+	 * here, it tests tuple of arrays and then performs some operations such as tupleRead
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	@Test
 	public void testTupleOfArrays() {
@@ -284,7 +321,13 @@ public class TupleTest {
 
 	}
 
-	// written by Mohammad Alsulmi
+	/**
+	 * Tests the method universe.tuple( ) with creating much complicated tuple types
+	 * here, it tests multiple levels of tuples, with one containing arrays and then performs some operations such as tupleRead
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	@Test
 	public void testMixedTypeTuples() {
@@ -391,7 +434,13 @@ public class TupleTest {
 
 	}
 
-	// written by Mohammad Alsulmi
+	/**
+	 * Tests the method universe.tuple( ) with creating much complicated tuple types
+	 * here, it tests using tuples containing symbolic constants and apply some boolean reasoning operations 
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	@Test
 	public void testComplexTuples() {
