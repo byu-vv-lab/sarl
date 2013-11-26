@@ -885,6 +885,13 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	// Exported methods.............................................
 
+	/**
+	 * Note: The general simplification routine (simplifyGenericExpression)
+	 * is required to run before a call to simplifyRelational.
+	 * 
+	 * @see simplifyGenericExpression
+	 * @see simplifyRelational
+	 */
 	@Override
 	protected SymbolicExpression simplifyExpression(
 			SymbolicExpression expression) {
@@ -892,12 +899,14 @@ public class IdealSimplifier extends CommonSimplifier {
 		// symbolic constants (booleans, numeric, ...)
 		// numeric expressions (polynomials, ...)
 		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
-		expression = simplifyGenericExpression(expression);
 		if (expression instanceof Polynomial)
 			return simplifyPolynomial((Polynomial) expression);
+		//**initially order of operation was: generic, poly, boolExp... appeared to be redundancy in poly case**
+		expression = simplifyGenericExpression(expression);
 		if (isNumericRelational(expression))
 			return simplifyRelational((BooleanExpression) expression);
 		return expression;
+		
 	}
 	/**
 	 *   
