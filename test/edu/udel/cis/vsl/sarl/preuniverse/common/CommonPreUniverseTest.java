@@ -103,7 +103,7 @@ public class CommonPreUniverseTest {
 		// For testing objects() method
 		objectCollection = objectFactory.objects();
 		
-		// For testing multipl(Iterable) method
+		// For testing multiply(Iterable) method
 		emptyNumericList = new ArrayList<NumericExpression>();
 		numericList = new ArrayList<NumericExpression>();
 		
@@ -295,6 +295,7 @@ public class CommonPreUniverseTest {
 	 */
 	public void testNullExpression() {
 		SymbolicExpression resultNullExpression = universe.nullExpression();
+		
 		assertEquals(nullExpression, resultNullExpression); //test for equality
 	}
 

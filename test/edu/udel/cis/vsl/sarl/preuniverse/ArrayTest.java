@@ -56,8 +56,7 @@ public class ArrayTest {
 		realType = universe.realType();
 		intArrayType = universe.arrayType(integerType); // array of ints
 		doubleIntArrayType = universe.arrayType(intArrayType); // array of
-																// int[]s
-
+															   // int[]s
 		// Instantiate NumberExpressions
 		two = universe.integer(2);
 		four = universe.integer(4);
@@ -69,7 +68,7 @@ public class ArrayTest {
 
 	/**
 	 * Main function that tests for successful completion of denseArrayWrite().
-	 * Written by Jordan Saints
+	 * Written by Jordan Saints.
 	 */
 	@Test
 	public void testDenseArrayWriteSuccess() {
@@ -126,7 +125,8 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #1 that tests failure branch (1 of 2) of
-	 * denseArrayWrite(). Written by Jordan Saints
+	 * denseArrayWrite(). Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam1Exception() {
@@ -147,7 +147,8 @@ public class ArrayTest {
 
 	/**
 	 * Auxiliary function #2 that tests failure branch (2 of 2) of
-	 * denseArrayWrite(). Written by Jordan Saints
+	 * denseArrayWrite(). Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
 	 */
 	@Test(expected = SARLException.class)
 	public void testDenseArrayWriteParam2Exception() {
@@ -169,6 +170,7 @@ public class ArrayTest {
 		universe.denseArrayWrite(doubleIntArrayTypeExpression,
 				expressionsToWrite);
 	}
+	
 	/**
 	 * Tests the method length(SymbolicExpression array) with an exception
 	 * for a case when passing a null reference
@@ -176,7 +178,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testLengthExceptions() {
 
@@ -193,6 +194,7 @@ public class ArrayTest {
 		length = universe.length(array);
 
 	}
+	
 	/**
 	 * Tests the method length(SymbolicExpression array) with an exception
 	 * for a case when passing a non array type
@@ -200,7 +202,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testLengthExceptions2() {
 		// exception for non array type
@@ -217,6 +218,7 @@ public class ArrayTest {
 		length = universe.length(tuple);
 
 	}
+	
 	/**
 	 * Tests the method length(SymbolicExpression array) to make sure
 	 * it returns 0 when passing an empty array
@@ -224,7 +226,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void emptyArrayTest() {
 		// get an empty array with size 0
@@ -232,6 +233,7 @@ public class ArrayTest {
 		NumericExpression zero = universe.integer(0);
 		assertEquals(zero, universe.length(array));
 	}
+	
 	/**
 	 * Tests the method removeElementAt(SymbolicExpression array, int position) 
 	 * which will remove a specific element at a specific position
@@ -239,7 +241,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testRemoveElementAt() {
 		SymbolicExpression array, expected, resultedArray;
@@ -257,6 +258,7 @@ public class ArrayTest {
 		assertEquals(expected, resultedArray);
 
 	}
+	
 	/**
 	 * Tests the method removeElementAt(SymbolicExpression array, int position) with an exception case
 	 * of passing a non array type
@@ -264,7 +266,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testRemoveElementAtException() {
 
@@ -282,6 +283,7 @@ public class ArrayTest {
 		resultedArray = universe.removeElementAt(tuple, 0);
 
 	}
+	
 	/**
 	 * Tests the method removeElementAt(SymbolicExpression array, int position) with an exception case
 	 * of passing index out of range
@@ -289,7 +291,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testRemoveElementAtException2() {
@@ -316,7 +317,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testArrayWrite() {
 		SymbolicExpression array, resultedArray, expected;
@@ -343,7 +343,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testArrayWriteException() {
@@ -362,6 +361,7 @@ public class ArrayTest {
 		array = null;
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
+	
 	/**
 	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
 	 * with an exception case of passing null index
@@ -369,7 +369,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayWriteException2() {
 		// testing the fail when pass a null index to arrayWrite()
@@ -388,6 +387,7 @@ public class ArrayTest {
 				Arrays.asList(new NumericExpression[] { two, three, five }));
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
+	
 	/**
 	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
 	 * with an exception case of passing null value
@@ -395,7 +395,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayWriteException3() {
 		// testing the fail when pass a null value to arrayWrite()
@@ -413,6 +412,7 @@ public class ArrayTest {
 		two = null;
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
+	
 	/**
 	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
 	 * with an exception case of passing non array type
@@ -420,7 +420,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayWriteException4() {
 		// testing the fail when pass a non array type to arrayWrite()
@@ -442,6 +441,7 @@ public class ArrayTest {
 
 		resultedArray = universe.arrayWrite(tuple, one, two);
 	}
+	
 	/**
 	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
 	 * with an exception case of passing non integer index array
@@ -449,7 +449,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayWriteException5() {
 		// testing the fail when pass a non integer index to arrayWrite()
@@ -466,6 +465,7 @@ public class ArrayTest {
 				Arrays.asList(new NumericExpression[] { two, three, five }));
 		resultedArray = universe.arrayWrite(array, one, two);
 	}
+	
 	/**
 	 * Tests the method arrayWrite(SymbolicExpression array, NumericExpression index, SymbolicExpression value ) 
 	 * with an exception case of passing when passing an incompatible value to array type
@@ -491,13 +491,13 @@ public class ArrayTest {
 		resultedArray = universe.arrayWrite(array, one, two);
 		assertEquals(resultedArray, array);
 	}
+	
 	/**
 	 * Tests the method arrayRead(SymbolicExpression array, NumericExpression index ) 
 	 * with no exceptions
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayReadException() {
 		// testing the fail when pass a null array to arrayRead()
@@ -514,13 +514,13 @@ public class ArrayTest {
 		resultedArray = universe.arrayRead(array, one);
 		assertEquals(resultedArray, array);
 	}
+	
 	/**
 	 * Tests the method arrayRead(SymbolicExpression array, NumericExpression index ) 
 	 * with an exception case of passing null index 
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayReadException2() {
 		// testing the fail when pass a null index to arrayRead()
@@ -538,13 +538,13 @@ public class ArrayTest {
 		resultedArray = universe.arrayRead(array, two);
 		assertEquals(resultedArray, array);
 	}
+	
 	/**
 	 * Tests the method arrayRead(SymbolicExpression array, NumericExpression index ) 
 	 * with an exception case of passing a non array type 
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayReadException3() {
 		// here we use a tuple instead of array
@@ -563,13 +563,13 @@ public class ArrayTest {
 
 		resultedArray = universe.arrayRead(tuple, two);
 	}
+	
 	/**
 	 * Tests the method arrayRead(SymbolicExpression array, NumericExpression index ) 
 	 * with an exception case of passing an index out of bound
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayReadException4() {
 		// testing the fail when pass a negative index to arrayRead()
@@ -586,6 +586,7 @@ public class ArrayTest {
 				Arrays.asList(new NumericExpression[] { two, three, five }));
 		resultedArray = universe.arrayRead(array, negativeOne);
 	}
+	
 	/**
 	 * Tests the method universe.compatible( SymbolicType type1,SymbolicType type2)
 	 * to verify when passing two arguments of the same type it returns true BooleanExpression, and
@@ -594,7 +595,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testCompatibleWithArray() {
 
@@ -620,13 +620,13 @@ public class ArrayTest {
 		assertEquals(expected, result);
 
 	}
+	
 	/**
 	 * Tests the method universe.array( SymbolicType type, elements)
 	 * to verify initialization of an array with no exception
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testArray() {
 		LinkedList<SymbolicExpression> elements; // list of elements
@@ -659,6 +659,7 @@ public class ArrayTest {
 		array = universe.array(integerType, elements);
 
 	}
+	
 	/**
 	 * Tests the method universe.array( SymbolicType type, elements)
 	 * to verify initialization of an array with an an exception case of passing 
@@ -666,7 +667,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayException2() {
 		// testing the fail when passing a null elements type to array()
@@ -683,6 +683,7 @@ public class ArrayTest {
 
 		array = universe.array(realType, elements);
 	}
+	
 	/**
 	 * Tests the method universe.array( SymbolicType type, elements)
 	 * to verify initialization of an array with an an exception case of passing 
@@ -690,7 +691,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayException3() {
 		NumericExpression elements[]; // array of elements
@@ -703,6 +703,7 @@ public class ArrayTest {
 		array = universe.array(integerType, Arrays.asList(elements));
 
 	}
+	
 	/**
 	 * Tests the method universe.array( SymbolicType type, elements)
 	 * to verify initialization of an array with an an exception case of passing 
@@ -710,7 +711,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testArrayException4() {
 		NumericExpression elements[]; // array of elements
@@ -726,13 +726,13 @@ public class ArrayTest {
 																	// type
 
 	}
+	
 	/**
 	 * Tests the method universe.append( SymbolicExpression array, element)
 	 * to verify a regular case of passing an element to an array with no exception expected
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testAppend() {
 
@@ -756,6 +756,7 @@ public class ArrayTest {
 		assertEquals(expected, array);
 
 	}
+	
 	/**
 	 * Tests the method universe.append( SymbolicExpression array, element)
 	 * with an expected exception case of passing an element to be appended to non array type
@@ -764,7 +765,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testAppendException() {
 
@@ -782,6 +782,7 @@ public class ArrayTest {
 		// we expect exception since append() cannot accept other than arrays
 		tuple = universe.append(tuple, value);
 	}
+	
 	/**
 	 * Tests the method universe.append( SymbolicExpression array, element)
 	 * with an expected exception case of passing a null element to be appended to an array 
@@ -790,7 +791,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testAppendException2() {
 
@@ -814,7 +814,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testAppendException3() {
 
@@ -829,6 +828,7 @@ public class ArrayTest {
 		value = universe.rational(6.0);
 		array = universe.append(array, value);
 	}
+	
 	/**
 	 * Tests the method universe.append( SymbolicExpression array, element)
 	 * with an expected exception case of passing an array to another array 
@@ -838,7 +838,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test(expected = SARLException.class)
 	public void testAppendException4() {
 
@@ -909,6 +908,7 @@ public class ArrayTest {
 		array3 = universe.arrayWrite(array4, universe.integer(1), array4);
 
 	}
+	
 	/**
 	 * Tests the creation of complicated arrays e.g. array of tuples, and performing 
 	 * some array operations such as arrayWrite
@@ -958,6 +958,7 @@ public class ArrayTest {
 
 		assertEquals(tuple1, universe.arrayRead(array, universe.integer(1)));
 	}
+	
 	/**
 	 * Tests the creation of more complicated and more nested arrays e.g. array of arrays, and performing 
 	 * some array operations such as arrayWrite
@@ -1094,8 +1095,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
-
 	@Test
 	public void testCompleteArrays() {
 
@@ -1137,6 +1136,7 @@ public class ArrayTest {
 				universe.arrayRead(completeArray, universe.integer(1)));
 
 	}
+	
 	/**
 	 * Tests the creation of complicated arrays with using symbolicConstant 
 	 * and applying some reasoning to verify that reasoning works well with arrays 
@@ -1144,7 +1144,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void complexArrayTest() {
 
@@ -1201,6 +1200,7 @@ public class ArrayTest {
 		assertEquals(expected, simplifiedArray);
 
 	}
+	
 	/**
 	 * Tests the creation of more complicated arrays (complete and nested arrays) with using symbolicConstant 
 	 * and applying some reasoning to verify that reasoning works very well when we mix different types 
@@ -1208,7 +1208,6 @@ public class ArrayTest {
 	 * @author malsulmi
 	 * 
 	 */
-
 	@Test
 	public void testComplexMixedArray() {
 
@@ -1305,7 +1304,5 @@ public class ArrayTest {
 					universe.arrayRead(nestedArray, universe.integer(1)));
 
 		}
-
 	}
-
 }
