@@ -21,7 +21,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -80,7 +79,7 @@ public class BasicCollectionTest {
 		expr5 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
 		expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(2)));
 		expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(100)));
-		SymbolicExpression five = new ExpressionStub("5");
+		//SymbolicExpression five = new ExpressionStub("5");
 		SymbolicExpression twenty = createExpression(20);
 		
 		assertTrue(objectFactory.canonic(twenty).isCanonic());
