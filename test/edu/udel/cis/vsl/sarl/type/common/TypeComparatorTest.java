@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -8,7 +8,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * testing TypeComparator is done inside classes
+ * that test different SymbolicTypes
+ * 
+ * @author mohammedalali
+ *
+ */
 public class TypeComparatorTest {
+	
+	
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

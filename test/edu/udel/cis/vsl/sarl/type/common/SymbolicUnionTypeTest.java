@@ -34,6 +34,9 @@ public class SymbolicUnionTypeTest {
 	 */
 	NumberFactory numberFactory;
 	
+	/**
+	 * creating unionType to be used for tests
+	 */
 	CommonSymbolicUnionType unionType, unionType2;
 	
 	/**

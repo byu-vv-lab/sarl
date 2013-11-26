@@ -46,6 +46,7 @@ import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicPrimitiveType;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicRealType;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTupleType;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
 
 /**
@@ -124,6 +125,16 @@ public class SymbolicTypeFactoryTest {
 	 * an array of SymbolicTypes to be used in creating the SequenceType
 	 */
 	SymbolicType typesArray[];
+	
+	/**
+	 * creating unionType to be used for tests
+	 */
+	SymbolicUnionType unionType;
+	
+	/**
+	 typeSequence is used to assign the array of CommonSymbolicType to the variables that is unionType. 
+	 */
+	SymbolicTypeSequence typeSequence;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -171,6 +182,8 @@ public class SymbolicTypeFactoryTest {
 		typesArray[2] = idealIntKind;
 		typesArray[3] = boundedIntKind;
 		
+		typeSequence = new CommonSymbolicTypeSequence(typesArray);
+		unionType = typeFactory.unionType(objectFactory.stringObject("myUnion"), typeSequence);
 	}
 
 	@After
@@ -368,10 +381,10 @@ public class SymbolicTypeFactoryTest {
 		assertEquals(typeFactory.pureType(boundedIntKind), boundedIntKind.getPureType());
 		assertEquals(typeFactory.pureType(floatRealKind), floatRealKind.getPureType());
 		assertEquals(typeFactory.pureType(cArray), cArray.getPureType());
-		assertEquals(typeFactory.pureType(cArray), typeFactory.arrayType(boundedIntKind));
 		assertNull(functionType.getPureType());
 		functionType.setPureType(functionType);
 		assertNotNull(functionType.getPureType());
 		assertEquals(functionType.getPureType(), typeFactory.pureType(functionType));
+		assertEquals(typeFactory.pureType(unionType).symbolicObjectKind(), SymbolicObjectKind.TYPE);
 	}
 }
