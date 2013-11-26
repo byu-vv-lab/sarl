@@ -23,6 +23,7 @@ public class BoundsObjectEnlargeUpperTest {
 	/**
 	 * Calls the setUp() method in CommonObjects to make use of consolidated SARL object 
 	 * declarations and initializations for testing of "Simplify" module.
+	 * 
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -107,7 +108,7 @@ public class BoundsObjectEnlargeUpperTest {
 		boundObj3 = boundObj.clone();
 		
 		assertEquals(boundObj, boundObj3);
-		boundObj.enlargeUpper(num3, true);;
+		boundObj.enlargeUpper(num3, true);
 		assertNotEquals(boundObj, boundObj3);
 	}
 	

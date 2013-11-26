@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ BoundsObjectEnlargeUpperTest.class, BoundsObjectToStringTest.class, BoundsObjectRestrictUpperTest.class, BoundsObjectRestrictLowerTest.class, BoundsObjectConstantTest.class, BoundsObjectIsConsistentTest.class, BoundsObjectMakeConstantTest.class, BoundsObjectIsRealTest.class, BoundsObjectEqualsTest.class, BoundsObjectCloneTest.class, BoundsObjectSetUpperTest.class, BoundsObjectSetLowerTest.class, BoundsObjectNewLowerTest.class, BoundsObjectNewUpperTest.class })
+@SuiteClasses({ BoundsObjectEnlargeLowerTest.class, BoundsObjectEnlargeUpperTest.class, BoundsObjectToStringTest.class, BoundsObjectRestrictUpperTest.class, BoundsObjectRestrictLowerTest.class, BoundsObjectConstantTest.class, BoundsObjectIsConsistentTest.class, BoundsObjectMakeConstantTest.class, BoundsObjectIsRealTest.class, BoundsObjectEqualsTest.class, BoundsObjectCloneTest.class, BoundsObjectSetUpperTest.class, BoundsObjectSetLowerTest.class, BoundsObjectNewLowerTest.class, BoundsObjectNewUpperTest.class })
 public class BoundsObjectSuite {
 
 }
