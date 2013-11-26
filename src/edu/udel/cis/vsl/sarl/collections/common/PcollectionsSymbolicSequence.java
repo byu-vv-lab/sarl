@@ -47,13 +47,19 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 		pvector = TreePVector.empty();
 	}
 
+	/**
+	 * The caller is responsible for making sure "elements" does not
+	 * contain any null elements.
+	 * 
+	 * @param elements
+	 */
 	public PcollectionsSymbolicSequence(Collection<T> elements) {
 		super(SymbolicCollectionKind.SEQUENCE);
-		for (T element : elements) {
-			if (element == null)
-				throw new NullPointerException(
-						"Attempt to place null element in a symbolic sequence");
-		}
+		//for (T element : elements) {
+		//	if (element == null)
+		//		throw new NullPointerException(
+		//				"Attempt to place null element in a symbolic sequence");
+		//}
 		pvector = TreePVector.from(elements);
 	}
 
