@@ -106,7 +106,6 @@ public class CommonObjects {
 	
 	static BoundsObject boundObj, boundObj2, boundObj3;
 	
-	
 	static edu.udel.cis.vsl.sarl.IF.number.Number num3,
 	num5, numNeg2000, num10000, num0, num10pt5;
 	
