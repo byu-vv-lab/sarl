@@ -38,8 +38,9 @@ public class PCollectionsBenchWithArrays {
 
             
             for (int j = 0; j < size; j++) {
-                ve.plus(element);
+                ve = ve.plus(universe.integer(j));
             }
+            System.out.println("Vector (ve) size: " + ve.size());
             long etime = System.nanoTime();
 
             double fTime = (etime - stime) / 1000000000.0;
