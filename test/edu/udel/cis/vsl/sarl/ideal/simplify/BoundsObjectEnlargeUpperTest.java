@@ -11,11 +11,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/**Provides testing of the enlargeUpper method of BoundsObject
+/**Provides testing of the enlargeUpper method 
+ * (and call to it from enlargeTo) of BoundsObject
  * 
  * @author danfried
  *
- *@see BoundsObject.enlargeUpper
+ * @see BoundsObject.enlargeUpper
+ * @see BoundsObject.enlargeTo
  */
 public class BoundsObjectEnlargeUpperTest {
 
@@ -44,7 +46,7 @@ public class BoundsObjectEnlargeUpperTest {
 	}
 
 	/**
-	 * Provides testing that confirms the behavior that an infinate upper
+	 * Provides testing that confirms the behavior that an infinite upper
 	 * bound should not adopt a lower bound when "enlarge" methods are called
 	 * 
 	 * @see BoundsObject
@@ -96,10 +98,185 @@ public class BoundsObjectEnlargeUpperTest {
 		assertNotEquals(boundObj, boundObj3);
 	}
 	
-	@Ignore
+	/**
+	 * Testing on BoundsObject.enlargeUpper when providing a 
+	 * larger real rational bound with the same "true" strictness
+	 */
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void enlargeUpperToLargerTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num0, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);;
+		assertNotEquals(boundObj, boundObj3);
 	}
-
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when providing a 
+	 * larger real rational bound with the same "false" strictness
+	 */
+	@Test
+	public void enlargeUpperToLargerFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num0, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);;
+		assertNotEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when providing a 
+	 * larger real rational bound with true->false strictness
+	 */
+	@Test
+	public void enlargeUpperToLargerTrueToFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num0, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);;
+		assertNotEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when providing a 
+	 * larger real rational bound with false->true strictness
+	 */
+	@Test
+	public void enlargeUpperToLargerFalseToTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num0, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);;
+		assertNotEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to provide a
+	 * real rational number value as parameter for the new bound that is 
+	 * less than the initial bound.  Both have a strictness of "true"
+	 */
+	@Test
+	public void enlargeUpperToSmallerTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num5, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to provide a
+	 * real rational number value as parameter for the new bound that is 
+	 * less than the initial bound.  Both have a strictness of "false"
+	 */
+	@Test
+	public void enlargeUpperToSmallerFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num5, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to provide a
+	 * real rational number value as parameter for the new bound that is 
+	 * less than the initial bound and strictness changes from 
+	 * "True" to "False."
+	 */
+	@Test
+	public void enlargeUpperToSmallerTrueFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num5, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to provide a
+	 * real rational number value as parameter for the new bound that is 
+	 * less than the initial bound and strictness changes from 
+	 * "True" to "False."
+	 */
+	@Test
+	public void enlargeUpperToSmallerFalseTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xpy, num5, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to pass
+	 * the same rational real number and "True" strictness
+	 * as parameters.
+	 */
+	@Test
+	public void enlargeUpperToSameTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xy, num3, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to pass
+	 * the same rational real number and "False" strictness
+	 * as parameters.
+	 */
+	@Test
+	public void enlargeUpperToSameFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xy, num3, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);
+		assertEquals(boundObj, boundObj3);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to pass
+	 * the same rational real number and strictness (true->false)
+	 * as parameters.  The bound should remain the same, but the
+	 * strictness of the upper bound should change.
+	 */
+	@Test
+	public void enlargeUpperToSameTrueFalseTest(){
+		boundObj = BoundsObject.newUpperBound(xy, num3, true);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, false);
+		assertNotEquals(boundObj, boundObj3);
+		assertFalse(boundObj.strictUpper);
+	}
+	
+	/**
+	 * Testing on BoundsObject.enlargeUpper when attempting to pass
+	 * the same rational real number and strictness (false->true)
+	 * as parameters.  Both the value and strictness of the upper
+	 * bound are expected to remain the same.
+	 */
+	@Test
+	public void enlargeUpperToSameFalseTrueTest(){
+		boundObj = BoundsObject.newUpperBound(xy, num3, false);
+		boundObj3 = boundObj.clone();
+		
+		assertEquals(boundObj, boundObj3);
+		boundObj.enlargeUpper(num3, true);
+		assertEquals(boundObj, boundObj3);
+		assertFalse(boundObj.strictUpper);
+	}
 }
