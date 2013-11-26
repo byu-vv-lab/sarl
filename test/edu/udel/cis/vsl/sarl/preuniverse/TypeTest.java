@@ -10,7 +10,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
- * This class tests type functionality in the PreUniverse package.
+ * This class tests Type functionality in the PreUniverse package.
+ * The majority of these tests test methods by causing exceptions
+ * to be thrown when given bad input.
+ * 
  * @author jsaints
  */
 public class TypeTest {
@@ -33,36 +36,56 @@ public class TypeTest {
 		oneInt = universe.oneInt();
 	}
 	
+	/**
+	 * Tests that you are unable to add two SymExprs of different types.
+	 * Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
+	 */
 	@Test(expected=SARLException.class)
-	// Written by Jordan Saints on 9/25/13
 	public void testCheckSameType1() {
 		universe.add(two, four); //should complete successfully
 		universe.add(oneReal, oneInt); //should throw an exception b/c not same type
 	}
 	
+	/**
+	 * Tests that you are unable to multiply two SymExprs of different types.
+	 * Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
+	 */
 	@Test(expected=SARLException.class)
-	// Written by Jordan Saints on 9/25/13
 	public void testCheckSameType2() {
 		universe.multiply(two, four); //should complete successfully
 		universe.multiply(oneReal, oneInt); //should throw an exception b/c not same type
 	}
 	
+	/**
+	 * Tests that you are unable to divide two SymExprs of different types.
+	 * Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
+	 */
 	@Test(expected=SARLException.class)
-	// Written by Jordan Saints on 9/25/13
 	public void testCheckSameType3() {
 		universe.divide(two, four); //should complete successfully
 		universe.divide(oneReal, oneInt); //should throw an exception b/c not same type
 	}
 	
+	/**
+	 * Tests that you are unable to subtract two SymExprs of different types.
+	 * Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
+	 */
 	@Test(expected=SARLException.class)
-	// Written by Jordan Saints on 9/25/13
 	public void testCheckSameType4() {
 		universe.subtract(two, four); //should complete successfully
 		universe.subtract(oneReal, oneInt); //should throw an exception b/c not same type
 	}
 	
+	/**
+	 * Tests that you are unable to modulo two SymExprs of different types.
+	 * Written by Jordan Saints.
+	 * @exception A SARLException will be thrown (intentially) by this test.
+	 */
 	@Test(expected=SARLException.class)
-	// Written by Jordan Saints on 9/25/13
 	public void testCheckSameType5() {
 		universe.modulo(two, four); //should complete successfully
 		universe.modulo(oneReal, oneInt); //should throw an exception b/c not same type
