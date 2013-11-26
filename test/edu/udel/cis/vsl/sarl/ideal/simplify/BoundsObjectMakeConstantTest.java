@@ -11,7 +11,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * This test class provides testing coverage of the makeConstant
+ * method in BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject.makeConstant
  *
  */
 public class BoundsObjectMakeConstantTest {
@@ -135,6 +140,21 @@ public class BoundsObjectMakeConstantTest {
 		assertTrue(boundObj.isConsistent());
 		boundObj.makeConstant(num10000Int);
 		assertEquals(num10000Int, boundObj.constant());
+	}
+	
+	/**
+	 * Application of makeConstant method with a non-integral real
+	 * rational number.
+	 */
+	@Test
+	public void makeConstantRationalTest(){
+		boundObj = BoundsObject.newTightBound(yNE, num3);
+		assertTrue(boundObj.isConsistent());
+		boundObj.makeConstant(num10pt5);
+		assertEquals(num10pt5, boundObj.constant());
+		//out.println(num10pt5.getClass());
+		assertEquals(num10pt5.getClass(), boundObj.constant().getClass());
+		//out.println("integral? :  " + boundObj.isIntegral());
 	}
 
 }
