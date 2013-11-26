@@ -414,16 +414,16 @@ public class CommonPreUniverse implements PreUniverse {
 	 * arguments to a case/switch. Each case checks the equality of the two
 	 * arguments based on the following types:
 	 * <ul>
-	 * <li>BOOLEAN:</li>
-	 * <li>CHAR:</li>
+	 * <li>BOOLEAN: Tests 2 boolean values for equality</li>
+	 * <li>CHAR: Tests 2 char values for equality. Checks 
+	 * whether both are concrete or not.</li>
 	 * <li>INTEGER:</li>
-	 * <li>REAL:</li>
-	 * <li>ARRAY:
-	 * <li>
+	 * <li>REAL: Checks whether 2 real values are equal</li>
+	 * <li>ARRAY: Checks whether 2 arrays are equal</li>
 	 * <li>FUNCTION: Takes a sequence and checks the content and equality of its
 	 * elements</li>
-	 * <li>TUPLE:</li>
-	 * <li>UNION:</li>
+	 * <li>TUPLE: Checks whether 2 tuples are equal</li>
+	 * <li>UNION: Scans 2 separate unions to check equality</li>
 	 * </ul>
 	 * 
 	 * @param arg0
