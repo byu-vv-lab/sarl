@@ -117,10 +117,11 @@ public class IdealSimplifierSimpExprTest {
 		
 		idealSimp = idealSimplifierFactory.newSimplifier(assumption);
 		
-		numExpect = preUniv.add(preUniv.rational(12500), preUniv.multiply(preUniv.rational(3125), preUniv.power(y, 3)));
+		numExpect = preUniv.add(preUniv.rational(2500), preUniv.multiply(preUniv.rational(3125), preUniv.power(y, 3)));
 		
 		out.println(numExpect);
 		expected = numExpect;
+		
 		// Step through the problem to see how it is breaking down the problem
 		//should be 2500 not 12500
 		
@@ -177,9 +178,4 @@ public class IdealSimplifierSimpExprTest {
 		
 		assertEquals(expected, idealSimp.simplifyExpression(symExpr));
 	}
-	
-	/*@Test
-	public void simplifyExprLarge(){
-		
-	}*/
 }
