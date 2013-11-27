@@ -151,15 +151,14 @@ public class IdealSimplifier extends CommonSimplifier {
 	}
 
 	/**
-	 * Simplifies a factored polynomial. Result could be either Polynomial or
-	 * RationalExpression.
+	 * Performs further simplificationsn to a polynomial which has already been
+	 * simplified through the generic method
+	 * {@link CommonSimplifier#simplifyGenericExpression}.
 	 * 
-	 * 
-	 * sub(P) { write P=aX+b, X pseudo-primitive factored poly if
-	 * map.contains(X) return a*map(X)+b; if P has more than one term: loop over
-	 * terms of P and call sub. if any simplify, return sum of result. if P has
-	 * more than one factor: loop over factors of P and call sub. if any
-	 * simplify, return product of result. return P }
+	 * The method proceeds by putting the polynomial in affine form, then
+	 * looking in the constant map to see if there is already a known value for
+	 * the "pseudo polynomial" component of that affine form. If this fails, it
+	 * just simplifies the factorization.
 	 */
 	private Polynomial simplifyPolynomialWork(Polynomial fp) {
 		AffineExpression affine = info.affineFactory.affine(fp);
@@ -170,14 +169,14 @@ public class IdealSimplifier extends CommonSimplifier {
 			return info.idealFactory.constant(info.affineFactory.affineValue(
 					affine, pseudoValue));
 		{
-			int numTerms = fp.termMap(info.idealFactory).size();
-
-			if (numTerms > 1) {
-				Polynomial result = (Polynomial) simplifyGenericExpression(fp);
-
-				if (result != fp)
-					return result;
-			}
+			// int numTerms = fp.termMap(info.idealFactory).size();
+			//
+			// if (numTerms > 1) {
+			// Polynomial result = (Polynomial) simplifyGenericExpression(fp);
+			//
+			// if (result != fp)
+			// return result;
+			// }
 			{
 				Monomial f1 = fp.factorization(info.idealFactory);
 
@@ -192,14 +191,30 @@ public class IdealSimplifier extends CommonSimplifier {
 		return fp;
 	}
 
+	/**
+	 * Simplifies a polynomial. Assumes the polynomial is not currently in the
+	 * simplification cache. Does NOT assume that the generic simplification has
+	 * been performed on this polynomial.
+	 * 
+	 * @param polynomial
+	 *            a polynomial which does not have an entry in the
+	 *            simplification cache
+	 * @return simplified version of the polynomial
+	 */
 	private Polynomial simplifyPolynomial(Polynomial polynomial) {
-		Polynomial result = (Polynomial) simplifyMap.get(polynomial);
+		Polynomial result1 = (Polynomial) simplifyGenericExpression(polynomial);
+		Polynomial result2 = null;
 
-		if (result == null) {
-			result = simplifyPolynomialWork(polynomial);
-			simplifyMap.put(polynomial, result);
+		if (result1 != polynomial) {
+			result2 = (Polynomial) simplifyMap.get(result1);
+			if (result2 == null) {
+				if (result1 instanceof Constant)
+					result2 = result1;
+			}
 		}
-		return result;
+		if (result2 == null)
+			result2 = simplifyPolynomialWork(result1);
+		return result2;
 	}
 
 	// 4 relations: 0<, 0<=, 0==, 0!=
@@ -212,7 +227,8 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	// 0!=p/q <=> 0!=p
 
-	private BooleanExpression simplifyRelational(BooleanExpression expression) {
+	private BooleanExpression simplifyRelationalWork(
+			BooleanExpression expression) {
 		SymbolicOperator operator = expression.operator();
 		Polynomial poly = (Polynomial) expression.argument(1);
 		BooleanExpression result;
@@ -233,6 +249,31 @@ public class IdealSimplifier extends CommonSimplifier {
 		default:
 			throw new SARLInternalException("unreachable");
 		}
+	}
+
+	/**
+	 * Simplifies a relational expression. Assumes expression does not already
+	 * exist in simplification cache. Does NOT assume that generic
+	 * simplification has been performed on expression.
+	 * 
+	 * @param expression
+	 *            any boolean expression
+	 * @return
+	 */
+	private BooleanExpression simplifyRelational(BooleanExpression expression) {
+		BooleanExpression result1 = (BooleanExpression) simplifyGenericExpression(expression);
+		BooleanExpression result2 = null;
+
+		if (result1 != expression) {
+			result2 = (BooleanExpression) simplifyMap.get(result1);
+			if (result2 == null) {
+				if (result1.operator() == SymbolicOperator.CONCRETE)
+					result2 = result1;
+			}
+		}
+		if (result2 == null)
+			result2 = simplifyRelationalWork(result1);
+		return result2;
 	}
 
 	/**
@@ -429,7 +470,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		Number lower = bound.lower(), upper = bound.upper();
 		BooleanExpression result = null;
 		Polynomial fp = (Polynomial) bound.expression;
-		Polynomial ideal = simplifyPolynomial(fp);
+		Polynomial ideal = (Polynomial) apply(fp);
 
 		if (lower != null) {
 			if (bound.strictLower())
@@ -755,9 +796,9 @@ public class IdealSimplifier extends CommonSimplifier {
 				.negate(info.numberFactory.divide(offset, coefficient));
 		Number value;
 		BoundsObject bound = aBoundMap.get(pseudo);
-		
+
 		// TODO: if a monomial==0 then you know at least
-		// one of the primitives==0.  This is a disjunction
+		// one of the primitives==0. This is a disjunction
 		// over the primitive powers occurring in the monomial.
 		// if there is only one primitive ...
 		// alternatively, could do this as soon as the
@@ -790,7 +831,7 @@ public class IdealSimplifier extends CommonSimplifier {
 			Map<BooleanExpression, Boolean> aBooleanMap) {
 		// some ideas: if a monomial!=0 then all of the primitives!=0.
 		// this is a conjunction of formulas over the primitives.
-		
+
 		// if a pseudo is non-zero, you could tighten its
 		// bounds.
 		return true;
@@ -886,28 +927,33 @@ public class IdealSimplifier extends CommonSimplifier {
 	// Exported methods.............................................
 
 	/**
-	 * Note: The general simplification routine (simplifyGenericExpression)
-	 * is required to run before a call to simplifyRelational.
+	 * {@inheritDoc}
 	 * 
-	 * @see simplifyGenericExpression
-	 * @see simplifyRelational
+	 * Simplifies an expression, providing special handling beyond the generic
+	 * simplification for ideal expressions. Relational expressions also get
+	 * special handling. All other expressions are simplified generically.
+	 * 
+	 * This method does not look in the simplify cache for an existing
+	 * simplification of expression. See the documentation for the super method.
+	 * 
+	 * @see {@link #simplifyGenericExpression}
+	 * @see {@link #simplifyRelational}
+	 * @see {@link #simplifyPolynomial}
 	 */
 	@Override
 	protected SymbolicExpression simplifyExpression(
 			SymbolicExpression expression) {
-		// special handling for:
-		// symbolic constants (booleans, numeric, ...)
-		// numeric expressions (polynomials, ...)
-		// relational expressions (0<a, 0<=a, 0==a, 0!=a)
+		if (expression instanceof Constant) // optimization
+			return expression;
 		if (expression instanceof Polynomial)
 			return simplifyPolynomial((Polynomial) expression);
-		//**initially order of operation was: generic, poly, boolExp... appeared to be redundancy in poly case**
-		expression = simplifyGenericExpression(expression);
 		if (isNumericRelational(expression))
 			return simplifyRelational((BooleanExpression) expression);
-		return expression;
-		
+		if (expression.isTrue() || expression.isFalse())
+			return expression;
+		return simplifyGenericExpression(expression);
 	}
+
 	/**
 	 *   
 	 */
@@ -975,15 +1021,18 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 		return substitutionMap;
 	}
+
 	/**
-	 *  This method takes the assumption in the IdealSimplifier and reduces the Context to its basic form.
+	 * This method takes the assumption in the IdealSimplifier and reduces the
+	 * Context to its basic form.
 	 */
 	@Override
 	public BooleanExpression getReducedContext() {
 		return assumption;
 	}
+
 	/**
-	 * This method takes the assumption in the IdealSimplifier and 
+	 * This method takes the assumption in the IdealSimplifier and
 	 */
 	@Override
 	public BooleanExpression getFullContext() {

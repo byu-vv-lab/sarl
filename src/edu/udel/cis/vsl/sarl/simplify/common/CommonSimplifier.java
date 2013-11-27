@@ -73,6 +73,11 @@ public abstract class CommonSimplifier implements Simplifier {
 	 * {@link CommonSimplifier#simplifyGenericExpression}, a generic
 	 * simplification method provided here.
 	 * 
+	 * Typically, an implementation of this method should not look in the cache
+	 * for a simplified version of expression, because that is done already in
+	 * the "main" simplify method, {@link #apply}, which then calls this method
+	 * if it does not find it in the cache.
+	 * 
 	 * 
 	 * @param expression
 	 *            any symbolic expression.
@@ -257,6 +262,21 @@ public abstract class CommonSimplifier implements Simplifier {
 		}
 	}
 
+	/**
+	 * This method simplifies an expression in a generic way that should work
+	 * correctly on any symbolic expression: it simplifies the type and the
+	 * arguments of the expression, and then rebuilds the expression using
+	 * method {@link PreUniverse@make}.
+	 * 
+	 * This method does <strong>not</strong> look in the table of cached
+	 * simplification results for expression. However, the recursive calls to
+	 * the arguments may invoke the method {@link apply}, which will look for
+	 * cached results on those arguments.
+	 * 
+	 * @param expression
+	 *            any symbolic expression
+	 * @return a simplified version of that expression
+	 */
 	protected SymbolicExpression simplifyGenericExpression(
 			SymbolicExpression expression) {
 		if (expression.isNull())
