@@ -39,6 +39,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.common.NTPolynomial;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**
@@ -191,10 +192,28 @@ public class IdealSimplifier extends CommonSimplifier {
 		return fp;
 	}
 
+	private Constant pseudoReplacement(Polynomial fp) {
+		AffineExpression affine = info.affineFactory.affine(fp);
+		Polynomial pseudo = affine.pseudo();
+		Number pseudoValue = constantMap.get(pseudo);
+
+		if (pseudoValue != null)
+			return info.idealFactory.constant(info.affineFactory.affineValue(
+					affine, pseudoValue));
+		else
+			return null;
+	}
+
 	/**
 	 * Simplifies a polynomial. Assumes the polynomial is not currently in the
 	 * simplification cache. Does NOT assume that the generic simplification has
 	 * been performed on this polynomial.
+	 * 
+	 * Have to be careful here: some polynomials (instances of NYPolynomial)
+	 * contain extrinsic data, namely, the factorization. So you can't just
+	 * apply generic simplification to them or they will lose that extrinsic
+	 * data.
+	 * 
 	 * 
 	 * @param polynomial
 	 *            a polynomial which does not have an entry in the
@@ -202,19 +221,26 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * @return simplified version of the polynomial
 	 */
 	private Polynomial simplifyPolynomial(Polynomial polynomial) {
-		Polynomial result1 = (Polynomial) simplifyGenericExpression(polynomial);
-		Polynomial result2 = null;
+		Polynomial result = pseudoReplacement(polynomial);
 
-		if (result1 != polynomial) {
-			result2 = (Polynomial) simplifyMap.get(result1);
-			if (result2 == null) {
-				if (result1 instanceof Constant)
-					result2 = result1;
+		if (result != null)
+			return result;
+		if (polynomial instanceof Monomial) {
+			return (Polynomial) simplifyGenericExpression(polynomial);
+		} else {
+			Monomial f1 = polynomial.factorization(info.idealFactory);
+
+			if (f1.degree() > 1) { // nontrivial factorization
+				result = (Polynomial) simplifyGenericExpression(f1);
+
+				if (result.degree() < polynomial.degree())
+					return result;
 			}
+			result = (Polynomial) simplifyGenericExpression(polynomial);
+			if (result.degree() < polynomial.degree())
+				return result;
+			return polynomial;
 		}
-		if (result2 == null)
-			result2 = simplifyPolynomialWork(result1);
-		return result2;
 	}
 
 	// 4 relations: 0<, 0<=, 0==, 0!=
