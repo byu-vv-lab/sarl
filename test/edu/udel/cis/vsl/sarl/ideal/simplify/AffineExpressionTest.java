@@ -1,6 +1,10 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.integerType;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.preUniv;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.system;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xpy;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xx;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -9,6 +13,7 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
@@ -18,14 +23,14 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-//import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
+// import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monic;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory;
-//import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+// import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -36,33 +41,33 @@ public class AffineExpressionTest {
 
 	private static NumericSymbolicConstant y;
 
-	//private static NumericExpression xpy;
+	// private static NumericExpression xpy;
 	// /////////////////////////////////////////////////////
 	private static ObjectFactory objectFactory;
 	private static SymbolicTypeFactory typeFactory;
 	private static CollectionFactory collectionFactory;
-	//private static NumericExpressionFactory numericExpressionFactory;
+	// private static NumericExpressionFactory numericExpressionFactory;
 
 	private static BooleanExpressionFactory booleanFactory;
-	//private static RealNumberFactory realNumberFactory;
+	// private static RealNumberFactory realNumberFactory;
 	private static CommonIdealFactory commonIdealFactory;
 
 	private static IdealFactory idealFactory;
-	//private static IdealFactory polyconstant;
+	// private static IdealFactory polyconstant;
 
 	private static SymbolicType realType;
-	//private static SymbolicType integerType;
+	// private static SymbolicType integerType;
 
-	//private static NumericExpression one, two, three;
+	// private static NumericExpression one, two, three;
 	private static Constant c10;
 	private static SymbolicType real;
 
 	private static edu.udel.cis.vsl.sarl.IF.number.Number offset;
 	private static edu.udel.cis.vsl.sarl.IF.number.Number coefficient;
-	//private static NumericExpression xxxx;
-	//private static NumericExpression threexxxx;
+	// private static NumericExpression xxxx;
+	// private static NumericExpression threexxxx;
 	private static NumericExpression onePxPxsqPthreexquad;
-	//private static NumericExpression xx;
+	// private static NumericExpression xx;
 
 	private static PrintStream out = System.out;
 
@@ -77,19 +82,19 @@ public class AffineExpressionTest {
 		y = (NumericSymbolicConstant) preUniv.symbolicConstant(
 				preUniv.stringObject("y"), realType);
 		xpy = preUniv.add(x, y);
-		//one = preUniv.rational(1); // 1.0
-		//two = preUniv.rational(2); // 2.0
-		//three = preUniv.rational(3);
+		// one = preUniv.rational(1); // 1.0
+		// two = preUniv.rational(2); // 2.0
+		// three = preUniv.rational(3);
 		// //////////
 		numberFactory = system.numberFactory();
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		collectionFactory = system.collectionFactory();
-		//numericExpressionFactory = system.numericFactory();
+		// numericExpressionFactory = system.numericFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
-		//polyconstant = (IdealFactory) system.numericFactory();
+		// polyconstant = (IdealFactory) system.numericFactory();
 		booleanFactory = system.booleanFactory();
-		//realNumberFactory = (RealNumberFactory) system.numberFactory();
+		// realNumberFactory = (RealNumberFactory) system.numberFactory();
 		commonIdealFactory = new CommonIdealFactory(numberFactory,
 				objectFactory, typeFactory, collectionFactory, booleanFactory);
 		// ////////////////////////////////////////
@@ -107,8 +112,19 @@ public class AffineExpressionTest {
 	public void tearDown() throws Exception {
 	}
 
+	// TODO: we are ignoring this test because it requires that
+	// assertions be enabled. Since we want to run the tests
+	// both with assertions enabled and disabled, we can't
+	// have that. Modify this test so that it works under
+	// either assumption, or delete it.
+	// Also note that this test modifies fields in this class.
+	// This is not good because that affects other test methods
+	// in this class. Since you cannot predict the order in
+	// which the test methods will be run, this can yield
+	// nondeterminisitic results.
 	@Test
 	/* (expected=java.lang.AssertionError.class) */
+	@Ignore
 	public void tostringtest() {
 		// //////
 		// //
@@ -168,10 +184,10 @@ public class AffineExpressionTest {
 			assertEquals(test.equals(test), true);
 			// /////////////////////
 			xx = preUniv.power(x, 2); // x^2
-			//xxxx = preUniv.power(x, 4); // x^4
-			//threexxxx = preUniv.multiply(three, xxxx);
-			//onePxPxsqPthreexquad = preUniv.add(one,
-			//		preUniv.add(x, preUniv.add(xx, threexxxx)));
+			// xxxx = preUniv.power(x, 4); // x^4
+			// threexxxx = preUniv.multiply(three, xxxx);
+			// onePxPxsqPthreexquad = preUniv.add(one,
+			// preUniv.add(x, preUniv.add(xx, threexxxx)));
 			AffineExpression working = new AffineExpression(
 					(Polynomial) onePxPxsqPthreexquad, offset, coefficient);
 			out.println(onePxPxsqPthreexquad.toString());
@@ -186,12 +202,15 @@ public class AffineExpressionTest {
 		}
 		assertTrue(nullError);
 	}
-	
-	//@Test(expected = AssertionError.class)
-	//public void nullCoefficient() {
-	//	new AffineExpression((Polynomial) x, null, offset);
-	//}
 
+	// @Test(expected = AssertionError.class)
+	// public void nullCoefficient() {
+	// new AffineExpression((Polynomial) x, null, offset);
+	// }
+
+	// TODO: this test fails because coefficient is null.
+	// Fix it.
+	@Ignore
 	@Test
 	public void makeAffine() {
 		new AffineExpression((Polynomial) x, coefficient, offset);

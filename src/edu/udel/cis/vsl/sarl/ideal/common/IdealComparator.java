@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
@@ -65,14 +65,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;
 
-	private Comparator<SymbolicType> typeComparator;
+	// private Comparator<SymbolicType> typeComparator;
 
 	private CommonIdealFactory idealFactory;
 
 	public IdealComparator(CommonIdealFactory idealFactory) {
 		this.idealFactory = idealFactory;
 		this.objectComparator = idealFactory.objectFactory().comparator();
-		this.typeComparator = idealFactory.typeFactory().typeComparator();
+		// this.typeComparator = idealFactory.typeFactory().typeComparator();
 	}
 
 	private static boolean debug = false;
@@ -92,11 +92,19 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
-	 * Compares IdealExpressions. First compare types. Within a type, first all
-	 * the NTRationalExpression, then everything else. "Everything else" are
-	 * instances of Polynomial. Polynomials are sorted first by degree: larger
-	 * degree comes first (since that's the way you typically write them). Given
-	 * two polynomials of the same degree:
+	 * 
+	 * Compares IdealExpressions.
+	 * 
+	 * NOTE: FOR NOW, we are assuming the types are equal. I.e., it is the
+	 * caller's responsibility to know that if two numeric expressions are being
+	 * compared, they had better have the same type. Otherwise everything could
+	 * be wrong. This is an optimization.
+	 * 
+	 * First compare types. Within a type, first all the NTRationalExpression,
+	 * then everything else. "Everything else" are instances of Polynomial.
+	 * Polynomials are sorted first by degree: larger degree comes first (since
+	 * that's the way you typically write them). Given two polynomials of the
+	 * same degree:
 	 * 
 	 * if the two polynomials are monomials of the same degree, compare monics,
 	 * then constants
@@ -110,11 +118,15 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		IdealExpression e1 = (IdealExpression) o1;
 		IdealExpression e2 = (IdealExpression) o2;
 		SymbolicType t1 = e1.type();
-		SymbolicType t2 = e2.type();
-		int result = typeComparator.compare(t1, t2);
+		// SymbolicType t2 = e2.type();
+		// int result = typeComparator.compare(t1, t2);
 
-		if (result != 0)
-			return result;
+		// if (result != 0) {
+		// assert false;
+		// return result;
+		// }
+
+		assert t1.equals(e2.type());
 		if (t1.isInteger()) {
 			if (o1 instanceof Monic && o2 instanceof Monic)
 				return compareMonics((Monic) o1, (Monic) o2);
