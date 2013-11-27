@@ -39,7 +39,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
-import edu.udel.cis.vsl.sarl.ideal.common.NTPolynomial;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**
@@ -149,47 +148,6 @@ public class IdealSimplifier extends CommonSimplifier {
 	private boolean isNumericRelational(SymbolicExpression expression) {
 		return isRelational(expression.operator())
 				&& ((SymbolicExpression) expression.argument(0)).isNumeric();
-	}
-
-	/**
-	 * Performs further simplificationsn to a polynomial which has already been
-	 * simplified through the generic method
-	 * {@link CommonSimplifier#simplifyGenericExpression}.
-	 * 
-	 * The method proceeds by putting the polynomial in affine form, then
-	 * looking in the constant map to see if there is already a known value for
-	 * the "pseudo polynomial" component of that affine form. If this fails, it
-	 * just simplifies the factorization.
-	 */
-	private Polynomial simplifyPolynomialWork(Polynomial fp) {
-		AffineExpression affine = info.affineFactory.affine(fp);
-		Polynomial pseudo = affine.pseudo();
-		Number pseudoValue = constantMap.get(pseudo);
-
-		if (pseudoValue != null)
-			return info.idealFactory.constant(info.affineFactory.affineValue(
-					affine, pseudoValue));
-		{
-			// int numTerms = fp.termMap(info.idealFactory).size();
-			//
-			// if (numTerms > 1) {
-			// Polynomial result = (Polynomial) simplifyGenericExpression(fp);
-			//
-			// if (result != fp)
-			// return result;
-			// }
-			{
-				Monomial f1 = fp.factorization(info.idealFactory);
-
-				if (f1.degree() > 1) {
-					Monomial f2 = (Monomial) simplifyGenericExpression(f1);
-
-					if (f2 != f1)
-						return f2.expand(info.idealFactory);
-				}
-			}
-		}
-		return fp;
 	}
 
 	private Constant pseudoReplacement(Polynomial fp) {
