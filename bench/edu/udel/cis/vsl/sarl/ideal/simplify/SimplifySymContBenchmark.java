@@ -198,7 +198,7 @@ public class SimplifySymContBenchmark {
 		falseExpr = preUniv.bool(false);
 		
 		subPoly = xInt;
-		assumption = preUniv.equals(preUniv.power(xInt, 6), int5);
+		assumption = preUniv.equals(preUniv.power(xInt, 6), int2);
 		//out.println("assumption : " + assumption);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		//out.println(idealSimplifier);
@@ -208,7 +208,7 @@ public class SimplifySymContBenchmark {
 		 * The value of <i>size</i> determines how many iterations of increasing the 
 		 * polynomial degree are performed.
 		 */
-		size = 6;
+		size = 100;
 		
 		/**
 		 * When <i>iterated</i> is set to <b>false</b>, the assumption is only applied to 
@@ -220,7 +220,7 @@ public class SimplifySymContBenchmark {
 		iterated = false;
 		
 		for(int i = 0; i < size; i++){
-			subPoly = preUniv.multiply(subPoly, preUniv.add(xInt, cInt));
+			subPoly = preUniv.multiply(subPoly, preUniv.add(xInt, int5));
 			if(iterated)
 				subCol.add((NumericSymbolicConstant) subPoly);
 			n = i+1;

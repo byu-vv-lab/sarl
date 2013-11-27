@@ -117,7 +117,7 @@ public class IdealSimplifierSimpExprTest {
 		
 		idealSimp = idealSimplifierFactory.newSimplifier(assumption);
 		
-		numExpect = preUniv.add(preUniv.rational(2500), preUniv.multiply(preUniv.rational(3125), preUniv.power(y, 3)));
+		numExpect = preUniv.add(preUniv.rational(12500), preUniv.multiply(preUniv.rational(3125), preUniv.power(y, 3)));
 		
 		out.println(numExpect);
 		expected = numExpect;
