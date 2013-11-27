@@ -42,7 +42,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  * 
  */
 
-public class TheoremProverTestTemplate {
+public class TheoremProverTemplateTest {
 
 
 	// Static fields: instantiated once and used for all tests...

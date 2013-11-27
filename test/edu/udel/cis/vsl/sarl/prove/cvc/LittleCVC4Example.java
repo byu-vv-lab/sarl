@@ -58,10 +58,6 @@ public class LittleCVC4Example {
 		out.flush();
 		out.println("Does f(x)=0? " + smt.query(fxeq0));
 		// answer should be "invalid"
-		// Assertion failed: (clazz != NULL && jenv->ExceptionOccurred() ==
-		// NULL), function Java_edu_nyu_acsys_CVC4_CVC4JNI_SmtEngine_1query,
-		// file java.cpp, line 38741.
-		// the assertion failure goes away if the first call to query is removed
 		out.flush();
 	}
 
