@@ -83,6 +83,20 @@ public class IdealPowerTest {
 	}
 	
 	/**
+	 * a function - power() which has NumericExpression as base and IntObject as an exponent
+	 * 
+	 * @param a - NumericExpression
+	 * @param b - IntObject
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of numeric expression as base and IntObject as power
+	 */
+	public NumericExpression power(NumericExpression a, IntObject b){
+		NumericExpression ne = idealFactory.power(a, b);
+		return ne;
+	}
+	
+	/**
 	 * Creates a numeric expression 0^0, which should return a SARLException
 	 * Not sure how to assert the expectation of an exception, will look into this shortly
 	 */
@@ -126,8 +140,8 @@ public class IdealPowerTest {
 		IntObject n = objectFactory.intObject(exponent);
 		IntObject m = objectFactory.intObject(exponent - 1);
 		NumericExpression xpy = idealFactory.add(x, y);
-		NumericExpression xpyen = idealFactory.power(xpy, n);
-		NumericExpression xpyem = idealFactory.power(xpy, m);
+		NumericExpression xpyen = power(xpy, n);
+		NumericExpression xpyem = power(xpy, m);
 		NumericExpression quotient = idealFactory.divide(xpyen, xpyem);
 
 		out.println("bigPower: (X+Y)^" + n + " = " + xpyen);
