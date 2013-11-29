@@ -107,11 +107,12 @@ public class IdealBooleanTest {
 	@Test
 	public void notLessThan() {
 		NumericExpression n1 = idealFactory.subtract(x,intOne);
-		NumericExpression n2 = idealFactory.add(x, intOne);		
-		BooleanExpression n = idealFactory.notLessThan(n2, n1);
-		BooleanExpression nn = idealFactory.notLessThan(n1, n2);
+		NumericExpression n2 = idealFactory.add(x, intOne);
 		BooleanExpression m1 = booleanFactory.symbolic(false);
 		BooleanExpression m2 = booleanFactory.symbolic(true);
+		
+		BooleanExpression n = idealFactory.notLessThan(n2, n1);
+		BooleanExpression nn = idealFactory.notLessThan(n1, n2);
 		
 		assertEquals(m2, n);
 		assertEquals(m1, nn);
@@ -132,7 +133,8 @@ public class IdealBooleanTest {
 		NumericExpression n1 = idealFactory.subtract(x, intOne);
 		NumericExpression n2 = idealFactory.add(x, intOne);
 		BooleanExpression m = booleanFactory.symbolic(true);
-		BooleanExpression n = booleanFactory.symbolic(false);				
+		BooleanExpression n = booleanFactory.symbolic(false);
+		
 		BooleanExpression n01 = idealFactory.notLessThanEquals(n1, n2);
 		BooleanExpression n02 = idealFactory.notLessThanEquals(n2, n1);
 		
