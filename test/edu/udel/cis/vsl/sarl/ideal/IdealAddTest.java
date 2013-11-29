@@ -119,6 +119,24 @@ public class IdealAddTest {
 	}
 	
 	/**
+	 * a function - add() which adds two polynomials
+	 * 
+	 * @param a - Polynomial
+	 * @param b - Polynomial
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of addition of two polynomials
+	 */
+	public Polynomial add(Polynomial a, Polynomial b){
+		Polynomial p = idealFactory.add(a, b);
+		return p;
+	}
+	
+	public RationalExpression addRational(RationalExpression a, Polynomial b){
+		RationalExpression r = (RationalExpression) idealFactory.add(a, b);
+		return r;
+	}
+	/**
 	 * Adds two constants of real type.
 	 * 
 	 * @param type
@@ -164,18 +182,15 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPolyToPoly(){
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
-		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+		Polynomial p1 = (Polynomial) idealFactory.add(idealFactory.multiply(x, x), intOne);
+		Polynomial p2 = (Polynomial) idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p3 = idealFactory.multiply(intZero, x);
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(intThree, 
+		Polynomial p3 = (Polynomial) idealFactory.multiply(intZero, x);
+		Polynomial p4 = (Polynomial) idealFactory.add(idealFactory.multiply(intThree, 
 				idealFactory.multiply(x, x)), intTwo);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
-		Polynomial poly3 = (Polynomial) p3;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
-		Polynomial b2 = idealFactory.add(poly3, poly2);
+		Polynomial b1 = add(p1, p2);
+		Polynomial b2 = add(p3, p2);
 		
 		assertEquals(p4, b1);
 		assertEquals(p2, b2);
@@ -199,16 +214,14 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPolyToMonomial() {
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
+		Polynomial p1 = (Polynomial) idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p2 = idealFactory.multiply(intTen, x);
-		NumericExpression p3 = idealFactory.add(idealFactory.multiply(
+		Polynomial p2 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p3 = (Polynomial) idealFactory.add(idealFactory.multiply(
 				intTen, x), idealFactory.add(idealFactory.multiply(
 						intTwo, idealFactory.multiply(x, x)), intOne));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
-		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+				
+		Polynomial b1 = add(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -231,11 +244,10 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addMonomialToMonomial() {
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.intConstant(20), x);
-		Polynomial poly1 = (Polynomial) p1;
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(idealFactory.intConstant(20), x);
 				
-		Polynomial b1 = idealFactory.add(poly1, poly1);
+		Polynomial b1 = add(p1, p1);
 		
 		assertEquals(p2, b1);
 	}
@@ -258,14 +270,12 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addMonomialToPrimitivePower() {
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(x, x);
-		NumericExpression p3 = idealFactory.multiply(x, idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p3 = (Polynomial) idealFactory.multiply(x, idealFactory.
 				add(intTen, x));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -288,14 +298,12 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addMonomialToMonic() {
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(x, y);
-		NumericExpression p3 = idealFactory.multiply(x, idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p3 = (Polynomial) idealFactory.multiply(x, idealFactory.
 				add(intTen, y));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -318,12 +326,11 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addMonicToMonic() {
-		NumericExpression p1 = idealFactory.multiply(x, y);
-		NumericExpression p2 = idealFactory.multiply(intTwo, 
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, y));
-		Polynomial poly1 = (Polynomial) p1;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly1);
+		Polynomial b1 = add(p1, p1);
 		
 		assertEquals(p2, b1);
 	}
@@ -346,14 +353,12 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPrimitivePowerToMonic() {
-		NumericExpression p1 = idealFactory.multiply(x, y);
-		NumericExpression p2 = idealFactory.multiply(x, x);
-		NumericExpression p3 = idealFactory.multiply(idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p3 = (Polynomial) idealFactory.multiply(idealFactory.
 				add(x, y), x);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -376,13 +381,12 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPrimitiveToMonic() {
-		NumericExpression p1 = idealFactory.multiply(x, y);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(idealFactory.
 				add(intOne, y), x);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) x;
+		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, poly1);
 		
 		assertEquals(p2, b1);
 	}
@@ -405,12 +409,11 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addConstantToMonic() {
-		NumericExpression p1 = idealFactory.multiply(x, y);
-		NumericExpression p2 = idealFactory.add(idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p2 = (Polynomial) idealFactory.add(idealFactory.
 				multiply(x, y), intOne);
-		Polynomial poly1 = (Polynomial) p1;
-		
-		Polynomial b1 = idealFactory.add(poly1, intOne);
+	
+		Polynomial b1 = add(p1, intOne);
 		
 		assertEquals(p2, b1);
 	}
@@ -433,15 +436,13 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPolyToPrimitivePower() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(idealFactory.
 				multiply(x, x), intTwo);
-		NumericExpression p3 = idealFactory.multiply(idealFactory.
+		Polynomial p3 = (Polynomial) idealFactory.multiply(idealFactory.
 				multiply(x, x), intThree);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -464,12 +465,11 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPrimitivePowerToItself() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(idealFactory.
 				multiply(x, x), intTwo);
-		Polynomial poly1 = (Polynomial) p1;
 				
-		Polynomial b1 = idealFactory.add(poly1, poly1);
+		Polynomial b1 = add(p1, p1);
 		
 		assertEquals(p2, b1);
 	}
@@ -492,13 +492,12 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPrimitivePowerToPrimitive() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.add(x, idealFactory.
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p2 = (Polynomial) idealFactory.add(x, idealFactory.
 				multiply(x, x));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) x;
+		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b1 = idealFactory.add(poly1, poly2);
+		Polynomial b1 = add(p1, poly1);
 		
 		assertEquals(p2, b1);
 	}
@@ -521,10 +520,10 @@ public class IdealAddTest {
 	 */
 	@Test
 	public void addPrimitiveToConstant() {
-		NumericExpression p1 = idealFactory.add(x, intOne);
+		Polynomial p1 = (Polynomial) idealFactory.add(x, intOne);
 		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b1 = idealFactory.add(poly1, intOne);
+		Polynomial b1 = add(poly1, intOne);
 		
 		assertEquals(p1, b1);
 	}
@@ -546,21 +545,17 @@ public class IdealAddTest {
 						typeFactory.realType())); // value 'Y' of type real
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
-		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
-		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
 				monic); //3x^2 * y
-		NumericExpression polynomial = idealFactory.add(monomial, x2); //3x^2 * y + x^2
+		Polynomial polynomial = (Polynomial) idealFactory.add(monomial, x2); //3x^2 * y + x^2
 		RationalExpression plusPrimitive = (RationalExpression) 
 				idealFactory.add(r1, x); //(x*y + x)/y 
-		RationalExpression plusPrimitivePower = (RationalExpression) 
-				idealFactory.add(r1, x2); //(x^2*y + x)/y 
-		RationalExpression plusMonic = (RationalExpression) 
-				idealFactory.add(r1, monic); //(x^2*y^2 + x)/y 
-		RationalExpression plusMonomial = (RationalExpression) 
-				idealFactory.add(r1, monomial); //(3*x^2*y^2 + x)/y 
-		RationalExpression plusPolynomial = (RationalExpression) 
-				idealFactory.add(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
+		RationalExpression plusPrimitivePower = addRational(r1, x2); //(x^2*y + x)/y 
+		RationalExpression plusMonic = addRational(r1, monic); //(x^2*y^2 + x)/y 
+		RationalExpression plusMonomial = addRational(r1, monomial); //(3*x^2*y^2 + x)/y 
+		RationalExpression plusPolynomial = addRational(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
 		
 		NumericExpression result1 = idealFactory.divide(idealFactory.
 				add(idealFactory.multiply(x, y), x), y); //(x*y + x)/y 
