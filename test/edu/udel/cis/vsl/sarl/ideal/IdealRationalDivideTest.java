@@ -251,4 +251,29 @@ public class IdealRationalDivideTest {
 		
 		assertEquals(result, divPrimitivePower);
 	}
+	
+	/**
+	 * Adds a rational expression and a primitive by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a primitive (passed as arguments).
+	 */
+	@Test
+	public void divideRationalToPrimitive() {
+		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
+		NumericExpression result = idealFactory.divide(y, y2); //1/y 		
+		
+		RationalExpression divPrimitive = (RationalExpression) 
+				idealFactory.divide(r1, x); //1/y
+		
+		assertEquals(result, divPrimitive);
+	}
 }
