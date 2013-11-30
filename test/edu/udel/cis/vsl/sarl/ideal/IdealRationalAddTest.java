@@ -225,5 +225,29 @@ public class IdealRationalAddTest {
 		assertEquals(result, plusMonomial);
 	}
 	
-	
+	/**
+	 * Adds a rational expression and a monic by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a monic (passed as arguments).
+	 */
+	@Test
+	public void addRationalToMonic() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression result3 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monic, y), x), y); //(x^2*y^2 + x)/y 
+		
+		RationalExpression plusMonic = addRational(r1, monic); //(x^2*y^2 + x)/y 
+		
+		assertEquals(result3, plusMonic);
+	}
 }
