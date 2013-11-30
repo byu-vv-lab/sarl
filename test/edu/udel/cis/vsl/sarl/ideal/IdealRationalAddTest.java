@@ -275,4 +275,29 @@ public class IdealRationalAddTest {
 		
 		assertEquals(result2, plusPrimitivePower);
 	}
+	
+	/**
+	 * Adds a rational expression and a primitive by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a primitive (passed as arguments).
+	 */
+	@Test
+	public void addRationalToPrimitive() {
+		NumericExpression result1 = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(x, y), x), y); //(x*y + x)/y 
+		
+		RationalExpression plusPrimitive = (RationalExpression) 
+				idealFactory.add(r1, x); //(x*y + x)/y
+		
+		assertEquals(result1, plusPrimitive);
+	}
 }
