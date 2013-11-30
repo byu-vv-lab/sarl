@@ -126,6 +126,34 @@ public class IdealSubtractTest {
 	}
 	
 	/**
+	 * a function - sub() which subtracts two polynomials
+	 * 
+	 * @param a - Polynomial
+	 * @param b - Polynomial
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of subtraction of two polynomials
+	 */
+	public Polynomial sub(Polynomial a, Polynomial b){
+		Polynomial p = (Polynomial) idealFactory.subtract(a, b);
+		return p;
+	}
+	
+	/**
+	 * a function - subRational() which subtracts a rational expression with a polynomial
+	 * 
+	 * @param a - RationalExpression
+	 * @param b - Polynomial
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of subtraction of a rational expression and a polynomial
+	 */
+	public RationalExpression subRational(RationalExpression a, Polynomial b){
+		RationalExpression r = (RationalExpression) idealFactory.subtract(a, b);
+		return r;
+	}
+	
+	/**
 	 * Subtracts two polynomials by forming the factorization and by factoring 
 	 * out the common factors that are produced from the two factorizations.
 	 * 
@@ -143,17 +171,15 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subPolyToPoly() {
-		NumericExpression p1 = idealFactory.add(idealFactory.multiply(x, x), intOne);
-		NumericExpression p2 = idealFactory.add(idealFactory.multiply(intTwo, 
+		Polynomial p1 = (Polynomial) idealFactory.add(idealFactory.multiply(x, x), intOne);
+		Polynomial p2 = (Polynomial) idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p3 = idealFactory.add(idealFactory.multiply(intThree, 
+		Polynomial p3 = (Polynomial) idealFactory.add(idealFactory.multiply(intThree, 
 				idealFactory.multiply(x, x)), intTwo);
 		NumericExpression p4 = idealFactory.multiply(x, x);
-		Polynomial poly1 = (Polynomial) p2;
-		Polynomial poly2 = (Polynomial) p3;
 		
-		NumericExpression b1 = idealFactory.subtract(p2, p1);
-		NumericExpression b2 = idealFactory.subtract(poly2, poly1);
+		Polynomial b1 = sub(p2, p1);
+		Polynomial b2 = sub(p3, p2);
 		
 		assertEquals(p4, b1);
 		assertEquals(p1, b2);
@@ -179,14 +205,12 @@ public class IdealSubtractTest {
 	public void subPolyToMonomial() {
 		NumericExpression p1 = idealFactory.add(idealFactory.multiply(intTwo, 
 				idealFactory.multiply(x, x)), intOne);
-		NumericExpression p2 = idealFactory.multiply(intTen, x);
-		NumericExpression p3 = idealFactory.add(idealFactory.multiply(
+		Polynomial p2 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p3 = (Polynomial) idealFactory.add(idealFactory.multiply(
 				intTen, x), idealFactory.add(idealFactory.multiply(
 						intTwo, idealFactory.multiply(x, x)), intOne));
-		Polynomial poly1 = (Polynomial) p2;
-		Polynomial poly2 = (Polynomial) p3;
 		
-		NumericExpression b1 = idealFactory.subtract(poly2, poly1);
+		Polynomial b1 = sub(p3, p2);
 		
 		assertEquals(p1, b1);
 	}
@@ -209,13 +233,11 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subMonomialToMonomial() {
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(intOne, x);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(intOne, x);
 		NumericExpression p3 = idealFactory.multiply(idealFactory.intConstant(9), x);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
+		Polynomial b1 = sub(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -238,14 +260,12 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subMonomialToMonic() {
-		NumericExpression p1 = idealFactory.multiply(intTen, idealFactory.multiply(x, y));
-		NumericExpression p2 = idealFactory.multiply(x, y);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, idealFactory.multiply(x, y));
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, y);
 		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(idealFactory.
 				intConstant(9), x), y);
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
+		Polynomial b1 = sub(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -268,14 +288,12 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subMonicToMonic() {
-		NumericExpression p1 = idealFactory.multiply(x, idealFactory.multiply(x, y));
-		NumericExpression p2 = idealFactory.multiply(x, y);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, idealFactory.multiply(x, y));
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, y);
 		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, y), idealFactory.
 				subtract(x, intOne));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
+		Polynomial b1 = sub(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -298,14 +316,12 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subPrimitivePowerToMonomial() {
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(x, x);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(x, x);
 		NumericExpression p3 = idealFactory.subtract(idealFactory.
 				multiply(x, x), idealFactory.multiply(intTen, x));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly2, poly1);
+		Polynomial b1 = sub(p2, p1);
 		
 		assertEquals(p3, b1);
 	}
@@ -328,13 +344,11 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subMonicToPrimitivePower() {
-		NumericExpression p1 = idealFactory.multiply(x, y);
-		NumericExpression p2 = idealFactory.multiply(y, y);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(y, y);
 		NumericExpression p3 = idealFactory.multiply(y, idealFactory.subtract(x, y));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
+		Polynomial b1 = sub(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -357,13 +371,11 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subPrimitivePowerToItself() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.multiply(y, y);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial p2 = (Polynomial) idealFactory.multiply(y, y);
 		NumericExpression p3 = idealFactory.multiply(idealFactory.add(x, y), idealFactory.subtract(x, y));
-		Polynomial poly1 = (Polynomial) p1;
-		Polynomial poly2 = (Polynomial) p2;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, poly2);
+		Polynomial b1 = sub(p1, p2);
 		
 		assertEquals(p3, b1);
 	}
@@ -386,12 +398,11 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subPrimitivePowerToConstant() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
 		NumericExpression p2 = idealFactory.subtract(idealFactory.
 				multiply(x, x), intOne);
-		Polynomial poly1 = (Polynomial) p1;
 		
-		NumericExpression b1 = idealFactory.subtract(poly1, intOne);
+		NumericExpression b1 = idealFactory.subtract(p1, intOne);
 		
 		assertEquals(p2, b1);
 	}
@@ -414,12 +425,12 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void subPrimitivePowerToPrimitive() {
-		NumericExpression p1 = idealFactory.multiply(x, x);
+		Polynomial p1 = (Polynomial) idealFactory.multiply(x, x);
 		NumericExpression p2 = idealFactory.subtract(idealFactory.
 				multiply(x, x), x);
-		Polynomial poly1 = (Polynomial) p1;
+		Polynomial poly1 = (Polynomial) x;
 		
-		NumericExpression b2 = idealFactory.subtract(poly1, x);
+		Polynomial b2 = sub(p1, poly1);
 		
 		assertEquals(p2, b2);
 	}
@@ -487,21 +498,18 @@ public class IdealSubtractTest {
 	 */
 	@Test
 	public void constantTermSubtraction() {
-		NumericExpression n = idealFactory.add(idealFactory.multiply(one, x), intOne);
-		NumericExpression m = idealFactory.add(idealFactory.multiply(one, x), intZero);
-		NumericExpression o = idealFactory.add(idealFactory.multiply(intTen, 
+		Polynomial n = (Polynomial) idealFactory.add(idealFactory.multiply(one, x), intOne);
+		Polynomial m = (Polynomial) idealFactory.add(idealFactory.multiply(one, x), intZero);
+		Polynomial o = (Polynomial) idealFactory.add(idealFactory.multiply(intTen, 
 				idealFactory.multiply(x, x)),(idealFactory.add(
 						idealFactory.multiply(intTen, x), intOne)));
 		NumericExpression p = idealFactory.add(idealFactory.multiply(intTen, 
 				idealFactory.multiply(x, x)), idealFactory.multiply(intTen, x));
-		Polynomial poly1 = (Polynomial) n;
-		Polynomial poly2 = (Polynomial) m;
-		Polynomial poly3 = (Polynomial) o;		
-		Polynomial b1 = idealFactory.subtractConstantTerm(poly1);
-		Polynomial b2 = idealFactory.subtractConstantTerm(poly2);
-		Polynomial b3 = idealFactory.subtractConstantTerm(poly3);
+				
+		Polynomial b1 = idealFactory.subtractConstantTerm(n);
+		Polynomial b2 = idealFactory.subtractConstantTerm(m);
+		Polynomial b3 = idealFactory.subtractConstantTerm(o);
 		Polynomial b4 = idealFactory.subtractConstantTerm(constZero);
-		
 		out.println("Constant Term Subtraction1=" + b3);
 		
 		assertEquals(x, b1);
@@ -545,21 +553,17 @@ public class IdealSubtractTest {
 						typeFactory.realType())); // value 'Y' of real type
 		
 		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		NumericExpression x2 = idealFactory.multiply(x, x); //x^2
-		NumericExpression monic = idealFactory.multiply(x2, y); //x^2 * y
-		NumericExpression monomial = idealFactory.multiply(idealFactory.constant(realThree), 
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
 				monic); //3x^2 * y
-		NumericExpression polynomial = idealFactory.add(monomial, x2); //3x^2 * y + x^2
+		Polynomial polynomial = (Polynomial) idealFactory.add(monomial, x2); //3x^2 * y + x^2
 		RationalExpression subPrimitive = (RationalExpression) 
 				idealFactory.subtract(r1, x); //(x - x*y)/y 
-		RationalExpression subPrimitivePower = (RationalExpression) 
-				idealFactory.subtract(r1, x2); //(x - x^2*y)/y 
-		RationalExpression subMonic = (RationalExpression) 
-				idealFactory.subtract(r1, monic); //(x - x^2*y^2)/y 
-		RationalExpression subMonomial = (RationalExpression) 
-				idealFactory.subtract(r1, monomial); //(x - 3*x^2*y^2)/y 
-		RationalExpression subPolynomial = (RationalExpression) 
-				idealFactory.subtract(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
+		RationalExpression subPrimitivePower = subRational(r1, x2); //(x - x^2*y)/y 
+		RationalExpression subMonic = subRational(r1, monic); //(x - x^2*y^2)/y 
+		RationalExpression subMonomial = subRational(r1, monomial); //(x - 3*x^2*y^2)/y 
+		RationalExpression subPolynomial = subRational(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
 		
 		NumericExpression result1 = idealFactory.divide(idealFactory.
 				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y 
