@@ -95,52 +95,7 @@ public class IdealRationalDivideTest {
 		RationalExpression r = (RationalExpression) idealFactory.divide(a, b);
 		return r;
 	}
-	
-	/**
-	 * Divide various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void divideToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // value 'X' of type real
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType())); // value 'Y' of type real
 		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(idealFactory.
-				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
-		RationalExpression divPrimitive = (RationalExpression) 
-				idealFactory.divide(r1, x); //1/y 
-		RationalExpression divPrimitivePower = divideRational(x2, r1); //(x*y)
-		RationalExpression divMonic = divideRational(monic, r1); //(x*y^2) 
-		RationalExpression divMonomial = divideRational(idealFactory.divide(monomial, 
-						idealFactory.constant(realThree)), r1); //(x*y^2) 
-		RationalExpression divPolynomial = divideRational(polynomial, r1); //x^3 + (x^3/y)
-		
-		NumericExpression result1 = idealFactory.divide(y, y2); //1/y 
-		NumericExpression result2 = idealFactory.multiply(x,y); //(x*y) 
-		NumericExpression result3 = idealFactory.multiply(y2, x); //(x*y^2) 
-		NumericExpression result4 = idealFactory.add(result3, 
-				idealFactory.multiply(x, y)); //(x*y^2) + (x*y) 
-		
-		assertEquals(result1, divPrimitive);	
-		assertEquals(result2, divPrimitivePower);	
-		assertEquals(result3, divMonic);	
-		assertEquals(result3, divMonomial);
-		assertEquals(result4, divPolynomial);
-	}
-	
 	/**
 	 * Adds a rational expression and a polynomial by forming the factorization and by factoring out 
 	 * the common factors that are produced from the two factorizations.
