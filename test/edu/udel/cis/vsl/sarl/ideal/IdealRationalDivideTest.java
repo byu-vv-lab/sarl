@@ -172,4 +172,33 @@ public class IdealRationalDivideTest {
 		
 		assertEquals(result2, divPolynomial);
 	}
+	
+	/**
+	 * Adds a rational expression and a monomial by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a monomial (passed as arguments).
+	 */
+	@Test
+	public void divideRationalToMonomial() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
+				monic); //3x^2 * y
+		NumericExpression result = idealFactory.multiply(y2, x); //(x*y^2) 
+				
+		RationalExpression divMonomial = divideRational(idealFactory.divide(monomial, 
+				idealFactory.constant(realThree)), r1); //(x*y^2) 
+		
+		assertEquals(result, divMonomial);
+	}
 }
