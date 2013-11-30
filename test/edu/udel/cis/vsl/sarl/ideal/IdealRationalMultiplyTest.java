@@ -28,8 +28,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
@@ -96,53 +94,6 @@ public class IdealRationalMultiplyTest {
 	public RationalExpression multiplyRational(RationalExpression a, Polynomial b){
 		RationalExpression r = (RationalExpression) idealFactory.multiply(a, b);
 		return r;
-	}
-	
-	/**
-	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void mulToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));	
-		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(idealFactory.
-				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
-		RationalExpression mulPrimitive = (RationalExpression) 
-				idealFactory.multiply(r1, x); //(x*x)/y 
-		RationalExpression mulPrimitivePower = multiplyRational(r1, x2); //(x*x^2)/y 
-		RationalExpression mulMonic = multiplyRational(r1, monic); //(x^3) 
-		RationalExpression mulMonomial = multiplyRational(r1, idealFactory.divide(monomial, 
-						idealFactory.constant(realThree))); //(x^3) 
-		RationalExpression mulPolynomial = multiplyRational(r1, polynomial); //x^3 + (x^3/y)
-		
-		NumericExpression result1 = idealFactory.divide(idealFactory.
-				multiply(x, x), y); //(x*x)/y 
-		NumericExpression result2 = idealFactory.divide(idealFactory.
-				multiply(x2, x), y); //(x^2*x)/y 
-		NumericExpression result3 = idealFactory.multiply(x2, x); //(x^3) 
-		NumericExpression result4 = idealFactory.add(idealFactory.
-				multiply(x2, x), idealFactory.divide(idealFactory.
-						multiply(x2, x), y)); //3*x^3 + (x^3/y) 
-		
-		assertEquals(result1, mulPrimitive);	
-		assertEquals(result2, mulPrimitivePower);	
-		assertEquals(result3, mulMonic);	
-		assertEquals(result3, mulMonomial);
-		assertEquals(result4, mulPolynomial);
 	}
 	
 	/**
