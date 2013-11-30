@@ -252,4 +252,29 @@ public class IdealRationalSubtractTest {
 		
 		assertEquals(result, subPrimitivePower);
 	}
+	
+	/**
+	 * Subtracts a rational expression and a primitive by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Primitive
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the subtraction of a rational expression 
+	 * 				and a primitive (passed as arguments).
+	 */
+	@Test
+	public void subRationalToPrimitive() {
+		NumericExpression result = idealFactory.divide(idealFactory.
+				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y  
+		
+		RationalExpression subPrimitive = (RationalExpression) 
+				idealFactory.subtract(r1, x); //(x - x*y)/y  
+		
+		assertEquals(result, subPrimitive);
+	}
 }
