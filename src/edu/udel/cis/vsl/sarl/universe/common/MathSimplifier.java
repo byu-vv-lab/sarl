@@ -11,23 +11,26 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
-import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
-public class MathSimplifier extends CommonSimplifier{
+public class MathSimplifier extends CommonSimplifier {
 
 	private SymbolicExpression sinFunction;
 	private SymbolicExpression cosFunction;
 	private MathUniverse mathUniverse;
-	
-	public MathSimplifier (MathUniverse mathUniverse, SymbolicExpression sinFunction, SymbolicExpression cosFunction) {
+	private NumericExpression one;
+
+	public MathSimplifier(MathUniverse mathUniverse,
+			SymbolicExpression sinFunction, SymbolicExpression cosFunction) {
 		super(mathUniverse);
 		this.mathUniverse = mathUniverse;
-		this.sinFunction = sinFunction;//making method for sin 
+		this.sinFunction = sinFunction;// making method for sin
 		this.cosFunction = cosFunction;
-		// TODO Auto-generated constructor stub
+		this.one = mathUniverse.oneReal();
+
 	}
-	
 
 	@Override
 	public Map<SymbolicConstant, SymbolicExpression> substitutionMap() {
@@ -56,21 +59,42 @@ public class MathSimplifier extends CommonSimplifier{
 	@Override
 	protected SymbolicExpression simplifyExpression(
 			SymbolicExpression expression) {
-		
 		SymbolicExpression result = this.simplifyGenericExpression(expression);
 		SymbolicOperator operator = result.operator();
-		if (operator == SymbolicOperator.POWER){
+
+		if (operator == SymbolicOperator.POWER) {
 			NumericExpression base = (NumericExpression) result.argument(0);
 			SymbolicObject arg1 = result.argument(1);
-			if(arg1.symbolicObjectKind() == SymbolicObjectKind.INT){
-				int exp = ((IntObject) arg1).getInt();
+
+			if (base.operator() == SymbolicOperator.APPLY) {
+				SymbolicExpression function = (SymbolicExpression) base
+						.argument(0);
+
+				if (function == cosFunction) {
+					if (arg1.symbolicObjectKind() == SymbolicObjectKind.INT) {
+						int exp = ((IntObject) arg1).getInt();
+
+						if (exp > 1) {
+							SymbolicSequence<?> sequence = (SymbolicSequence<?>) base
+									.argument(1);
+							NumericExpression theta = (NumericExpression) sequence
+									.get(0);
+							NumericExpression sinTheta = mathUniverse
+									.sin(theta);
+							NumericExpression sinTheta2 = mathUniverse
+									.multiply(sinTheta, sinTheta);
+							NumericExpression difference = mathUniverse
+									.subtract(one, sinTheta2);
+							NumericExpression factor = mathUniverse.power(
+									difference, exp / 2);
+
+							result = exp % 2 == 0 ? factor : mathUniverse
+									.multiply(mathUniverse.cos(theta), factor);
+						}
+					}
+				}
 			}
-		SymbolicExpression function = (SymbolicExpression) base.argument(0);	
-			
 		}
-				
-				
 		return result;
 	}
-
 }
