@@ -34,7 +34,6 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
-import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -93,8 +92,7 @@ public class IdealSubtractTest {
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression one; // real constant 1
 	private RationalNumber realOne; // real 1
-	private RationalNumber realThree; // real 3
-
+	
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -116,7 +114,6 @@ public class IdealSubtractTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realOne = numberFactory.rational("1");
-		realThree = numberFactory.rational("3");
 		one = idealFactory.constant(realOne);
 	}
 
@@ -137,20 +134,6 @@ public class IdealSubtractTest {
 	public Polynomial sub(Polynomial a, Polynomial b){
 		Polynomial p = (Polynomial) idealFactory.subtract(a, b);
 		return p;
-	}
-	
-	/**
-	 * a function - subRational() which subtracts a rational expression with a polynomial
-	 * 
-	 * @param a - RationalExpression
-	 * @param b - Polynomial
-	 * 
-	 * @return
-	 * 			the value of an expression consisting of subtraction of a rational expression and a polynomial
-	 */
-	public RationalExpression subRational(RationalExpression a, Polynomial b){
-		RationalExpression r = (RationalExpression) idealFactory.subtract(a, b);
-		return r;
 	}
 	
 	/**
@@ -534,53 +517,5 @@ public class IdealSubtractTest {
 		
 		assertEquals(p2, n1);
 		assertEquals(intZero, m1);
-	}
-	
-	/**
-	 * Subtract various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void subToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // value 'X' of real type
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType())); // value 'Y' of real type
-		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(monomial, x2); //3x^2 * y + x^2
-		RationalExpression subPrimitive = (RationalExpression) 
-				idealFactory.subtract(r1, x); //(x - x*y)/y 
-		RationalExpression subPrimitivePower = subRational(r1, x2); //(x - x^2*y)/y 
-		RationalExpression subMonic = subRational(r1, monic); //(x - x^2*y^2)/y 
-		RationalExpression subMonomial = subRational(r1, monomial); //(x - 3*x^2*y^2)/y 
-		RationalExpression subPolynomial = subRational(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
-		
-		NumericExpression result1 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y 
-		NumericExpression result2 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(x2, y)), y); //(x^2*y + x)/y 
-		NumericExpression result3 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(monic, y)), y); //(x^2*y^2 + x)/y 
-		NumericExpression result4 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(monomial, y)), y); //(3*x^2*y^2 + x)/y 
-		NumericExpression result5 = idealFactory.divide(idealFactory.
-				add(idealFactory.minus(idealFactory.multiply(polynomial, y)),
-						x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
-		
-		assertEquals(result1, subPrimitive);	
-		assertEquals(result2, subPrimitivePower);	
-		assertEquals(result3, subMonic);	
-		assertEquals(result4, subMonomial);
-		assertEquals(result5, subPolynomial);
 	}
 }
