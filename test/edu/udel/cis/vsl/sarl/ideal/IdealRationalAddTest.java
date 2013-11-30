@@ -169,20 +169,18 @@ public class IdealRationalAddTest {
 	}
 	
 	/**
-	 * Adds two polynomials by forming the factorization and by factoring out 
+	 * Adds a rational expression and a polynomial by forming the factorization and by factoring out 
 	 * the common factors that are produced from the two factorizations.
 	 * 
-	 * @param p1
-	 *            a Polynomial
-	 * @param p2
-	 *            a Polynomial
+	 * @param p1 - RationalExpression
+	 * @param p2 - Polynomial
 	 * 
 	 * @param type
 	 * 				Polynomial
 	 * 
 	 * @return
-	 * 				a polynomial of type Polynomial which is the sum of two 
-	 * 				polynomials (passed as arguments).
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a polynomial (passed as arguments).
 	 */
 	@Test
 	public void addRationalToPolynomial() {
@@ -191,11 +189,41 @@ public class IdealRationalAddTest {
 		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
 				monic); //3x^2 * y
 		Polynomial polynomial = (Polynomial) idealFactory.add(monomial, x2); //3x^2 * y + x^2
-		NumericExpression result5 = idealFactory.divide(idealFactory.
+		NumericExpression result = idealFactory.divide(idealFactory.
 				add(idealFactory.multiply(polynomial, y), x), y); //(3*x^2*y^2 + x^2 * y + x)/y
 		
 		RationalExpression plusPolynomial = addRational(r1, polynomial); //(3*x^2*y^2 + x^2 * y + x)/y
 		
-		assertEquals(result5, plusPolynomial);
+		assertEquals(result, plusPolynomial);
 	}
+	
+	/**
+	 * Adds a rational expression and a monomial by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Monomial
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the sum of a rational expression 
+	 * 				and a monomial (passed as arguments).
+	 */
+	@Test
+	public void addRationalToMonomial() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
+				monic); //3x^2 * y		
+		NumericExpression result = idealFactory.divide(idealFactory.
+				add(idealFactory.multiply(monomial, y), x), y); //(3*x^2*y^2 + x)/y 
+		
+		RationalExpression plusMonomial = addRational(r1, monomial); //(3*x^2*y^2 + x)/y 
+		
+		assertEquals(result, plusMonomial);
+	}
+	
+	
 }
