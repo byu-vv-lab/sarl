@@ -97,54 +97,6 @@ public class IdealRationalSubtractTest {
 	}
 	
 	/**
-	 * Subtract various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void subToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // value 'X' of real type
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType())); // value 'Y' of real type
-		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(monomial, x2); //3x^2 * y + x^2
-		RationalExpression subPrimitive = (RationalExpression) 
-				idealFactory.subtract(r1, x); //(x - x*y)/y 
-		RationalExpression subPrimitivePower = subRational(r1, x2); //(x - x^2*y)/y 
-		RationalExpression subMonic = subRational(r1, monic); //(x - x^2*y^2)/y 
-		RationalExpression subMonomial = subRational(r1, monomial); //(x - 3*x^2*y^2)/y 
-		RationalExpression subPolynomial = subRational(r1, polynomial); //(x - 3*x^2*y^2 - x^2 * y)/y
-		
-		NumericExpression result1 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y 
-		NumericExpression result2 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(x2, y)), y); //(x^2*y + x)/y 
-		NumericExpression result3 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(monic, y)), y); //(x^2*y^2 + x)/y 
-		NumericExpression result4 = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(monomial, y)), y); //(3*x^2*y^2 + x)/y 
-		NumericExpression result5 = idealFactory.divide(idealFactory.
-				add(idealFactory.minus(idealFactory.multiply(polynomial, y)),
-						x), y); //(3*x^2*y^2 + x^2 * y + x)/y 
-		
-		assertEquals(result1, subPrimitive);	
-		assertEquals(result2, subPrimitivePower);	
-		assertEquals(result3, subMonic);	
-		assertEquals(result4, subMonomial);
-		assertEquals(result5, subPolynomial);
-	}
-	
-	/**
 	 * Subtracts a rational expression and a polynomial by forming the factorization and by factoring out 
 	 * the common factors that are produced from the two factorizations.
 	 * 
