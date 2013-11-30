@@ -203,4 +203,29 @@ public class IdealRationalMultiplyTest {
 		
 		assertEquals(result, mulMonomial);
 	}
+	
+	/**
+	 * Multiplies a rational expression and a monic by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - Monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the multiplication of a rational expression 
+	 * 				and a monic (passed as arguments).
+	 */
+	@Test
+	public void mulRationalToMonic() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression result1 = idealFactory.multiply(x2, x); //(x^3)   
+		
+		RationalExpression mulMonic = multiplyRational(r1, monic); //(x^3)
+		
+		assertEquals(result1, mulMonic);
+	}
 }
