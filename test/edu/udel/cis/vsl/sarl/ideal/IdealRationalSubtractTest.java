@@ -201,4 +201,30 @@ public class IdealRationalSubtractTest {
 		
 		assertEquals(result, subMonomial);
 	}
+	
+	/**
+	 * Subtracts a rational expression and a monic by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - monic
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the subtraction of a rational expression 
+	 * 				and a monic (passed as arguments).
+	 */
+	@Test
+	public void subRationalToMonic() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
+		NumericExpression result = idealFactory.divide(idealFactory.
+				subtract(x, idealFactory.multiply(monic, y)), y); //(x^2*y^2 + x)/y 
+		
+		RationalExpression subMonic = subRational(r1, monic); //(x - x^2*y^2)/y 
+		
+		assertEquals(result, subMonic);
+	}
 }
