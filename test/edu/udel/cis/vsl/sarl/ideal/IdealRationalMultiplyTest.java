@@ -228,4 +228,29 @@ public class IdealRationalMultiplyTest {
 		
 		assertEquals(result1, mulMonic);
 	}
+	
+	/**
+	 * Multiplies a rational expression and a primitive power by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
+	 * 
+	 * @param p1 - RationalExpression
+	 * @param p2 - PrimitivePower
+	 * 
+	 * @param type
+	 * 				Polynomial
+	 * 
+	 * @return
+	 * 				a rational expression of type RationalExpression which is the multiplication of a rational expression 
+	 * 				and a primitive power (passed as arguments).
+	 */
+	@Test
+	public void mulRationalToPrimitivePower() {
+		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
+		NumericExpression result2 = idealFactory.divide(idealFactory.
+				multiply(x2, x), y); //(x^2*x)/y 
+		
+		RationalExpression mulPrimitivePower = multiplyRational(r1, x2); //(x*x^2)/y 
+		
+		assertEquals(result2, mulPrimitivePower);
+	}
 }
