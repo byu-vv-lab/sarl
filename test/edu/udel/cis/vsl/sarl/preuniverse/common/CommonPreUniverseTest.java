@@ -1399,6 +1399,13 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 
 	}
+	/**
+	 * Tests the method integer() for a cases of passing BigInteger 
+	 * the method will return a NumericExpression with an intger numeric type
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
 	@Test
 	public void testInteger() {
@@ -1411,32 +1418,48 @@ public class CommonPreUniverseTest {
 		num1 = universe.integer(n1);
 		num2 = universe.integer(n2);
 	}
+	/**
+	 * Tests the method add() for an exception case 
+	 * of passing null list of NumericExpression
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testAddException() {
-		// testing the fail when passing a null list to add()
 		LinkedList<NumericExpression> numbers;
 		NumericExpression sum;
-
+		// null list
 		numbers = null;
 		sum = universe.add(numbers);
 
 	}
+	/**
+	 * Tests the method add() for an exception case 
+	 * of passing an empty list of NumericExpression to add
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test(expected = SARLException.class)
 	public void testAddException2() {
-		// testing the fail when passing an empty list to add()
 		LinkedList<NumericExpression> numbers;
 		NumericExpression sum;
-
+		// empty list
 		numbers = new LinkedList<>();
 		sum = universe.add(numbers);
 
 	}
+	/**
+	 * Tests the method neq(SumbolicExpression arg0, SumbolicExpression arg1) 
+	 * for a regular case(no exceptions) when passing two non equivalent boolean expressions
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testNeq() {
 
@@ -1459,8 +1482,15 @@ public class CommonPreUniverseTest {
 		result = universe.neq(expression, expression2);
 
 	}
+	/**
+	 * Tests the method divides(NumericExpression arg0, NumericExpression arg1) 
+	 * for two cases: one when one integer,5 divides another, which is 10
+	 * , while the other case when an integer, 3 doesn't divide another integer, 10.
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testDivides() {
 		// test if one integer a divides another integer b
@@ -1470,7 +1500,7 @@ public class CommonPreUniverseTest {
 		num1 = universe.integer(10);
 		num2 = universe.integer(5);
 		num3 = universe.integer(3);
-
+		
 		// check if num2 divides num1
 		// here the result should be true since 5 divides 10
 		res = universe.divides(num2, num1);
@@ -1482,8 +1512,14 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.bool(false), res);
 
 	}
+	/**
+	 * Tests the method not() with two cases (1) using less than method
+	 * (2) using less than equal. 
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testNot() {
 
@@ -1509,8 +1545,20 @@ public class CommonPreUniverseTest {
 		notExp = universe.not(exp);
 
 	}
+	/**
+	 * Tests the method equals(SymbolicExpression exp1, SymbolicExpression exp2) to check wether two expression are identical
+	 * for different cases:
+	 * (1) exp1 is boolean and exp2 is numeric integer.
+	 * (2) when exp1 and exp2 are booleans but with different values.
+	 * (3) when exp1 and exp2 are numeric integers but with different values.
+	 * (4) when exp1 and exp2 are arrays but with different values.
+	 * (5) when exp1 and exp2 are tuples but with different values.
+	 * 
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testEqual() {
 		// testing some cases of equals
