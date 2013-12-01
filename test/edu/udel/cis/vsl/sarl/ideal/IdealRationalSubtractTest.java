@@ -56,9 +56,9 @@ public class IdealRationalSubtractTest {
 	private IdealFactory idealFactory;
 
 	private RationalNumber realThree; // real 3
-	RationalExpression r1;
-	NumericSymbolicConstant x;
-	NumericSymbolicConstant y;
+	RationalExpression r1; // Rational Expression x/y
+	NumericSymbolicConstant x; // int symbolic constant "X"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
 		
 	@Before
 	public void setUp() throws Exception {
@@ -223,9 +223,9 @@ public class IdealRationalSubtractTest {
 	public void subRationalToPrimitive() {
 		NumericExpression result = idealFactory.divide(idealFactory.
 				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y  
+		Polynomial poly1 = (Polynomial) x;
 		
-		RationalExpression subPrimitive = (RationalExpression) 
-				idealFactory.subtract(r1, x); //(x - x*y)/y  
+		RationalExpression subPrimitive = subRational(r1, poly1); //(x - x*y)/y  
 		
 		assertEquals(result, subPrimitive);
 	}
