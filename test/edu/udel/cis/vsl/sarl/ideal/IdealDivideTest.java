@@ -28,12 +28,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
-import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
-import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -55,13 +53,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>PrimitivePower / PrimitivePower</li>
  * <li>Primitive / PrimitivePower</li>
  * <li>Constant / Primitive</li>
- * <li>RationalExpression / Polynomial</li>
- * <li>RationalExpression / Monomial</li>
- * <li>RationalExpression / Monic</li>
- * <li>RationalExpression / Primitive</li>
- * <li>RationalExpression / PrimitivePower</li>
  * </ul>
- *
  */
 public class IdealDivideTest {
 
@@ -81,20 +73,13 @@ public class IdealDivideTest {
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen; // real constant 15
 	private NumericExpression five; // real constant 5
-	private NumericExpression seven; // real constant 7
-	private NumericExpression twentyOne; // real constant 21
-	private NumericExpression thirtyFive; // real constant 35
 	private NumericExpression zero; // real constant 0
 	private RationalNumber realZero; // real 0
-	private RationalNumber realOne; // real 1
 	private RationalNumber realFifteen; // real 15
 	private RationalNumber realFive; // real 5
-	private NumericExpression three; // real 3
+	private NumericExpression three; // real  constant 3
 	private RationalNumber realThree; // real 3
-	private RationalNumber realSeven; // real 7
-	private RationalNumber realTwentyOne; // real 21
-	private RationalNumber realThirtyFive; // real 35
-	
+		
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
@@ -114,18 +99,11 @@ public class IdealDivideTest {
 		y = objectFactory.canonic(idealFactory.symbolicConstant(
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
-		realOne = numberFactory.rational("1");
 		realFifteen = numberFactory.rational("15");
 		realFive = numberFactory.rational("5");
-		realSeven = numberFactory.rational("7");
-		realTwentyOne = numberFactory.rational("21");
-		realThirtyFive = numberFactory.rational("35");
 		zero = idealFactory.constant(realZero);
 		fifteen = idealFactory.constant(realFifteen);
 		five = idealFactory.constant(realFive);
-		seven = idealFactory.constant(realSeven);
-		twentyOne = idealFactory.constant(realTwentyOne);
-		thirtyFive = idealFactory.constant(realThirtyFive);
 		realThree = numberFactory.rational("3");
 		three = idealFactory.constant(realThree);
 	}
@@ -149,19 +127,6 @@ public class IdealDivideTest {
 		return p;
 	}
 	
-	/**
-	 * a function - divideRational() which divides a rational expression with a polynomial
-	 * 
-	 * @param a - RationalExpression
-	 * @param b - Polynomial
-	 * 
-	 * @return
-	 * 			the value of an expression consisting of division of a rational expression and a polynomial
-	 */
-	public RationalExpression divideRational(Polynomial a, RationalExpression b){
-		RationalExpression r = (RationalExpression) idealFactory.divide(a, b);
-		return r;
-	}
 	/**
 	 * Divides two polynomials, a polynomial with monic, monomial, 
 	 * a monomial with a monic, a monic with a primitivepower and a constant
@@ -403,8 +368,9 @@ public class IdealDivideTest {
 	@Test
 	public void divideMonomialToPrimitive() {
 		Polynomial p01 = (Polynomial) idealFactory.multiply(intTen, x);
+		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b1 = (Polynomial) idealFactory.divide(p01, x);
+		Polynomial b1 = divide(p01, poly1);
 		
 		assertEquals(intTen, b1);
 	}
@@ -429,7 +395,7 @@ public class IdealDivideTest {
 	public void dividePrimitivePowerToItself() {
 		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
 		
-		Polynomial b1 = (Polynomial) idealFactory.divide(p01, p01);
+		Polynomial b1 = divide(p01, p01);
 		
 		assertEquals(intOne, b1);
 	}
@@ -455,8 +421,9 @@ public class IdealDivideTest {
 		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
 		Polynomial p02 = (Polynomial) idealFactory.multiply(intTen, x);
 		NumericExpression p03 = idealFactory.divide(p01, p02);
+		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial b3 = (Polynomial) idealFactory.divide(x, intTen);
+		Polynomial b3 = divide(poly1, intTen);
 		
 		assertEquals(p03, b3);
 	}
@@ -499,126 +466,5 @@ public class IdealDivideTest {
 		Polynomial b1 = divide(p01, p02);
 		
 		assertEquals(p05, b1);
-	}
-	
-	/**
-	 * Returns a rational expression by canceling out the common factors that 
-	 * are present in both numerator and denominator.
-	 * 
-	 * @param type
-	 * 				Symbolic Expressions of same numeric type
-	 * 
-	 * the test below does this:
-	 * 		(21x^3 - 35x^2) / (7x) -------> 3x^2 - 5x
-	 */
-	@Test
-	public void complexRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory.symbolicConstant(Xobj,
-				typeFactory.realType())); // value 'X' of type real
-		IntObject exp3 = objectFactory.intObject(3); // integer object '3'
-		IntObject exp2 = objectFactory.intObject(2); // integer object '2'
-		
-		NumericExpression complex1 = idealFactory.multiply(twentyOne, idealFactory.
-				power(x, exp3));
-		NumericExpression complex2 = idealFactory.multiply(thirtyFive, idealFactory.
-				power(x, exp2));
-		NumericExpression numer = idealFactory.subtract(complex1, complex2);		
-		NumericExpression denom = idealFactory.multiply(x, seven);
-		NumericExpression complex = idealFactory.divide(numer, denom);
-		NumericExpression result1 = idealFactory.multiply(idealFactory.power(x, 
-				exp2), three);
-		NumericExpression result2 = idealFactory.multiply(x, five);
-		NumericExpression result = idealFactory.subtract(result1, result2);
-		
-		assertEquals(result, complex);
-	}
-	
-	/**
-	 * Returns a rational expression by canceling out the common factors that 
-	 * are present in both numerator and denominator.
-	 * 
-	 * @param type
-	 * 				Symbolic Expressions of same numeric type
-	 * 
-	 *  [(x+1)(x-1)(xy+3)]/[(x-1)*(xy+5)*z] = [(x+1)(xy+3)]/[(xy+5)*z]?
-	 */
-	@Test
-	public void factoringRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // value 'X' of type real
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("y"),
-						typeFactory.realType())); // value 'Y' of type real
-		NumericSymbolicConstant z = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("z"),
-						typeFactory.realType())); // value 'Z' of type real
-		
-		NumericExpression xPlus1 = idealFactory.add(x, 
-				idealFactory.constant(realOne)); //(x+1)
-		NumericExpression xMinus1 = idealFactory.subtract(x, 
-				idealFactory.constant(realOne)); //(x-1)
-		NumericExpression xy = idealFactory.multiply(x, y); //xy
-		NumericExpression xyPlusThree = idealFactory.add(xy, 
-				idealFactory.constant(realThree)); //xy+3
-		NumericExpression xyPlusFive = idealFactory.add(xy, 
-				idealFactory.constant(realFive)); //xy+5
-		NumericExpression numerator = idealFactory.multiply(
-				idealFactory.multiply(xPlus1, xMinus1), xyPlusThree); //(x+1)(x-1)(xy+3)
-		NumericExpression denominator = idealFactory.multiply(
-				idealFactory.multiply(xMinus1, xyPlusFive), z); //(x-1)*(xy+5)*z		
-		NumericExpression resultNumer = idealFactory.multiply(xPlus1, 
-				xyPlusThree); //(x+1)(xy+3)
-		NumericExpression resultDenom = idealFactory.multiply(xyPlusFive, 
-				z); //(xy+5)*z
-		NumericExpression r1 = idealFactory.divide(numerator, denominator);
-		NumericExpression result = idealFactory.divide(resultNumer, resultDenom);
-		
-		assertEquals(result, r1);
-	}
-	
-	/**
-	 * Divide various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void divideToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType())); // value 'X' of type real
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType())); // value 'Y' of type real
-		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(idealFactory.
-				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
-		RationalExpression divPrimitive = (RationalExpression) 
-				idealFactory.divide(r1, x); //1/y 
-		RationalExpression divPrimitivePower = divideRational(x2, r1); //(x*y)
-		RationalExpression divMonic = divideRational(monic, r1); //(x*y^2) 
-		RationalExpression divMonomial = divideRational(idealFactory.divide(monomial, 
-						idealFactory.constant(realThree)), r1); //(x*y^2) 
-		RationalExpression divPolynomial = divideRational(polynomial, r1); //x^3 + (x^3/y)
-		
-		NumericExpression result1 = idealFactory.divide(y, y2); //1/y 
-		NumericExpression result2 = idealFactory.multiply(x,y); //(x*y) 
-		NumericExpression result3 = idealFactory.multiply(y2, x); //(x*y^2) 
-		NumericExpression result4 = idealFactory.add(result3, 
-				idealFactory.multiply(x, y)); //(x*y^2) + (x*y) 
-		
-		assertEquals(result1, divPrimitive);	
-		assertEquals(result2, divPrimitivePower);	
-		assertEquals(result3, divMonic);	
-		assertEquals(result3, divMonomial);
-		assertEquals(result4, divPolynomial);
 	}
 }
