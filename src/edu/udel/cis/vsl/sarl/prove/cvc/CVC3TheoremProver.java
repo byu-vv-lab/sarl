@@ -31,6 +31,7 @@ import cvc3.Op;
 import cvc3.QueryResult;
 import cvc3.Type;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -753,7 +754,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		int index = 0;
 
 		for (Expr value : values) {
-			if (value != null) 
+			if (value != null)
 				result = vc.tupleUpdateExpr(result, index, value);
 			index++;
 		}
@@ -1627,11 +1628,14 @@ public class CVC3TheoremProver implements TheoremProver {
 			Map<?, ?> cvcModel = vc.getConcreteModel();
 			CVC3ModelFinder finder = new CVC3ModelFinder(this, cvcModel);
 			Map<SymbolicConstant, SymbolicExpression> model = finder.getModel();
+			ModelResult result = Prove.modelResult(model);
 
-			return Prove.modelResult(model);
+			popCVC3();
+			return result;
+		} else {
+			popCVC3();
+			return translateResult(cvcResult);
 		}
-		popCVC3();
-		return translateResult(cvcResult);
 	}
 
 	/**

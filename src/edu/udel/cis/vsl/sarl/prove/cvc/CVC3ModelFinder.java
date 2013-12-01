@@ -88,6 +88,8 @@ public class CVC3ModelFinder {
 
 	Map<SymbolicConstant, SymbolicExpression> model;
 
+	private boolean debug = false;
+
 	public CVC3ModelFinder(CVC3TheoremProver prover, Map<?, ?> cvcModel) {
 		this.prover = prover;
 		this.universe = prover.universe();
@@ -794,7 +796,7 @@ public class CVC3ModelFinder {
 			Expr value = (Expr) entry.getValue();
 			SymbolicExpression sarlValue;
 
-			if (out != null) {
+			if (debug && out != null) {
 				// debugging...
 				out.print("key = ");
 				printExpr(key, out);
