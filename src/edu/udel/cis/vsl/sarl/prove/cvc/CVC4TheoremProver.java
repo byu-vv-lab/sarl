@@ -119,10 +119,10 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Map<Expr, SymbolicConstant> opMap = new HashMap<Expr, SymbolicConstant>();
 
 	/**
-	 * Mapping of CVC4 variables to their corresponding symbolic constants.
+	 * Mapping of SARL variables to their corresponding CVC4 expressions.
 	 * Needed in order to construct model when there is a counter example.
 	 */
-	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
+	private Map<SymbolicConstant, Expr> varMap = new HashMap<SymbolicConstant, Expr>();
 
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC4 type. Set in method
@@ -147,7 +147,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * Set in method reset().
 	 */
 	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
-
+	
 	/**
 	 * Stack of SymbolicExpressions and their translations as Exprs
 	 */
@@ -172,7 +172,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
 		cvcAssumption = translate(context);
-		smt.assertFormula(cvcAssumption);
+		smt.assertFormula(cvcAssumption);		
 	}
 
 	/**
@@ -1042,7 +1042,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		} else {
 			result = em.mkVar(newCvcName(root), type); 
 		}
-		varMap.put(result, symbolicConstant);
+		varMap.put(symbolicConstant, result);
 		return result;
 	}
 	
@@ -1061,7 +1061,6 @@ public class CVC4TheoremProver implements TheoremProver {
 					+ result);
 			out.flush();
 		}
-		// unfortunately QueryResult is not an enum...
 		if (result.equals(Result.Validity.VALID)) {
 			return Prove.RESULT_YES;
 		} else if (result.equals(Result.Validity.INVALID)) {
@@ -1215,20 +1214,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
-//	/**
-//	 * Translate expr from SARL to CVC4. This results in two things: a CVC4
-//	 * expression (which is returned) and also side-effects: constraints added
-//	 * to the CVC4 assumption set, possibly involving auxiliary variables.
-//	 * 
-//	 * @param SymbolicExpression
-//	 * @returns Expr
-//	 */
-//	public Expr translate(SymbolicExpression expr) {
-//		Expr result;
-//		result = translateWork(expr);
-//		return result;
-//	}
-
 	/**
 	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
 	 * Types in CVC4.
@@ -1290,15 +1275,19 @@ public class CVC4TheoremProver implements TheoremProver {
 		Result cvcResult = queryCVC4(predicate);
 
 		if (cvcResult.equals(Validity.INVALID)) {
-//			Map<?, ?> cvcModel;
-//			Map<SymbolicConstant, SymbolicExpression> model;
-			
-			// TODO set model
-			
-			
-//			return Prove.modelResult(model);
+			Map<SymbolicConstant, SymbolicExpression> model = 
+					new HashMap<SymbolicConstant, SymbolicExpression>();
+			for (SymbolicConstant sarlConstant : varMap.keySet())
+			{
+				Expr cvcConstant = varMap.get(sarlConstant);
+				Expr cvcExpression = smt.getValue(cvcConstant);
+				// TODO back translate
+//				SymbolicExpression sarlExpression = backTranslate(cvcExpression);
+//				model.put(sarlConstant, sarlExpression);
+			}
+			popCVC4();
+			return Prove.modelResult(model);
 		}
-		
 		popCVC4();
 		return translateResult(cvcResult);
 	}
@@ -1344,7 +1333,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				out.println(cvcPredicate);
 				out.flush();
 			}
-			result = smt.assertFormula(cvcPredicate);
+			result = smt.query(cvcPredicate);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new SARLInternalException(
