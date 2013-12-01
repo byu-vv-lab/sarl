@@ -195,9 +195,7 @@ public class IdealSimplifier extends CommonSimplifier {
 					return result;
 			}
 			result = (Polynomial) simplifyGenericExpression(polynomial);
-			if (result.degree() < polynomial.degree())
-				return result;
-			return polynomial;
+			return result;
 		}
 	}
 
