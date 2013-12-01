@@ -34,6 +34,7 @@ import edu.nyu.acsys.CVC4.ExprManager;
 import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.Result;
+import edu.nyu.acsys.CVC4.SExpr;
 import edu.nyu.acsys.CVC4.Result.Validity;
 import edu.nyu.acsys.CVC4.SmtEngine;
 import edu.nyu.acsys.CVC4.Type;
@@ -99,6 +100,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The CVC4 object that checks queries
 	 */
 	private SmtEngine smt = new SmtEngine(em);
+	
 
 	/**
 	 * Map from SARL expressions of funcional type to corresponding CVC4
@@ -162,6 +164,8 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr cvcAssumption;
 
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
+		smt.setOption("incremental", new SExpr(true));
+		smt.setOption("produce-models", new SExpr(true));
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
@@ -1199,12 +1203,14 @@ public class CVC4TheoremProver implements TheoremProver {
 				return result;
 		}
 		result = expressionMap.get(expr);
-		if (result != null) {
+		if (result != null && translationStack != null) {
 			translationStack.getLast().put(expr, result);
 			return result;
 		}
 		result = translateWork(expr);
-		translationStack.getLast().put(expr, result);
+		if(translationStack != null && !translationStack.isEmpty()) {
+			translationStack.getLast().put(expr, result);
+		}
 		this.expressionMap.put(expr, result);
 		return result;
 	}
