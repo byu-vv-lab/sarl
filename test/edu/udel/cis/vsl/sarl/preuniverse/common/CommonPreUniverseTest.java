@@ -1286,8 +1286,15 @@ public class CommonPreUniverseTest {
 		assertEquals(universe.rational(.1), result);
 
 	}
+	/**
+	 * Tests the method compatible() which compare two SymbolicExpressions
+	 * and returns whether they are equivalent or not.
+	 * Here, we test two unions types for two cases, one they are identical, while the other they are not
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithUnion() {
 
@@ -1334,8 +1341,15 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 
 	}
+	/**
+	 * Tests the method compatible() which compare two SymbolicExpressions
+	 * and returns whether they are equivalent or not.
+	 * Here, we test two function types to check if they are equivalent
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithFunction() {
 
@@ -1359,8 +1373,15 @@ public class CommonPreUniverseTest {
 		assertEquals(expected, result);
 
 	}
+	/**
+	 * Tests the method compatible() which compare two SymbolicExpressions
+	 * and returns whether they are equivalent or not.
+	 * Here, we test two Real types to check if they are equivalent
+	 * 
+	 * @author malsulmi
+	 * 
+	 */
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testCompatibleWithReal() {
 
@@ -1379,7 +1400,6 @@ public class CommonPreUniverseTest {
 
 	}
 
-	// written by Mohammad Alsulmi
 	@Test
 	public void testInteger() {
 		// covering the other cases of integers
