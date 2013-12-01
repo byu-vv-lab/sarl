@@ -332,8 +332,8 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            SymbolicCollection given to the translation.
 	 * @return linkedlist of CVC4 Expr
 	 */
-	private List<Expr> translateCollection(SymbolicCollection<?> collection) {
-		List<Expr> result = new LinkedList<Expr>();
+	private vectorExpr translateCollection(SymbolicCollection<?> collection) {
+		vectorExpr result = new vectorExpr();
 
 		for (SymbolicExpression expr : collection)
 			result.add(expr == null ? null : translate(expr));
@@ -575,14 +575,14 @@ public class CVC4TheoremProver implements TheoremProver {
 		boolean isBig = isBigArray(arrayExpression);
 		Expr origin = translate(arrayExpression);
 		Expr result = isBig ? bigArrayValue(origin) : origin;
-		List<Expr> values = translateCollection((SymbolicSequence<?>) expr
+		vectorExpr values = translateCollection((SymbolicSequence<?>) expr
 				.argument(1));
 		int index = 0;
 
-		for (Expr value : values) {
-			if (value != null)
+		for (int i = 0; i < values.size(); i++) {
+			if (values.get(i) != null)
 				result = em.mkExpr(Kind.STORE, result,
-						em.mkConst(new Rational(index)), value);
+						em.mkConst(new Rational(index)), values.get(i));
 			index++;
 		}
 		assertIndexInBounds(arrayExpression, universe.integer(index - 1));
@@ -606,15 +606,15 @@ public class CVC4TheoremProver implements TheoremProver {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
 		Expr result = translate(tupleExpression);
-		List<Expr> values = translateCollection((SymbolicSequence<?>) expr
+		vectorExpr values = translateCollection((SymbolicSequence<?>) expr
 				.argument(1));
 		int index = 0;
 		Expr i;
 
-		for (Expr value : values) {
+		for (int j = 0; j < values.size(); j++) {
 			i = em.mkConst(new Rational(index));
-			if (value != null)
-				result = em.mkExpr(Kind.TUPLE_UPDATE, result, i, value);
+			if (values.get(j) != null)
+				result = em.mkExpr(Kind.TUPLE_UPDATE, result, i, values.get(j));
 			index++;
 		}
 		return result;
@@ -838,13 +838,13 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = em.mkExpr(Kind.PLUS,
-						translate((SymbolicExpression) expr.argument(0)));
+						translateCollection((SymbolicCollection<?>) 
+								expr.argument(0)));
 			else {
 				result = null;
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for ADD");
 			}
-
 			break;
 		case AND:
 			if (numArgs == 2)
@@ -853,7 +853,7 @@ public class CVC4TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = em.mkExpr(Kind.AND, 
-						(vectorExpr) translateCollection((SymbolicCollection<?>) 
+						translateCollection((SymbolicCollection<?>) 
 								expr.argument(0)));
 						
 			else {
@@ -867,7 +867,7 @@ public class CVC4TheoremProver implements TheoremProver {
 					.mkExpr(Kind.FUNCTION,
 							translateFunction((SymbolicExpression) expr
 									.argument(0)),
-							(vectorExpr) translateCollection((SymbolicCollection<?>) expr
+							translateCollection((SymbolicCollection<?>) expr
 									.argument(1)));
 			break;
 		case ARRAY_LAMBDA: {
@@ -1202,7 +1202,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				return result;
 		}
 		result = expressionMap.get(expr);
-		if (result != null && translationStack != null) {
+		if (result != null && translationStack != null && !translationStack.isEmpty()) {
 			translationStack.getLast().put(expr, result);
 			return result;
 		}
