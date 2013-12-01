@@ -11,11 +11,18 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
+/**
+ * @author Mohammad Alsulmi (malsulmi)
+ * 
+ * In this benchmark, we try to measure (evaluate) creating vectors by using one of the persistent java collection framework
+ * which is PCollections framework.
+ * 
+ * Here, we create vector of Symbolic Expressions and we append an integer SymbolicExpression.
+ */
+
 public class PCollectionsBenchWithArrays {
 
-    /**
-     * @author Mohammad Alsulmi (malsulmi)
-     */
+    
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses
 			.newIdealFactorySystem();
@@ -27,20 +34,19 @@ public class PCollectionsBenchWithArrays {
 
 
     public static void main(String[] args) {
-        PVector<SymbolicExpression> ve;
-        SymbolicExpression element = universe.integer(1000);
+        PVector<SymbolicExpression> vector;
 
         int maxSize = (int) Math.pow(2, 28);
         for (int i = 1; i <= maxSize; i = i * 2) {
-            ve = TreePVector.empty();
+            vector = TreePVector.empty();
             int size = i;
             long stime = System.nanoTime();
 
             
             for (int j = 0; j < size; j++) {
-                ve = ve.plus(universe.integer(j));
+                vector = vector.plus(universe.integer(j));
             }
-            System.out.println("Vector (ve) size: " + ve.size());
+            System.out.println("Vector (ve) size: " + vector.size());
             long etime = System.nanoTime();
 
             double fTime = (etime - stime) / 1000000000.0;

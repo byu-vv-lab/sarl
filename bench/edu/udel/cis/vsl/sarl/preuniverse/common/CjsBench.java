@@ -1,11 +1,16 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+/**
+ * @author Mohammad Alsulmi (malsulmi)
+ * 
+ * In this benchmark, we try to measure (evaluate) creating vectors by using one of the persistent java collection framework
+ * which is CJS framework
+ * 
+ *  some of the code has been commented since the library is not added to the SARL project.
+ */
 
 public class CjsBench {
-    /**
-     * @author Mohammad Alsulmi (malsulmi)
-     */
-    public static void main(String[] args) {
+       public static void main(String[] args) {
         //PersistentVector<String> vector;
         int maxSize = (int) Math.pow(2, 28);
         for (int i = 1; i <= maxSize; i = i * 2) {
@@ -16,7 +21,7 @@ public class CjsBench {
             
             for (int j = 0; j < size; j++) {
                 //String xx = Integer.toString(j);
-            	//vector.plus(null);
+            	// vector = vector.plus(null);
             }
             long etime = System.nanoTime();
 

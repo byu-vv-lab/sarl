@@ -12,7 +12,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 /**
  * 
- * @author Mohammad Alsulmi (malsulmi) 
+ * @author malsulmi
  * 
  * The purpose of this benchmark is to evaluate the performance of creating arrays and appending
  * 
@@ -35,12 +35,13 @@ public class ArrayCreationBenchmark {
 
 	public static void main(String[] args) {
 		LinkedList<NumericExpression> elementsList;
-		int maxSize = (int) Math.pow(2, 20);
+		int maxSize = (int) Math.pow(2, 15);
 		int size;
 		long startingTime, endingTime;
 		double totalTime;
 		System.out.println("Testing of array creation using array method");
 		// the case of array creation
+		
 		for (int i = 1; i <= maxSize; i = i * 2) {
 			size = i;
 			// starting the time
@@ -58,19 +59,21 @@ public class ArrayCreationBenchmark {
 					+ " for size: " + size);
 
 		}
+		
 		System.out.println("Testing of array creation using append method");
 
 		// the case of append to an empty array
-
+		SymbolicExpression element = universe.integer(1000);
 		for (int i = 1; i <= maxSize; i = i * 2) {
 			size = i;
 			// starting the time
-			startingTime = System.nanoTime();
+			
 			elementsList = new LinkedList<>();
 			array = universe.array(integerType, elementsList);
+			startingTime = System.nanoTime();
 
 			for (int j = 0; j < size; j++) {
-				array = universe.append(array, universe.integer(j));
+				array = universe.append(array, element);
 			}
 			// stopping the time
 			endingTime = System.nanoTime();

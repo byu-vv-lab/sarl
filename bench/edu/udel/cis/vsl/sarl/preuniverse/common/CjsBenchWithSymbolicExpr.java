@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import edu.udel.cis.vsl.sarl.SARL;
+
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -8,10 +9,18 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 
+
+/**
+ * @author Mohammad Alsulmi (malsulmi)
+ * 
+ * In this benchmark, we try to measure (evaluate) creating vectors by using one of the persistent java collection framework
+ * which is CJS framework
+ * 
+ *  some of the code has been commented since the library is not added to the SARL project.
+ */
+
 public class CjsBenchWithSymbolicExpr {
-	 /**
-     * @author Mohammad Alsulmi (malsulmi)
-     */
+
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses
 			.newIdealFactorySystem();
