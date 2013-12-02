@@ -49,6 +49,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+
 /**
  * The class IdealTypeTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using types
@@ -57,12 +58,12 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * 
  * <ul>
  * <li>Casts the expressions from one type to another</li>
- * <li>Create constant</li>
- * <li>Create a symbolic constant</li>
- * <li>Create a zero polynomial</li>
- * <li>Create a monomial</li>
- * <li>Create a real zero</li>
- * <li>Create a real one</li>
+ * <li>Creates constant</li>
+ * <li>Creates a symbolic constant</li>
+ * <li>Creates a zero polynomial</li>
+ * <li>Creates a monomial</li>
+ * <li>Creates a real zero</li>
+ * <li>Creates a real one</li>
  * </ul>
  *
  */
