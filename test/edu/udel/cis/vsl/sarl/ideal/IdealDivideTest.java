@@ -128,6 +128,34 @@ public class IdealDivideTest {
 	}
 	
 	/**
+	 * a function - multiply() which multiplies two polynomials
+	 * 
+	 * @param a - Polynomial
+	 * @param b - Polynomial
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of multiplication of two polynomials
+	 */
+	public Polynomial multiply(Polynomial a, Polynomial b){
+		Polynomial p = idealFactory.multiply(a, b);
+		return p;
+	}
+	
+	/**
+	 * a function - add() which adds two polynomials
+	 * 
+	 * @param a - Polynomial
+	 * @param b - Polynomial
+	 * 
+	 * @return
+	 * 			the value of an expression consisting of addition of two polynomials
+	 */
+	public Polynomial add(Polynomial a, Polynomial b){
+		Polynomial p = idealFactory.add(a, b);
+		return p;
+	}
+	
+	/**
 	 * Divides two polynomials, a polynomial with monic, monomial, 
 	 * a monomial with a monic, a monic with a primitivepower and a constant
 	 * 
@@ -136,19 +164,22 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divide() {
-		NumericExpression n1 = idealFactory.multiply(intTen, x);
-		NumericExpression n2 = idealFactory.multiply(intOne, x);
-		NumericExpression n3 = idealFactory.multiply(intZero, x);
-		NumericExpression n4 = idealFactory.multiply(intOne, intOne);
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial n1 = multiply(intTen, poly1);
+		Polynomial n2 = multiply(intOne, poly1);
+		Polynomial n3 = multiply(intZero, poly1);
+		Polynomial n4 = multiply(intOne, intOne);
 		NumericExpression n5 = idealFactory.multiply(fifteen, three);
 		NumericExpression n6 = idealFactory.multiply(five, three);
 		NumericExpression n7 = idealFactory.multiply(zero, three);
-		NumericExpression n = idealFactory.add(x, y);
+		Polynomial n = add(poly1, poly2);
 		NumericExpression m = idealFactory.subtract(x, y);
 		NumericExpression np = idealFactory.divide(n, m);		
-		NumericExpression b1 = idealFactory.divide(n1, n2);
-		NumericExpression b2 = idealFactory.divide(n3, n2);
-		NumericExpression b3 = idealFactory.divide(n1, n4);
+		Polynomial b1 = divide(n1, n2);
+		Polynomial b2 = divide(n3, n2);
+		Polynomial b3 = divide(n1, n4);
 		NumericExpression b4 = idealFactory.divide(n5, n6);
 		NumericExpression b5 = idealFactory.divide(n7, n6);
 		NumericExpression p1 = idealFactory.divide(n, m);
@@ -179,10 +210,10 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void dividePolyToPoly() {
-		Polynomial p01 = (Polynomial) idealFactory.add(intTen, idealFactory.
-				multiply(intTen, x));
-		Polynomial p02 = (Polynomial) idealFactory.add(intTwo, idealFactory.
-				multiply(intTwo, x));
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = add(intTen, multiply(intTen, poly1));
+		Polynomial p02 = add(intTwo, multiply(intTwo, poly1));
 		
 		Polynomial b1 = divide(p01, p02);
 		
@@ -207,11 +238,12 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void dividePolyToMonomial() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
-		Polynomial p02 = (Polynomial) idealFactory.multiply(intTen, x);
-		Polynomial p03 = (Polynomial) idealFactory.add(p02, idealFactory.
-				multiply(intTen, p01));
-		NumericExpression p04 = idealFactory.add(x, intOne);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(poly1, poly1);
+		Polynomial p02 = multiply(intTen, poly1);
+		Polynomial p03 = add(p02, multiply(intTen, p01));
+		NumericExpression p04 = add(poly1, intOne);
 		
 		Polynomial b1 = divide(p03, p02);
 		
@@ -236,8 +268,10 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonomialToMonomial() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(intTen, x);
-		Polynomial p02 = (Polynomial) idealFactory.multiply(intTwo, x);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(intTen, poly1);
+		Polynomial p02 = multiply(intTwo, poly1);
 		
 		Polynomial b1 = divide(p01, p02);
 		
@@ -262,8 +296,11 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonomialToMonic() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(intTen, idealFactory.multiply(x, y));
-		Polynomial p02 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p01 = multiply(intTen, multiply(poly1, poly2));
+		Polynomial p02 = multiply(poly1, poly2);
 		
 		Polynomial b1 = divide(p01, p02);
 		
@@ -288,8 +325,11 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonicToMonic() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, idealFactory.multiply(x, y));
-		Polynomial p02 = (Polynomial) idealFactory.multiply(x, y);
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p01 = multiply(poly1, multiply(poly1, poly2));
+		Polynomial p02 = multiply(poly1, poly2);
 				
 		Polynomial b1 = divide(p01, p02);
 		
@@ -314,9 +354,11 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonomialToPrimitivePower() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
-		Polynomial p02 = (Polynomial) idealFactory.multiply(intTen, x);
-		NumericExpression p03 = idealFactory.divide(intTen, x);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(poly1, poly1);
+		Polynomial p02 = multiply(intTen, poly1);
+		NumericExpression p03 = divide(intTen, poly1);
 		
 		Polynomial b1 = divide(p02, p01);
 		
@@ -341,8 +383,11 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonicToPrimitivePower() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
-		Polynomial p02 = (Polynomial) idealFactory.multiply(idealFactory.multiply(x, x), y);
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p01 = multiply(poly1, poly1);
+		Polynomial p02 = multiply(multiply(poly1, poly1), poly2);
 		
 		Polynomial b1 = divide(p02, p01);
 		
@@ -367,8 +412,9 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void divideMonomialToPrimitive() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(intTen, x);
 		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(intTen, poly1);
 		
 		Polynomial b1 = divide(p01, poly1);
 		
@@ -393,7 +439,9 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void dividePrimitivePowerToItself() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(poly1, poly1);
 		
 		Polynomial b1 = divide(p01, p01);
 		
@@ -418,10 +466,11 @@ public class IdealDivideTest {
 	 */
 	@Test
 	public void dividePrimitiveToConstant() {
-		Polynomial p01 = (Polynomial) idealFactory.multiply(x, x);
-		Polynomial p02 = (Polynomial) idealFactory.multiply(intTen, x);
-		NumericExpression p03 = idealFactory.divide(p01, p02);
 		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p01 = multiply(poly1, poly1);
+		Polynomial p02 = multiply(intTen, poly1);
+		NumericExpression p03 = divide(p01, p02);
 		
 		Polynomial b3 = divide(poly1, intTen);
 		
@@ -448,19 +497,20 @@ public class IdealDivideTest {
 		Zobj = objectFactory.stringObject("Z"); // string object 'Z'
 		NumericSymbolicConstant z = objectFactory.canonic(idealFactory.symbolicConstant(Zobj,
 				typeFactory.integerType()));
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		Polynomial poly3 = (Polynomial) z;
 		
-		Polynomial p01 = (Polynomial) idealFactory.multiply(idealFactory.
-				multiply(idealFactory.subtract(x, intOne),idealFactory.
-						add(x, intOne)), idealFactory.add(idealFactory.
-								multiply(x,y), intTwo));
-		Polynomial p02 = (Polynomial) idealFactory.multiply(idealFactory.
-				multiply(idealFactory.subtract(x, intOne), z), idealFactory.
-				add(idealFactory.multiply(x, y), intThree));
-		Polynomial p03 = (Polynomial) idealFactory.multiply(idealFactory.
-				add(x, intOne), idealFactory.add(idealFactory.
-						multiply(x,y), intTwo));
-		Polynomial p04 = (Polynomial) idealFactory.multiply(z, idealFactory.
-		add(idealFactory.multiply(x, y), intThree));
+		Polynomial p01 = multiply(multiply((Polynomial) idealFactory.
+				subtract(poly1, intOne),add(poly1, intOne)), add(multiply(
+						poly1, poly2), intTwo));
+		Polynomial p02 = multiply(multiply((Polynomial) idealFactory.
+				subtract(poly1, intOne), poly3), add(multiply(poly1, 
+						poly2), intThree));
+		Polynomial p03 = multiply(add(poly1, intOne), add(multiply(
+				poly1, poly2), intTwo));
+		Polynomial p04 = multiply(poly3, add(multiply(poly1, poly2), 
+				intThree));
 		NumericExpression p05 = divide(p03, p04);
 		
 		Polynomial b1 = divide(p01, p02);
