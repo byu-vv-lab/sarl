@@ -100,7 +100,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * The CVC4 object that checks queries
 	 */
 	private SmtEngine smt = new SmtEngine(em);
-	
+
 
 	/**
 	 * Map from SARL expressions of funcional type to corresponding CVC4
@@ -147,7 +147,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * Set in method reset().
 	 */
 	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
-	
+
 	/**
 	 * Stack of SymbolicExpressions and their translations as Exprs
 	 */
@@ -171,6 +171,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		this.universe = universe;
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
+		translationStack.add(new HashMap<SymbolicExpression, Expr>());
 		cvcAssumption = translate(context);
 		smt.assertFormula(cvcAssumption);		
 	}
@@ -367,9 +368,9 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = newAuxVariable(cvcType);
 			for (int i = 0; i < size; i++)
 				result = em
-						.mkExpr(Kind.STORE, result,
-								em.mkConst(new Rational(i)),
-								translate(sequence.get(i)));
+				.mkExpr(Kind.STORE, result,
+						em.mkConst(new Rational(i)),
+						translate(sequence.get(i)));
 			break;
 		}
 		case BOOLEAN:
@@ -382,8 +383,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		case TUPLE:
 			result = em
-					.mkExpr(Kind.TUPLE,
-							(vectorExpr) translateCollection((SymbolicSequence<?>) object));
+			.mkExpr(Kind.TUPLE,
+					(vectorExpr) translateCollection((SymbolicSequence<?>) object));
 			break;
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
@@ -416,7 +417,7 @@ public class CVC4TheoremProver implements TheoremProver {
 					Kind.LAMBDA,
 					(Expr) newSingletonList(translateSymbolicConstant(
 							(SymbolicConstant) expr.argument(0), true)),
-					translate((SymbolicExpression) expr.argument(1)));
+							translate((SymbolicExpression) expr.argument(1)));
 			break;
 		default:
 			throw new SARLInternalException(
@@ -475,7 +476,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		if (numArgs == 1)
 			result = em.mkExpr(Kind.OR, (vectorExpr)
 					translateCollection((SymbolicCollection<?>) expr
-					.argument(0)));
+							.argument(0)));
 		else if (numArgs == 2)
 			result = em.mkExpr(Kind.OR,
 					translate((SymbolicExpression) expr.argument(0)),
@@ -556,7 +557,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				.mkExpr(Kind.STORE, array, index, value);
 		return result;
 	}
-	
+
 	/**
 	 * Translates a multiple array-write (or array update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -590,7 +591,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			result = bigArray(bigArrayLength(origin), result);
 		return result;
 	}
-	
+
 	/**
 	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
 	 * expression to equivalent CVC4 expression.
@@ -619,7 +620,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Translates SymbolicExpressions of the type "exists" and "for all" into
 	 * the CVC4 equivalent Expr
@@ -759,7 +760,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				translate(arg));
 		return result;
 	}
-	
+
 	/**
 	 * UNION_INJECT: injects an element of a member type into a union type that
 	 * includes that member type. 2 arguments: arg0 is an IntObject giving the
@@ -802,7 +803,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				translate(arg));
 		return result;
 	}
-	
+
 	/**
 	 * Pops the CVC4 stack. This means all the assertions made between the last
 	 * push and now will go away.
@@ -855,7 +856,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				result = em.mkExpr(Kind.AND, 
 						translateCollection((SymbolicCollection<?>) 
 								expr.argument(0)));
-						
+
 			else {
 				result = null;
 				throw new SARLInternalException(
@@ -864,9 +865,9 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		case APPLY:
 			result = em
-					.mkExpr(Kind.FUNCTION,
-							translateFunction((SymbolicExpression) expr
-									.argument(0)),
+			.mkExpr(Kind.FUNCTION,
+					translateFunction((SymbolicExpression) expr
+							.argument(0)),
 							translateCollection((SymbolicCollection<?>) expr
 									.argument(1)));
 			break;
@@ -974,8 +975,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			if (exponent instanceof IntObject)
 				result = em.mkExpr(Kind.POW,
 						translate((SymbolicExpression) expr.argument(0)), em
-								.mkConst(new Rational(((IntObject) exponent)
-										.getInt())));
+						.mkConst(new Rational(((IntObject) exponent)
+								.getInt())));
 			else
 				result = em.mkExpr(Kind.POW,
 						translate((SymbolicExpression) expr.argument(0)),
@@ -993,15 +994,15 @@ public class CVC4TheoremProver implements TheoremProver {
 		case TUPLE_READ:
 			result = em.mkExpr(Kind.TUPLE_SELECT,
 					translate((SymbolicExpression) expr.argument(0)), em
-							.mkConst(new Rational(
-									((IntObject) expr.argument(1)).getInt())));
+					.mkConst(new Rational(
+							((IntObject) expr.argument(1)).getInt())));
 			break;
 		case TUPLE_WRITE:
 			result = em.mkExpr(Kind.TUPLE_UPDATE,
 					translate((SymbolicExpression) expr.argument(0)), em
-							.mkConst(new Rational(
-									((IntObject) expr.argument(1)).getInt())),
-					translate((SymbolicExpression) expr.argument(2)));
+					.mkConst(new Rational(
+							((IntObject) expr.argument(1)).getInt())),
+							translate((SymbolicExpression) expr.argument(2)));
 			break;
 		case UNION_EXTRACT:
 			result = translateUnionExtract(expr);
@@ -1045,7 +1046,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		varMap.put(symbolicConstant, result);
 		return result;
 	}
-	
+
 	/**
 	 * translateResult takes a QueryResult and processes the equality between
 	 * said QueryResult and the result types (valid, invalid, unknown, abort)
@@ -1106,22 +1107,30 @@ public class CVC4TheoremProver implements TheoremProver {
 					translateType(((SymbolicArrayType) type).elementType()));
 			if (!(type instanceof SymbolicCompleteArrayType))
 				// tuple:<extent,array>
-				result = em.mkTupleType((vectorType) Arrays.asList(
-						em.integerType(), result));
+			{
+				vectorType vector = new vectorType();
+				vector.add(em.integerType());
+				vector.add(result);
+				result = em.mkTupleType(vector);
+			}
 			break;
 		case TUPLE:
-			result = em
-					.mkTupleType((vectorType) 
-							translateTypeSequence(((SymbolicTupleType) type)
-							.sequence()));
+			List<Type> typeSeq = translateTypeSequence(((SymbolicTupleType) type)
+					.sequence());
+			vectorType vector = new vectorType();
+			for (Type t : typeSeq)
+				vector.add(t);
+			result = em.mkTupleType(vector);
 			break;
 		case FUNCTION:
-			result = em
-					.mkFunctionType((vectorType)
-							translateTypeSequence(((SymbolicFunctionType) type)
-									.inputTypes()),
-							translateType(((SymbolicFunctionType) type)
-									.outputType()));
+			List<Type> inputTypes = translateTypeSequence(((SymbolicFunctionType) type)
+					.inputTypes());
+			vectorType inputVector = new vectorType();
+			for (Type t : inputTypes)
+				inputVector.add(t);
+			result = em.mkFunctionType(inputVector,
+					translateType(((SymbolicFunctionType) type)
+							.outputType()));
 			break;
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
@@ -1149,11 +1158,11 @@ public class CVC4TheoremProver implements TheoremProver {
 					{
 						DatatypeConstructor cons = new 
 								DatatypeConstructor(constructor);
-						
+
 						for (String selector : selectorList)
 							for (Type t : typeList)
 								cons.addArg(selector, t);
-						
+
 						cvc4Union.addConstructor(cons);
 					}
 
@@ -1166,7 +1175,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		typeMap.put(type, result);
 		return result;
 	}
-	
+
 	/**
 	 * Translate expr from SARL to CVC4. This results in a CVC4
 	 * expression (which is returned).
@@ -1188,7 +1197,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 *            any SARL expression
 	 * @return the CVC4 expression resulting from translation
 	 */
-	
+
 	Expr translate(SymbolicExpression expr) {
 		Expr result;
 		Iterator<Map<SymbolicExpression, Expr>> iter = translationStack
@@ -1202,12 +1211,13 @@ public class CVC4TheoremProver implements TheoremProver {
 				return result;
 		}
 		result = expressionMap.get(expr);
-		if (result != null && translationStack != null && !translationStack.isEmpty()) {
+		if (result != null && translationStack != null && 
+				!translationStack.isEmpty()) {
 			translationStack.getLast().put(expr, result);
 			return result;
 		}
 		result = translateWork(expr);
-		if(translationStack != null && !translationStack.isEmpty()) {
+		if (translationStack != null && !translationStack.isEmpty()) {
 			translationStack.getLast().put(expr, result);
 		}
 		this.expressionMap.put(expr, result);
@@ -1234,7 +1244,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	public PreUniverse universe() {
 		return universe;
 	}
-	
+
 	/**
 	 * Returns the queries and results
 	 * 
@@ -1282,8 +1292,8 @@ public class CVC4TheoremProver implements TheoremProver {
 				Expr cvcConstant = varMap.get(sarlConstant);
 				Expr cvcExpression = smt.getValue(cvcConstant);
 				// TODO back translate
-//				SymbolicExpression sarlExpression = backTranslate(cvcExpression);
-//				model.put(sarlConstant, sarlExpression);
+				//				SymbolicExpression sarlExpression = backTranslate(cvcExpression);
+				//				model.put(sarlConstant, sarlExpression);
 			}
 			popCVC4();
 			return Prove.modelResult(model);
@@ -1291,7 +1301,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		popCVC4();
 		return translateResult(cvcResult);
 	}
-	
+
 	/**
 	 * queryCVC4 gets called by valid, prints out predicate and context, and the
 	 * CVC4 assumptions and CVC4 predicate. Passes the symbolicPredicate through
@@ -1328,7 +1338,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				vectorExpr assertions = smt.getAssertions();
 				for (int i = 0; i < assertions.size(); i++)
 					out.println(assertions.get(i));
-				
+
 				out.print("CVC4 predicate   " + numValidCalls + ": ");
 				out.println(cvcPredicate);
 				out.flush();
