@@ -31,6 +31,25 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 public interface BooleanExpressionFactory {
 
 	/**
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
+	 * the they are created.  Default is false.  Setting to true will
+	 * decrease performance in certain CnfFactory methods.
+	 * 
+	 * @param boolean value: false = default
+	 * 
+	 * @return void
+	 */
+	void setBooleanExpressionSimplification(boolean value);
+	
+	/**
+	 * Whether or not CnfFactory methods are allowed to simplify expensive
+	 * (p || !p) expressions.
+	 * 
+	 * @return boolean value: false = default
+	 */
+	boolean getBooleanExpressionSimplification();
+	
+	/**
 	 * Returns an expression, given the operator and collection of arguments
 	 * @param operator
 	 * 		A SymbolicOperator

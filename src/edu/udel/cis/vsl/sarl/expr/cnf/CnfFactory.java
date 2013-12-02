@@ -53,7 +53,7 @@ public class CnfFactory implements BooleanExpressionFactory {
 	/** Whether or not Functions check for instances of (p || !p) 
 	 * A value of False will increase performance
 	 */
-	private Boolean simplify = true; 
+	public Boolean simplify = false; 
 
 	public CnfFactory(SymbolicTypeFactory typeFactory,
 			ObjectFactory objectFactory, CollectionFactory collectionFactory) {
@@ -72,11 +72,13 @@ public class CnfFactory implements BooleanExpressionFactory {
 		return collectionFactory.singletonHashSet(x).add(y);
 	}
 	
-	/**
-	 * Getter method, so that tests can be skipped if simplify is not active
-	 * @return boolean: whether or not to simplify p || !p events
-	 */
-	public boolean getSimplify() {
+	@Override
+	public void setBooleanExpressionSimplification(boolean value) {
+		simplify = value;
+	}
+	
+	@Override
+	public boolean getBooleanExpressionSimplification() {
 		return simplify;
 	}
 

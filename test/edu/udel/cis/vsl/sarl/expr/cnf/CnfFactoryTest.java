@@ -269,7 +269,7 @@ public class CnfFactoryTest {
 		BooleanExpression testingfalse = sUniverse.bool(false);
 
 		// testing for various combinations of true and false and and or results
-		if(bef.getSimplify()){
+		if(bef.getBooleanExpressionSimplification()){
 		assertEquals(trueExpr, (bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
 		assertEquals(trueExpr, bef.or(qortrue, porfalse));
 		}

@@ -1197,6 +1197,16 @@ public class CommonPreUniverse implements PreUniverse {
 	public BooleanExpression bool(boolean value) {
 		return booleanFactory.symbolic(value);
 	}
+	
+	@Override
+	public void setBooleanExpressionSimplification(boolean value) {
+		booleanFactory.setBooleanExpressionSimplification(value);
+	}
+	
+	@Override
+	public boolean getBooleanExpressionSimplification() {
+		return booleanFactory.getBooleanExpressionSimplification();
+	}
 
 	/**
 	 * Assume both args are in CNF normal form:

@@ -807,6 +807,25 @@ public interface PreUniverse {
 	BooleanExpression bool(boolean value);
 
 	/**
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
+	 * the they are created.  Default is false.  Setting to true will
+	 * decrease performance in certain CnfFactory methods.
+	 * 
+	 * @param boolean value: false = default
+	 * 
+	 * @return void
+	 */
+	void setBooleanExpressionSimplification(boolean value);
+	
+	/**
+	 * Whether or not CnfFactory methods are allowed to simplify expensive
+	 * (p || !p) expressions.
+	 * 
+	 * @return boolean value: false = default
+	 */
+	boolean getBooleanExpressionSimplification();
+	
+	/**
 	 * Returns a symbolic expression representing the conjunction of the two
 	 * given arguments. Each argument must be non-null and have boolean type.
 	 * 
