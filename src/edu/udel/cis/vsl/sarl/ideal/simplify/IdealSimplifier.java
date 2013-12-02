@@ -628,6 +628,30 @@ public class IdealSimplifier extends CommonSimplifier {
 		out.flush();
 	}
 
+	/**
+	 * Performs deep copy of a bounds map. Temporary fix: once persistent maps
+	 * and an immutable BoundsObject are used, this will not be needed.
+	 * 
+	 * @param map
+	 *            a bounds map
+	 * @return a deep copy of that map that does not share anything that is
+	 *         mutable, such as a BoundsObject
+	 */
+	private Map<Polynomial, BoundsObject> copyBoundMap(
+			Map<Polynomial, BoundsObject> map) {
+		HashMap<Polynomial, BoundsObject> result = new HashMap<>();
+
+		for (Entry<Polynomial, BoundsObject> entry : map.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().clone());
+		}
+		return result;
+	}
+
+	private Map<BooleanExpression, Boolean> copyBooleanMap(
+			Map<BooleanExpression, Boolean> map) {
+		return new HashMap<>(map);
+	}
+
 	private boolean extractBoundsOr(BooleanExpression or,
 			Map<Polynomial, BoundsObject> aBoundMap,
 			Map<BooleanExpression, Boolean> aBooleanMap) {
@@ -636,10 +660,8 @@ public class IdealSimplifier extends CommonSimplifier {
 			// copies of original maps, corresponding to p. these never
 			// change...
 			// TODO: HEY, USE IMMUTABLE MAPS!
-			Map<Polynomial, BoundsObject> originalBoundMap = new HashMap<Polynomial, BoundsObject>(
-					aBoundMap);
-			Map<BooleanExpression, Boolean> originalBooleanMap = new HashMap<BooleanExpression, Boolean>(
-					aBooleanMap);
+			Map<Polynomial, BoundsObject> originalBoundMap = copyBoundMap(aBoundMap);
+			Map<BooleanExpression, Boolean> originalBooleanMap = copyBooleanMap(aBooleanMap);
 			Iterator<? extends BooleanExpression> clauses = or
 					.booleanCollectionArg(0).iterator();
 			boolean satisfiable = extractBoundsBasic(clauses.next(), aBoundMap,
@@ -648,10 +670,8 @@ public class IdealSimplifier extends CommonSimplifier {
 			// result <- result | ((p & q1) | ... | (p & qn)) :
 			while (clauses.hasNext()) {
 				BooleanExpression clause = clauses.next();
-				Map<Polynomial, BoundsObject> newBoundMap = new HashMap<Polynomial, BoundsObject>(
-						originalBoundMap);
-				Map<BooleanExpression, Boolean> newBooleanMap = new HashMap<BooleanExpression, Boolean>(
-						originalBooleanMap);
+				Map<Polynomial, BoundsObject> newBoundMap = copyBoundMap(originalBoundMap);
+				Map<BooleanExpression, Boolean> newBooleanMap = copyBooleanMap(originalBooleanMap);
 				// compute p & q_i:
 				boolean newSatisfiable = extractBoundsBasic(clause,
 						newBoundMap, newBooleanMap);
@@ -669,6 +689,7 @@ public class IdealSimplifier extends CommonSimplifier {
 						BoundsObject bound1 = aBoundMap.get(primitive);
 
 						if (bound1 != null)
+							// TODO: if bound1 becomes vacuous, remove it
 							bound1.enlargeTo(bound2);
 					}
 					for (Map.Entry<BooleanExpression, Boolean> entry : newBooleanMap

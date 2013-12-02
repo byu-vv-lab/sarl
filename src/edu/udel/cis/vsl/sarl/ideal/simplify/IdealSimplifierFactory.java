@@ -38,7 +38,7 @@ public class IdealSimplifierFactory implements SimplifierFactory {
 		info.idealFactory = idealFactory;
 		info.numberFactory = universe.numberFactory();
 		info.out = System.out;
-		info.verbose = true;
+		info.verbose = false; //true;
 	}
 
 	public IdealSimplifier newSimplifier(BooleanExpression assumption) {

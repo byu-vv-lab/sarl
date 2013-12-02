@@ -354,7 +354,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		List<Expr> result = new LinkedList<Expr>();
 
 		for (SymbolicExpression expr : collection)
-			result.add(expr == null ? null : translate(expr));
+			result.add(expr == null || expr.isNull() ? null : translate(expr));
 		return result;
 	}
 
@@ -1272,7 +1272,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			result = translateUnionTest(expr);
 			break;
 		default:
-			throw new SARLInternalException("unreachable");
+			throw new SARLInternalException("unreachable: " + expr.operator());
 		}
 		return result;
 	}

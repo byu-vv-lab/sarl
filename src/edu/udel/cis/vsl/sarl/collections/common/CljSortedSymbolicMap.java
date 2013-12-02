@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.common;
 
@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import com.trifork.clj_ds.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
@@ -94,14 +95,34 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<V> o) {
-		if (o instanceof CljSortedSymbolicMap)
-			return pmap.equals(((CljSortedSymbolicMap<?, ?>) o).pmap);
-		return false;
+		int size = size();
+
+		if (size != o.size())
+			return false;
+		if (size == 0)
+			return true;
+		else {
+			SymbolicType thisType = getFirst().type(), thatType = o.getFirst()
+					.type();
+
+			if (thisType == null) {
+				if (thatType != null)
+					return false;
+			} else {
+				if (!thisType.equals(thatType))
+					return false;
+			}
+			// now you know the two sets have the same type of elements,
+			// since an expression collection holds elements of one type
+			// TODO: make the type a field in a symbolic collection?
+			if (o instanceof CljSortedSymbolicMap)
+				return pmap.equals(((CljSortedSymbolicMap<?, ?>) o).pmap);
+			return false;
+		}
 	}
 
 	@Override
 	protected int computeHashCode() {
-		
 		return SymbolicCollectionKind.MAP.hashCode() ^ pmap.hashCode();
 	}
 
@@ -125,16 +146,17 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 	@SuppressWarnings("unchecked")
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		
+
 		for (Entry<K, V> entry : entries()) {
 			K key = entry.getKey();
 			V value = entry.getValue();
 
 			if (!key.isCanonic() || !value.isCanonic()) {
 				if (key.isCanonic())
-					pmap = pmap.assoc(key, (V) factory.canonic((SymbolicExpression)value));
+					pmap = pmap.assoc(key,
+							(V) factory.canonic((SymbolicExpression) value));
 				else {
-					
+
 					pmap = pmap.without(key);
 					pmap = pmap.assoc(factory.canonic(key),
 							factory.canonic(value));
