@@ -24,9 +24,9 @@ import java.io.PrintStream;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -54,13 +54,34 @@ public class IdealPowerTest {
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
-		
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
+	/**
+	 * int constant -1
+	 */
+	private Constant intNegOne;
+	/**
+	 * int constant 0
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 * "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
 		
 	@Before
 	public void setUp() throws Exception {
@@ -68,6 +89,7 @@ public class IdealPowerTest {
 		objectFactory = system.objectFactory();
 		typeFactory = system.typeFactory();
 		idealFactory = (IdealFactory) system.numericFactory();
+		intNegOne = idealFactory.intConstant(-1);
 		intZero = idealFactory.zeroInt();
 		intOne = idealFactory.intConstant(1);
 		intTwo = idealFactory.intConstant(2);
@@ -98,19 +120,25 @@ public class IdealPowerTest {
 	}
 	
 	/**
-	 * Creates a numeric expression 0^0, which should return a SARLException
-	 * Not sure how to assert the expectation of an exception, will look into this shortly
+	 * Creates a numeric expression 0^0, which should raise a SARLException
 	 */
-	@Ignore
-	@Test
+	@Test(expected=SARLException.class)
 	public void zeroToZero() {
-		//@SuppressWarnings("unused")
 		NumericExpression ztz = idealFactory.power(intZero, intZero);
-		out.println("ztz=" +ztz);
+		out.println("ztz= " + ztz);
 	}
 	
 	/**
-	 * Asserts true if (x+1)^2 = x^2 + 2*x + 1
+	 * Creates a numeric expression 1^-1, which should raise a SARLException
+	 */
+	@Test(expected=SARLException.class)
+	public void negativeExponent() {
+		NumericExpression negExp = idealFactory.power(intOne, intNegOne);
+		out.println("negExp= " + negExp);
+	}
+	
+	/**
+	 * Asserts that(x+1)^2 = x^2 + 2*x + 1
 	 * 
 	 * @param type
 	 * 				SymbolicExpression of numeric type
