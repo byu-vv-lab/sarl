@@ -21,8 +21,8 @@ import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * Benchmark for IdealSimplifier based on a symbolic constant ......
- * The assumption of a numeric substitution of a variable in the polynomial
+ * Benchmark for IdealSimplifier based on a Boolean Expression
+ * The assumption of a numeric substitution of a variable in the expression
  * is applied, and the time to apply the simplification is reported as a console
  * output.
  * 
