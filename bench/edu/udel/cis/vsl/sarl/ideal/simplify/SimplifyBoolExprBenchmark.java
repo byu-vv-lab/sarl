@@ -112,7 +112,7 @@ public class SimplifyBoolExprBenchmark {
 	
 	static int size, n, j;
 	
-	static ArrayList<NumericSymbolicConstant> subCol;
+	static ArrayList<BooleanExpression> subCol;
 	
 	
 	/**
@@ -224,7 +224,7 @@ public static void main(String[] args) {
 		//out.println("assumption : " + assumption);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		//out.println(idealSimplifier);
-		subCol = new ArrayList<NumericSymbolicConstant>();
+		subCol = new ArrayList<BooleanExpression>();
 		
 		/**
 		 * The value of <i>size</i> determines how many iterations of increasing the 
@@ -244,7 +244,7 @@ public static void main(String[] args) {
 		for(int i = 0; i < size; i++){
 			subPoly = preUniv.multiply(subPoly, preUniv.add(xInt, yInt));
 			if(iterated)
-				subCol.add((NumericSymbolicConstant) subPoly);
+				subCol.add((BooleanExpression) subPoly);
 			n = i+1;
 		}
 		
@@ -257,7 +257,7 @@ public static void main(String[] args) {
 		}
 		else{
 			j = 0;
-			for(NumericSymbolicConstant i : subCol){
+			for(BooleanExpression i : subCol){
 				j++;
 				start = System.currentTimeMillis();
 				//out.println(i);

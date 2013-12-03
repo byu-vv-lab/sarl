@@ -208,7 +208,7 @@ public class SimplifySymContBenchmark {
 		 * The value of <i>size</i> determines how many iterations of increasing the 
 		 * symbolic constant degree are performed.
 		 */
-		size = 40;
+		size = 100;
 		
 		/**
 		 * When <i>iterated</i> is set to <b>false</b>, the assumption is only applied to 
