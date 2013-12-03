@@ -77,6 +77,15 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 	private static boolean debug = false;
 
+	/**
+	 * Compares two NumericExpressions that are of the same type.
+	 * 
+	 * Note: Currently, these expression should be of similar type. An optimization task here is to
+	 * improve this method in such a way that it can compare two numeric expressions of different type.
+	 * 
+	 * @param o1 - NumericExpression
+	 * @param o2 - NumericExpression of the same type
+	 */
 	@Override
 	public int compare(NumericExpression o1, NumericExpression o2) {
 		if (debug) {
