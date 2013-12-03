@@ -22,6 +22,14 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 
+/**
+ * This class creates an ideal symbolic constant and also has methods that gives us the name of this newly
+ * created symolic constant along with its string representation.
+ * 
+ * This ideal symbolic constant can either be an integer or a real type.
+ * 
+ *
+ */
 public class IdealSymbolicConstant extends NumericPrimitive implements
 		NumericSymbolicConstant {
 
