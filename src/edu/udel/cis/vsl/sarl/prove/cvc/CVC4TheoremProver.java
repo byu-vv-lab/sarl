@@ -174,6 +174,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		smt.setOption("incremental", new SExpr(true));
 		smt.setOption("produce-models", new SExpr(true));
+		smt.setOption("interactive-mode", new SExpr(true));
 		assert universe != null;
 		assert context != null;
 		this.universe = universe;
