@@ -142,6 +142,15 @@ public class IdealBooleanTest {
 		assertEquals(m, n02);
 	}
 	
+	/**
+	 * Returns true if the first argument is 'equal' 
+	 * to the second argument and returns false otherwise.
+	 * @param type
+	 * 				NumericExpression
+	 * 
+	 * @return type
+	 * 				BooleanExpression
+	 */
 	@Test
 	public void equals() {
 		NumericExpression n1 = idealFactory.add(x, intOne);

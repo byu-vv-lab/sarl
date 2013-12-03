@@ -72,10 +72,10 @@ public class IdealDivideTest {
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
 	private NumericExpression fifteen; // real constant 15
-	private NumericExpression five; // real constant 5
 	private NumericExpression zero; // real constant 0
 	private RationalNumber realZero; // real 0
 	private RationalNumber realFifteen; // real 15
+	private NumericExpression five; // real constant 5
 	private RationalNumber realFive; // real 5
 	private NumericExpression three; // real  constant 3
 	private RationalNumber realThree; // real 3
@@ -100,9 +100,9 @@ public class IdealDivideTest {
 				objectFactory.stringObject("Y"), typeFactory.integerType()));
 		realZero = numberFactory.rational("0");
 		realFifteen = numberFactory.rational("15");
-		realFive = numberFactory.rational("5");
 		zero = idealFactory.constant(realZero);
 		fifteen = idealFactory.constant(realFifteen);
+		realFive = numberFactory.rational("5");
 		five = idealFactory.constant(realFive);
 		realThree = numberFactory.rational("3");
 		three = idealFactory.constant(realThree);
