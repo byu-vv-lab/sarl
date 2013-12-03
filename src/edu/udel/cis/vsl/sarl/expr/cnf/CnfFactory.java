@@ -149,6 +149,8 @@ public class CnfFactory implements BooleanExpressionFactory {
 			return arg0;
 		if (arg0 == falseExpr || arg1 == falseExpr)
 			return falseExpr;
+		if (arg0.equals(not(arg1)))
+			return falseExpr;
 		if (arg0.equals(arg1))
 			return arg0;
 		else {
