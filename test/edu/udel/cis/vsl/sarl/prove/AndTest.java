@@ -71,14 +71,11 @@ public class AndTest {
 
 		prover.setOutput(System.out); // for debugging
 		provers.add(prover);
-
-		// TODO: until this is working, don't commit it, as it causes
-		// subsequent tests to crash...
-
-//		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
-//				.newProver(context);
-//		cvc4prover.setOutput(System.out); // for debugging
-//		provers.add(cvc4prover);
+		
+		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
+				.newProver(context);
+		cvc4prover.setOutput(System.out); // for debugging
+		provers.add(cvc4prover);
 	}
 
 	@Before
