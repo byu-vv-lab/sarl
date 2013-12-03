@@ -35,11 +35,11 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.IdealFactory;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
-import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+
 /**
  * The class IdealMultiplyTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using multiplications among various combinations such as:
@@ -55,11 +55,6 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>PrimitivePower * PrimitivePower</li>
  * <li>Primitive * PrimitivePower</li>
  * <li>Constant * Primitive</li>
- * <li>RationalExpression * Polynomial</li>
- * <li>RationalExpression * Monomial</li>
- * <li>RationalExpression * Monic</li>
- * <li>RationalExpression * Primitive</li>
- * <li>RationalExpression * PrimitivePower</li>
  * </ul>
  *
  */
@@ -82,16 +77,16 @@ public class IdealMultiplyTest {
 	StringObject Xobj; // "X"
 	NumericSymbolicConstant x; // int symbolic constant "X"
 	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression fifteen;
-	private NumericExpression five;
-	private NumericExpression zero;
-	private NumericExpression one;
-	private RationalNumber realZero;
-	private RationalNumber realOne;
-	private RationalNumber realFifteen;
-	private RationalNumber realFive; 
-	private NumericExpression three; 
-	private RationalNumber realThree; 
+	private NumericExpression fifteen; //real constant 15
+	private NumericExpression five; // real constant 5
+	private NumericExpression zero; // real constant 0
+	private NumericExpression one; // real constant 1
+	private RationalNumber realZero; // real 0
+	private RationalNumber realOne; // real 1
+	private RationalNumber realFifteen; // real 15
+	private RationalNumber realFive; // real 5
+	private NumericExpression three; // real constant 3
+	private RationalNumber realThree; // real 3
 	
 	@Before
 	public void setUp() throws Exception {
@@ -145,17 +140,17 @@ public class IdealMultiplyTest {
 	}
 	
 	/**
-	 * a function - multiplyRational() which multiplies a rational expression with a polynomial
+	 * a function - add() which adds two polynomials
 	 * 
-	 * @param a - RationalExpression
+	 * @param a - Polynomial
 	 * @param b - Polynomial
 	 * 
 	 * @return
-	 * 			the value of an expression consisting of multiplication of a rational expression and a polynomial
+	 * 			the value of an expression consisting of addition of two polynomials
 	 */
-	public RationalExpression multiplyRational(RationalExpression a, Polynomial b){
-		RationalExpression r = (RationalExpression) idealFactory.multiply(a, b);
-		return r;
+	public Polynomial add(Polynomial a, Polynomial b){
+		Polynomial p = idealFactory.add(a, b);
+		return p;
 	}
 	
 	/**
@@ -192,24 +187,26 @@ public class IdealMultiplyTest {
 	 * 				of two polynomials (passed as arguments).
 	 */
 	@Test
-	public void mulPolyToPoly() {
-		Polynomial p1 = (Polynomial) idealFactory.add(idealFactory.multiply(x, x), intOne);
-		Polynomial p2 = (Polynomial) idealFactory.add(idealFactory.multiply(intTwo,
-						idealFactory.multiply(x, x)), intOne);
-		Polynomial p3 = (Polynomial) idealFactory.multiply(intZero, x);
-		NumericExpression x2 = idealFactory.multiply(x, x);
-		NumericExpression x4 = idealFactory.multiply(x2, x2);
-		NumericExpression p4 = idealFactory.add(idealFactory.multiply(idealFactory.
-				intConstant(3), idealFactory.multiply(x, x)), intOne);
-		NumericExpression p5 = idealFactory.add(idealFactory.
-				multiply(intTwo, x4), p4);
-				
-		Polynomial b1 = multiply(p1, p2);
-		Polynomial b2 = multiply(p1, p3);
+    public void mulPolyToPoly() {
+		Polynomial poly1 = (Polynomial) x;
 		
-		assertEquals(p5, b1);
-		assertEquals(intZero, b2);
-	}
+		Polynomial p1 = add(multiply(poly1, poly1), intOne);
+        Polynomial p2 = add(multiply(intTwo,
+                        multiply(poly1, poly1)), intOne);
+        Polynomial p3 = multiply(intZero, poly1);
+        NumericExpression x2 = multiply(poly1, poly1);
+        NumericExpression x4 = idealFactory.multiply(x2, x2);
+        NumericExpression p4 = idealFactory.add(multiply(idealFactory.
+                intConstant(3), multiply(poly1, poly1)), intOne);
+        NumericExpression p5 = idealFactory.add(idealFactory.
+                multiply(intTwo, x4), p4);
+               
+        Polynomial b1 = multiply(p1, p2);
+        Polynomial b2 = multiply(p1, p3);
+       
+        assertEquals(p5, b1);
+        assertEquals(intZero, b2);
+    }
 	
 	/**
 	 * Multiplies a polynomial with a monomial by forming the factorization 
@@ -229,9 +226,11 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulPolyToMonomial() {
-		Polynomial p1 = (Polynomial) idealFactory.add(idealFactory.multiply(x, x), intOne);
-		Polynomial p2 = (Polynomial) idealFactory.multiply(intTen, x);
-		NumericExpression x2 = idealFactory.multiply(x, x);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p1 = add(multiply(poly1, poly1), intOne);
+		Polynomial p2 = multiply(intTen, poly1);
+		NumericExpression x2 = multiply(poly1, poly1);
 		NumericExpression p3 = idealFactory.add(idealFactory.multiply(intTen, 
 				idealFactory.multiply(x2, x)), p2);
 		
@@ -258,9 +257,11 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulMonomialToMonomial() {
-		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.intConstant(100), 
-				idealFactory.multiply(x, x));
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p1 = multiply(intTen, poly1);
+		NumericExpression p2 = multiply(idealFactory.intConstant(100), 
+				multiply(poly1, poly1));
 		
 		Polynomial b1 = multiply(p1, p1);
 		
@@ -285,10 +286,13 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulMonomialToMonic() {
-		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
-		Polynomial p2 = (Polynomial) idealFactory.multiply(x, y);
-		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, intTen), 
-				idealFactory.multiply(x, y));
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p1 = multiply(intTen, poly1);
+		Polynomial p2 = multiply(poly1, poly2);
+		NumericExpression p3 = multiply(multiply(poly1, intTen), 
+				multiply(poly1, poly2));
 		
 		Polynomial b1 = multiply(p1, p2);
 		
@@ -313,10 +317,13 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulMonicToMonic() {
-		Polynomial p1 = (Polynomial) idealFactory.multiply(idealFactory.multiply(x, y), x);
-		Polynomial p2 = (Polynomial) idealFactory.multiply(x, y);
-		NumericExpression p3 = idealFactory.multiply(idealFactory.multiply(x, 
-				idealFactory.multiply(x, x)), idealFactory.multiply(y, y));
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p1 = multiply(multiply(poly1, poly2), poly1);
+		Polynomial p2 = multiply(poly1, poly2);
+		NumericExpression p3 = multiply(multiply(poly1, 
+				multiply(poly1, poly1)), multiply(poly2, poly2));
 		
 		Polynomial b1 = multiply(p1, p2);
 		
@@ -341,10 +348,11 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulMonomialToPrimitivePower() {
-		Polynomial p1 = (Polynomial) idealFactory.multiply(intTen, x);
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.multiply(intTen, idealFactory.
-				multiply(x2, x));
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial p1 = multiply(intTen, poly1);
+		Polynomial x2 = multiply(poly1, poly1);
+		NumericExpression p2 = multiply(intTen, multiply(x2, poly1));
 		
 		Polynomial b1 = multiply(p1, x2);
 		
@@ -356,7 +364,7 @@ public class IdealMultiplyTest {
 	 * and by factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1
-	 *            a Monoic
+	 *            a Monic
 	 * @param p2
 	 *            a PrimitivePower
 	 * 
@@ -369,10 +377,13 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulMonicToPrimitivePower() {
-		Polynomial p1 = (Polynomial) idealFactory.multiply(x, y);
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x);
-		NumericExpression p2 = idealFactory.multiply(idealFactory.multiply(x, idealFactory.
-				multiply(x, x)), y);
+		Polynomial poly1 = (Polynomial) x;
+		Polynomial poly2 = (Polynomial) y;
+		
+		Polynomial p1 = multiply(poly1, poly2);
+		Polynomial x2 = multiply(poly1, poly1);
+		NumericExpression p2 = multiply(multiply(poly1, multiply(poly1, 
+				poly1)), poly2);
 		
 		Polynomial b1 = multiply(p1, x2);
 		
@@ -397,8 +408,10 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulPrimitivePowerToItself() {
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x);
-		NumericExpression x4 = idealFactory.multiply(x2, x2);
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial x2 = multiply(poly1, poly1);
+		NumericExpression x4 = multiply(x2, x2);
 		
 		Polynomial b1 = multiply(x2, x2);
 		
@@ -423,9 +436,10 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void mulPrimitivePowerToPrimitive() {
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x);
-		NumericExpression p1 = idealFactory.multiply(x, x2);
 		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial x2 = multiply(poly1, poly1);
+		NumericExpression p1 = multiply(poly1, x2);
 				
 		Polynomial b1 = multiply(x2,poly1);
 		
@@ -451,9 +465,10 @@ public class IdealMultiplyTest {
 	@Test
 	public void mulConstantToPrimitive() {
 		Polynomial poly1 = (Polynomial) x;
-		NumericExpression p1 = idealFactory.multiply(intTen, x);
 		
-		Polynomial b1 = idealFactory.multiply(poly1, intTen);
+		NumericExpression p1 = multiply(intTen, poly1);
+		
+		Polynomial b1 = multiply(poly1, intTen);
 		
 		assertEquals(p1, b1);
 	}
@@ -486,63 +501,17 @@ public class IdealMultiplyTest {
 	 */
 	@Test
 	public void xp1xm1() {
-		Polynomial xp1 = (Polynomial) idealFactory.add(x, intOne);
-		Polynomial xm1 = (Polynomial) idealFactory.add(x,
-				idealFactory.minus(intOne));
+		Polynomial poly1 = (Polynomial) x;
+		
+		Polynomial xp1 = add(poly1, intOne);
+		Polynomial xm1 = add(poly1, (Polynomial) idealFactory.minus(intOne));
 		Polynomial xp1xm1 = multiply(xp1, xm1);		
-		SymbolicExpression x2m1 = idealFactory.subtract(idealFactory.multiply(x, x),
+		SymbolicExpression x2m1 = idealFactory.subtract(multiply(poly1, poly1),
 				idealFactory.multiply(intOne,intOne));
 		
 		out.println("xp1xm1=" + xp1xm1);
 		out.println("x2m1=" + x2m1);
 		
 		assertEquals(x2m1, xp1xm1);
-	}
-	
-	/**
-	 * Multiply various levels of numbers (primitive, monic, poly, etc.) with 
-	 * a rational number
-	 * 
-	 * @return type
-	 * 				RationalExpression
-	 */
-	@Test
-	public void mulToRational() {
-		NumericSymbolicConstant x = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("x"),
-						typeFactory.realType()));
-		NumericSymbolicConstant y = objectFactory.canonic(idealFactory
-				.symbolicConstant(objectFactory.stringObject("Y"),
-						typeFactory.realType()));	
-		
-		RationalExpression r1 = (RationalExpression) idealFactory.divide(x, y);	// x/y	
-		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
-		Polynomial monic = (Polynomial) idealFactory.multiply(x2, y); //x^2 * y
-		Polynomial monomial = (Polynomial) idealFactory.multiply(idealFactory.constant(realThree), 
-				monic); //3x^2 * y
-		Polynomial polynomial = (Polynomial) idealFactory.add(idealFactory.
-				divide(monomial, idealFactory.constant(realThree)), x2); //x^2 * y + x^2
-		RationalExpression mulPrimitive = (RationalExpression) 
-				idealFactory.multiply(r1, x); //(x*x)/y 
-		RationalExpression mulPrimitivePower = multiplyRational(r1, x2); //(x*x^2)/y 
-		RationalExpression mulMonic = multiplyRational(r1, monic); //(x^3) 
-		RationalExpression mulMonomial = multiplyRational(r1, idealFactory.divide(monomial, 
-						idealFactory.constant(realThree))); //(x^3) 
-		RationalExpression mulPolynomial = multiplyRational(r1, polynomial); //x^3 + (x^3/y)
-		
-		NumericExpression result1 = idealFactory.divide(idealFactory.
-				multiply(x, x), y); //(x*x)/y 
-		NumericExpression result2 = idealFactory.divide(idealFactory.
-				multiply(x2, x), y); //(x^2*x)/y 
-		NumericExpression result3 = idealFactory.multiply(x2, x); //(x^3) 
-		NumericExpression result4 = idealFactory.add(idealFactory.
-				multiply(x2, x), idealFactory.divide(idealFactory.
-						multiply(x2, x), y)); //3*x^3 + (x^3/y) 
-		
-		assertEquals(result1, mulPrimitive);	
-		assertEquals(result2, mulPrimitivePower);	
-		assertEquals(result3, mulMonic);	
-		assertEquals(result3, mulMonomial);
-		assertEquals(result4, mulPolynomial);
 	}
 }
