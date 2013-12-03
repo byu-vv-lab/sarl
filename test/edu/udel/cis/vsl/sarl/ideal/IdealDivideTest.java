@@ -62,23 +62,74 @@ public class IdealDivideTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	private Constant intThree; // int constant 3
-	private Constant intFive; // int constant 5
-	private Constant intTen; // int constant 10
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression fifteen; // real constant 15
-	private NumericExpression zero; // real constant 0
-	private RationalNumber realZero; // real 0
-	private RationalNumber realFifteen; // real 15
-	private NumericExpression five; // real constant 5
-	private RationalNumber realFive; // real 5
-	private NumericExpression three; // real  constant 3
-	private RationalNumber realThree; // real 3
+	/**
+	 * int constant 0
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne; 
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 * int constant 3
+	 */
+	private Constant intThree; 
+	/**
+	 * int constant 5
+	 */
+	private Constant intFive; 
+	/**
+	 * int constant 10
+	 */
+	private Constant intTen; 
+	/**
+	 *  "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x; 
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y; 
+	/**
+	 * real constant 15
+	 */
+	private NumericExpression fifteen; 
+	/**
+	 * real constant 0
+	 */
+	private NumericExpression zero;
+	/**
+	 * real 0
+	 */
+	private RationalNumber realZero; 
+	/**
+	 * real 15
+	 */
+	private RationalNumber realFifteen;
+	/**
+	 * real constant 5
+	 */
+	private NumericExpression five;
+	/**
+	 * real 5
+	 */
+	private RationalNumber realFive;
+	/**
+	 * real  constant 3
+	 */
+	private NumericExpression three;
+	/**
+	 * real 3
+	 */
+	private RationalNumber realThree; 
 		
 	@Before
 	public void setUp() throws Exception {
@@ -114,7 +165,7 @@ public class IdealDivideTest {
 	}
 	
 	/**
-	 * a function - add() which divides two polynomials
+	 * a function - divide() which divides two polynomials
 	 * 
 	 * @param a - Polynomial
 	 * @param b - Polynomial
@@ -209,7 +260,7 @@ public class IdealDivideTest {
 	 * 				two polynomials (passed as arguments).
 	 */
 	@Test
-	public void dividePolyToPoly() {
+	public void dividePolyByPoly() {
 		Polynomial poly1 = (Polynomial) x;
 		
 		Polynomial p01 = add(intTen, multiply(intTen, poly1));
