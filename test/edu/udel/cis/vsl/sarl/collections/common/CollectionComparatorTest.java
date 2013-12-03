@@ -2,11 +2,7 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
-//import java.util.Collection;
 import java.util.Comparator;
-/*import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;*/
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,10 +13,12 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-/*import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;*/
 
+/**
+ * 
+ * @author rwjones
+ *	Test class for CollectionComparator
+ */
 public class CollectionComparatorTest {
 
 	CollectionComparator collectionComparator;
@@ -29,7 +27,6 @@ public class CollectionComparatorTest {
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test2;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
-	//private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test4;
 	
 	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain;
 	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain2;
@@ -58,9 +55,7 @@ public class CollectionComparatorTest {
 		collectionComparator = new CollectionComparator();
 		collectionComparator.setElementComparator(elementComparator);
 		test = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test3 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		//test4 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		
+		test3 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);		
 		
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
@@ -92,6 +87,9 @@ public class CollectionComparatorTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Test method for CollectionComparator.setElementComparator
+	 */
 	@Test
 	public void testSetElementComparator() {
 		testSetComparator = collectionComparator = new CollectionComparator();
@@ -101,6 +99,9 @@ public class CollectionComparatorTest {
 		assertEquals(testSetComparator.compare(test, test3), 0);
 	}
 
+	/**
+	 * Test method for CollectionComparator.compare
+	 */
 	@Test
 	public void testCompare() {
 		assertEquals(collectionComparator.compare(test, test2), -4);
