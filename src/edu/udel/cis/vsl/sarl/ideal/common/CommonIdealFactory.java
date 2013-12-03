@@ -1441,6 +1441,13 @@ public class CommonIdealFactory implements IdealFactory {
 		return isPositive((RationalExpression) difference);
 	}
 
+	public BooleanExpression integerLessThan(NumericExpression arg0, 
+			NumericExpression arg1) {
+		if(lessThan(arg0, arg1) == booleanFactory.symbolic(true))
+			return lessThanEquals(add(arg0, intConstant(1)), arg1);
+		else
+			return lessThanEquals(add(arg1, intConstant(1)), arg0);
+	}
 	@Override
 	public BooleanExpression lessThanEquals(NumericExpression arg0,
 			NumericExpression arg1) {
