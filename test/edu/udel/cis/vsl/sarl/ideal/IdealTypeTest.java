@@ -76,33 +76,114 @@ public class IdealTypeTest {
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
 
-	private RationalNumber ratZero; // 0
-	private RationalNumber ratThree; // 3
-	private Constant constZero; // real constant 0
-	private Constant intNegOne; // int constant -1
-	private Constant intZero; // int constant 0
-	private Constant intTen; // int constant 10
-	StringObject Xobj; // "X"
-	IntObject intObj3; // integer object 3
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	private NumericExpression five; // real constant 5
-	private NumericExpression oneTwoFive; // real constant 125
-	private NumericExpression one; // rel constant 1
-	private RationalNumber realOne; // real 1
-	private RationalNumber realFive; // real 5
-	private NumericExpression three; // real constant 3
-	private RationalNumber realThree; // real 3
-	private RationalNumber realOneTwoFive; // real 125
-	private SymbolicType real; // type real
-	private SymbolicType integer; // type integer
-	NumericExpression e01; // Real 3 cast to integer 3
-	NumericExpression e2; // 5 + 3 ADD
-	NumericExpression e3; // 5 > 3, 5, 3 COND
-	NumericExpression e4; // 5 * 3 MULTIPLY
-	NumericExpression e5; // -5 NEGATIVE
-	NumericExpression e6; // 5 ^ 3 POWER
-	NumericExpression e7; // 5 - 3 SUBTRACT
-	NumericExpression e10; // 5 ^ 3   (3 - IntObject)
+	/**
+	 * rational 0
+	 */
+	private RationalNumber ratZero;
+	/**
+	 * rational 3
+	 */
+	private RationalNumber ratThree;
+	/**
+	 * real constant 0
+	 */
+	private Constant constZero;
+	/**
+	 * int constant -1
+	 */
+	private Constant intNegOne;
+	/**
+	 * int constant 0
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 10
+	 */
+	private Constant intTen;
+	/**
+	 * "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * integer object 3
+	 */
+	IntObject intObj3;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * real constant 5
+	 */
+	private NumericExpression five;
+	/**
+	 * real constant 125
+	 */
+	private NumericExpression oneTwoFive;
+	/**
+	 *  real constant 1
+	 */
+	private NumericExpression one;
+	/**
+	 * real 1
+	 */
+	private RationalNumber realOne;
+	/**
+	 * real 5
+	 */
+	private RationalNumber realFive;
+	/**
+	 * real constant 3
+	 */
+	private NumericExpression three;
+	/**
+	 * real 3
+	 */
+	private RationalNumber realThree;
+	/**
+	 *  real 125
+	 */
+	private RationalNumber realOneTwoFive;
+	/**
+	 * type real
+	 */
+	private SymbolicType real;
+	/**
+	 * type integer
+	 */
+	private SymbolicType integer;
+	/**
+	 * expression: Real 3 cast to integer 3
+	 */
+	NumericExpression e01;
+	/**
+	 * expression: 5 + 3 ADD
+	 */
+	NumericExpression e2;
+	/**
+	 * expression: 5 > 3, 5, 3 COND
+	 */
+	NumericExpression e3;
+	/**
+	 * expression: 5 * 3 MULTIPLY
+	 */
+	NumericExpression e4;
+	/**
+	 * expression: -5 NEGATIVE
+	 */
+	NumericExpression e5;
+	/**
+	 * expression:  5 ^ 3 POWER
+	 */
+	NumericExpression e6;
+	/**
+	 * expression:  5 - 3 SUBTRACT
+	 */
+	NumericExpression e7;
+	/**
+	 * expression: 5 ^ 3   (3 - IntObject)
+	 */
+	NumericExpression e10;
 
 	@Before
 	public void setUp() throws Exception {
