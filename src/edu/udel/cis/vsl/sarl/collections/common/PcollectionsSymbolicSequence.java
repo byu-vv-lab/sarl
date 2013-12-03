@@ -123,10 +123,15 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
+		
 		if (this == o)
+		{
 			return true;
-		if (size() != o.size())
+		}
+		if (this.size() != o.size())
+		{
 			return false;
+		}
 
 		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
 		Iterator<T> these = this.iterator();

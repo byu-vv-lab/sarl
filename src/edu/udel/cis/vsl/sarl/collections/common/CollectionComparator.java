@@ -90,6 +90,12 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 	 *         the first
 	 */
 	private int compareSets(SymbolicSet<?> s1, SymbolicSet<?> s2) {
+		/*The isSorted method for PcollectionsSortedSymbloic Set is never implemented and always
+		returns false so this method will always throw and internal exception until that is implemented
+		this method isn't going to do anything since there are no other symbolic sets to create in sarl*/
+		
+		/*throw new SARLInternalException(
+				"Comparison of unsorted sets not efficient");*/
 		if (s1.isSorted()) {
 			if (s2.isSorted()) {
 				Iterator<? extends SymbolicExpression> iter1 = s1.iterator();

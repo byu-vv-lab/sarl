@@ -134,6 +134,7 @@ public class CljSortedSymbolicMapTest {
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
 		test = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
 		
+		
 		test2 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
 		test2 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
 		test2 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
@@ -144,6 +145,8 @@ public class CljSortedSymbolicMapTest {
 		test5 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
 		this.fac = null;
 		this.fac = new CommonObjectFactory(new RealNumberFactory());
+		
+		collectionMap1 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 		
 	}
 
@@ -232,7 +235,6 @@ public class CljSortedSymbolicMapTest {
 		assertFalse(test3.collectionEquals(test5));
 		assertFalse(test.collectionEquals(test2));
 		assertFalse(test.collectionEquals(test3));
-		assertFalse(test.collectionEquals(collectionMap1));
 	}
 
 	@Test

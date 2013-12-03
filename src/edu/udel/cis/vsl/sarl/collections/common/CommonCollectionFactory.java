@@ -21,6 +21,7 @@ package edu.udel.cis.vsl.sarl.collections.common;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeSet;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
@@ -34,7 +35,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private ObjectFactory objectFactory;
 
-	private SymbolicSet<?> emptyHashSet, emptySortedSet;
+	private SymbolicSet<?> emptyHashSet, emptySortedSet, emptyHashSet2;
 
 	private SymbolicMap<?, ?> emptyHashMap, emptySortedMap;
 
@@ -49,7 +50,8 @@ public class CommonCollectionFactory implements CollectionFactory {
 		this.comparator = new CollectionComparator();
 		emptyHashSet = objectFactory
 				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
-		//emptySortedSet = emptyHashSet;
+		emptyHashSet2 = objectFactory
+				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
 		emptyHashMap = objectFactory
 				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());
 		objectFactory.setCollectionComparator(comparator);
@@ -67,6 +69,8 @@ public class CommonCollectionFactory implements CollectionFactory {
 		emptySortedMap = objectFactory
 				.canonic(new CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>(
 						elementComparator));
+		/*emptySortedMap = objectFactory
+				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());*/
 		emptySequence = objectFactory
 				.canonic(new PcollectionsSymbolicSequence<SymbolicExpression>());
 		// etc.
@@ -92,7 +96,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet() {
-		return (SymbolicSet<T>) emptySortedSet;
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override
@@ -106,9 +110,10 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
 			T element) {
-		SymbolicSet<T> empty = emptySortedSet();
+		/*SymbolicSet<T> empty = emptySortedSet();
 
-		return empty.add(element);
+		return empty.add(element);*/
+		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override

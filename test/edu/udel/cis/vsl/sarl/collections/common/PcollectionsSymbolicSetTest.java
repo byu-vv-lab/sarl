@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.collections.common;
 import static org.junit.Assert.*;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -15,18 +16,41 @@ import org.junit.Test;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.Transform;
 //import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 //import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 //import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 //import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 //import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.expr.Expressions;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.type.Types;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 public class PcollectionsSymbolicSetTest {
 
-	
+	CommonObjectFactory fac;
+	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
+	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
+	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 	
 	private static PSet<SymbolicExpression> pTree;
 	private static Collection<SymbolicExpression> collectionSet;
@@ -40,7 +64,7 @@ public class PcollectionsSymbolicSetTest {
 	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain;
 	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain2;
 	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain3;
-	
+	private static PcollectionsSymbolicSet<SymbolicExpression> emptyPSet;	
 	private static SymbolicExpression three = new ExpressionStub("3");	
 	private static SymbolicExpression four = new ExpressionStub("4");
 	private static SymbolicExpression five = new ExpressionStub("5");
@@ -48,10 +72,39 @@ public class PcollectionsSymbolicSetTest {
 	private static SymbolicExpression nine = new ExpressionStub("9");
 	private static SymbolicExpression ten = new ExpressionStub("10");
 	
+	private PcollectionsSymbolicSet<SymbolicExpression> canonicSet;
+	private PcollectionsSymbolicSet<SymbolicExpression> canonicSet2;
+	private PcollectionsSymbolicSet<SymbolicExpression> canonicSet3;
+	private static SymbolicExpression twenty = createExpression(20);
+	private static SymbolicExpression forty = createExpression(40);
+	private static SymbolicExpression sixty = createExpression(60);
+	private static SymbolicExpression eighty = createExpression(80);
+	private static SymbolicExpression hundred = createExpression(100);
+	
+	public static SymbolicExpression createExpression(int expression){
+		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		NumberFactory numFact = Numbers.REAL_FACTORY;
+		IntegerNumber expr = numFact.integer(expression);
+		ObjectFactory objFact = Objects.newObjectFactory(numFact);
+		SymbolicObject symObj =  objFact.numberObject(expr);
+		SymbolicTypeFactory typeFact = Types.newTypeFactory(objFact);
+		CollectionFactory collectionFact = Collections.newCollectionFactory(objFact);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFact, typeFact, collectionFact);
+		return exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
+	}
+	
     Transform<SymbolicExpression,SymbolicExpression> transform= new Transform<SymbolicExpression,SymbolicExpression>()
     {
 		public ExpressionStub apply(SymbolicExpression x){
 			String temp = x.toString() + "00";
+			return new ExpressionStub(temp);
+		}
+	};
+	
+	Transform<SymbolicExpression,SymbolicExpression> transform2= new Transform<SymbolicExpression,SymbolicExpression>()
+    {
+		public ExpressionStub apply(SymbolicExpression x){
+			String temp = x.toString();
 			return new ExpressionStub(temp);
 		}
 	};
@@ -113,7 +166,30 @@ public class PcollectionsSymbolicSetTest {
 		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(three);
 		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(otherfive);
 		pSetPlain3 = new PcollectionsSymbolicSet<SymbolicExpression>();
+		emptyPSet = new PcollectionsSymbolicSet<SymbolicExpression>();
 		//pSetPlain3 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain3.add(five);
+		
+		twenty = createExpression(20);
+		forty = createExpression(40);
+		sixty = createExpression(60);
+		eighty = createExpression(80);
+		eighty = objectFactory.canonic(eighty);
+		hundred = createExpression(100);
+		forty = objectFactory.canonic(forty);
+		sixty = objectFactory.canonic(sixty);
+
+		
+		canonicSet = new PcollectionsSymbolicSet<SymbolicExpression>(collectionSet);
+		canonicSet2 = new PcollectionsSymbolicSet<SymbolicExpression>(collectionSet);
+		canonicSet3 = new PcollectionsSymbolicSet<SymbolicExpression>(collectionSet);
+		
+		canonicSet3 = (PcollectionsSymbolicSet<SymbolicExpression>) canonicSet3.add(twenty);
+		canonicSet3 = (PcollectionsSymbolicSet<SymbolicExpression>) canonicSet3.add(hundred);
+
+		
+		canonicSet = (PcollectionsSymbolicSet<SymbolicExpression>) canonicSet.add(twenty);
+		canonicSet = (PcollectionsSymbolicSet<SymbolicExpression>) canonicSet.add(eighty);
+		canonicSet = (PcollectionsSymbolicSet<SymbolicExpression>) canonicSet.add(forty);
 		
 	}
 
@@ -131,37 +207,45 @@ public class PcollectionsSymbolicSetTest {
 		int hashCodePlain = pSetPlain.computeHashCode();
 		assertEquals(pSetPlain.hashCode(),hashCodePlain);
 	}
-/*
+
 	@Test
 	public void testCanonizeChildren() {
-		fail("Not yet implemented");
-	}*/
+		
+		assertFalse(canonicSet.isCanonic());
+		canonicSet = objectFactory.canonic(canonicSet);
+		assertTrue(canonicSet.isCanonic());		
+		assertFalse(canonicSet2.isCanonic());
+		canonicSet2 = objectFactory.canonic(canonicSet2);
+		assertTrue(canonicSet2.isCanonic());
+		canonicSet3 = objectFactory.canonic(canonicSet3);
+	}
 
 	@Test
 	public void testCollectionEquals() {
-		assertTrue(pSetHash.equals(pSetHash));
-		assertTrue(pSetHash.equals(pSetHash2));
-		assertFalse(pSetHash.equals(pSetHash3));
-		assertTrue(pSetHash.equals(pSetPlain));
-		assertTrue(pSetHash.equals(pSetCollection));
-		assertFalse(pSetHash.equals(pSetHash3));
-		assertFalse(pSetHash.equals(pSetPlain3));
+		assertTrue(pSetHash.collectionEquals(pSetHash));
+		assertTrue(pSetHash.collectionEquals(pSetHash2));
+		assertFalse(pSetHash.collectionEquals(pSetHash3));
+		assertTrue(pSetHash.collectionEquals(pSetPlain));
+		assertTrue(pSetHash.collectionEquals(pSetCollection));
+		assertFalse(pSetHash.collectionEquals(pSetHash3));
+		assertFalse(pSetHash.collectionEquals(pSetPlain3));
 		
-		assertTrue(pSetCollection.equals(pSetCollection));
-		assertTrue(pSetCollection.equals(pSetCollection2));
-		assertFalse(pSetCollection.equals(pSetCollection3));
-		assertTrue(pSetCollection.equals(pSetPlain));
-		assertTrue(pSetCollection.equals(pSetCollection));
-		assertFalse(pSetCollection.equals(pSetHash3));
-		assertFalse(pSetCollection.equals(pSetPlain3));
+		assertTrue(pSetCollection.collectionEquals(pSetCollection));
+		assertTrue(pSetCollection.collectionEquals(pSetCollection2));
+		assertFalse(pSetCollection.collectionEquals(pSetCollection3));
+		assertTrue(pSetCollection.collectionEquals(pSetPlain));
+		assertTrue(pSetCollection.collectionEquals(pSetCollection));
+		assertFalse(pSetCollection.collectionEquals(pSetHash3));
+		assertFalse(pSetCollection.collectionEquals(pSetPlain3));
 		
-		assertTrue(pSetPlain.equals(pSetPlain));
-		assertTrue(pSetPlain.equals(pSetPlain2));
-		assertFalse(pSetPlain.equals(pSetPlain3));
-		assertTrue(pSetPlain.equals(pSetHash));
-		assertTrue(pSetPlain.equals(pSetCollection));
-		assertFalse(pSetPlain.equals(pSetHash3));
-		assertFalse(pSetPlain.equals(pSetCollection3));
+		assertTrue(pSetPlain.collectionEquals(pSetPlain));
+		assertTrue(pSetPlain.collectionEquals(pSetPlain2));
+		assertFalse(pSetPlain.collectionEquals(pSetPlain3));
+		assertTrue(pSetPlain.collectionEquals(pSetHash));
+		assertTrue(pSetPlain.collectionEquals(pSetCollection));
+		assertFalse(pSetPlain.collectionEquals(pSetHash3));
+		assertFalse(pSetPlain.collectionEquals(pSetCollection3));
+		
 	}
 
 	@Test
@@ -228,9 +312,9 @@ public class PcollectionsSymbolicSetTest {
 
 	@Test
 	public void testIsSorted() {
-		assertTrue(pSetHash.isSorted());
-		assertTrue(pSetCollection.isSorted());
-		assertTrue(pSetPlain.isSorted());
+		assertFalse(pSetHash.isSorted());
+		assertFalse(pSetCollection.isSorted());
+		assertFalse(pSetPlain.isSorted());
 	}
 
 	@Test
@@ -295,6 +379,8 @@ public class PcollectionsSymbolicSetTest {
 	@Test
 	public void testApply() {
 		assertEquals(pSetPlain.apply(transform).toString(),"{300,500}");
+		assertEquals(pSetPlain.apply(transform2).toString(), "{3,5}");
+		assertEquals(emptyPSet.apply(transform).toString(), "{}");
 	}
 
 }

@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -14,10 +15,33 @@ import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.collections.Collections;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
+import edu.udel.cis.vsl.sarl.expr.Expressions;
+import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+import edu.udel.cis.vsl.sarl.object.Objects;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.type.Types;
+import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 
 public class PcollectionsSymbolicMapTest {
+	
+	CommonObjectFactory fac;
+	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
+	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 	
 	private static SymbolicExpression x = new ExpressionStub("5");
 
@@ -45,6 +69,26 @@ public class PcollectionsSymbolicMapTest {
 	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSmaller;
 	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainEmptyPMap;
 	
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> canonicMap;
+	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> canonicMap2;
+	
+	private static SymbolicExpression twenty = createExpression(20);
+	private static SymbolicExpression forty = createExpression(40);
+	private static SymbolicExpression sixty = createExpression(60);
+	private static SymbolicExpression eighty = createExpression(80);
+	private static SymbolicExpression hundred = createExpression(100);
+	
+	public static SymbolicExpression createExpression(int expression){
+		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+		NumberFactory numFact = Numbers.REAL_FACTORY;
+		IntegerNumber expr = numFact.integer(expression);
+		ObjectFactory objFact = Objects.newObjectFactory(numFact);
+		SymbolicObject symObj =  objFact.numberObject(expr);
+		SymbolicTypeFactory typeFact = Types.newTypeFactory(objFact);
+		CollectionFactory collectionFact = Collections.newCollectionFactory(objFact);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFact, typeFact, collectionFact);
+		return exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
+	}
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		
@@ -62,6 +106,10 @@ public class PcollectionsSymbolicMapTest {
 				javaMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
 				pMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(pmap);
 				
+				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("A^4"), new ExpressionStub("T"));
+				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("P^5"), new ExpressionStub("T"));
+				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("3G"), new ExpressionStub("T"));
+				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("R^2"), new ExpressionStub("T"));
 				pMap.put(y, b);
 				javaMap.put(y, b);
 				
@@ -74,7 +122,6 @@ public class PcollectionsSymbolicMapTest {
 				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(b , c);
 				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(x, z);
 				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(z, b);
-				
 				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(y, c);
 				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(b , c);
 				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(x, z);
@@ -83,9 +130,14 @@ public class PcollectionsSymbolicMapTest {
 				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(a, c);
 				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(z , y);
 				
-				/*pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(b , c);
-				pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(x, z);
-				pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap.put(z, b);*/
+				
+				canonicMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
+				twenty = objectFactory.canonic(twenty);
+				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(twenty, eighty);
+				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, eighty);
+				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, hundred);
+				canonicMap2 = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
+				
 	}
 
 	@After
@@ -104,12 +156,18 @@ public class PcollectionsSymbolicMapTest {
 		int pMapHash = pMap.computeHashCode();
 		assertEquals(pMap.hashCode(), pMapHash);
 	}
-/*
+
 	@Test
 	public void testCanonizeChildren() {
-		fail("Not yet implemented");
+		assertFalse(canonicMap.isCanonic());
+		canonicMap = objectFactory.canonic(canonicMap);
+		assertTrue(canonicMap.isCanonic());
+		
+		assertFalse(canonicMap2.isCanonic());
+		canonicMap2 = objectFactory.canonic(canonicMap2);
+		assertTrue(canonicMap2.isCanonic());
 	}
-	*/
+	
 
 	@Test
 	public void testGet() {

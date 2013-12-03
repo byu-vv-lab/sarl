@@ -105,7 +105,7 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 
 	@Override
 	public boolean isSorted() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -144,13 +144,15 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 		while (iter.hasNext()) {
 			T t1 = iter.next();
 			T t2 = factory.canonic(t1);
-
+			
 			if (t1 != t2) {
 				PSet<T> newSet = HashTreePSet.empty();
 				Iterator<T> iter2 = pset.iterator();
-
+				
 				for (int i = 0; i < count; i++)
+				{
 					newSet = newSet.plus(iter2.next());
+				}
 				newSet = newSet.plus(t2);
 				while (iter.hasNext())
 					newSet = newSet.plus(factory.canonic(iter.next()));
