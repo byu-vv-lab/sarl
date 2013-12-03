@@ -24,6 +24,7 @@ public class BooleanTest {
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		universe = PreUniverses.newPreUniverse(system);
+		booleanFactory = system.booleanFactory();
 		
 	}
 	
