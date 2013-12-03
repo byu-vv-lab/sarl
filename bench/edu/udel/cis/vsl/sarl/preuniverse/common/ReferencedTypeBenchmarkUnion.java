@@ -10,6 +10,26 @@ import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
+/**
+ * 
+ * @author Julian Piane (jpiane)
+ * 
+ * This benchmark tests the preuniverse method referencedType()
+ * 
+ * The purpose of this benchmark is to analyze the effect of the recursive
+ * structure of this method in the hopes that a loop-based modification
+ * may be applied to allow for performance enhancements.
+ * 
+ * we will be simulating a symbolic expression with many embedded sub-expressions
+ * by creating n-dimensional arrays where each sub-array is a sub-expression.
+ * 
+ * This benchmark class also serves the purpose of comparing the results to the other
+ * referencedType benchmarks, ReferencedTypeBenchmark and ReferencedTypeBenchmarkTuple.
+ * The result of this study will shine light on certain inefficiencies that may be a
+ * result of the different SymbolicTypes.
+ *
+ */
+
 public class ReferencedTypeBenchmarkUnion {
 	private static PreUniverse universe;
 	private static SymbolicType unionType, integerType;
