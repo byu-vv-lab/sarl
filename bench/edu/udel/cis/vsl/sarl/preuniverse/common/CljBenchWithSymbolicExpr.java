@@ -17,7 +17,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
  *  some of the code has been commented since the library is not added to the SARL project.
  */
 
-public class CjsBenchWithSymbolicExpr {
+public class CljBenchWithSymbolicExpr {
 
 	public final static SymbolicUniverse universe = SARL.newIdealUniverse();
 	public final static FactorySystem system = PreUniverses

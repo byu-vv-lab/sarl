@@ -10,7 +10,7 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
  *  some of the code has been commented since the library is not added to the SARL project.
  */
 
-public class CjsBench {
+public class CljBench {
        public static void main(String[] args) {
 //        PersistentVector<String> vector;
         int maxSize = (int) Math.pow(2, 21);
