@@ -83,7 +83,7 @@ public class SimplifySymContBenchmark {
 	
 	static SymbolicExpression symbExpr_xyyInt; // (int)x * (int)y^2
 	
-	static NumericSymbolicConstant A, B, C, x, xsqd, y, z, xInt, yInt, zInt, cInt, divInt,subSymConst;
+	static NumericSymbolicConstant A, B, C, x, xsqd, y, z, xInt, yInt, zInt, cInt, divInt;
 	
 	static SymbolicType realType, integerType;
 		
@@ -94,7 +94,7 @@ public class SimplifySymContBenchmark {
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xNE, yNE, xpy, xy, xx, x4th, threeX4th, xxy,
-	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
+	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1,subSymConst;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
@@ -208,7 +208,7 @@ public class SimplifySymContBenchmark {
 		 * The value of <i>size</i> determines how many iterations of increasing the 
 		 * symbolic constant degree are performed.
 		 */
-		size = 100;
+		size = 40;
 		
 		/**
 		 * When <i>iterated</i> is set to <b>false</b>, the assumption is only applied to 
@@ -220,9 +220,10 @@ public class SimplifySymContBenchmark {
 		iterated = false;
 		
 		for(int i = 0; i < size; i++){
-			subSymConst = (NumericSymbolicConstant) preUniv.multiply(subSymConst, preUniv.add(xInt, int5));
+			subSymConst = preUniv.multiply(subSymConst, preUniv.add(xInt, cInt));
 			if(iterated)
-				subCol.add((NumericSymbolicConstant) subSymConst);
+				subCol.add((NumericSymbolicConstant) preUniv.symbolicConstant(
+						preUniv.stringObject(subSymConst.toString()), realType));
 			n = i+1;
 		}
 		
