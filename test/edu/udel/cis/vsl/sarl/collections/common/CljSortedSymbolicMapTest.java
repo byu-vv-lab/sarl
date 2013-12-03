@@ -20,44 +20,30 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-/*import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
-import edu.udel.cis.vsl.sarl.collections.Collections;
-import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;*/
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-/*import edu.udel.cis.vsl.sarl.expr.Expressions;
-import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
-import edu.udel.cis.vsl.sarl.number.Numbers;*/
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-//import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
-/*import edu.udel.cis.vsl.sarl.type.Types;
-import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;*/
 import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
+/**
+ * 
+ * @author rwjones
+ *	Test class for collections.common.CljSortedSymbolicMap
+ */
 public class CljSortedSymbolicMapTest {
 
 	CommonObjectFactory fac;
 	
-	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
 	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
 	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
-
-	//private static CollectionFactory collectionFactory = Collections.newCollectionFactory(objectFactory);
 
 	private static SymbolicExpression x = new ExpressionStub("5");
 
@@ -77,7 +63,6 @@ public class CljSortedSymbolicMapTest {
 	
 	
 	Collection<SymbolicExpression> set;
-	private static SymbolicMap<SymbolicExpression, SymbolicExpression> collectionMap1;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test2;
 	private static CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
@@ -145,9 +130,7 @@ public class CljSortedSymbolicMapTest {
 		test5 = (CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
 		this.fac = null;
 		this.fac = new CommonObjectFactory(new RealNumberFactory());
-		
-		collectionMap1 = new CljSortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		
+			
 	}
 
 	@After
@@ -156,6 +139,9 @@ public class CljSortedSymbolicMapTest {
 	}
 
 
+	/**
+	 * Test method for computeHashCode()
+	 */
 	@Test
 	public void testComputeHashCode() {
 		
@@ -164,6 +150,9 @@ public class CljSortedSymbolicMapTest {
 		
 	}
 
+	/**
+	 * Test method for canonizeChildren()
+	 */
 	@Test
 	public void testCanonizeChildren() 
 	{
@@ -177,57 +166,83 @@ public class CljSortedSymbolicMapTest {
 		
 	}
 
+	/**
+	 * Test method for restrict()
+	 */
 	@Test
 	public void testRestrict() {
 		assertEquals(test.restrict(elementComparator).compare(a, b), -4);
 		assertEquals(test.restrict(elementComparator).compare(a, x), 0);
 	}
 
+	/**
+	 * Test method for size()
+	 */
 	@Test
 	public void testSize() {
 		assertEquals(test.size(),3);
 		assertEquals(test2.size(),3);
 	}
 
+	/**
+	 * Test method for iterator()
+	 */
 	@Test
 	public void testIterator() {
 		java.util.Iterator<SymbolicExpression> temp = test.iterator();
 		String testString = "[";
 		while(temp.hasNext())
 		{
-			//temp.next().toString();
 			testString = testString + temp.next().toString() + ",";			
 		}
 		testString = testString + "]";
 		assertEquals(testString, "[y,10,5,]");
 	}
 
+	/**
+	 * Test method for get()
+	 */
 	@Test
 	public void testGet() {
 		assertEquals(test.get(a),test.get(x));
 	}
 
+	/**
+	 * Test method for keys()
+	 */
 	@Test
 	public void testKeys() {
 		assertEquals(test.keys().toString(),"[5, 9, y]");
 	}
 
+	/**
+	 * Test method for values()
+	 */
 	@Test
 	public void testValues() {
 		assertEquals(test.values().toString(),"[y, 10, 5]");
 	}
 
+	/**
+	 * Test method for entries()
+	 */
 	@Test
 	public void testEntries() {
 		assertEquals(test.entries().toString(),"[[5 y], [9 10], [y 5]]");
 	}
 
+	/**
+	 * Test method for isEmpty()
+	 */
 	@Test
 	public void testIsEmpty() {
 		assertFalse(test.isEmpty());
 		assertTrue(test3.isEmpty());
 	}
 
+	/**
+	 * Test method for collectionEqualsSymbolicCollectionOfV()
+	 */
 	@Test
 	public void testCollectionEqualsSymbolicCollectionOfV() {
 		assertTrue(test.collectionEquals(test5));
@@ -237,34 +252,52 @@ public class CljSortedSymbolicMapTest {
 		assertFalse(test.collectionEquals(test3));
 	}
 
+	/**
+	 * Test method for isSorted()
+	 */
 	@Test
 	public void testIsSorted() {
 		assertTrue(test.isSorted());
 	}
 
+	/**
+	 * Test method for put()
+	 */
 	@Test
 	public void testPut() {
 		assertEquals(test.put(z, a).keys().toString(), "[10, 5, 9, y]");
 	}
 
+	/**
+	 * Test method for remove()
+	 */
 	@Test
 	public void testRemove() {
 		assertEquals(test.remove(a).keys().toString(), "[9, y]");
 		assertEquals(test3.remove(a).keys().toString(), "[]");
 	}
 
+	/**
+	 * Test method for comparator()
+	 */
 	@Test
 	public void testComparator() {
 		assertEquals(canonicTest.comparator().compare(canonicTest.get(twenty),canonicTest.get(sixty)), 0);
 		assertEquals(canonicTest.comparator().compare(canonicTest.get(twenty),canonicTest.get(eighty)), 3);
 	}
 
+	/**
+	 * Test method for toStringBufferBoolean()
+	 */
 	@Test
 	public void testToStringBufferBoolean() {
 		assertEquals(test3.toStringBuffer(true).toString(), "{}");
 		assertEquals(test.toStringBuffer(true).toString(), "{5->y, 9->10, y->5}");
 	}
 
+	/**
+	 * Test method for toStringBufferLong()
+	 */
 	@Test
 	public void testToStringBufferLong() {
 		assertEquals(test3.toStringBufferLong().toString(), "SortedMap{}");
