@@ -130,8 +130,11 @@ public class ModelTest {
 	}
 
 	@Test
-	public void test() {
-		
+	public void testValidProver() {
+		BooleanExpression predicate = universe.equals(x, y);
+		for (TheoremProver prover : provers){
+			prover.validOrModel(predicate);
+		}
 	}
 
 }
