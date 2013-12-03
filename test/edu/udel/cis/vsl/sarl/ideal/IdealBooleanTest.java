@@ -64,14 +64,32 @@ public class IdealBooleanTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
-
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	StringObject Yobj; // "Y"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
 	
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo; 
+	/**
+	 * "X"
+	 */
+	StringObject Xobj; 
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x; 
+	/**
+	 * "Y"
+	 */
+	StringObject Yobj;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
+		
 	@Before
 	public void setUp() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
