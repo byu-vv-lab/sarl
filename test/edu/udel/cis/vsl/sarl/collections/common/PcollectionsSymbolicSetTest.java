@@ -12,13 +12,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-//import org.pcollections.HashTreePMap;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PSet;
 
-import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.Transform;
-//import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
@@ -28,12 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
-//import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-//import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
-//import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
-//import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
@@ -45,12 +37,15 @@ import edu.udel.cis.vsl.sarl.type.Types;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
+/**
+ * 
+ * @author rwjones
+ * Test class for collections.common.PcollectionsSymbolicSet
+ */
 public class PcollectionsSymbolicSetTest {
 
 	CommonObjectFactory fac;
-	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
 	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
-	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 	
 	private static PSet<SymbolicExpression> pTree;
 	private static Collection<SymbolicExpression> collectionSet;
@@ -143,7 +138,6 @@ public class PcollectionsSymbolicSetTest {
 		pSetHash2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetHash2.add(three);
 		pSetHash2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetHash2.add(otherfive);
 		pSetHash3 = new PcollectionsSymbolicSet<SymbolicExpression>(pTree);
-		//pSetHash3 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetHash3.add(five);
 
 					
 		pSetCollection = new PcollectionsSymbolicSet<SymbolicExpression>(collectionSet);
@@ -155,7 +149,6 @@ public class PcollectionsSymbolicSetTest {
 		pSetCollection2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetCollection2.add(three);
 		pSetCollection2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetCollection2.add(otherfive);
 		pSetCollection3 = new PcollectionsSymbolicSet<SymbolicExpression>(collectionSet);
-		//pSetCollection3 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetCollection3.add(five);
 		
 		pSetPlain = new PcollectionsSymbolicSet<SymbolicExpression>();
 		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(five);
@@ -167,7 +160,6 @@ public class PcollectionsSymbolicSetTest {
 		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(otherfive);
 		pSetPlain3 = new PcollectionsSymbolicSet<SymbolicExpression>();
 		emptyPSet = new PcollectionsSymbolicSet<SymbolicExpression>();
-		//pSetPlain3 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain3.add(five);
 		
 		twenty = createExpression(20);
 		forty = createExpression(40);
@@ -197,7 +189,9 @@ public class PcollectionsSymbolicSetTest {
 	public void tearDown() throws Exception {
 	}
 
-
+	/**
+	 * Test method for computeHashCode()
+	 */
 	@Test
 	public void testComputeHashCode() {
 		int hashCodeHash = pSetHash.computeHashCode();
@@ -208,6 +202,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.hashCode(),hashCodePlain);
 	}
 
+	/**
+	 * Test method for canonizeChildren()
+	 */
 	@Test
 	public void testCanonizeChildren() {
 		
@@ -220,6 +217,9 @@ public class PcollectionsSymbolicSetTest {
 		canonicSet3 = objectFactory.canonic(canonicSet3);
 	}
 
+	/**
+	 * Test method for collectionEquals()
+	 */
 	@Test
 	public void testCollectionEquals() {
 		assertTrue(pSetHash.collectionEquals(pSetHash));
@@ -248,6 +248,9 @@ public class PcollectionsSymbolicSetTest {
 		
 	}
 
+	/**
+	 * Test method for size()
+	 */
 	@Test
 	public void testSize() {
 		assertEquals(pSetHash.size(),2);
@@ -255,6 +258,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.size(),2);
 	}
 
+	/**
+	 * Test method for iterator()
+	 */
 	@Test
 	public void testIterator() {
 		assertEquals(iteratorString(pSetHash),"[3,5,]");
@@ -265,6 +271,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(iteratorString(pSetPlain3),"[]");
 	}
 
+	/**
+	 * Test method for contains()
+	 */
 	@Test
 	public void testContains() {
 		assertTrue(pSetHash.contains(five));
@@ -280,6 +289,9 @@ public class PcollectionsSymbolicSetTest {
 		assertFalse(pSetPlain3.contains(five));
 	}
 
+	/**
+	 * Test method for toStringBuffer()
+	 */
 	@Test
 	public void testToStringBuffer() {
 		assertEquals(pSetHash.toStringBuffer(true).toString(),"{3,5}");
@@ -298,6 +310,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain3.toStringBuffer(false).toString(),"");
 	}
 
+	/**
+	 * Test method for toStringBufferLong()
+	 */
 	@Test
 	public void testToStringBufferLong() {
 		assertEquals(pSetHash.toStringBufferLong().toString(),"UnsortedSet{3,5}");
@@ -310,6 +325,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain3.toStringBufferLong().toString(),"UnsortedSet{}");
 	}
 
+	/**
+	 * Test method for isSorted()
+	 */
 	@Test
 	public void testIsSorted() {
 		assertFalse(pSetHash.isSorted());
@@ -317,6 +335,9 @@ public class PcollectionsSymbolicSetTest {
 		assertFalse(pSetPlain.isSorted());
 	}
 
+	/**
+	 * Test method for add()
+	 */
 	@Test
 	public void testAdd() {
 		assertEquals(pSetHash.toString(),"{3,5}");
@@ -329,6 +350,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.add(ten).toString(),"{3,5,10}");
 	}
 
+	/**
+	 * Test method for addAll()
+	 */
 	@Test
 	public void testAddAll() {
 		assertEquals(pSetHash.toString(),"{3,5}");
@@ -341,6 +365,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.addAll(pSetPlain3.add(ten).add(four).add(nine)).toString(),"{3,4,5,9,10}");
 	}
 
+	/**
+	 * Test method for remove() 
+	 */
 	@Test
 	public void testRemove() {
 		assertEquals(pSetHash.remove(three).toString(), "{5}");
@@ -353,6 +380,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain3.remove(three).toString(), "{}");
 	}
 
+	/**
+	 * Test method for removeAll()
+	 */
 	@Test
 	public void testRemoveAll() {
 		assertEquals(pSetHash.addAll(pSetHash3.add(ten).add(four).add(nine)).removeAll(pSetHash2).toString(), "{4,9,10}");
@@ -364,11 +394,17 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain3.removeAll(pSetCollection2).toString(), "{}");
 	}
 
+	/**
+	 * Test method for keepOnly(), expects a thrown exception
+	 */
 	@Test(expected=UnsupportedOperationException.class)
 	public void testKeepOnly() {
 		pSetPlain.keepOnly(pSetCollection);
 	}
 
+	/**
+	 * Test method for comparator()
+	 */
 	@Test
 	public void testComparator() {
 		assertEquals(pSetHash.comparator(),null);
@@ -376,6 +412,9 @@ public class PcollectionsSymbolicSetTest {
 		assertEquals(pSetPlain.comparator(),null);
 	}
 
+	/**
+	 * Test method for apply()
+	 */
 	@Test
 	public void testApply() {
 		assertEquals(pSetPlain.apply(transform).toString(),"{300,500}");
