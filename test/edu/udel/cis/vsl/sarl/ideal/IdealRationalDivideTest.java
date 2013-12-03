@@ -67,20 +67,62 @@ public class IdealRationalDivideTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 
-	private RationalNumber realThree; // real 3
-	private RationalNumber realOne; // real 1
-	private RationalNumber realFive; // real 5
-	private RationalNumber realSeven; // real 7
-	private RationalNumber realTwentyOne; // real 21
-	private RationalNumber realThirtyFive; // real 35
-	private NumericExpression three; // real constant 3
-	private NumericExpression five; // real constant 5
-	private NumericExpression seven; // real constant 7
-	private NumericExpression twentyOne; // real constant 21
-	private NumericExpression thirtyFive; // real constant 35
-	RationalExpression r1; // Rational Expression x/y
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
+	/**
+	 * real 3
+	 */
+	private RationalNumber realThree; 
+	/**
+	 * real 1
+	 */
+	private RationalNumber realOne;
+	/**
+	 * real 5
+	 */
+	private RationalNumber realFive;
+	/**
+	 * real 7
+	 */
+	private RationalNumber realSeven;
+	/**
+	 * real 21
+	 */
+	private RationalNumber realTwentyOne;
+	/**
+	 * real 35
+	 */
+	private RationalNumber realThirtyFive;
+	/**
+	 * real constant 3
+	 */
+	private NumericExpression three;
+	/**
+	 * real constant 5
+	 */
+	private NumericExpression five;
+	/**
+	 * real constant 7
+	 */
+	private NumericExpression seven;
+	/**
+	 * real constant 21
+	 */
+	private NumericExpression twentyOne;
+	/**
+	 *  real constant 35
+	 */
+	private NumericExpression thirtyFive;
+	/**
+	 * Rational Expression x/y
+	 */
+	RationalExpression r1;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
 		
 	@Before
 	public void setUp() throws Exception {
