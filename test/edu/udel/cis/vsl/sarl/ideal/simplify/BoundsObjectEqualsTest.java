@@ -10,8 +10,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
+/**Provides testing of the equals method of BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject.equals
  *
  */
 public class BoundsObjectEqualsTest {

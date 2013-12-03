@@ -13,7 +13,14 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 
 /**
+ * Provides testing on the upper method of BoundsObject,
+ * which is a getter method for returning the current upper
+ * bound of a BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject
+ * @see BoundsObject.upper()
  *
  */
 public class BoundsObjectSetUpperTest {

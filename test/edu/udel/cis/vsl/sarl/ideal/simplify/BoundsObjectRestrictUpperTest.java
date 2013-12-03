@@ -11,7 +11,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing on the restrictUpper method of BoundsObject,
+ * which is used to adjust to a more restrictive bound on an existing BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject
+ * @see BoundsObject.restrictUpper
  *
  */
 public class BoundsObjectRestrictUpperTest {

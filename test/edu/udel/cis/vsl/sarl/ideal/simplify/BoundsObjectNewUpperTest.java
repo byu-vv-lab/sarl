@@ -3,7 +3,6 @@
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
-
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -12,7 +11,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing of the newUpperBound method, which
+ * is used as one of three public constructors for a BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject
+ * @see BoundsObject.newUpperBound
  *
  */
 public class BoundsObjectNewUpperTest {

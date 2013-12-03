@@ -12,7 +12,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing of the isReal method of BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject.isReal
  *
  */
 public class BoundsObjectIsRealTest {

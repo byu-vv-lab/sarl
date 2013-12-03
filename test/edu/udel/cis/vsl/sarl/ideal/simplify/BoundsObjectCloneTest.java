@@ -11,9 +11,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
+/**Provides testing of the clone method of BoundsObject
+ * 
  * @author danfried
  *
+ *@see BoundsObject.clone
  */
 public class BoundsObjectCloneTest {
 

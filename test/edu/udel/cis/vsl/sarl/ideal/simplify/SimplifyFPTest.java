@@ -11,7 +11,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing on two methods of simplification; apply and simplifyExpression
+ * in IdealSimplifier.
+ * 
  * @author danfried
+ * 
+ * @see IdealSimplifier
+ * @see IdealSimplifier.apply
+ * @see IdealSimplifier.simplifyExpression
  *
  */
 public class SimplifyFPTest {

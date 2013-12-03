@@ -11,7 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing of the isConsistent method of BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject.isConsistent
  *
  */
 public class BoundsObjectIsConsistentTest {

@@ -12,7 +12,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Provides testing of the newLowerBound method, which
+ * is used as one of three public constructors for a BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject
+ * @see BoundsObject.newLowerBound
  *
  */
 public class BoundsObjectNewLowerTest {

@@ -10,8 +10,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
+/**Provides testing of the constant method of BoundsObject
+ * 
  * @author danfried
+ * 
+ * @see BoundsObject.constant()
  *
  */
 public class BoundsObjectConstantTest {
