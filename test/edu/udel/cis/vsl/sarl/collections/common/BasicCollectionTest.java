@@ -33,12 +33,10 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 
-
-
 /**
  * @author rwjones
  *
- * declaring all the required variables
+ * Test class for collections.common.BasicCollection
  */
 public class BasicCollectionTest {
 	
@@ -93,7 +91,6 @@ public class BasicCollectionTest {
 		expr5 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
 		expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(2)));
 		expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(100)));
-		//SymbolicExpression five = new ExpressionStub("5");
 		
 		// this block is used to crate a list
 		collectionList1 = new LinkedList<SymbolicExpression>();
