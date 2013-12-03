@@ -289,6 +289,7 @@ public class CnfFactoryTest {
 	
 	/**
 	 * Tests CnfFactory and(bool boolExpr1, bool boolExpr2) method.
+	 * ensures that and correctly makes (expr1 && expr2) as well anding groups of sets
 	 */
 	@Test
 	public void andTrueExprTest() {
@@ -312,6 +313,7 @@ public class CnfFactoryTest {
 	
 	/**
 	 * Tests CnfFactory or(bool boolExpr1, bool boolExpr2) method.
+	 * Tests for combinations of statements, and simplifications for or
 	 */
 	@Test
 	public void orTrueExprTest() {
@@ -333,7 +335,7 @@ public class CnfFactoryTest {
 
 	/**
 	 * Testing for code in CnfFactoryEquiv()
-	 * 
+	 * Tests equivalence.
 	 */
 	@Test
 	public void equivTest() {
@@ -361,7 +363,7 @@ public class CnfFactoryTest {
 
 	/**
 	 * Testing for code in CnfFactoryNot()
-	 * 
+	 * makes sure not(false) is true
 	 */
 	@Test
 	public void booleannotTest() {
@@ -373,8 +375,8 @@ public class CnfFactoryTest {
 	}
 
 	/**
-	 * Testing for code in CnfFactoryforall()
-	 * 
+	 * Testing for code in CnfFactoryforall(). Tests to ensure all combinations of
+	 * forall(values) return their correct output.
 	 */
 	@Test
 	public void forAllTest() {
@@ -390,7 +392,7 @@ public class CnfFactoryTest {
 
 	/**
 	 * Testing for code in CnfFactoryExists()
-	 * 
+	 * Tests to make sure if something exists, then exists(something) = true
 	 */
 	@Test
 	public void existsTest() {
@@ -409,7 +411,8 @@ public class CnfFactoryTest {
 
 	/**
 	 * Testing for code in CnfSymbolicConstant()
-	 * 
+	 * Tests to make sure the super is working correctly.
+	 * This is for tostring() and .name
 	 */
 	@Test
 	public void cnfSymbolicConstantTest() {
