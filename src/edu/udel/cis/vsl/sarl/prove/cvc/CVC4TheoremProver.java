@@ -48,6 +48,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -379,12 +380,12 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		case INTEGER:
 		case REAL:
-			result = em.mkConst(((NumberObject) object).getNumber().toString());
+			Number real = ((NumberObject) object).getNumber();
+			result = em.mkConst(new Rational(real.toString()));
 			break;
 		case TUPLE:
-			result = em
-			.mkExpr(Kind.TUPLE,
-					(vectorExpr) translateCollection((SymbolicSequence<?>) object));
+			result = em.mkExpr(Kind.TUPLE, 
+					translateCollection((SymbolicSequence<?>) object));
 			break;
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
