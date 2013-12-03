@@ -42,7 +42,7 @@ public class ReferencedTypeBenchmarkTuple {
 			TupleType = universe.tupleType(
 					universe.stringObject("tupleType"),
 					Arrays.asList(new SymbolicType[] { tupleType }));
-			int summer = 200;
+			int summer = 200000;
 			size += summer;
 			totalTime = 0;
 			

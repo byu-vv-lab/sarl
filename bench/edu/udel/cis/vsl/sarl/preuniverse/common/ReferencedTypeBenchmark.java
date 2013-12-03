@@ -52,7 +52,7 @@ public class ReferencedTypeBenchmark {
 		{
 			nDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
 			ArrayType = universe.arrayType(arrayType);
-			int summer = 200;
+			int summer = 200000;
 			size += summer;
 			totalTime = 0;
 			
