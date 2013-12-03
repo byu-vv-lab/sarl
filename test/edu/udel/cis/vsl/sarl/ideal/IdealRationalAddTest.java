@@ -37,7 +37,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * The class IdealRationalAddTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * The class IdealRationalTest consists of methods which returns a rational expression which is the
+ * result of adding a rational number to each and every one of the following expressions
+ * 
+ * This class tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using additions among various combinations such as:
  * 
  * <ul>
@@ -47,6 +50,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>RationalExpression + Primitive</li>
  * <li>RationalExpression + PrimitivePower</li>
  * </ul>
+ * 
+ * Example:
+ * 			RationalExpression: x/y
+ * 			Polynomial: 3*x^2*y + x^2
+ * 
+ * 			Adding both gives us the new rational expression which looks like:
+ * 			            (3*x^2*y^2 + x^2 * y + x)/y
  * 
  */
 public class IdealRationalAddTest {
