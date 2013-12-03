@@ -134,7 +134,7 @@ public interface IdealFactory extends NumericExpressionFactory {
 	One one(SymbolicType type);
 
 	/**
-	 * Creates a Monomial
+	 * Creates a Monomial which is a Monic multiplied by a constant, integer or a real number.
 	 * 
 	 * @param constant - a concrete number. Wraps a NumberObject, which wraps a Number
 	 * @param monic - product of powers of primitive expressions x_1^{i_1}*...*x_n^{i_n}, 
@@ -149,7 +149,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	Monomial monomial(Constant constant, Monic monic);
 
 	/**
-	 * Multiplies two polynomials
+	 * Multiplies two polynomials by forming the factorization and by 
+	 * factoring out the common factors that are produced from the two factorizations.
 	 * 
 	 * @param poly1 - Numeric Expression of type Polynomial
 	 * @param poly2 - Numeric Expression of type Polynomial
@@ -175,7 +176,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 			Monomial factorization);
 
 	/**
-	 * Adds two polynomials
+	 * Adds two polynomials by forming the factorization and by factoring out 
+	 * the common factors that are produced from the two factorizations.
 	 * 
 	 * @param p1 - Numeric Expression of type Polynomial
 	 * @param p2 - Numeric Expression of type Polynomial
@@ -190,7 +192,8 @@ public interface IdealFactory extends NumericExpressionFactory {
 	Polynomial add(Polynomial p1, Polynomial p2);
 
 	/**
-	 * Subtracts the constant term for the given polynomial
+	 *  Returns the expression by removing the constant term present in the 
+	 * passed argument.
 	 * 
 	 * @param polynomial - Numeric Expression of type Polynomial
 	 * 
