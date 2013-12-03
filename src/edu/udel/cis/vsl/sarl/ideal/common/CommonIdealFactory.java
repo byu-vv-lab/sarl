@@ -58,67 +58,43 @@ import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
  * <pre>
- * rat       : DIVIDE factpoly factpoly | factpoly
- * factpoly  : FACTPOLY poly fact | poly
- * fact      : MULTIPLY number monicfact | monicfact
- * monicfact : MULTIPLY polypow+ | polypow
- * polypow   : POWER poly int | poly
- * poly      : SUM monomial+ | monomial
- * monomial  : MULTIPLY number monic | number | monic
- * monic     : MULTIPLY ppow+ | ppow
- * ppow      : POWER primitive int | primitive
- * number    : CONCRETE numberObject
- * primitive : ...
+ * Number    : a CONCRETE number object
+ * 					Ex: a real constant '3'
+ * Primitive : any symbol or number raised to the 1st power
+ * 					Ex: 'x' or 'y'
+ * PrimitivePower  : a Primitive raised to any non-negative power
+ * 					Ex: (x^2), (y^5) etc.
+ * Monic  : Two or more PrimitivePowers multiplied together. It always has a leading coefficient as 1
+ * 					Ex: [(x^2)*y], [(x^5)*(y^5)*(z^10)]
+ * Monomial : a Monic multiplied by a constant, integer or a real number
+ * 					Ex: 3*x*y, [10*(x^2)*(y^8)*(z^7)]
+ * Polynomial  : Two or more Monomials added together
+ * 					Ex: [10*(x^3)]+[4*(x^2)]+[3*x]+1
+ * RationalExpression  : Polynomial divided by a Polynomial
+ * 					Ex: [5*(x^2)+6*(x^2)*y+3*y] / [7*(x^2)+3*x]
+ * factpoly  : FACTPOLY polynomial fact | polynomial
+ *                  Ex: (x+1)^2
+ *                           (SUM ((POWER (x, 2)), (MULTIPLY (2, x)), 1))
+ *                           (POWER (SUM (x, 1), 2))
+ * fact  : MULTIPLY Number Monic | Monic
  * </pre>
- * 
- * A primitive is anything that doesn't fall into one of the preceding
- * categories, including a symbolic constant, array read expression, tuple read
- * expression, function application, etc.
  * 
  * Rules of the normal form:
  * <ul>
- * <li>Any numeric expression will have one of the following 8 forms: rat,
- * factpoly, poly, monomial, monic, ppow, number, primitive; a numeric
- * expression of integer type will not have rat form
- * <li>NO MIXING OF TYPES: in an expression of real type, all of the descendant
- * arguments will have real type; in an expression of integer type, all of the
+ * <li>Any numeric expression will have one of the following 8 forms: RationalExpression,
+ * factpoly, Polynomial, Monomial, Monic, PrimitivePower, Number, Primitive. Also, a numeric
+ * expression of integer type will not have rational form
+ * <li>NO MIXING OF TYPES: If an expression is of real type, all of the descendant
+ * arguments will have real type; conversely if an expression is of integer type, all of the
  * descendant arguments will have integer type</li>
- * <li>the second factpoly argument of DIVIDE in the rat rule must be _reduced_:
- * if real type, the leading coefficient is 1; if integer type, the leading
- * coefficient is positive and the GCD of the absolute values of the
- * coefficients is 1.</li>
- * <li>the two factpoly arguments of DIVIDE in the rat rule will have no common
- * factors</li>
- * <li>the poly argument of FACTPOLY cannot be a monomial</li>
- * <li>the poly argument of FACTPOLY must be a monic polynomial, i.e., have
- * leading coefficient 1</li>
+ * <li>the two polynomial arguments which divide each other in the RationalExpression will have 
+ * no common factors</li>
+ * <li>the polynomial argument of FACTPOLY cannot be a Monomial</li>
+ * <li>the polynomial argument of FACTPOLY must be a Monic polynomial, i.e., have
+ * leading coefficient as 1</li>
  * <li>the fact argument of FACTPOLY, when multiplied out, will yield the same
- * polynomial as the poly argument of FACTPOLY</li>
- * <li>the sequence polypow+ in monicfact will have length at least 2</li>
- * <li>the int in polypow will be greater than or equal to 2</li>
- * <li>the sequence monomial+ in poly will have length >=2</li>
- * <li>the number argument of MULTIPLY in monomial rule will not be 1.</li>
- * <li>the sequence ppow+ in monic rule will have length >=2</li>
- * <li>the int in ppow rule will be >=2</li>
+ * Polynomial as the polynomial argument of FACTPOLY</li>
  * </ul>
- * 
- * <pre>
- * Normal form examples:
- * x         : x
- * 1         : 1
- * x+1       : SUM x 1
- * x^2       : POWER x 2
- * (x+1)^2   : FACTPOLY
- *               (SUM (POWER x 2) (MULTIPLY 2 x) 1)
- *               (POWER (SUM x 1) 2)
- * x/y       : DIVIDE x y
- * 2/3       : CONCRETE(2/3)
- * x/2       : MULTIPLY 1/2 x
- * (x+1)^2/3 : FACTPOLY
- *               (SUM (MULTIPLY 1/3 (POWER x 2)) (MULTIPLY 2/3 x) 1/3)
- *               (MULTIPLY 1/3 (POWER (SUM x 1) 2))
- * 
- * </pre>
  * 
  */
 public class CommonIdealFactory implements IdealFactory {
