@@ -25,7 +25,7 @@ public class ExponentiatorTest {
 	//private static BigInteger bigThree = new BigInteger("3");
 	private static IntegerNumber inOne = factory.integer(1);
 	private static IntegerNumber inZero = factory.integer(0);
-	private static IntegerNumber inNegativeOne = factory.integer(-1);
+	//private static IntegerNumber inNegativeOne = factory.integer(-1);
 	private static IntegerNumber inTwo = factory.integer(2);
 	//private static IntegerNumber inThree = factory.integer(3);
 	//private static IntegerNumber inEight = factory.integer(8);
