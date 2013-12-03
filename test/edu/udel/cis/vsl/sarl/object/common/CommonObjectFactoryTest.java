@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
-import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 import edu.udel.cis.vsl.sarl.type.common.TypeSequenceComparator;
@@ -175,18 +173,14 @@ public class CommonObjectFactoryTest {
 	public void testOneRealObj() {
 		assertEquals("1", this.fac.oneRealObj().toString());
 	}
-
-	// TODO: Use a number Factory to create your RealInteger:
 	
 	/**
 	 * Method to test CommonObjectFactory.numberObject
 	 */
-	/*
 	@Test
 	public void testNumberObject() {
-		assertEquals("1", this.fac.numberObject(new RealInteger(new BigInteger("1"))).toString());
+		assertEquals("1", this.fac.numberObject(this.fac.numberFactory().integer(1)).toString());
 	}
-	*/
 	
 	/**
 	 * Method to test thrown exception for CommonObjectFactory.numberObject()
