@@ -17,9 +17,11 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject.SymbolicObjectKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -168,7 +170,7 @@ public class SymbolicTypeFactoryTest {
 		completeArrayType1 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
 		completeArrayType2 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
 		typesList = new ArrayList<SymbolicType>();
-		typesArray = new SymbolicType[4];
+		typesArray = new SymbolicType[5];
 		
 		//a list of CommonSymbolicType 
 		typesList.add(idealRealKind);
@@ -181,6 +183,7 @@ public class SymbolicTypeFactoryTest {
 		typesArray[1] = floatRealKind;
 		typesArray[2] = idealIntKind;
 		typesArray[3] = boundedIntKind;
+		typesArray[4] = completeArrayType2;
 		
 		typeSequence = new CommonSymbolicTypeSequence(typesArray);
 		unionType = typeFactory.unionType(objectFactory.stringObject("myUnion"), typeSequence);
@@ -375,16 +378,21 @@ public class SymbolicTypeFactoryTest {
 	 */
 	@Test
 	public void testPureType() {
+		StringObject stringObject = objectFactory.stringObject("myTuple");
 		CommonSymbolicCompleteArrayType cArray = (CommonSymbolicCompleteArrayType) typeFactory.arrayType(boundedIntKind, numericPrimitive);
-		CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeFactory.sequence(typesList), floatRealKind);
-		
+		CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeSequence, floatRealKind);
+		SymbolicFunctionType functionType2 = typeFactory.functionType(typeSequence, floatRealKind);
+		SymbolicTupleType tupleType = typeFactory.tupleType(stringObject, typeFactory.sequence(typesArray));
+				
 		assertEquals(typeFactory.pureType(boundedIntKind), boundedIntKind.getPureType());
 		assertEquals(typeFactory.pureType(floatRealKind), floatRealKind.getPureType());
 		assertEquals(typeFactory.pureType(cArray), cArray.getPureType());
 		assertNull(functionType.getPureType());
 		functionType.setPureType(functionType);
 		assertNotNull(functionType.getPureType());
-		assertEquals(functionType.getPureType(), typeFactory.pureType(functionType));
+		assertEquals(functionType.getPureType(), (CommonSymbolicFunctionType)typeFactory.pureType(functionType));
 		assertEquals(typeFactory.pureType(unionType).symbolicObjectKind(), SymbolicObjectKind.TYPE);
+		assertTrue(typeFactory.pureType(functionType2) instanceof SymbolicFunctionType);
+		assertTrue((SymbolicTupleType)typeFactory.pureType(tupleType) instanceof SymbolicTupleType);
 	}
 }
