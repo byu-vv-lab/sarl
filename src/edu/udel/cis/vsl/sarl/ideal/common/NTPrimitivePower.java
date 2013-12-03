@@ -42,6 +42,11 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 		assert exponent.getInt() >= 2;
 	}
 
+	/**
+	 * Creates a primitive which is any symbol or number raised to the 1st power
+	 * 
+	 * @return - a primitive such as 'x' or 'y'
+	 */
 	public NumericPrimitive primitive() {
 		return (NumericPrimitive) argument(0);
 	}
@@ -72,6 +77,12 @@ public class NTPrimitivePower extends IdealExpression implements PrimitivePower 
 		return exponent();
 	}
 
+	/**
+	 * The number that is raised as a power to any particular expression or any constants
+	 * This exponent number is of type intObject.
+	 * 
+	 * @return - the value by multiplying the expression or any constant, number of times equal to the integer that is raised to the power.
+	 */
 	public IntObject exponent() {
 		return (IntObject) argument(1);
 	}
