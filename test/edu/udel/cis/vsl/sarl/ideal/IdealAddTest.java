@@ -160,6 +160,7 @@ public class IdealAddTest {
 	public void commutativity1() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		SymbolicExpression xpy = add(poly1, poly2); // x + y
 		SymbolicExpression ypx = add(poly2, poly1); // y + x
 		
@@ -185,6 +186,7 @@ public class IdealAddTest {
 	@Test
 	public void addPolyToPoly(){
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = add(multiply(poly1, poly1), intOne);
 		Polynomial p2 = add(multiply(intTwo, multiply(poly1, poly1)), intOne);
 		Polynomial p3 = multiply(intZero, poly1);
@@ -216,6 +218,7 @@ public class IdealAddTest {
 	@Test
 	public void addPolyToMonomial() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = add(multiply(intTwo, multiply(poly1, poly1)), intOne);
 		Polynomial p2 = multiply(intTen, poly1);
 		Polynomial p3 = add(multiply(intTen, poly1), add(multiply(
@@ -245,6 +248,7 @@ public class IdealAddTest {
 	@Test
 	public void addMonomialToMonomial() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = multiply(intTen, poly1);
 		Polynomial p2 = multiply(idealFactory.intConstant(20), poly1);
 				
@@ -272,6 +276,7 @@ public class IdealAddTest {
 	@Test
 	public void addMonomialToPrimitivePower() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = multiply(intTen, poly1);
 		Polynomial p2 = multiply(poly1, poly1);
 		Polynomial p3 = multiply(poly1, add(intTen, poly1));
@@ -301,6 +306,7 @@ public class IdealAddTest {
 	public void addMonomialToMonic() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		Polynomial p1 = multiply(intTen, poly1);
 		Polynomial p2 = multiply(poly1, poly2);
 		Polynomial p3 = multiply(poly1, add(intTen, poly2));
@@ -330,6 +336,7 @@ public class IdealAddTest {
 	public void addMonicToMonic() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		Polynomial p1 = multiply(poly1, poly2);
 		Polynomial p2 = multiply(intTwo, multiply(poly1, poly2));
 		
@@ -358,6 +365,7 @@ public class IdealAddTest {
 	public void addPrimitivePowerToMonic() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		Polynomial p1 = multiply(poly1, poly2);
 		Polynomial p2 = multiply(poly1, poly1);
 		Polynomial p3 = multiply(add(poly1, poly2), poly1);
@@ -387,6 +395,7 @@ public class IdealAddTest {
 	public void addPrimitiveToMonic() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		Polynomial p1 = multiply(poly1, poly2);
 		Polynomial p2 = multiply(add(intOne, poly2), poly1);
 		
@@ -415,6 +424,7 @@ public class IdealAddTest {
 	public void addConstantToMonic() {
 		Polynomial poly1 = (Polynomial) x;
 		Polynomial poly2 = (Polynomial) y;
+		
 		Polynomial p1 = multiply(poly1, poly2);
 		Polynomial p2 = add(multiply(poly1, poly2), intOne);
 	
@@ -442,6 +452,7 @@ public class IdealAddTest {
 	@Test
 	public void addPolyToPrimitivePower() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = multiply(poly1, poly1);
 		Polynomial p2 = multiply(multiply(poly1, poly1), intTwo);
 		Polynomial p3 = multiply(multiply(poly1, poly1), intThree);
@@ -470,6 +481,7 @@ public class IdealAddTest {
 	@Test
 	public void addPrimitivePowerToItself() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = multiply(poly1, poly1);
 		Polynomial p2 = multiply(multiply(poly1, poly1), intTwo);
 				
@@ -497,6 +509,7 @@ public class IdealAddTest {
 	@Test
 	public void addPrimitivePowerToPrimitive() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = multiply(poly1, poly1);
 		Polynomial p2 = add(poly1, multiply(poly1, poly1));
 		
@@ -524,6 +537,7 @@ public class IdealAddTest {
 	@Test
 	public void addPrimitiveToConstant() {
 		Polynomial poly1 = (Polynomial) x;
+		
 		Polynomial p1 = add(poly1, intOne);
 		
 		Polynomial b1 = add(poly1, intOne);

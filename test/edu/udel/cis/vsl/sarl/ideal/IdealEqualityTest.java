@@ -43,6 +43,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+
 /**
  * The class IdealEqualityTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using equalities
@@ -52,11 +53,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * 
  * The comparisons usually comprises of:
  * 
+ * <ul>
  * <li>equals</li>
  * <li>not equals</li>
  * <li>Also checks if two symbolic constants are equal or not.</li>
  * <li>Compares two rational expressions also performing operations such as less than, less than equals, 
  * not less than, not less than equals etc.</li>
+ *</ul>
  *
  */
 public class IdealEqualityTest {

@@ -56,9 +56,9 @@ public class IdealRationalMultiplyTest {
 	private IdealFactory idealFactory;
 
 	private RationalNumber realThree; // real 3
-	RationalExpression r1;
-	NumericSymbolicConstant x;
-	NumericSymbolicConstant y;
+	RationalExpression r1; // Rational Expression x/y
+	NumericSymbolicConstant x; // int symbolic constant "X"
+	NumericSymbolicConstant y; // int symbolic constant "Y"
 		
 	@Before
 	public void setUp() throws Exception {
@@ -223,9 +223,9 @@ public class IdealRationalMultiplyTest {
 	public void mulRationalToPrimitive() {
 		NumericExpression result = idealFactory.divide(idealFactory.
 				multiply(x, x), y); //(x*x)/y 
+		Polynomial poly1 = (Polynomial) x;
 		
-		RationalExpression mulPrimitive = (RationalExpression) 
-				idealFactory.multiply(r1, x); //(x*x)/y
+		RationalExpression mulPrimitive = multiplyRational(r1, poly1); //(x*x)/y
 		
 		assertEquals(result, mulPrimitive);
 	}

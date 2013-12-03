@@ -38,6 +38,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+
 /**
  * The class IdealPowerTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using exponentials
@@ -103,8 +104,9 @@ public class IdealPowerTest {
 	@Ignore
 	@Test
 	public void zeroToZero() {
-		@SuppressWarnings("unused")
+		//@SuppressWarnings("unused")
 		NumericExpression ztz = idealFactory.power(intZero, intZero);
+		out.println("ztz=" +ztz);
 	}
 	
 	/**
