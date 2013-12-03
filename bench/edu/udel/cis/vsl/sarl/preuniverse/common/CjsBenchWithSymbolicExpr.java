@@ -1,9 +1,7 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import edu.udel.cis.vsl.sarl.SARL;
-
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
@@ -32,21 +30,21 @@ public class CjsBenchWithSymbolicExpr {
 
 
     public static void main(String[] args) {
-      //  PersistentVector<SymbolicExpression> vector;
-        SymbolicExpression element = universe.integer(1000);
+ //       PersistentVector<SymbolicExpression> vector;
+        //SymbolicExpression element = universe.integer(1000);
 
-        int maxSize = (int) Math.pow(2, 28);
+        int maxSize = (int) Math.pow(2, 20);
         for (int i = 1; i <= maxSize; i = i * 2) {
-        //	vector = Persistents.vector();
+ //       	vector = Persistents.vector();
             int size = i;
             long stime = System.nanoTime();
 
             
             for (int j = 0; j < size; j++) {
-          //      vector.plus(element);
+   //             vector  = vector.plus(universe.integer(1000));
             }
             long etime = System.nanoTime();
-
+     //       System.out.println("Vector (vector) size: " + vector.size());
             double fTime = (etime - stime) / 1000000000.0;
             System.out.println(size+ "  "+fTime + " Sec");
         }

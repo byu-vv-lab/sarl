@@ -35,7 +35,7 @@ public class ArrayCreationBenchmark {
 
 	public static void main(String[] args) {
 		LinkedList<NumericExpression> elementsList;
-		int maxSize = (int) Math.pow(2, 15);
+		int maxSize = (int) Math.pow(2, 20);
 		int size;
 		long startingTime, endingTime;
 		double totalTime;
@@ -45,11 +45,12 @@ public class ArrayCreationBenchmark {
 		for (int i = 1; i <= maxSize; i = i * 2) {
 			size = i;
 			// starting the time
-			startingTime = System.nanoTime();
+			
 			elementsList = new LinkedList<NumericExpression>();
 			for (int j = 0; j < size; j++) {
 				elementsList.add(universe.integer(j));
 			}
+			startingTime = System.nanoTime();
 			array = universe.array(integerType, (elementsList));
 			endingTime = System.nanoTime();
 
@@ -69,8 +70,8 @@ public class ArrayCreationBenchmark {
 			// starting the time
 			
 			elementsList = new LinkedList<>();
-			array = universe.array(integerType, elementsList);
 			startingTime = System.nanoTime();
+			array = universe.array(integerType, elementsList);
 
 			for (int j = 0; j < size; j++) {
 				array = universe.append(array, element);

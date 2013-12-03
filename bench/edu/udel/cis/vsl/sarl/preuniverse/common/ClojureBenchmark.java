@@ -1,10 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
-import java.util.LinkedList;
-
 import com.trifork.clj_ds.IPersistentCollection;
-import com.trifork.clj_ds.IPersistentList;
-import com.trifork.clj_ds.PersistentList;
 import com.trifork.clj_ds.PersistentVector;
 
 

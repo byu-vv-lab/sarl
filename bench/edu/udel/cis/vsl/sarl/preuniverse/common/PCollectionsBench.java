@@ -14,8 +14,8 @@ import org.pcollections.TreePVector;
 
 public class PCollectionsBench {
     public static void main(String[] args) {
-        PVector<Object> vector;
-        int maxSize = (int) Math.pow(2, 28);
+        PVector<String> vector;
+        int maxSize = (int) Math.pow(2, 20);
         for (int i = 1; i <= maxSize; i = i * 2) {
             vector = TreePVector.empty();
             int size = i;
@@ -23,8 +23,10 @@ public class PCollectionsBench {
 
             
             for (int j = 0; j < size; j++) {
-                vector = vector.plus(null);
+            	
+                vector = vector.plus("hello");
             }
+            System.out.println("Vector (vector) size: " + vector.size());
             long etime = System.nanoTime();
 
             double fTime = (etime - stime) / 1000000000.0;

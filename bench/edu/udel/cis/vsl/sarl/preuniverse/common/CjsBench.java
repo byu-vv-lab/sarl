@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+
 /**
  * @author Mohammad Alsulmi (malsulmi)
  * 
@@ -11,18 +12,18 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 public class CjsBench {
        public static void main(String[] args) {
-        //PersistentVector<String> vector;
-        int maxSize = (int) Math.pow(2, 28);
+//        PersistentVector<String> vector;
+        int maxSize = (int) Math.pow(2, 21);
         for (int i = 1; i <= maxSize; i = i * 2) {
-        	//vector = Persistents.vector();
+  //      	vector = Persistents.vector();
             int size = i;
             long stime = System.nanoTime();
 
             
             for (int j = 0; j < size; j++) {
-                //String xx = Integer.toString(j);
-            	// vector = vector.plus(null);
+    //        	 vector = vector.plus("hello");
             }
+      //      System.out.println("Vector (vector) size: " + vector.size());
             long etime = System.nanoTime();
 
             double fTime = (etime - stime) / 1000000000.0;
