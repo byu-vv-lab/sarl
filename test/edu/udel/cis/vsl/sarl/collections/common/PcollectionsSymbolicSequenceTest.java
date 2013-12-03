@@ -3,7 +3,6 @@ package edu.udel.cis.vsl.sarl.collections.common;
 import static org.junit.Assert.*;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedList;
 
 import org.junit.After;
@@ -22,7 +21,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -39,7 +37,6 @@ public class PcollectionsSymbolicSequenceTest {
 	CommonObjectFactory fac;
 	//private static ObjectFactory objectFactory = new ObjectFactoryStub();
 	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
-	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 	
 	
 	private static Collection<SymbolicExpression> listCollection;//list collection
@@ -70,17 +67,14 @@ public class PcollectionsSymbolicSequenceTest {
 	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence;//Sequence that will take in an Iterable param
 	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence2;
 	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence3;
-	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequenceEmpty;
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence;//Sequence that will take in an array param
 	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence2;
 	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence3;
-	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequenceEmpty;
 	
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence;//Sequence that takes in a single element param
 	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequenceEmpty;
 	
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence;//Sequence that takes in no param
 	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence2;
@@ -90,7 +84,6 @@ public class PcollectionsSymbolicSequenceTest {
 	private PcollectionsSymbolicSequence<SymbolicExpression> canonicSequence;
 	private static SymbolicExpression twenty = createExpression(20);
 	private static SymbolicExpression forty = createExpression(40);
-	private static SymbolicExpression sixty = createExpression(60);
 	private static SymbolicExpression eighty = createExpression(80);
 	private static SymbolicExpression hundred = createExpression(100);
 	
@@ -190,7 +183,6 @@ public class PcollectionsSymbolicSequenceTest {
 		
 		twenty = createExpression(20);
 		forty = createExpression(40);
-		sixty = createExpression(60);
 		eighty = createExpression(80);
 		eighty = objectFactory.canonic(eighty);
 		hundred = createExpression(100);
@@ -206,31 +198,43 @@ public class PcollectionsSymbolicSequenceTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * Test method for constructor with null SymbolicExpression, expects thrown exception
+	 */
 	@Test(expected=NullPointerException.class)
 	public void testEmptyElements()
 	{
 		SymbolicExpression nl = null;
-		elementSequenceEmpty = new PcollectionsSymbolicSequence<SymbolicExpression>(nl);
+		new PcollectionsSymbolicSequence<SymbolicExpression>(nl);
 	}
-	
+
+	/**
+	 * Test method for constructor with LinkedList containing null SymbolicExpression, expects thrown exception
+	 */
 	@Test(expected=NullPointerException.class)
 	public void testEmptyIterables()
 	{
 		SymbolicExpression nl = null;
 		Iterable<SymbolicExpression> temp = new LinkedList<SymbolicExpression>();
 		((LinkedList<SymbolicExpression>) temp).add(nl);
-		iterableSequenceEmpty = new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
+		new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
 	}
-	
+
+	/**
+	 * Test method for constructor with array containing null SymbolicExpression, expects thrown exception
+	 */
 	@Test(expected=NullPointerException.class)
-	public void testEmptyarray()
+	public void testEmptyArray()
 	{
 		SymbolicExpression nl = null;
 		SymbolicExpression[] temp = new SymbolicExpression[1];
 		temp[0] = nl;
-		arraySequenceEmpty = new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
+		new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
 	}
 
+	/**
+	 * Test method for computeHashCode()
+	 */
 	@Test
 	public void testComputeHashCode() {
 		int testHashList = listSequence.hashCode();
@@ -249,6 +253,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.hashCode(),testHashPlain);
 	}
 
+	/**
+	 * Test method for canonizeChildren()
+	 */
 	@Test
 	public void testCanonizeChildren() {
 		assertFalse(canonicSequence.isCanonic());
@@ -258,6 +265,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertTrue(canonicSequence.get(0).isCanonic());
 	}
 
+	/**
+	 * Test method for collectionEquals()
+	 */
 	@Test
 	public void testCollectionEquals() {
 		//tests if collection equals itself
@@ -288,12 +298,13 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(emptyPlainSequence3.collectionEquals(listSequence),false);
 		assertEquals(emptyPlainSequence3.collectionEquals(emptyPlainSequence3),true);
 		assertEquals(elementSequence.collectionEquals(elementSequence2),false);
-		assertEquals(elementSequence.intrinsicEquals(new PcollectionsSymbolicSet()),false);
-		System.out.println(plainSequence.collectionEquals(canonicSequence));
-		System.out.println(canonicSequence.collectionEquals(plainSequence));
+		assertEquals(elementSequence.intrinsicEquals(new PcollectionsSymbolicSet<SymbolicExpression>()),false);
 		
 	}
 
+	/**
+	 * Test method for iterator()
+	 */
 	@Test
 	public void testIterator() {
 		java.util.Iterator<SymbolicExpression> listIterator = listSequence.iterator();
@@ -342,6 +353,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainString, "[]");
 	}
 
+	/**
+	 * Test method for size()
+	 */
 	@Test
 	public void testSize() {
 		assertEquals(listSequence.size(),3);
@@ -351,6 +365,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.size(),0);
 	}
 
+	/**
+	 * Test method for add()
+	 */
 	@Test
 	public void testAdd() {
 		assertEquals(listSequence.size(),3);
@@ -369,6 +386,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.add(ten).size(),1);
 	}
 
+	/**
+	 * Test method for set()
+	 */
 	@Test
 	public void testSet() {
 		assertEquals(listSequence.toStringBuffer(true).toString(),"<5,3,5>");
@@ -387,6 +407,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.add(five).set(0, ten).toStringBuffer(true).toString(),"<10>");
 	}
 
+	/**
+	 * Test method for remove()
+	 */
 	@Test
 	public void testRemove() {
 		assertEquals(listSequence.toStringBuffer(true).toString(),"<5,3,5>");
@@ -404,6 +427,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.add(five).remove(0).toStringBuffer(true).toString(),"<>");
 	}
 
+	/**
+	 * Test method for subSequence()
+	 */
 	@Test
 	public void testSubSequence() {
 		assertEquals(listSequence.subSequence(0, 0).toStringBuffer(true).toString(),"<>");
@@ -422,6 +448,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(elementSequence.add(five).subSequence(0, 1).toStringBuffer(true).toString(),"<5>");
 	}
 
+	/**
+	 * Test method for setExtend()
+	 */
 	@Test
 	public void testSetExtend() {
 		assertEquals(listSequence.setExtend(10, ten, empty).toStringBuffer(true).toString(),"<5,3,5,,,,,,,,10>");
@@ -437,12 +466,17 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.add(five).add(three).setExtend(0, ten, empty).toStringBuffer(true).toString(),"<10,3>");
 	}
 
+	/**
+	 * Test method for apply()
+	 */
 	@Test
 	public void testApply() {
 		assertEquals(listSequence.apply(transform).toString(),"<500,300,500>");
 	}
-	
 
+	/**
+	 * Test method for toStringBuffer()
+	 */
 	@Test
 	public void testToStringBuffer() {
 		assertEquals(listSequence.toStringBuffer(true).toString(),"<5,3,5>");
@@ -461,6 +495,9 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(plainSequence.toStringBuffer(false).toString(),"<>");
 	}
 
+	/**
+	 * Test method for toStringBufferLong()
+	 */
 	@Test
 	public void testToStringBufferLong() {
 		assertEquals(listSequence.toStringBufferLong().toString(),"Sequence<5,3,5>");
