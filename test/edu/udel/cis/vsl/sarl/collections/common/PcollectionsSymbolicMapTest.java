@@ -2,7 +2,6 @@ package edu.udel.cis.vsl.sarl.collections.common;
 
 import static org.junit.Assert.*;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -23,7 +22,6 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
-import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
 import edu.udel.cis.vsl.sarl.expr.Expressions;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
@@ -37,11 +35,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 
+/**
+ * Test class for collections.common.PcollectionsSymbolicMap
+ */
 public class PcollectionsSymbolicMapTest {
 	
 	CommonObjectFactory fac;
 	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
-	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 	
 	private static SymbolicExpression x = new ExpressionStub("5");
 
@@ -74,7 +74,6 @@ public class PcollectionsSymbolicMapTest {
 	
 	private static SymbolicExpression twenty = createExpression(20);
 	private static SymbolicExpression forty = createExpression(40);
-	private static SymbolicExpression sixty = createExpression(60);
 	private static SymbolicExpression eighty = createExpression(80);
 	private static SymbolicExpression hundred = createExpression(100);
 	
@@ -145,6 +144,9 @@ public class PcollectionsSymbolicMapTest {
 	}
 
 
+	/**
+	 * Test method for computeHashCode()
+	 */
 	@Test
 	public void testComputeHashCode() {
 		int hash = plainPMap.computeHashCode();
@@ -157,6 +159,9 @@ public class PcollectionsSymbolicMapTest {
 		assertEquals(pMap.hashCode(), pMapHash);
 	}
 
+	/**
+	 * Test method for canonizeChildren()
+	 */
 	@Test
 	public void testCanonizeChildren() {
 		assertFalse(canonicMap.isCanonic());
@@ -169,30 +174,45 @@ public class PcollectionsSymbolicMapTest {
 	}
 	
 
+	/**
+	 * Test method for get()
+	 */
 	@Test
 	public void testGet() {
 		assertEquals(plainPMap.get(y).toString(),"3");
 		assertEquals(plainEmptyPMap.get(y),null);
 	}
 
+	/**
+	 * Test method for keys()
+	 */
 	@Test
 	public void testKeys() {
 		assertEquals(plainPMap.keys().toString(),"[4, 5, 9, 10]");
 		assertEquals(plainEmptyPMap.keys().toString(),"[]");
 	}
 
+	/**
+	 * Test method for values()
+	 */
 	@Test
 	public void testValues() {
 		assertEquals(plainPMap.values().toString(),"[3, 10, 3, 9]");
 		assertEquals(plainEmptyPMap.values().toString(),"[]");
 	}
 
+	/**
+	 * Test method for entries()
+	 */
 	@Test
 	public void testEntries() {
 		assertEquals(plainPMap.entries().toString(),"[4=3, 5=10, 9=3, 10=9]");
 		assertEquals(plainEmptyPMap.entries().toString(),"[]");
 	}
 
+	/**
+	 * Test method for iterator()
+	 */
 	@Test
 	public void testIterator() {
 		Iterator<SymbolicExpression> temp = plainPMap.iterator();
@@ -214,12 +234,18 @@ public class PcollectionsSymbolicMapTest {
 		assertEquals(testEmptyString, "[]");
 	}
 
+	/**
+	 * Test method for size()
+	 */
 	@Test
 	public void testSize() {
 		assertEquals(plainPMap.size(),4);
 		assertEquals(plainEmptyPMap.size(),0);
 	}
 
+	/**
+	 * Test method for collectionEqualsSymbolicCollectionOfV()
+	 */
 	@Test
 	public void testCollectionEqualsSymbolicCollectionOfV() {
 		assertFalse(plainPMap.collectionEquals(plainEmptyPMap));
@@ -230,6 +256,9 @@ public class PcollectionsSymbolicMapTest {
 		assertTrue(plainPMapSame.collectionEquals(plainPMap));
 	}
 
+	/**
+	 * Test method for toStringBufferBoolean()
+	 */
 	@Test
 	public void testToStringBufferBoolean() {
 		assertEquals(plainPMap.toStringBuffer(true).toString(),"{4->3, 5->10, 9->3, 10->9}");
@@ -238,23 +267,35 @@ public class PcollectionsSymbolicMapTest {
 		assertEquals(plainEmptyPMap.toStringBuffer().toString(),"{}");
 	}
 
+	/**
+	 * Test method for toStringBufferLong()
+	 */
 	@Test
 	public void testToStringBufferLong() {
 		assertEquals(plainPMap.toStringBufferLong().toString(),"UnsortedMap{4->3, 5->10, 9->3, 10->9}");
 		assertEquals(plainEmptyPMap.toStringBufferLong().toString(),"UnsortedMap{}");
 	}
 
+	/**
+	 * Test method for isEmpty()
+	 */
 	@Test
 	public void testIsEmpty() {
 		assertFalse(plainPMap.isEmpty());
 		assertTrue(plainEmptyPMap.isEmpty());
 	}
 
+	/**
+	 * Test method for isSorted()
+	 */
 	@Test
 	public void testIsSorted() {
 		assertFalse(plainPMap.isSorted());
 	}
 
+	/**
+	 * Test method for put()
+	 */
 	@Test
 	public void testPut() {
 		assertTrue(plainEmptyPMap.isEmpty());
@@ -262,6 +303,9 @@ public class PcollectionsSymbolicMapTest {
 		assertFalse(plainEmptyPMap.isEmpty());
 	}
 
+	/**
+	 * Test method for remove()
+	 */
 	@Test
 	public void testRemove() {
 		assertTrue(plainEmptyPMap.isEmpty());
@@ -271,6 +315,9 @@ public class PcollectionsSymbolicMapTest {
 		assertTrue(plainEmptyPMap.isEmpty());
 	}
 
+	/**
+	 * Test method for comparator()
+	 */
 	@Test
 	public void testComparator() {
 		assertEquals(plainPMap.comparator(),null);
