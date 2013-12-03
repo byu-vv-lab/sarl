@@ -20,7 +20,11 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
-
+/**
+ * implementation for SymbolicPrimitiveType, which could be a boolean or a char.
+ * 
+ * @author mohammedalali
+ */
 public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 
 	private final static int classCode = CommonSymbolicPrimitiveType.class

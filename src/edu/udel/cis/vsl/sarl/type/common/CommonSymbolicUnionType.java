@@ -27,18 +27,31 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * an implementation of {@link SymbolicUnionType}
+ * @author mohammedalali
+ *
+ */
 public class CommonSymbolicUnionType extends CommonSymbolicType implements
 		SymbolicUnionType {
 
 	private final static int classCode = CommonSymbolicUnionType.class
 			.hashCode();
-
+	/**
+	 * sequence used to create the unionType
+	 */
 	private SymbolicTypeSequence sequence;
 
+	/**
+	 * holds the name of this unionType
+	 */
 	private StringObject name;
 
 	private Map<SymbolicType, Integer> indexMap = new LinkedHashMap<SymbolicType, Integer>();
 
+	/**
+	 * holds the pureType of this unionType
+	 */
 	private SymbolicUnionType pureType;
 
 	/**
@@ -114,10 +127,19 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 		return indexMap.get(type);
 	}
 
+	/**
+	 * @return the pureType of this unionType
+	 * You have to set the pureType first using setPureType(...)
+	 */
 	public SymbolicUnionType getPureType() {
 		return pureType;
 	}
-
+	
+	/**
+	 * used to set the pureType of this unionType
+	 * 
+	 * @param pureType
+	 */
 	public void setPureType(SymbolicUnionType pureType) {
 		this.pureType = pureType;
 	}

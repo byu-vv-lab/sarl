@@ -29,7 +29,8 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
- * an implementation of SymbolicTypeSequcen, which is a finite, ordered
+ * an implementation of {@link SymbolicTypeSequence}
+ 	which is a finite, ordered
  * sequence of SymbolicType.
  * 
  * @author alali

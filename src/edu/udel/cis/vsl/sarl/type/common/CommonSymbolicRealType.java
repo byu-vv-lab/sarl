@@ -23,14 +23,25 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * an implementation of {@link SymbolicRealType}
+ * 
+ * @author mohammedalali
+ *
+ */
 public class CommonSymbolicRealType extends CommonSymbolicType implements
 		SymbolicRealType {
 
 	private final static int classCode = CommonSymbolicRealType.class
 			.hashCode();
-
+	/**
+	 * holds the kind of this realType: ideal, herbrand, float.
+	 */
 	private RealKind realKind;
 
+	/**
+	 * holds the shortName of this realType
+	 */
 	private StringBuffer name;
 
 	public CommonSymbolicRealType(RealKind kind) {

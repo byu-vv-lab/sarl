@@ -23,15 +23,28 @@ import java.util.Comparator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
+/**
+ * compares two {@link SymbolicTypeSequence}
+ * 
+ * @author mohammedalali
+ *
+ */
 public class TypeSequenceComparator implements
 		Comparator<SymbolicTypeSequence> {
-
+	/**
+	 * holds the way to compare two SymbolicTypeSequences
+	 */
 	private Comparator<SymbolicType> typeComparator;
 
 	public TypeSequenceComparator() {
 
 	}
-
+	
+	/**
+	 * must be used to set the typeComparator before comparing by compare()
+	 * 
+	 * @param c
+	 */
 	public void setTypeComparator(Comparator<SymbolicType> c) {
 		typeComparator = c;
 	}

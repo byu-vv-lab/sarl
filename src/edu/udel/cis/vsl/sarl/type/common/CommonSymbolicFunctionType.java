@@ -26,7 +26,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 /**
  * @author jthakkar
  *
- *implementation of SymbolicFunctionType
+ *implementation of {@link SymbolicFunctionType}
  */
 public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 		SymbolicFunctionType {

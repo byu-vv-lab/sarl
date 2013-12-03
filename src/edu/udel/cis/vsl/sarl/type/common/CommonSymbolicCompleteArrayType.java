@@ -26,7 +26,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 /**
  * @author jthakkar
  *
- *implementation for SymbolicCompleteArrayType
+ *implementation for  {@link SymbolicCompleteArrayType}
  */
 public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 		implements SymbolicCompleteArrayType {
