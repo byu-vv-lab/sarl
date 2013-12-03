@@ -138,8 +138,8 @@ public class CnfFactoryTest {
 	}
 
 	/**
-	 * Testing for code in CnfFactoryNot()
-	 * 
+	 * Testing for code in CnfFactoryNot() makes sure that the function not actually returns
+	 * not(value)
 	 */
 	@Test
 	public void notTest() {
@@ -180,7 +180,8 @@ public class CnfFactoryTest {
 	}
 
 	/**
-	 * Testing for code in CnfFactoryforall()
+	 * Testing for code in CnfFactoryforall() checks to make sure the output of forall(values)
+	 * is right. Testing done for forall(trues), forall(falses), and forall(mix true and false)
 	 * 
 	 */
 	@Test
@@ -202,7 +203,8 @@ public class CnfFactoryTest {
 
 
 	/**
-	 * Testing for code in CnfFactoryNot()
+	 * Testing for code in CnfFactoryNot(). Uses longer groups of values to ensure that even
+	 * in long sets, not will still return not(value)
 	 * 
 	 */
 	@Test
@@ -276,17 +278,8 @@ public class CnfFactoryTest {
 		// System.out.println(bef.and(p, bef.not(p)));
 
 		
-		// TODO: The following fails because p&&!p does not simplify
-		// to false (yet).  This is not a bug because it is not
-		// wrong, it is just not the current form used.   The simplifier
-		// should get it to simplify to false.  All of these need to be broken
-		// down into separate tests and this can be uncommented if
-		// and when this feature is implemented.
-		//assertEquals(falseExpr, bef.and(p, bef.not(p)));
-
-		// System.out.println(bef.and(bef.or(p,r), bef.not(p)));
-		// System.out.println(bef.or(bef.not(p), (bef.or(p, bef.or(bef.not(q),
-		// bef.or(bef.not(p), r))))));
+		assertEquals(falseExpr, bef.and(bef.not(p), p));
+		assertEquals(falseExpr, bef.and(p, bef.not(p)));
 		assertEquals(bef.or(bef.not(p), r), (bef.or(bef.not(p), bef.and(p, r))));
 		assertEquals(testingtrue, bef.or(p, bef.not(p)));
 		assertEquals(testingtrue, bef.or(bef.not(p), p));
@@ -335,6 +328,7 @@ public class CnfFactoryTest {
 		assertEquals(testingtrue, bef.or(trueExpr, testingfalse));
 		assertEquals(testingtrue, bef.or(falseExpr, testingtrue));
 		assertEquals(testingfalse, bef.or(testingfalse, falseExpr));
+		//System.out.println(bef.and(p, bef.or(q, bef.not(q))));
 	}
 
 	/**
