@@ -23,11 +23,11 @@ public class CVC4TheoremProverFactoryTest {
 		SymbolicConstant symConstYInt = universe.symbolicConstant(strY,
 				universe.realType());
 
+		BooleanExpression context = universe.equals(symConstYInt,
+				universe.rational(0));
 		CVC4TheoremProverFactory cvc4tpf = new CVC4TheoremProverFactory(
 				universe);
 		assertNotNull(cvc4tpf);
-		// TODO: Don't commit this until it is working as it causes other
-		// things to crash
-		// cvc4tpf.newProver(context);
+		cvc4tpf.newProver(context);
 	}
 }
