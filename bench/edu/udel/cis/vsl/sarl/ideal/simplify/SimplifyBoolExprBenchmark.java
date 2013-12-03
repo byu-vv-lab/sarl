@@ -62,7 +62,7 @@ public class SimplifyBoolExprBenchmark {
 	
 	static Simplifier simp1ifier_xeq5;
 	
-	static BooleanExpression xeq5, trueExpr, falseExpr, assumption; //assumption is not initialized, as uses will vary greatly
+	static BooleanExpression xeq5, trueExpr, falseExpr, assumption, subBoolExpr; //assumption is not initialized, as uses will vary greatly
 	
 	static SymbolicExpression symbExpr_xpy; // x + y
 	
@@ -92,10 +92,10 @@ public class SimplifyBoolExprBenchmark {
 	rat0, rat1, rat2, rat3, rat4, rat5, rat6, rat20, rat25, rat200; // -1.0, -2.0, -3.0, -5.0, -25.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 25.0, 200.0
 	
 	static NumericExpression intNeg1, intNeg2, intNeg3, intNeg5, int0,
-	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
+	int1, int2, int3, int4, int5, int25; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xNE, yNE, xpy, xy, xx, x4th, threeX4th, xxy,
-	xyy, subPoly, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
+	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
@@ -155,6 +155,7 @@ public static void main(String[] args) {
 		int3 = preUniv.integer(3);
 		int4 = preUniv.integer(4);
 		int5 = preUniv.integer(5);
+		int25 = preUniv.integer(25);
 		symbFactory = system.expressionFactory().typeFactory();
 		realType = preUniv.realType();
 		integerType = preUniv.integerType();
@@ -219,8 +220,8 @@ public static void main(String[] args) {
 		num10000Int = numFact.integer("10000");
 		trueExpr = preUniv.bool(true);
 		falseExpr = preUniv.bool(false);
-		subPoly = xInt;
-		assumption = preUniv.equals(xInt, int5);
+		subBoolExpr = xeq5;
+		assumption = preUniv.equals(xInt, int25);
 		//out.println("assumption : " + assumption);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
 		//out.println(idealSimplifier);
@@ -228,32 +229,32 @@ public static void main(String[] args) {
 		
 		/**
 		 * The value of <i>size</i> determines how many iterations of increasing the 
-		 * polynomial degree are performed.
+		 * size of the boolean expression are performed.
 		 */
 		size = 100;
 		
 		/**
 		 * When <i>iterated</i> is set to <b>false</b>, the assumption is only applied to 
-		 * the largest polynomial formed, and the time for that transform is reported.
+		 * the largest boolean expression formed, and the time for that transform is reported.
 		 * <br></br>
 		 * When <i>iterated</i> is set to <b>true</b>, the assumption is applied to each
-		 * iterative degree polynomial and the time for each transform is reported.
+		 * iterative degree boolean expression and the time for each transform is reported.
 		 */
 		iterated = false;
 		
 		for(int i = 0; i < size; i++){
-			subPoly = preUniv.multiply(subPoly, preUniv.add(xInt, yInt));
+			subBoolExpr = preUniv.and(subBoolExpr,preUniv.equals(preUniv.add(preUniv.power(xInt, 2), yInt),int5));
 			if(iterated)
-				subCol.add((BooleanExpression) subPoly);
+				subCol.add((BooleanExpression) subBoolExpr);
 			n = i+1;
 		}
 		
 		if(!iterated){
 			start = System.currentTimeMillis();
-			idealSimplifier.apply(subPoly);
+			idealSimplifier.apply(subBoolExpr);
 			time = System.currentTimeMillis() - start;
 			out.println(n + "   time: " + time);
-			out.println(subPoly);
+			out.println(subBoolExpr);
 		}
 		else{
 			j = 0;
@@ -267,7 +268,7 @@ public static void main(String[] args) {
 				out.println(j + "  time: " + time);
 				//out.println();
 			}
-			out.println(subPoly);
+			out.println(subBoolExpr);
 		}
 	}
 }
