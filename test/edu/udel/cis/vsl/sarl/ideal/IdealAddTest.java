@@ -65,20 +65,58 @@ public class IdealAddTest {
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
-
-	private RationalNumber ratNegPointTwoFive; // -0.25 (-1/4)
-	private RationalNumber ratOnePointFive; // 1.5 (3/2)
-	private RationalNumber ratOnePointTwoFive; // 1.25 (5/4)
-	private Constant constOnePointFive; // real constant 3/2
-	private Constant constNegPointTwoFive; // real constant -1/4
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	private Constant intThree; // int constant 3
-	private Constant intTen; // int constant 10
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
+	/**
+	 * -0.25 (-1/4)
+	 */
+	private RationalNumber ratNegPointTwoFive;
+	/**
+	 * 1.5 (3/2)
+	 */
+	private RationalNumber ratOnePointFive;
+	/**
+	 * 1.25 (5/4)
+	 */
+	private RationalNumber ratOnePointTwoFive; 
+	/**
+	 * real constant 3/2
+	 */
+	private Constant constOnePointFive;
+	/**
+	 * real constant -1/4
+	 */
+	private Constant constNegPointTwoFive;
+	/**
+	 * int constant 0
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 * int constant 3
+	 */
+	private Constant intThree;
+	/**
+	 *  int constant 10
+	 */
+	private Constant intTen;
+	/**
+	 *  "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
 			
 	@Before
 	public void setUp() throws Exception {
