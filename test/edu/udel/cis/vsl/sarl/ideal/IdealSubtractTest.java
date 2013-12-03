@@ -74,20 +74,59 @@ public class IdealSubtractTest {
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
-
-	private RationalNumber ratZero; // rational 0
-	private Constant constZero; // real constant 0
-	private Constant intNegOne; // int constant -1
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	private Constant intThree; // int constant 3
-	private Constant intTen; // int constant 10
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression one; // real constant 1
-	private RationalNumber realOne; // real 1
+	
+	/**
+	 * rational 0
+	 */
+	private RationalNumber ratZero;
+	/**
+	 * real constant 0
+	 */
+	private Constant constZero;
+	/**
+	 * int constant -1
+	 */
+	private Constant intNegOne;
+	/**
+	 *  int constant 0
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 * int constant 3
+	 */
+	private Constant intThree;
+	/**
+	 * int constant 10
+	 */
+	private Constant intTen;
+	/**
+	 * "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
+	/**
+	 * real constant 1
+	 */
+	private NumericExpression one;
+	/**
+	 * real 1
+	 */
+	private RationalNumber realOne;
 	
 	@Before
 	public void setUp() throws Exception {
