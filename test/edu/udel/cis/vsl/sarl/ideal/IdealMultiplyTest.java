@@ -65,28 +65,91 @@ public class IdealMultiplyTest {
 	private ObjectFactory objectFactory;
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
-
-	private RationalNumber ratNegPointTwoFive; // -1/4
-	private RationalNumber ratOnePointFive; // 3/2
-	private Constant constOnePointFive; // real constant 3/2
-	private Constant constNegPointTwoFive; // real constant -1/4
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	private Constant intTen; // int constant 10
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression fifteen; //real constant 15
-	private NumericExpression five; // real constant 5
-	private NumericExpression zero; // real constant 0
-	private NumericExpression one; // real constant 1
-	private RationalNumber realZero; // real 0
-	private RationalNumber realOne; // real 1
-	private RationalNumber realFifteen; // real 15
-	private RationalNumber realFive; // real 5
-	private NumericExpression three; // real constant 3
-	private RationalNumber realThree; // real 3
+	
+	/**
+	 * rational -1/4
+	 */
+	private RationalNumber ratNegPointTwoFive; 
+	/**
+	 * rational 3/2
+	 */
+	private RationalNumber ratOnePointFive;
+	/**
+	 * real constant 3/2
+	 */
+	private Constant constOnePointFive;
+	/**
+	 * real constant -1/4
+	 */
+	private Constant constNegPointTwoFive;
+	/**
+	 * int constant 
+	 */
+	private Constant intZero;
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne; 
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 * int constant 10
+	 */
+	private Constant intTen;
+	/**
+	 * "X"
+	 */
+	StringObject Xobj; 
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
+	/**
+	 * real constant 15
+	 */
+	private NumericExpression fifteen;
+	/**
+	 * real constant 5
+	 */
+	private NumericExpression five; 
+	/**
+	 * real constant 0
+	 */
+	private NumericExpression zero; 
+	/**
+	 * real constant 1
+	 */
+	private NumericExpression one; 
+	/**
+	 * real 0
+	 */
+	private RationalNumber realZero;
+	/**
+	 * real 1
+	 */
+	private RationalNumber realOne;
+	/**
+	 * real 15
+	 */
+	private RationalNumber realFifteen; 
+	/**
+	 * real 5
+	 */
+	private RationalNumber realFive;
+	/**
+	 * real constant 3
+	 */
+	private NumericExpression three;
+	/**
+	 * real 3
+	 */
+	private RationalNumber realThree;
 	
 	@Before
 	public void setUp() throws Exception {
