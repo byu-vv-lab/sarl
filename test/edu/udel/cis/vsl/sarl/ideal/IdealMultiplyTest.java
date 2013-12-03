@@ -465,8 +465,7 @@ public class IdealMultiplyTest {
 	@Test
 	public void mulConstantToPrimitive() {
 		Polynomial poly1 = (Polynomial) x;
-		
-		NumericExpression p1 = multiply(intTen, poly1);
+		NumericExpression p1 = idealFactory.multiply(intTen, x);
 		
 		Polynomial b1 = multiply(poly1, intTen);
 		
