@@ -37,7 +37,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * The class IdealRationalTest consists of methods which returns a rational expression which is the
+ * The class IdealRationalAddTest consists of methods which returns a rational expression which is the
  * result of adding a rational number to each and every one of the following expressions
  * 
  * This class tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 

@@ -39,7 +39,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * The class IdealDivideTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * The class IdealRationalDivideTest consists of methods which returns a rational expression which is the
+ * result of dividing a rational number to each and every one of the following expressions
+ * 
+ * This class tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using divisions among various combinations such as:
  * 
  * <ul>
@@ -49,6 +52,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>RationalExpression / Primitive</li>
  * <li>RationalExpression / PrimitivePower</li>
  * </ul>
+ * 
+ * Example:
+ * 				RationalExpression: x/y
+ * 				Monomial: 3x^2 * y
+ * 
+ * 				Now dividing the rational expression with the given monomial gives a rational expression as the result
+ * 								(x*y^2)
  *
  */
 public class IdealRationalDivideTest {
