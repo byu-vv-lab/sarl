@@ -413,7 +413,6 @@ public class IdealDivideTest {
 	@Test
 	public void divideMonomialToPrimitive() {
 		Polynomial poly1 = (Polynomial) x;
-		
 		Polynomial p01 = multiply(intTen, poly1);
 		
 		Polynomial b1 = divide(p01, poly1);
@@ -440,7 +439,6 @@ public class IdealDivideTest {
 	@Test
 	public void dividePrimitivePowerToItself() {
 		Polynomial poly1 = (Polynomial) x;
-		
 		Polynomial p01 = multiply(poly1, poly1);
 		
 		Polynomial b1 = divide(p01, p01);
