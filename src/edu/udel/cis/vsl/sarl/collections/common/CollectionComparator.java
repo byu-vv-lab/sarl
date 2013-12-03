@@ -38,7 +38,7 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 	}
 
 	/**
-	 * Sets the comparator for the CollectionComparator
+	 * Sets the comparator for the collection.
 	 * 
 	 * @param s1
 	 *            the comparator to be set

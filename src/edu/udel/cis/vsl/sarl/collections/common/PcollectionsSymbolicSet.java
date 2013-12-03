@@ -167,6 +167,13 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 		return null;
 	}
 
+	/**
+	 * Takes in an anonymous class that contains an apply method that will transform a SymbolicObject into 
+	 * a different SymbolicObject. The Collections apply method will iterate over all elements in it and call
+	 * the passed in classes apply method on the SymbolicObject
+	 * @param Transform<T, U>
+	 * @return Returns a new PcollectionsSymbolicSet with all of the original collections elements transformed.
+	 */
 	public <U extends SymbolicExpression> SymbolicSet<U> apply(
 			Transform<T, U> transform) {
 		int count = 0;

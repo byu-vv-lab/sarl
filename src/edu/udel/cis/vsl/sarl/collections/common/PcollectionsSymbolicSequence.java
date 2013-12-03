@@ -196,6 +196,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 		}
 	}
 
+	
 	@Override
 	public <U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform) {

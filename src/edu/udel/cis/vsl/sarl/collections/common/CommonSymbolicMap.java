@@ -87,6 +87,12 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		return result;
 	}
 
+	/**
+	 * Place brackets around the string buffer.
+	 * 
+	 * @param buffer
+	 *            a string buffer
+	 */
 	public StringBuffer toStringBuffer() {
 		StringBuffer buffer = new StringBuffer("{");
 		boolean first = true;

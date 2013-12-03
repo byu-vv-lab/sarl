@@ -24,6 +24,9 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 public interface SymbolicSequence<T extends SymbolicExpression> extends
 		SymbolicCollection<T> {
 
+	/**
+	 * The number of elements the Sequence contains.
+	 */
 	int size();
 
 	/**
@@ -95,6 +98,13 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 */
 	SymbolicSequence<T> subSequence(int start, int end);
 
+	/**
+	 * Takes in an anonymous class that contains an apply method that will transform a SymbolicObject into 
+	 * a different SymbolicObject. The Collections apply method will iterate over all elements in it and call
+	 * the passed in classes apply method on the SymbolicObject
+	 * @param Transform<T, U>
+	 * @return Returns a new Sequence with all of the original collections elements transformed.
+	 */
 	<U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform);
 

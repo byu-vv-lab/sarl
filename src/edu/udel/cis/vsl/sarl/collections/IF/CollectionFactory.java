@@ -35,12 +35,33 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
  */
 public interface CollectionFactory {
 
+	/**
+	 * Simply returns the comparator that was instantiated to the collection
+	 * @return
+	 *       The comparator for the collection
+	 */
 	Comparator<SymbolicCollection<? extends SymbolicExpression>> comparator();
 
+	/**
+	 * Sets the comparator for the collection.
+	 * 
+	 * @param s1
+	 *            the comparator to be set
+	 */
 	void setElementComparator(Comparator<SymbolicExpression> c);
 
+	/**
+	 * Instantiates initial properties for the collection.
+	 */
 	void init();
 
+	/**
+	 * Takes in a Java collection and creates a new Basic Collection containing the elements contained
+	 * in the in the Java Collection passed in.
+	 * @param javaCollection
+	 * @return
+	 * 		A new Basic Collection.
+	 */
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection);
 

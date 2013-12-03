@@ -34,7 +34,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private ObjectFactory objectFactory;
 
-	private SymbolicSet<?> emptyHashSet, emptySortedSet;
+	private SymbolicSet<?> emptyHashSet;//, emptySortedSet;
 
 	private SymbolicMap<?, ?> emptyHashMap, emptySortedMap;
 
@@ -88,7 +88,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 		return (SymbolicSet<T>) emptyHashSet;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet() {
 		throw new UnsupportedOperationException("not yet implemented");
