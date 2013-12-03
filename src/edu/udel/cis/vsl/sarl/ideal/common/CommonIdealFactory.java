@@ -1441,6 +1441,13 @@ public class CommonIdealFactory implements IdealFactory {
 		return isPositive((RationalExpression) difference);
 	}
 
+	/**
+	 * returns true if arg0 is less than arg1. Both the arguments must be of integer data type.
+	 * 
+	 * @param arg0 - a NumericExpression of integer type
+	 * @param arg1 - a NumericExpression of integer type
+	 * @return - a true value if arg0 > arg1, else returns false.
+	 */
 	public BooleanExpression integerLessThan(NumericExpression arg0, 
 			NumericExpression arg1) {
 		assert arg0.type().isInteger();
