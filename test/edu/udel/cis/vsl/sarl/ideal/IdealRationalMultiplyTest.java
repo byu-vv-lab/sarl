@@ -37,7 +37,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * The class IdealMultiplyTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * The class IdealRationalMultiplyTest consists of methods which returns a rational expression which is the
+ * result of multiplying a rational number to each and every one of the following expressions
+ * 
+ * This class tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using multiplications among various combinations such as:
  * 
  * <ul>
@@ -47,6 +50,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>RationalExpression * Primitive</li>
  * <li>RationalExpression * PrimitivePower</li>
  * </ul>
+ * 
+ * Example:
+ * 				RationalExpression: x/y
+ * 				Polynomial: x^2 * y + x^2
+ * 
+ * 				Now multiplying the given rational expression with the given polynomial gives the result as a rational expression
+ * 						x^3 + (x^3/y)
  *
  */
 public class IdealRationalMultiplyTest {
