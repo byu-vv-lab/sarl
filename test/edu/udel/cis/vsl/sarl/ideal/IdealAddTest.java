@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
@@ -538,7 +539,7 @@ public class IdealAddTest {
 	public void addPrimitiveToConstant() {
 		Polynomial poly1 = (Polynomial) x;
 		
-		Polynomial p1 = add(poly1, intOne);
+		NumericExpression p1 = idealFactory.add(x, intOne);
 		
 		Polynomial b1 = add(poly1, intOne);
 		
