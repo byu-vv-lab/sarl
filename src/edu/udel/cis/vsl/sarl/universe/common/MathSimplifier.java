@@ -56,6 +56,15 @@ public class MathSimplifier extends CommonSimplifier {
 		return null;
 	}
 
+	/**
+	 * This method is taking in an expression and attempting to return a simplified
+	 * form of the expression. First, we attempt to run simplifyGenericExpression
+	 * on the expression that is passed in, to try to break it down right away. Then, we're checking the pattern of the
+	 * operators to see if they match a specific pattern. For example, if the POWER
+	 * operator is used for APPLY with cosine and some angle theta, and the exponent
+	 * for the POWER operator is an integer, we rewrite the expression in terms of sine, utilizing
+	 * trigonometric identities. 
+	 */
 	@Override
 	protected SymbolicExpression simplifyExpression(
 			SymbolicExpression expression) {
