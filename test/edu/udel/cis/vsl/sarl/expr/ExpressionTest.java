@@ -252,6 +252,9 @@ public class ExpressionTest {
 	/**
 	 * Tests for the CommonExpressionFactory Class
 	 * Tests for concreteReferenceExpression(SymbolicOperator operator, SymbolicObject arg0)
+	 * 
+	 * Makes sure the correct operators and types are returned once the Factory is complete
+	 * also make sure the String values are what they are supposed to be
 	 */
 	public void commonExpressionFactoryConcrete() {
 		SymbolicType referenceType1;
@@ -277,6 +280,8 @@ public class ExpressionTest {
 	/**
 	 * Tests for the CommonExpressionFactory Class
 	 * Tests for expression(SymbolicOperator operator,SymbolicType type, SymbolicObject[] arguments)
+	 * 
+	 * Makes sure the expression factory return the correct types, operators and String value
 	 */
 	public void commonExpressionFactoryExpressionWithArrays() {
 		SymbolicType referenceType;
@@ -317,6 +322,8 @@ public class ExpressionTest {
 	/**
 	 * Tests for the CommonExpressionFactory Class
 	 * expression(SymbolicOperator operator,SymbolicType type, Collection<SymbolicObject> args) 
+	 * 
+	 * makes sure the correct operaters, types, and String values are returned upon creation
 	 */
 	public void commonExpressionFactoryExpressionWithCollections() {
 		SymbolicType referenceType;
