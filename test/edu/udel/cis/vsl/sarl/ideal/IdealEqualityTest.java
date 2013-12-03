@@ -71,13 +71,34 @@ public class IdealEqualityTest {
 	private IdealFactory idealFactory;
 	private BooleanExpressionFactory booleanFactory;
 
-	private Constant intOne; // int constant 1
-	private Constant intTwo; // int constant 2
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
-	private NumericExpression zero; // real constant 0
-	private RationalNumber realZero; // real 0
+	/**
+	 *  int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * int constant 2
+	 */
+	private Constant intTwo;
+	/**
+	 *  "X"
+	 */
+	StringObject Xobj;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x; 
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y; 
+	/**
+	 * real constant 0
+	 */
+	private NumericExpression zero; 
+	/**
+	 * real 0
+	 */
+	private RationalNumber realZero;
 
 	@Before
 	public void setUp() throws Exception {
