@@ -20,6 +20,11 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * 
  * we will be simulating a symbolic expression with many embedded sub-expressions
  * by creating n-dimensional arrays where each sub-array is a sub-expression.
+ * 
+ * This benchmark class also serves the purpose of comparing the results to the other
+ * referencedType benchmarks, ReferencedTypeBenchmarkTuple and ReferencedTypeBenchmarkUnion.
+ * The result of this study will shine light on certain inefficiencies that may be a
+ * result of the different SymbolicTypes.
  *
  */
 
