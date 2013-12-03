@@ -24,6 +24,8 @@ public class ExponentiatorTest {
 	//private static BigInteger bigTwo = new BigInteger("2");
 	//private static BigInteger bigThree = new BigInteger("3");
 	private static IntegerNumber inOne = factory.integer(1);
+	private static IntegerNumber inZero = factory.integer(0);
+	private static IntegerNumber inNegativeOne = factory.integer(-1);
 	private static IntegerNumber inTwo = factory.integer(2);
 	//private static IntegerNumber inThree = factory.integer(3);
 	//private static IntegerNumber inEight = factory.integer(8);
@@ -45,15 +47,25 @@ public class ExponentiatorTest {
 	public void setUp() throws Exception {
 	}
 	
-	
-	//@Ignore @Test
-	/* TODO This test fails because the variable myXpo is never
-	 * initialized before referenced.
-	 * */
 	@Test
 	public void OneExpTest(){
 		inResult = myXpo.exp( inTwo , inOne );
 		assertEquals( inResult , inTwo );
+	}
+	
+	/*
+	//need to catch illegalArgumentException
+	@Test
+	public void NegativeExpTest(){
+		inResult = myXpo.exp( inTwo , inNegativeOne );
+		assertEquals( inResult , inTwo );
+	}
+	*/	
+	
+	@Test
+	public void ZeroExpTest(){
+		inResult = myXpo.exp( inTwo , inZero );
+		assertEquals( inResult , inOne );
 	}
 	
 }
