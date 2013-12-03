@@ -278,11 +278,63 @@ public class CnfFactoryTest {
 		assertEquals(falseExpr, bef.and(bef.not(p), p));
 		assertEquals(falseExpr, bef.and(p, bef.not(p)));
 		assertEquals(bef.or(bef.not(p), r), (bef.or(bef.not(p), bef.and(p, r))));
+		
+		assertEquals(bef.and(p,r), bef.or(bef.and(p, r), bef.and(r, p)));
+		assertEquals(bef.or(bef.or(p,r),p), bef.or(r, p));
+		assertEquals(bef.or(bef.or(p,r),bef.or(q,r)), bef.or(r, bef.or(q,p)));
 		assertEquals(testingtrue, bef.or(p, bef.not(p)));
 		assertEquals(testingtrue, bef.or(bef.not(p), p));
 		assertEquals(testingfalse, bef.not(bef.or(bef.not(p), p)));
 		assertEquals(q, bef.or(qandtrue, pandfalse));
 	}
+	
+
+	/**
+	 * Testing for code in CnfFactoryOr() with simplification on.
+	 * 
+	 */
+	@Test
+	public void orSimplifyTest() {
+		CnfFactory bef = (CnfFactory) Expressions.newCnfFactory(stf, of, cf);
+		bef.setBooleanExpressionSimplification(true);
+		StringObject pobject = sUniverse.stringObject("p");
+		StringObject qobject = sUniverse.stringObject("q");
+		StringObject robject = sUniverse.stringObject("r");
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(
+				pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(
+				qobject, booleanType);
+		BooleanExpression r = (BooleanExpression) sUniverse.symbolicConstant(
+				robject, booleanType);
+		BooleanExpression falseExpr = bef.falseExpr();
+		BooleanExpression trueExpr = bef.trueExpr();
+		BooleanExpression qandtrue = bef.and(q, trueExpr);
+		BooleanExpression pandfalse = bef.and(p, falseExpr);
+		BooleanExpression qortrue = bef.or(q, bef.not(p));
+		BooleanExpression porfalse = bef.or(p, r);
+		BooleanExpression testingtrue = sUniverse.bool(true);
+		BooleanExpression testingfalse = sUniverse.bool(false);
+
+		// testing for various combinations of true and false and and or results
+		if(bef.getBooleanExpressionSimplification()){
+		assertEquals(trueExpr, (bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
+		assertEquals(trueExpr, bef.or(qortrue, porfalse));
+		}
+
+		
+		assertEquals(falseExpr, bef.and(bef.not(p), p));
+		assertEquals(falseExpr, bef.and(p, bef.not(p)));
+		assertEquals(bef.or(bef.not(p), r), (bef.or(bef.not(p), bef.and(p, r))));
+		
+		assertEquals(bef.and(p,r), bef.or(bef.and(p, r), bef.and(r, p)));
+		assertEquals(bef.or(bef.or(p,r),p), bef.or(r, p));
+		assertEquals(bef.or(bef.or(p,r),bef.or(q,r)), bef.or(r, bef.or(q,p)));
+		assertEquals(testingtrue, bef.or(p, bef.not(p)));
+		assertEquals(testingtrue, bef.or(bef.not(p), p));
+		assertEquals(testingfalse, bef.not(bef.or(bef.not(p), p)));
+		assertEquals(q, bef.or(qandtrue, pandfalse));
+	}
+	
 	
 	/**
 	 * Tests CnfFactory and(bool boolExpr1, bool boolExpr2) method.
