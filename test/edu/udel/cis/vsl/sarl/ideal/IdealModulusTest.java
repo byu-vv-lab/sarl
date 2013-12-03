@@ -55,14 +55,38 @@ public class IdealModulusTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 
-	private Constant constOnePointFive; // real constant 1.5 (3/2)
-	private Constant constOne; // real constant 1
-	private Constant intZero; // int constant 0
-	private Constant intOne; // int constant 1
-	private RationalNumber ratOnePointFive; // 1.5 (3/2)
-	private RationalNumber ratOne; // 1
-	StringObject Xobj; // "X"
-	NumericSymbolicConstant x; // int symbolic constant "X"
+	/**
+	 * real constant 1.5 (3/2)
+	 */
+	private Constant constOnePointFive;
+	/**
+	 * real constant 1
+	 */
+	private Constant constOne;
+	/**
+	 * int constant 0
+	 */
+	private Constant intZero; 
+	/**
+	 * int constant 1
+	 */
+	private Constant intOne;
+	/**
+	 * rational 1.5 (3/2)
+	 */
+	private RationalNumber ratOnePointFive;
+	/**
+	 * rational 1
+	 */
+	private RationalNumber ratOne;
+	/**
+	 * "X"
+	 */
+	StringObject Xobj; 
+	/**
+	 *  int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
 	
 	@Before
 	public void setUp() throws Exception {
