@@ -37,7 +37,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * The class IdealSubtractTest tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
+ * The class IdealRationalSubtractTest consists of methods which returns a rational expression which is the
+ * result of subtracting a rational number to each and every one of the following expressions
+ * 
+ * This class tests methods found in the edu.udel.cis.vsl.sarl.ideal.common package 
  * using subtractions among various combinations such as:
  * 
  * <ul>
@@ -47,6 +50,13 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>RationalExpression - Primitive</li>
  * <li>RationalExpression - PrimitivePower</li>
  * </ul>
+ * 
+ * Example:
+ * 				RationalExpression: x/y
+ * 				PrimitivePower: x^2
+ * 
+ * 				Subtracting both will give us a rational expression which looks like:
+ * 						(x - x^2*y)/y
  * 
  */
 public class IdealRationalSubtractTest {
@@ -198,7 +208,7 @@ public class IdealRationalSubtractTest {
 	public void subRationalToPrimitivePower() {
 		Polynomial x2 = (Polynomial) idealFactory.multiply(x, x); //x^2
 		NumericExpression result = idealFactory.divide(idealFactory.
-				subtract(x, idealFactory.multiply(x2, y)), y); //(x^2*y + x)/y  
+				subtract(x, idealFactory.multiply(x2, y)), y); //(x - x^2*y)/y  
 		
 		RationalExpression subPrimitivePower = subRational(r1, x2); //(x - x^2*y)/y  
 		
