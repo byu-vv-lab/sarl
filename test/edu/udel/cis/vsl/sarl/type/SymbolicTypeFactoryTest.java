@@ -111,7 +111,7 @@ public class SymbolicTypeFactoryTest {
 	/**
 	 * CompleteArrayTypes to be used in the factory testing
 	 */
-	SymbolicCompleteArrayType completeArrayType1, completeArrayType2;
+	SymbolicCompleteArrayType completeArrayType1, completeArrayType2, completeArrayType3;
 	
 	/**
 	 * Real types to be used in creating the SequenceType
@@ -131,12 +131,20 @@ public class SymbolicTypeFactoryTest {
 	/**
 	 * creating unionType to be used for tests
 	 */
-	SymbolicUnionType unionType;
+	SymbolicUnionType unionType, unionType2, unionType3;
 	
 	/**
 	 typeSequence is used to assign the array of CommonSymbolicType to the variables that is unionType. 
 	 */
-	SymbolicTypeSequence typeSequence;
+	SymbolicTypeSequence typeSequence, typeSequence2;
+	
+	CommonSymbolicFunctionType functionType;
+	
+	SymbolicFunctionType functionType2, functionType3;
+	
+	SymbolicTupleType tupleType, tupleType2, tupleType3;
+	
+	StringObject tupleStringObject, tupleStringObject3;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -169,6 +177,7 @@ public class SymbolicTypeFactoryTest {
 		numericPrimitive = new NumericPrimitive(SymbolicOperator.CONCRETE, idealIntKind, symbolicObject);
 		completeArrayType1 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
 		completeArrayType2 = typeFactory.arrayType(boundedIntKind, numericPrimitive);
+		completeArrayType3 = typeFactory.arrayType(idealIntKind, numericPrimitive);
 		typesList = new ArrayList<SymbolicType>();
 		typesArray = new SymbolicType[5];
 		
@@ -186,7 +195,21 @@ public class SymbolicTypeFactoryTest {
 		typesArray[4] = completeArrayType2;
 		
 		typeSequence = new CommonSymbolicTypeSequence(typesArray);
+		typeSequence2 = new CommonSymbolicTypeSequence(typesList);
+		tupleStringObject = objectFactory.stringObject("myTuple");
+		tupleStringObject3 = objectFactory.stringObject("myTuple3");
+		tupleType = typeFactory.tupleType(tupleStringObject, typeFactory.sequence(typesArray));
+		tupleType2 = typeFactory.tupleType(tupleStringObject, typeFactory.sequence(typesArray));
+		tupleType3 = typeFactory.tupleType(tupleStringObject3, typeFactory.sequence(typesList));
 		unionType = typeFactory.unionType(objectFactory.stringObject("myUnion"), typeSequence);
+		unionType2 = typeFactory.unionType(objectFactory.stringObject("myUnion2"), typeSequence);
+		unionType3 = typeFactory.unionType(objectFactory.stringObject("myUnion3"), typeSequence2);
+		functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeSequence, floatRealKind);
+		functionType2 = typeFactory.functionType(typeSequence, boundedIntKind);
+		functionType3 = typeFactory.functionType(typeSequence2, boundedIntKind);
+
+		
+
 	}
 
 	@After
@@ -318,6 +341,19 @@ public class SymbolicTypeFactoryTest {
 		typeFactory.typeComparator().setExpressionComparator(expressionComparator);
 		assertNotNull(typeFactory.typeComparator().expressionComparator());		
 		assertEquals(typeFactory.typeComparator().compare(completeArrayType1, completeArrayType2), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(completeArrayType1, completeArrayType3), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(functionType, functionType2), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(functionType, functionType3), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(unionType, unionType2), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(unionType, unionType3), 0);
+		//testing two different types
+		assertNotEquals(typeFactory.typeComparator().compare(completeArrayType1, functionType), 0);
+		//testing two identical boolean types
+		assertEquals(typeFactory.typeComparator().compare(typeFactory.booleanType(), typeFactory.booleanType()), 0);
+		//testing two identical TupleTypes
+		assertEquals(typeFactory.typeComparator().compare(tupleType, tupleType2), 0);
+		assertNotEquals(typeFactory.typeComparator().compare(tupleType, tupleType3), 0);
+
 	}
 	
 	/**
@@ -378,11 +414,7 @@ public class SymbolicTypeFactoryTest {
 	 */
 	@Test
 	public void testPureType() {
-		StringObject stringObject = objectFactory.stringObject("myTuple");
 		CommonSymbolicCompleteArrayType cArray = (CommonSymbolicCompleteArrayType) typeFactory.arrayType(boundedIntKind, numericPrimitive);
-		CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeSequence, floatRealKind);
-		SymbolicFunctionType functionType2 = typeFactory.functionType(typeSequence, floatRealKind);
-		SymbolicTupleType tupleType = typeFactory.tupleType(stringObject, typeFactory.sequence(typesArray));
 				
 		assertEquals(typeFactory.pureType(boundedIntKind), boundedIntKind.getPureType());
 		assertEquals(typeFactory.pureType(floatRealKind), floatRealKind.getPureType());
