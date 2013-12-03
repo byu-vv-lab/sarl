@@ -643,9 +643,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			throws Exception {
 		Expr variable = translateSymbolicConstant((SymbolicConstant)
 				(expr.argument(0)), true);
-		vectorExpr varList = new vectorExpr();
-		varList.add(variable);
-		variable = em.mkExpr(Kind.BOUND_VAR_LIST, varList);
+		variable = em.mkExpr(Kind.BOUND_VAR_LIST, variable);
 		Expr predicate = translate((SymbolicExpression) expr.argument(1));
 		SymbolicOperator kind = expr.operator();
 
@@ -1286,7 +1284,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Result result;
 		
-		smt.push();
 		result = queryCVC4(symbolicPredicate);
 		smt.pop();
 		return translateResult(result);
