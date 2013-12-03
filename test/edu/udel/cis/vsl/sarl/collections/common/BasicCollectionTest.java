@@ -36,7 +36,7 @@ import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 
 /**
- * @author jthakkar
+ * @author rwjones
  *
  * declaring all the required variables
  */
@@ -94,9 +94,6 @@ public class BasicCollectionTest {
 		expr2 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(2)));
 		expr100 = exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, objectFactory.numberObject(numFact.integer(100)));
 		//SymbolicExpression five = new ExpressionStub("5");
-		SymbolicExpression twenty = createExpression(20);
-		
-		assertTrue(objectFactory.canonic(twenty).isCanonic());
 		
 		// this block is used to crate a list
 		collectionList1 = new LinkedList<SymbolicExpression>();
@@ -175,7 +172,7 @@ public class BasicCollectionTest {
 	}
 
 	/**
-	 * this test goes through each element to check whether they are cononic or not, if they are not they are made canonic. 
+	 * this test goes through each element to check whether they are canonic or not, if they are not they are made canonic. 
 	 */
 	@Test(expected=SARLInternalException.class)
 	public void testCanonizeChildren(){
