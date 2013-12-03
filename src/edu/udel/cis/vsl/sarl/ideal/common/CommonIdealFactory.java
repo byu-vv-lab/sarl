@@ -1120,6 +1120,15 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
+	 * Returns a symbolic expression which is the result of dividing arg0 with arg1. The two given expressions must have 
+	 * the same (numeric) type: either both integers, or both real.
+	 * 
+	 * @param arg0 - a symbolic expression of a numeric type
+	 * @param arg1 - a symbolic expression of the same numeric type
+	 * 
+	 * @return
+	 * 				arg0 / arg1
+	 * 
 	 * Note: this must handle both integer and real division.
 	 */
 	@Override
