@@ -48,8 +48,6 @@ public class ModelTest {
 
 		private static SymbolicType integerType = universe.integerType();
 
-		private static NumericExpression three = universe.integer(3);
-
 		private static NumericExpression five = universe.integer(5);
 
 		private static NumericExpression ten = universe.integer(10);
