@@ -65,10 +65,22 @@ public class IdealRationalAddTest {
 	private SymbolicTypeFactory typeFactory;
 	private IdealFactory idealFactory;
 
-	private RationalNumber realThree; // real 3
-	RationalExpression r1; // Rational Expression x/y
-	NumericSymbolicConstant x; // int symbolic constant "X"
-	NumericSymbolicConstant y; // int symbolic constant "Y"
+	/**
+	 * real 3
+	 */
+	private RationalNumber realThree;
+	/**
+	 * Rational Expression x/y
+	 */
+	RationalExpression r1;
+	/**
+	 * int symbolic constant "X"
+	 */
+	NumericSymbolicConstant x;
+	/**
+	 * int symbolic constant "Y"
+	 */
+	NumericSymbolicConstant y;
 		
 	@Before
 	public void setUp() throws Exception {
