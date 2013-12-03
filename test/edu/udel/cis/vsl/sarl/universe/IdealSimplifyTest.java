@@ -299,5 +299,10 @@ public class IdealSimplifyTest {
 				universe.multiply(universe.integer(2), u), universe.integer(2));
 
 		assertEquals(universe.zeroInt(), e);
+	} 
+	
+	@Test 
+	public void simplyifyTrig() { 
+		
 	}
 }
