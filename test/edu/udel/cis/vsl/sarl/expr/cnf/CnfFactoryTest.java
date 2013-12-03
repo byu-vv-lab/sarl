@@ -28,6 +28,7 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.*;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -231,8 +232,6 @@ public class CnfFactoryTest {
 		BooleanExpression FORALL = bef.booleanExpression(
 				SymbolicOperator.FORALL, existschk);
 		CnfExpression cnf3 = (CnfExpression) FORALL;
-		// BooleanExpression FORALLTEST =
-		// bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
 
 		assertEquals(bef.or(bef.not(p), bef.not(q)), bef.not(andtrue));
 		assertEquals(bef.and(bef.not(p), bef.not(q)), bef.not(ortrue));
@@ -275,7 +274,6 @@ public class CnfFactoryTest {
 		assertEquals(trueExpr, (bef.or(p, bef.or(q, bef.or(bef.not(p), r)))));
 		assertEquals(trueExpr, bef.or(qortrue, porfalse));
 		}
-		// System.out.println(bef.and(p, bef.not(p)));
 
 		
 		assertEquals(falseExpr, bef.and(bef.not(p), p));
