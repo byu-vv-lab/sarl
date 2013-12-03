@@ -83,7 +83,7 @@ public class SimplifySymContBenchmark {
 	
 	static SymbolicExpression symbExpr_xyyInt; // (int)x * (int)y^2
 	
-	static NumericSymbolicConstant A, B, C, x, xsqd, y, z, xInt, yInt, zInt, cInt, divInt;
+	static NumericSymbolicConstant A, B, C, x, xsqd, y, z, xInt, yInt, zInt, cInt, divInt,subSymConst;
 	
 	static SymbolicType realType, integerType;
 		
@@ -94,7 +94,7 @@ public class SimplifySymContBenchmark {
 	int1, int2, int3, int4, int5; // -1, -2, -3, -5, 1, 2, 3, 4, 5
 	
 	static NumericExpression xNE, yNE, xpy, xy, xx, x4th, threeX4th, xxy,
-	xyy, subPoly, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
+	xyy, onePxPxSqdP3x4th, mixedXYTermPoly, bigMixedXYTermPoly, xSqrLess1, xSqrP1;
 	
 	static NumericExpression xpyInt, xyInt, xxInt, x4thInt, 
 	threeX4thInt, xxyInt, xyyInt;
@@ -197,7 +197,7 @@ public class SimplifySymContBenchmark {
 		trueExpr = preUniv.bool(true);
 		falseExpr = preUniv.bool(false);
 		
-		subPoly = xInt;
+		subSymConst = xInt;
 		assumption = preUniv.equals(preUniv.power(xInt, 6), int2);
 		//out.println("assumption : " + assumption);
 		idealSimplifier = idealSimplifierFactory.newSimplifier(assumption);
@@ -220,18 +220,18 @@ public class SimplifySymContBenchmark {
 		iterated = false;
 		
 		for(int i = 0; i < size; i++){
-			subPoly = preUniv.multiply(subPoly, preUniv.add(xInt, int5));
+			subSymConst = (NumericSymbolicConstant) preUniv.multiply(subSymConst, preUniv.add(xInt, int5));
 			if(iterated)
-				subCol.add((NumericSymbolicConstant) subPoly);
+				subCol.add((NumericSymbolicConstant) subSymConst);
 			n = i+1;
 		}
 		
 		if(!iterated){
 			start = System.currentTimeMillis();
-			idealSimplifier.apply(subPoly);
+			idealSimplifier.apply(subSymConst);
 			time = System.currentTimeMillis() - start;
 			out.println(n + "   time: " + time);
-			out.println(subPoly);
+			out.println(subSymConst);
 		}
 		else{
 			j = 0;
@@ -245,7 +245,7 @@ public class SimplifySymContBenchmark {
 				out.println(j + "  time: " + time);
 				//out.println();
 			}
-			out.println(subPoly);
+			out.println(subSymConst);
 		}
 
 	}
