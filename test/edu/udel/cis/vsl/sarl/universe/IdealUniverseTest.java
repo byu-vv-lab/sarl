@@ -38,7 +38,8 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
-
+import edu.udel.cis.vsl.sarl.universe.common.MathUniverse; 
+import edu.udel.cis.vsl.sarl.universe.common.MathSimplifier;
 public class IdealUniverseTest {
 
 	private static PrintStream out = System.out;
@@ -51,7 +52,9 @@ public class IdealUniverseTest {
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
-
+	private MathUniverse mathUniverse; 
+	private SymbolicExpression symbol;  
+	private MathSimplifier trigIdentity;
 	@Before
 	public void setUp() throws Exception {
 		universe = Universes.newIdealUniverse();
@@ -166,9 +169,24 @@ public class IdealUniverseTest {
 		map.put(tuple1, tuple2);
 		out.println("subExpression:     expr = " + expr);
 		out.println("subExpression:     map  = " + map);
-		out.println("subExpression: expected = " + expected);
+		out.println("subExpression: expected = " + expected); 
 		actual = universe.substitute(expr, map);
 		assertEquals(expected, actual);
+	} 
+	@Test
+	public void newMathTest() {   
+		NumericExpression one = mathUniverse.oneReal();
+		SymbolicExpression cos = mathUniverse.cosFunction; 
+		SymbolicExpression cos2 = mathUniverse.multiply((NumericExpression) cos, (NumericExpression) cos);  
+		SymbolicExpression sin = mathUniverse.sinFunction; 
+		SymbolicExpression sin2 = mathUniverse.multiply((NumericExpression) sin, (NumericExpression) sin);   
+		SymbolicExpression expected = mathUniverse.subtract(one, (NumericExpression) sin2);
+		
+		out.println("hello");
+		out.println(expected);
+		SymbolicExpression answer = trigIdentity.simplifyExpression(cos2); 
+		assertEquals(expected,answer);
+		
 	}
 
 }
