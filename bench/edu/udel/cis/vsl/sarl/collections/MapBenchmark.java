@@ -16,19 +16,19 @@ public class MapBenchmark {
 	
 	public static void main(String args[])
 	{
-		//int[] size = new int[1];
-		//size[0] = 1000;
+		int[] size = new int[1];
+		size[0] = 10;
 		//size[1] = 200;
 		//size[2] = 300;
 		//size[3] = 400;
 		/*size[4] = 500;
-		size[5] = 600;*/
-		/*size[6] = 100000;
+		/*size[5] = 600;
+		size[6] = 100000;
 		size[7] = 250000;
 		size[8] = 500000;
 		size[9] = 750000;
 		size[10] = 1000000;*/
-		/*for(int s = 0; s < size.length; s++)
+		for(int s = 0; s < size.length; s++)
 		{	
 			for(int t = 0; t < 5; t++)
 			{
@@ -121,7 +121,7 @@ public class MapBenchmark {
 				pMap = null;
 			}
 			
-		}*/
+		}
 	
 	}
 	
