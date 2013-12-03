@@ -1448,7 +1448,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @param arg1 - a NumericExpression of integer type
 	 * @return - a true value if arg0 > arg1, else returns false.
 	 */
-	/*public BooleanExpression integerLessThan(NumericExpression arg0, 
+	public BooleanExpression integerLessThan(NumericExpression arg0, 
 			NumericExpression arg1) {
 		assert arg0.type().isInteger();
 		assert arg1.type().isInteger();
@@ -1456,7 +1456,7 @@ public class CommonIdealFactory implements IdealFactory {
 			return lessThanEquals(add(arg0, intConstant(1)), arg1);
 		else
 			return lessThanEquals(add(arg1, intConstant(1)), arg0);
-	}*/
+	}
 	@Override
 	public BooleanExpression lessThanEquals(NumericExpression arg0,
 			NumericExpression arg1) {
