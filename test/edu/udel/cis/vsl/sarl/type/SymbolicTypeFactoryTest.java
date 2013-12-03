@@ -144,7 +144,8 @@ public class SymbolicTypeFactoryTest {
 	
 	SymbolicTupleType tupleType, tupleType2, tupleType3;
 	
-	StringObject tupleStringObject, tupleStringObject3;
+	StringObject tupleStringObject, tupleStringObject3, unionStringObject, 
+	unionStringObject2, unionStringObject3;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -198,18 +199,18 @@ public class SymbolicTypeFactoryTest {
 		typeSequence2 = new CommonSymbolicTypeSequence(typesList);
 		tupleStringObject = objectFactory.stringObject("myTuple");
 		tupleStringObject3 = objectFactory.stringObject("myTuple3");
+		unionStringObject = objectFactory.stringObject("myUnion");
+		unionStringObject2 = objectFactory.stringObject("myUnion2");
+		unionStringObject3 = objectFactory.stringObject("myUnion3");
 		tupleType = typeFactory.tupleType(tupleStringObject, typeFactory.sequence(typesArray));
 		tupleType2 = typeFactory.tupleType(tupleStringObject, typeFactory.sequence(typesArray));
 		tupleType3 = typeFactory.tupleType(tupleStringObject3, typeFactory.sequence(typesList));
-		unionType = typeFactory.unionType(objectFactory.stringObject("myUnion"), typeSequence);
-		unionType2 = typeFactory.unionType(objectFactory.stringObject("myUnion2"), typeSequence);
-		unionType3 = typeFactory.unionType(objectFactory.stringObject("myUnion3"), typeSequence2);
+		unionType = typeFactory.unionType(unionStringObject, typeSequence);
+		unionType2 = typeFactory.unionType(unionStringObject2, typeSequence);
+		unionType3 = typeFactory.unionType(unionStringObject3, typeSequence2);
 		functionType = (CommonSymbolicFunctionType)typeFactory.functionType(typeSequence, floatRealKind);
 		functionType2 = typeFactory.functionType(typeSequence, boundedIntKind);
 		functionType3 = typeFactory.functionType(typeSequence2, boundedIntKind);
-
-		
-
 	}
 
 	@After
@@ -398,11 +399,11 @@ public class SymbolicTypeFactoryTest {
 	 */
 	@Test
 	public void testUnionType() {
-		StringObject stringObject = objectFactory.stringObject("myUnion");
+		//SymbolicTypeSequence nullSequence = null;
 		
-		
-		assertTrue((typeFactory.unionType(stringObject, 
+		assertTrue((typeFactory.unionType(unionStringObject, 
 				typeFactory.sequence(typesList))) instanceof SymbolicUnionType);
+		//assertNull(typeFactory.unionType(unionStringObject2, nullSequence));
 				
 	}
 	

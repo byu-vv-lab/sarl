@@ -23,16 +23,30 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * an implementation of {@link SymbolicTupleType}
+ * 
+ * @author mohammedalali
+ *
+ */
 public class CommonSymbolicTupleType extends CommonSymbolicType implements
 		SymbolicTupleType {
 
 	private final static int classCode = CommonSymbolicTupleType.class
 			.hashCode();
-
+	/**
+	 * a SymbolicTypeSequenece to be used to create the TupleType
+	 */
 	private SymbolicTypeSequence sequence;
 
+	/**
+	 * a StringObject to hold the name of this TupleType
+	 */
 	private StringObject name;
 
+	/**
+	 * a SymbolicTupleType to hold the pureType of this TupleType
+	 */
 	private SymbolicTupleType pureType;
 
 	CommonSymbolicTupleType(StringObject name, SymbolicTypeSequence sequence) {
@@ -81,10 +95,20 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 			name = (StringObject) factory.canonic(name);
 	}
 
+	/**
+	 * returns the pureType of this TupleType,
+	 * that is the same type without any length
+	 * 
+	 * Has to use setPureType(...) before calling this method
+	 */
 	public SymbolicTupleType getPureType() {
 		return pureType;
 	}
 
+	/**
+	 * used to set the pureType of this TupleType
+	 * @param pureType
+	 */
 	public void setPureType(SymbolicTupleType pureType) {
 		this.pureType = pureType;
 	}
