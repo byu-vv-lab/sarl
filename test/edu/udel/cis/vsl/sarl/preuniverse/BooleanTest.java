@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+//import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -17,7 +17,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 public class BooleanTest {
 
 	private static PreUniverse universe;
-	private static SymbolicType booleanType;
+	//private static SymbolicType booleanType;
 	private static BooleanExpressionFactory booleanFactory;
 	
 	@BeforeClass
