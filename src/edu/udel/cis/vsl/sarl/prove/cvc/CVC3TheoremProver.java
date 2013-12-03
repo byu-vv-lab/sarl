@@ -222,9 +222,9 @@ public class CVC3TheoremProver implements TheoremProver {
 			nameCountMap.put(root, 1);
 			return root;
 		} else {
-			String result = root + "'" + count;
+			String result = root + "__" + count;
 
-			nameCountMap.put(root, nameCountMap.put(root, count + 1));
+			nameCountMap.put(root, count + 1);
 			return result;
 		}
 	}
@@ -479,6 +479,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			translationStack.getLast().put(symbolicConstant, result);
 			this.expressionMap.put(symbolicConstant, result);
 		} else {
+			// TODO: COULD COLLIDE WITH NAMES FROM CLEANING...
 			result = vc.varExpr(newCvcName(root), type);
 		}
 		varMap.put(result, symbolicConstant);
