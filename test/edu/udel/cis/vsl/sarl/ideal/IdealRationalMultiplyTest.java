@@ -231,9 +231,9 @@ public class IdealRationalMultiplyTest {
 	 */
 	@Test
 	public void mulRationalToPrimitive() {
+		Polynomial poly1 = (Polynomial) x;
 		NumericExpression result = idealFactory.divide(idealFactory.
 				multiply(x, x), y); //(x*x)/y 
-		Polynomial poly1 = (Polynomial) x;
 		
 		RationalExpression mulPrimitive = multiplyRational(r1, poly1); //(x*x)/y
 		
