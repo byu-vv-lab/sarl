@@ -230,9 +230,9 @@ public class IdealRationalAddTest {
 	 */
 	@Test
 	public void addRationalToPrimitive() {
+		Polynomial poly1 = (Polynomial) x;
 		NumericExpression result = idealFactory.divide(idealFactory.
 				add(idealFactory.multiply(x, y), x), y); //(x*y + x)/y 
-		Polynomial poly1 = (Polynomial) x;
 		
 		RationalExpression plusPrimitive = addRational(r1, poly1); //(x*y + x)/y
 		

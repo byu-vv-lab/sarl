@@ -231,9 +231,9 @@ public class IdealRationalSubtractTest {
 	 */
 	@Test
 	public void subRationalToPrimitive() {
+		Polynomial poly1 = (Polynomial) x;
 		NumericExpression result = idealFactory.divide(idealFactory.
 				subtract(x, idealFactory.multiply(x, y)), y); //(x*y + x)/y  
-		Polynomial poly1 = (Polynomial) x;
 		
 		RationalExpression subPrimitive = subRational(r1, poly1); //(x - x*y)/y  
 		

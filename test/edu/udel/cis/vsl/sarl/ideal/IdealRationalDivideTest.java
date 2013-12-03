@@ -256,10 +256,10 @@ public class IdealRationalDivideTest {
 	 */
 	@Test
 	public void divideRationalToPrimitive() {
+		Polynomial poly1 = (Polynomial) x;
 		NumericExpression y2 = idealFactory.multiply(y, y); //y^2
 		NumericExpression result = idealFactory.divide(y, y2); //1/y 		
-		Polynomial poly1 = (Polynomial) x;
-		
+				
 		RationalExpression divPrimitive = (RationalExpression) 
 				idealFactory.divide(r1, poly1); //1/y
 		
