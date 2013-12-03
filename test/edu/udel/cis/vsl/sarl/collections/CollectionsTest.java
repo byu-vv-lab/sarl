@@ -14,6 +14,9 @@ import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
+/**
+ * Test class for sarl.collections.Collections
+ */
 public class CollectionsTest {
 
 	
@@ -21,7 +24,6 @@ public class CollectionsTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
 	}
 
 	@AfterClass
@@ -33,16 +35,15 @@ public class CollectionsTest {
 		NumberFactory numberFactory = Numbers.REAL_FACTORY;
 		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
 		collectionFactory = Collections.newCollectionFactory(objectFactory);
-
-		
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		
 	}
 
-	
+	/**
+	 * Verifies that Collections.newCollectionFactory returns a CollectionFactory
+	 */
 	@Test
 	public void testNewCollectionFactory() {
 		assertTrue(collectionFactory instanceof CollectionFactory);
