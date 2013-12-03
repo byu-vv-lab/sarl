@@ -19,7 +19,6 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -164,6 +163,14 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr cvcAssumption;
 
+	/**
+	 * Constructs new CVC4 theorem prover with given symbolic universe.
+	 * 
+	 * @param universe
+	 *            the controlling symbolic universe
+	 * @param context
+	 * 			  the assumption(s) the prover will use for queries
+	 */
 	CVC4TheoremProver(PreUniverse universe, BooleanExpression context) {
 		smt.setOption("incremental", new SExpr(true));
 		smt.setOption("produce-models", new SExpr(true));
@@ -634,16 +641,18 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr translateQuantifier(SymbolicExpression expr)
 			throws Exception {
-		Expr variable = this.translateSymbolicConstant(
-				(SymbolicConstant) (expr.argument(0)), true);
+		Expr variable = translateSymbolicConstant((SymbolicConstant)
+				(expr.argument(0)), true);
+		vectorExpr varList = new vectorExpr();
+		varList.add(variable);
+		variable = em.mkExpr(Kind.BOUND_VAR_LIST, varList);
 		Expr predicate = translate((SymbolicExpression) expr.argument(1));
 		SymbolicOperator kind = expr.operator();
-		Expr varList = em.mkExpr(Kind.BOUND_VAR_LIST, variable);
-		
+
 		if (kind == SymbolicOperator.FORALL) {
-			return em.mkExpr(Kind.FORALL, varList, predicate);
+			return em.mkExpr(Kind.FORALL, variable, predicate);
 		} else if (kind == SymbolicOperator.EXISTS) {
-			return em.mkExpr(Kind.EXISTS, varList, predicate);
+			return em.mkExpr(Kind.EXISTS, variable, predicate);
 		} else { 
 			throw new SARLInternalException(
 					"Cannot translate quantifier into CVC4: " + expr);
@@ -866,10 +875,8 @@ public class CVC4TheoremProver implements TheoremProver {
 			}
 			break;
 		case APPLY:
-			result = em
-			.mkExpr(Kind.FUNCTION,
-					translateFunction((SymbolicExpression) expr
-							.argument(0)),
+			result = em.mkExpr(Kind.FUNCTION,
+					translateFunction((SymbolicExpression) expr.argument(0)),
 							translateCollection((SymbolicCollection<?>) expr
 									.argument(1)));
 			break;
@@ -1060,7 +1067,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	private ValidityResult translateResult(Result result) {
 		if (showProverQueries) {
-			out.println("CVC4 assumptions      " + universe.numValidCalls() + ": "
+			out.println("CVC4 assumptions " + universe.numValidCalls() + ": "
 					+ context);
 			out.println("CVC4 result      " + universe.numValidCalls() + ": "
 					+ result);
@@ -1277,11 +1284,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return ValidityResult from using translateResult
 	 */
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
-		Expr cvc4Predicate = translate(symbolicPredicate);
+		Result result;
+		
 		smt.push();
-		Result result = smt.query(cvc4Predicate);
+		result = queryCVC4(symbolicPredicate);
 		smt.pop();
-
 		return translateResult(result);
 	}
 
@@ -1297,8 +1304,8 @@ public class CVC4TheoremProver implements TheoremProver {
 				Expr cvcConstant = varMap.get(sarlConstant);
 				Expr cvcExpression = smt.getValue(cvcConstant);
 				// TODO back translate
-				//				SymbolicExpression sarlExpression = backTranslate(cvcExpression);
-				//				model.put(sarlConstant, sarlExpression);
+				//	SymbolicExpression sarlExpression = backTranslate(cvcExpression);
+				//	model.put(sarlConstant, sarlExpression);
 			}
 			popCVC4();
 			return Prove.modelResult(model);
@@ -1325,9 +1332,9 @@ public class CVC4TheoremProver implements TheoremProver {
 		if (showProverQueries) {
 			numValidCalls = universe.numValidCalls();
 			out.println();
-			out.print("SARL context " + numValidCalls + ": ");
+			out.print("SARL context   " + numValidCalls + ": ");
 			out.println(context);
-			out.print("SARL predicate  " + numValidCalls + ": ");
+			out.print("SARL predicate " + numValidCalls + ": ");
 			out.println(symbolicPredicate);
 			out.flush();
 		}
