@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.ideal.simplify;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;

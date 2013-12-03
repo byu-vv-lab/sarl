@@ -3,9 +3,8 @@
 
 import java.math.BigInteger;
 
-
-
-import edu.udel.cis.vsl.sarl.IF.number.*;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 

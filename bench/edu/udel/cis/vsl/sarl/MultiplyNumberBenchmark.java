@@ -2,7 +2,7 @@ package edu.udel.cis.vsl.sarl;
 
 
 import edu.udel.cis.vsl.sarl.IF.number.Number;
-import edu.udel.cis.vsl.sarl.IF.number.*;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 

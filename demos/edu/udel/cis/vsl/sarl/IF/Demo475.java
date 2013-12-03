@@ -32,7 +32,7 @@ public class Demo475 {
 
 	private static SymbolicType realType;
 
-	private static SymbolicType integerType;
+	// private static SymbolicType integerType;
 
 	private static NumericExpression one, two;
 
@@ -42,7 +42,7 @@ public class Demo475 {
 	public static void setUpBeforeClass() throws Exception {
 		universe = SARL.newStandardUniverse();
 		realType = universe.realType();
-		integerType = universe.integerType();
+		// integerType = universe.integerType();
 		x = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x"), realType);
 		y = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -113,11 +113,11 @@ public class Demo475 {
 	@Ignore
 	@Test
 	public void simp3() {
-		BooleanExpression claim1 = universe.equals(y, universe.add(x, one));
+		// BooleanExpression claim1 = universe.equals(y, universe.add(x, one));
 		BooleanExpression claim2 = universe.equals(
 				universe.multiply(universe.rational(3), y),
 				universe.add(universe.multiply(two, x), one));
-		BooleanExpression claim = universe.and(claim1, claim2);
+		// BooleanExpression claim = universe.and(claim1, claim2);
 		Reasoner reasoner = universe.reasoner(claim2);
 		SymbolicExpression x_simp = reasoner.simplify(x);
 		SymbolicExpression y_simp = reasoner.simplify(y);
@@ -149,10 +149,10 @@ public class Demo475 {
 	@Test
 	public void proof() {
 		BooleanExpression claim1 = universe.equals(y, universe.add(x, one));
-		BooleanExpression claim2 = universe.equals(
-				universe.multiply(universe.rational(3), y),
-				universe.add(universe.multiply(two, x), one));
-		BooleanExpression claim = universe.and(claim1, claim2);
+		// BooleanExpression claim2 = universe.equals(
+		// universe.multiply(universe.rational(3), y),
+		// universe.add(universe.multiply(two, x), one));
+		// BooleanExpression claim = universe.and(claim1, claim2);
 		Reasoner reasoner = universe.reasoner(claim1);
 		BooleanExpression q1 = universe.equals(x, universe.minus(two));
 
@@ -174,7 +174,7 @@ public class Demo475 {
 		assertEquals(universe.rational(-10),
 				universe.arrayRead(array, universe.integer(2)));
 
-		//out.println(universe.arrayWrite(array, universe.integer(5), x));
+		// out.println(universe.arrayWrite(array, universe.integer(5), x));
 
 		SymbolicType arrayType = universe.arrayType(realType);
 

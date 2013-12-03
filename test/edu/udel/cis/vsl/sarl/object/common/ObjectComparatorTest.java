@@ -1,6 +1,8 @@
 package edu.udel.cis.vsl.sarl.object.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -15,12 +17,10 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.object.common.ExpressionComparatorStub;
-import edu.udel.cis.vsl.sarl.object.common.ExpressionStub;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
+import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 
 /**
  * Test class for ObjectComparator

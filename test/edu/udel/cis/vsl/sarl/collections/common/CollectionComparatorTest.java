@@ -1,14 +1,14 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 //import java.util.Collection;
 import java.util.Comparator;
 /*import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;*/
-
 import java.util.LinkedList;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,14 +16,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
+
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.Collections;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;

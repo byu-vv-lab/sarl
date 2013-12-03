@@ -18,12 +18,16 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.expr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,8 +35,8 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
-import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
@@ -65,8 +69,6 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
-
-import java.util.List;
 /**
  * ExpressionTest tests methods found in edu.udel.cis.vsl.sarl.expr.comm package.
  * 

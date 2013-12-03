@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
@@ -29,13 +29,9 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
-import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
-import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
 public class UnionTest {
@@ -54,15 +50,15 @@ public class UnionTest {
 	 * precisely: inject(1, 2/3), inject(2, true), and inject(0, 10).
 	 */
 	SymbolicExpression a;
-	
-	private BooleanExpressionFactory booleanFactory;
+
+	// private BooleanExpressionFactory booleanFactory;
 
 	@Before
 	public void setUp() throws Exception {
 		universe = Universes.newIdealUniverse();
-		FactorySystem system = PreUniverses.newIdealFactorySystem();
-		
-		booleanFactory = system.booleanFactory();
+		// FactorySystem system = PreUniverses.newIdealFactorySystem();
+
+		// booleanFactory = system.booleanFactory();
 		intType = universe.integerType();
 		realType = universe.realType();
 		booleanType = universe.booleanType();
@@ -137,7 +133,7 @@ public class UnionTest {
 
 	@Test
 	public void unionTestTest() {
-		
+
 		SymbolicExpression ten = universe.integer(10);
 		SymbolicExpression u_ten = universe.unionInject(union1,
 				universe.intObject(0), ten);
@@ -148,24 +144,26 @@ public class UnionTest {
 				u_ten);
 		SymbolicExpression test2 = universe.unionTest(universe.intObject(2),
 				u_ten);
-		
+
 		assertEquals(universe.bool(true), test0);
 		assertEquals(universe.bool(false), test1);
 		assertEquals(universe.bool(false), test2);
 	}
-	
+
 	@Test
-	public void abstractUnionTestTest(){
-		
-		SymbolicExpression x = universe.symbolicConstant(universe.stringObject("x"), union1);
-		
+	public void abstractUnionTestTest() {
+
+		SymbolicExpression x = universe.symbolicConstant(
+				universe.stringObject("x"), union1);
+
 		SymbolicExpression test0 = universe.unionTest(universe.intObject(0), x);
-		
+
 		assertEquals(booleanType, test0.type());
-		assertEquals(SymbolicExpression.SymbolicOperator.UNION_TEST, test0.operator());
+		assertEquals(SymbolicExpression.SymbolicOperator.UNION_TEST,
+				test0.operator());
 		assertEquals(universe.intObject(0), test0.argument(0));
 		assertEquals(x, test0.argument(1));
-		
+
 	}
 
 	@Test

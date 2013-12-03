@@ -2,8 +2,15 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
-import static org.junit.Assert.*;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.boundObj;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num0;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num0Int;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.x;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xInt;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;

@@ -25,10 +25,10 @@ import java.util.Map.Entry;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind;
 
 public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 

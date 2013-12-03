@@ -1,6 +1,11 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -11,10 +16,6 @@ import org.junit.Test;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicArrayType;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
-import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicRealType;
-import edu.udel.cis.vsl.sarl.type.common.TypeComparator;
 
 /**
  * @author alali

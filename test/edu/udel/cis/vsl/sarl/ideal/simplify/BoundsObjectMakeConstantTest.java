@@ -2,8 +2,20 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
-import static org.junit.Assert.*;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.boundObj;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num0;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num0Int;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num10000;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num10000Int;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num10pt5;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.num3;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.symbExpr_xpy;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.symbExpr_xpyInt;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xpy;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xpyInt;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.yNE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;

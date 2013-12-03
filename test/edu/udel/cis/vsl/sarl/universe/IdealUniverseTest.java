@@ -38,8 +38,6 @@ import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.util.SingletonMap;
-import edu.udel.cis.vsl.sarl.universe.common.MathUniverse; 
-import edu.udel.cis.vsl.sarl.universe.common.MathSimplifier;
 public class IdealUniverseTest {
 
 	private static PrintStream out = System.out;
@@ -52,9 +50,11 @@ public class IdealUniverseTest {
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
-	private MathUniverse mathUniverse; 
-	private SymbolicExpression symbol;  
-	private MathSimplifier trigIdentity;
+
+	// private MathUniverse mathUniverse;
+	// private SymbolicExpression symbol;
+	// private MathSimplifier trigIdentity;
+
 	@Before
 	public void setUp() throws Exception {
 		universe = Universes.newIdealUniverse();

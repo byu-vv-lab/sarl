@@ -10,7 +10,7 @@ import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.ratNeg25;
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.trueExpr;
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.x;
 import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xeq5;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.BeforeClass;

@@ -1,10 +1,12 @@
 package edu.udel.cis.vsl.sarl.object;
 
-import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
-import edu.udel.cis.vsl.sarl.number.Numbers;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
  * Test class for Objects class

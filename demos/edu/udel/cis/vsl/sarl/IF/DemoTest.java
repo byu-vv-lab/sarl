@@ -32,7 +32,11 @@ public class DemoTest {
 
 	private static NumericSymbolicConstant y;
 
-	private static NumericExpression two, three, pi;
+	private static NumericExpression two;
+
+	// private static NumericExpression three;
+
+	private static NumericExpression pi;
 
 	private static BooleanExpression trueExpr;
 
@@ -46,7 +50,7 @@ public class DemoTest {
 		y = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("y"), realType);
 		two = universe.rational(2);
-		three = universe.rational(3);
+		// three = universe.rational(3);
 		pi = universe.rational(3.1415926);
 		trueExpr = universe.bool(true);
 	}
@@ -99,7 +103,7 @@ public class DemoTest {
 		BooleanExpression assumption = universe.and(assumption1, assumption2);
 		NumericExpression x_simple, y_simple;
 		NumericExpression x_expected = universe.rational(8, 3);
-		NumericExpression y_expected = universe.rational(1, 3);
+		// NumericExpression y_expected = universe.rational(1, 3);
 
 		out.println("assumption = " + assumption);
 		out.flush();

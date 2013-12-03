@@ -5,7 +5,8 @@ package edu.udel.cis.vsl.sarl;
 
 import java.util.Random;
 
-import edu.udel.cis.vsl.sarl.IF.number.*;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 
 

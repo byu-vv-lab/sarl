@@ -3,8 +3,23 @@
  */
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
-import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.*;
-import static org.junit.Assert.*;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.assumption;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.bigMixedXYTermPoly;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.idealSimplifier;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.idealSimplifierFactory;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.out;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.preUniv;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat0;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.rat1;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.ratNeg1;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.threeX4th;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.trueExpr;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.x;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.x4th;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.xNE;
+import static edu.udel.cis.vsl.sarl.ideal.simplify.CommonObjects.yNE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.After;
 import org.junit.Before;
