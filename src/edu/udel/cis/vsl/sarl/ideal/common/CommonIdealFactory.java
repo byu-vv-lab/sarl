@@ -1443,6 +1443,8 @@ public class CommonIdealFactory implements IdealFactory {
 
 	public BooleanExpression integerLessThan(NumericExpression arg0, 
 			NumericExpression arg1) {
+		assert arg0.type().isInteger();
+		assert arg1.type().isInteger();
 		if(lessThan(arg0, arg1) == booleanFactory.symbolic(true))
 			return lessThanEquals(add(arg0, intConstant(1)), arg1);
 		else
