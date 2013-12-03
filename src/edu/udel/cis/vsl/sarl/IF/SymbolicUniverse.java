@@ -862,6 +862,25 @@ public interface SymbolicUniverse {
 	 * @return the symbolic expression "false"
 	 */
 	BooleanExpression falseExpression();
+	
+	/**
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
+	 * the they are created.  Default is false.  Setting to true will
+	 * decrease performance in certain CnfFactory methods.
+	 * 
+	 * @param boolean value: false = default
+	 * 
+	 * @return void
+	 */
+	void setBooleanExpressionSimplification(boolean value);
+	
+	/**
+	 * Whether or not CnfFactory methods are allowed to simplify expensive
+	 * (p || !p) expressions.
+	 * 
+	 * @return boolean value: false = default
+	 */
+	boolean getBooleanExpressionSimplification();
 
 	/**
 	 * The symbolic expression wrapping the given boolean object (true or
