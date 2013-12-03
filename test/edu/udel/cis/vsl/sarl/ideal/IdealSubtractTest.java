@@ -519,6 +519,10 @@ public class IdealSubtractTest {
 	 * 
 	 * @param type
 	 * 				Polynomial
+	 * 
+	 * Returns
+	 * 			a polynomial of type Polynomial, without the constant term. If the constant term is 
+	 * 			passed as an argument, then returns zero
 	 */
 	@Test
 	public void constantTermSubtraction() {
