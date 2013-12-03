@@ -638,11 +638,12 @@ public class CVC4TheoremProver implements TheoremProver {
 				(SymbolicConstant) (expr.argument(0)), true);
 		Expr predicate = translate((SymbolicExpression) expr.argument(1));
 		SymbolicOperator kind = expr.operator();
-
+		Expr varList = em.mkExpr(Kind.BOUND_VAR_LIST, variable);
+		
 		if (kind == SymbolicOperator.FORALL) {
-			return em.mkExpr(Kind.FORALL, variable, predicate);
+			return em.mkExpr(Kind.FORALL, varList, predicate);
 		} else if (kind == SymbolicOperator.EXISTS) {
-			return em.mkExpr(Kind.EXISTS, variable, predicate);
+			return em.mkExpr(Kind.EXISTS, varList, predicate);
 		} else { 
 			throw new SARLInternalException(
 					"Cannot translate quantifier into CVC4: " + expr);
@@ -1059,15 +1060,17 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	private ValidityResult translateResult(Result result) {
 		if (showProverQueries) {
+			out.println("CVC4 assumptions      " + universe.numValidCalls() + ": "
+					+ context);
 			out.println("CVC4 result      " + universe.numValidCalls() + ": "
 					+ result);
 			out.flush();
 		}
-		if (result.equals(Result.Validity.VALID)) {
+		if (result.equals(new Result(Result.Validity.VALID))) {
 			return Prove.RESULT_YES;
-		} else if (result.equals(Result.Validity.INVALID)) {
+		} else if (result.equals(new Result(Result.Validity.INVALID))) {
 			return Prove.RESULT_NO;
-		} else if (result.equals(Result.Validity.VALIDITY_UNKNOWN)) {
+		} else if (result.equals(new Result(Result.Validity.VALIDITY_UNKNOWN))) {
 			return Prove.RESULT_MAYBE;
 		} else {
 			out.println("Warning: Unknown CVC4 query result: " + result);
@@ -1275,6 +1278,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	public ValidityResult valid(BooleanExpression symbolicPredicate) {
 		Expr cvc4Predicate = translate(symbolicPredicate);
+		smt.push();
 		Result result = smt.query(cvc4Predicate);
 		smt.pop();
 
