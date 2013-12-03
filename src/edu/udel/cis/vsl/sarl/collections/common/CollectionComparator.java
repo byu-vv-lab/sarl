@@ -37,6 +37,12 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 	public CollectionComparator() {
 	}
 
+	/**
+	 * Sets the comparator for the CollectionComparator
+	 * 
+	 * @param s1
+	 *            the comparator to be set
+	 */
 	public void setElementComparator(Comparator<SymbolicExpression> elementComparator) {
 		this.elementComparator = elementComparator;
 	}
@@ -65,6 +71,15 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 		}
 	}
 
+	/**
+	 * Compares two sequences. 
+	 * 
+	 * @param s1
+	 *            a symbolic sequence
+	 * @param s2
+	 *            a symbolic sequence
+	 * @return the result if the the elements are not equal else it returns 0 if the sets were equal
+	 */
 	private int compareSequences(SymbolicSequence<?> s1, SymbolicSequence<?> s2) {
 		int size = s1.size();
 
@@ -120,6 +135,17 @@ public class CollectionComparator implements Comparator<SymbolicCollection<?>> {
 		}
 	}
 
+	/**
+	 * Compares two Maps.
+	 * 
+	 * @param s1
+	 *            a symbolic map
+	 * @param s2
+	 *            a symbolic map
+	 * @return comparison result if the maps are not equal, 0 if they are equal,
+	 * 1 if the first parameter map is sorted and the second parameter map is not sorted,
+	 * -1 if the first map is not sorted and the second map is sorted.
+	 */
 	private <K1 extends SymbolicExpression, V1 extends SymbolicExpression, K2 extends SymbolicExpression, V2 extends SymbolicExpression> int compareMaps(
 			SymbolicMap<K1, V1> m1, SymbolicMap<K2, V2> m2) {
 		if (m1.isSorted()) {

@@ -8,7 +8,6 @@ import java.util.Comparator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -32,13 +31,6 @@ public class CollectionTest {
 
 	private static SymbolicExpression y = new ExpressionStub("y");
 	
-	//private static SymbolicExpression a = new ExpressionStub("5");
-
-	//private static SymbolicExpression b = new ExpressionStub("9");
- 
-	//private static CommonCollectionFactory mapCreate;
-	//private static SymbolicMap<SymbolicExpression, SymbolicExpression> collectionMap;
-
 	/**
 	 * TODO mapCreate is never initialized and causes the NullPointerException.
 	 * @Ignore tag is added to all tests in this class, and will be removed once 
@@ -49,10 +41,6 @@ public class CollectionTest {
 		collectionFactory.setElementComparator(elementComparator);
 		collectionFactory.init();
 		comparator = collectionFactory.comparator();
-		//collectionMap = mapCreate.emptySortedMap();
-		//collectionMap = collectionMap.put(a, b);
-		//collectionMap = collectionMap.put(x, b);
-		//collectionMap = collectionMap.put(b, y);
 	}
 
 	@Before
@@ -63,7 +51,7 @@ public class CollectionTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Ignore @Test
+	@Test
 	public void emptySeq() {
 		SymbolicSequence<SymbolicExpression> seq0 = collectionFactory
 				.emptySequence();
@@ -71,7 +59,7 @@ public class CollectionTest {
 		assertEquals(0, seq0.size());
 	}
 
-	@Ignore @Test
+	@Test
 	public void removeUndoesAddSeq() {
 		SymbolicSequence<SymbolicExpression> seq0, seq1, seq2;
 
@@ -81,7 +69,7 @@ public class CollectionTest {
 		assertEquals(seq0, seq2);
 	}
 
-	@Ignore @Test
+	@Test
 	public void compareSeqsEq() {
 		SymbolicSequence<SymbolicExpression> seq0, seq1, seq2;
 

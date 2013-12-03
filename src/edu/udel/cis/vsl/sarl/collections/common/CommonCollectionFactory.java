@@ -21,7 +21,6 @@ package edu.udel.cis.vsl.sarl.collections.common;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.TreeSet;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
@@ -35,7 +34,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 
 	private ObjectFactory objectFactory;
 
-	private SymbolicSet<?> emptyHashSet, emptySortedSet, emptyHashSet2;
+	private SymbolicSet<?> emptyHashSet, emptySortedSet;
 
 	private SymbolicMap<?, ?> emptyHashMap, emptySortedMap;
 
@@ -49,8 +48,6 @@ public class CommonCollectionFactory implements CollectionFactory {
 		this.objectFactory = objectFactory;
 		this.comparator = new CollectionComparator();
 		emptyHashSet = objectFactory
-				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
-		emptyHashSet2 = objectFactory
 				.canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
 		emptyHashMap = objectFactory
 				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());
@@ -69,8 +66,6 @@ public class CommonCollectionFactory implements CollectionFactory {
 		emptySortedMap = objectFactory
 				.canonic(new CljSortedSymbolicMap<SymbolicExpression, SymbolicExpression>(
 						elementComparator));
-		/*emptySortedMap = objectFactory
-				.canonic(new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>());*/
 		emptySequence = objectFactory
 				.canonic(new PcollectionsSymbolicSequence<SymbolicExpression>());
 		// etc.

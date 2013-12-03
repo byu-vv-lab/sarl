@@ -181,4 +181,15 @@ public class CommonCollectionFactoryTest {
 		assertEquals(collectionFactory.singletonSortedSet(five, elementComparator),null);
 	}
 	
+	/**
+	 * Test method for singletonSortedMap()
+	 */
+	@Test
+	public void testSingletonSortedMap()
+	{
+		collectionFactory.setElementComparator(elementComparator);
+		collectionFactory.init();
+		assertEquals(collectionFactory.singletonSortedMap(five,three).toString(),"{5->3}");
+	}
+	
 }
