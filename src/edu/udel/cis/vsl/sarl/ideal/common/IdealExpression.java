@@ -25,6 +25,14 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
+/**
+ * This class creates the ideal expressions by taking as the input of an operator, arguments and their type.
+ * 
+ * This class extends CommonSymbolicExpression which is the root of the symbolic expression hierarchy. This helps us in
+ * creating the required expression using the methods present in this class.
+ * 
+ *
+ */
 public abstract class IdealExpression extends CommonSymbolicExpression
 		implements NumericExpression {
 
@@ -64,6 +72,10 @@ public abstract class IdealExpression extends CommonSymbolicExpression
 		super(kind, type, arg0, arg1, arg2);
 	}
 
+	/**
+	 * 
+	 * @return - returns an enumerated value defined in IdealKind.
+	 */
 	public abstract IdealKind idealKind();
 
 }
