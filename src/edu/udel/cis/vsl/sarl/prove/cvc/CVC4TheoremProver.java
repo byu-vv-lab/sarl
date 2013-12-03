@@ -1301,15 +1301,19 @@ public class CVC4TheoremProver implements TheoremProver {
 			{
 				Expr cvcConstant = varMap.get(sarlConstant);
 				Expr cvcExpression = smt.getValue(cvcConstant);
-				// TODO back translate
-				//	SymbolicExpression sarlExpression = backTranslate(cvcExpression);
-				//	model.put(sarlConstant, sarlExpression);
+					SymbolicExpression sarlExpression = backTranslate(cvcExpression);
+					model.put(sarlConstant, sarlExpression);
 			}
 			popCVC4();
 			return Prove.modelResult(model);
 		}
 		popCVC4();
 		return translateResult(cvcResult);
+	}
+
+	private SymbolicExpression backTranslate(Expr cvcExpression) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
