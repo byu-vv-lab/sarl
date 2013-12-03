@@ -21,7 +21,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 
 /**
- * Benchmark for IdealSimplifier based on a symbolic constant ......
+ * Benchmark for IdealSimplifier based on a symbolic constant of increasing degree
  * The assumption of a numeric substitution of a variable in the polynomial
  * is applied, and the time to apply the simplification is reported as a console
  * output.
@@ -206,7 +206,7 @@ public class SimplifySymContBenchmark {
 		
 		/**
 		 * The value of <i>size</i> determines how many iterations of increasing the 
-		 * polynomial degree are performed.
+		 * symbolic constant degree are performed.
 		 */
 		size = 100;
 		
