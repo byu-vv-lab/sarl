@@ -63,7 +63,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * <li>Primitive Subtract</li>
  * <li>Primitive Negative Subtract</li>
  * <li>minus</li>
- * <li>Constant term subtraction in the given expression</li>
+ * <li>Constant term subtraction</li>
  * </ul>
  *
  */
