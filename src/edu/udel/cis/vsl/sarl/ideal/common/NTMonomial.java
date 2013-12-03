@@ -48,6 +48,12 @@ public class NTMonomial extends IdealExpression implements Monomial {
 		return (Monic) argument(1);
 	}
 
+	/**
+	 * Creates a Monic expression
+	 * 
+	 * @return
+	 * 			a Monic
+	 */
 	public Monic monic() {
 		return (Monic) argument(1);
 	}
