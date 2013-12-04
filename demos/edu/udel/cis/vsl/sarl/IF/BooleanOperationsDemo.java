@@ -29,7 +29,7 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
  * - LESS THAN EQUALS (x <= y) operation
  * - EQUALS (x = y) operation
  * - NOT EQUALS (x != y) operation
- * - combination of the above...
+ * - combinations of the above...
  * - 
  * @author mohammedalali
  *
