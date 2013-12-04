@@ -2325,7 +2325,7 @@ public class CommonPreUniverse implements PreUniverse {
 				return type;
 			case ARRAY_ELEMENT: {
 				ArrayElementReference ref = (ArrayElementReference) reference;
-				reference = (ReferenceExpression) ref.getParent();
+				reference = ref.getParent();
 
 				if (type instanceof SymbolicArrayType)
 					type = ((SymbolicArrayType) type).elementType();
