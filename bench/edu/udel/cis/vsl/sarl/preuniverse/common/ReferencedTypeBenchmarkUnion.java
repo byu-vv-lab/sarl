@@ -56,17 +56,19 @@ public class ReferencedTypeBenchmarkUnion {
 		
 		identityReference = universe.identityReference();
 
-		for(int i = 1; i <=7; i++)
+		nDimensionalUnionReference = universe.unionMemberReference(identityReference, zeroInt);
+		UnionType = universe.unionType(
+				universe.stringObject("UnionType"),
+				Arrays.asList(new SymbolicType[] { unionType }));
+		
+		
+		for(int i = 1; i <=15; i++)
 		{
-			nDimensionalUnionReference = universe.unionMemberReference(identityReference, zeroInt);
-			UnionType = universe.unionType(
-					universe.stringObject("UnionType"),
-					Arrays.asList(new SymbolicType[] { unionType }));
 			int summer = 200000;
 			size += summer;
 			totalTime = 0;
 			
-			for(int n = 0; n < size; n++)
+			for(int n = 0; n < summer; n++)
 			{
 				UnionType = universe.unionType(
 						universe.stringObject("UnionType"),

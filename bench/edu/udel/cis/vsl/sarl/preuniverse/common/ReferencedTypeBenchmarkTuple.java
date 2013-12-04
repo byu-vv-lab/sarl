@@ -56,17 +56,18 @@ public class ReferencedTypeBenchmarkTuple {
 		
 		identityReference = universe.identityReference();
 
-		for(int i = 1; i <=7; i++)
+		TupleType = universe.tupleType(
+				universe.stringObject("tupleType"),
+				Arrays.asList(new SymbolicType[] { tupleType }));
+		nDimensionalTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
+		for(int i = 1; i <=15; i++)
 		{
-			nDimensionalTupleReference = universe.tupleComponentReference(identityReference, zeroInt);
-			TupleType = universe.tupleType(
-					universe.stringObject("tupleType"),
-					Arrays.asList(new SymbolicType[] { tupleType }));
-			int summer = 200000;
+			
+			int summer =200000;
 			size += summer;
 			totalTime = 0;
 			
-			for(int n = 0; n < size; n++)
+			for(int n = 0; n < summer; n++)
 			{
 				TupleType = universe.tupleType(
 						universe.stringObject("tupleType"),

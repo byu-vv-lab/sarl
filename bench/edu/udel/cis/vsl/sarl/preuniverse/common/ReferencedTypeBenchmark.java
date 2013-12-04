@@ -52,16 +52,16 @@ public class ReferencedTypeBenchmark {
 		
 		
 		identityReference = universe.identityReference();
+		nDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
+		ArrayType = universe.arrayType(arrayType);
 
-		for(int i = 1; i <=7; i++)
+		for(int i = 1; i <=15; i++)
 		{
-			nDimensionalArrayReference = universe.arrayElementReference(identityReference, zero);
-			ArrayType = universe.arrayType(arrayType);
 			int summer = 200000;
 			size += summer;
 			totalTime = 0;
 			
-			for(int n = 0; n < size; n++)
+			for(int n = 0; n < summer; n++)
 			{
 				ArrayType = universe.arrayType(ArrayType);
 				nDimensionalArrayReference = universe.arrayElementReference(nDimensionalArrayReference, zero);
