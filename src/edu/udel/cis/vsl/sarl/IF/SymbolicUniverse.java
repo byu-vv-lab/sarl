@@ -865,7 +865,7 @@ public interface SymbolicUniverse {
 	
 	/**
 	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
-	 * the they are created.  Default is false.  Setting to true will
+	 * they are created.  Default is false.  Setting to true will
 	 * decrease performance in certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
