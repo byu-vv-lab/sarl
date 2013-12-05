@@ -464,14 +464,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Translates a symbolic expression of functional type. In CVC4, functions
-	 * have type Op; expressions have type Expr.
-	 * 
-	 * @param expr
-	 * @return the function expression as a CVC4 Op
-	 */
-
-	/**
 	 * Translates a SymbolicExpression of type (a || b) into an equivalent CVC4
 	 * Expr
 	 * 
