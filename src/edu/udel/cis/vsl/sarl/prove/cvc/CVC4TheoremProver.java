@@ -403,10 +403,10 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	/**
 	 * Translates a symbolic expression of functional type. In CVC4, functions
-	 * have type Op; expressions have type Expr.
+	 * have type Expr; expressions have type Expr.
 	 * 
 	 * @param expr
-	 * @return the function expression as a CVC4 Op
+	 * @return the function expression as a CVC4 Expr
 	 */
 	private Expr translateFunction(SymbolicExpression expr) {
 		Expr result = functionMap.get(expr);
