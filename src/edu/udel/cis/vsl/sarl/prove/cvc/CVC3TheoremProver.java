@@ -176,7 +176,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @param universe
 	 *            the controlling symbolic universe
 	 * @param context
-	 * 			  the assumption(s) the prover will use for queries
+	 *            the assumption(s) the prover will use for queries
 	 */
 	CVC3TheoremProver(PreUniverse universe, BooleanExpression context) {
 		assert universe != null;
@@ -185,8 +185,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.context = context;
 		intDivisionStack
-			.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, 
-				IntDivisionInfo>());
+				.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
 		translationStack.add(new HashMap<SymbolicExpression, Expr>());
 		cvcAssumption = translate(context);
 		vc.assertFormula(cvcAssumption);
@@ -398,7 +397,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			result = vc.lambdaExpr(
 					newSingletonList(translateSymbolicConstant(
 							(SymbolicConstant) expr.argument(0), true)),
-							translate((SymbolicExpression) expr.argument(1)));
+					translate((SymbolicExpression) expr.argument(1)));
 			break;
 		default:
 			throw new SARLInternalException(
@@ -448,7 +447,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			break;
 		case TUPLE:
 			result = vc
-			.tupleExpr(translateCollection((SymbolicSequence<?>) object));
+					.tupleExpr(translateCollection((SymbolicSequence<?>) object));
 			break;
 		default:
 			throw new SARLInternalException("Unknown concrete object: " + expr);
@@ -1112,8 +1111,8 @@ public class CVC3TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
-				.plusExpr(translateCollection((SymbolicCollection<?>) expr
-						.argument(0)));
+						.plusExpr(translateCollection((SymbolicCollection<?>) expr
+								.argument(0)));
 			else
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for ADD");
@@ -1125,8 +1124,8 @@ public class CVC3TheoremProver implements TheoremProver {
 						translate((SymbolicExpression) expr.argument(1)));
 			else if (numArgs == 1)
 				result = vc
-				.andExpr(translateCollection((SymbolicCollection<?>) expr
-						.argument(0)));
+						.andExpr(translateCollection((SymbolicCollection<?>) expr
+								.argument(0)));
 			else
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for AND: " + expr);
@@ -1225,7 +1224,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			break;
 		case NOT:
 			result = vc
-			.notExpr(translate((SymbolicExpression) expr.argument(0)));
+					.notExpr(translate((SymbolicExpression) expr.argument(0)));
 			break;
 		case OR:
 			result = translateOr(expr);
@@ -1306,7 +1305,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 			this.vc.push();
 			intDivisionStack
-			.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
+					.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
 			translationStack.add(new HashMap<SymbolicExpression, Expr>());
 			cvcPredicate = translate(symbolicPredicate);
 			if (showProverQueries) {
@@ -1413,14 +1412,14 @@ public class CVC3TheoremProver implements TheoremProver {
 			break;
 		case TUPLE:
 			result = vc
-			.tupleType(translateTypeSequence(((SymbolicTupleType) type)
-					.sequence()));
+					.tupleType(translateTypeSequence(((SymbolicTupleType) type)
+							.sequence()));
 			break;
 		case FUNCTION:
 			result = vc.funType(
 					translateTypeSequence(((SymbolicFunctionType) type)
 							.inputTypes()),
-							translateType(((SymbolicFunctionType) type).outputType()));
+					translateType(((SymbolicFunctionType) type).outputType()));
 			break;
 		case UNION: {
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
@@ -1625,17 +1624,25 @@ public class CVC3TheoremProver implements TheoremProver {
 		QueryResult cvcResult = queryCVC3(predicate);
 
 		if (cvcResult.equals(QueryResult.INVALID)) {
-			Map<?, ?> cvcModel = vc.getConcreteModel();
-			CVC3ModelFinder finder = new CVC3ModelFinder(this, cvcModel);
-			Map<SymbolicConstant, SymbolicExpression> model = finder.getModel();
-			ModelResult result = Prove.modelResult(model);
+			try {
+				Map<?, ?> cvcModel = vc.getConcreteModel();
+				CVC3ModelFinder finder = new CVC3ModelFinder(this, cvcModel);
+				Map<SymbolicConstant, SymbolicExpression> model = finder
+						.getModel();
+				ModelResult result = Prove.modelResult(model);
 
-			popCVC3();
-			return result;
-		} else {
-			popCVC3();
-			return translateResult(cvcResult);
+				popCVC3();
+				return result;
+			} catch (Cvc3Exception e) {
+				System.err.println("CVC3 unable to find model: "
+						+ e.getMessage());
+				System.err.flush();
+
+				return Prove.modelResult(null);
+			}
 		}
+		popCVC3();
+		return translateResult(cvcResult);
 	}
 
 	/**

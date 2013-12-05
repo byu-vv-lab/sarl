@@ -815,9 +815,11 @@ public class CVC3ModelFinder {
 			}
 			sarlValue = backTranslate(value, simplifyType(typeOf(key)));
 			if (sarlValue == null)
-				throw new SARLInternalException("Unable to back translate "
-						+ value);
-			assign(key, sarlValue);
+				System.err
+						.println("Warning: CVC3 model finder unable to back translate value "
+								+ value + " for key " + key);
+			else
+				assign(key, sarlValue);
 		}
 	}
 
