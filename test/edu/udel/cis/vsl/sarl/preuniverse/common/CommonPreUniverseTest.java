@@ -512,6 +512,8 @@ public class CommonPreUniverseTest {
 	 *  variables to be used in testing. Each variable fulfills the 
 	 *  "index", "low", "high", and "predicate" parameters, respectively.
 	 *  The bounds used are Concrete Expressions.
+	 *  
+	 *  @author blutuu
 	 */
 	@Test
 	public void testExistsIntConcrete() {
