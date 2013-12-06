@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import edu.nyu.acsys.CVC4.IntegerType;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -24,6 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -50,6 +52,7 @@ public class CommonPreUniverseTest {
 
 	// Universe
 	private static PreUniverse universe;
+	private static CommonPreUniverse preuniverse;
 	// SymbolicTypes
 	private static SymbolicType integerType;
 	private static SymbolicType realType;
@@ -78,6 +81,7 @@ public class CommonPreUniverseTest {
 	public static void setUpBeforeClass() throws Exception {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		universe = PreUniverses.newPreUniverse(system);
+		preuniverse = (CommonPreUniverse) PreUniverses.newPreUniverse(system);
 
 		// Types
 		integerType = universe.integerType();
@@ -498,6 +502,24 @@ public class CommonPreUniverseTest {
 						universe.stringObject("branch1"), integerType),
 				universe.integer(1200), (NumericExpression) nullConstant,
 				universe.bool(true)), testResult4);
+	}
+	
+	@Test
+	public void testExistsIntConcrete() {
+		StringObject name = universe.stringObject("index");
+		SymbolicType type = universe.integerType();
+		IntegerNumber low, high;
+		low = (IntegerNumber) universe.integer(1000);
+		high = (IntegerNumber) universe.integer(2000);
+		SymbolicObject x1 = universe
+				.symbolicConstant(universe.stringObject("x1"), integerType);
+		SymbolicType symbolicType = universe.integerType();
+		SymbolicConstant index = universe.symbolicConstant(name, type);
+		SymbolicExpression symbolicExpression = 
+				expressionFactory.expression(SymbolicExpression.SymbolicOperator.CONCRETE, symbolicType, x1);
+		
+		assertEquals(preuniverse.existsIntConcrete(index, low, high, symbolicExpression),
+				preuniverse.existsIntConcrete(index, low, high, symbolicExpression));
 	}
 
 	/**
