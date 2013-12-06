@@ -844,6 +844,13 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
+	/**
+	 * This test focuses on testing referencedType() solely with symbolic types
+	 * containing mixed symbolic types containing any combination of unions,
+	 * arrays and/or tuples
+	 * 
+	 * @author jpiane
+	 */
 	// This test focuses on testing referencedType() solely with symbolic types
 	// containing mixed symbolic types containing any combination of unions,
 	// arrays and/or tuples
