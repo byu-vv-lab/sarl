@@ -415,8 +415,8 @@ public class CommonPreUniverse implements PreUniverse {
 	 * arguments based on the following types:
 	 * <ul>
 	 * <li>BOOLEAN: Tests 2 boolean values for equality</li>
-	 * <li>CHAR: Tests 2 char values for equality. Checks 
-	 * whether both are concrete or not.</li>
+	 * <li>CHAR: Tests 2 char values for equality. Checks whether both are
+	 * concrete or not.</li>
 	 * <li>INTEGER:</li>
 	 * <li>REAL: Checks whether 2 real values are equal</li>
 	 * <li>ARRAY: Checks whether 2 arrays are equal</li>
@@ -626,7 +626,7 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	protected BooleanExpression existsIntConcrete(SymbolicConstant index,
-			IntegerNumber low, IntegerNumber high, SymbolicExpression predicate) {
+			IntegerNumber low, IntegerNumber high, BooleanExpression predicate) {
 		BooleanExpression result = falseExpr;
 
 		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
@@ -1197,12 +1197,12 @@ public class CommonPreUniverse implements PreUniverse {
 	public BooleanExpression bool(boolean value) {
 		return booleanFactory.symbolic(value);
 	}
-	
+
 	@Override
 	public void setBooleanExpressionSimplification(boolean value) {
 		booleanFactory.setBooleanExpressionSimplification(value);
 	}
-	
+
 	@Override
 	public boolean getBooleanExpressionSimplification() {
 		return booleanFactory.getBooleanExpressionSimplification();
@@ -2267,8 +2267,7 @@ public class CommonPreUniverse implements PreUniverse {
 	/*
 	 * //Using newimproved version
 	 * 
-	 * @Override 
-	 * public SymbolicType referencedType(SymbolicType type,
+	 * @Override public SymbolicType referencedType(SymbolicType type,
 	 * ReferenceExpression reference) { if (reference == null) throw new
 	 * SARLException("referencedType given null reference"); if (type == null)
 	 * throw new SARLException("referencedType given null type"); switch
@@ -2307,10 +2306,10 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	/*
 	 * Written by Julian Piane This is an improved version of referenceTest
-	 * which allows for SymbolicTypes of infinite embedded size. These enhancements
-	 * change the runtime from roughly exponential to a clear O(n) time.
-	 * Current tests are being done to compare the efficiencies of the method on different
-	 * Symbolic Types.
+	 * which allows for SymbolicTypes of infinite embedded size. These
+	 * enhancements change the runtime from roughly exponential to a clear O(n)
+	 * time. Current tests are being done to compare the efficiencies of the
+	 * method on different Symbolic Types.
 	 */
 	public SymbolicType referencedType(SymbolicType type,
 			ReferenceExpression reference) {
