@@ -700,9 +700,12 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	// This test focuses on testing referencedType() solely with symbolic types
-	// containing unions.
-	// Written by Julian Piane
+	/**
+	 * This test focuses on testing referencedType() solely with symbolic types
+	 * containing unions.
+	 * 
+	 * @author jpiane
+	 */
 	public void referencedTypeUnion() {
 		ReferenceExpression nullReference, identityReference, unionReference;
 		SymbolicUnionType unionType;
