@@ -2309,7 +2309,7 @@ public class CommonPreUniverse implements PreUniverse {
 	 * Written by Julian Piane This is an improved version of referenceTest
 	 * which allows for SymbolicTypes of infinite embedded size. These enhancements
 	 * change the runtime from roughly exponential to a clear O(n) time.
-	 * Current tests are being done to compare the efficenies of the method on different
+	 * Current tests are being done to compare the efficiencies of the method on different
 	 * Symbolic Types.
 	 */
 	public SymbolicType referencedType(SymbolicType type,

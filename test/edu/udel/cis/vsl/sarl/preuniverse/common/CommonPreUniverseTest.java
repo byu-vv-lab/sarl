@@ -670,7 +670,11 @@ public class CommonPreUniverseTest {
 
 	@Test
 	@Ignore
-	// Test written by Julian Piane
+	/**
+	 * Test for dereference().
+	 * 
+	 * @author jpiane
+	 */
 	public void testDereference() {
 		SymbolicType doubleArrayType = universe.arrayType(arrayType); // int[]
 		SymbolicExpression arrayTypeExpression = universe.symbolicConstant(
