@@ -517,18 +517,24 @@ public class CommonPreUniverseTest {
 	public void testExistsIntConcrete() {
 		StringObject name = universe.stringObject("index");
 		SymbolicType type = universe.integerType();
-		IntegerNumber low, high;
+		IntegerNumber low, high, low2, high2;
 		low = (IntegerNumber) universe.integer(1000);
+		low2 = (IntegerNumber) universe.integer(2000);
 		high = (IntegerNumber) universe.integer(2000);
+		high2 = (IntegerNumber) universe.integer(1000);
 		SymbolicObject x1 = universe
 				.symbolicConstant(universe.stringObject("x1"), integerType);
 		SymbolicType symbolicType = universe.integerType();
 		SymbolicConstant index = universe.symbolicConstant(name, type);
 		SymbolicExpression symbolicExpression = 
 				expressionFactory.expression(SymbolicExpression.SymbolicOperator.CONCRETE, symbolicType, x1);
+		BooleanExpression testResult = preuniverse.existsIntConcrete(index, low, high, symbolicExpression);
+		BooleanExpression testResult2 = preuniverse.existsIntConcrete(index, low2, high2, symbolicExpression);
 		
 		assertEquals(preuniverse.existsIntConcrete(index, low, high, symbolicExpression),
-				preuniverse.existsIntConcrete(index, low, high, symbolicExpression));
+				testResult);
+		assertEquals(preuniverse.existsIntConcrete(index, low2, high2, symbolicExpression),
+				testResult2);
 	}
 
 	/**
