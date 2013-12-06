@@ -748,9 +748,12 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	// This test focuses on testing referencedType() solely with symbolic types
-	// containing arrays.
-	// Written by Julian Piane
+	/**
+	 * This test focuses on testing referencedType() solely with symbolic types
+	 * containing arrays.
+	 * 
+	 * @author jpiane
+	 */
 	public void referencedTypeArray() {
 		ReferenceExpression nullReference, identityReference, arrayReference, twoDimensionalArrayReference;
 		NumericExpression zero, one, two, three;
@@ -793,9 +796,12 @@ public class CommonPreUniverseTest {
 	}
 
 	@Test
-	// This test focuses on testing referencedType() solely with symbolic types
-	// containing tuples.
-	// Written by Julian Piane
+	/**
+	 * This test focuses on testing referencedType() solely with symbolic types
+	 * containing unions.
+	 * 
+	 * @author jpiane
+	 */
 	public void referencedTypeTuple() {
 		ReferenceExpression nullReference, identityReference, tupleReference;
 		SymbolicTupleType tupleType;
