@@ -452,7 +452,8 @@ public class CommonPreUniverseTest {
 	 *         testing. Each variable fulfills the "index", "low", "high", and
 	 *         "predicate" parameters, respectively. The variable parameters
 	 *         combine to test null and non null values which aid in reaching
-	 *         every branch of existsInt() successfully.
+	 *         every branch of existsInt() successfully. The bounds used are 
+	 *         Symbolic Expressions.
 	 */
 	@Test
 	// Written by Marlin Blue 9/25
@@ -504,6 +505,14 @@ public class CommonPreUniverseTest {
 				universe.bool(true)), testResult4);
 	}
 	
+	/**
+	 *  testExistsIntConcrete() uses the existsIntConcrete() method to
+	 *  check whether the incrementing low value compares with the 
+	 *  given high value. Within this test there is a collection of 
+	 *  variables to be used in testing. Each variable fulfills the 
+	 *  "index", "low", "high", and "predicate" parameters, respectively.
+	 *  The bounds used are Concrete Expressions.
+	 */
 	@Test
 	public void testExistsIntConcrete() {
 		StringObject name = universe.stringObject("index");
