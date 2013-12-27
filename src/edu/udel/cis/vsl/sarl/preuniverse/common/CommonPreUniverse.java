@@ -1349,18 +1349,13 @@ public class CommonPreUniverse implements PreUniverse {
 						predicate));
 	}
 
-	/**
-	 * a<b => 0<b-a.
-	 */
 	@Override
 	public BooleanExpression lessThan(NumericExpression arg0,
 			NumericExpression arg1) {
+
 		return numericFactory.lessThan(arg0, arg1);
 	}
 
-	/**
-	 * a<=b => 0<=b-a.
-	 */
 	@Override
 	public BooleanExpression lessThanEquals(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -1370,7 +1365,6 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public BooleanExpression equals(SymbolicExpression arg0,
 			SymbolicExpression arg1) {
-
 		if (arg0.isNumeric() && arg1.isNumeric())
 			return numericFactory.equals((NumericExpression) arg0,
 					(NumericExpression) arg1);

@@ -81,17 +81,18 @@ import edu.udel.cis.vsl.sarl.util.BinaryOperator;
  * 
  * Rules of the normal form:
  * <ul>
- * <li>Any numeric expression will have one of the following 8 forms: RationalExpression,
- * factpoly, Polynomial, Monomial, Monic, PrimitivePower, Number, Primitive. Also, a numeric
- * expression of integer type will not have rational form
- * <li>NO MIXING OF TYPES: If an expression is of real type, all of the descendant
- * arguments will have real type; conversely if an expression is of integer type, all of the
- * descendant arguments will have integer type</li>
- * <li>the two polynomial arguments which divide each other in the RationalExpression will have 
- * no common factors</li>
+ * <li>Any numeric expression will have one of the following 8 forms:
+ * RationalExpression, factpoly, Polynomial, Monomial, Monic, PrimitivePower,
+ * Number, Primitive. Also, a numeric expression of integer type will not have
+ * rational form
+ * <li>NO MIXING OF TYPES: If an expression is of real type, all of the
+ * descendant arguments will have real type; conversely if an expression is of
+ * integer type, all of the descendant arguments will have integer type</li>
+ * <li>the two polynomial arguments which divide each other in the
+ * RationalExpression will have no common factors</li>
  * <li>the polynomial argument of FACTPOLY cannot be a Monomial</li>
- * <li>the polynomial argument of FACTPOLY must be a Monic polynomial, i.e., have
- * leading coefficient as 1</li>
+ * <li>the polynomial argument of FACTPOLY must be a Monic polynomial, i.e.,
+ * have leading coefficient as 1</li>
  * <li>the fact argument of FACTPOLY, when multiplied out, will yield the same
  * Polynomial as the polynomial argument of FACTPOLY</li>
  * </ul>
@@ -1062,6 +1063,8 @@ public class CommonIdealFactory implements IdealFactory {
 
 	@Override
 	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return add((Constant) arg0, (Constant) arg1);
 		if (arg0.type().isInteger())
 			return add((Polynomial) arg0, (Polynomial) arg1);
 		else
@@ -1095,6 +1098,8 @@ public class CommonIdealFactory implements IdealFactory {
 	@Override
 	public NumericExpression multiply(NumericExpression arg0,
 			NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return multiply((Constant) arg0, (Constant) arg1);
 		if (arg0.type().isInteger())
 			return multiply((Polynomial) arg0, (Polynomial) arg1);
 		else
@@ -1120,20 +1125,24 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
-	 * Returns a symbolic expression which is the result of dividing arg0 with arg1. The two given expressions must have 
-	 * the same (numeric) type: either both integers, or both real.
+	 * Returns a symbolic expression which is the result of dividing arg0 with
+	 * arg1. The two given expressions must have the same (numeric) type: either
+	 * both integers, or both real.
 	 * 
-	 * @param arg0 - a symbolic expression of a numeric type
-	 * @param arg1 - a symbolic expression of the same numeric type
+	 * @param arg0
+	 *            - a symbolic expression of a numeric type
+	 * @param arg1
+	 *            - a symbolic expression of the same numeric type
 	 * 
-	 * @return
-	 * 				arg0 / arg1
+	 * @return arg0 / arg1
 	 * 
-	 * Note: this must handle both integer and real division.
+	 *         Note: this must handle both integer and real division.
 	 */
 	@Override
 	public NumericExpression divide(NumericExpression arg0,
 			NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return divide((Constant) arg0, (Constant) arg1);
 		if (arg0.type().isInteger())
 			return intDividePolynomials((Polynomial) arg0, (Polynomial) arg1);
 		if (arg0 instanceof Polynomial && arg1 instanceof Polynomial)
@@ -1151,6 +1160,8 @@ public class CommonIdealFactory implements IdealFactory {
 	public NumericExpression minus(NumericExpression arg) {
 		if (arg.isZero())
 			return arg;
+		if (arg instanceof Constant)
+			return negate((Constant) arg);
 		if (arg instanceof Polynomial)
 			return negate((Polynomial) arg);
 		else
@@ -1162,6 +1173,7 @@ public class CommonIdealFactory implements IdealFactory {
 		NumericExpression result = one(base.type());
 		int n = exponent.getInt();
 
+		assert n >= 0;
 		while (n > 0) {
 			if (n % 2 != 0) {
 				result = multiply(result, base);
@@ -1434,37 +1446,56 @@ public class CommonIdealFactory implements IdealFactory {
 	@Override
 	public BooleanExpression lessThan(NumericExpression arg0,
 			NumericExpression arg1) {
+		Number num0 = extractNumber(arg0);
+
+		if (num0 != null) {
+			Number num1 = extractNumber(arg1);
+
+			if (num1 != null) // num0-num1<0 <=> num0<num1
+				return num0.compareTo(num1) < 0 ? this.trueExpr : falseExpr;
+		}
+
 		NumericExpression difference = subtract(arg1, arg0);
 
-		if (difference instanceof Polynomial)
-			return isPositive((Polynomial) difference);
-		return isPositive((RationalExpression) difference);
+		return difference instanceof Polynomial ? isPositive((Polynomial) difference)
+				: isPositive((RationalExpression) difference);
 	}
 
 	/**
-	 * returns true if arg0 is less than arg1. Both the arguments must be of integer data type.
+	 * returns true if arg0 is less than arg1. Both the arguments must be of
+	 * integer data type.
 	 * 
-	 * @param arg0 - a NumericExpression of integer type
-	 * @param arg1 - a NumericExpression of integer type
+	 * @param arg0
+	 *            - a NumericExpression of integer type
+	 * @param arg1
+	 *            - a NumericExpression of integer type
 	 * @return - a true value if arg0 > arg1, else returns false.
 	 */
-	public BooleanExpression integerLessThan(NumericExpression arg0, 
+	public BooleanExpression integerLessThan(NumericExpression arg0,
 			NumericExpression arg1) {
-		assert arg0.type().isInteger();
-		assert arg1.type().isInteger();
-		if(lessThan(arg0, arg1) == booleanFactory.symbolic(true))
-			return lessThanEquals(add(arg0, intConstant(1)), arg1);
-		else
-			return lessThanEquals(add(arg1, intConstant(1)), arg0);
+		return lessThanEquals(add(arg0, oneInt), arg1);
 	}
-	@Override
-	public BooleanExpression lessThanEquals(NumericExpression arg0,
+
+	private BooleanExpression lessThanEqualsMain(NumericExpression arg0,
 			NumericExpression arg1) {
 		NumericExpression difference = subtract(arg1, arg0);
 
-		if (difference instanceof Polynomial)
-			return isNonnegative((Polynomial) difference);
-		return isNonnegative((RationalExpression) difference);
+		return difference instanceof Polynomial ? isNonnegative((Polynomial) difference)
+				: isNonnegative((RationalExpression) difference);
+	}
+
+	@Override
+	public BooleanExpression lessThanEquals(NumericExpression arg0,
+			NumericExpression arg1) {
+		Number num0 = extractNumber(arg0);
+
+		if (num0 != null) {
+			Number num1 = extractNumber(arg1);
+
+			if (num1 != null) // num0-num1<=0 <=> num0<=num1
+				return num0.compareTo(num1) <= 0 ? this.trueExpr : falseExpr;
+		}
+		return lessThanEqualsMain(arg0, arg1);
 	}
 
 	@Override
@@ -1482,6 +1513,11 @@ public class CommonIdealFactory implements IdealFactory {
 	@Override
 	public BooleanExpression equals(NumericExpression arg0,
 			NumericExpression arg1) {
+		if (arg0.equals(arg1))
+			return trueExpr;
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return falseExpr;
+
 		NumericExpression difference = subtract(arg1, arg0);
 		Number number = extractNumber(difference);
 
@@ -1506,13 +1542,30 @@ public class CommonIdealFactory implements IdealFactory {
 
 	@Override
 	public BooleanExpression neq(NumericExpression arg0, NumericExpression arg1) {
+		if (arg0.equals(arg1))
+			return falseExpr;
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return trueExpr;
+
 		NumericExpression difference = subtract(arg1, arg0);
 		Number number = extractNumber(difference);
 
-		if (number == null)
+		if (number == null) {
+			Polynomial zeroThing = difference instanceof Polynomial ? (Polynomial) difference
+					: ((RationalExpression) difference).numerator(this);
+
+			if (zeroThing instanceof Monomial) {
+				Monic monic = ((Monomial) difference).monic(this);
+
+				zeroThing = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
+						.primitive(this) : monic;
+			} else {
+				// TODO: divide by leading coefficient of polynomial if real?
+				// use factorization?
+			}
 			return booleanFactory.booleanExpression(SymbolicOperator.NEQ,
-					zero(arg0.type()), difference);
-		else
+					zero(arg0.type()), zeroThing);
+		} else
 			return number.signum() != 0 ? trueExpr : falseExpr;
 	}
 }
