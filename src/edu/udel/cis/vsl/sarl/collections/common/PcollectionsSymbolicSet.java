@@ -144,19 +144,19 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 		while (iter.hasNext()) {
 			T t1 = iter.next();
 			T t2 = factory.canonic(t1);
-			
+
 			if (t1 != t2) {
 				PSet<T> newSet = HashTreePSet.empty();
 				Iterator<T> iter2 = pset.iterator();
-				
-				for (int i = 0; i < count; i++)
-				{
+
+				for (int i = 0; i < count; i++) {
 					newSet = newSet.plus(iter2.next());
 				}
 				newSet = newSet.plus(t2);
 				while (iter.hasNext())
 					newSet = newSet.plus(factory.canonic(iter.next()));
 				pset = newSet;
+				return;
 			}
 			count++;
 		}
@@ -168,11 +168,15 @@ public class PcollectionsSymbolicSet<T extends SymbolicExpression> extends
 	}
 
 	/**
-	 * Takes in an anonymous class that contains an apply method that will transform a SymbolicObject into 
-	 * a different SymbolicObject. The Collections apply method will iterate over all elements in it and call
+	 * Takes in an anonymous class that contains an apply method that will
+	 * transform a SymbolicObject into a different SymbolicObject. The
+	 * Collections apply method will iterate over all elements in it and call
 	 * the passed in classes apply method on the SymbolicObject
-	 * @param Transform<T, U>
-	 * @return Returns a new PcollectionsSymbolicSet with all of the original collections elements transformed.
+	 * 
+	 * @param Transform
+	 *            <T, U>
+	 * @return Returns a new PcollectionsSymbolicSet with all of the original
+	 *         collections elements transformed.
 	 */
 	public <U extends SymbolicExpression> SymbolicSet<U> apply(
 			Transform<T, U> transform) {

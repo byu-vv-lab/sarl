@@ -53,6 +53,7 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 	protected boolean intrinsicEquals(SymbolicObject o) {
 		@SuppressWarnings("unchecked")
 		SymbolicCollection<T> that = (SymbolicCollection<T>) o;
+		
 		if (collectionKind != that.collectionKind())
 			return false;
 		if (size() != that.size())

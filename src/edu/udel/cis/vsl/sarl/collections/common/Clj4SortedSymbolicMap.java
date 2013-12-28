@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.trifork.clj_ds.PersistentTreeMap;
+import com.github.krukow.clj_lang.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -31,7 +31,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+public class Clj4SortedSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
 
 	private PersistentTreeMap<K, V> pmap;
@@ -46,12 +46,17 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 		};
 	}
 
-	public CljSortedSymbolicMap(Comparator<? super K> comparator) {
+	public Clj4SortedSymbolicMap(PersistentTreeMap<K, V> pmap) {
+		super();
+		this.pmap = pmap;
+	}
+
+	public Clj4SortedSymbolicMap(Comparator<? super K> comparator) {
 		super();
 		this.pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
 	}
 
-	CljSortedSymbolicMap(Map<K, V> javaMap, Comparator<? super K> comparator) {
+	Clj4SortedSymbolicMap(Map<K, V> javaMap, Comparator<? super K> comparator) {
 		super();
 		pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
 		for (Entry<K, V> entry : javaMap.entrySet())
@@ -115,8 +120,8 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 			// now you know the two sets have the same type of elements,
 			// since an expression collection holds elements of one type
 			// TODO: make the type a field in a symbolic collection?
-			if (o instanceof CljSortedSymbolicMap)
-				return pmap.equals(((CljSortedSymbolicMap<?, ?>) o).pmap);
+			if (o instanceof Clj4SortedSymbolicMap)
+				return pmap.equals(((Clj4SortedSymbolicMap<?, ?>) o).pmap);
 			return false;
 		}
 	}
@@ -133,14 +138,12 @@ public class CljSortedSymbolicMap<K extends SymbolicExpression, V extends Symbol
 
 	@Override
 	public SymbolicMap<K, V> put(K key, V value) {
-		return new CljSortedSymbolicMap<K, V>(pmap.assoc(key, value),
-				pmap.comparator());
+		return new Clj4SortedSymbolicMap<K, V>(pmap.assoc(key, value));
 	}
 
 	@Override
 	public SymbolicMap<K, V> remove(K key) {
-		return new CljSortedSymbolicMap<K, V>(pmap.without(key),
-				pmap.comparator());
+		return new Clj4SortedSymbolicMap<K, V>(pmap.without(key));
 	}
 
 	@SuppressWarnings("unchecked")

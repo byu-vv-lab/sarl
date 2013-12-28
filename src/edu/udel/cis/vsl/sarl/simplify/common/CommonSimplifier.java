@@ -195,7 +195,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		return theSequence.apply(this);
 	}
 
-	protected SymbolicCollection<?> simplifyGenericCollection(
+	protected SymbolicCollection<?> simplifyGenericCollectionOLD(
 			SymbolicCollection<?> collection) {
 		int count = 0;
 		Iterator<? extends SymbolicExpression> iter = collection.iterator();
@@ -205,6 +205,7 @@ public abstract class CommonSimplifier implements Simplifier {
 			SymbolicExpression y = apply(x);
 
 			if (x != y) {
+				// this assumes iterators will always iterate in same order
 				Iterator<? extends SymbolicExpression> iter2 = collection
 						.iterator();
 				List<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
@@ -218,6 +219,24 @@ public abstract class CommonSimplifier implements Simplifier {
 			}
 			count++;
 		}
+		return collection;
+	}
+
+	protected SymbolicCollection<?> simplifyGenericCollection(
+			SymbolicCollection<?> collection) {
+		Iterator<? extends SymbolicExpression> iter = collection.iterator();
+		boolean change = false;
+		List<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
+
+		while (iter.hasNext()) {
+			SymbolicExpression x = iter.next();
+			SymbolicExpression y = apply(x);
+
+			change = change || x != y;
+			list.add(y);
+		}
+		if (change)
+			return universe.basicCollection(list);
 		return collection;
 	}
 
@@ -308,6 +327,7 @@ public abstract class CommonSimplifier implements Simplifier {
 						SymbolicObject arg = expression.argument(i);
 						SymbolicObject simplifiedArg = simplifyObject(arg);
 
+						assert simplifiedArg != null;
 						if (simplifiedArg != arg) {
 							simplifiedArgs = new SymbolicObject[numArgs];
 							for (int j = 0; j < i; j++)

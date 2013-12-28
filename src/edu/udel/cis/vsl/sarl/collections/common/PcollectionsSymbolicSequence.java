@@ -42,25 +42,24 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	private PVector<T> pvector;
 
+	public PcollectionsSymbolicSequence(PVector<T> pvector) {
+		super(SymbolicCollectionKind.SEQUENCE);
+		this.pvector = pvector;
+	}
+
 	public PcollectionsSymbolicSequence() {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.empty();
 	}
 
 	/**
-	 * The caller is responsible for making sure "elements" does not
-	 * contain any null elements.
+	 * The caller is responsible for making sure "elements" does not contain any
+	 * null elements.
 	 * 
 	 * @param elements
 	 */
 	public PcollectionsSymbolicSequence(Collection<T> elements) {
-		super(SymbolicCollectionKind.SEQUENCE);
-		//for (T element : elements) {
-		//	if (element == null)
-		//		throw new NullPointerException(
-		//				"Attempt to place null element in a symbolic sequence");
-		//}
-		pvector = TreePVector.from(elements);
+		this(TreePVector.from(elements));
 	}
 
 	public PcollectionsSymbolicSequence(Iterable<? extends T> elements) {
@@ -123,13 +122,11 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
-		
-		if (this == o)
-		{
+
+		if (this == o) {
 			return true;
 		}
-		if (this.size() != o.size())
-		{
+		if (this.size() != o.size()) {
 			return false;
 		}
 
@@ -163,7 +160,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 			if (!expr.isCanonic()) {
 				PVector<T> newVector = pvector.subList(0, count);
-				
+
 				T canonic = factory.canonic(expr);
 
 				assert canonic != null;
@@ -196,7 +193,6 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 		}
 	}
 
-	
 	@Override
 	public <U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform) {
