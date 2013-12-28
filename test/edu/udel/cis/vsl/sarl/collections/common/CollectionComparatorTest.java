@@ -43,17 +43,17 @@ public class CollectionComparatorTest {
 	CollectionComparator collectionComparator;
 	CollectionComparator testSetComparator;
 	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test2;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test2;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test3;
 		
 	private static PMap<SymbolicExpression,SymbolicExpression> pmap;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMapCollection;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMapCollection2;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> pMapCollection;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> pMapCollection2;
 	
-	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain;
-	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain2;
-	private static PcollectionsSymbolicSet<SymbolicExpression> pSetPlain3;
+	private static PcollectionsHashSet<SymbolicExpression> pSetPlain;
+	private static PcollectionsHashSet<SymbolicExpression> pSetPlain2;
+	private static PcollectionsHashSet<SymbolicExpression> pSetPlain3;
 	
 	private static SymbolicExpression x = new ExpressionStub("5");
 
@@ -89,46 +89,46 @@ public class CollectionComparatorTest {
 	public void setUp() throws Exception {
 		collectionComparator = new CollectionComparator();
 		collectionComparator.setElementComparator(elementComparator);
-		test = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test3 = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		test = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		test3 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
 		
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
 		
-		test3 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(a, b);
-		test3 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(x, y);
-		test3 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(y, a);
-		test3 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test3.put(b, z);
+		test3 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test3.put(a, b);
+		test3 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test3.put(x, y);
+		test3 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test3.put(y, a);
+		test3 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test3.put(b, z);
 		
 		
-		pSetPlain = new PcollectionsSymbolicSet<SymbolicExpression>();
-		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(a);
-		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(b);
-		pSetPlain = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain.add(z);
-		pSetPlain2 = new PcollectionsSymbolicSet<SymbolicExpression>();
-		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(a);
-		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(b);
-		pSetPlain2 = (PcollectionsSymbolicSet<SymbolicExpression>) pSetPlain2.add(z);
-		pSetPlain3 = new PcollectionsSymbolicSet<SymbolicExpression>();
+		pSetPlain = new PcollectionsHashSet<SymbolicExpression>();
+		pSetPlain = (PcollectionsHashSet<SymbolicExpression>) pSetPlain.add(a);
+		pSetPlain = (PcollectionsHashSet<SymbolicExpression>) pSetPlain.add(b);
+		pSetPlain = (PcollectionsHashSet<SymbolicExpression>) pSetPlain.add(z);
+		pSetPlain2 = new PcollectionsHashSet<SymbolicExpression>();
+		pSetPlain2 = (PcollectionsHashSet<SymbolicExpression>) pSetPlain2.add(a);
+		pSetPlain2 = (PcollectionsHashSet<SymbolicExpression>) pSetPlain2.add(b);
+		pSetPlain2 = (PcollectionsHashSet<SymbolicExpression>) pSetPlain2.add(z);
+		pSetPlain3 = new PcollectionsHashSet<SymbolicExpression>();
 		
 		pmap = HashTreePMap.empty();
-		pMapCollection = new PcollectionsSymbolicMap<SymbolicExpression,SymbolicExpression>(pmap);
-		pMapCollection = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(a,b);
-		pMapCollection = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(x,y);
-		pMapCollection = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(y,a);
-		pMapCollection = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(b,z);
+		pMapCollection = new PcollectionsHashMap<SymbolicExpression,SymbolicExpression>(pmap);
+		pMapCollection = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(a,b);
+		pMapCollection = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(x,y);
+		pMapCollection = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(y,a);
+		pMapCollection = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection.put(b,z);
 		
-		pMapCollection2 = new PcollectionsSymbolicMap<SymbolicExpression,SymbolicExpression>(pmap);
-		pMapCollection2 = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(a,b);
-		pMapCollection2 = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(x,y);
-		pMapCollection2 = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(y,a);
-		pMapCollection2 = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(b,z);
+		pMapCollection2 = new PcollectionsHashMap<SymbolicExpression,SymbolicExpression>(pmap);
+		pMapCollection2 = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(a,b);
+		pMapCollection2 = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(x,y);
+		pMapCollection2 = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(y,a);
+		pMapCollection2 = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMapCollection2.put(b,z);
 		
 	}
 

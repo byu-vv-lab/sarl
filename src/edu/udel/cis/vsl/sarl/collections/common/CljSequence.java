@@ -25,7 +25,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
  *            the kind of symbolic expressions that will be put in the
  *            collection
  */
-public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
+public class CljSequence<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> implements SymbolicSequence<T> {
 
 	/**
@@ -33,7 +33,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	 */
 	private PersistentVector<T> pvector;
 
-	public Clj4SymbolicSequence(PersistentVector<T> pvector) {
+	public CljSequence(PersistentVector<T> pvector) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		this.pvector = pvector;
 	}
@@ -41,7 +41,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	/**
 	 * Constructs empty sequence.
 	 */
-	public Clj4SymbolicSequence() {
+	public CljSequence() {
 		this(Persistents.<T> vector());
 	}
 
@@ -51,7 +51,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	 * @param elements
 	 *            some collection of elements of T
 	 */
-	public Clj4SymbolicSequence(Collection<? extends T> elements) {
+	public CljSequence(Collection<? extends T> elements) {
 		this(Persistents.vector(elements));
 	}
 
@@ -61,7 +61,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	 * @param elements
 	 *            some iterable of elements of T
 	 */
-	public Clj4SymbolicSequence(Iterable<? extends T> elements) {
+	public CljSequence(Iterable<? extends T> elements) {
 		this(Persistents.vector(elements));
 	}
 
@@ -71,7 +71,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	 * @param elements
 	 *            array of elements of T
 	 */
-	public Clj4SymbolicSequence(T[] elements) {
+	public CljSequence(T[] elements) {
 		this(Persistents.vector(elements));
 	}
 
@@ -81,7 +81,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 	 * @param element
 	 *            an element of T
 	 */
-	public Clj4SymbolicSequence(T element) {
+	public CljSequence(T element) {
 		this(Persistents.vector(element));
 	}
 
@@ -129,12 +129,12 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> add(T element) {
-		return new Clj4SymbolicSequence<T>(pvector.plus(element));
+		return new CljSequence<T>(pvector.plus(element));
 	}
 
 	@Override
 	public SymbolicSequence<T> set(int index, T element) {
-		return new Clj4SymbolicSequence<T>(pvector.plusN(index, element));
+		return new CljSequence<T>(pvector.plusN(index, element));
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 
 		for (int i = index; i < newSize; i++)
 			newVector = newVector.plusN(i, newVector.get(i + 1));
-		return new Clj4SymbolicSequence<T>(newVector.minus());
+		return new CljSequence<T>(newVector.minus());
 	}
 
 	@Override
@@ -160,13 +160,13 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 			for (int i = size; i < index; i++)
 				newVector = newVector.plus(filler);
 			newVector = newVector.plus(value);
-			return new Clj4SymbolicSequence<T>(newVector);
+			return new CljSequence<T>(newVector);
 		}
 	}
 
 	@Override
 	public SymbolicSequence<T> subSequence(int start, int end) {
-		return new Clj4SymbolicSequence<T>(pvector.subList(start, end));
+		return new CljSequence<T>(pvector.subList(start, end));
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 				newVector = newVector.plus(u);
 				while (iter.hasNext())
 					newVector = newVector.plus(transform.apply(iter.next()));
-				return new Clj4SymbolicSequence<U>(newVector);
+				return new CljSequence<U>(newVector);
 			}
 			count++;
 		}
@@ -244,7 +244,6 @@ public class Clj4SymbolicSequence<T extends SymbolicExpression> extends
 				newVector = newVector.plus(canonic);
 				while (iter.hasNext()) {
 					canonic = factory.canonic(iter.next());
-					assert canonic != null;
 					newVector = newVector.plus(canonic);
 				}
 				pvector = newVector;

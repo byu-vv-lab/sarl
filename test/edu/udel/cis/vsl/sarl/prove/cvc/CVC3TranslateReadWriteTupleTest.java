@@ -19,7 +19,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSymbolicSequence;
+import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSequence;
 import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
@@ -157,7 +157,7 @@ public class CVC3TranslateReadWriteTupleTest {
 		tupleType.add(intType);
 		
 		SymbolicSequence<SymbolicExpression> tupleSequenceWrite = 
-				new PcollectionsSymbolicSequence<SymbolicExpression>();
+				new PcollectionsSequence<SymbolicExpression>();
 		tupleSequenceWrite = tupleSequenceWrite.add(fiveInt);
 		tupleSequenceWrite = tupleSequenceWrite.add(oneInt);
 		tupleSequenceWrite = tupleSequenceWrite.add(twoInt);

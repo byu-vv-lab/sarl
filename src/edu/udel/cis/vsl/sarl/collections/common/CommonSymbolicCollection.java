@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.common;
 
@@ -40,7 +40,7 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 
 	/**
 	 * Tells whether the two collections (o and this) are equal, assuming o and
-	 * this have the same kind.
+	 * this have the same kind and same size.
 	 * 
 	 * @param o
 	 *            a symbolic collection with the same
@@ -53,7 +53,7 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 	protected boolean intrinsicEquals(SymbolicObject o) {
 		@SuppressWarnings("unchecked")
 		SymbolicCollection<T> that = (SymbolicCollection<T>) o;
-		
+
 		if (collectionKind != that.collectionKind())
 			return false;
 		if (size() != that.size())

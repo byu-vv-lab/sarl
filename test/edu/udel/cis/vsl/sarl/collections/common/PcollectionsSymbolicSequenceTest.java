@@ -62,28 +62,28 @@ public class PcollectionsSymbolicSequenceTest {
 	private static SymbolicExpression ten = new ExpressionStub("10");
 	
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> listSequence;//Sequence that will take in a Collection param
-	private PcollectionsSymbolicSequence<SymbolicExpression> listSequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> listSequence3;
+	private PcollectionsSequence<SymbolicExpression> listSequence;//Sequence that will take in a Collection param
+	private PcollectionsSequence<SymbolicExpression> listSequence2;
+	private PcollectionsSequence<SymbolicExpression> listSequence3;
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence;//Sequence that will take in an Iterable param
-	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> iterableSequence3;
+	private PcollectionsSequence<SymbolicExpression> iterableSequence;//Sequence that will take in an Iterable param
+	private PcollectionsSequence<SymbolicExpression> iterableSequence2;
+	private PcollectionsSequence<SymbolicExpression> iterableSequence3;
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence;//Sequence that will take in an array param
-	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> arraySequence3;
+	private PcollectionsSequence<SymbolicExpression> arraySequence;//Sequence that will take in an array param
+	private PcollectionsSequence<SymbolicExpression> arraySequence2;
+	private PcollectionsSequence<SymbolicExpression> arraySequence3;
 	
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence;//Sequence that takes in a single element param
-	private PcollectionsSymbolicSequence<SymbolicExpression> elementSequence2;
+	private PcollectionsSequence<SymbolicExpression> elementSequence;//Sequence that takes in a single element param
+	private PcollectionsSequence<SymbolicExpression> elementSequence2;
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence;//Sequence that takes in no param
-	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence2;
-	private PcollectionsSymbolicSequence<SymbolicExpression> plainSequence3;
-	private PcollectionsSymbolicSequence<SymbolicExpression> emptyPlainSequence3;
+	private PcollectionsSequence<SymbolicExpression> plainSequence;//Sequence that takes in no param
+	private PcollectionsSequence<SymbolicExpression> plainSequence2;
+	private PcollectionsSequence<SymbolicExpression> plainSequence3;
+	private PcollectionsSequence<SymbolicExpression> emptyPlainSequence3;
 	
-	private PcollectionsSymbolicSequence<SymbolicExpression> canonicSequence;
+	private PcollectionsSequence<SymbolicExpression> canonicSequence;
 	private static SymbolicExpression twenty = createExpression(20);
 	private static SymbolicExpression forty = createExpression(40);
 	private static SymbolicExpression eighty = createExpression(80);
@@ -124,63 +124,63 @@ public class PcollectionsSymbolicSequenceTest {
 		listCollection.add(five);
 		listCollection.add(three);
 		listCollection.add(otherfive);
-		listSequence = new PcollectionsSymbolicSequence<SymbolicExpression>(listCollection);
+		listSequence = new PcollectionsSequence<SymbolicExpression>(listCollection);
 		listCollection2 = new LinkedList<SymbolicExpression>();
 		listCollection2.add(five);
 		listCollection2.add(three);
 		listCollection2.add(otherfive);
-		listSequence2 = new PcollectionsSymbolicSequence<SymbolicExpression>(listCollection2);
+		listSequence2 = new PcollectionsSequence<SymbolicExpression>(listCollection2);
 		listCollection3 = new LinkedList<SymbolicExpression>();
 		listCollection3.add(five);
-		listSequence3 = new PcollectionsSymbolicSequence<SymbolicExpression>(listCollection3);
+		listSequence3 = new PcollectionsSequence<SymbolicExpression>(listCollection3);
 		
 		iterableList = new LinkedList<SymbolicExpression>();
 		((LinkedList<SymbolicExpression>) iterableList).add(five);
 		((LinkedList<SymbolicExpression>) iterableList).add(three);
 		((LinkedList<SymbolicExpression>) iterableList).add(otherfive);
-		iterableSequence = new PcollectionsSymbolicSequence<SymbolicExpression>(iterableList);
+		iterableSequence = new PcollectionsSequence<SymbolicExpression>(iterableList);
 		iterableList2 = new LinkedList<SymbolicExpression>();
 		((LinkedList<SymbolicExpression>) iterableList2).add(five);
 		((LinkedList<SymbolicExpression>) iterableList2).add(three);
 		((LinkedList<SymbolicExpression>) iterableList2).add(otherfive);
-		iterableSequence2 = new PcollectionsSymbolicSequence<SymbolicExpression>(iterableList2);
+		iterableSequence2 = new PcollectionsSequence<SymbolicExpression>(iterableList2);
 		iterableList3 = new LinkedList<SymbolicExpression>();
 		((LinkedList<SymbolicExpression>) iterableList3).add(otherfive);
-		iterableSequence3 = new PcollectionsSymbolicSequence<SymbolicExpression>(iterableList3);
+		iterableSequence3 = new PcollectionsSequence<SymbolicExpression>(iterableList3);
 		
 		expressionList = new SymbolicExpression[3];
 		expressionList[0] = five;
 		expressionList[1] = three;
 		expressionList[2] = otherfive;
 		
-		arraySequence = new PcollectionsSymbolicSequence<SymbolicExpression>(expressionList);
+		arraySequence = new PcollectionsSequence<SymbolicExpression>(expressionList);
 		expressionList2 = new SymbolicExpression[3];
 		expressionList2[0] = five;
 		expressionList2[1] = three;
 		expressionList2[2] = otherfive;
-		arraySequence2 = new PcollectionsSymbolicSequence<SymbolicExpression>(expressionList2);
+		arraySequence2 = new PcollectionsSequence<SymbolicExpression>(expressionList2);
 		expressionList3 = new SymbolicExpression[1];
 		expressionList3[0] = otherfive;
-		arraySequence3 = new PcollectionsSymbolicSequence<SymbolicExpression>(expressionList3);
+		arraySequence3 = new PcollectionsSequence<SymbolicExpression>(expressionList3);
 		
 		
-		elementSequence = new PcollectionsSymbolicSequence<SymbolicExpression>(five);
+		elementSequence = new PcollectionsSequence<SymbolicExpression>(five);
 		elementSequence.add(three);
-		elementSequence2 = new PcollectionsSymbolicSequence<SymbolicExpression>(empty);
+		elementSequence2 = new PcollectionsSequence<SymbolicExpression>(empty);
 		elementSequence2.add(ten);
 		
 		
-		plainSequence = new PcollectionsSymbolicSequence<SymbolicExpression>();
+		plainSequence = new PcollectionsSequence<SymbolicExpression>();
 		plainSequence.add(five);
 		plainSequence.add(three);
 		plainSequence.add(otherfive);
-		plainSequence2 = new PcollectionsSymbolicSequence<SymbolicExpression>();
+		plainSequence2 = new PcollectionsSequence<SymbolicExpression>();
 		plainSequence2.add(five);
 		plainSequence2.add(three);
 		plainSequence2.add(otherfive);
-		plainSequence3 = new PcollectionsSymbolicSequence<SymbolicExpression>();
+		plainSequence3 = new PcollectionsSequence<SymbolicExpression>();
 		plainSequence3.add(empty);
-		emptyPlainSequence3 = new PcollectionsSymbolicSequence<SymbolicExpression>();
+		emptyPlainSequence3 = new PcollectionsSequence<SymbolicExpression>();
 
 		
 		twenty = createExpression(20);
@@ -193,7 +193,7 @@ public class PcollectionsSymbolicSequenceTest {
 		canonicList[0] = twenty;
 		canonicList[1] = eighty;
 		canonicList[2] = hundred;
-		canonicSequence = new PcollectionsSymbolicSequence<SymbolicExpression>(canonicList);
+		canonicSequence = new PcollectionsSequence<SymbolicExpression>(canonicList);
 	}
 
 	@After
@@ -207,7 +207,7 @@ public class PcollectionsSymbolicSequenceTest {
 	public void testEmptyElements()
 	{
 		SymbolicExpression nl = null;
-		new PcollectionsSymbolicSequence<SymbolicExpression>(nl);
+		new PcollectionsSequence<SymbolicExpression>(nl);
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class PcollectionsSymbolicSequenceTest {
 		SymbolicExpression nl = null;
 		Iterable<SymbolicExpression> temp = new LinkedList<SymbolicExpression>();
 		((LinkedList<SymbolicExpression>) temp).add(nl);
-		new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
+		new PcollectionsSequence<SymbolicExpression>(temp);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class PcollectionsSymbolicSequenceTest {
 		SymbolicExpression nl = null;
 		SymbolicExpression[] temp = new SymbolicExpression[1];
 		temp[0] = nl;
-		new PcollectionsSymbolicSequence<SymbolicExpression>(temp);
+		new PcollectionsSequence<SymbolicExpression>(temp);
 	}
 
 	/**
@@ -300,7 +300,7 @@ public class PcollectionsSymbolicSequenceTest {
 		assertEquals(emptyPlainSequence3.collectionEquals(listSequence),false);
 		assertEquals(emptyPlainSequence3.collectionEquals(emptyPlainSequence3),true);
 		assertEquals(elementSequence.collectionEquals(elementSequence2),false);
-		assertEquals(elementSequence.intrinsicEquals(new PcollectionsSymbolicSet<SymbolicExpression>()),false);
+		assertEquals(elementSequence.intrinsicEquals(new PcollectionsHashSet<SymbolicExpression>()),false);
 		
 	}
 

@@ -65,12 +65,12 @@ public class CljSortedSymbolicMapTest {
 	
 	
 	Collection<SymbolicExpression> set;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test2;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test3;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test4;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> test5;
-	private static Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression> canonicTest;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test2;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test3;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test4;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test5;
+	private static CljSortedMap<SymbolicExpression,SymbolicExpression> canonicTest;
 	
 
 	public static SymbolicExpression createExpression(int expression){
@@ -102,34 +102,34 @@ public class CljSortedSymbolicMapTest {
 		eighty = objectFactory.canonic(eighty);
 		hundred = createExpression(100);
 		forty = objectFactory.canonic(forty);
-		canonicTest = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		canonicTest = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 		
-		canonicTest = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(twenty, forty);
-		canonicTest = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(sixty, forty);
-		canonicTest = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(eighty, hundred);
-		
-		
-		
-		test = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test3 = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test4 = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test5 = new Clj4SortedSymbolicMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(twenty, forty);
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(sixty, forty);
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(eighty, hundred);
 		
 		
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
-		test = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
+		
+		test = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		test3 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		test4 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
+		test5 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
 		
 		
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
-		test2 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
 		
-		test5 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(a, b);
-		test5 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(x, y);
-		test5 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(y, a);
-		test5 = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
+		
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
+		
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(a, b);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(x, y);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(y, a);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
 		this.fac = null;
 		this.fac = new CommonObjectFactory(new RealNumberFactory());
 			

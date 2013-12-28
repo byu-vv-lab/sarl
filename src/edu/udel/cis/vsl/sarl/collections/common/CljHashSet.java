@@ -12,21 +12,23 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class Clj4HashSet<T extends SymbolicExpression> extends
+public class CljHashSet<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> implements SymbolicSet<T> {
+
+	private final static int classCode = CljHashSet.class.hashCode();
 
 	private PersistentSet<T> pset;
 
-	Clj4HashSet(PersistentSet<T> pset) {
+	CljHashSet(PersistentSet<T> pset) {
 		super(SymbolicCollectionKind.SET);
 		this.pset = pset;
 	}
 
-	Clj4HashSet() {
+	CljHashSet() {
 		this(Persistents.<T> hashSet());
 	}
 
-	Clj4HashSet(Collection<T> elements) {
+	CljHashSet(Collection<T> elements) {
 		this(Persistents.hashSet(elements));
 	}
 
@@ -92,7 +94,7 @@ public class Clj4HashSet<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSet<T> add(T element) {
-		return new Clj4HashSet<T>(pset.plus(element));
+		return new CljHashSet<T>(pset.plus(element));
 	}
 
 	@Override
@@ -101,12 +103,12 @@ public class Clj4HashSet<T extends SymbolicExpression> extends
 
 		for (T element : set)
 			result = result.plus(element);
-		return new Clj4HashSet<T>(result);
+		return new CljHashSet<T>(result);
 	}
 
 	@Override
 	public SymbolicSet<T> remove(T element) {
-		return new Clj4HashSet<T>(pset.minus(element));
+		return new CljHashSet<T>(pset.minus(element));
 	}
 
 	@Override
@@ -115,7 +117,7 @@ public class Clj4HashSet<T extends SymbolicExpression> extends
 
 		for (T element : set)
 			result = result.minus(element);
-		return new Clj4HashSet<T>(result);
+		return new CljHashSet<T>(result);
 	}
 
 	@Override
@@ -128,43 +130,19 @@ public class Clj4HashSet<T extends SymbolicExpression> extends
 			if (!theSet.contains(element))
 				result = result.minus(element);
 
-		return new Clj4HashSet<T>(result);
+		return new CljHashSet<T>(result);
 	}
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
-		return pset.equals(((Clj4HashSet<T>) o).pset);
+		SymbolicSet<T> that = (SymbolicSet<T>) o;
+
+		return !that.isSorted() && pset.equals(((CljHashSet<T>) o).pset);
 	}
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicCollectionKind.SET.hashCode() ^ pset.hashCode();
-	}
-
-	// @Override
-	public void canonizeChildrenOLD(CommonObjectFactory factory) {
-		int count = 0;
-		Iterator<T> iter = pset.iterator();
-
-		while (iter.hasNext()) {
-			T t1 = iter.next();
-			T t2 = factory.canonic(t1);
-
-			if (t1 != t2) {
-				PersistentSet<T> newSet = Persistents.hashSet();
-				Iterator<T> iter2 = pset.iterator();
-
-				for (int i = 0; i < count; i++) {
-					newSet = newSet.plus(iter2.next());
-				}
-				newSet = newSet.plus(t2);
-				while (iter.hasNext())
-					newSet = newSet.plus(factory.canonic(iter.next()));
-				pset = newSet;
-				return;
-			}
-			count++;
-		}
+		return classCode ^ pset.hashCode();
 	}
 
 	@Override
@@ -176,7 +154,6 @@ public class Clj4HashSet<T extends SymbolicExpression> extends
 			T t1 = iter.next();
 			T t2 = factory.canonic(t1);
 
-			assert t2 != null;
 			newSet = newSet.plus(t2);
 		}
 		pset = newSet;

@@ -13,21 +13,21 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class Clj4HashSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+public class CljHashMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
 
 	private PersistentMap<K, V> pmap;
 
-	public Clj4HashSymbolicMap(PersistentMap<K, V> pmap) {
+	public CljHashMap(PersistentMap<K, V> pmap) {
 		super();
 		this.pmap = pmap;
 	}
 
-	public Clj4HashSymbolicMap() {
+	public CljHashMap() {
 		this(Persistents.<K, V> hashMap());
 	}
 
-	Clj4HashSymbolicMap(Map<K, V> javaMap) {
+	CljHashMap(Map<K, V> javaMap) {
 		this(Persistents.hashMap(javaMap));
 	}
 
@@ -110,17 +110,17 @@ public class Clj4HashSymbolicMap<K extends SymbolicExpression, V extends Symboli
 
 	@Override
 	public SymbolicMap<K, V> put(K key, V value) {
-		return new Clj4HashSymbolicMap<K, V>(pmap.plus(key, value));
+		return new CljHashMap<K, V>(pmap.plus(key, value));
 	}
 
 	@Override
 	public SymbolicMap<K, V> remove(K key) {
-		return new Clj4HashSymbolicMap<K, V>(pmap.minus(key));
+		return new CljHashMap<K, V>(pmap.minus(key));
 	}
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<V> o) {
-		Clj4HashSymbolicMap<?, ?> that = (Clj4HashSymbolicMap<?, ?>) o;
+		CljHashMap<?, ?> that = (CljHashMap<?, ?>) o;
 
 		return pmap.equals(that.pmap);
 	}

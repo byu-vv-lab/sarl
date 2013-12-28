@@ -10,8 +10,8 @@ import org.pcollections.PMap;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionComparatorStub;
 import edu.udel.cis.vsl.sarl.collections.IF.ExpressionStub;
-import edu.udel.cis.vsl.sarl.collections.common.Clj4SortedSymbolicMap;
-import edu.udel.cis.vsl.sarl.collections.common.PcollectionsSymbolicMap;
+import edu.udel.cis.vsl.sarl.collections.common.CljSortedMap;
+import edu.udel.cis.vsl.sarl.collections.common.PcollectionsHashMap;
 
 public class MapBenchmark {
 
@@ -33,11 +33,11 @@ public class MapBenchmark {
 				}
 
 				Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
-				Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression> cljMap = new Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>(
+				CljSortedMap<SymbolicExpression, SymbolicExpression> cljMap = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
 						elementComparator);
 				PMap<SymbolicExpression, SymbolicExpression> pmap = HashTreePMap
 						.empty();
-				PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(
+				PcollectionsHashMap<SymbolicExpression, SymbolicExpression> pMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>(
 						pmap);
 				// set up for removing elemnts from the array
 				ArrayList<Integer> removeList = new ArrayList<Integer>(size[s]);
@@ -54,10 +54,10 @@ public class MapBenchmark {
 				long cljStartTime = System.nanoTime();
 				for (int k = 0; k < size[s]; k++) {
 					if (k + 1 == size[s]) {
-						cljMap = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) cljMap
+						cljMap = (CljSortedMap<SymbolicExpression, SymbolicExpression>) cljMap
 								.put(keyVals[k], keyVals[0]);
 					} else {
-						cljMap = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) cljMap
+						cljMap = (CljSortedMap<SymbolicExpression, SymbolicExpression>) cljMap
 								.put(keyVals[k], keyVals[k + 1]);
 					}
 				}
@@ -72,10 +72,10 @@ public class MapBenchmark {
 				long pmapStartTime = System.nanoTime();
 				for (int j = 0; j < size[s]; j++) {
 					if (j + 1 == size[s]) {
-						pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap
+						pMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMap
 								.put(keyVals[j], keyVals[0]);
 					} else {
-						pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap
+						pMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMap
 								.put(keyVals[j], keyVals[j + 1]);
 					}
 				}
@@ -90,7 +90,7 @@ public class MapBenchmark {
 				// start remove from clj
 				cljStartTime = System.nanoTime();
 				for (int l = 0; l < size[s]; l++) {
-					cljMap = (Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>) cljMap
+					cljMap = (CljSortedMap<SymbolicExpression, SymbolicExpression>) cljMap
 							.remove(keyVals[removeElements[l]]);
 				}
 				cljEndTime = System.nanoTime();
@@ -104,7 +104,7 @@ public class MapBenchmark {
 				// start remove from pmap
 				pmapStartTime = System.nanoTime();
 				for (int m = 0; m < size[s]; m++) {
-					pMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) pMap
+					pMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) pMap
 							.remove(keyVals[removeElements[m]]);
 				}
 				pmapEndTime = System.nanoTime();

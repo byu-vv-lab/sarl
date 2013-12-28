@@ -63,16 +63,16 @@ public class PcollectionsSymbolicMapTest {
 	
 	
 	
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> javaMap;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> pMap;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> javaMap;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> pMap;
 	
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMap;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSame;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainPMapSmaller;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> plainEmptyPMap;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> plainPMap;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> plainPMapSame;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> plainPMapSmaller;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> plainEmptyPMap;
 	
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> canonicMap;
-	private static PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression> canonicMap2;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> canonicMap;
+	private static PcollectionsHashMap<SymbolicExpression, SymbolicExpression> canonicMap2;
 	
 	private static SymbolicExpression twenty = createExpression(20);
 	private static SymbolicExpression forty = createExpression(40);
@@ -104,40 +104,40 @@ public class PcollectionsSymbolicMapTest {
 		
 				pmap = HashTreePMap.empty();
 				map = new LinkedHashMap<SymbolicExpression,SymbolicExpression>();
-				javaMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
-				pMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(pmap);
+				javaMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>(map);
+				pMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>(pmap);
 				
-				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("A^4"), new ExpressionStub("T"));
-				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("P^5"), new ExpressionStub("T"));
-				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("3G"), new ExpressionStub("T"));
-				javaMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("R^2"), new ExpressionStub("T"));
+				javaMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("A^4"), new ExpressionStub("T"));
+				javaMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("P^5"), new ExpressionStub("T"));
+				javaMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("3G"), new ExpressionStub("T"));
+				javaMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) javaMap.put(new ExpressionStub("R^2"), new ExpressionStub("T"));
 				pMap.put(y, b);
 				javaMap.put(y, b);
 				
-				plainPMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
-				plainPMapSame = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
-				plainPMapSmaller = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
-				plainEmptyPMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>();
+				plainPMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>();
+				plainPMapSame = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>();
+				plainPMapSmaller = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>();
+				plainEmptyPMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>();
 				
-				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(y, c);
-				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(b , c);
-				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(x, z);
-				plainPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(z, b);
-				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(y, c);
-				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(b , c);
-				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(x, z);
-				plainPMapSame = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(z, b);
+				plainPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(y, c);
+				plainPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(b , c);
+				plainPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(x, z);
+				plainPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMap.put(z, b);
+				plainPMapSame = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(y, c);
+				plainPMapSame = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(b , c);
+				plainPMapSame = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(x, z);
+				plainPMapSame = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSame.put(z, b);
 				
-				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(a, c);
-				plainPMapSmaller = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(z , y);
+				plainPMapSmaller = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(a, c);
+				plainPMapSmaller = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainPMapSmaller.put(z , y);
 				
 				
-				canonicMap = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
+				canonicMap = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>(map);
 				twenty = objectFactory.canonic(twenty);
-				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(twenty, eighty);
-				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, eighty);
-				canonicMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, hundred);
-				canonicMap2 = new PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>(map);
+				canonicMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(twenty, eighty);
+				canonicMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, eighty);
+				canonicMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) canonicMap.put(forty, hundred);
+				canonicMap2 = new PcollectionsHashMap<SymbolicExpression, SymbolicExpression>(map);
 				
 	}
 
@@ -301,7 +301,7 @@ public class PcollectionsSymbolicMapTest {
 	@Test
 	public void testPut() {
 		assertTrue(plainEmptyPMap.isEmpty());
-		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
+		plainEmptyPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
 		assertFalse(plainEmptyPMap.isEmpty());
 	}
 
@@ -311,9 +311,9 @@ public class PcollectionsSymbolicMapTest {
 	@Test
 	public void testRemove() {
 		assertTrue(plainEmptyPMap.isEmpty());
-		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
+		plainEmptyPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.put(a,b);
 		assertFalse(plainEmptyPMap.isEmpty());
-		plainEmptyPMap = (PcollectionsSymbolicMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.remove(a);
+		plainEmptyPMap = (PcollectionsHashMap<SymbolicExpression, SymbolicExpression>) plainEmptyPMap.remove(a);
 		assertTrue(plainEmptyPMap.isEmpty());
 	}
 

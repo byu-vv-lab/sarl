@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.common;
 
@@ -31,22 +31,24 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+public class PcollectionsHashMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
+
+	private final static int classCode = SymbolicCollectionKind.MAP.hashCode();
 
 	private PMap<K, V> pmap;
 
-	public PcollectionsSymbolicMap(PMap<K, V> pmap) {
+	public PcollectionsHashMap(PMap<K, V> pmap) {
 		super();
 		this.pmap = pmap;
 	}
 
-	public PcollectionsSymbolicMap() {
+	public PcollectionsHashMap() {
 		super();
 		this.pmap = HashTreePMap.empty();
 	}
 
-	PcollectionsSymbolicMap(Map<K, V> javaMap) {
+	PcollectionsHashMap(Map<K, V> javaMap) {
 		this(HashTreePMap.from(javaMap));
 	}
 
@@ -77,7 +79,7 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 
 	@Override
 	protected int computeHashCode() {
-		return SymbolicCollectionKind.MAP.hashCode() ^ pmap.hashCode();
+		return classCode ^ pmap.hashCode();
 	}
 
 	@Override
@@ -87,7 +89,7 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<V> o) {
-		PcollectionsSymbolicMap<?, ?> that = (PcollectionsSymbolicMap<?, ?>) o;
+		PcollectionsHashMap<?, ?> that = (PcollectionsHashMap<?, ?>) o;
 
 		return pmap.equals(that.pmap);
 	}
@@ -130,12 +132,12 @@ public class PcollectionsSymbolicMap<K extends SymbolicExpression, V extends Sym
 
 	@Override
 	public SymbolicMap<K, V> put(K key, V value) {
-		return new PcollectionsSymbolicMap<K, V>(pmap.plus(key, value));
+		return new PcollectionsHashMap<K, V>(pmap.plus(key, value));
 	}
 
 	@Override
 	public SymbolicMap<K, V> remove(K key) {
-		return new PcollectionsSymbolicMap<K, V>(pmap.minus(key));
+		return new PcollectionsHashMap<K, V>(pmap.minus(key));
 	}
 
 	@Override

@@ -37,17 +37,17 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
  * @author siegel
  * 
  */
-public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
+public class PcollectionsSequence<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> implements SymbolicSequence<T> {
 
 	private PVector<T> pvector;
 
-	public PcollectionsSymbolicSequence(PVector<T> pvector) {
+	public PcollectionsSequence(PVector<T> pvector) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		this.pvector = pvector;
 	}
 
-	public PcollectionsSymbolicSequence() {
+	public PcollectionsSequence() {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.empty();
 	}
@@ -58,11 +58,11 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 	 * 
 	 * @param elements
 	 */
-	public PcollectionsSymbolicSequence(Collection<T> elements) {
+	public PcollectionsSequence(Collection<T> elements) {
 		this(TreePVector.from(elements));
 	}
 
-	public PcollectionsSymbolicSequence(Iterable<? extends T> elements) {
+	public PcollectionsSequence(Iterable<? extends T> elements) {
 		this();
 		for (T expr : elements) {
 			if (expr == null)
@@ -72,7 +72,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 		}
 	}
 
-	public PcollectionsSymbolicSequence(T[] elements) {
+	public PcollectionsSequence(T[] elements) {
 		this();
 		for (T expr : elements) {
 			if (expr == null)
@@ -82,7 +82,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 		}
 	}
 
-	public PcollectionsSymbolicSequence(T element) {
+	public PcollectionsSequence(T element) {
 		this();
 		if (element == null)
 			throw new NullPointerException(
@@ -107,17 +107,17 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> add(T element) {
-		return new PcollectionsSymbolicSequence<T>(pvector.plus(element));
+		return new PcollectionsSequence<T>(pvector.plus(element));
 	}
 
 	@Override
 	public SymbolicSequence<T> set(int index, T element) {
-		return new PcollectionsSymbolicSequence<T>(pvector.with(index, element));
+		return new PcollectionsSequence<T>(pvector.with(index, element));
 	}
 
 	@Override
 	public SymbolicSequence<T> remove(int index) {
-		return new PcollectionsSymbolicSequence<T>(pvector.minus(index));
+		return new PcollectionsSequence<T>(pvector.minus(index));
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> subSequence(int start, int end) {
-		return new PcollectionsSymbolicSequence<T>(pvector.subList(start, end));
+		return new PcollectionsSequence<T>(pvector.subList(start, end));
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 			for (int i = size; i < index; i++)
 				newVector = newVector.plus(filler);
 			newVector = newVector.plus(value);
-			return new PcollectionsSymbolicSequence<T>(newVector);
+			return new PcollectionsSequence<T>(newVector);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class PcollectionsSymbolicSequence<T extends SymbolicExpression> extends
 				newVector = newVector.plus(u);
 				while (iter.hasNext())
 					newVector = newVector.plus(transform.apply(iter.next()));
-				return new PcollectionsSymbolicSequence<U>(newVector);
+				return new PcollectionsSequence<U>(newVector);
 			}
 			count++;
 		}

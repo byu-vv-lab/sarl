@@ -30,11 +30,18 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
+/**
+ * Implementation of CollectionFactory. Currently using Clojure's data
+ * structures (clj-ds) for all collections.
+ * 
+ * @author siegel
+ * 
+ */
 public class CommonCollectionFactory implements CollectionFactory {
 
 	private ObjectFactory objectFactory;
 
-	private SymbolicSet<?> emptyHashSet;// , emptySortedSet;
+	private SymbolicSet<?> emptyHashSet, emptySortedSet;
 
 	private SymbolicMap<?, ?> emptyHashMap, emptySortedMap;
 
@@ -47,14 +54,10 @@ public class CommonCollectionFactory implements CollectionFactory {
 	public CommonCollectionFactory(ObjectFactory objectFactory) {
 		this.objectFactory = objectFactory;
 		this.comparator = new CollectionComparator();
-		 emptyHashSet = objectFactory
-		 .canonic(new Clj4HashSet<SymbolicExpression>());
-
-		// emptyHashSet = objectFactory
-		// .canonic(new PcollectionsSymbolicSet<SymbolicExpression>());
-
+		emptyHashSet = objectFactory
+				.canonic(new CljHashSet<SymbolicExpression>());
 		emptyHashMap = objectFactory
-				.canonic(new Clj4HashSymbolicMap<SymbolicExpression, SymbolicExpression>());
+				.canonic(new CljHashMap<SymbolicExpression, SymbolicExpression>());
 		objectFactory.setCollectionComparator(comparator);
 	}
 
@@ -68,10 +71,12 @@ public class CommonCollectionFactory implements CollectionFactory {
 	public void init() {
 		assert elementComparator != null;
 		emptySortedMap = objectFactory
-				.canonic(new Clj4SortedSymbolicMap<SymbolicExpression, SymbolicExpression>(
+				.canonic(new CljSortedMap<SymbolicExpression, SymbolicExpression>(
 						elementComparator));
 		emptySequence = objectFactory
-				.canonic(new Clj4SymbolicSequence<SymbolicExpression>());
+				.canonic(new CljSequence<SymbolicExpression>());
+		emptySortedSet = objectFactory
+				.canonic(new CljSortedSet<SymbolicExpression>(elementComparator));
 		// etc.
 	}
 
@@ -92,9 +97,10 @@ public class CommonCollectionFactory implements CollectionFactory {
 		return (SymbolicSet<T>) emptyHashSet;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet() {
-		throw new UnsupportedOperationException("not yet implemented");
+		return (SymbolicSet<T>) emptySortedSet;
 	}
 
 	@Override
@@ -108,30 +114,27 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
 			T element) {
-		/*
-		 * SymbolicSet<T> empty = emptySortedSet();
-		 * 
-		 * return empty.add(element);
-		 */
-		throw new UnsupportedOperationException("not yet implemented");
+		SymbolicSet<T> empty = emptySortedSet();
+
+		return empty.add(element);
 	}
 
 	@Override
 	public <T extends SymbolicExpression> SymbolicSequence<T> sequence(
 			Iterable<? extends T> elements) {
-		return new Clj4SymbolicSequence<T>(elements);
+		return new CljSequence<T>(elements);
 	}
 
 	@Override
 	public <T extends SymbolicExpression> SymbolicSequence<T> sequence(
 			T[] elements) {
-		return new Clj4SymbolicSequence<T>(elements);
+		return new CljSequence<T>(elements);
 	}
 
 	@Override
 	public <T extends SymbolicExpression> SymbolicSequence<T> singletonSequence(
 			T element) {
-		return new Clj4SymbolicSequence<T>(element);
+		return new CljSequence<T>(element);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -171,39 +174,37 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
 			Map<K, V> javaMap) {
-		return new Clj4SortedSymbolicMap<K, V>(javaMap, elementComparator);
+		return new CljSortedMap<K, V>(javaMap, elementComparator);
 	}
 
 	@Override
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> hashMap(
 			Map<K, V> javaMap) {
-		return new Clj4HashSymbolicMap<K, V>(javaMap);
+		return new CljHashMap<K, V>(javaMap);
 	}
 
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> emptySortedSet(
 			Comparator<? super T> comparator) {
-		// TODO Auto-generated method stub
-		return null;
+		return new CljSortedSet<T>(comparator);
 	}
 
 	@Override
 	public <T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(
 			T element, Comparator<? super T> comparator) {
-		// TODO Auto-generated method stub
-		return null;
+		return emptySortedSet(comparator).add(element);
 	}
 
 	@Override
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptySortedMap(
 			Comparator<? super K> comparator) {
-		return new Clj4SortedSymbolicMap<K, V>(comparator);
+		return new CljSortedMap<K, V>(comparator);
 	}
 
 	@Override
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonSortedMap(
 			Comparator<? super K> comparator, K key, V value) {
-		SymbolicMap<K, V> result = new Clj4SortedSymbolicMap<K, V>(comparator);
+		SymbolicMap<K, V> result = new CljSortedMap<K, V>(comparator);
 
 		result = result.put(key, value);
 		return result;
@@ -212,7 +213,7 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
 			Comparator<? super K> comparator, Map<K, V> javaMap) {
-		return new Clj4SortedSymbolicMap<K, V>(javaMap, comparator);
+		return new CljSortedMap<K, V>(javaMap, comparator);
 	}
 
 }

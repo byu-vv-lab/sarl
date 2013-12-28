@@ -31,7 +31,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-public class Clj4SortedSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
+public class CljSortedMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
 
 	private PersistentTreeMap<K, V> pmap;
@@ -46,17 +46,17 @@ public class Clj4SortedSymbolicMap<K extends SymbolicExpression, V extends Symbo
 		};
 	}
 
-	public Clj4SortedSymbolicMap(PersistentTreeMap<K, V> pmap) {
+	public CljSortedMap(PersistentTreeMap<K, V> pmap) {
 		super();
 		this.pmap = pmap;
 	}
 
-	public Clj4SortedSymbolicMap(Comparator<? super K> comparator) {
+	public CljSortedMap(Comparator<? super K> comparator) {
 		super();
 		this.pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
 	}
 
-	Clj4SortedSymbolicMap(Map<K, V> javaMap, Comparator<? super K> comparator) {
+	CljSortedMap(Map<K, V> javaMap, Comparator<? super K> comparator) {
 		super();
 		pmap = new PersistentTreeMap<K, V>(null, restrict(comparator));
 		for (Entry<K, V> entry : javaMap.entrySet())
@@ -120,8 +120,8 @@ public class Clj4SortedSymbolicMap<K extends SymbolicExpression, V extends Symbo
 			// now you know the two sets have the same type of elements,
 			// since an expression collection holds elements of one type
 			// TODO: make the type a field in a symbolic collection?
-			if (o instanceof Clj4SortedSymbolicMap)
-				return pmap.equals(((Clj4SortedSymbolicMap<?, ?>) o).pmap);
+			if (o instanceof CljSortedMap)
+				return pmap.equals(((CljSortedMap<?, ?>) o).pmap);
 			return false;
 		}
 	}
@@ -138,12 +138,12 @@ public class Clj4SortedSymbolicMap<K extends SymbolicExpression, V extends Symbo
 
 	@Override
 	public SymbolicMap<K, V> put(K key, V value) {
-		return new Clj4SortedSymbolicMap<K, V>(pmap.assoc(key, value));
+		return new CljSortedMap<K, V>(pmap.assoc(key, value));
 	}
 
 	@Override
 	public SymbolicMap<K, V> remove(K key) {
-		return new Clj4SortedSymbolicMap<K, V>(pmap.without(key));
+		return new CljSortedMap<K, V>(pmap.without(key));
 	}
 
 	@SuppressWarnings("unchecked")
