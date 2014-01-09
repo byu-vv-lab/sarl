@@ -73,7 +73,7 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer result = new StringBuffer(name.toStringBuffer(false));
 
-		result.append(sequence.toStringBuffer(false));
+		//result.append(sequence.toStringBuffer(false));
 		return result;
 	}
 

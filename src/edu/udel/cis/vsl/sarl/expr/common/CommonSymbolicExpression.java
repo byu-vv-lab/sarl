@@ -370,15 +370,21 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			result.append(arguments[0].toStringBuffer(true));
 			return result;
 		case CONCRETE: {
-			if (type.typeKind() == SymbolicTypeKind.CHAR) {
+			SymbolicTypeKind tk = type.typeKind();
+
+			if (tk == SymbolicTypeKind.CHAR) {
 				result.append("'");
 				result.append(arguments[0].toStringBuffer(false));
 				result.append("'");
 			} else {
 				if (!type.isNumeric() && !type.isBoolean()) {
-					result.append('(');
-					result.append(type.toStringBuffer(false));
-					result.append(')');
+					if (tk == SymbolicTypeKind.TUPLE)
+						result.append(type.toStringBuffer(false));
+					else {
+						result.append('(');
+						result.append(type.toStringBuffer(false));
+						result.append(')');
+					}
 				}
 				result.append(arguments[0].toStringBuffer(false));
 				if (type.isHerbrand())
@@ -413,6 +419,26 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				count++;
 			}
 			result.append("]");
+			return result;
+		}
+		case DENSE_TUPLE_WRITE: {
+			int count = 0;
+			boolean first = true;
+
+			result.append(arguments[0].toStringBuffer(true));
+			result.append("<");
+			for (SymbolicExpression value : (SymbolicSequence<?>) arguments[1]) {
+				if (!value.isNull()) {
+					if (first)
+						first = false;
+					else
+						result.append(", ");
+					result.append(count + ":=");
+					result.append(value.toStringBuffer(false));
+				}
+				count++;
+			}
+			result.append(">");
 			return result;
 		}
 		case DIVIDE:
