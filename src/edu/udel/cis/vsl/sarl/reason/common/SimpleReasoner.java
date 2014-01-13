@@ -18,7 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.reason.common;
 
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,10 +105,6 @@ public class SimpleReasoner implements Reasoner {
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		throw new TheoremProverException(
 				"SimpleIdealProver cannot be used to find models");
-	}
-
-	@Override
-	public void setOutput(PrintStream out) {
 	}
 
 	@Override

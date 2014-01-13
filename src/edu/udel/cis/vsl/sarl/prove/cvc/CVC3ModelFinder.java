@@ -96,7 +96,7 @@ public class CVC3ModelFinder {
 		this.vc = prover.validityChecker();
 		this.varMap = prover.varMap();
 		this.opMap = prover.opMap();
-		this.out = prover.out();
+		this.out = universe.getOutputStream();
 		this.cvcModel = cvcModel;
 		this.preModel = new HashMap<SymbolicConstant, Object>();
 		this.model = new HashMap<SymbolicConstant, SymbolicExpression>();

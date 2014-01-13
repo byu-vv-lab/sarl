@@ -68,4 +68,9 @@ public class CommonValidityResult implements ValidityResult {
 		return resultType;
 	}
 
+	@Override
+	public String toString() {
+		return resultType.toString();
+	}
+
 }

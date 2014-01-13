@@ -69,12 +69,12 @@ public class AndTest {
 		TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
 				.newProver(context);
 
-		prover.setOutput(System.out); // for debugging
+		// prover.setOutput(System.out); // for debugging
 		provers.add(prover);
-		
+
 		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
 				.newProver(context);
-		cvc4prover.setOutput(System.out); // for debugging
+		// cvc4prover.setOutput(System.out); // for debugging
 		provers.add(cvc4prover);
 	}
 
@@ -118,7 +118,7 @@ public class AndTest {
 			assertEquals(ResultType.NO, result.getResultType());
 		}
 	}
-	
+
 	@Test
 	public void translateTwoArgNotEqual() {
 		check(ResultType.NO, universe.and(boolTrue, boolFalse));
@@ -129,7 +129,7 @@ public class AndTest {
 		check(ResultType.YES, universe.and(boolTrue, boolTrue));
 	}
 
-	@Test (expected = SARLInternalException.class)
+	@Test(expected = SARLInternalException.class)
 	public void translateThreeArg() {
 		BooleanExpression predicate = (BooleanExpression) expressionFactory
 				.expression(SymbolicOperator.AND, boolType, boolTrue, boolTrue,

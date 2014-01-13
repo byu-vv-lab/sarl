@@ -100,6 +100,16 @@ public class CommonReasoner implements Reasoner {
 
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
+		boolean showQuery = universe().getShowQueries();
+
+		if (showQuery) {
+			PrintStream out = universe().getOutputStream();
+			int id = universe().numValidCalls();
+
+			out.println("Query " + id + " assumption: "
+					+ simplifier.getFullContext());
+			out.println("Query " + id + " predicate:  " + predicate);
+		}
 		if (predicate == null)
 			throw new SARLException("Argument to Reasoner.valid is null.");
 		else {
@@ -120,6 +130,12 @@ public class CommonReasoner implements Reasoner {
 					prover = factory.newProver(getReducedContext());
 				result = prover.valid(simplifiedPredicate);
 				validityCache.put(predicate, result);
+			}
+			if (showQuery) {
+				int id = universe().numValidCalls() - 1;
+				PrintStream out = universe().getOutputStream();
+
+				out.println("Query " + id + " result:     " + result);
 			}
 			return result;
 		}
@@ -144,11 +160,6 @@ public class CommonReasoner implements Reasoner {
 			validityCache.put(predicate, result);
 		}
 		return result;
-	}
-
-	@Override
-	public void setOutput(PrintStream out) {
-		prover.setOutput(out);
 	}
 
 	@Override

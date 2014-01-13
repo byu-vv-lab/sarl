@@ -75,17 +75,17 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	private PreUniverse universe;
 
-	/**
-	 * Print the queries and results each time valid is called. Initialized by
-	 * constructor.
-	 */
-	private boolean showProverQueries = false;
-
-	/**
-	 * The printwriter used to print the queries and results. Initialized by
-	 * constructor.
-	 */
-	private PrintStream out = System.out;
+	// /**
+	// * Print the queries and results each time valid is called. Initialized by
+	// * constructor.
+	// */
+	// private boolean showProverQueries = false;
+	//
+	// /**
+	// * The printwriter used to print the queries and results. Initialized by
+	// * constructor.
+	// */
+	// private PrintStream out = System.out;
 
 	/** The CVC3 object used to check queries. */
 	private ValidityChecker vc = ValidityChecker.create();
@@ -163,7 +163,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	/**
 	 * The assumption under which this prover is operating.
 	 */
-	private BooleanExpression context;
+	// private BooleanExpression context;
 
 	/**
 	 * The translation of the context to a CVC3 expression.
@@ -183,7 +183,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		assert context != null;
 		this.universe = universe;
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
-		this.context = context;
+		// this.context = context;
 		intDivisionStack
 				.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
 		translationStack.add(new HashMap<SymbolicExpression, Expr>());
@@ -1288,18 +1288,18 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	private QueryResult queryCVC3(BooleanExpression symbolicPredicate) {
 		QueryResult result = null;
-		int numValidCalls = -1;
+		boolean show = universe.getShowProverQueries();
 
 		universe.incrementProverValidCount();
-		if (showProverQueries) {
-			numValidCalls = universe.numValidCalls();
-			out.println();
-			out.print("SARL context   " + numValidCalls + ": ");
-			out.println(context);
-			out.print("SARL predicate " + numValidCalls + ": ");
-			out.println(symbolicPredicate);
-			out.flush();
-		}
+		// if (showProverQueries) {
+		// numValidCalls = universe.numValidCalls();
+		// out.println();
+		// out.print("SARL context   " + numValidCalls + ": ");
+		// out.println(context);
+		// out.print("SARL predicate " + numValidCalls + ": ");
+		// out.println(symbolicPredicate);
+		// out.flush();
+		// }
 		try {
 			Expr cvcPredicate;
 
@@ -1308,17 +1308,27 @@ public class CVC3TheoremProver implements TheoremProver {
 					.add(new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>());
 			translationStack.add(new HashMap<SymbolicExpression, Expr>());
 			cvcPredicate = translate(symbolicPredicate);
-			if (showProverQueries) {
+			if (show) {
+				PrintStream out = universe.getOutputStream();
+				int id = universe.numProverValidCalls() - 1;
+
 				out.println();
-				out.print("CVC3 assumptions " + numValidCalls + ": ");
+				out.print("CVC3 assumptions " + id + ": ");
 				for (Object o : vc.getUserAssumptions()) {
 					out.println(o);
 				}
-				out.print("CVC3 predicate   " + numValidCalls + ": ");
+				out.print("CVC3 predicate   " + id + ": ");
 				out.println(cvcPredicate);
 				out.flush();
 			}
 			result = vc.query(cvcPredicate);
+			if (show) {
+				PrintStream out = universe.getOutputStream();
+				int id = universe.numProverValidCalls() - 1;
+
+				out.println("CVC3 result      " + id + ": " + result);
+				out.flush();
+			}
 		} catch (Cvc3Exception e) {
 			e.printStackTrace();
 			throw new SARLInternalException(
@@ -1352,11 +1362,11 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 
 	private ValidityResult translateResult(QueryResult result) {
-		if (showProverQueries) {
-			out.println("CVC3 result      " + universe.numValidCalls() + ": "
-					+ result);
-			out.flush();
-		}
+		// if (showProverQueries) {
+		// out.println("CVC3 result      " + universe.numValidCalls() + ": "
+		// + result);
+		// out.flush();
+		// }
 		// unfortunately QueryResult is not an enum...
 		if (result.equals(QueryResult.VALID)) {
 			return Prove.RESULT_YES;
@@ -1365,10 +1375,10 @@ public class CVC3TheoremProver implements TheoremProver {
 		} else if (result.equals(QueryResult.UNKNOWN)) {
 			return Prove.RESULT_MAYBE;
 		} else if (result.equals(QueryResult.ABORT)) {
-			out.println("Warning: Query aborted by CVC3.");
+			System.err.println("Warning: Query aborted by CVC3.");
 			return Prove.RESULT_MAYBE;
 		} else {
-			out.println("Warning: Unknown CVC3 query result: " + result);
+			System.err.println("Warning: Unknown CVC3 query result: " + result);
 			return Prove.RESULT_MAYBE;
 		}
 	}
@@ -1556,26 +1566,6 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Returns the queries and results
-	 * 
-	 * @return PrintSteam
-	 */
-
-	public PrintStream out() {
-		return out;
-	}
-
-	/**
-	 * Outputs the boolean value of showProverQueries
-	 * 
-	 * @return boolean value, true if out in setOutput is not equal to null
-	 */
-
-	public boolean showProverQueries() {
-		return showProverQueries;
-	}
-
-	/**
 	 * Takes a BooleanExpression and passes it through queryCVC3 to return a
 	 * QueryResult. The QueryResult is then passed through translateResult that
 	 * gives us a QueryResult that is checked whether it is valid, invalid, to
@@ -1602,12 +1592,6 @@ public class CVC3TheoremProver implements TheoremProver {
 	@Override
 	public String toString() {
 		return "CVC3TheoremProver";
-	}
-
-	@Override
-	public void setOutput(PrintStream out) {
-		this.out = out;
-		showProverQueries = out != null;
 	}
 
 	/**

@@ -32,58 +32,59 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 // then examine the model and make sure it does not satisfy
 // the query.
 
-//until this class stops throwing exception, run in separate
-//Java virtual machine:
+// until this class stops throwing exception, run in separate
+// Java virtual machine:
 @RunWith(JUnit4.class)
-
 public class ModelTest {
 
 	// Static fields: instantiated once and used for all tests...
 
-		private static FactorySystem factorySystem = PreUniverses
-				.newIdealFactorySystem();
+	private static FactorySystem factorySystem = PreUniverses
+			.newIdealFactorySystem();
 
-		private static PreUniverse universe = PreUniverses
-				.newPreUniverse(factorySystem);
+	private static PreUniverse universe = PreUniverses
+			.newPreUniverse(factorySystem);
 
-		private static SymbolicType integerType = universe.integerType();
+	private static SymbolicType integerType = universe.integerType();
 
-		private static NumericExpression five = universe.integer(5);
+	private static NumericExpression five = universe.integer(5);
 
-		private static NumericExpression ten = universe.integer(10);
+	private static NumericExpression ten = universe.integer(10);
 
-		private static NumericSymbolicConstant x = (NumericSymbolicConstant) universe
-				.symbolicConstant(universe.stringObject("x"), integerType);
+	private static NumericSymbolicConstant x = (NumericSymbolicConstant) universe
+			.symbolicConstant(universe.stringObject("x"), integerType);
 
-		private static NumericSymbolicConstant y = (NumericSymbolicConstant) universe
-				.symbolicConstant(universe.stringObject("y"), integerType);
+	private static NumericSymbolicConstant y = (NumericSymbolicConstant) universe
+			.symbolicConstant(universe.stringObject("y"), integerType);
 
-		private static BooleanExpression context = universe.and(
-				universe.equals(x, five), universe.lessThan(y, ten));
+	private static BooleanExpression context = universe.and(
+			universe.equals(x, five), universe.lessThan(y, ten));
 
-		private static Collection<TheoremProver> provers;
-	
+	private static Collection<TheoremProver> provers;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
+
 		provers = new LinkedList<TheoremProver>();
 		{
 			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
 					.newProver(context);
-			
-			//TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
-			//		.newProver(context);
 
-			prover.setOutput(System.out); // for debugging
-			//cvc4prover.setOutput(System.out);
-			
+			// TheoremProver cvc4prover =
+			// Prove.newCVC4TheoremProverFactory(universe)
+			// .newProver(context);
+
+			// prover.setOutput(System.out); // for debugging
+			// cvc4prover.setOutput(System.out);
+
 			provers.add(prover);
-			//provers.add(cvc4prover); // adds cvc3 and cvc4 theorem prover to the collection
+			// provers.add(cvc4prover); // adds cvc3 and cvc4 theorem prover to
+			// the collection
 		}
-		
+
 		// TODO: until this is working, don't commit it, as it causes
 		// subsequent tests to crash...
-		
+
 	}
 
 	@Before
@@ -93,44 +94,51 @@ public class ModelTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * Uses each prover to check the validity of the predicate, 
-	 * compare the result with the expected result, and
-	 * print the counterexample if the predicate is invalid.
-	 * @param expected The validity result (YES, NO or MAYBE) that is expected.
-	 * @param predicate The predicate to be examined.
+	 * Uses each prover to check the validity of the predicate, compare the
+	 * result with the expected result, and print the counterexample if the
+	 * predicate is invalid.
+	 * 
+	 * @param expected
+	 *            The validity result (YES, NO or MAYBE) that is expected.
+	 * @param predicate
+	 *            The predicate to be examined.
 	 */
-	private void checkResult(ValidityResult.ResultType expected, BooleanExpression predicate) {
-		System.out.println("\nProving the predicate " + predicate.toString() + "...");
-		for (TheoremProver prover : provers){
+	private void checkResult(ValidityResult.ResultType expected,
+			BooleanExpression predicate) {
+		System.out.println("\nProving the predicate " + predicate.toString()
+				+ "...");
+		for (TheoremProver prover : provers) {
 			System.out.print("Current prover is " + prover.toString() + ", ");
 			ValidityResult result = prover.validOrModel(predicate);
 			assertEquals(expected, result.getResultType());
-			System.out.println("result is " + result.getResultType().toString() + ".");
-			if(expected == ResultType.NO)
-				System.out.println("The counterexample is " + ((ModelResult)result).getModel().toString() + ".");
+			System.out.println("result is " + result.getResultType().toString()
+					+ ".");
+			if (expected == ResultType.NO)
+				System.out.println("The counterexample is "
+						+ ((ModelResult) result).getModel().toString() + ".");
 		}
 	}
-	
+
 	/**
-	 * Checks whether "x==y" / "5+10 < x+y" is valid. 
-	 * The provers should find the predicates are invalid and 
-	 * provide a counterexample.
+	 * Checks whether "x==y" / "5+10 < x+y" is valid. The provers should find
+	 * the predicates are invalid and provide a counterexample.
 	 */
 	@Test
 	public void validOrModelTest() {
 		BooleanExpression predicate = universe.equals(x, y);
 		checkResult(ResultType.NO, predicate);
-		
-		predicate = universe.lessThan(universe.add(five, ten), universe.add(x, y));
+
+		predicate = universe.lessThan(universe.add(five, ten),
+				universe.add(x, y));
 		checkResult(ResultType.NO, predicate);
 	}
 
 	@Test
 	public void testValidProver() {
 		BooleanExpression predicate = universe.equals(x, y);
-		for (TheoremProver prover : provers){
+		for (TheoremProver prover : provers) {
 			prover.validOrModel(predicate);
 		}
 	}

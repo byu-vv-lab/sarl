@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.IF;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
@@ -38,6 +39,59 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 public interface PreUniverse {
 
 	// General...
+
+	/**
+	 * Gets the show queries flag: if true, SARL theorem prover queries will be
+	 * printed to the output stream.
+	 * 
+	 * @return current value of the show queries flag
+	 */
+	boolean getShowQueries();
+
+	/**
+	 * Sets the show queries flag. If this is set to true, SARL theorem prover
+	 * queries will be printed to the output stream.
+	 * 
+	 * @param value
+	 *            new value for the show queries flag.
+	 */
+	void setShowQueries(boolean value);
+
+	/**
+	 * Gets the show prover queries flag: if true, the theorem prover queries
+	 * processed by the underlying theorem prover(s) will be printed to the
+	 * output stream.
+	 * 
+	 * @return current value of the show prover queries flag
+	 */
+	boolean getShowProverQueries();
+
+	/**
+	 * Sets the show prover queries flag. If set to true, the theorem prover
+	 * queries processed by the underlying theorem prover(s) will be printed to
+	 * the output stream.
+	 * 
+	 * @param value
+	 *            new value for the show theorem prover queries flag
+	 */
+	void setShowProverQueries(boolean value);
+
+	/**
+	 * Returns the output stream to which information (such as queries) will be
+	 * printed. By default, standard out.
+	 * 
+	 * @return current output stream
+	 */
+	PrintStream getOutputStream();
+
+	/**
+	 * Sets the output stream, the stream to which information (such as queries)
+	 * will be printed. By default, standard out.
+	 * 
+	 * @param out
+	 *            new value for output stream
+	 */
+	void setOutputStream(PrintStream out);
 
 	/**
 	 * Returns a comparator on the set of all symbolic objects. This defines a
@@ -326,9 +380,10 @@ public interface PreUniverse {
 	 * @return the NumberObject wrapping that Number
 	 */
 	NumberObject numberObject(Number value);
+
 	/**
 	 * Returns the charObject wrapping the given char value. These are SARL
-	 * char, not Java char. 
+	 * char, not Java char.
 	 * 
 	 * @param value
 	 *            a SARL char
@@ -609,14 +664,15 @@ public interface PreUniverse {
 	/**
 	 * 
 	 * @param char
-	 *            
+	 * 
 	 * @return SymbolicExpression char by given char type theChar
 	 */
 	SymbolicExpression character(char theChar);
+
 	/**
 	 * 
 	 * @param String
-	 *            
+	 * 
 	 * @return SymbolicExpression String by given String type theString
 	 */
 	SymbolicExpression stringExpression(String theString);
@@ -807,24 +863,24 @@ public interface PreUniverse {
 	BooleanExpression bool(boolean value);
 
 	/**
-	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
-	 * the they are created.  Default is false.  Setting to true will
-	 * decrease performance in certain CnfFactory methods.
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as the they
+	 * are created. Default is false. Setting to true will decrease performance
+	 * in certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
 	 * 
 	 * @return void
 	 */
 	void setBooleanExpressionSimplification(boolean value);
-	
+
 	/**
-	 * Whether or not CnfFactory methods are allowed to simplify expensive
-	 * (p || !p) expressions.
+	 * Whether or not CnfFactory methods are allowed to simplify expensive (p ||
+	 * !p) expressions.
 	 * 
 	 * @return boolean value: false = default
 	 */
 	boolean getBooleanExpressionSimplification();
-	
+
 	/**
 	 * Returns a symbolic expression representing the conjunction of the two
 	 * given arguments. Each argument must be non-null and have boolean type.
@@ -1322,12 +1378,13 @@ public interface PreUniverse {
 	 * Given a reference and a value, returns the sub-expression of value
 	 * specified by the reference. Throws exception if the reference is not of
 	 * the correct form for the type of value.
-	 *  @param value
-	 *              a SymbolicExpression which you would like to dereference from
-	 *  @param reference
-	 *              a ReferenceExpression which is compatible with the value
-	 *              and points to the sub-expression you would like to dereference.
-	 *  @return the ssub-expression inside value pointed to by reference.
+	 * 
+	 * @param value
+	 *            a SymbolicExpression which you would like to dereference from
+	 * @param reference
+	 *            a ReferenceExpression which is compatible with the value and
+	 *            points to the sub-expression you would like to dereference.
+	 * @return the ssub-expression inside value pointed to by reference.
 	 */
 	SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference);
@@ -1335,10 +1392,10 @@ public interface PreUniverse {
 	/**
 	 * Returns the type referenced by a reference into an object of the given
 	 * type. You can only use this method to get the type referenced into a
-	 * SymbolicType, not a SymbolicExpression. Example: if type is array-of-array-of-int
-	 * and the reference is an array element reference, this method returns array-of-int.
-	 * If the reference was an array element's array element, this method woud
-	 * return int.
+	 * SymbolicType, not a SymbolicExpression. Example: if type is
+	 * array-of-array-of-int and the reference is an array element reference,
+	 * this method returns array-of-int. If the reference was an array element's
+	 * array element, this method woud return int.
 	 * 
 	 * @param type
 	 *            a symbolic type which contains a subtype you would like to get

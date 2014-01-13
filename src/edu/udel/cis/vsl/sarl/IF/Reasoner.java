@@ -18,7 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
-import java.io.PrintStream;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -211,16 +210,6 @@ public interface Reasoner {
 	 *         can be concluded if <code>false</code> is returned
 	 */
 	boolean isValid(BooleanExpression predicate);
-
-	/**
-	 * If you want to see the queries and results (e.g., for debugging), set
-	 * this to the appropriate PrintStream. Setting to null turns off that
-	 * output. It is null, be default.
-	 * 
-	 * @param out
-	 *            PrintStream to which you want the output sent
-	 */
-	void setOutput(PrintStream out);
 
 	/**
 	 * If the given expression can be reduced to a concrete numeric value using

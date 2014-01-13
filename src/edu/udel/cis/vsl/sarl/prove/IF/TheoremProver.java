@@ -18,8 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.IF;
 
-import java.io.PrintStream;
-
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
@@ -105,13 +103,4 @@ public interface TheoremProver {
 	 */
 	ValidityResult validOrModel(BooleanExpression predicate);
 
-	/**
-	 * If you want to see the queries and results (e.g., for debugging), set
-	 * this to the appropriate PrintStream. Setting to null turns off that
-	 * output. It is null, be default.
-	 * 
-	 * @param out
-	 *            PrintStream to which you want the output sent
-	 */
-	void setOutput(PrintStream out);
 }

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
@@ -73,6 +74,59 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 public interface SymbolicUniverse {
 
 	// General...
+
+	/**
+	 * Gets the show queries flag: if true, SARL theorem prover queries will be
+	 * printed to the output stream.
+	 * 
+	 * @return current value of the show queries flag
+	 */
+	boolean getShowQueries();
+
+	/**
+	 * Sets the show queries flag. If this is set to true, SARL theorem prover
+	 * queries will be printed to the output stream.
+	 * 
+	 * @param value
+	 *            new value for the show queries flag.
+	 */
+	void setShowQueries(boolean value);
+
+	/**
+	 * Gets the show prover queries flag: if true, the theorem prover queries
+	 * processed by the underlying theorem prover(s) will be printed to the
+	 * output stream.
+	 * 
+	 * @return current value of the show prover queries flag
+	 */
+	boolean getShowProverQueries();
+
+	/**
+	 * Sets the show prover queries flag. If set to true, the theorem prover
+	 * queries processed by the underlying theorem prover(s) will be printed to
+	 * the output stream.
+	 * 
+	 * @param value
+	 *            new value for the show theorem prover queries flag
+	 */
+	void setShowProverQueries(boolean value);
+
+	/**
+	 * Returns the output stream to which information (such as queries) will be
+	 * printed. By default, standard out.
+	 * 
+	 * @return current output stream
+	 */
+	PrintStream getOutputStream();
+
+	/**
+	 * Sets the output stream, the stream to which information (such as queries)
+	 * will be printed. By default, standard out.
+	 * 
+	 * @param out
+	 *            new value for output stream
+	 */
+	void setOutputStream(PrintStream out);
 
 	/**
 	 * Returns a comparator on the set of all symbolic objects. This defines a
@@ -531,44 +585,40 @@ public interface SymbolicUniverse {
 
 	/** The symbolic expression representing the real number 1. */
 	NumericExpression oneReal();
-	
+
 	/**
 	 * 
 	 * @param value
-	 * 				an Java int
-	 * @return
-	 * 			a concrete rational representation of this integer value. 
-	 * 			basically returns (value/1), which is a rational
+	 *            an Java int
+	 * @return a concrete rational representation of this integer value.
+	 *         basically returns (value/1), which is a rational
 	 */
 	NumericExpression rational(int value);
-	
+
 	/**
 	 * 
 	 * @param value
-	 * 				a Java long
-	 * @return
-	 * 			a concrete rational representation of this long value. 
-	 * 			basically returns (value/1), which is a rational
+	 *            a Java long
+	 * @return a concrete rational representation of this long value. basically
+	 *         returns (value/1), which is a rational
 	 */
 	NumericExpression rational(long value);
 
 	/**
 	 * 
 	 * @param value
-	 * 				a Java BigInteger
-	 * @return
-	 * 			a concrete rational representation of this BigInteger value. 
-	 * 			basically returns (value/1), which is a rational
+	 *            a Java BigInteger
+	 * @return a concrete rational representation of this BigInteger value.
+	 *         basically returns (value/1), which is a rational
 	 */
 	NumericExpression rational(BigInteger value);
 
 	/**
 	 * 
 	 * @param value
-	 * 				a Java float 
-	 * @return
-	 * 			a concrete rational representation of this float value. 
-	 * 			basically returns (value/1), which is a rational
+	 *            a Java float
+	 * @return a concrete rational representation of this float value. basically
+	 *         returns (value/1), which is a rational
 	 */
 	NumericExpression rational(float value);
 
@@ -610,7 +660,7 @@ public interface SymbolicUniverse {
 	 *         symbolic expression
 	 */
 	NumericExpression rational(long numerator, long denominator);
-	
+
 	/**
 	 * Returns the symbolic concrete real number numerator/denominator (real
 	 * division).
@@ -656,9 +706,9 @@ public interface SymbolicUniverse {
 	/**
 	 * Attempts to extract a concrete numeric value from the given expression,
 	 * using the assumption if necessary to simplify the expression. For
-	 * example, if the assumption is "N=5" and the expression is "N", this method
-	 * will probably return the number 5. If it cannot obtain a concrete value
-	 * for whatever reason, it will return null.
+	 * example, if the assumption is "N=5" and the expression is "N", this
+	 * method will probably return the number 5. If it cannot obtain a concrete
+	 * value for whatever reason, it will return null.
 	 * 
 	 * @param assumption
 	 *            a boolean expression that is assumed to hold
@@ -862,21 +912,21 @@ public interface SymbolicUniverse {
 	 * @return the symbolic expression "false"
 	 */
 	BooleanExpression falseExpression();
-	
+
 	/**
-	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
-	 * they are created.  Default is false.  Setting to true will
-	 * decrease performance in certain CnfFactory methods.
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as they are
+	 * created. Default is false. Setting to true will decrease performance in
+	 * certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
 	 * 
 	 * @return void
 	 */
 	void setBooleanExpressionSimplification(boolean value);
-	
+
 	/**
-	 * Whether or not CnfFactory methods are allowed to simplify expensive
-	 * (p || !p) expressions.
+	 * Whether or not CnfFactory methods are allowed to simplify expensive (p ||
+	 * !p) expressions.
 	 * 
 	 * @return boolean value: false = default
 	 */

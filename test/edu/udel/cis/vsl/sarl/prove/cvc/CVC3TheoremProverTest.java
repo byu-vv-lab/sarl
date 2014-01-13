@@ -68,7 +68,7 @@ public class CVC3TheoremProverTest {
 
 	@Test
 	public void testBoolean() {
-		cvcProver.setOutput(null);
+		// cvcProver.setOutput(null);
 		SymbolicType boolType = universe.booleanType();
 		Type t = cvcProver.translateType(boolType);
 
@@ -103,8 +103,8 @@ public class CVC3TheoremProverTest {
 				.newProver(booleanExprTrue);
 
 		// including for coverage
-		cvcProver.setOutput(out);
-		cvcProver.showProverQueries();
+		// cvcProver.setOutput(out);
+		// cvcProver.showProverQueries();
 
 		// if true, then true (valid)
 		assertEquals(ValidityResult.ResultType.YES,

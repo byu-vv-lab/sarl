@@ -1,5 +1,6 @@
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -159,6 +160,21 @@ public class CommonPreUniverse implements PreUniverse {
 	private int validCount = 0;
 
 	private int proverValidCount = 0;
+
+	/**
+	 * The stream to which output such as theorem prover queries should be sent.
+	 */
+	private PrintStream out = System.out;
+
+	/**
+	 * Should SARL reasoner queries be printed?
+	 */
+	private boolean showQueries = false;
+
+	/**
+	 * Should the theorem prover queries to the underlying prover(s) be printed?
+	 */
+	private boolean showProverQueries = false;
 
 	// Constructor...
 
@@ -652,6 +668,36 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	// Public methods implementing SymbolicUniverse...
+
+	@Override
+	public boolean getShowQueries() {
+		return showQueries;
+	}
+
+	@Override
+	public void setShowQueries(boolean value) {
+		this.showQueries = value;
+	}
+
+	@Override
+	public boolean getShowProverQueries() {
+		return showProverQueries;
+	}
+
+	@Override
+	public void setShowProverQueries(boolean value) {
+		this.showProverQueries = value;
+	}
+
+	@Override
+	public PrintStream getOutputStream() {
+		return out;
+	}
+
+	@Override
+	public void setOutputStream(PrintStream out) {
+		this.out = out;
+	}
 
 	@Override
 	public SymbolicObject canonic(SymbolicObject object) {
