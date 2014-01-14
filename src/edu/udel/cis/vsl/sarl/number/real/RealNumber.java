@@ -18,6 +18,8 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
+import java.math.BigInteger;
+
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 public abstract class RealNumber implements Number {
@@ -38,12 +40,16 @@ public abstract class RealNumber implements Number {
 			if (o instanceof RealRational) {
 				RealRational me = (RealRational) this;
 				RealRational you = (RealRational) o;
-				int result = me.numerator().compareTo(you.numerator());
-
-				if (result != 0)
-					return result;
-				result = me.denominator().compareTo(you.denominator());
-				return result;
+				BigInteger myValue = me.numerator().multiply(you.denominator());
+				BigInteger yourValue = you.numerator().multiply(me.denominator());
+				
+				return myValue.compareTo(yourValue);
+//				int result = me.numerator().compareTo(you.numerator());
+//
+//				if (result != 0)
+//					return result;
+//				result = me.denominator().compareTo(you.denominator());
+//				return result;
 			} else if (o instanceof RealInteger)
 				return 1;
 			return -1;
