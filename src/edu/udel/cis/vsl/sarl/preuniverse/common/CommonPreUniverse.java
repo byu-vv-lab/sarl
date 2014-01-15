@@ -630,7 +630,7 @@ public class CommonPreUniverse implements PreUniverse {
 			IntegerNumber high, BooleanExpression predicate) {
 		BooleanExpression result = trueExpr;
 
-		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
+		for (IntegerNumber i = low; numberFactory.compare(i, high) < 0; i = numberFactory
 				.increment(i)) {
 			SymbolicExpression iExpression = number(numberObject(i));
 			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
@@ -1772,9 +1772,8 @@ public class CommonPreUniverse implements PreUniverse {
 					SymbolicExpression origin = (SymbolicExpression) array
 							.argument(0);
 
-					if (indexNumber.compareTo(denseArrayMaxSize) < 0) {
+					if (numberFactory.compare(indexNumber, denseArrayMaxSize) < 0) {
 						int indexInt = indexNumber.intValue();
-
 						SymbolicSequence<?> values = (SymbolicSequence<?>) array
 								.argument(1);
 						int size = values.size();
