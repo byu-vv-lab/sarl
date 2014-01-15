@@ -1,6 +1,8 @@
 package edu.udel.cis.vsl.sarl.numbers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 
@@ -65,5 +67,14 @@ public class RealNumberTest {
 		RationalNumber b = factory.rational(bigTen, bigTen);
 		int result = a.compareTo(b);
 		assertEquals(0, result);
+	}
+	
+	@Test
+	public void compareRationals(){
+		RationalNumber a = factory.rational(new BigInteger("3"), new BigInteger("4"));
+		RationalNumber b = factory.rational("1");
+		
+		assertFalse(a.compareTo(b) < 0);
+		assertTrue(factory.compare(a, b) < 0);
 	}
 }

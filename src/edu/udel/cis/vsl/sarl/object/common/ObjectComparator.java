@@ -22,6 +22,7 @@ import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
@@ -47,6 +48,8 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 	 */
 	private Comparator<SymbolicCollection<?>> collectionComparator;
 
+	private NumberFactory numberFactory;
+
 	/**
 	 * Type Comparator, set using setTypeComparator
 	 */
@@ -57,11 +60,13 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 	 */
 	private Comparator<SymbolicTypeSequence> typeSequenceComparator;
 
-	public ObjectComparator() {
+	public ObjectComparator(NumberFactory numberFactory) {
+		this.numberFactory = numberFactory;
 	}
 
 	/**
 	 * Sets the expression comparator for this object
+	 * 
 	 * @param c
 	 */
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
@@ -70,6 +75,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 	/**
 	 * Sets the collection comparator for this object
+	 * 
 	 * @param c
 	 */
 	public void setCollectionComparator(Comparator<SymbolicCollection<?>> c) {
@@ -78,6 +84,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 	/**
 	 * Sets the type comparator for this object
+	 * 
 	 * @param c
 	 */
 	public void setTypeComparator(Comparator<SymbolicType> c) {
@@ -86,6 +93,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 	/**
 	 * Sets the type sequence comparator for this object
+	 * 
 	 * @param c
 	 */
 	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
@@ -131,6 +139,7 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 
 	/**
 	 * Compares two SymbolicObjects.
+	 * 
 	 * @param o1
 	 * @param o2
 	 * @return 0 if the two objects are equivalent
@@ -165,7 +174,8 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 			case INT:
 				return ((IntObject) o1).getInt() - ((IntObject) o2).getInt();
 			case NUMBER:
-				return ((NumberObject) o1).getNumber().compareTo(((NumberObject) o2).getNumber());
+				return numberFactory.compare(((NumberObject) o1).getNumber(),
+						((NumberObject) o2).getNumber());
 			case STRING:
 				return ((StringObject) o1).getString().compareTo(
 						((StringObject) o2).getString());

@@ -645,7 +645,7 @@ public class CommonPreUniverse implements PreUniverse {
 			IntegerNumber low, IntegerNumber high, BooleanExpression predicate) {
 		BooleanExpression result = falseExpr;
 
-		for (IntegerNumber i = low; i.compareTo(high) < 0; i = numberFactory
+		for (IntegerNumber i = low; numberFactory.compare(i, high) < 0; i = numberFactory
 				.increment(i)) {
 			SymbolicExpression iExpression = number(numberObject(i));
 			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
@@ -1361,7 +1361,8 @@ public class CommonPreUniverse implements PreUniverse {
 			IntegerNumber highNumber = (IntegerNumber) extractNumber(high);
 
 			if (highNumber != null
-					&& numberFactory.subtract(highNumber, lowNumber).compareTo(
+					&& numberFactory.compare(
+							numberFactory.subtract(highNumber, lowNumber),
 							quantifierExpandBound) <= 0) {
 				return forallIntConcrete(index, lowNumber, highNumber,
 						predicate);
@@ -1383,7 +1384,8 @@ public class CommonPreUniverse implements PreUniverse {
 			IntegerNumber highNumber = (IntegerNumber) extractNumber(high);
 
 			if (highNumber != null
-					&& numberFactory.subtract(highNumber, lowNumber).compareTo(
+					&& numberFactory.compare(
+							numberFactory.subtract(highNumber, lowNumber),
 							quantifierExpandBound) <= 0) {
 				return existsIntConcrete(index, lowNumber, highNumber,
 						predicate);
@@ -1756,7 +1758,7 @@ public class CommonPreUniverse implements PreUniverse {
 							.extent());
 
 					if (lengthNumber != null
-							&& indexNumber.compareTo(lengthNumber) >= 0)
+							&& numberFactory.compare(indexNumber, lengthNumber) >= 0)
 						throw err("Array index out of bounds in method arrayRead."
 								+ "\narray: "
 								+ array
@@ -1814,7 +1816,7 @@ public class CommonPreUniverse implements PreUniverse {
 						.extent());
 
 				if (lengthNumber != null
-						&& indexNumber.compareTo(lengthNumber) >= 0)
+						&& numberFactory.compare(indexNumber, lengthNumber) >= 0)
 					throw err("Array index out of bounds in method arrayWrite."
 							+ "\narray: " + array + "\nextent: " + lengthNumber
 							+ "\nindex: " + indexNumber);

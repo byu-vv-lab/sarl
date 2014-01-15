@@ -1452,7 +1452,8 @@ public class CommonIdealFactory implements IdealFactory {
 			Number num1 = extractNumber(arg1);
 
 			if (num1 != null) // num0-num1<0 <=> num0<num1
-				return num0.compareTo(num1) < 0 ? this.trueExpr : falseExpr;
+				return numberFactory.compare(num0, num1) < 0 ? this.trueExpr
+						: this.falseExpr;
 		}
 
 		NumericExpression difference = subtract(arg1, arg0);
@@ -1493,7 +1494,8 @@ public class CommonIdealFactory implements IdealFactory {
 			Number num1 = extractNumber(arg1);
 
 			if (num1 != null) // num0-num1<=0 <=> num0<=num1
-				return num0.compareTo(num1) <= 0 ? this.trueExpr : falseExpr;
+				return numberFactory.compare(num0, num1) <= 0 ? this.trueExpr
+						: falseExpr;
 		}
 		return lessThanEqualsMain(arg0, arg1);
 	}

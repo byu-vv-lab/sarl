@@ -19,6 +19,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.common.CommonCollectionFactory;
+import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.RealNumberFactory;
 import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicTypeFactory;
 
@@ -40,7 +41,7 @@ public class ObjectComparatorTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.com = new ObjectComparator();
+		this.com = new ObjectComparator(Numbers.REAL_FACTORY);
 	}
 
 	/**

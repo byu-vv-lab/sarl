@@ -65,7 +65,7 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	public CommonObjectFactory(NumberFactory numberFactory) {
 		this.numberFactory = numberFactory;
-		this.comparator = new ObjectComparator();
+		this.comparator = new ObjectComparator(numberFactory);
 		this.trueObj = canonic(new CommonBooleanObject(true));
 		this.falseObj = canonic(new CommonBooleanObject(false));
 		this.zeroIntObj = canonic(intObject(0));
