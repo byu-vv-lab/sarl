@@ -821,7 +821,8 @@ public class IdealSimplifier extends CommonSimplifier {
 			bound = BoundsObject.newTightBound(pseudo, value);
 			aBoundMap.put(pseudo, bound);
 		} else {
-			if ((bound.lower != null && bound.lower.compareTo(value) > 0)
+			if ((bound.lower != null && info.numberFactory.compare(bound.lower,
+					value) > 0)
 					|| (bound.upper != null && value.compareTo(bound.upper) > 0))
 				return false;
 			bound.makeConstant(value);

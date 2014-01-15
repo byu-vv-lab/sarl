@@ -31,7 +31,6 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Primitive;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
-import edu.udel.cis.vsl.sarl.number.Numbers;
 
 /**
  * Comparator for ideal numeric expressions. This comparator is very heavily
@@ -260,7 +259,7 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	private int compareConstants(Constant c1, Constant c2) {
-		return Numbers.REAL_FACTORY.compare(c1.number(), c2.number());
+		return idealFactory.numberFactory().compare(c1.number(), c2.number());
 	}
 
 	private int compareRationals(RationalExpression e1, RationalExpression e2) {
