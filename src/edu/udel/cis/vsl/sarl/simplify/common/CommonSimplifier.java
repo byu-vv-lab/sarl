@@ -91,6 +91,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
+		case CHAR://add char type here, TODO need to check if this is correct
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
