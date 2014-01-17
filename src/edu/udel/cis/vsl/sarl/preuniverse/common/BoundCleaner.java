@@ -169,6 +169,7 @@ public class BoundCleaner {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
+		case CHAR:
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;

@@ -1010,6 +1010,7 @@ public class CVC3TheoremProver implements TheoremProver {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
+		case CHAR:
 			break;
 		case ARRAY:
 			sideEffectType(((SymbolicArrayType) type).elementType());

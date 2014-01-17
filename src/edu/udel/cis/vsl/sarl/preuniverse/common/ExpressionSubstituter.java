@@ -180,6 +180,7 @@ public class ExpressionSubstituter {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
+		case CHAR: // add char here, because printf in MPI programs will make char part of bundle type.
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;

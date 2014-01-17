@@ -222,6 +222,7 @@ public class CVC3ModelFinder {
 		case INTEGER:
 		case REAL:
 		case BOOLEAN:
+		case CHAR:
 			return type;
 		case ARRAY: {
 			SymbolicType oldElementType = ((SymbolicArrayType) type)
