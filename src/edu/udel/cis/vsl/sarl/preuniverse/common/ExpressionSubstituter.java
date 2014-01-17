@@ -321,6 +321,7 @@ public class ExpressionSubstituter {
 					case INT:
 					case NUMBER:
 					case STRING:
+					case CHAR:
 						// no substitutions into those primitive objects
 						if (newArgs != null)
 							newArgs[i] = arg;
