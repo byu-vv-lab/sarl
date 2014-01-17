@@ -268,6 +268,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		case INT:
 		case NUMBER:
 		case STRING:
+		case CHAR:
 			return object;
 		case EXPRESSION:
 			return apply((SymbolicExpression) object);
