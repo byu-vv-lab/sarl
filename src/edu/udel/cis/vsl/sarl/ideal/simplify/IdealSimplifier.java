@@ -576,6 +576,8 @@ public class IdealSimplifier extends CommonSimplifier {
 	}
 
 	private boolean updateConstantMap() {
+		// The constant map doesn't get cleared because we want to keep
+		// accumulating facts. Thus the map might not be empty at this point.
 		for (BoundsObject bounds : boundMap.values()) {
 			Number lower = bounds.lower();
 
@@ -587,10 +589,8 @@ public class IdealSimplifier extends CommonSimplifier {
 				processHerbrandCast(expression, lower);
 			}
 		}
-
 		boolean satisfiable = LinearSolver.reduceConstantMap(info.idealFactory,
 				constantMap);
-
 		if (debug) {
 			printBoundMap(info.out);
 			printConstantMap(info.out);

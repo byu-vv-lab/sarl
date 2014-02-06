@@ -28,6 +28,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
@@ -335,6 +336,12 @@ public class CommonIdealFactory implements IdealFactory {
 			return monic;
 		if (monic.isTrivialMonic())
 			return constant;
+		// zirkel: A constant times big-O is just big-O
+		if (monic.operator() == SymbolicOperator.APPLY
+				&& ((SymbolicConstant) monic.argument(0)).name().toString()
+						.equals("BIG_O")) {
+			return monic;
+		}
 		return ntMonomial(constant, monic);
 	}
 
