@@ -613,7 +613,7 @@ public class CommonPreUniverse implements PreUniverse {
 			return trueExpr;
 		else {
 			BooleanExpression result = compatible(seq0.getType(0),
-					seq1.getType(1), nestingDepth);
+					seq1.getType(0), nestingDepth);
 
 			if (size > 1)
 				for (int i = 1; i < size; i++)
