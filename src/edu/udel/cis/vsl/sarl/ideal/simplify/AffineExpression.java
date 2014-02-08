@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
@@ -46,14 +46,14 @@ public class AffineExpression {
 	private Number coefficient; /* not null */
 
 	private Number offset; /* not null */
-	
+
 	/**
 	 * @param pseudo
-	 * 			Polynomial
+	 *            Polynomial
 	 * @param coefficient
-	 * 		 leading coefficient number
+	 *            leading coefficient number
 	 * @param offset
-	 * 			offset number
+	 *            offset number
 	 */
 
 	public AffineExpression(Polynomial pseudo, Number coefficient, Number offset) {
@@ -64,9 +64,10 @@ public class AffineExpression {
 		this.coefficient = coefficient;
 		this.offset = offset;
 	}
-/** 
- * @return coefficient * pseudo
- */
+
+	/**
+	 * @return coefficient * pseudo
+	 */
 	public String toString() {
 		String result = "";
 
@@ -80,6 +81,7 @@ public class AffineExpression {
 		}
 		return result;
 	}
+
 	/**
 	 * 
 	 * @return Polynomial
@@ -88,17 +90,19 @@ public class AffineExpression {
 	public Polynomial pseudo() {
 		return pseudo;
 	}
-/**
- * 
- * @return   coefficient number
- */
+
+	/**
+	 * 
+	 * @return coefficient number
+	 */
 	public Number coefficient() {
 		return coefficient;
 	}
-/**
- * 
- * @return offset number
- */
+
+	/**
+	 * 
+	 * @return offset number
+	 */
 	public Number offset() {
 		return offset;
 	}
@@ -106,13 +110,14 @@ public class AffineExpression {
 	boolean iff(boolean p, boolean q) {
 		return (p && q) || ((!p) && !q);
 	}
-/**
- * Equals compares an affineExpression to another
- * @return boolean
- * 	       true if equal false if not equal
- * @param object 
- * 			an AffineExpression
- */
+
+	/**
+	 * Equals compares an affineExpression to another
+	 * 
+	 * @return boolean true if equal false if not equal
+	 * @param object
+	 *            an AffineExpression
+	 */
 
 	@Override
 	public boolean equals(Object object) {

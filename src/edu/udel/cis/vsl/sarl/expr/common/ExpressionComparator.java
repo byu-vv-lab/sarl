@@ -44,10 +44,10 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 	private Comparator<NumericExpression> numericComparator;
 
 	/**
-	 * Constructor that takes a three Comparators of types NumericExpression,SymbolicObject,
-	 * and SymbolicType.
+	 * Constructor that takes a three Comparators of types
+	 * NumericExpression,SymbolicObject, and SymbolicType.
 	 * 
-	 * @param numericComparator 
+	 * @param numericComparator
 	 * @param objectComparator
 	 * @param typeComparator
 	 */
@@ -59,17 +59,19 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 		this.objectComparator = objectComparator;
 		this.typeComparator = typeComparator;
 	}
-	
+
 	/**
 	 * Returns a comparator of the type SymbolicObject
+	 * 
 	 * @return Comparator<SymbolicObject>
 	 */
 	public Comparator<SymbolicObject> objectComparator() {
 		return objectComparator;
 	}
-	
+
 	/**
 	 * Returns a comparator of the type SymbolicType
+	 * 
 	 * @return Comparator<SymbolicType>
 	 */
 	public Comparator<SymbolicType> typeComparator() {
@@ -78,6 +80,7 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 
 	/**
 	 * Returns a comparator of the type numericExpression
+	 * 
 	 * @return Comparator<NumericExpression>
 	 */
 	public Comparator<NumericExpression> numericComparator() {
@@ -95,6 +98,11 @@ public class ExpressionComparator implements Comparator<SymbolicExpression> {
 		SymbolicType t1 = o1.type();
 		SymbolicType t2 = o2.type();
 
+		// NULL comes before everything:
+		if (t1 == null) {
+			return t2 == null ? 0 : -1;
+		} else if (t2 == null)
+			return 1;
 		if (t1.isNumeric()) {
 			if (t2.isNumeric())
 				return numericComparator.compare((NumericExpression) o1,
