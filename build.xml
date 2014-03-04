@@ -14,7 +14,10 @@
 
 	<!-- Directories -->
 
-	<property file="build_default.properties" />
+	<condition property="properties.file" value="build.properties" else="build_default.properties">
+		<available file="build.properties" />
+	</condition>
+	<property file="${properties.file}" />
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="bin.dir" value="${basedir}/bin" />
 	<property name="javadoc.dir" value="${basedir}/doc/javadoc" />
@@ -105,7 +108,7 @@
 		<jacoco:coverage>
 			<junit fork="true" forkmode="once" timeout="300000">
 				<jvmarg value="-ea" />
-				<sysproperty key="java.library.path" value="${libdir}"/>
+				<sysproperty key="java.library.path" value="${libdir}" />
 				<classpath refid="test.execute.classpath" />
 				<formatter type="brief" usefile="false" />
 				<formatter type="xml" />

@@ -39,7 +39,13 @@ openjdk-7-jdk.
 
 5. cd sarl
 
-6. Type "ant" and everything should build without warnings or errors
+6. If your VSL dependencies path is not in /opt/vsl, then you need
+to create a build.properties file by copying the content from
+build_default.properties and modifying the value of entry "root"
+to be the path to your VSL dependencies folder. The newly created file
+build.properties will automatically be used by ant to to build the .jar file.
+
+7. Type "ant" and everything should build without warnings or errors
 and produce sarl.jar.  Type "ant test" to run a JUnit test suite.  All
 tests should pass.
 
@@ -74,11 +80,17 @@ and specify its value to be /opt/vsl.
 String Substitution -> New..., and then define an entry 
 vsl_lib and set its value to be /opt/vsl/lib.
 
-8. Do a clean build.  Everything should compile.  Generate the sarl.jar
+8. If your VSL dependencies path is not in /opt/vsl, then you need
+to create a build.properties file by copying the content from
+build_default.properties and modifying the value of entry "root"
+to be the path to your VSL dependencies folder. The newly created file
+build.properties will automatically be used by ant to to build the .jar file.
+
+9. Do a clean build.  Everything should compile.  Generate the sarl.jar
 by right-clicking (or ctrl-click on OS X) the build.xml file and
 Run As->Ant Build.  
 
-9. Go to Run->Run Configurations.... Create a new JUnit configuration.
+10. Go to Run->Run Configurations.... Create a new JUnit configuration.
 Name it SARL Tests. Select "Run all tests in the selected project..."
 and navigate to the folder "test" in the SARL project.
 The Test runner should be JUnit 4. Under the Arguments tab, type
