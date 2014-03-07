@@ -1,3 +1,6 @@
+# This properties file is intended for configuring Nikolai, 
+# our worker for all tests. If the environment of Nikolai is
+# changed, then this file need to be updated accordingly.
 root=/opt/vsl
 libdir=${root}/lib
 clj-ds.jar=${libdir}/clj-ds.jar
