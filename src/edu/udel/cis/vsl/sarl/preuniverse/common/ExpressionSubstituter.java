@@ -180,7 +180,8 @@ public class ExpressionSubstituter {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
-		case CHAR: // add char here, because printf in MPI programs will make char part of bundle type.
+		case CHAR: // add char here, because printf in MPI programs will make
+					// char part of bundle type.
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
@@ -281,8 +282,7 @@ public class ExpressionSubstituter {
 			return expression;
 		if (operator == SymbolicOperator.EXISTS
 				|| operator == SymbolicOperator.FORALL
-				|| operator == SymbolicOperator.LAMBDA
-				|| operator == SymbolicOperator.ARRAY_LAMBDA) {
+				|| operator == SymbolicOperator.LAMBDA) {
 			SymbolicType type = expression.type();
 			SymbolicType newType = substituteType(type, map, boundStack);
 			SymbolicConstant arg0 = (SymbolicConstant) expression.argument(0);
