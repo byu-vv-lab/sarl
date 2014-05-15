@@ -299,6 +299,7 @@ public class BoundCleaner {
 
 				switch (kind) {
 				case BOOLEAN:
+				case CHAR:
 				case INT:
 				case NUMBER:
 				case STRING:
