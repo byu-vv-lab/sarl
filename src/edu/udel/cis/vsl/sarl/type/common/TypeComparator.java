@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
@@ -29,15 +29,16 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 
 /**
- *	This class is to compare different types in the Type module.
- *	It compare those types: Boolean, Integer, Real, Array, Function, Tuple, and Union.
- *
- *	@author alali
+ * This class is to compare different types in the Type module. It compare those
+ * types: Boolean, Integer, Real, Array, Function, Tuple, and Union.
+ * 
+ * @author alali
  */
 public class TypeComparator implements Comparator<SymbolicType> {
 
 	/**
-	 * used to compare typeSequence from the types that contain a sequence, i.e. Function, Tuple, Union
+	 * used to compare typeSequence from the types that contain a sequence, i.e.
+	 * Function, Tuple, Union
 	 */
 	private Comparator<SymbolicTypeSequence> typeSequenceComparator;
 
@@ -53,45 +54,38 @@ public class TypeComparator implements Comparator<SymbolicType> {
 
 	}
 
-	
 	/**
-	 * setting value to the typeSequenceComparator that will be used to compare typeSequence in Function, Tuple, and Union
-	 * @param c Comparator of type SymbolicTypeSequence
+	 * setting value to the typeSequenceComparator that will be used to compare
+	 * typeSequence in Function, Tuple, and Union
+	 * 
+	 * @param c
+	 *            Comparator of type SymbolicTypeSequence
 	 */
 	public void setTypeSequenceComparator(Comparator<SymbolicTypeSequence> c) {
 		typeSequenceComparator = c;
 	}
 
-	
 	/**
-	 * sets expressionComparator to be used in comparing SymbolicCompleteArrayType
-	 * @param c , a comparator of type symbolic expressions
+	 * sets expressionComparator to be used in comparing
+	 * SymbolicCompleteArrayType
+	 * 
+	 * @param c
+	 *            , a comparator of type symbolic expressions
 	 */
 	public void setExpressionComparator(Comparator<SymbolicExpression> c) {
 		expressionComparator = c;
-		
+
 	}
 
-	
 	/**
-	 * @return expressionComparator that was set to compare SymbolicCompleteArrayType
+	 * @return expressionComparator that was set to compare
+	 *         SymbolicCompleteArrayType
 	 */
 	public Comparator<SymbolicExpression> expressionComparator() {
 		return expressionComparator;
 	}
 
-	
-	/* (non-Javadoc)
-	 * comparing two types according to their types.
-	 * if the two types aren't equal
-	 * @return 0
-	 * 
-	 * otherwise, it checks if the two similar types are of the same kinds
-	 * @returns 0 if similar kind. Otherwise, returns -1, 1.
-	 * 
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	 @Override
+	@Override
 	public int compare(SymbolicType o1, SymbolicType o2) {
 		SymbolicTypeKind kind = o1.typeKind();
 		int result = kind.compareTo(o2.typeKind());
@@ -100,6 +94,7 @@ public class TypeComparator implements Comparator<SymbolicType> {
 			return result;
 		switch (kind) {
 		case BOOLEAN:
+		case CHAR:
 			return 0;
 		case INTEGER:
 			return ((SymbolicIntegerType) o1).integerKind().compareTo(
