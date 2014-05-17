@@ -339,18 +339,23 @@ public class CVC3ModelFinder {
 				"Unable to compute type of CVC3 expression: " + expr);
 	}
 
-	private NumericExpression backTranslateRational(Expr expr, SymbolicType type) {
+	private SymbolicExpression backTranslateRational(Expr expr,
+			SymbolicType type) {
 		Rational rational = expr.getRational();
 		NumberFactory numberFactory = universe.numberFactory();
-		NumericExpression result;
+		SymbolicTypeKind kind = type.typeKind();
+		SymbolicExpression result;
 
-		if (type.isInteger()) {
+		if (kind == SymbolicTypeKind.INTEGER) {
 			try {
 				result = universe.integer(rational.getInteger());
 			} catch (Cvc3Exception e) {
 				result = universe.number(numberFactory.integer(rational
 						.toString()));
 			}
+			return result;
+		} else if (kind == SymbolicTypeKind.CHAR) {
+			result = universe.character((char) rational.getInteger());
 			return result;
 		} else {
 			try {

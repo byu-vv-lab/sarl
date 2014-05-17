@@ -19,6 +19,7 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +42,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -74,18 +76,6 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * by constructor and never changes.
 	 */
 	private PreUniverse universe;
-
-	// /**
-	// * Print the queries and results each time valid is called. Initialized by
-	// * constructor.
-	// */
-	// private boolean showProverQueries = false;
-	//
-	// /**
-	// * The printwriter used to print the queries and results. Initialized by
-	// * constructor.
-	// */
-	// private PrintStream out = System.out;
 
 	/** The CVC3 object used to check queries. */
 	private ValidityChecker vc = ValidityChecker.create();
@@ -287,11 +277,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * @return CVC3 tuple of an ordered pair (length, array)
 	 */
 	private Expr bigArray(Expr length, Expr value) {
-		List<Expr> list = new LinkedList<Expr>();
-
-		list.add(length);
-		list.add(value);
-		return vc.tupleExpr(list);
+		return vc.tupleExpr(Arrays.asList(length, value));
 	}
 
 	/**
@@ -357,6 +343,32 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
+	 * Translates a symbolic collection to a list of CVC3 expressions while
+	 * converting each expression in the collection to a corresponding expected
+	 * type as needed.
+	 * 
+	 * @param types
+	 *            a sequence of types for which the length is equals the size of
+	 *            the collection,
+	 * 
+	 * @param collection
+	 *            an ordered collection of symbolic expressions
+	 * @return a list of CVC3 expressions formed by translating and converting
+	 *         each expression using the corresponding expected type
+	 */
+	private List<Expr> translateConvertCollection(SymbolicTypeSequence types,
+			SymbolicCollection<?> collection) {
+		Iterator<SymbolicType> typeIter = types.iterator();
+		List<Expr> result = new LinkedList<Expr>();
+
+		for (SymbolicExpression expr : collection) {
+			result.add(expr == null || expr.isNull() ? null : translateConvert(
+					typeIter.next(), expr));
+		}
+		return result;
+	}
+
+	/**
 	 * Translate a given SymbolicTypeSequence to an equivalent linkedlist of
 	 * Types in CVC3.
 	 * 
@@ -369,6 +381,42 @@ public class CVC3TheoremProver implements TheoremProver {
 
 		for (SymbolicType t : sequence)
 			result.add(t == null ? null : translateType(t));
+		return result;
+	}
+
+	/**
+	 * Translates the expression and then converts it to the expected type if
+	 * necessary. This is needed for array types. If a value of complete array
+	 * type is translated, the result will be a CVC3 expression of array type.
+	 * If it used in a context where a value of incomplete array type is
+	 * expected, it must be converted to a "big array", i.e., an ordered pair in
+	 * which the first component is the length and the second component is the
+	 * CVC3 expression of array type.
+	 * 
+	 * @param expectedType
+	 *            the SARL expected type
+	 * @param expression
+	 *            the SARL expression to be translated
+	 * @return the translated expression, possibly coerced to be compatible with
+	 *         the expected type
+	 */
+	private Expr translateConvert(SymbolicType expectedType,
+			SymbolicExpression expression) {
+		Expr result = translate(expression);
+
+		if (expectedType.typeKind() == SymbolicTypeKind.ARRAY) {
+			SymbolicArrayType expectedArrayType = (SymbolicArrayType) expectedType;
+			SymbolicArrayType actualArrayType = (SymbolicArrayType) expression
+					.type();
+
+			if (actualArrayType.isComplete() && !expectedArrayType.isComplete()) {
+				NumericExpression lengthExpression = ((SymbolicCompleteArrayType) actualArrayType)
+						.extent();
+				Expr length = translate(lengthExpression);
+
+				result = bigArray(length, result);
+			}
+		}
 		return result;
 	}
 
@@ -445,6 +493,12 @@ public class CVC3TheoremProver implements TheoremProver {
 		case REAL:
 			result = vc.ratExpr(((NumberObject) object).getNumber().toString());
 			break;
+		case CHAR: {
+			int intRepresentation = ((CharObject) object).getChar();
+
+			result = vc.ratExpr(intRepresentation);
+			break;
+		}
 		case TUPLE:
 			result = vc
 					.tupleExpr(translateCollection((SymbolicSequence<?>) object));
@@ -630,6 +684,9 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * Checks whether an index is in the bounds of an array SymbolicExpression
 	 * by passing in the arguments to the validity checker
 	 * 
+	 * TODO: what does assertFormula do?. Doesn't it mean, tell CVC3 to assume
+	 * this? Why is this necessary?
+	 * 
 	 * @param arrayExpression
 	 * @param index
 	 */
@@ -685,6 +742,8 @@ public class CVC3TheoremProver implements TheoremProver {
 			throws Cvc3Exception {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
+		SymbolicType expectedValueType = ((SymbolicArrayType) arrayExpression
+				.type()).elementType();
 		NumericExpression indexExpression = (NumericExpression) expr
 				.argument(1);
 		Expr array, index, value, result;
@@ -692,7 +751,8 @@ public class CVC3TheoremProver implements TheoremProver {
 		assertIndexInBounds(arrayExpression, indexExpression);
 		array = translate(arrayExpression);
 		index = translate(indexExpression);
-		value = translate((SymbolicExpression) expr.argument(2));
+		value = translateConvert(expectedValueType,
+				(SymbolicExpression) expr.argument(2));
 		result = isBigArray(arrayExpression) ? bigArray(bigArrayLength(array),
 				vc.writeExpr(bigArrayValue(array), index, value)) : vc
 				.writeExpr(array, index, value);
@@ -806,7 +866,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	private Expr processEquality(SymbolicType type1, SymbolicType type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
 		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
-			// length are equal and forall i (0<=i<length).a[i]=b[i].
+			// lengths are equal and forall i (0<=i<length).a[i]=b[i].
 			SymbolicArrayType arrayType1 = (SymbolicArrayType) type1;
 			SymbolicArrayType arrayType2 = (SymbolicArrayType) type2;
 			Expr extent1, extent2, array1, array2, readExpr1, readExpr2;
@@ -1131,12 +1191,20 @@ public class CVC3TheoremProver implements TheoremProver {
 				throw new SARLInternalException(
 						"Expected 1 or 2 arguments for AND: " + expr);
 			break;
-		case APPLY:
-			result = vc.funExpr(translateFunction((SymbolicExpression) expr
-					.argument(0)),
-					translateCollection((SymbolicCollection<?>) expr
-							.argument(1)));
+		case APPLY: {
+			SymbolicExpression functionExpression = (SymbolicExpression) expr
+					.argument(0);
+			SymbolicTypeSequence expectedTypes = ((SymbolicFunctionType) functionExpression
+					.type()).inputTypes();
+			Op cvcFunction = translateFunction(functionExpression);
+			SymbolicCollection<?> arguments = (SymbolicCollection<?>) expr
+					.argument(1);
+			List<Expr> cvcArguments = translateConvertCollection(expectedTypes,
+					arguments);
+
+			result = vc.funExpr(cvcFunction, cvcArguments);
 			break;
+		}
 		case ARRAY_LAMBDA: {
 			SymbolicExpression function = (SymbolicExpression) expr.argument(0);
 			SymbolicOperator op0 = function.operator();
@@ -1256,12 +1324,21 @@ public class CVC3TheoremProver implements TheoremProver {
 					translate((SymbolicExpression) expr.argument(0)),
 					((IntObject) expr.argument(1)).getInt());
 			break;
-		case TUPLE_WRITE:
-			result = vc.tupleUpdateExpr(
-					translate((SymbolicExpression) expr.argument(0)),
-					((IntObject) expr.argument(1)).getInt(),
-					translate((SymbolicExpression) expr.argument(2)));
+		case TUPLE_WRITE: {
+			SymbolicExpression tupleExpression = (SymbolicExpression) expr
+					.argument(0);
+			SymbolicTupleType tupleType = (SymbolicTupleType) tupleExpression
+					.type();
+			int index = ((IntObject) expr.argument(1)).getInt();
+			SymbolicType expectedType = tupleType.sequence().getType(index);
+			SymbolicExpression valueExpression = (SymbolicExpression) expr
+					.argument(2);
+			Expr valueExpr = translateConvert(expectedType, valueExpression);
+
+			result = vc.tupleUpdateExpr(translate(tupleExpression), index,
+					valueExpr);
 			break;
+		}
 		case UNION_EXTRACT:
 			result = translateUnionExtract(expr);
 			break;
@@ -1409,6 +1486,7 @@ public class CVC3TheoremProver implements TheoremProver {
 			result = vc.boolType();
 			break;
 		case INTEGER:
+		case CHAR:
 			result = vc.intType();
 			break;
 		case REAL:
