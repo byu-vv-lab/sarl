@@ -77,9 +77,12 @@ public class QuantifierTest {
 			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
 					.newProver(context);
 
-			//provers.add(prover);
+			provers.add(prover);
 		}
 		{
+			// debugging:
+			// context = universe.trueExpression();
+
 			TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(
 					universe).newProver(context);
 

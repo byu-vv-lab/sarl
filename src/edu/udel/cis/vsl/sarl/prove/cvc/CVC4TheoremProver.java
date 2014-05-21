@@ -191,19 +191,20 @@ public class CVC4TheoremProver implements TheoremProver {
 		smt.setOption("incremental", new SExpr(true));
 		// allows the CVC4 to find models (counterexamples)...
 		smt.setOption("produce-models", new SExpr(true));
+		// this is necessary to use method getAssertions:
+		smt.setOption("interactive-mode", new SExpr(true));
 		cvc0 = em.mkConst(new Rational(0));
 		cvc1 = em.mkConst(new Rational(1));
 		cvcTrue = em.mkConst(true);
 		cvcFalse = em.mkConst(false);
-		// what does this do...
-		// smt.setOption("interactive-mode", new SExpr(true));
-
 		// The following is necessary since the same bound symbolic constant
 		// can be used in different scopes in the context; CVC4 requires
 		// that these map to distinct variables.
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
-		cvcAssumption = translate(context);
-		smt.assertFormula(cvcAssumption);
+		if (!context.isTrue()) {
+			cvcAssumption = translate(context);
+			smt.assertFormula(cvcAssumption);
+		}
 	}
 
 	// ************************* Private Methods ************************** //
@@ -473,15 +474,25 @@ public class CVC4TheoremProver implements TheoremProver {
 					.getNumber();
 			BigInteger big = integerNumber.bigIntegerValue();
 
-			return em.mkConst(new Rational(big));
+			// TODO: until we can figure out why the construtor to Rational
+			// which takes a BigInteger does not work, we go through
+			// strings...
+			return em.mkConst(new Rational(big.toString()));
 		}
 		case REAL: {
 			RationalNumber rationalNumber = (RationalNumber) ((NumberObject) object)
 					.getNumber();
 			BigInteger numerator = rationalNumber.numerator(), denominator = rationalNumber
 					.denominator();
+			Rational rationalNumerator = new Rational(numerator.toString()), rationalDenominator = new Rational(
+					denominator.toString());
 
-			result = em.mkConst(new Rational(numerator, denominator));
+			result = em.mkConst(rationalNumerator
+					.dividedBy(rationalDenominator));
+			// TODO: until we can figure out why the construtor to Rational
+			// which takes a BigInteger does not work, we go through
+			// strings...
+			// result = em.mkConst(new Rational(numerator, denominator));
 			break;
 		}
 		case TUPLE:
@@ -680,9 +691,12 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return the equivalent CVC4 Expr
 	 */
 	private Expr translateQuantifier(SymbolicExpression expr) {
-		Expr boundVariable = translateSymbolicConstant(
-				(SymbolicConstant) (expr.argument(0)), true);
-		Expr boundVariableList = em.mkExpr(Kind.BOUND_VAR_LIST, boundVariable);
+		SymbolicConstant boundVariable = (SymbolicConstant) (expr.argument(0));
+		Expr boundVar = translateSymbolicConstant(boundVariable, true);
+
+		expressionMap.put(boundVariable, boundVar);
+
+		Expr boundVariableList = em.mkExpr(Kind.BOUND_VAR_LIST, boundVar);
 		Expr predicate = translate((SymbolicExpression) expr.argument(1));
 		SymbolicOperator kind = expr.operator();
 
@@ -1240,13 +1254,13 @@ public class CVC4TheoremProver implements TheoremProver {
 				int id = universe.numProverValidCalls() - 1;
 
 				out.println();
-				out.print("CVC4 assumptions " + id + ": ");
+				out.println("CVC4 assumptions " + id + ":");
 
-				// the following crashes:
 				vectorExpr assertions = smt.getAssertions();
 
 				for (int i = 0; i < assertions.size(); i++)
-					out.println(assertions.get(i));
+					out.println("  " + assertions.get(i));
+
 				out.print("CVC4 predicate   " + id + ": ");
 				out.println(cvcPredicate);
 				out.flush();
@@ -1256,7 +1270,7 @@ public class CVC4TheoremProver implements TheoremProver {
 				PrintStream out = universe.getOutputStream();
 				int id = universe.numProverValidCalls() - 1;
 
-				out.println("CVCV result   " + id + ": " + result);
+				out.println("CVC4 result      " + id + ": " + result);
 				out.flush();
 			}
 		} catch (Exception e) {
@@ -1289,11 +1303,13 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return ValidityResult
 	 */
 	private ValidityResult translateResult(Result result) {
-		if (result.equals(new Result(Result.Validity.VALID))) {
+		Validity validity = result.isValid();
+
+		if (validity.equals(Result.Validity.VALID)) {
 			return Prove.RESULT_YES;
-		} else if (result.equals(new Result(Result.Validity.INVALID))) {
+		} else if (validity.equals(Result.Validity.INVALID)) {
 			return Prove.RESULT_NO;
-		} else if (result.equals(new Result(Result.Validity.VALIDITY_UNKNOWN))) {
+		} else if (validity.equals(Result.Validity.VALIDITY_UNKNOWN)) {
 			return Prove.RESULT_MAYBE;
 		} else {
 			System.err.println("Warning: Unknown CVC4 query result: " + result);
