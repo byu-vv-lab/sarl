@@ -62,8 +62,6 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
-// TODO: add support for characters by converting them to integers
-
 /**
  * An implementation of TheoremProver using the automated theorem prover CVC3.
  * Transforms a theorem proving query into the language of CVC3, invokes CVC3
@@ -1684,6 +1682,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	 */
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
+		// TODO: why no clean of bound variables from predicate???
 		QueryResult cvcResult = queryCVC3(predicate);
 
 		if (cvcResult.equals(QueryResult.INVALID)) {

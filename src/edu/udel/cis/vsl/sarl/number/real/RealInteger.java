@@ -47,10 +47,12 @@ public class RealInteger extends RealNumber implements IntegerNumber {
 		this.value = value;
 	}
 
+	@Override
 	public int signum() {
 		return value.signum();
 	}
 
+	@Override
 	public String toString() {
 		return value.toString();
 	}
@@ -59,22 +61,31 @@ public class RealInteger extends RealNumber implements IntegerNumber {
 		return value;
 	}
 
+	@Override
 	public String atomString() {
 		return toString();
 	}
 
+	@Override
 	public boolean isZero() {
 		return value == BigInteger.ZERO;
 	}
 
+	@Override
 	public boolean isOne() {
 		return value == BigInteger.ONE;
 	}
 
 	// TODO: check that the int is in range. If not, throw an
 	// exception.
+	@Override
 	public int intValue() {
 		return value.intValue();
+	}
+
+	@Override
+	public BigInteger bigIntegerValue() {
+		return value;
 	}
 
 }

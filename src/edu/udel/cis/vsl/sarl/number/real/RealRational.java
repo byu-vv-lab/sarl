@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
@@ -43,8 +43,8 @@ public class RealRational extends RealNumber implements RationalNumber {
 	private BigInteger denominator;
 
 	/**
-	 * Creates a rational number from supplied integer values
-	 * Includes testing to detect null values and denominators of zero
+	 * Creates a rational number from supplied integer values Includes testing
+	 * to detect null values and denominators of zero
 	 * 
 	 * @param numerator
 	 * @param denominator
@@ -56,7 +56,7 @@ public class RealRational extends RealNumber implements RationalNumber {
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-	
+
 	@Override
 	/**
 	 * Overrides the method signum.
@@ -66,19 +66,22 @@ public class RealRational extends RealNumber implements RationalNumber {
 		return numerator.signum();
 	}
 
-	BigInteger numerator() {
+	@Override
+	public BigInteger numerator() {
 		return numerator;
 	}
 
-	BigInteger denominator() {
+	@Override
+	public BigInteger denominator() {
 		return denominator;
 	}
 
-	@Override
 	/**
-	 * Overrides the method toString.
-	 * Returns a string representation of a RealRational and prints only the numerator for rationals with denominator equal to one.
+	 * Overrides the method toString. Returns a string representation of a
+	 * RealRational and prints only the numerator for rationals with denominator
+	 * equal to one.
 	 */
+	@Override
 	public String toString() {
 		if (denominator.equals(BigInteger.ONE)) {
 			return numerator.toString();
@@ -87,31 +90,30 @@ public class RealRational extends RealNumber implements RationalNumber {
 		}
 	}
 
-	@Override
 	/**
-	 * Overrides the atomString method.
-	 * Returns a toString representation enclosed in parentheses.
+	 * Overrides the atomString method. Returns a toString representation
+	 * enclosed in parentheses.
 	 */
+	@Override
 	public String atomString() {
 		return "(" + toString() + ")";
 	}
 
-	@Override
 	/**
-	 * Overrides the isZero method.
-	 * A rational is only zero when its numerator is zero.
-	 * This method simplifies isZero on RealRationals by only evaluating the numerator.
+	 * Overrides the isZero method. A rational is only zero when its numerator
+	 * is zero. This method simplifies isZero on RealRationals by only
+	 * evaluating the numerator.
 	 */
+	@Override
 	public boolean isZero() {
 		return numerator == BigInteger.ZERO;
 	}
 
-	@Override
 	/**
-	 * Overrides the isOne method.
-	 * A rational is only one when its numerator and denominator are equal.
-	 * This method compares the two values with .equals
+	 * Overrides the isOne method. A rational is only one when its numerator and
+	 * denominator are equal. This method compares the two values with .equals
 	 */
+	@Override
 	public boolean isOne() {
 		return numerator.equals(denominator);
 	}
