@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
-import java.math.BigInteger;
 
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
@@ -11,7 +10,7 @@ import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.RealType;
 import edu.nyu.acsys.CVC4.SExpr;
 import edu.nyu.acsys.CVC4.SmtEngine;
-import edu.nyu.acsys.CVC4.vectorExpr;
+import edu.nyu.acsys.CVC4.Type;
 
 public class LittleCVC4Example {
 
@@ -33,9 +32,9 @@ public class LittleCVC4Example {
 		FunctionType fType;
 		Expr x, y, f, fx, fy, xeqy, fxeqfy, fxeq0;
 
-		Rational negOne = new Rational(BigInteger.valueOf(-1));
-
-		out.println("negOne = " + negOne);
+		// this is wrong: can't use BigInteger as argument reliably:
+		// Rational negOne = new Rational(BigInteger.valueOf(-1));
+		// out.println("negOne = " + negOne);
 
 		out.println("Starting little CVC4 example...");
 		em = new ExprManager();
@@ -52,6 +51,12 @@ public class LittleCVC4Example {
 		x = em.mkVar("x", realType); // real variable x
 		y = em.mkVar("y", realType); // real variable y
 		f = em.mkVar("f", fType); // function from real to real
+
+		Type fType2 = f.getType();
+
+		out.println("fType2 = " + fType2);
+		out.println("fType2 equals fType: " + fType2.equals(fType));
+
 		fx = em.mkExpr(Kind.APPLY_UF, f, x); // f(x)
 		fy = em.mkExpr(Kind.APPLY_UF, f, y); // f(y)
 		xeqy = em.mkExpr(Kind.EQUAL, x, y); // x=y
@@ -62,7 +67,7 @@ public class LittleCVC4Example {
 		out.println("Asserting x=y: " + xeqy);
 		smt.assertFormula(xeqy);
 
-		vectorExpr assertions = smt.getAssertions();
+		// vectorExpr assertions = smt.getAssertions();
 
 		out.println("Does f(x)=f(y)? " + smt.query(fxeqfy));
 		// answer should be "valid" since x=y => f(x)=f(y)

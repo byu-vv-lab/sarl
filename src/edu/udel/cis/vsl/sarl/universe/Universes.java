@@ -18,6 +18,7 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.universe;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.Collections;
@@ -31,6 +32,7 @@ import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.Reason;
@@ -44,13 +46,31 @@ import edu.udel.cis.vsl.sarl.universe.common.MathUniverse;
 
 public class Universes {
 
+	public enum Prover {
+		CVC3, CVC4, Z3
+	}
+
+	public final static Prover DEFAULT_PROVER = Prover.CVC3;
+
+	public static TheoremProverFactory newProverFactory(PreUniverse universe) {
+		switch (DEFAULT_PROVER) {
+		case CVC3:
+			return Prove.newCVC3TheoremProverFactory(universe);
+		case CVC4:
+			return Prove.newCVC4TheoremProverFactory(universe);
+		case Z3:
+			// return Prove.newZ3TheoremProverFactory(universe);
+		default:
+			throw new SARLInternalException("Unkown Prover: " + DEFAULT_PROVER);
+		}
+	}
+
 	public static SymbolicUniverse newIdealUniverse() {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
 				(IdealFactory) system.numericFactory(), universe);
-		TheoremProverFactory proverFactory = Prove
-				.newCVC3TheoremProverFactory(universe);
+		TheoremProverFactory proverFactory = newProverFactory(universe);
 		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
 				simplifierFactory, proverFactory);
 
@@ -63,8 +83,7 @@ public class Universes {
 		MathUniverse universe = new MathUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
 				(IdealFactory) system.numericFactory(), universe);
-		TheoremProverFactory proverFactory = Prove
-				.newCVC3TheoremProverFactory(universe);
+		TheoremProverFactory proverFactory = newProverFactory(universe);
 		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
 				simplifierFactory, proverFactory);
 
@@ -77,8 +96,7 @@ public class Universes {
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Simplify
 				.newIdentitySimplifierFactory(universe);
-		TheoremProverFactory proverFactory = Prove
-				.newCVC3TheoremProverFactory(universe);
+		TheoremProverFactory proverFactory = newProverFactory(universe);
 		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
 				simplifierFactory, proverFactory);
 
@@ -100,8 +118,7 @@ public class Universes {
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Expressions
 				.standardSimplifierFactory(expressionFactory, universe);
-		TheoremProverFactory proverFactory = Prove
-				.newCVC3TheoremProverFactory(universe);
+		TheoremProverFactory proverFactory = newProverFactory(universe);
 		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
 				simplifierFactory, proverFactory);
 

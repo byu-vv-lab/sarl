@@ -11,5 +11,6 @@
 	<classpathentry kind="var" path="VSL/lib/CVC4.jar" sourcepath="/VSL/src/cvc4-1.2-sources.jar"/>
 	<classpathentry kind="var" path="VSL/lib/jsr166y.jar"/>
 	<classpathentry kind="var" path="VSL/lib/clj-ds-0.0.4.jar" sourcepath="/VSL/lib/clj-ds-0.0.4-sources.jar"/>
+	<classpathentry kind="var" path="VSL/lib/com.microsoft.z3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

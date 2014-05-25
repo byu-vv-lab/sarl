@@ -21,17 +21,15 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import edu.nyu.acsys.CVC4.ArrayType;
 import edu.nyu.acsys.CVC4.Datatype;
 import edu.nyu.acsys.CVC4.DatatypeConstructor;
+import edu.nyu.acsys.CVC4.DatatypeType;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
-import edu.nyu.acsys.CVC4.FunctionType;
 import edu.nyu.acsys.CVC4.Kind;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.Result;
@@ -84,9 +82,8 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  * The SymbolTable class can be used to store and lookup symbols by name, if
  * desired." Hence there is no need to re-name variables.
  * 
- * TODO: as in CVC3, need to convert some of the array values to big arrays.
+ * Think about making all arrays pairs.
  * 
- * TODO: need to figure out how to translate an array lambda correctly.
  */
 public class CVC4TheoremProver implements TheoremProver {
 
@@ -132,12 +129,15 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Map<SymbolicConstant, Expr> variableMap = new HashMap<>();
 
-	/**
-	 * Map from CVC variables back to SARL symbolic constants. This is used for
-	 * finding models. When CVC finds a model, it needs to be translated back to
-	 * a SARL model. This map is basically the inverse of {@link #variableMap}.
-	 */
-	private Map<Expr, SymbolicConstant> inverseMap = new HashMap<>();
+	// /**
+	// * Map from CVC variables back to SARL symbolic constants. This is used
+	// for
+	// * finding models. When CVC finds a model, it needs to be translated back
+	// to
+	// * a SARL model. This map is basically the inverse of {@link
+	// #variableMap}.
+	// */
+	// private Map<Expr, SymbolicConstant> inverseMap = new HashMap<>();
 
 	/**
 	 * Mapping of SARL symbolic type to corresponding CVC4 type. Used to cache
@@ -193,6 +193,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		smt.setOption("produce-models", new SExpr(true));
 		// this is necessary to use method getAssertions:
 		smt.setOption("interactive-mode", new SExpr(true));
+		smt.setOption("rewrite-divk", new SExpr(true));
 		cvc0 = em.mkConst(new Rational(0));
 		cvc1 = em.mkConst(new Rational(1));
 		cvcTrue = em.mkConst(true);
@@ -203,24 +204,14 @@ public class CVC4TheoremProver implements TheoremProver {
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
 		if (!context.isTrue()) {
 			cvcAssumption = translate(context);
+
+			System.out.println("cvcAssumption: " + cvcAssumption);
+
 			smt.assertFormula(cvcAssumption);
 		}
 	}
 
 	// ************************* Private Methods ************************** //
-
-	// /**
-	// * Simple utility method to procued a vectorExpr of one element.
-	// *
-	// * @param element
-	// * @return the vectorExpr consisting of the single element
-	// */
-	// private vectorExpr newSingletonVector(Expr element) {
-	// vectorExpr result = new vectorExpr(1);
-	//
-	// result.add(element);
-	// return result;
-	// }
 
 	/**
 	 * Creates a new CVC4 (ordinary) variable of given type with unique name;
@@ -252,29 +243,30 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	/**
-	 * Symbolic expressions of incomplete array type are represented by ordered
-	 * pairs (length, array). This method tells whether the given symbolic
-	 * expression type requires such a representation.
-	 * 
-	 * @param type
-	 *            any symbolic type
-	 * @return true iff the type is an incomplete array type
-	 */
-	private boolean isBigArrayType(SymbolicType type) {
-		return type instanceof SymbolicArrayType
-				&& !((SymbolicArrayType) type).isComplete();
-	}
-
-	/**
-	 * Like above, but takes SymbolicExpression as input.
-	 * 
-	 * @param expr
-	 * @return true iff the type of expr is an incomplete array type
-	 */
-	private boolean isBigArray(SymbolicExpression expr) {
-		return isBigArrayType(expr.type());
-	}
+	// /**
+	// * Symbolic expressions of incomplete array type are represented by
+	// ordered
+	// * pairs (length, array). This method tells whether the given symbolic
+	// * expression type requires such a representation.
+	// *
+	// * @param type
+	// * any symbolic type
+	// * @return true iff the type is an incomplete array type
+	// */
+	// private boolean isBigArrayType(SymbolicType type) {
+	// return type instanceof SymbolicArrayType
+	// && !((SymbolicArrayType) type).isComplete();
+	// }
+	//
+	// /**
+	// * Like above, but takes SymbolicExpression as input.
+	// *
+	// * @param expr
+	// * @return true iff the type of expr is an incomplete array type
+	// */
+	// private boolean isBigArray(SymbolicExpression expr) {
+	// return isBigArrayType(expr.type());
+	// }
 
 	/**
 	 * This method takes in the length and value of an Expr and returns the
@@ -287,7 +279,7 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return CVC4 tuple of an ordered pair (length, array)
 	 */
 	private Expr bigArray(Expr length, Expr value) {
-		vectorExpr list = new vectorExpr(2);
+		vectorExpr list = new vectorExpr();
 
 		list.add(length);
 		list.add(value);
@@ -295,89 +287,67 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * This method takes any Expr that is of incomplete array type and returns
-	 * the length.
+	 * Given any CVC Expr which has type (Integer, array-of-T), returns the
+	 * first component, i.e., the component of integer type.
 	 * 
 	 * @param bigArray
-	 *            CVC4 Expr of bigArray
-	 * @return length of CVC4 Expr of incomplete array type
+	 *            any CVC Expr of type (Integer, array-of-T) for some T
+	 * @return the first component of that expression
 	 */
 	private Expr bigArrayLength(Expr bigArray) {
+		// check this
+		if (bigArray.getKind().equals(Kind.TUPLE)) {
+			return bigArray.getChild(0);
+		}
 		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, cvc0);
 	}
 
 	/**
-	 * This methods takes any Expr that is of incomplete array type and returns
-	 * the value.
+	 * Given any CVC Expr which has type (Integer, array-of-T), returns the
+	 * second component, i.e., the component of array type.
 	 * 
 	 * @param bigArray
-	 *            CVC4 Expr of bigArray
-	 * @return value of CVC4 Expr of incomplete array type
+	 *            any CVC Expr of type (Integer, array-of-T) for some T
+	 * @return the second component of that expression
 	 */
 	private Expr bigArrayValue(Expr bigArray) {
+		// if this is already a pair, get the 1 component, else do this
+		if (bigArray.getKind().equals(Kind.TUPLE)) {
+			return bigArray.getChild(1);
+		}
 		return em.mkExpr(Kind.TUPLE_SELECT, bigArray, cvc1);
 	}
 
 	/**
-	 * Formats the name of unionType during type translation.
+	 * Computes the name of the index-th selector function into a union type.
+	 * This is the function that taken an element of the union and returns an
+	 * element of the index-th member type.
 	 * 
 	 * @param unionType
+	 *            a union type
 	 * @param index
-	 * @return the newly formatted name of the unionType
+	 *            integer in [0,n), where n is the number of member types of the
+	 *            union type
+	 * @return the name of the index-th selector function
 	 */
 	private String selector(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_extract_" + index;
 	}
 
 	/**
-	 * Formats the name of unionType during type translation.
+	 * Computes the name of the index-th constructor function for a union type.
+	 * This is the function which takes as input an element of the index-th
+	 * member type and returns an element of the union type.
 	 * 
 	 * @param unionType
+	 *            a union type
 	 * @param index
-	 * @return the newly formatted name of the unionType
+	 *            an integer in [0,n), where n is the number of member types of
+	 *            the union type
+	 * @return the name of the index-th constructor function
 	 */
 	private String constructor(SymbolicUnionType unionType, int index) {
 		return unionType.name().toString() + "_inject_" + index;
-	}
-
-	/**
-	 * Translates a SARL symbolic expression to a CVC Expr and "coerces" the
-	 * result to conform to the expected CVC type if necessary. This is needed
-	 * for arrays.
-	 * 
-	 * @param expr
-	 * @return
-	 */
-	private Expr translateCoerce(Type expectedType,
-			SymbolicExpression expression) {
-		Expr result = translate(expression);
-
-		if (result.getType().isArray() && expectedType.isTuple()) {
-			Expr length = translate(universe.length(expression));
-
-			result = bigArray(length, result);
-		}
-		return result;
-	}
-
-	private Expr translateCoerce(SymbolicType expectedType,
-			SymbolicExpression expression) {
-		Expr result = translate(expression);
-
-		if (expectedType.typeKind() == SymbolicTypeKind.ARRAY) {
-			SymbolicArrayType expectedArrayType = (SymbolicArrayType) expectedType;
-			SymbolicArrayType actualArrayType = (SymbolicArrayType) expression
-					.type();
-
-			if (actualArrayType.isComplete() && !expectedArrayType.isComplete()) {
-				NumericExpression lengthExpression = ((SymbolicCompleteArrayType) actualArrayType)
-						.extent();
-				Expr length = translate(lengthExpression);
-
-				result = bigArray(length, result);
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -393,39 +363,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	private vectorExpr translateCollection(SymbolicCollection<?> collection) {
 		vectorExpr result = new vectorExpr();
 
-		for (SymbolicExpression expr : collection)
-			result.add(expr == null ? null : translate(expr));
-		return result;
-	}
-
-	/**
-	 * Translates an ordered symbolic collection (of SARL symbolic expressions)
-	 * to a CVC vector of Expr, coercing the elements to specified types as
-	 * needed. The expected types are provided as a CVC vector of Type. There
-	 * must be at least as many types as elements in the collections; types
-	 * beyond the size of the collection will just be ignored. Used method
-	 * {@link #translateCoerce(Type, SymbolicExpression)} to translate and
-	 * coerce each element.
-	 * 
-	 * @param cvcType
-	 *            a vector of CVC types
-	 * @param collection
-	 *            a SARL symbolic collection of symbolic expressions
-	 * @return a CVC vector of Expr (CVC expressions) of the same length as the
-	 *         given collection, obtained by translating and coercing each
-	 *         element
-	 */
-	private vectorExpr translateCoerceCollection(vectorType cvcTypes,
-			SymbolicCollection<?> collection) {
-		int n = collection.size();
-		vectorExpr result = new vectorExpr(n);
-		int i = 0;
-
-		assert n <= cvcTypes.size();
 		for (SymbolicExpression expr : collection) {
-			result.add(expr == null ? null : translateCoerce(cvcTypes.get(i),
-					expr));
-			i++;
+			if (expr == null)
+				result.add(null);
+			else
+				result.add(translate(expr));
 		}
 		return result;
 	}
@@ -445,39 +387,39 @@ public class CVC4TheoremProver implements TheoremProver {
 
 		switch (kind) {
 		case ARRAY: {
-			// type must be a complete array type, which is translated
-			// to a CVC4 array type
+			// type must be a complete array type
 			NumericExpression extentExpression = ((SymbolicCompleteArrayType) type)
 					.extent();
 			IntegerNumber extentNumber = (IntegerNumber) universe
 					.extractNumber(extentExpression);
 			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
 			int size = sequence.size();
-			ArrayType cvcType = (ArrayType) translateType(type);
-			Type cvcElementType = cvcType.getConstituentType();
+			ArrayType cvcType = new ArrayType(translateType(type));
 
 			assert extentNumber != null && extentNumber.intValue() == size;
 			result = newAuxVar(cvcType);
 			for (int i = 0; i < size; i++)
-				result = em.mkExpr(Kind.STORE, result,
-						em.mkConst(new Rational(i)),
-						translateCoerce(cvcElementType, sequence.get(i)));
+				result = em
+						.mkExpr(Kind.STORE, result,
+								em.mkConst(new Rational(i)),
+								translate(sequence.get(i)));
+			result = bigArray(em.mkConst(new Rational(size)), result);
 			break;
 		}
 		case BOOLEAN:
 			result = ((BooleanObject) object).getBoolean() ? cvcTrue : cvcFalse;
 			break;
 		case CHAR:
-			return em.mkConst(new Rational(((CharObject) object).getChar()));
+			result = em.mkConst(new Rational(((CharObject) object).getChar()));
+			break;
 		case INTEGER: {
 			IntegerNumber integerNumber = (IntegerNumber) ((NumberObject) object)
 					.getNumber();
-			BigInteger big = integerNumber.bigIntegerValue();
 
-			// TODO: until we can figure out why the construtor to Rational
-			// which takes a BigInteger does not work, we go through
-			// strings...
-			return em.mkConst(new Rational(big.toString()));
+			// yes, toString is the only reliable and efficient way
+			// to do this...
+			result = em.mkConst(new Rational(integerNumber.toString()));
+			break;
 		}
 		case REAL: {
 			RationalNumber rationalNumber = (RationalNumber) ((NumberObject) object)
@@ -489,17 +431,10 @@ public class CVC4TheoremProver implements TheoremProver {
 
 			result = em.mkConst(rationalNumerator
 					.dividedBy(rationalDenominator));
-			// TODO: until we can figure out why the construtor to Rational
-			// which takes a BigInteger does not work, we go through
-			// strings...
-			// result = em.mkConst(new Rational(numerator, denominator));
 			break;
 		}
 		case TUPLE:
-			TupleType cvcType = (TupleType) translateType(type);
-			vectorType expectedTypes = cvcType.getTypes();
-			vectorExpr members = translateCoerceCollection(expectedTypes,
-					(SymbolicSequence<?>) object);
+			vectorExpr members = translateCollection((SymbolicSequence<?>) object);
 
 			result = em.mkExpr(Kind.TUPLE, members);
 			break;
@@ -522,13 +457,26 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr translateSymbolicConstant(SymbolicConstant symbolicConstant,
 			boolean isBoundVariable) {
-		Type type = translateType(symbolicConstant.type());
 		String name = symbolicConstant.name().getString();
-		Expr result = isBoundVariable ? em.mkBoundVar(name, type) : em.mkVar(
-				name, type);
+		SymbolicType symbolicType = symbolicConstant.type();
+		Type type = translateType(symbolicConstant.type());
+		Expr result;
 
+		if (isBoundVariable) {
+			result = em.mkBoundVar(name, type);
+		} else {
+			if (symbolicType.typeKind() == SymbolicTypeKind.ARRAY) {
+				Type cvcArrayType = (new TupleType(type)).getTypes().get(1);
+				Expr constant = em.mkVar(name, cvcArrayType);
+				NumericExpression length = universe.length(symbolicConstant);
+				Expr cvcLength = translate(length);
+
+				result = em.mkExpr(Kind.TUPLE, cvcLength, constant);
+			} else {
+				result = em.mkVar(type);
+			}
+		}
 		this.variableMap.put(symbolicConstant, result);
-		this.inverseMap.put(result, symbolicConstant);
 		return result;
 	}
 
@@ -544,23 +492,23 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	/**
-	 * Tells CVC4 to assume that an array index is within bounds.
-	 * 
-	 * @param arrayExpression
-	 * @param index
-	 */
-	private void assertIndexInBounds(SymbolicExpression arrayExpression,
-			NumericExpression index) {
-		NumericExpression length = universe.length(arrayExpression);
-		BooleanExpression predicate = universe.lessThan(index, length);
-		Expr cvcPredicate;
-
-		predicate = universe.and(
-				universe.lessThanEquals(universe.zeroInt(), index), predicate);
-		cvcPredicate = translate(predicate);
-		smt.assertFormula(cvcPredicate);
-	}
+	// /**
+	// * Tells CVC4 to assume that an array index is within bounds.
+	// *
+	// * @param arrayExpression
+	// * @param index
+	// */
+	// private void assertIndexInBounds(SymbolicExpression arrayExpression,
+	// NumericExpression index) {
+	// NumericExpression length = universe.length(arrayExpression);
+	// BooleanExpression predicate = universe.lessThan(index, length);
+	// Expr cvcPredicate;
+	//
+	// predicate = universe.and(
+	// universe.lessThanEquals(universe.zeroInt(), index), predicate);
+	// cvcPredicate = translate(predicate);
+	// smt.assertFormula(cvcPredicate);
+	// }
 
 	/**
 	 * Translates an array-read expression a[i] into equivalent CVC4 expression
@@ -574,14 +522,13 @@ public class CVC4TheoremProver implements TheoremProver {
 				.argument(0);
 		NumericExpression indexExpression = (NumericExpression) expr
 				.argument(1);
-		Expr array, index, result;
+		Expr array, arrayValue, index, result;
 
-		assertIndexInBounds(arrayExpression, indexExpression);
+		// assertIndexInBounds(arrayExpression, indexExpression);
 		array = translate(arrayExpression);
-		index = translate((SymbolicExpression) expr.argument(1));
-		if (isBigArray(arrayExpression))
-			array = bigArrayValue(array);
-		result = em.mkExpr(Kind.SELECT, array, index);
+		arrayValue = bigArrayValue(array);
+		index = translate(indexExpression);
+		result = em.mkExpr(Kind.SELECT, arrayValue, index);
 		return result;
 	}
 
@@ -596,21 +543,22 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr translateArrayWrite(SymbolicExpression expr) {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
-		SymbolicArrayType arrayType = (SymbolicArrayType) arrayExpression
-				.type();
+		// SymbolicArrayType arrayType = (SymbolicArrayType) arrayExpression
+		// .type();
 		NumericExpression indexExpression = (NumericExpression) expr
 				.argument(1);
 		SymbolicExpression valueExpression = (SymbolicExpression) expr
 				.argument(2);
-		Expr array, index, value, result;
+		Expr array, arrayValue, length, index, value, result;
 
-		assertIndexInBounds(arrayExpression, indexExpression);
+		// assertIndexInBounds(arrayExpression, indexExpression);
 		array = translate(arrayExpression);
+		arrayValue = bigArrayValue(array);
+		length = bigArrayLength(array);
 		index = translate(indexExpression);
-		value = translateCoerce(arrayType.elementType(), valueExpression);
-		result = isBigArray(arrayExpression) ? bigArray(bigArrayLength(array),
-				em.mkExpr(Kind.STORE, bigArrayValue(array), index, value)) : em
-				.mkExpr(Kind.STORE, array, index, value);
+		value = translate(valueExpression);
+		result = bigArray(length,
+				em.mkExpr(Kind.STORE, arrayValue, index, value));
 		return result;
 	}
 
@@ -626,11 +574,9 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr translateDenseArrayWrite(SymbolicExpression expr) {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
-		boolean isBig = isBigArray(arrayExpression);
 		Expr origin = translate(arrayExpression);
-		Type cvcElementType = ((ArrayType) origin.getType())
-				.getConstituentType();
-		Expr result = isBig ? bigArrayValue(origin) : origin;
+		Expr result = bigArrayValue(origin);
+		Expr length = bigArrayLength(origin);
 		SymbolicSequence<?> values = (SymbolicSequence<?>) expr.argument(1);
 		int numValues = values.size();
 
@@ -639,7 +585,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 			if (value != null) {
 				Expr cvcIndex = em.mkConst(new Rational(i));
-				Expr cvcValue = translateCoerce(cvcElementType, value);
+				Expr cvcValue = translate(value);
 
 				result = em.mkExpr(Kind.STORE, result, cvcIndex, cvcValue);
 			}
@@ -647,8 +593,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		// why?:
 		// assertIndexInBounds(arrayExpression, universe.integer(numValues -
 		// 1));
-		if (isBig)
-			result = bigArray(bigArrayLength(origin), result);
+		result = bigArray(length, result);
 		return result;
 	}
 
@@ -664,7 +609,6 @@ public class CVC4TheoremProver implements TheoremProver {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
 		Expr result = translate(tupleExpression);
-		vectorType expectedTypes = ((TupleType) result.getType()).getTypes();
 		SymbolicSequence<?> values = (SymbolicSequence<?>) expr.argument(1);
 		int numValues = values.size();
 
@@ -673,7 +617,7 @@ public class CVC4TheoremProver implements TheoremProver {
 
 			if (value != null) {
 				Expr cvcIndex = em.mkConst(new Rational(index));
-				Expr cvcValue = translateCoerce(expectedTypes.get(index), value);
+				Expr cvcValue = translate(value);
 
 				result = em.mkExpr(Kind.TUPLE_UPDATE, result, cvcIndex,
 						cvcValue);
@@ -691,15 +635,14 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return the equivalent CVC4 Expr
 	 */
 	private Expr translateQuantifier(SymbolicExpression expr) {
+		SymbolicOperator kind = expr.operator();
 		SymbolicConstant boundVariable = (SymbolicConstant) (expr.argument(0));
 		Expr boundVar = translateSymbolicConstant(boundVariable, true);
+		Expr boundVariableList, predicate;
 
 		expressionMap.put(boundVariable, boundVar);
-
-		Expr boundVariableList = em.mkExpr(Kind.BOUND_VAR_LIST, boundVar);
-		Expr predicate = translate((SymbolicExpression) expr.argument(1));
-		SymbolicOperator kind = expr.operator();
-
+		boundVariableList = em.mkExpr(Kind.BOUND_VAR_LIST, boundVar);
+		predicate = translate((SymbolicExpression) expr.argument(1));
 		if (kind == SymbolicOperator.FORALL)
 			return em.mkExpr(Kind.FORALL, boundVariableList, predicate);
 		else if (kind == SymbolicOperator.EXISTS)
@@ -724,46 +667,34 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr processEquality(SymbolicType type1, SymbolicType type2,
 			Expr cvcExpression1, Expr cvcExpression2) {
+		Expr result;
+
 		if (type1.typeKind() == SymbolicTypeKind.ARRAY) {
-			// length are equal and forall i (0<=i<length).a[i]=b[i].
+			// lengths are equal and forall i (0<=i<length).a[i]=b[i].
 			SymbolicArrayType arrayType1 = (SymbolicArrayType) type1;
 			SymbolicArrayType arrayType2 = (SymbolicArrayType) type2;
-			Expr extent1, extent2, array1, array2, readExpr1, readExpr2;
-			Expr result, index, indexRangeExpr, elementEqualsExpr, forallExpr;
-
-			if (arrayType1 instanceof SymbolicCompleteArrayType) {
-				extent1 = translate(((SymbolicCompleteArrayType) arrayType1)
-						.extent());
-				array1 = cvcExpression1;
-			} else {
-				extent1 = bigArrayLength(cvcExpression1);
-				array1 = bigArrayValue(cvcExpression1);
-			}
-			if (arrayType2 instanceof SymbolicCompleteArrayType) {
-				extent2 = translate(((SymbolicCompleteArrayType) arrayType2)
-						.extent());
-				array2 = cvcExpression2;
-			} else {
-				extent2 = bigArrayLength(cvcExpression2);
-				array2 = bigArrayValue(cvcExpression2);
-			}
-			result = em.mkExpr(Kind.EQUAL, extent1, extent2);
-			index = newAuxBoundVar(em.integerType());
-			indexRangeExpr = em.mkExpr(Kind.AND,
-					em.mkExpr(Kind.GEQ, index, em.mkConst(new Rational(0))),
+			Expr extent1 = bigArrayLength(cvcExpression1);
+			Expr array1 = bigArrayValue(cvcExpression1);
+			Expr extent2 = bigArrayLength(cvcExpression2);
+			Expr array2 = bigArrayValue(cvcExpression2);
+			Expr index = newAuxBoundVar(em.integerType());
+			Expr indexRangeExpr = em.mkExpr(Kind.AND,
+					em.mkExpr(Kind.GEQ, index, cvc0),
 					em.mkExpr(Kind.LT, index, extent1));
-			readExpr1 = em.mkExpr(Kind.SELECT, array1, index);
-			readExpr2 = em.mkExpr(Kind.SELECT, array2, index);
-			elementEqualsExpr = processEquality(arrayType1.elementType(),
+			Expr readExpr1 = em.mkExpr(Kind.SELECT, array1, index);
+			Expr readExpr2 = em.mkExpr(Kind.SELECT, array2, index);
+			Expr elementEqualsExpr = processEquality(arrayType1.elementType(),
 					arrayType2.elementType(), readExpr1, readExpr2);
-			forallExpr = em.mkExpr(Kind.FORALL,
+			Expr forallExpr = em.mkExpr(Kind.FORALL,
 					em.mkExpr(Kind.BOUND_VAR_LIST, index),
 					em.mkExpr(Kind.IMPLIES, indexRangeExpr, elementEqualsExpr));
-			result = em.mkExpr(Kind.AND, result, forallExpr);
-			return result;
+
+			result = em.mkExpr(Kind.AND,
+					em.mkExpr(Kind.EQUAL, extent1, extent2), forallExpr);
 		} else {
-			return em.mkExpr(Kind.EQUAL, cvcExpression1, cvcExpression2);
+			result = em.mkExpr(Kind.EQUAL, cvcExpression1, cvcExpression2);
 		}
+		return result;
 	}
 
 	/**
@@ -810,13 +741,14 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return the CVC4 translation of that expression
 	 */
 	private Expr translateUnionExtract(SymbolicExpression expr) {
-		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
-		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
 		int index = ((IntObject) expr.argument(0)).getInt();
-		String selector = selector(unionType, index);
-		Expr selectorExpr = em.mkConst(selector);
-		Expr result = em.mkExpr(Kind.APPLY_SELECTOR, selectorExpr,
-				translate(arg));
+		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
+		Expr cvcArg = translate(arg);
+		DatatypeType datatypeType = new DatatypeType(cvcArg.getType());
+		Datatype datatype = datatypeType.getDatatype();
+		DatatypeConstructor constructor = datatype.get(index);
+		Expr selector = constructor.get(0).getSelector();
+		Expr result = em.mkExpr(Kind.APPLY_SELECTOR, selector, cvcArg);
 
 		return result;
 	}
@@ -836,12 +768,12 @@ public class CVC4TheoremProver implements TheoremProver {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
 		SymbolicUnionType unionType = (SymbolicUnionType) expr.type();
-		SymbolicType memberType = unionType.sequence().getType(index);
-		String constructor = constructor(unionType, index);
-		Expr constructExpr = em.mkConst(constructor);
-		Expr result = em.mkExpr(Kind.APPLY_CONSTRUCTOR, constructExpr,
-				translateCoerce(memberType, arg));
+		DatatypeType datatypeType = new DatatypeType(translateType(unionType));
+		Datatype datatype = datatypeType.getDatatype();
+		Expr constructor = datatype.get(index).getConstructor();
+		Expr result;
 
+		result = em.mkExpr(Kind.APPLY_CONSTRUCTOR, constructor, translate(arg));
 		return result;
 	}
 
@@ -858,11 +790,12 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr translateUnionTest(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
-		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
-		String constructor = constructor(unionType, index);
-		Expr constructorExpr = em.mkConst(constructor);
-		Expr result = em.mkExpr(Kind.APPLY_TESTER, constructorExpr,
-				translate(arg));
+		Expr cvcArg = translate(arg);
+		DatatypeType datatypeType = new DatatypeType(cvcArg.getType());
+		Datatype datatype = datatypeType.getDatatype();
+		DatatypeConstructor constructor = datatype.get(index);
+		Expr tester = constructor.getTester();
+		Expr result = em.mkExpr(Kind.APPLY_TESTER, tester, cvcArg);
 
 		return result;
 	}
@@ -913,34 +846,30 @@ public class CVC4TheoremProver implements TheoremProver {
 			SymbolicSequence<?> arguments = (SymbolicSequence<?>) expression
 					.argument(1);
 			Expr cvcFunction = translate(function);
-			FunctionType cvcFunctionType = (FunctionType) cvcFunction.getType();
-			vectorType argTypes = cvcFunctionType.getArgTypes();
-			vectorExpr cvcArguments = translateCoerceCollection(argTypes,
-					arguments);
+			// Type cvcType = cvcFunction.getType();
+			// FunctionType cvcFunctionType = new FunctionType(cvcType);
+			vectorExpr cvcArguments = translateCollection(arguments);
 
 			result = em.mkExpr(Kind.APPLY_UF, cvcFunction, cvcArguments);
 			break;
 		}
 		case ARRAY_LAMBDA: {
-			SymbolicExpression function = (SymbolicExpression) expression
-					.argument(0);
-			SymbolicOperator op0 = function.operator();
-			Expr var, body;
-
-			if (op0 == SymbolicOperator.LAMBDA) {
-				var = translate((SymbolicConstant) function.argument(0));
-				body = translate((SymbolicExpression) function.argument(1));
-			} else {
-				// create new SymbolicConstantIF _SARL_i
-				// create new APPLY expression apply(f,i)
-				// need universe.
-				// or just assert forall i.a[i]=f(i)
-				throw new UnsupportedOperationException("TO DO");
-			}
-			// TODO: what??? Have email in to cvc-users
-			// asking how to make an array lambda
-			result = em.mkExpr(Kind.SELECT, var, body);
-			break;
+			// SymbolicExpression function = (SymbolicExpression) expression
+			// .argument(0);
+			// SymbolicOperator op0 = function.operator();
+			// Expr var, body;
+			//
+			// if (op0 == SymbolicOperator.LAMBDA) {
+			// var = translate((SymbolicConstant) function.argument(0));
+			// body = translate((SymbolicExpression) function.argument(1));
+			// } else {
+			// // create new SymbolicConstantIF _SARL_i
+			// // create new APPLY expression apply(f,i)
+			// // need universe.
+			// // or just assert forall i.a[i]=f(i)
+			// }
+			throw new UnsupportedOperationException(
+					"Array lambdas are not supported in CVC4");
 		}
 		case ARRAY_READ:
 			result = translateArrayRead(expression);
@@ -1100,6 +1029,27 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
+	private DatatypeType translateUnionType(SymbolicUnionType unionType) {
+		Datatype cvc4Union = new Datatype(unionType.name().getString());
+		int index = 0;
+		DatatypeType result;
+
+		// make 1 constructor for each member type...
+		for (SymbolicType memberType : unionType.sequence()) {
+			DatatypeConstructor cons = new DatatypeConstructor(constructor(
+					unionType, index));
+			Type cvcMemberType = translateType(memberType);
+			// note: the tester name is is_+constructor name.
+
+			cons.addArg(selector(unionType, index), cvcMemberType);
+			// add constructor to Datatype. extractor=selector
+			cvc4Union.addConstructor(cons);
+			index++;
+		}
+		result = em.mkDatatypeType(cvc4Union);
+		return result;
+	}
+
 	/**
 	 * Translates the symbolic type to a CVC4 type.
 	 * 
@@ -1148,41 +1098,9 @@ public class CVC4TheoremProver implements TheoremProver {
 							.inputTypes()),
 					translateType(((SymbolicFunctionType) type).outputType()));
 			break;
-		case UNION: {
-			SymbolicUnionType unionType = (SymbolicUnionType) type;
-			Datatype cvc4Union = new Datatype(unionType.name().getString());
-			List<String> constructors = new LinkedList<String>();
-			List<List<String>> selectors = new LinkedList<List<String>>();
-			List<List<Type>> types = new LinkedList<List<Type>>();
-			SymbolicTypeSequence sequence = unionType.sequence();
-			int index = 0;
-
-			for (SymbolicType t : sequence) {
-				List<String> selectorList = new LinkedList<String>();
-				List<Type> typeList = new LinkedList<Type>();
-
-				selectorList.add(selector(unionType, index));
-				typeList.add(translateType(t));
-				selectors.add(selectorList);
-				types.add(typeList);
-				constructors.add(constructor(unionType, index));
-				index++;
-			}
-			for (String constructor : constructors)
-				for (List<String> selectorList : selectors)
-					for (List<Type> typeList : types) {
-						DatatypeConstructor cons = new DatatypeConstructor(
-								constructor);
-
-						for (String selector : selectorList)
-							for (Type t : typeList)
-								cons.addArg(selector, t);
-
-						cvc4Union.addConstructor(cons);
-					}
-			result = em.mkDatatypeType(cvc4Union);
+		case UNION:
+			result = translateUnionType((SymbolicUnionType) type);
 			break;
-		}
 		default:
 			throw new SARLInternalException("Unknown SARL type: " + type);
 		}
@@ -1202,8 +1120,12 @@ public class CVC4TheoremProver implements TheoremProver {
 		vectorType result = new vectorType();
 
 		// TODO: is there something better than null here?
-		for (SymbolicType t : sequence)
-			result.add(t == null ? null : translateType(t));
+		for (SymbolicType t : sequence) {
+			if (t == null)
+				result.add(null);
+			else
+				result.add(translateType(t));
+		}
 		return result;
 	}
 
@@ -1229,6 +1151,40 @@ public class CVC4TheoremProver implements TheoremProver {
 		throw new SARLException("Model finding not yet supported for CVC4");
 	}
 
+	private void showQuery(Expr cvcPredicate) {
+		try {
+			PrintStream out = universe.getOutputStream();
+			int id = universe.numProverValidCalls() - 1;
+			vectorExpr assertions;
+
+			out.println();
+			out.println("CVC4 assumptions " + id + ":");
+			assertions = smt.getAssertions();
+			for (int i = 0; i < assertions.size(); i++)
+				out.println("  " + assertions.get(i));
+
+			out.print("CVC4 predicate   " + id + ": ");
+			out.println(cvcPredicate);
+			out.flush();
+		} catch (Exception e) {
+			System.err
+					.println("Warning: error in attempting to print CVC4 data.");
+		}
+	}
+
+	private void showResult(Result result) {
+		try {
+			PrintStream out = universe.getOutputStream();
+			int id = universe.numProverValidCalls() - 1;
+
+			out.println("CVC4 result      " + id + ": " + result);
+			out.flush();
+		} catch (Exception e) {
+			System.err
+					.println("Warning: error in attempting to print CVC4 result.");
+		}
+	}
+
 	/**
 	 * queryCVC4 gets called by valid, prints out predicate and context, and the
 	 * CVC4 assumptions and CVC4 predicate. Passes the symbolicPredicate through
@@ -1249,35 +1205,15 @@ public class CVC4TheoremProver implements TheoremProver {
 
 			this.smt.push();
 			cvcPredicate = translate(symbolicPredicate);
-			if (show) {
-				PrintStream out = universe.getOutputStream();
-				int id = universe.numProverValidCalls() - 1;
-
-				out.println();
-				out.println("CVC4 assumptions " + id + ":");
-
-				vectorExpr assertions = smt.getAssertions();
-
-				for (int i = 0; i < assertions.size(); i++)
-					out.println("  " + assertions.get(i));
-
-				out.print("CVC4 predicate   " + id + ": ");
-				out.println(cvcPredicate);
-				out.flush();
-			}
+			if (show)
+				showQuery(cvcPredicate);
 			result = smt.query(cvcPredicate);
-			if (show) {
-				PrintStream out = universe.getOutputStream();
-				int id = universe.numProverValidCalls() - 1;
-
-				out.println("CVC4 result      " + id + ": " + result);
-				out.flush();
-			}
+			if (show)
+				showResult(result);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new SARLInternalException(
-					"Error in parsing the symbolic expression or querying CVC4:\n"
-							+ e);
+			throw new SARLInternalException("Error in querying CVC4:\n" + e
+					+ "\nThe SARL predicate was:\n  " + symbolicPredicate);
 		}
 		return result;
 	}
