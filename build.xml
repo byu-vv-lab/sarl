@@ -44,6 +44,7 @@
 		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
+		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<target name="compile" description="Compile all java source files.">
@@ -59,6 +60,7 @@
 			<zipfileset includes="**/*.class" src="${cvc4.lib.jar}" />
 			<zipfileset includes="**/*.class" src="${pcollections.jar}" />
 			<zipfileset includes="**/*.class" src="${clj-ds.jar}" />
+			<zipfileset includes="**/*.class" src="${z3.lib.jar}" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
@@ -76,6 +78,7 @@
 		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
+		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<path id="test.execute.classpath">
@@ -87,6 +90,7 @@
 		<pathelement location="${cvc4.lib.jar}" />
 		<pathelement location="${pcollections.jar}" />
 		<pathelement location="${clj-ds.jar}" />
+		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<target name="test-init">

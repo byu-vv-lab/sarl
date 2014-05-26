@@ -61,6 +61,7 @@ public class FindModelTest {
 	@Before
 	public void setUp() throws Exception {
 		universe = SARL.newStandardUniverse();
+		//universe.setShowProverQueries(true); // DEBUGGING
 		realType = universe.realType();
 		intType = universe.integerType();
 		x = (NumericSymbolicConstant) universe.symbolicConstant(

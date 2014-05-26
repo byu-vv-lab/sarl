@@ -71,7 +71,7 @@ public class QuantifierTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		universe.setShowProverQueries(true); // for debugging
+		//universe.setShowProverQueries(true); // for debugging
 		provers = new LinkedList<TheoremProver>();
 		{
 			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
