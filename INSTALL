@@ -19,15 +19,15 @@ openjdk-7-jdk.
 	vsl_osx64-1.0.tgz	- 64-bit osx
 	
    Unzip the .tgz file and you will have the folder vsl.
-   Move vsl to /opt (you might need to use “sudo” for this.
+   Move vsl to /opt (you might need to use "sudo" for this.
    Also, if you don't already have a directory called /opt, 
    you will have to create it with mkdir /opt).
 
    Suppose that you put the .tgz file (or .tar file if your browser
-   unzipped it automatically to a .tar file) in the directory $Download.
+   unzipped it automatically to a .tar file) in the directory DOWNLOAD.
    You can use the following commands:
 
-   		$ cd $Download
+   		$ cd DOWNLOAD
    		$ tar xzf YourTgzOrTarFile vsl
    		$ sudo mv vsl /opt
 
@@ -73,7 +73,7 @@ and other Eclipse meta-data are already in the SVN archive, saving you
 a bunch of work.
 
 6. Navigate to Preferences -> Java -> Build Path -> ClassPath 
-Variables, and then select “New...” to create a classpath variable VSL, 
+Variables, and then select "New..." to create a classpath variable VSL, 
 and specify its value to be /opt/vsl.
 
 7. Navigate to Preferences -> Run/Debug ->

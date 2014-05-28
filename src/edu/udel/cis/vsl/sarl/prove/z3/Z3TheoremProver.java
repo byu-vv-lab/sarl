@@ -49,7 +49,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  * fields from the sort: each field is a FuncDecl. I guess this func decl is the
  * extraction function (projection).
  */
-
+@SuppressWarnings("unused")
 public class Z3TheoremProver implements TheoremProver {
 
 	public final static String bigArrayName = "bigArray";
@@ -253,11 +253,6 @@ public class Z3TheoremProver implements TheoremProver {
 		}
 		return value;
 	}
-	
-	
-	
-	
-	
 
 	private Expr translate(SymbolicExpression expression) throws Z3Exception {
 

@@ -16,7 +16,7 @@ import com.microsoft.z3.Symbol;
 import com.microsoft.z3.TupleSort;
 import com.microsoft.z3.Z3Exception;
 
-public class Z3SortTest {
+public class Z3SortExample {
 	public final static void main(String[] args) throws Z3Exception {
 		PrintStream out = System.out;
 		Context ctx = new Context();

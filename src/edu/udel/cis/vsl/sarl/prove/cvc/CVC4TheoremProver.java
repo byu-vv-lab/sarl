@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.prove.cvc;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +30,9 @@ import edu.nyu.acsys.CVC4.DatatypeConstructor;
 import edu.nyu.acsys.CVC4.DatatypeType;
 import edu.nyu.acsys.CVC4.Expr;
 import edu.nyu.acsys.CVC4.ExprManager;
+import edu.nyu.acsys.CVC4.Integer;
 import edu.nyu.acsys.CVC4.Kind;
+import edu.nyu.acsys.CVC4.LogicInfo;
 import edu.nyu.acsys.CVC4.Rational;
 import edu.nyu.acsys.CVC4.Result;
 import edu.nyu.acsys.CVC4.Result.Validity;
@@ -88,17 +91,40 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  */
 public class CVC4TheoremProver implements TheoremProver {
 
-	public static boolean debug = false;
+	// ************************** Static Fields *************************** //
+
+	/**
+	 * Should a new CVC4 statement engine and expression manager be instantiated
+	 * for every query?
+	 */
+	public final static boolean resetAfterQuery = false;
+
+	public final static int constBooleanKindInt = Kind.CONST_BOOLEAN
+			.swigValue();
+
+	public final static int constRationalKindInt = Kind.CONST_RATIONAL
+			.swigValue();
+
+	public final static int applyUFKindInt = Kind.APPLY_UF.swigValue();
+
+	public final static int tupleKindInt = Kind.TUPLE.swigValue();
+
+	public final static int selectKindInt = Kind.SELECT.swigValue();
+
+	public final static int storeKindInt = Kind.STORE.swigValue();
 
 	// ****************************** Fields ****************************** //
+
+	/**
+	 * The given assumption under which this theorem prover operates.
+	 */
+	private BooleanExpression context;
 
 	/**
 	 * The symbolic universe used for managing symbolic expressions. Initialized
 	 * by constructor and never changes.
 	 */
 	private PreUniverse universe;
-
-	private BooleanExpression context;
 
 	/**
 	 * The CVC4 object used for creating CVC4 {@link Expr}s (expressions).
@@ -107,10 +133,15 @@ public class CVC4TheoremProver implements TheoremProver {
 	private ExprManager em;
 
 	/**
-	 * The CVC4 object used to checks queries. Created once during instantiation
-	 * and never modified.
+	 * The CVC4 SmtEngine used to checks queries when a model is not needed.
+	 * 
 	 */
-	private SmtEngine smt;
+	private SmtEngine basicSmt;
+
+	/**
+	 * The CVC4 SmtEngine used exclusively for finding models.
+	 */
+	private SmtEngine modelSmt;
 
 	/**
 	 * The number of auxiliary CVC4 variables created. These are the variables
@@ -149,11 +180,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	 */
 	private Expr cvc0;
 
-	// /**
-	// * The CVC4 integer constant 1.
-	// */
-	// private Expr cvc1;
-
 	/**
 	 * The CVC4 boolean constant "true".
 	 */
@@ -167,10 +193,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr select0;
 
 	private Expr select1;
-
-	// private Expr update0;
-	//
-	// private Expr update1;
 
 	// *************************** Constructors *************************** //
 
@@ -189,6 +211,18 @@ public class CVC4TheoremProver implements TheoremProver {
 		// The following is necessary since the same bound symbolic constant
 		// can be used in different scopes in the context; CVC4 requires
 		// that these map to distinct variables.
+		//
+		// Can we use a stack instead?
+		// Every time you enter a quantified scope, push the
+		// stack. Entries on the stack are maps from symbolic
+		// expressions to Expr as above. When you translate
+		// a binding instance you always make a new variable
+		// and add an entry to the new stack frame. When you
+		// look up an expression to see if it has already been
+		// translated. Problem: if you see "x+1" you may find
+		// an earlier "x+1" for a different x. There is no
+		// way around it... you have to get a unique bound
+		// variable somehow.
 		this.context = (BooleanExpression) universe
 				.cleanBoundVariables(context);
 		init();
@@ -196,33 +230,27 @@ public class CVC4TheoremProver implements TheoremProver {
 
 	// ************************* Private Methods ************************** //
 
-	private void init() {
-		em = new ExprManager();
-		smt = new SmtEngine(em);
-		auxVarCount = 0;
-		expressionMap = new HashMap<>();
-		variableMap = new HashMap<>();
-		typeMap = new HashMap<SymbolicType, Type>();
+	private SmtEngine newBasicSmt(ExprManager em) {
+		LogicInfo info = new LogicInfo();
+		SmtEngine smt = new SmtEngine(em);
+
 		// the following is necessary if you are going to make
-		// multiple verify calls with the same SmtEngine
-		// (this may change in the future)...
-
-		// TODO: DEBUGGING:::
-		// smt.setOption("incremental", new SExpr(true));
-
-		// allows the CVC4 to find models (counterexamples)...
-		smt.setOption("produce-models", new SExpr(true));
+		// multiple verify calls with the same SmtEngine:
+		if (!resetAfterQuery)
+			smt.setOption("incremental", new SExpr(true));
+		// forbid the SMT from finding models (counterexamples)...
+		smt.setOption("produce-models", new SExpr(false));
 		// this is necessary to use method getAssertions:
-		smt.setOption("interactive-mode", new SExpr(true));
+		if (universe.getShowProverQueries())
+			smt.setOption("interactive-mode", new SExpr(true));
+		// allows integer division/modulus with constant denominator:
 		smt.setOption("rewrite-divk", new SExpr(true));
-		cvc0 = em.mkConst(new Rational(0));
-		// cvc1 = em.mkConst(new Rational(1));
-		cvcTrue = em.mkConst(true);
-		cvcFalse = em.mkConst(false);
-		select0 = em.mkConst(new TupleSelect(0));
-		select1 = em.mkConst(new TupleSelect(1));
-		// update0 = em.mkConst(new TupleUpdate(0));
-		// update1 = em.mkConst(new TupleUpdate(1));
+		// if you enable non-linear arithmetic, you DISABLE model-finding!
+		info.arithNonLinear();
+		info.enableQuantifiers();
+		info.enableIntegers();
+		info.enableReals();
+		smt.setLogic(info);
 		if (!context.isTrue()) {
 			cvcAssumption = translate(context);
 			if (universe.getShowProverQueries()) {
@@ -232,15 +260,62 @@ public class CVC4TheoremProver implements TheoremProver {
 			}
 			smt.assertFormula(cvcAssumption);
 		}
+		return smt;
 	}
 
+	private SmtEngine newModelSmt(ExprManager em) {
+		LogicInfo info = new LogicInfo();
+		SmtEngine smt = new SmtEngine(em);
+
+		// the following is necessary if you are going to make
+		// multiple verify calls with the same SmtEngine:
+		if (!resetAfterQuery)
+			smt.setOption("incremental", new SExpr(true));
+		// allow the SMT to find models (counterexamples)...
+		smt.setOption("produce-models", new SExpr(true));
+		// this is necessary to use method getAssertions:
+		if (universe.getShowProverQueries())
+			smt.setOption("interactive-mode", new SExpr(true));
+		// allows integer division/modulus with constant denominator:
+		smt.setOption("rewrite-divk", new SExpr(true));
+		// if you enable non-linear arithmetic, you DISABLE model-finding!
+		// info.arithNonLinear();
+		info.enableQuantifiers();
+		info.enableIntegers();
+		info.enableReals();
+		smt.setLogic(info);
+		if (!context.isTrue()) {
+			cvcAssumption = translate(context);
+			if (universe.getShowProverQueries()) {
+				universe.getOutputStream().println(
+						"New CVC4 system formed with assumption:\n  "
+								+ cvcAssumption);
+			}
+			smt.assertFormula(cvcAssumption);
+		}
+		return smt;
+	}
+
+	private void init() {
+		em = new ExprManager();
+		basicSmt = null;
+		modelSmt = null;
+		auxVarCount = 0;
+		expressionMap = new HashMap<>();
+		variableMap = new HashMap<>();
+		typeMap = new HashMap<SymbolicType, Type>();
+		cvc0 = em.mkConst(new Rational(0, 1));
+		cvcTrue = em.mkConst(true);
+		cvcFalse = em.mkConst(false);
+		select0 = em.mkConst(new TupleSelect(0));
+		select1 = em.mkConst(new TupleSelect(1));
+	}
+
+	/**
+	 * Gets rid of the old expression manager and statement engine and replaces
+	 * them with new ones; resets other state.
+	 */
 	private void reset() {
-		// if (em != null)
-		// em.delete();
-		// if (smt != null)
-		// smt.delete();
-		em = null;
-		smt = null;
 		if (universe.getShowProverQueries()) {
 			universe.getOutputStream().println("Destroying old CVC4 system.");
 		}
@@ -288,11 +363,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * @return CVC4 tuple of an ordered pair (length, array)
 	 */
 	private Expr bigArray(Expr length, Expr value) {
-		// vectorExpr list = new vectorExpr();
-		//
-		// list.add(length);
-		// list.add(value);
-		// return em.mkExpr(Kind.TUPLE, list);
 		return em.mkExpr(Kind.TUPLE, length, value);
 	}
 
@@ -326,15 +396,11 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr bigArrayValue(Expr bigArray) {
 		Expr result;
 
-		// System.err.println("bigArray: " + bigArray);
-		// System.err.println("bigArray type: " + bigArray.getType());
-		// if this is already a pair, get the 1 component, else do this
 		if (bigArray.getKind().equals(Kind.TUPLE)) {
 			result = bigArray.getChild(1);
 		} else {
 			result = em.mkExpr(select1, bigArray);
 		}
-		// System.err.println("result: " + result);
 		return result;
 	}
 
@@ -422,26 +488,27 @@ public class CVC4TheoremProver implements TheoremProver {
 			assert extentNumber != null && extentNumber.intValue() == size;
 			result = newAuxVar(cvcArrayType);
 			for (int i = 0; i < size; i++)
-				result = em
-						.mkExpr(Kind.STORE, result,
-								em.mkConst(new Rational(i)),
-								translate(sequence.get(i)));
-			result = bigArray(em.mkConst(new Rational(size)), result);
+				result = em.mkExpr(Kind.STORE, result,
+						em.mkConst(new Rational(i, 1)),
+						translate(sequence.get(i)));
+			result = bigArray(em.mkConst(new Rational(size, 1)), result);
 			break;
 		}
 		case BOOLEAN:
 			result = ((BooleanObject) object).getBoolean() ? cvcTrue : cvcFalse;
 			break;
 		case CHAR:
-			result = em.mkConst(new Rational(((CharObject) object).getChar()));
+			result = em
+					.mkConst(new Rational(((CharObject) object).getChar(), 1));
 			break;
 		case INTEGER: {
 			IntegerNumber integerNumber = (IntegerNumber) ((NumberObject) object)
 					.getNumber();
+			Integer cvcInteger = new Integer(integerNumber.toString());
 
 			// yes, toString is the only reliable and efficient way
-			// to do this...
-			result = em.mkConst(new Rational(integerNumber.toString()));
+			// to do this.
+			result = em.mkConst(new Rational(cvcInteger));
 			break;
 		}
 		case REAL: {
@@ -449,11 +516,11 @@ public class CVC4TheoremProver implements TheoremProver {
 					.getNumber();
 			BigInteger numerator = rationalNumber.numerator(), denominator = rationalNumber
 					.denominator();
-			Rational rationalNumerator = new Rational(numerator.toString()), rationalDenominator = new Rational(
+			Integer cvcNumerator = new Integer(numerator.toString()), cvcDenominator = new Integer(
 					denominator.toString());
+			Rational rational = new Rational(cvcNumerator, cvcDenominator);
 
-			result = em.mkConst(rationalNumerator
-					.dividedBy(rationalDenominator));
+			result = em.mkConst(rational);
 			break;
 		}
 		case TUPLE:
@@ -567,8 +634,6 @@ public class CVC4TheoremProver implements TheoremProver {
 	private Expr translateArrayWrite(SymbolicExpression expr) {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
-		// SymbolicArrayType arrayType = (SymbolicArrayType) arrayExpression
-		// .type();
 		NumericExpression indexExpression = (NumericExpression) expr
 				.argument(1);
 		SymbolicExpression valueExpression = (SymbolicExpression) expr
@@ -608,7 +673,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			SymbolicExpression value = values.get(i);
 
 			if (value != null) {
-				Expr cvcIndex = em.mkConst(new Rational(i));
+				Expr cvcIndex = em.mkConst(new Rational(i, 1));
 				Expr cvcValue = translate(value);
 
 				result = em.mkExpr(Kind.STORE, result, cvcIndex, cvcValue);
@@ -876,6 +941,7 @@ public class CVC4TheoremProver implements TheoremProver {
 			break;
 		}
 		case ARRAY_LAMBDA: {
+			// TODO
 			// SymbolicExpression function = (SymbolicExpression) expression
 			// .argument(0);
 			// SymbolicOperator op0 = function.operator();
@@ -996,11 +1062,10 @@ public class CVC4TheoremProver implements TheoremProver {
 			SymbolicObject exponent = expression.argument(1);
 
 			if (exponent instanceof IntObject)
-				result = em
-						.mkExpr(Kind.POW,
-								translate((SymbolicExpression) expression
-										.argument(0)), em.mkConst(new Rational(
-										((IntObject) exponent).getInt())));
+				result = em.mkExpr(Kind.POW,
+						translate((SymbolicExpression) expression.argument(0)),
+						em.mkConst(new Rational(
+								((IntObject) exponent).getInt(), 1)));
 			else
 				result = em.mkExpr(Kind.POW,
 						translate((SymbolicExpression) expression.argument(0)),
@@ -1166,11 +1231,138 @@ public class CVC4TheoremProver implements TheoremProver {
 		return result;
 	}
 
-	private SymbolicExpression backTranslate(Expr cvcExpression) {
-		throw new SARLException("Model finding not yet supported for CVC4");
+	private SymbolicExpression backTranslateArray(SymbolicType elementType,
+			NumericExpression length, Expr expr) {
+		IntegerNumber lengthNum = (IntegerNumber) universe
+				.extractNumber(length);
+		int lengthInt;
+		SymbolicExpression[] elements;
+		SymbolicExpression result;
+
+		if (lengthNum == null)
+			throw new SARLInternalException(
+					"CVC4 model contains array of non-concrete length: "
+							+ length);
+		lengthInt = lengthNum.intValue();
+		elements = new SymbolicExpression[lengthInt];
+		for (int i = 0; i < lengthInt; i++) {
+			Expr readExpr = em.mkExpr(Kind.SELECT, expr,
+					em.mkConst(new Rational(i, 1)));
+			Expr value = modelSmt.getValue(readExpr);
+			SymbolicExpression sarlValue = backTranslate(elementType, value);
+
+			elements[i] = sarlValue;
+		}
+		result = universe.array(elementType, Arrays.asList(elements));
+		return result;
 	}
 
-	private void showQuery(Expr cvcPredicate) {
+	private SymbolicExpression backTranslateRational(SymbolicType sarlType,
+			Expr expr) {
+		Rational rational = expr.getConstRational();
+		edu.nyu.acsys.CVC4.Integer numerator = rational.getNumerator();
+		String numeratorString = numerator.toString();
+		SymbolicExpression result;
+
+		switch (sarlType.typeKind()) {
+		case INTEGER:
+			if (!rational.isIntegral())
+				throw new SARLInternalException(
+						"CVC4 produced model in which variable of integer type was assigned non-integer: "
+								+ rational);
+			result = universe.integer(new BigInteger(numerator.toString()));
+			break;
+		case CHAR:
+			if (!rational.isIntegral())
+				throw new SARLInternalException(
+						"CVC4 produced model in which variable of char type was assigned non-integer: "
+								+ rational);
+			result = universe.character((char) numerator.getUnsignedInt());
+			break;
+		case REAL: {
+			String denominatorString = rational.getDenominator().toString();
+
+			result = universe.rational(new BigInteger(numeratorString),
+					new BigInteger(denominatorString));
+			break;
+		}
+		default:
+			throw new SARLException(
+					"CVC4 model produced rational value for SARL type "
+							+ sarlType);
+		}
+		return result;
+	}
+
+	private SymbolicExpression backTranslateTuple(SymbolicType sarlType,
+			Expr expr) {
+		SymbolicExpression result;
+		SymbolicTypeKind typeKind = sarlType.typeKind();
+
+		// could be a tuple for an array, or for a tuple
+		if (typeKind == SymbolicTypeKind.ARRAY) {
+			// tuple is ordered pair (length,array); return a concrete array
+			SymbolicType elementType = ((SymbolicArrayType) sarlType)
+					.elementType();
+			Expr lengthExpr = bigArrayLength(expr);
+			Expr valueExpr = bigArrayValue(expr);
+			NumericExpression length = (NumericExpression) backTranslate(
+					universe.integerType(), lengthExpr);
+			result = backTranslateArray(elementType, length, valueExpr);
+		} else if (typeKind == SymbolicTypeKind.TUPLE) {
+			SymbolicTupleType tupleType = (SymbolicTupleType) sarlType;
+			SymbolicTypeSequence componentTypes = tupleType.sequence();
+			int numComponents = componentTypes.numTypes();
+			SymbolicExpression[] sarlComponents = new SymbolicExpression[numComponents];
+
+			for (int i = 0; i < numComponents; i++) {
+				SymbolicType componentType = componentTypes.getType(i);
+				Expr component = expr.getChild(i);
+				SymbolicExpression sarlComponent = backTranslate(componentType,
+						component);
+
+				sarlComponents[i] = sarlComponent;
+			}
+			result = universe.tuple(tupleType, Arrays.asList(sarlComponents));
+		} else
+			throw new SARLInternalException(
+					"CVC4 model returned tuple for SARL type " + sarlType);
+		return result;
+	}
+
+	/**
+	 * Translates what should hopefully be a concrete CVC4 Expr to a concrete
+	 * SARL symbolic expression.
+	 * 
+	 * @param expr
+	 * @return
+	 */
+	private SymbolicExpression backTranslate(SymbolicType sarlType, Expr expr) {
+		Kind kind = expr.getKind();
+		int kindInt = kind.swigValue();
+		SymbolicExpression result;
+
+		if (kindInt == constBooleanKindInt) {
+			result = universe.bool(expr.getConstBoolean());
+		} else if (kindInt == constRationalKindInt) {
+			result = backTranslateRational(sarlType, expr);
+		} else if (kindInt == tupleKindInt) {
+			result = backTranslateTuple(sarlType, expr);
+		} else
+			throw new SARLInternalException(
+					"Encountered unexpected kind of CVC4 expression for SARL type "
+							+ sarlType + ":\n" + expr);
+		return result;
+	}
+
+	/**
+	 * Prints the current CVC4 assumption(s) and the given cvcPredicate. Catches
+	 * and ignores any exception, and just prints the exception to stderr.
+	 * 
+	 * @param cvcPredicate
+	 *            the predicate that is being queried
+	 */
+	private void showQuery(SmtEngine smt, Expr cvcPredicate) {
 		try {
 			PrintStream out = universe.getOutputStream();
 			int id = universe.numProverValidCalls() - 1;
@@ -1191,6 +1383,13 @@ public class CVC4TheoremProver implements TheoremProver {
 		}
 	}
 
+	/**
+	 * Prints the given CVC4 query result. Catches and any exception and prints
+	 * it to stderr, and otherwise ignores the exception.
+	 * 
+	 * @param result
+	 *            a query result
+	 */
 	private void showResult(Result result) {
 		try {
 			PrintStream out = universe.getOutputStream();
@@ -1205,37 +1404,29 @@ public class CVC4TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * queryCVC4 gets called by valid, prints out predicate and context, and the
-	 * CVC4 assumptions and CVC4 predicate. Passes the symbolicPredicate through
-	 * translate and uses the cvcPredicate for the validitychecker.
+	 * Pushes the CVC4 statement manager, translates the given SARL predicate,
+	 * and invokes the CVC4 query method on the result.
 	 * 
-	 * @param symbolicPredicate
-	 * @return Result
+	 * @param predicate
+	 *            a boolean-valued symbolic expression
+	 * @return the result of running CVC4 query on the given predicate; tells
+	 *         whether the predicate is valid (yes, no, or maybe)
 	 */
-	private Result queryCVC4(BooleanExpression symbolicPredicate) {
+	private Result queryCVC4(SmtEngine smt, BooleanExpression predicate) {
 		Result result = null;
 		boolean show = universe.getShowProverQueries();
 		Expr cvcPredicate;
 
 		universe.incrementProverValidCount();
-		symbolicPredicate = (BooleanExpression) universe
-				.cleanBoundVariables(symbolicPredicate);
+		predicate = (BooleanExpression) universe.cleanBoundVariables(predicate);
 		smt.push();
-		cvcPredicate = translate(symbolicPredicate);
+		cvcPredicate = translate(predicate);
 		if (show)
-			showQuery(cvcPredicate);
+			showQuery(smt, cvcPredicate);
 		result = smt.query(cvcPredicate);
 		if (show)
 			showResult(result);
 		return result;
-	}
-
-	/**
-	 * Pops the CVC4 stack. This means all the assertions made between the last
-	 * push and now will go away.
-	 */
-	private void popCVC4() {
-		smt.pop();
 	}
 
 	/**
@@ -1276,12 +1467,18 @@ public class CVC4TheoremProver implements TheoremProver {
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		try {
-			Result result = queryCVC4(predicate);
+			Result result;
+			ValidityResult validityResult;
 
-			smt.pop();
-			// TODO: DEBUGGING:
-			reset();
-			return translateResult(result);
+			if (basicSmt == null)
+				basicSmt = newBasicSmt(em);
+			result = queryCVC4(basicSmt, predicate);
+			validityResult = translateResult(result);
+			basicSmt.pop();
+			if (resetAfterQuery) {
+				reset();
+			}
+			return validityResult;
 		} catch (Exception e) {
 			System.err.println("Warning: exception thrown by CVC4:\n" + e
 					+ "\nThe SARL predicate queried was:\n  " + predicate);
@@ -1293,30 +1490,34 @@ public class CVC4TheoremProver implements TheoremProver {
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
 		try {
-			Result cvcResult = queryCVC4(predicate);
+			Result cvcResult;
 			ValidityResult result;
 
+			if (modelSmt == null)
+				modelSmt = newModelSmt(em);
+			cvcResult = queryCVC4(modelSmt, predicate);
 			if (cvcResult != null
 					&& cvcResult.isValid().equals(Validity.INVALID)) {
 				Map<SymbolicConstant, SymbolicExpression> model = new HashMap<SymbolicConstant, SymbolicExpression>();
 
 				for (Entry<SymbolicConstant, Expr> entry : variableMap
 						.entrySet()) {
-					Expr cvcValue = smt.getValue(entry.getValue());
-					SymbolicExpression sarlExpression = backTranslate(cvcValue);
+					SymbolicConstant symbolicConstant = entry.getKey();
+					SymbolicType sarlType = symbolicConstant.type();
+					Expr cvcValue = modelSmt.getValue(entry.getValue());
+					SymbolicExpression sarlExpression = backTranslate(sarlType,
+							cvcValue);
 
-					model.put(entry.getKey(), sarlExpression);
+					model.put(symbolicConstant, sarlExpression);
 				}
 				result = Prove.modelResult(model);
 			} else {
 				result = translateResult(cvcResult);
 			}
-
-			popCVC4();
-
-			// TODO: DEBUGGING:
-			reset();
-
+			modelSmt.pop();
+			if (resetAfterQuery) {
+				reset();
+			}
 			return result;
 		} catch (Exception e) {
 			System.err.println("Warning: exception thrown by CVC4:\n" + e

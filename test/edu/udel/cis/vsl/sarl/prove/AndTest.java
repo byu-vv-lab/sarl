@@ -63,19 +63,14 @@ public class AndTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		TheoremProver prover;
 
+		universe.setShowProverQueries(true);
 		provers = new LinkedList<TheoremProver>();
-
-		TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
-				.newProver(context);
-
-		// prover.setOutput(System.out); // for debugging
+		prover = Prove.newCVC3TheoremProverFactory(universe).newProver(context);
 		provers.add(prover);
-
-		TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(universe)
-				.newProver(context);
-		// cvc4prover.setOutput(System.out); // for debugging
-		provers.add(cvc4prover);
+		prover = Prove.newCVC4TheoremProverFactory(universe).newProver(context);
+		provers.add(prover);
 	}
 
 	@Before

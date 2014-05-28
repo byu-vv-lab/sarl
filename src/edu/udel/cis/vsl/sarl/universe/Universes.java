@@ -46,6 +46,15 @@ import edu.udel.cis.vsl.sarl.universe.common.MathUniverse;
 
 public class Universes {
 
+	/**
+	 * The provers.
+	 * 
+	 * Limitations of CVC4: you can have model-finding, or non-linear arithmetic
+	 * support, but not both at the same time.
+	 * 
+	 * @author siegel
+	 * 
+	 */
 	public enum Prover {
 		CVC3, CVC4, Z3
 	}
