@@ -59,9 +59,9 @@ public class Universes {
 		case CVC4:
 			return Prove.newCVC4TheoremProverFactory(universe);
 		case Z3:
-			// return Prove.newZ3TheoremProverFactory(universe);
+			return Prove.newZ3TheoremProverFactory(universe);
 		default:
-			throw new SARLInternalException("Unkown Prover: " + DEFAULT_PROVER);
+			throw new SARLInternalException("Unknown Prover: " + DEFAULT_PROVER);
 		}
 	}
 

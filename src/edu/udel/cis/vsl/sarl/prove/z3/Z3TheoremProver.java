@@ -253,6 +253,11 @@ public class Z3TheoremProver implements TheoremProver {
 		}
 		return value;
 	}
+	
+	
+	
+	
+	
 
 	private Expr translate(SymbolicExpression expression) throws Z3Exception {
 
