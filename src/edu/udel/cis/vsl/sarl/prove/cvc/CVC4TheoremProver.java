@@ -1176,12 +1176,17 @@ public class CVC4TheoremProver implements TheoremProver {
 					.mkTupleType(translateTypeSequence(((SymbolicTupleType) type)
 							.sequence()));
 			break;
-		case FUNCTION:
-			result = em.mkFunctionType(
-					translateTypeSequence(((SymbolicFunctionType) type)
-							.inputTypes()),
-					translateType(((SymbolicFunctionType) type).outputType()));
+		case FUNCTION: {
+			SymbolicFunctionType funcType = (SymbolicFunctionType) type;
+			SymbolicTypeSequence inputs = funcType.inputTypes();
+
+			if (inputs.numTypes() == 0)
+				throw new SARLException(
+						"CVC3 requires function types to have at least one input");
+			result = em.mkFunctionType(translateTypeSequence(inputs),
+					translateType(funcType.outputType()));
 			break;
+		}
 		case UNION:
 			result = translateUnionType((SymbolicUnionType) type);
 			break;
