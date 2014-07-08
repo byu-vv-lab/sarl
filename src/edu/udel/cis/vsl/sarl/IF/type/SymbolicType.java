@@ -44,7 +44,7 @@ public interface SymbolicType extends SymbolicObject {
 	 * The different kinds of types.
 	 */
 	public enum SymbolicTypeKind {
-		ARRAY, BOOLEAN, CHAR, FUNCTION, INTEGER, REAL, SET, TUPLE, UNION
+		ARRAY, BOOLEAN, CHAR, FUNCTION, INTEGER, MAP, REAL, SET, TUPLE, UNION
 	};
 
 	/**

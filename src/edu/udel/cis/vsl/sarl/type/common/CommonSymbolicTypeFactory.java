@@ -18,6 +18,7 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -29,8 +30,10 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType.IntegerKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicMapType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType.RealKind;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -40,10 +43,10 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
- * an implementation of {@link SymbolicTypeFactory} 
+ * an implementation of {@link SymbolicTypeFactory}
  * 
  * @author alali
- *
+ * 
  */
 public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
@@ -78,12 +81,14 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	private SymbolicRealType realType, herbrandRealType;
 
 	/**
-	 * a SymbolicType object to be returned for Char or CommonSymbolicPrimitiveType
+	 * a SymbolicType object to be returned for Char or
+	 * CommonSymbolicPrimitiveType
 	 */
 	private SymbolicType characterType;
 
 	/**
 	 * Constructs a CommonSymbolicTypeFactory from an ObjectFactory
+	 * 
 	 * @param objectFactory
 	 */
 	public CommonSymbolicTypeFactory(ObjectFactory objectFactory) {
@@ -217,10 +222,12 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 	}
 
 	/**
-	 * Private method, only called within this class
-	 * Creates a SymbolicTypeSequence that contains the pureType of all the 
-	 * elements in the sequence
-	 * @param sequence, a sequence of SymbolicTypes
+	 * Private method, only called within this class Creates a
+	 * SymbolicTypeSequence that contains the pureType of all the elements in
+	 * the sequence
+	 * 
+	 * @param sequence
+	 *            , a sequence of SymbolicTypes
 	 * @return a sequence of pureType of elements in the original sequence
 	 */
 	private SymbolicTypeSequence pureSequence(SymbolicTypeSequence sequence) {
@@ -250,78 +257,151 @@ public class CommonSymbolicTypeFactory implements SymbolicTypeFactory {
 
 		if (cached != null)
 			return cached;
-		else {
-			SymbolicTypeKind kind = type.typeKind();
+		switch (type.typeKind()) {
+		case ARRAY: {
+			CommonSymbolicArrayType arrayType = (CommonSymbolicArrayType) type;
+			SymbolicType elementType = arrayType.elementType();
+			SymbolicType pureElementType = pureType(elementType);
+			CommonSymbolicArrayType result;
 
-			switch (kind) {
-			case ARRAY: {
-				CommonSymbolicArrayType arrayType = (CommonSymbolicArrayType) type;
-				SymbolicType elementType = arrayType.elementType();
-				SymbolicType pureElementType = pureType(elementType);
-				CommonSymbolicArrayType result;
-
-				if (elementType == pureElementType && !arrayType.isComplete())
-					result = arrayType;
-				else {
-					result = (CommonSymbolicArrayType) arrayType(pureElementType);
-					result.setPureType(result);
-				}
-				arrayType.setPureType(result);
-				return result;
+			if (elementType == pureElementType && !arrayType.isComplete())
+				result = arrayType;
+			else {
+				result = (CommonSymbolicArrayType) arrayType(pureElementType);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
 			}
-			case FUNCTION: {
-				CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType) type;
-				SymbolicType outputType = functionType.outputType();
-				SymbolicType pureOutputType = pureType(outputType);
-				SymbolicTypeSequence inputs = functionType.inputTypes();
-				SymbolicTypeSequence pureInputs = pureSequence(inputs);
-				CommonSymbolicFunctionType result;
-
-				if (outputType == pureOutputType && inputs == pureInputs)
-					result = functionType;
-				else {
-					result = (CommonSymbolicFunctionType) functionType(
-							pureInputs, pureOutputType);
-					result.setPureType(result);
-				}
-				functionType.setPureType(result);
-				return result;
-			}
-			case TUPLE: {
-				CommonSymbolicTupleType tupleType = (CommonSymbolicTupleType) type;
-				SymbolicTypeSequence sequence = tupleType.sequence();
-				SymbolicTypeSequence pureSequence = pureSequence(sequence);
-				CommonSymbolicTupleType result;
-
-				if (sequence == pureSequence)
-					result = tupleType;
-				else {
-					result = (CommonSymbolicTupleType) tupleType(
-							tupleType.name(), pureSequence);
-					result.setPureType(result);
-				}
-				tupleType.setPureType(result);
-				return result;
-			}
-			case UNION:
-				CommonSymbolicUnionType unionType = (CommonSymbolicUnionType) type;
-				SymbolicTypeSequence sequence = unionType.sequence();
-				SymbolicTypeSequence pureSequence = pureSequence(sequence);
-				CommonSymbolicUnionType result;
-
-				if (sequence == pureSequence)
-					result = unionType;
-				else {
-					result = (CommonSymbolicUnionType) unionType(
-							unionType.name(), pureSequence);
-					result.setPureType(result);
-				}
-				unionType.setPureType(result);
-				return result;
-			default:
-				throw new SARLInternalException("unreachable");
-			}
+			arrayType.setPureType(result);
+			return result;
 		}
+		case FUNCTION: {
+			CommonSymbolicFunctionType functionType = (CommonSymbolicFunctionType) type;
+			SymbolicType outputType = functionType.outputType();
+			SymbolicType pureOutputType = pureType(outputType);
+			SymbolicTypeSequence inputs = functionType.inputTypes();
+			SymbolicTypeSequence pureInputs = pureSequence(inputs);
+			CommonSymbolicFunctionType result;
+
+			if (outputType == pureOutputType && inputs == pureInputs)
+				result = functionType;
+			else {
+				result = (CommonSymbolicFunctionType) functionType(pureInputs,
+						pureOutputType);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
+			}
+			functionType.setPureType(result);
+			return result;
+		}
+		case TUPLE: {
+			CommonSymbolicTupleType tupleType = (CommonSymbolicTupleType) type;
+			SymbolicTypeSequence sequence = tupleType.sequence();
+			SymbolicTypeSequence pureSequence = pureSequence(sequence);
+			CommonSymbolicTupleType result;
+
+			if (sequence == pureSequence)
+				result = tupleType;
+			else {
+				result = (CommonSymbolicTupleType) tupleType(tupleType.name(),
+						pureSequence);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
+			}
+			tupleType.setPureType(result);
+			return result;
+		}
+		case UNION: {
+			CommonSymbolicUnionType unionType = (CommonSymbolicUnionType) type;
+			SymbolicTypeSequence sequence = unionType.sequence();
+			SymbolicTypeSequence pureSequence = pureSequence(sequence);
+			CommonSymbolicUnionType result;
+
+			if (sequence == pureSequence)
+				result = unionType;
+			else {
+				result = (CommonSymbolicUnionType) unionType(unionType.name(),
+						pureSequence);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
+			}
+			unionType.setPureType(result);
+			return result;
+		}
+		case SET: {
+			CommonSymbolicSetType setType = (CommonSymbolicSetType) type;
+			SymbolicType elementType = setType.elementType();
+			SymbolicType pureElementType = pureType(elementType);
+			CommonSymbolicSetType result;
+
+			if (elementType == pureElementType)
+				result = setType;
+			else {
+				result = (CommonSymbolicSetType) setType(pureElementType);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
+			}
+			setType.setPureType(result);
+			return result;
+		}
+		case MAP: {
+			CommonSymbolicMapType mapType = (CommonSymbolicMapType) type;
+			SymbolicType keyType = mapType.keyType();
+			SymbolicType pureKeyType = pureType(keyType);
+			SymbolicType valueType = mapType.valueType();
+			SymbolicType pureValueType = pureType(valueType);
+			CommonSymbolicMapType result;
+
+			if (keyType == pureKeyType && valueType == pureValueType)
+				result = mapType;
+			else {
+				result = (CommonSymbolicMapType) mapType(pureKeyType,
+						pureValueType);
+				if (type.isCanonic())
+					result = objectFactory.canonic(result);
+				result.setPureType(result);
+			}
+			mapType.setPureType(result);
+			return result;
+		}
+		case BOOLEAN:
+		case CHAR:
+		case INTEGER:
+		case REAL:
+			throw new SARLInternalException(
+					"unreachable because these types always return themselves");
+		}
+		throw new SARLInternalException(
+				"unreachable because the switch covers all cases");
+	}
+
+	@Override
+	public SymbolicSetType setType(SymbolicType elementType) {
+		return new CommonSymbolicSetType(elementType);
+	}
+
+	@Override
+	public SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType) {
+		return new CommonSymbolicMapType(keyType, valueType);
+	}
+
+	@Override
+	public SymbolicTupleType entryType(SymbolicMapType mapType) {
+		SymbolicTupleType result = ((CommonSymbolicMapType) mapType)
+				.getEntryType();
+
+		if (result != null)
+			return result;
+		result = tupleType(objectFactory.stringObject("Entry"),
+				sequence(Arrays.asList(mapType.keyType(), mapType.valueType())));
+		if (mapType.isCanonic())
+			result = objectFactory.canonic(result);
+		((CommonSymbolicMapType) mapType).setEntryType(result);
+		return result;
 	}
 
 }

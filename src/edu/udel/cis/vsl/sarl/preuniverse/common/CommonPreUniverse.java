@@ -38,7 +38,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicMapType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
@@ -2364,8 +2366,8 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	/*
-	 * The version Julian wrote is incorrect because it processes the types in 
-	 * inside-out order.  Consider e.g. array of array of tuple.
+	 * The version Julian wrote is incorrect because it processes the types in
+	 * inside-out order. Consider e.g. array of array of tuple.
 	 */
 	// @Override
 	// /*
@@ -2541,6 +2543,161 @@ public class CommonPreUniverse implements PreUniverse {
 
 	public SymbolicExpression cleanBoundVariables(SymbolicExpression expr) {
 		return cleaner.clean(expr);
+	}
+
+	@Override
+	public SymbolicSetType setType(SymbolicType elementType) {
+		return typeFactory.setType(elementType);
+	}
+
+	@Override
+	public SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType) {
+		return typeFactory.mapType(keyType, valueType);
+	}
+
+	@Override
+	public SymbolicTupleType entryType(SymbolicMapType mapType) {
+		return typeFactory.entryType(mapType);
+	}
+
+	@Override
+	public SymbolicExpression insertElementAt(SymbolicExpression concreteArray,
+			int index, SymbolicExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression emptySet(SymbolicSetType setType) {
+		return expression(SymbolicOperator.CONCRETE, setType,
+				collectionFactory.emptyHashSet());
+	}
+
+	@Override
+	public SymbolicExpression singletonSet(SymbolicSetType setType,
+			SymbolicExpression value) {
+		return expression(SymbolicOperator.CONCRETE, setType,
+				collectionFactory.singletonHashSet(value));
+	}
+
+	@Override
+	public BooleanExpression isElementOf(SymbolicExpression value,
+			SymbolicExpression set) {
+		if (set == null)
+			throw err("Set argument to isElementof is null");
+		if (set.type().typeKind() != SymbolicTypeKind.SET)
+			throw err("Argument to isElementOf does not have set type: " + set
+					+ "\nType is: " + set.type());
+		if (value == null)
+			throw err("Value argument to isElementOf is null");
+		if (set.operator() != SymbolicOperator.CONCRETE)
+			throw err("Sets must be concrete for now");
+		else {
+			SymbolicObject arg0 = set.argument(0);
+			boolean result;
+
+			if (!(arg0 instanceof SymbolicSet))
+				throw err("Argument of concrete set expression is not a set: "
+						+ set);
+			@SuppressWarnings("unchecked")
+			SymbolicSet<SymbolicExpression> contents = (SymbolicSet<SymbolicExpression>) arg0;
+			// check type of value compatible with set element type?
+			result = contents.contains(value);
+			return bool(result);
+			// TODO: problem: need to compute equals on each element???????  Disjunction.
+		}
+	}
+
+	@Override
+	public BooleanExpression isSubsetOf(SymbolicExpression set1,
+			SymbolicExpression set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression setAdd(SymbolicExpression set,
+			SymbolicExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression setRemove(SymbolicExpression set,
+			SymbolicExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression setUnion(SymbolicExpression set1,
+			SymbolicExpression set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression setIntersection(SymbolicExpression set1,
+			SymbolicExpression set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression setDifference(SymbolicExpression set1,
+			SymbolicExpression set2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression cardinality(SymbolicExpression set) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression emptyMap(SymbolicMapType mapType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression put(SymbolicExpression map,
+			SymbolicExpression key, SymbolicExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression get(SymbolicExpression map, SymbolicExpression key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression removeEntryWithKey(SymbolicExpression map,
+			SymbolicExpression key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression keySet(SymbolicExpression map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NumericExpression mapSize(SymbolicExpression map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SymbolicExpression entrySet(SymbolicExpression map) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

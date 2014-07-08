@@ -27,7 +27,7 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
  * an implementation of {@link SymbolicTupleType}
  * 
  * @author mohammedalali
- *
+ * 
  */
 public class CommonSymbolicTupleType extends CommonSymbolicType implements
 		SymbolicTupleType {
@@ -73,7 +73,7 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer result = new StringBuffer(name.toStringBuffer(false));
 
-		//result.append(sequence.toStringBuffer(false));
+		// result.append(sequence.toStringBuffer(false));
 		return result;
 	}
 
@@ -93,11 +93,13 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 			sequence = (SymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
+		if (pureType != null && !pureType.isCanonic())
+			pureType = factory.canonic(pureType);
 	}
 
 	/**
-	 * returns the pureType of this TupleType,
-	 * that is the same type without any length
+	 * returns the pureType of this TupleType, that is the same type without any
+	 * length
 	 * 
 	 * Has to use setPureType(...) before calling this method
 	 */
@@ -107,6 +109,7 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 
 	/**
 	 * used to set the pureType of this TupleType
+	 * 
 	 * @param pureType
 	 */
 	public void setPureType(SymbolicTupleType pureType) {

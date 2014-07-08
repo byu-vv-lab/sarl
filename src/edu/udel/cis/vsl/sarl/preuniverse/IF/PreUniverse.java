@@ -29,7 +29,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicMapType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
@@ -306,6 +308,23 @@ public interface PreUniverse {
 	 */
 	SymbolicUnionType unionType(StringObject name,
 			Iterable<? extends SymbolicType> memberTypes);
+
+	SymbolicSetType setType(SymbolicType elementType);
+
+	SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType);
+
+	/**
+	 * Returns a tuple type which has two components: component 0 is the key
+	 * type of the map type; component 1 is the value type of the map type. This
+	 * is the type of an "entry" in the map. This type is used by the method
+	 * {@link #entrySet(SymbolicExpression)}, which returns the set of entries
+	 * of a map.
+	 * 
+	 * @param mapType
+	 *            a map type
+	 * @return the type of an entry in the map
+	 */
+	SymbolicTupleType entryType(SymbolicMapType mapType);
 
 	/**
 	 * Applies the given operator to the arguments and returns the resulting
@@ -1213,6 +1232,9 @@ public interface PreUniverse {
 	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index);
 
+	SymbolicExpression insertElementAt(SymbolicExpression concreteArray,
+			int index, SymbolicExpression value);
+
 	/**
 	 * Returns an array of length 0.
 	 * 
@@ -1332,6 +1354,61 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression tupleWrite(SymbolicExpression tuple, IntObject index,
 			SymbolicExpression value);
+
+	// Sets...
+
+	SymbolicExpression emptySet(SymbolicSetType setType);
+
+	SymbolicExpression singletonSet(SymbolicSetType setType,
+			SymbolicExpression value);
+
+	BooleanExpression isElementOf(SymbolicExpression value,
+			SymbolicExpression set);
+
+	BooleanExpression isSubsetOf(SymbolicExpression set1,
+			SymbolicExpression set2);
+
+	SymbolicExpression setAdd(SymbolicExpression set, SymbolicExpression value);
+
+	SymbolicExpression setRemove(SymbolicExpression set,
+			SymbolicExpression value);
+
+	SymbolicExpression setUnion(SymbolicExpression set1, SymbolicExpression set2);
+
+	SymbolicExpression setIntersection(SymbolicExpression set1,
+			SymbolicExpression set2);
+
+	SymbolicExpression setDifference(SymbolicExpression set1,
+			SymbolicExpression set2);
+
+	NumericExpression cardinality(SymbolicExpression set);
+
+	// Maps...
+
+	SymbolicExpression emptyMap(SymbolicMapType mapType);
+
+	SymbolicExpression put(SymbolicExpression map, SymbolicExpression key,
+			SymbolicExpression value);
+
+	SymbolicExpression get(SymbolicExpression map, SymbolicExpression key);
+
+	SymbolicExpression removeEntryWithKey(SymbolicExpression map,
+			SymbolicExpression key);
+
+	SymbolicExpression keySet(SymbolicExpression map);
+
+	NumericExpression mapSize(SymbolicExpression map);
+
+	/**
+	 * Returns the entry set of the map. This is the set consisting of all
+	 * ordered pairs (key,value) for each entry in the map. Each entry is a
+	 * symbolic expression which has a tuple type. The tuple type has two
+	 * components: component 0 is the key type, component 1 the value type.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	SymbolicExpression entrySet(SymbolicExpression map);
 
 	// Misc. expressions...
 

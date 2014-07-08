@@ -18,24 +18,14 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-/**
- * @author jthakkar
- * 
- *         an implementation of {@link SymbolicArrayType}
- */
-public class CommonSymbolicArrayType extends CommonSymbolicType implements
-		SymbolicArrayType {
+public class CommonSymbolicSetType extends CommonSymbolicType implements
+		SymbolicSetType {
 
-	/**
-	 * a constant to store the hashCode of this object, so that it will be
-	 * calculated once and saved.
-	 */
-	private final static int classCode = CommonSymbolicArrayType.class
-			.hashCode();
+	private final static int classCode = CommonSymbolicSetType.class.hashCode();
 
 	private SymbolicType elementType;
 
@@ -43,38 +33,26 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 	 * Cache of the "pure" version of this type: the version that is recursively
 	 * incomplete.
 	 */
-	private SymbolicArrayType pureType = null;
+	private SymbolicSetType pureType = null;
 
 	/**
-	 * Creates new symbolic array type with given elementType. *
+	 * Creates new symbolic set type with given elementType. *
 	 * 
 	 * @param elementType
 	 *            any non-null type
 	 */
-	CommonSymbolicArrayType(SymbolicType elementType) {
-		super(SymbolicTypeKind.ARRAY);
+	CommonSymbolicSetType(SymbolicType elementType) {
+		super(SymbolicTypeKind.SET);
 		assert elementType != null;
 		this.elementType = elementType;
 	}
 
 	/**
-	 * Both this and that have kind ARRAY. However, neither, either or both may
-	 * be complete.
+	 * Both this and that have kind SET.
 	 */
 	@Override
 	protected boolean typeEquals(CommonSymbolicType that) {
-		if (!elementType.equals(((CommonSymbolicArrayType) that).elementType))
-			return false;
-		if (isComplete()) {
-			if (((CommonSymbolicArrayType) that).isComplete()) {
-				return ((CommonSymbolicCompleteArrayType) this).extent()
-						.equals(((CommonSymbolicCompleteArrayType) that)
-								.extent());
-			}
-			return false;
-		} else {
-			return !((CommonSymbolicArrayType) that).isComplete();
-		}
+		return elementType.equals(((CommonSymbolicSetType) that).elementType);
 	}
 
 	@Override
@@ -88,34 +66,18 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 	}
 
 	/**
-	 * Used by toString() method. Complete array type subclass can override this
-	 * by putting the extent in the brackets.
+	 * Nice human-readable representation of the set type. Example: <code>
+	 * Set&lt;int&gt;* </code>
 	 * 
-	 * @return "[]"
-	 */
-	public String extentString() {
-		return "[]";
-	}
-
-	/**
-	 * Nice human-readable representation of the array type. Example
-	 * "int[2][][4]". elementType: "int[][4]". extent: 2.
 	 */
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer result = new StringBuffer();
-		SymbolicType type;
 
-		for (type = this; type instanceof CommonSymbolicArrayType; type = ((CommonSymbolicArrayType) type)
-				.elementType())
-			result.append(((CommonSymbolicArrayType) type).extentString());
-		result.insert(0, type.toStringBuffer(false));
+		result.append("Set<");
+		result.append(elementType.toStringBuffer(false));
+		result.append(">");
 		return result;
-	}
-
-	@Override
-	public boolean isComplete() {
-		return false;
 	}
 
 	@Override
@@ -126,7 +88,7 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 			pureType = factory.canonic(pureType);
 	}
 
-	public SymbolicArrayType getPureType() {
+	public SymbolicSetType getPureType() {
 		return pureType;
 	}
 
@@ -135,7 +97,7 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 	 * 
 	 * @param pureType
 	 */
-	public void setPureType(SymbolicArrayType pureType) {
+	public void setPureType(SymbolicSetType pureType) {
 		this.pureType = pureType;
 	}
 

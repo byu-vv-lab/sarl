@@ -147,8 +147,26 @@ public class TypeComparator implements Comparator<SymbolicType> {
 				return result;
 			return typeSequenceComparator.compare(t1.sequence(), t2.sequence());
 		}
-		default:
-			throw new SARLInternalException("unreachable");
+		case SET: {
+			CommonSymbolicSetType t1 = (CommonSymbolicSetType) o1;
+			CommonSymbolicSetType t2 = (CommonSymbolicSetType) o2;
+
+			result = compare(t1.elementType(), t2.elementType());
+			return result;
+
 		}
+		case MAP: {
+			CommonSymbolicMapType t1 = (CommonSymbolicMapType) o1;
+			CommonSymbolicMapType t2 = (CommonSymbolicMapType) o2;
+
+			result = compare(t1.keyType(), t2.keyType());
+			if (result != 0)
+				return result;
+			result = compare(t1.valueType(), t2.valueType());
+			return result;
+
+		}
+		}
+		throw new SARLInternalException("unreachable");
 	}
 }

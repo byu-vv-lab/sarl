@@ -25,15 +25,15 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**
  * @author jthakkar
- *
- *implementation of {@link SymbolicFunctionType}
+ * 
+ *         implementation of {@link SymbolicFunctionType}
  */
 public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 		SymbolicFunctionType {
 
 	/**
-	 * a constant to store the hashCode of this object,
-	 * so that it will be calculated once and saved.
+	 * a constant to store the hashCode of this object, so that it will be
+	 * calculated once and saved.
 	 */
 	private final static int classCode = CommonSymbolicFunctionType.class
 			.hashCode();
@@ -97,6 +97,8 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 			inputTypes = (SymbolicTypeSequence) factory.canonic(inputTypes);
 		if (!outputType.isCanonic())
 			outputType = factory.canonic(outputType);
+		if (pureType != null && !pureType.isCanonic())
+			pureType = factory.canonic(pureType);
 	}
 
 	public SymbolicFunctionType getPureType() {

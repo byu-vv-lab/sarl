@@ -41,23 +41,34 @@ import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		SymbolicExpression {
 
+	/** Turn this one to print debugging information */
 	public static final boolean debug = false;
 
+	/** The operator of this expression. */
 	private SymbolicOperator operator;
 
+	/** The type of this expression */
 	private SymbolicType type;
 
+	/** The arguments of this expression */
 	private SymbolicObject[] arguments;
 
 	// Constructors...
 
 	/**
-	 * Main Constructor that takes an array of SymbolicObjects. Other
-	 * constructors are converted into this format.
+	 * Constructs a new instance from the given operator, type, and array of
+	 * arguments. This is the primary constructor; the others go through this
+	 * one. The given parameters are used directly to become the new fields of
+	 * the new expressions; nothing is cloned.
 	 * 
 	 * @param operator
+	 *            the operator for the new expression; must be non-null
 	 * @param type
+	 *            the type of the new expression; can only be <code>null</code>
+	 *            if the operator is {@link SymbolicOperator#NULL}
 	 * @param arguments
+	 *            the arguments for the new expression; must be non-null, but
+	 *            can have length 0
 	 */
 	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject[] arguments) {

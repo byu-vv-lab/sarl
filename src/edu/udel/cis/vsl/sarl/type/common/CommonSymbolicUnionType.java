@@ -29,8 +29,9 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**
  * an implementation of {@link SymbolicUnionType}
+ * 
  * @author mohammedalali
- *
+ * 
  */
 public class CommonSymbolicUnionType extends CommonSymbolicType implements
 		SymbolicUnionType {
@@ -120,6 +121,8 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 			sequence = (CommonSymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
+		if (pureType != null && !pureType.isCanonic())
+			pureType = factory.canonic(pureType);
 	}
 
 	@Override
@@ -128,13 +131,13 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	}
 
 	/**
-	 * @return the pureType of this unionType
-	 * You have to set the pureType first using setPureType(...)
+	 * @return the pureType of this unionType You have to set the pureType first
+	 *         using setPureType(...)
 	 */
 	public SymbolicUnionType getPureType() {
 		return pureType;
 	}
-	
+
 	/**
 	 * used to set the pureType of this unionType
 	 * 
