@@ -213,10 +213,11 @@ public class CljSequence<T extends SymbolicExpression> extends
 			Iterator<T> those = that.iterator();
 
 			while (these.hasNext()) {
-				// TODO a weird OutOfIndexBound exception was thrown here when
-				// verifying CIVL/example/experimental/multInLoopCond.cvl, which
-				// is avoided by adding the following line. But the problem is
-				// that the following line doesn't seem to be ever executed.
+				// TODO this check should be unnecessary but a bug
+				// in clj-ds requires that hasNext be invoked before
+				// each call to next for any iterator. The bug
+				// has been reported and when/if it is every fixed,
+				// this can be removed.
 				if (!those.hasNext())
 					return false;
 				if (!these.next().equals(those.next()))

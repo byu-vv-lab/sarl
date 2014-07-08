@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.type;
 
@@ -23,16 +23,17 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 /**
  * A symbolic type represents the type of a symbolic expression.
  * 
- * Every symbolic type has a "kind", given by the enumerate type
- * SymbolicTypeKind.
+ * Every symbolic type has a "kind", given by the enumerated type
+ * {@link SymbolicTypeKind}.
  * 
- * If the kind is ARRAY, the object can be cast to SymbolicArrayType.
+ * If the kind is ARRAY, the object can be cast to {@link SymbolicArrayType}.
  * 
- * If the kind is FUNCTION, the object can be cast to SymbolicFunctionType.
+ * If the kind is FUNCTION, the object can be cast to
+ * {@link SymbolicFunctionType}.
  * 
- * If the kind is TUPLE, the object can be cast to SymbolicTupleType.
+ * If the kind is TUPLE, the object can be cast to {@link SymbolicTupleType}.
  * 
- * If the kind is UNION, the object can be cast to SymbolicUnionType.
+ * If the kind is UNION, the object can be cast to {@link SymbolicUnionType}.
  * 
  * @author siegel
  * 
@@ -43,7 +44,7 @@ public interface SymbolicType extends SymbolicObject {
 	 * The different kinds of types.
 	 */
 	public enum SymbolicTypeKind {
-		ARRAY, BOOLEAN, CHAR, FUNCTION, INTEGER, REAL, TUPLE, UNION
+		ARRAY, BOOLEAN, CHAR, FUNCTION, INTEGER, REAL, SET, TUPLE, UNION
 	};
 
 	/**
@@ -88,10 +89,10 @@ public interface SymbolicType extends SymbolicObject {
 	 * @return true iff this type is a Herbrand type
 	 */
 	boolean isHerbrand();
-	
+
 	/**
-	 * Is this an Ideal numeric type?  These are the mathematical integer
-	 * and real types.
+	 * Is this an Ideal numeric type? These are the mathematical integer and
+	 * real types.
 	 * 
 	 * @return true iff this is the ideal real type or ideal integer type
 	 */
