@@ -14,6 +14,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.NTReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.OffsetReference;
@@ -427,6 +428,70 @@ public class CommonPreUniverse implements PreUniverse {
 		return compatible(type0, type1).isFalse();
 	}
 
+	private BooleanExpression equals(ReferenceExpression arg0,
+			ReferenceExpression arg1, int quantifierDepth) {
+		BooleanExpression result;
+		ReferenceKind kind = arg0.referenceKind();
+
+		if (kind != arg1.referenceKind())
+			result = falseExpr;
+		else if (arg0 instanceof NTReferenceExpression) {
+			ReferenceExpression parent0 = ((NTReferenceExpression) arg0)
+					.getParent();
+			ReferenceExpression parent1 = ((NTReferenceExpression) arg1)
+					.getParent();
+
+			result = equals(parent0, parent1, quantifierDepth);
+			if (result.isFalse())
+				return result;
+			switch (kind) {
+			case ARRAY_ELEMENT: {
+				ArrayElementReference ref0 = (ArrayElementReference) arg0;
+				ArrayElementReference ref1 = (ArrayElementReference) arg1;
+
+				result = and(
+						result,
+						equals(ref0.getIndex(), ref1.getIndex(),
+								quantifierDepth));
+				break;
+			}
+			case OFFSET: {
+				OffsetReference ref0 = (OffsetReference) arg0;
+				OffsetReference ref1 = (OffsetReference) arg1;
+
+				result = and(
+						result,
+						equals(ref0.getOffset(), ref1.getOffset(),
+								quantifierDepth));
+				break;
+			}
+			case TUPLE_COMPONENT: {
+				TupleComponentReference ref0 = (TupleComponentReference) arg0;
+				TupleComponentReference ref1 = (TupleComponentReference) arg1;
+
+				result = ref0.getIndex().equals(ref1.getIndex()) ? result
+						: falseExpr;
+				break;
+			}
+			case UNION_MEMBER: {
+				UnionMemberReference ref0 = (UnionMemberReference) arg0;
+				UnionMemberReference ref1 = (UnionMemberReference) arg1;
+
+				result = ref0.getIndex().equals(ref1.getIndex()) ? result
+						: falseExpr;
+				break;
+			}
+			default:
+				throw err("Unreachable because the only kinds of NTReferenceExpression "
+						+ "are as listed above.\n" + "This is: " + kind);
+			}
+		} else {
+			// either both are identity of both are null
+			result = trueExpr;
+		}
+		return result;
+	}
+
 	/**
 	 * Compares two arguments to check compatibility first, then passes those
 	 * arguments to a case/switch. Each case checks the equality of the two
@@ -463,6 +528,10 @@ public class CommonPreUniverse implements PreUniverse {
 
 		if (result.equals(falseExpr))
 			return result;
+		if (arg0 instanceof ReferenceExpression
+				&& arg1 instanceof ReferenceExpression)
+			return equals((ReferenceExpression) arg0,
+					(ReferenceExpression) arg1, quantifierDepth);
 		switch (type.typeKind()) {
 		case BOOLEAN:
 			return equiv((BooleanExpression) arg0, (BooleanExpression) arg1);
