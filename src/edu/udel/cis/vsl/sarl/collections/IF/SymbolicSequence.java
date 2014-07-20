@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.IF;
 
@@ -69,6 +69,21 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	SymbolicSequence<T> remove(int index);
 
 	/**
+	 * Inserts element at position index, shifting all subsequence elements up
+	 * one.
+	 * 
+	 * @param index
+	 *            integer in range [0,n], where n is length of sequence. If
+	 *            index is n, this is equivalent to appending the element to the
+	 *            end of the sequence
+	 * @param element
+	 *            the element to insert into the sequence
+	 * @return a sequence obtained from given one by inserting the element at
+	 *         the specified index
+	 */
+	SymbolicSequence<T> insert(int index, T element);
+
+	/**
 	 * If index is less than the original size s, same as set. Otherwise returns
 	 * a sequence of length index+1, with the elements in positions s, s+1, ...,
 	 * index-1 set to filler, and the element in position index set to value,
@@ -99,11 +114,15 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	SymbolicSequence<T> subSequence(int start, int end);
 
 	/**
-	 * Takes in an anonymous class that contains an apply method that will transform a SymbolicObject into 
-	 * a different SymbolicObject. The Collections apply method will iterate over all elements in it and call
+	 * Takes in an anonymous class that contains an apply method that will
+	 * transform a SymbolicObject into a different SymbolicObject. The
+	 * Collections apply method will iterate over all elements in it and call
 	 * the passed in classes apply method on the SymbolicObject
-	 * @param Transform<T, U>
-	 * @return Returns a new Sequence with all of the original collections elements transformed.
+	 * 
+	 * @param Transform
+	 *            <T, U>
+	 * @return Returns a new Sequence with all of the original collections
+	 *         elements transformed.
 	 */
 	<U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform);

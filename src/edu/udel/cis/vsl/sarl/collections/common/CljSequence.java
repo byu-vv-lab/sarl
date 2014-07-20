@@ -260,4 +260,20 @@ public class CljSequence<T extends SymbolicExpression> extends
 			count++;
 		}
 	}
+
+	@Override
+	public SymbolicSequence<T> insert(int index, T element) {
+		PersistentVector<T> newVector = pvector;
+		int size = newVector.size();
+
+		if (index == size) {
+			newVector = newVector.plus(element);
+		} else {
+			newVector = newVector.plus(newVector.get(size - 1));
+			for (int i = size - 1; i > index; i--)
+				newVector = newVector.plusN(i, newVector.get(i - 1));
+			newVector = newVector.plusN(index, element);
+		}
+		return new CljSequence<T>(newVector);
+	}
 }

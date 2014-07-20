@@ -160,6 +160,12 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private BooleanExpression trueExpr, falseExpr;
 
+	/**
+	 * Symbolic constant used as bound variable in certain lambda expressions.
+	 * It has integer type.
+	 */
+	private NumericSymbolicConstant arrayIndex;
+
 	private int validCount = 0;
 
 	private int proverValidCount = 0;
@@ -210,6 +216,8 @@ public class CommonPreUniverse implements PreUniverse {
 				typeFactory);
 		cleaner = new BoundCleaner(this, collectionFactory, typeFactory,
 				substituter);
+		arrayIndex = (NumericSymbolicConstant) canonic(symbolicConstant(
+				stringObject("i"), integerType));
 	}
 
 	// Helper methods...
@@ -1693,62 +1701,6 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
-	/*
-	 * // TODO: this method is erroneous. It throws an exception if // the
-	 * second argument is not a non-concrete-array. The original // does not.
-	 * Also, you cannot have one method that works for // an array OR element.
-	 * What if the user wants an array of arrays? // Then the array will be an
-	 * element. public SymbolicExpression appendEXPERIMENT( SymbolicExpression
-	 * concreteArray, SymbolicExpression arrayOrElement) { SymbolicType type =
-	 * concreteArray.type();
-	 * 
-	 * if (type.typeKind() != SymbolicTypeKind.ARRAY) throw
-	 * err("argument concreteArray not array type:\n" + concreteArray); if
-	 * (concreteArray.operator() != SymbolicOperator.CONCRETE) { throw
-	 * err("append invoked on non-concrete array:\n" + concreteArray); } else {
-	 * 
-	 * @SuppressWarnings("unchecked") SymbolicSequence<SymbolicExpression>
-	 * elements = (SymbolicSequence<SymbolicExpression>) concreteArray
-	 * .argument(0);
-	 * 
-	 * SymbolicExpression result;
-	 * 
-	 * if (arrayOrElement == null || arrayOrElement.isNull()) throw
-	 * err("Element to append has illegal value:\n" + arrayOrElement);
-	 * SymbolicType arrayOrElementType = arrayOrElement.type(); if
-	 * (arrayOrElementType.typeKind() == SymbolicTypeKind.ARRAY) { if
-	 * (arrayOrElement.operator() != SymbolicOperator.CONCRETE) throw
-	 * err("append invoked on non-concrete array:\n" + arrayOrElement);
-	 * SymbolicType elementType = ((SymbolicArrayType) type) .elementType();
-	 * SymbolicType typeForAppending = arrayOrElement.type(); SymbolicType
-	 * elementTypeForSecondArray = ((SymbolicArrayType) typeForAppending)
-	 * .elementType();
-	 * 
-	 * if (incompatible(elementType, elementTypeForSecondArray)) throw
-	 * err("Element(s) to append has incompatible type:\n" + "Expected: " +
-	 * concreteArray.type() + "\nSaw: " + arrayOrElement.type());
-	 * 
-	 * @SuppressWarnings("unchecked") SymbolicSequence<SymbolicExpression>
-	 * appendedElements = (SymbolicSequence<SymbolicExpression>) arrayOrElement
-	 * .argument(0); for (int i = 0; i < appendedElements.size(); i++) elements
-	 * = elements.add(this.arrayRead(arrayOrElement, integer(i))); type =
-	 * arrayType(elementType, integer(elements.size()));
-	 * 
-	 * result = expression(SymbolicOperator.CONCRETE, type, sequence(elements));
-	 * return result;
-	 * 
-	 * } else {
-	 * 
-	 * SymbolicType elementType = ((SymbolicArrayType) type) .elementType();
-	 * 
-	 * if (incompatible(elementType, arrayOrElement.type())) throw
-	 * err("Element to append has incompatible type:\n" + "Expected: " +
-	 * elementType + "\nSaw: " + arrayOrElement.type()); elements =
-	 * elements.add(arrayOrElement); type = arrayType(elementType,
-	 * integer(elements.size())); result = expression(SymbolicOperator.CONCRETE,
-	 * type, sequence(elements)); return result; } } }
-	 */
-
 	@Override
 	public SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index) {
@@ -1758,7 +1710,8 @@ public class CommonPreUniverse implements PreUniverse {
 			throw err("argument concreteArray not array type:\n"
 					+ concreteArray);
 		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
-			throw err("append invoked on non-concrete array:\n" + concreteArray);
+			throw err("argument concreteArray is not concrete:\n"
+					+ concreteArray);
 		} else {
 			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
 			@SuppressWarnings("unchecked")
@@ -1784,6 +1737,26 @@ public class CommonPreUniverse implements PreUniverse {
 		return expression(SymbolicOperator.CONCRETE,
 				arrayType(elementType, zeroInt()),
 				collectionFactory.emptySequence());
+	}
+
+	@Override
+	public SymbolicExpression constantArray(SymbolicType elementType,
+			NumericExpression length, SymbolicExpression value) {
+		SymbolicCompleteArrayType arrayType = arrayType(elementType, length);
+		IntegerNumber lengthNumber = (IntegerNumber) extractNumber(length);
+		SymbolicExpression result;
+
+		if (lengthNumber == null) {
+			result = arrayLambda(arrayType, lambda(arrayIndex, value));
+		} else {
+			int lengthInt = lengthNumber.intValue();
+			SymbolicExpression[] elements = new SymbolicExpression[lengthInt];
+
+			Arrays.fill(elements, value);
+			result = expression(SymbolicOperator.CONCRETE, arrayType,
+					collectionFactory.sequence(elements));
+		}
+		return result;
 	}
 
 	@Override
@@ -1953,17 +1926,6 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
-	// TODO: would like a method append, takes an array a and expression v,
-	// returns
-	// an array a' one longer with the expression added.
-	// If a has type array-of-T (whether complete or incomplete), a'
-	// will have type T[length(a)+1].
-	// Implementation:
-	// cases: concrete array, dense array write, other (symbolic
-	// constant, array-write, tuple-read, array-read,...)
-	// first two cases are kind of obvious. Otherwise: need
-	// a way to relate slices. This could be an array lambda.
-
 	/**
 	 * Returns an iterable object equivalent to given one except that any "null"
 	 * values are replaced by the SymbolicExpression NULL. Also, trailing
@@ -2075,12 +2037,6 @@ public class CommonPreUniverse implements PreUniverse {
 		return expression(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
 
 	}
-
-	// public SymbolicExpression arraySlice(SymbolicExpression array,
-	// NumericExpression startIndex, NumericExpression endIndex) {
-	// NumericExpression length = length(array);
-	//
-	// }
 
 	@Override
 	public SymbolicExpression tuple(SymbolicTupleType type,
@@ -2632,8 +2588,39 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression insertElementAt(SymbolicExpression concreteArray,
 			int index, SymbolicExpression value) {
-		// TODO Auto-generated method stub
-		return null;
+		SymbolicType type = concreteArray.type();
+
+		if (type.typeKind() != SymbolicTypeKind.ARRAY)
+			throw err("argument concreteArray not array type:\n"
+					+ concreteArray);
+		if (concreteArray.operator() != SymbolicOperator.CONCRETE) {
+			throw err("argument concreteArray is not concrete:\n"
+					+ concreteArray);
+
+		} else {
+			SymbolicType elementType = ((SymbolicArrayType) type).elementType();
+			@SuppressWarnings("unchecked")
+			SymbolicSequence<SymbolicExpression> elements = (SymbolicSequence<SymbolicExpression>) concreteArray
+					.argument(0);
+			int length = elements.size();
+			SymbolicExpression result;
+
+			if (index < 0 || index > length)
+				throw err("Index out of range:\narray: " + concreteArray
+						+ "\nlength: " + length + "\nindex: " + index);
+			if (incompatible(elementType, value.type()))
+				throw err("Argument value to method insertElementAt has incompatible type."
+						+ "\nvalue: "
+						+ value
+						+ "\ntype: "
+						+ value.type()
+						+ "\nExpected: " + elementType);
+			elements = elements.insert(index, value);
+			type = arrayType(elementType, integer(elements.size()));
+			result = expression(SymbolicOperator.CONCRETE, type,
+					sequence(elements));
+			return result;
+		}
 	}
 
 	@Override
@@ -2649,6 +2636,9 @@ public class CommonPreUniverse implements PreUniverse {
 				collectionFactory.singletonHashSet(value));
 	}
 
+	/**
+	 * Under construction.
+	 */
 	@Override
 	public BooleanExpression isElementOf(SymbolicExpression value,
 			SymbolicExpression set) {
@@ -2673,7 +2663,8 @@ public class CommonPreUniverse implements PreUniverse {
 			// check type of value compatible with set element type?
 			result = contents.contains(value);
 			return bool(result);
-			// TODO: problem: need to compute equals on each element???????  Disjunction.
+			// TODO: problem: need to compute equals on each element???????
+			// Disjunction.
 		}
 	}
 

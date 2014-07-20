@@ -1244,6 +1244,9 @@ public interface PreUniverse {
 	 */
 	SymbolicExpression emptyArray(SymbolicType elementType);
 
+	SymbolicExpression constantArray(SymbolicType elementType,
+			NumericExpression length, SymbolicExpression value);
+
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a
 	 * symbolic expression of integer type.

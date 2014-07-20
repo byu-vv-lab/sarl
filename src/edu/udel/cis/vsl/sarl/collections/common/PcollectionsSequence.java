@@ -249,4 +249,9 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 		return result;
 	}
 
+	@Override
+	public SymbolicSequence<T> insert(int index, T element) {
+		return new PcollectionsSequence<T>(pvector.plus(index, element));
+	}
+
 }

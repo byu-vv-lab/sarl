@@ -1276,6 +1276,20 @@ public interface SymbolicUniverse {
 	SymbolicExpression emptyArray(SymbolicType elementType);
 
 	/**
+	 * Returns an array in which every element has the same value.
+	 * 
+	 * @param elementType
+	 *            the element type of the array
+	 * @param length
+	 *            the length of the array
+	 * @param value
+	 *            the value of each element
+	 * @return an array of specified length in which every element is value
+	 */
+	SymbolicExpression constantArray(SymbolicType elementType,
+			NumericExpression length, SymbolicExpression value);
+
+	/**
 	 * Appends an element to the end of a concrete symbolic array. Returns a new
 	 * array expression which is same as old with new element appended to end.
 	 * 
@@ -1313,6 +1327,20 @@ public interface SymbolicUniverse {
 	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index);
 
+	/**
+	 * Inserts value an position index in array, shifting subsequence elements
+	 * "up".
+	 * 
+	 * @param concreteArray
+	 *            a concrete array
+	 * @param index
+	 *            an int index in the range [0,length], where length is the
+	 *            length of the original array. If index=length, this is the
+	 *            same as append.
+	 * @param value
+	 *            expression to insert
+	 * @return array obtained by inserting the element at specified index
+	 */
 	SymbolicExpression insertElementAt(SymbolicExpression concreteArray,
 			int index, SymbolicExpression value);
 
