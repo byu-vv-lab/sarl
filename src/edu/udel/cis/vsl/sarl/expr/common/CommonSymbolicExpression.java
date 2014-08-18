@@ -535,7 +535,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				atomize(result);
 			return result;
 		case MULTIPLY:
-			processFlexibleBinary(result, "*", true, false);
+			processFlexibleBinary(result, "*", true, atomize);
 			return result;
 		case NEGATIVE:
 			result.append("-");
