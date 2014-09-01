@@ -1846,6 +1846,7 @@ public class CommonPreUniverse implements PreUniverse {
 			SymbolicArrayType arrayType, NumericExpression index,
 			SymbolicExpression value) {
 		IntegerNumber indexNumber = (IntegerNumber) extractNumber(index);
+		IntegerNumber lengthNumber = null; // length of array type if complete
 
 		if (indexNumber != null) {
 			int indexInt = indexNumber.intValue();
@@ -1855,9 +1856,8 @@ public class CommonPreUniverse implements PreUniverse {
 				throw err("Argument index to arrayWrite is negative."
 						+ "\nindex: " + indexNumber);
 			if (arrayType.isComplete()) {
-				IntegerNumber lengthNumber = (IntegerNumber) extractNumber(((SymbolicCompleteArrayType) arrayType)
+				lengthNumber = (IntegerNumber) extractNumber(((SymbolicCompleteArrayType) arrayType)
 						.extent());
-
 				if (lengthNumber != null
 						&& numberFactory.compare(indexNumber, lengthNumber) >= 0)
 					throw err("Array index out of bounds in method arrayWrite."
@@ -1887,6 +1887,15 @@ public class CommonPreUniverse implements PreUniverse {
 					sequence = collectionFactory.emptySequence();
 				}
 				sequence = sequence.setExtend(indexInt, value, nullExpression);
+				// if the length of the sequence is the extent of the array type
+				// AND the sequence has no null values, you can forget the
+				// origin and make a concrete array value, since every cell
+				// has been over-written...
+				if (lengthNumber != null && sequence.getNumNull() == 0
+						&& lengthNumber.intValue() == sequence.size()) {
+					return expression(SymbolicOperator.CONCRETE, arrayType,
+							sequence);
+				}
 				return expression(SymbolicOperator.DENSE_ARRAY_WRITE,
 						arrayType, origin, sequence);
 			}
@@ -2033,7 +2042,6 @@ public class CommonPreUniverse implements PreUniverse {
 			throw err("Function must be LAMBDA type");
 		// TODO: Make sure the function takes an index (Integer) and outputs
 		// elementType
-		//
 		return expression(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
 
 	}
@@ -2759,5 +2767,4 @@ public class CommonPreUniverse implements PreUniverse {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

@@ -127,4 +127,13 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	<U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform);
 
+	/**
+	 * Returns the number of "NULL" elements of this sequence, i.e., symbolic
+	 * expressions for which method {@link SymbolicExpression#isNull()} returns
+	 * <code>true</code>.
+	 * 
+	 * @return number of NULL symbolic expressions in this sequence
+	 */
+	int getNumNull();
+
 }

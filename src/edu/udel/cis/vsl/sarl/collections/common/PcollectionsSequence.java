@@ -42,14 +42,28 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 
 	private PVector<T> pvector;
 
+	int numNull;
+
+	PcollectionsSequence(PVector<T> pvector, int numNull) {
+		super(SymbolicCollectionKind.SEQUENCE);
+		this.pvector = pvector;
+		this.numNull = numNull;
+	}
+
 	public PcollectionsSequence(PVector<T> pvector) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		this.pvector = pvector;
+
+		numNull = 0;
+		for (SymbolicExpression expr : pvector)
+			if (expr.isNull())
+				numNull++;
 	}
 
 	public PcollectionsSequence() {
 		super(SymbolicCollectionKind.SEQUENCE);
 		pvector = TreePVector.empty();
+		numNull = 0;
 	}
 
 	/**
@@ -107,22 +121,30 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> add(T element) {
-		return new PcollectionsSequence<T>(pvector.plus(element));
+		return new PcollectionsSequence<T>(pvector.plus(element),
+				element.isNull() ? numNull + 1 : numNull);
 	}
 
 	@Override
 	public SymbolicSequence<T> set(int index, T element) {
-		return new PcollectionsSequence<T>(pvector.with(index, element));
+		int newNumNull = numNull;
+
+		if (pvector.get(index).isNull())
+			newNumNull--;
+		if (element.isNull())
+			newNumNull++;
+		return new PcollectionsSequence<T>(pvector.with(index, element),
+				newNumNull);
 	}
 
 	@Override
 	public SymbolicSequence<T> remove(int index) {
-		return new PcollectionsSequence<T>(pvector.minus(index));
+		return new PcollectionsSequence<T>(pvector.minus(index), pvector.get(
+				index).isNull() ? numNull - 1 : numNull);
 	}
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
-
 		if (this == o) {
 			return true;
 		}
@@ -131,6 +153,10 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 		}
 
 		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
+
+		if (numNull != that.getNumNull())
+			return false;
+
 		Iterator<T> these = this.iterator();
 		Iterator<T> those = that.iterator();
 
@@ -185,11 +211,16 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 			return set(index, value);
 		else {
 			PVector<T> newVector = pvector;
+			int newNumNull = numNull;
 
 			for (int i = size; i < index; i++)
 				newVector = newVector.plus(filler);
+			if (filler.isNull())
+				newNumNull += index - size;
 			newVector = newVector.plus(value);
-			return new PcollectionsSequence<T>(newVector);
+			if (value.isNull())
+				newNumNull++;
+			return new PcollectionsSequence<T>(newVector, newNumNull);
 		}
 	}
 
@@ -251,7 +282,13 @@ public class PcollectionsSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> insert(int index, T element) {
-		return new PcollectionsSequence<T>(pvector.plus(index, element));
+
+		return new PcollectionsSequence<T>(pvector.plus(index, element),
+				element.isNull() ? numNull + 1 : numNull);
 	}
 
+	@Override
+	public int getNumNull() {
+		return numNull;
+	}
 }
