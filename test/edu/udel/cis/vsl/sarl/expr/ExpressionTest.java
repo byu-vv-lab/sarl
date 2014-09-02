@@ -372,11 +372,11 @@ public class ExpressionTest {
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
 		
 		assertEquals(xpyp1.toString(),
-				"X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4");
+				"X^4+4*((X^3)*Y)+6*((X^2)*(Y^2))+4*(X*(Y^3))+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
 		// power test atomize
 		assertEquals(xpyp1.toStringBuffer(true).toString(),
-				"(X^4+4*(X^3)*Y+6*(X^2)*(Y^2)+4*X*(Y^3)+Y^4)");
+				"(X^4+4*((X^3)*Y)+6*((X^2)*(Y^2))+4*(X*(Y^3))+Y^4)");
 		assertEquals(xpyp2.toStringBuffer(true).toString(), "((X+Y)^2)");
 	}
 
@@ -819,7 +819,7 @@ public class ExpressionTest {
 		//assertEquals(minusH.type(), herbrandType);
 		assertEquals(minusH, sUniverse.minus(cnef.cast(xpy, herbrandType)));
 		assertEquals(minusH, idealFactory.minus(cnef.cast(xpy, herbrandType)));
-		assertEquals(minusH.toStringBuffer(true).toString(), "-1*(hreal)(hreal)(X+Y)");
+		assertEquals(minusH.toStringBuffer(true).toString(), "(-1*(hreal)(hreal)(X+Y))");
 	}
 	
 	@Test
