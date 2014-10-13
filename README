@@ -12,7 +12,7 @@ very effective at placing symbolic expressions in a canonical form,
 in order to easily tell if two expressions are equivalent.  It
 supports real (mathematical) integers and reals, as well as
 Herbrand integers and reals (where the numeric operations are
-treated as uninterpreted functions).  
+treated as uninterpreted functions). 
 
 SARL is written by Stephen Siegel, University of Delaware.
 Please send comments, bug reports, feature requests, etc., to
