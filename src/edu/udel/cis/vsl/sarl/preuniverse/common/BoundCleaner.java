@@ -258,8 +258,7 @@ public class BoundCleaner {
 
 		if (operator == SymbolicOperator.EXISTS
 				|| operator == SymbolicOperator.FORALL
-				|| operator == SymbolicOperator.LAMBDA
-				|| operator == SymbolicOperator.ARRAY_LAMBDA) {
+				|| operator == SymbolicOperator.LAMBDA) {
 			SymbolicConstant boundVariable = (SymbolicConstant) expression
 					.argument(0);
 			SymbolicExpression arg1 = (SymbolicExpression) expression
