@@ -1994,18 +1994,23 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicExpression denseArrayWrite(SymbolicExpression array,
 			Iterable<? extends SymbolicExpression> values) {
-		if (!(array.type() instanceof SymbolicArrayType))
+		SymbolicType theArraysType = array.type();
+
+		if (!(theArraysType instanceof SymbolicArrayType))
 			throw new SARLException(
 					"Argument 0 of denseArrayWrite must have array type but had type "
-							+ array.type());
+							+ theArraysType);
 		else {
-			SymbolicType elementType = ((SymbolicArrayType) array.type())
-					.elementType();
-			values = replaceNulls(values);
+			SymbolicArrayType arrayType = (SymbolicArrayType) theArraysType;
+			SymbolicType elementType = arrayType.elementType();
 			int count = 0;
+			int numNulls = 0;
 
+			values = replaceNulls(values);
 			for (SymbolicExpression value : values) {
-				if (!value.isNull() && incompatible(elementType, value.type()))
+				if (value.isNull())
+					numNulls++;
+				else if (incompatible(elementType, value.type()))
 					throw err("Element "
 							+ count
 							+ " of values argument to denseArrayWrite has incompatible type.\n"
@@ -2013,7 +2018,15 @@ public class CommonPreUniverse implements PreUniverse {
 							+ value.type());
 				count++;
 			}
-			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, array.type(),
+			if (numNulls == 0 && arrayType.isComplete()) {
+				IntegerNumber lengthNumber = (IntegerNumber) extractNumber(((SymbolicCompleteArrayType) arrayType)
+						.extent());
+
+				if (lengthNumber != null && count == lengthNumber.intValue())
+					return expression(SymbolicOperator.CONCRETE, arrayType,
+							sequence(values));
+			}
+			return expression(SymbolicOperator.DENSE_ARRAY_WRITE, arrayType,
 					array, sequence(values));
 		}
 	}

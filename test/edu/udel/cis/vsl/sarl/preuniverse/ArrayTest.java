@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.preuniverse;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * @author jsaints and malsulmi
  */
 public class ArrayTest {
+
+	public final static boolean debug = true;
+
+	public final static PrintStream out = System.out;
 
 	// Universe
 	private static PreUniverse universe;
@@ -1350,5 +1355,27 @@ public class ArrayTest {
 		read = universe.arrayRead(a, two);
 		assertEquals(newElement, read);
 
+	}
+
+	/**
+	 * If a write operation on a dense array write expression results in writing
+	 * to the last element of the array not covered by the dense write, then the
+	 * result should be a concrete array.
+	 */
+	@Test
+	public void simplifyDenseArrayWrite() {
+		Iterable<NumericExpression> values = Arrays.asList(
+				universe.rational(9), universe.rational(99),
+				universe.rational(999));
+		SymbolicExpression oracle = universe.array(realType, values);
+		NumericExpression length = universe.integer(3);
+		SymbolicArrayType arrayType = universe.arrayType(realType, length);
+		SymbolicExpression x = universe.symbolicConstant(
+				universe.stringObject("X"), arrayType);
+		SymbolicExpression a = universe.denseArrayWrite(x, values);
+
+		if (debug)
+			out.println("a=" + a);
+		assertEquals(oracle, a);
 	}
 }
