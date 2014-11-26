@@ -28,13 +28,17 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 /**
+ * <p>
  * A reasoner provides methods to simplify symbolic expressions and prove or
  * disprove certain theorems, all under an over-arching assumption known as the
  * "context". The context is a BooleanExpression which is assumed to hold. The
  * context cannot change after the instantiation of the Reasoner.
+ * </p>
  * 
+ * <p>
  * Example: if the context used to create this Reasoner was N>=0 && N>=1, the
  * actual context may become simply N>=1.
+ * </p>
  * 
  * @author siegel
  * 
@@ -42,12 +46,12 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 public interface Reasoner {
 
 	/**
-	 * In the process of simplifying the initial context, this simplier may have
-	 * "solved" for some of the symbolic constants occurring in the context.
-	 * This method returns a map in which the keys are those symbolic constants
-	 * and the value associated to a key is the "solved" value. The solved value
-	 * will be substituted for the symbolic constants in any expression given to
-	 * the {@link #simplify} method of this simplifier.
+	 * In the process of simplifying the initial context, this simplifier may
+	 * have "solved" for some of the symbolic constants occurring in the
+	 * context. This method returns a map in which the keys are those symbolic
+	 * constants and the value associated to a key is the "solved" value. The
+	 * solved value will be substituted for the symbolic constants in any
+	 * expression given to the {@link #simplify} method of this simplifier.
 	 * 
 	 * @return a mapping from some symbolic constants occurring in original
 	 *         context to their solved values
@@ -59,11 +63,11 @@ public interface Reasoner {
 	 * may differ from the original one used to create the Reasoner because it
 	 * was simplified or put into a canonical form. Moreover, symbolic constants
 	 * which have been "solved" may be removed from the context. (For the
-	 * context with addtional equations giving those solved values, use method
+	 * context with additional equations giving those solved values, use method
 	 * {@link #getFullContext}). This context will not change after creation.
 	 * 
 	 * @return the reduced context associated to this Reasoner
-	 * */
+	 */
 	BooleanExpression getReducedContext();
 
 	/**
@@ -78,7 +82,7 @@ public interface Reasoner {
 	 * This context will not change after creation.
 	 * 
 	 * @return the reduced context associated to this Reasoner
-	 * */
+	 */
 	BooleanExpression getFullContext();
 
 	/**
@@ -99,19 +103,24 @@ public interface Reasoner {
 	UnaryOperator<SymbolicExpression> simplifier();
 
 	/**
+	 * <p>
 	 * Simplify the given expression under the context. The simplified
 	 * expression is guaranteed to be equivalent to the given one under the
 	 * context. I.e., if p and q are the two expressions, and c is the context,
 	 * then given any assignment of concrete values to symbolic constants for
 	 * which c holds, p and q will evaluate to the same concrete value.
+	 * </p>
 	 * 
+	 * <p>
 	 * Note that the expression can have any type, including array, function,
 	 * tuple, etc. The simplified expression may have a different type, but the
 	 * new type is guaranteed to be equivalent to the original under the
 	 * context. For example, if the given expression has type int[N] (array of
 	 * int of length N), the simplified expression might have type int[3] (e.g.,
 	 * if the context was "N=3").
+	 * </p>
 	 * 
+	 * <p>
 	 * Example:
 	 * 
 	 * <pre>
@@ -122,7 +131,7 @@ public interface Reasoner {
 	 * result of simplify (N<0)  : false
 	 * </pre>
 	 * 
-	 * Etc.
+	 * </p>
 	 * 
 	 * @param expression
 	 *            any symbolic expression
@@ -153,29 +162,39 @@ public interface Reasoner {
 	NumericExpression simplify(NumericExpression expression);
 
 	/**
+	 * <p>
 	 * Attempts to determine whether the statement p(x)=>q(x) is a tautology.
 	 * Here, p is the "assumption", q is the "predicate", and x stands for the
 	 * set of all symbolic constants which occur in p or q.
+	 * </p>
 	 * 
+	 * <p>
 	 * A result of YES implies forall x.(p(x)=>q(x)). A result of NO implies
 	 * nsat(p)||exists x.(p(x)&&!q(x)). Nothing can be concluded from a result
 	 * of MAYBE.
+	 * </p>
 	 * 
+	 * <p>
 	 * nsat(p) means p is not satisfiable, i.e., forall x.!p(x), or equivalently
 	 * !exists x.p(x). Note that if p is not satisfiable then any of the three
 	 * possible results could be returned.
+	 * </p>
 	 * 
+	 * <p>
 	 * Consider a call to valid(true,q). If this returns YES then forall x.q(x)
 	 * (i.e., q is a tautology). If it returns NO then exists x.!q(x) (i.e., q
 	 * is not a tautology).
+	 * </p>
 	 * 
+	 * <p>
 	 * Consider a call to valid(true,!q). If this returns YES then q is not
 	 * satisfiable. If it returns no, then q is satisfiable.
-	 * 
+	 * </p>
 	 */
 	ValidityResult valid(BooleanExpression predicate);
 
 	/**
+	 * <p>
 	 * Attempts to determine whether p(x)=>q(x) is valid, and, if not, also
 	 * returns a model (counter-example). The specification is exactly the same
 	 * as for {@link #valid}, except that a {@link ValidityResult} is returned.
@@ -185,11 +204,14 @@ public interface Reasoner {
 	 * YES or MAYBE. It may return null even if the result type is NO, either
 	 * because the assumption is not satisfiable or a model could not be found
 	 * for some reason.
+	 * </p>
 	 * 
+	 * <p>
 	 * If the model is non-null, it will be a map in which the key set consists
 	 * of all the symbolic constants of non-function type that occur in the
 	 * assumption or predicate. The value associated to a key will be a concrete
 	 * symbolic expression.
+	 * </p>
 	 * 
 	 * @param predicate
 	 *            the predicate q(x)
