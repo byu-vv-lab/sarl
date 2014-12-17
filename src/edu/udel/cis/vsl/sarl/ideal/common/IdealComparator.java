@@ -65,14 +65,14 @@ public class IdealComparator implements Comparator<NumericExpression> {
 
 	private Comparator<SymbolicObject> objectComparator;
 
-	// private Comparator<SymbolicType> typeComparator;
+	private Comparator<SymbolicType> typeComparator;
 
 	private CommonIdealFactory idealFactory;
 
 	public IdealComparator(CommonIdealFactory idealFactory) {
 		this.idealFactory = idealFactory;
 		this.objectComparator = idealFactory.objectFactory().comparator();
-		// this.typeComparator = idealFactory.typeFactory().typeComparator();
+		this.typeComparator = idealFactory.typeFactory().typeComparator();
 	}
 
 	private static boolean debug = false;
@@ -104,41 +104,53 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
+	 * <p>
+	 * Compares IdealExpressions, placing a total order on the set of all
+	 * IdealExpressions.
+	 * </p>
 	 * 
-	 * Compares IdealExpressions.
 	 * 
-	 * NOTE: FOR NOW, we are assuming the types are equal. I.e., it is the
-	 * caller's responsibility to know that if two numeric expressions are being
-	 * compared, they had better have the same type. Otherwise everything could
-	 * be wrong. This is an optimization.
 	 * 
+	 * <p>
 	 * First compare types. Within a type, first all the NTRationalExpression,
 	 * then everything else. "Everything else" are instances of Polynomial.
 	 * Polynomials are sorted first by degree: larger degree comes first (since
 	 * that's the way you typically write them). Given two polynomials of the
 	 * same degree:
+	 * <ul>
 	 * 
-	 * if the two polynomials are monomials of the same degree, compare monics,
-	 * then constants
+	 * <li>if the two polynomials are monomials of the same degree, compare
+	 * monics, then constants</li>
 	 * 
-	 * to compare two monics of the same degree: use dictionary order on the
-	 * primitive powers
+	 * <li>to compare two monics of the same degree: use dictionary order on the
+	 * primitive powers</li>
 	 * 
-	 * to compare two primitive power of same degree: compare the bases
+	 * <li>to compare two primitive power of same degree: compare the bases</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * <p>
+	 * Expression of two different types might be compared as follows: if a is
+	 * int and b is real, the expression "a>0 && b>0" might be represented by a
+	 * sorted list containing the two entries a>0 and b>0. Hence these two
+	 * entries will be compared. To compare a>0 and b>0, the comparison first
+	 * compares the operators, they are equal (both are >). Then it compares the
+	 * arguments, so it will compare a and b. At this point it is comparing two
+	 * expressions of different types. As an optimization, consider making a
+	 * version of the comparator that assumes the two expressions have the same
+	 * type.
+	 * </p>
 	 */
 	public int compareWork(NumericExpression o1, NumericExpression o2) {
 		IdealExpression e1 = (IdealExpression) o1;
 		IdealExpression e2 = (IdealExpression) o2;
 		SymbolicType t1 = e1.type();
-		// SymbolicType t2 = e2.type();
-		// int result = typeComparator.compare(t1, t2);
+		SymbolicType t2 = e2.type();
+		int result = typeComparator.compare(t1, t2);
 
-		// if (result != 0) {
-		// assert false;
-		// return result;
-		// }
-
-		assert t1.equals(e2.type());
+		if (result != 0) {
+			return result;
+		}
 		if (t1.isInteger()) {
 			if (o1 instanceof Monic && o2 instanceof Monic)
 				return compareMonics((Monic) o1, (Monic) o2);
