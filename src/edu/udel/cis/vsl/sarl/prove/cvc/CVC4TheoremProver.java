@@ -72,6 +72,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
+import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
  * An implementation of TheoremProver using the automated theorem prover CVC4.
@@ -156,6 +157,13 @@ public class CVC4TheoremProver implements TheoremProver {
 	 * Used to cache the results of translation.
 	 */
 	private Map<SymbolicExpression, Expr> expressionMap;
+
+	/**
+	 * Mapping of pairs (t1,t2) of CVC4 types to the uninterpreted function
+	 * symbol which representing casting from t1 to t2. The function has type
+	 * "function from t1 to t2".
+	 */
+	private Map<Pair<Type, Type>, Expr> castMap;
 
 	/**
 	 * Map from SARL symbolic constants to corresponding CVC4 variables. Entries
@@ -302,6 +310,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		modelSmt = null;
 		auxVarCount = 0;
 		expressionMap = new HashMap<>();
+		castMap = new HashMap<>();
 		variableMap = new HashMap<>();
 		typeMap = new HashMap<SymbolicType, Type>();
 		cvc0 = em.mkConst(new Rational(0, 1));
@@ -965,9 +974,29 @@ public class CVC4TheoremProver implements TheoremProver {
 		case ARRAY_WRITE:
 			result = translateArrayWrite(expression);
 			break;
-		case CAST:
-			result = translate((SymbolicExpression) expression.argument(0));
+		case CAST: {
+			SymbolicExpression argument = (SymbolicExpression) expression
+					.argument(0);
+			Expr cvcArgument = this.translate(argument);
+			Type originalType = cvcArgument.getType();
+			Type newType = translateType(expression.type());
+
+			if (originalType.equals(em.integerType())
+					&& newType.equals(em.realType()))
+				return cvcArgument;
+
+			Pair<Type, Type> key = new Pair<Type, Type>(originalType, newType);
+			Expr castFunction = castMap.get(key);
+
+			if (castFunction == null) {
+				castFunction = em.mkVar("cast" + castMap.size(),
+						em.mkFunctionType(originalType, newType));
+				castMap.put(key, castFunction);
+			}
+
+			result = em.mkExpr(Kind.APPLY_UF, castFunction, cvcArgument);
 			break;
+		}
 		case CONCRETE:
 			result = translateConcrete(expression);
 			break;

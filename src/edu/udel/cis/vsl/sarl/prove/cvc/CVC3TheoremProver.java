@@ -82,13 +82,13 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * Mapping of SARL symbolic type to corresponding CVC3 type. Set in method
 	 * reset().
 	 */
-	private Map<SymbolicType, Type> typeMap = new HashMap<SymbolicType, Type>();
+	private Map<SymbolicType, Type> typeMap = new HashMap<>();
 
 	/**
-	 * Mapping of SARL symbolic expression to corresponding CVC3 expresssion.
-	 * Set in method reset().
+	 * Mapping of SARL symbolic expression to corresponding CVC3 expression. Set
+	 * in method reset().
 	 */
-	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<SymbolicExpression, Expr>();
+	private Map<SymbolicExpression, Expr> expressionMap = new HashMap<>();
 
 	/**
 	 * Map from the root name (e.g., name of a symbolic constant) to the number
@@ -100,29 +100,37 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * 
 	 * The names are for symbolic constants of all kinds, including functions.
 	 */
-	private Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
+	private Map<String, Integer> nameCountMap = new HashMap<>();
 
 	/**
-	 * Map from SARL expressions of funcional type to corresponding CVC3
+	 * Map from SARL expressions of functional type to corresponding CVC3
 	 * operators. In SARL, a function is a kind of symbolic expression. In CVC3,
 	 * this concept is represented as an instance of "OpMut" (Operator Mutable),
 	 * a subtype of "Op" (operator), which is not a subtype of Expr. Hence a
 	 * separate map is needed.
 	 */
-	private Map<SymbolicExpression, Op> functionMap = new HashMap<SymbolicExpression, Op>();
+	private Map<SymbolicExpression, Op> functionMap = new HashMap<>();
+
+	/**
+	 * Map yielding the uninterpreted functions used to represent cast
+	 * operations. The key is a pair of CVC3 types: the pair (t1,t2) represents
+	 * a cast from t1 to t2. The value is a CVC3 uninterpreted function from t1
+	 * to t2.
+	 */
+	private Map<Pair<Type, Type>, Op> castMap = new HashMap<>();
 
 	/**
 	 * Mapping of CVC3 variables to their corresponding symbolic constants.
 	 * Needed in order to construct model when there is a counter example.
 	 */
-	private Map<Expr, SymbolicConstant> varMap = new HashMap<Expr, SymbolicConstant>();
+	private Map<Expr, SymbolicConstant> varMap = new HashMap<>();
 
 	/**
 	 * Mapping of CVC3 "Op"s to their corresponding symbolic constants. A CVC3
 	 * "Op" is used to represent a function. In SARL, a function is represented
 	 * by a symbolic constant of function type. This is used for finding models.
 	 */
-	private Map<Op, SymbolicConstant> opMap = new HashMap<Op, SymbolicConstant>();
+	private Map<Op, SymbolicConstant> opMap = new HashMap<>();
 
 	/**
 	 * Stack of Map giving integer division info objects in the current CVC3
@@ -136,17 +144,17 @@ public class CVC3TheoremProver implements TheoremProver {
 	 * corresponding to the quotient, the second the CVC3 expression
 	 * corresponding to the modulus.
 	 */
-	private LinkedList<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>> intDivisionStack = new LinkedList<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>>();
+	private LinkedList<Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>> intDivisionStack = new LinkedList<>();
 
 	/**
 	 * Like above, but remains persistent from query to query.
 	 */
-	private Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo> permanentIntegerDivisionMap = new HashMap<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo>();
+	private Map<Pair<SymbolicExpression, SymbolicExpression>, IntDivisionInfo> permanentIntegerDivisionMap = new HashMap<>();
 
 	/**
 	 * Stack of SymbolicExpressions and their translations as Exprs
 	 */
-	private LinkedList<Map<SymbolicExpression, Expr>> translationStack = new LinkedList<Map<SymbolicExpression, Expr>>();
+	private LinkedList<Map<SymbolicExpression, Expr>> translationStack = new LinkedList<>();
 
 	/**
 	 * The assumption under which this prover is operating.
@@ -1227,9 +1235,27 @@ public class CVC3TheoremProver implements TheoremProver {
 		case ARRAY_WRITE:
 			result = translateArrayWrite(expr);
 			break;
-		case CAST:
-			result = this.translate((SymbolicExpression) expr.argument(0));
+		case CAST: {
+			SymbolicExpression argument = (SymbolicExpression) expr.argument(0);
+			Expr cvcArgument = this.translate(argument);
+			Type originalType = cvcArgument.getType();
+			Type newType = translateType(expr.type());
+
+			if (originalType.equals(vc.intType())
+					&& newType.equals(vc.realType()))
+				return cvcArgument;
+
+			Pair<Type, Type> key = new Pair<Type, Type>(originalType, newType);
+			Op castFunction = castMap.get(key);
+
+			if (castFunction == null) {
+				castFunction = vc.createOp("cast" + castMap.size(),
+						vc.funType(originalType, newType));
+				castMap.put(key, castFunction);
+			}
+			result = vc.funExpr(castFunction, cvcArgument);
 			break;
+		}
 		case CONCRETE:
 			result = translateConcrete(expr);
 			break;

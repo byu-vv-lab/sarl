@@ -34,6 +34,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -1254,12 +1255,25 @@ public class CommonIdealFactory implements IdealFactory {
 			SymbolicType newType) {
 		if (numericExpression.type().isIdeal() && newType.equals(realType))
 			return castToReal(numericExpression);
+		if (numericExpression.type().isReal() && newType.equals(integerType)) {
+			RationalNumber number = (RationalNumber) extractNumber(numericExpression);
+
+			if (number != null) {
+				int sign = number.signum();
+
+				if (sign >= 0) {
+					return constant(numberFactory.floor(number));
+				} else {
+					return constant(numberFactory.ceil(number));
+				}
+			}
+		}
 		return expression(SymbolicOperator.CAST, newType, numericExpression);
 	}
 
 	/**
 	 * For ideal arithmetic, this respects almost every operation. cast(a O p) =
-	 * cast(a) O cast(p), for O=+,-,*, Not division. Nod modulus. Primities get
+	 * cast(a) O cast(p), for O=+,-,*, Not division. Nod modulus. Primitives get
 	 * a CAST operator in front of them. Constants get cast by number factory.
 	 */
 	private NumericExpression castToReal(NumericExpression numericExpression) {

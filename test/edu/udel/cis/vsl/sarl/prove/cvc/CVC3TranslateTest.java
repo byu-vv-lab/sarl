@@ -80,13 +80,11 @@ public class CVC3TranslateTest {
 	 * The test compares the created expr and the translated symbolic expression
 	 * that was casted.
 	 */
-
 	@Test
 	public void testTranslateCastRealToInt() {
 		Expr oneIntExpr = cvcProver.translate(oneInt);
 
-		SymbolicExpression castExp = expressionFactory.expression(
-				SymbolicOperator.CAST, intType, one);
+		SymbolicExpression castExp = universe.cast(intType, one);
 		Expr expr = cvcProver.translate(castExp);
 		assertEquals(oneIntExpr, expr);
 	}
@@ -117,12 +115,11 @@ public class CVC3TranslateTest {
 
 	@Test
 	public void testTranslateCastDoubleToInt() {
-		Expr oneFiveDoubleExpr = cvcProver.translate(oneFiveDouble);
+		Expr cvcOne = cvcProver.translate(oneInt);
 
-		SymbolicExpression castExp = expressionFactory.expression(
-				SymbolicOperator.CAST, intType, oneFiveDouble);
+		SymbolicExpression castExp = universe.cast(intType, oneFiveDouble);
 		Expr expr = cvcProver.translate(castExp);
-		Expr expr2 = vc.eqExpr(expr, oneFiveDoubleExpr);
+		Expr expr2 = vc.eqExpr(expr, cvcOne);
 		assertEquals(QueryResult.VALID, vc.query(expr2));
 	}
 
