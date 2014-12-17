@@ -45,6 +45,8 @@ public class CommonCollectionFactoryTest {
 	@Before
 	public void setUp() throws Exception {
 		collectionFactory = new CommonCollectionFactory(objectFactory);
+		collectionFactory.setElementComparator(elementComparator);
+		collectionFactory.init();
 	}
 
 	@After
@@ -56,7 +58,6 @@ public class CommonCollectionFactoryTest {
 	 */
 	@Test
 	public void testSetElementComparator() {
-		collectionFactory.setElementComparator(elementComparator);
 		assertTrue(collectionFactory.comparator() instanceof Comparator);
 	}
 

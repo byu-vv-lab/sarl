@@ -22,7 +22,7 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 /**
- * An implementation of {@link SymbolicObject}.
+ * A partial implementation of {@link SymbolicObject}.
  * 
  * @author siegel
  * 
@@ -30,54 +30,62 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	/**
-	 * If true, toString() will return toStringBufferLong, not toStringBuffer
+	 * If true, more detailed string representations of symbolic objects will be
+	 * returned by the {@link #toString()} method.
 	 */
 	private final static boolean debug = false;
 
 	/**
-	 * Set upon construction, used in equals for kind comparison
+	 * What kind of the symbolic object is this? Set upon construction.
 	 */
 	private SymbolicObjectKind kind;
 
 	/**
-	 * Cached hashCode, set upon first run of hashCode()
+	 * Cached hashCode, set upon first run of {@link #hashCode()}.
 	 */
 	private int hashCode;
 
 	/**
-	 * Tells whether hashCode is set or not
+	 * Has the hash code of this object been computed and cached in field
+	 * {@link #hashCode}?
 	 */
 	private boolean hashed = false;
 
 	/**
-	 * Unique id of the canonic symbolic object
+	 * If this is a canonic object (the unique representative of its equivalence
+	 * class), this will be its unique ID number, which is a nonnegative
+	 * integer. Otherwise, {@link #id} will be -1.
 	 */
 	private int id = -1;
 
 	/**
-	 * The order of the object, used for comparisons
+	 * An infinite-precision rational number associated to this object to
+	 * facilitate comparisons. CURRENTLY NOT USED.
 	 */
 	private RationalNumber order;
 
 	/**
-	 * Instantiates object and sets this.kind
+	 * Instantiates object and sets {@link #kind} as specified.
+	 * 
 	 * @param kind
+	 *            the kind of symbolic object this is
 	 */
 	protected CommonSymbolicObject(SymbolicObjectKind kind) {
 		this.kind = kind;
 	}
 
 	/**
-	 * set the order of the CommonSymbolicObject
+	 * Sets the {@link #order} field to the specified number.
+	 * 
 	 * @param number
+	 *            an infinite precision rational number
 	 */
 	public void setOrder(RationalNumber number) {
 		order = number;
 	}
 
 	/**
-	 * @return
-	 * 		The order of the CommonSymbolicObject
+	 * @return the rational number {@link #order}.
 	 */
 	public RationalNumber getOrder() {
 		return order;
@@ -95,7 +103,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public int id() {
 		return id;
 	}
@@ -106,8 +114,10 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	}
 
 	/**
-	 * Computes the hash code to be returned by hashCode(). This is run the first time hashCode is run.
-	 * The hash is cached for future calls to hashCode();
+	 * Computes the hash code to be returned by hashCode(). This is run the
+	 * first time hashCode is run. The hash is cached for future calls to
+	 * hashCode();
+	 * 
 	 * @return hash code
 	 */
 	protected abstract int computeHashCode();
@@ -152,13 +162,17 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	}
 
 	/**
-	 * Canonize the children of the ObjectFactory. Pull out the unique representatives of the objects.
+	 * Canonizes the children of this symbolic object. Replaces each child with
+	 * the canonic version of that child.
+	 * 
 	 * @param factory
+	 *            the object factory that is responsible for this symbolic
+	 *            object
 	 */
 	public abstract void canonizeChildren(CommonObjectFactory factory);
 
 	/**
-	 * Place parentheses around the string buffer.
+	 * Places parentheses around the string buffer.
 	 * 
 	 * @param buffer
 	 *            a string buffer

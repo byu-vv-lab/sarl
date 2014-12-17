@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.IF;
 
@@ -36,31 +36,41 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 public interface CollectionFactory {
 
 	/**
-	 * Simply returns the comparator that was instantiated to the collection
-	 * @return
-	 *       The comparator for the collection
+	 * Returns the comparator that is used to place a total order on the set of
+	 * all symbolic collections.
+	 * 
+	 * @return The comparator that is used to compare any two symbolic
+	 *         collections
 	 */
 	Comparator<SymbolicCollection<? extends SymbolicExpression>> comparator();
 
 	/**
-	 * Sets the comparator for the collection.
+	 * Sets the "element comparator" that is used to compare any two symbolic
+	 * expressions. The element comparator will be used by the collection
+	 * comparator to place a total order on the symbolic collections.
 	 * 
 	 * @param s1
-	 *            the comparator to be set
+	 *            the comparator on symbolic expressions
 	 */
 	void setElementComparator(Comparator<SymbolicExpression> c);
 
 	/**
-	 * Instantiates initial properties for the collection.
+	 * Initializes this collection factory. This should be called once, after
+	 * the element comparator has been set by
+	 * {@link #setElementComparator(Comparator)}.
 	 */
 	void init();
 
 	/**
-	 * Takes in a Java collection and creates a new Basic Collection containing the elements contained
-	 * in the in the Java Collection passed in.
+	 * Takes in a Java collection and creates a new Basic Collection containing
+	 * the elements contained in the in the Java Collection passed in. This
+	 * method may or may not copy the elements out of the given collection.
+	 * Therefore the given collection should never be accessed directly after
+	 * this method is called.
+	 * 
 	 * @param javaCollection
-	 * @return
-	 * 		A new Basic Collection.
+	 *            any kind of collection of symbolic expressions
+	 * @return a symbolic collection based on the given Java collection
 	 */
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection);
@@ -77,7 +87,7 @@ public interface CollectionFactory {
 	 * 
 	 * @return the empty sorted set
 	 */
-	<T extends SymbolicExpression> SymbolicSet<T> emptySortedSet();
+	<T extends SymbolicExpression> SortedSymbolicSet<T> emptySortedSet();
 
 	/**
 	 * Returns the empty sorted set.
@@ -87,7 +97,7 @@ public interface CollectionFactory {
 	 * 
 	 * @return the empty sorted set
 	 */
-	<T extends SymbolicExpression> SymbolicSet<T> emptySortedSet(
+	<T extends SymbolicExpression> SortedSymbolicSet<T> emptySortedSet(
 			Comparator<? super T> comparator);
 
 	/**
@@ -106,7 +116,8 @@ public interface CollectionFactory {
 	 *            a symbolic expression
 	 * @return the sorted set consisting of the one element
 	 */
-	<T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(T element);
+	<T extends SymbolicExpression> SortedSymbolicSet<T> singletonSortedSet(
+			T element);
 
 	/**
 	 * Returns the singleton sorted set containing the one element.
@@ -117,12 +128,11 @@ public interface CollectionFactory {
 	 *            used for sorting
 	 * @return the set consisting of that one element
 	 */
-	<T extends SymbolicExpression> SymbolicSet<T> singletonSortedSet(T element,
-			Comparator<? super T> comparator);
+	<T extends SymbolicExpression> SortedSymbolicSet<T> singletonSortedSet(
+			T element, Comparator<? super T> comparator);
 
 	/**
-	 * Returns a SymbolicSequence comprising the given sequence of
-	 * elements.
+	 * Returns a SymbolicSequence comprising the given sequence of elements.
 	 * 
 	 * @param elements
 	 *            any object providing an iterator over SymbolicExpressionIF
@@ -133,8 +143,8 @@ public interface CollectionFactory {
 			Iterable<? extends T> elements);
 
 	/**
-	 * Returns a SymbolicSequence comprising the sequence of
-	 * elements specified as an array.
+	 * Returns a SymbolicSequence comprising the sequence of elements specified
+	 * as an array.
 	 * 
 	 * @param elements
 	 *            any array of SymbolicExpressionIF
@@ -164,14 +174,14 @@ public interface CollectionFactory {
 	 * 
 	 * @return an empty sorted symbolic map
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptySortedMap();
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> emptySortedMap();
 
 	/**
 	 * Returns an empty sorted symbolic map using given comparator on keys.
 	 * 
 	 * @return an empty sorted symbolic map
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptySortedMap(
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> emptySortedMap(
 			Comparator<? super K> comparator);
 
 	/**
@@ -190,7 +200,7 @@ public interface CollectionFactory {
 	 *            the value for the entry
 	 * @return the map with the one entry
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonSortedMap(
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> singletonSortedMap(
 			K key, V value);
 
 	/**
@@ -203,7 +213,7 @@ public interface CollectionFactory {
 	 *            the value for the entry
 	 * @return the map with the one entry
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonSortedMap(
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> singletonSortedMap(
 			Comparator<? super K> comparator, K key, V value);
 
 	/**
@@ -225,7 +235,7 @@ public interface CollectionFactory {
 	 * @param javaMap
 	 * @return a symbolic map based on the given Java map
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> sortedMap(
 			Map<K, V> javaMap);
 
 	/**
@@ -235,7 +245,7 @@ public interface CollectionFactory {
 	 * @param javaMap
 	 * @return a sorted symbolic map based on the given Java map
 	 */
-	<K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> sortedMap(
+	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> sortedMap(
 			Comparator<? super K> comparator, Map<K, V> javaMap);
 
 	/**

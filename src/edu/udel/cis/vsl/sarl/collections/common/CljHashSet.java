@@ -1,7 +1,6 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import com.github.krukow.clj_ds.PersistentSet;
@@ -13,14 +12,12 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CljHashSet<T extends SymbolicExpression> extends
-		CommonSymbolicCollection<T> implements SymbolicSet<T> {
-
-	private final static int classCode = CljHashSet.class.hashCode();
+		CommonUnsortedSet<T> {
 
 	private PersistentSet<T> pset;
 
 	CljHashSet(PersistentSet<T> pset) {
-		super(SymbolicCollectionKind.SET);
+		super();
 		this.pset = pset;
 	}
 
@@ -38,34 +35,6 @@ public class CljHashSet<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer result = new StringBuffer();
-		boolean first = true;
-
-		if (atomize)
-			result.append("{");
-
-		for (T element : this) {
-			if (first)
-				first = false;
-			else
-				result.append(",");
-			result.append(element.toStringBuffer(false));
-		}
-		if (atomize)
-			result.append("}");
-		return result;
-	}
-
-	@Override
-	public StringBuffer toStringBufferLong() {
-		StringBuffer result = new StringBuffer("UnsortedSet");
-
-		result.append(toStringBuffer(true));
-		return result;
-	}
-
-	@Override
 	public Iterator<T> iterator() {
 		return pset.iterator();
 	}
@@ -73,23 +42,6 @@ public class CljHashSet<T extends SymbolicExpression> extends
 	@Override
 	public boolean contains(T element) {
 		return pset.contains(element);
-	}
-
-	/**
-	 * Returns false because this is a hash set, not a sorted set.
-	 */
-	@Override
-	public boolean isSorted() {
-		return false;
-	}
-
-	/**
-	 * Returns null because this is a hash set, not a sorted set, so doesn't use
-	 * a comparator.
-	 */
-	@Override
-	public Comparator<T> comparator() {
-		return null;
 	}
 
 	@Override
@@ -135,14 +87,11 @@ public class CljHashSet<T extends SymbolicExpression> extends
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
-		SymbolicSet<T> that = (SymbolicSet<T>) o;
-
-		return !that.isSorted() && pset.equals(((CljHashSet<T>) o).pset);
-	}
-
-	@Override
-	protected int computeHashCode() {
-		return classCode ^ pset.hashCode();
+		if (o instanceof CljHashSet<?>) {
+			return pset.equals(((CljHashSet<T>) o).pset);
+		} else {
+			return super.collectionEquals(o);
+		}
 	}
 
 	@Override

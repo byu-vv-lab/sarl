@@ -27,12 +27,12 @@ import com.github.krukow.clj_lang.PersistentTreeMap;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.collections.IF.SortedSymbolicMap;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CljSortedMap<K extends SymbolicExpression, V extends SymbolicExpression>
-		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
+		extends CommonSortedMap<K, V> {
 
 	private PersistentTreeMap<K, V> pmap;
 
@@ -127,22 +127,12 @@ public class CljSortedMap<K extends SymbolicExpression, V extends SymbolicExpres
 	}
 
 	@Override
-	protected int computeHashCode() {
-		return SymbolicCollectionKind.MAP.hashCode() ^ pmap.hashCode();
-	}
-
-	@Override
-	public boolean isSorted() {
-		return true;
-	}
-
-	@Override
-	public SymbolicMap<K, V> put(K key, V value) {
+	public SortedSymbolicMap<K, V> put(K key, V value) {
 		return new CljSortedMap<K, V>(pmap.assoc(key, value));
 	}
 
 	@Override
-	public SymbolicMap<K, V> remove(K key) {
+	public SortedSymbolicMap<K, V> remove(K key) {
 		return new CljSortedMap<K, V>(pmap.without(key));
 	}
 

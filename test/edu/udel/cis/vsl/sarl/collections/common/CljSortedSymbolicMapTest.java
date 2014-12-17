@@ -37,54 +37,56 @@ import edu.udel.cis.vsl.sarl.type.common.CommonSymbolicIntegerType;
 
 /**
  * 
- * @author rwjones
- *	Test class for collections.common.Clj4SortedSymbolicMap
+ * @author rwjones Test class for collections.common.Clj4SortedSymbolicMap
  */
 public class CljSortedSymbolicMapTest {
 
 	CommonObjectFactory fac;
-	
-	private static CommonObjectFactory objectFactory = new CommonObjectFactory(new RealNumberFactory());
+
+	private static CommonObjectFactory objectFactory = new CommonObjectFactory(
+			new RealNumberFactory());
 	private static Comparator<SymbolicExpression> elementComparator = new ExpressionComparatorStub();
 
 	private static SymbolicExpression x = new ExpressionStub("5");
 
 	private static SymbolicExpression y = new ExpressionStub("y");
-	
+
 	private static SymbolicExpression a = new ExpressionStub("5");
 
 	private static SymbolicExpression b = new ExpressionStub("9");
-	
+
 	private static SymbolicExpression z = new ExpressionStub("10");
-	
+
 	private static SymbolicExpression twenty = createExpression(20);
 	private static SymbolicExpression forty = createExpression(40);
 	private static SymbolicExpression sixty = createExpression(60);
 	private static SymbolicExpression eighty = createExpression(80);
 	private static SymbolicExpression hundred = createExpression(100);
-	
-	
-	Collection<SymbolicExpression> set;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test2;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test3;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test4;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> test5;
-	private static CljSortedMap<SymbolicExpression,SymbolicExpression> canonicTest;
-	
 
-	public static SymbolicExpression createExpression(int expression){
-		SymbolicType symbolicType = new CommonSymbolicIntegerType(IntegerKind.IDEAL);
+	Collection<SymbolicExpression> set;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> test;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> test2;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> test3;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> test4;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> test5;
+	private static CljSortedMap<SymbolicExpression, SymbolicExpression> canonicTest;
+
+	public static SymbolicExpression createExpression(int expression) {
+		SymbolicType symbolicType = new CommonSymbolicIntegerType(
+				IntegerKind.IDEAL);
 		NumberFactory numFact = Numbers.REAL_FACTORY;
 		IntegerNumber expr = numFact.integer(expression);
 		ObjectFactory objFact = Objects.newObjectFactory(numFact);
-		SymbolicObject symObj =  objFact.numberObject(expr);
+		SymbolicObject symObj = objFact.numberObject(expr);
 		SymbolicTypeFactory typeFact = Types.newTypeFactory(objFact);
-		CollectionFactory collectionFact = Collections.newCollectionFactory(objFact);
-		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(numFact, objFact, typeFact, collectionFact);
-		return exprFact.expression(SymbolicOperator.CONCRETE, symbolicType, symObj);
+		CollectionFactory collectionFact = Collections
+				.newCollectionFactory(objFact);
+		ExpressionFactory exprFact = Expressions.newIdealExpressionFactory(
+				numFact, objFact, typeFact, collectionFact);
+		return exprFact.expression(SymbolicOperator.CONCRETE, symbolicType,
+				symObj);
 	}
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -102,62 +104,75 @@ public class CljSortedSymbolicMapTest {
 		eighty = objectFactory.canonic(eighty);
 		hundred = createExpression(100);
 		forty = objectFactory.canonic(forty);
-		canonicTest = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		
-		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(twenty, forty);
-		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(sixty, forty);
-		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest.put(eighty, hundred);
-		
-		
-		
-		test = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test3 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test4 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		test5 = new CljSortedMap<SymbolicExpression,SymbolicExpression>(elementComparator);
-		
-		
-		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(x, y);
-		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, a);
-		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, z);
-		
-		
-		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(a, b);
-		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(b, b);
-		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(y, b);
-		
-		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(a, b);
-		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(x, y);
-		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(y, a);
-		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5.put(b, z);
+		canonicTest = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
+				elementComparator);
+
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest
+				.put(twenty, forty);
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest
+				.put(sixty, forty);
+		canonicTest = (CljSortedMap<SymbolicExpression, SymbolicExpression>) canonicTest
+				.put(eighty, hundred);
+
+		test = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
+				elementComparator);
+		test3 = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
+				elementComparator);
+		test4 = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
+				elementComparator);
+		test5 = new CljSortedMap<SymbolicExpression, SymbolicExpression>(
+				elementComparator);
+
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(
+				a, b);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(
+				x, y);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(
+				y, a);
+		test = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test.put(
+				b, z);
+
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test
+				.put(a, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test
+				.put(b, b);
+		test2 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test
+				.put(y, b);
+
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5
+				.put(a, b);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5
+				.put(x, y);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5
+				.put(y, a);
+		test5 = (CljSortedMap<SymbolicExpression, SymbolicExpression>) test5
+				.put(b, z);
 		this.fac = null;
 		this.fac = new CommonObjectFactory(new RealNumberFactory());
-			
+
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		
-	}
 
+	}
 
 	/**
 	 * Test method for computeHashCode()
 	 */
 	@Test
 	public void testComputeHashCode() {
-		
+
 		int testHash = test.computeHashCode();
-		assertEquals(test.hashCode(),testHash);
-		
+		assertEquals(test.hashCode(), testHash);
+
 	}
 
 	/**
 	 * Test method for canonizeChildren()
 	 */
 	@Test
-	public void testCanonizeChildren() 
-	{
+	public void testCanonizeChildren() {
 		assertFalse(canonicTest.isCanonic());
 		assertFalse(twenty.isCanonic());
 		assertTrue(forty.isCanonic());
@@ -165,7 +180,7 @@ public class CljSortedSymbolicMapTest {
 		assertTrue(canonicTest.isCanonic());
 		assertTrue(twenty.isCanonic());
 		assertTrue(forty.isCanonic());
-		
+
 	}
 
 	/**
@@ -182,8 +197,8 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testSize() {
-		assertEquals(test.size(),3);
-		assertEquals(test2.size(),3);
+		assertEquals(test.size(), 3);
+		assertEquals(test2.size(), 3);
 	}
 
 	/**
@@ -193,9 +208,8 @@ public class CljSortedSymbolicMapTest {
 	public void testIterator() {
 		java.util.Iterator<SymbolicExpression> temp = test.iterator();
 		String testString = "[";
-		while(temp.hasNext())
-		{
-			testString = testString + temp.next().toString() + ",";			
+		while (temp.hasNext()) {
+			testString = testString + temp.next().toString() + ",";
 		}
 		testString = testString + "]";
 		assertEquals(testString, "[y,10,5,]");
@@ -206,7 +220,7 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testGet() {
-		assertEquals(test.get(a),test.get(x));
+		assertEquals(test.get(a), test.get(x));
 	}
 
 	/**
@@ -214,7 +228,7 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testKeys() {
-		assertEquals(test.keys().toString(),"[5, 9, y]");
+		assertEquals(test.keys().toString(), "[5, 9, y]");
 	}
 
 	/**
@@ -222,7 +236,7 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testValues() {
-		assertEquals(test.values().toString(),"[y, 10, 5]");
+		assertEquals(test.values().toString(), "[y, 10, 5]");
 	}
 
 	/**
@@ -230,7 +244,7 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testEntries() {
-		assertEquals(test.entries().toString(),"[[5 y], [9 10], [y 5]]");
+		assertEquals(test.entries().toString(), "[[5 y], [9 10], [y 5]]");
 	}
 
 	/**
@@ -255,14 +269,6 @@ public class CljSortedSymbolicMapTest {
 	}
 
 	/**
-	 * Test method for isSorted()
-	 */
-	@Test
-	public void testIsSorted() {
-		assertTrue(test.isSorted());
-	}
-
-	/**
 	 * Test method for put()
 	 */
 	@Test
@@ -284,8 +290,12 @@ public class CljSortedSymbolicMapTest {
 	 */
 	@Test
 	public void testComparator() {
-		assertEquals(canonicTest.comparator().compare(canonicTest.get(twenty),canonicTest.get(sixty)), 0);
-		assertEquals(canonicTest.comparator().compare(canonicTest.get(twenty),canonicTest.get(eighty)), 3);
+		assertEquals(
+				canonicTest.comparator().compare(canonicTest.get(twenty),
+						canonicTest.get(sixty)), 0);
+		assertEquals(
+				canonicTest.comparator().compare(canonicTest.get(twenty),
+						canonicTest.get(eighty)), 3);
 	}
 
 	/**
@@ -294,7 +304,8 @@ public class CljSortedSymbolicMapTest {
 	@Test
 	public void testToStringBufferBoolean() {
 		assertEquals(test3.toStringBuffer(true).toString(), "{}");
-		assertEquals(test.toStringBuffer(true).toString(), "{5->y, 9->10, y->5}");
+		assertEquals(test.toStringBuffer(true).toString(),
+				"{5->y, 9->10, y->5}");
 	}
 
 	/**
@@ -303,7 +314,8 @@ public class CljSortedSymbolicMapTest {
 	@Test
 	public void testToStringBufferLong() {
 		assertEquals(test3.toStringBufferLong().toString(), "SortedMap{}");
-		assertEquals(test.toStringBufferLong().toString(), "SortedMap{5->y, 9->10, y->5}");
+		assertEquals(test.toStringBufferLong().toString(),
+				"SortedMap{5->y, 9->10, y->5}");
 	}
 
 }

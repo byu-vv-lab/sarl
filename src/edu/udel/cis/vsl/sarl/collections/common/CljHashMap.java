@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
-import java.util.Comparator;
+import static edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind.UNSORTED_MAP;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,12 +15,12 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 public class CljHashMap<K extends SymbolicExpression, V extends SymbolicExpression>
-		extends CommonSymbolicMap<K, V> implements SymbolicMap<K, V> {
+		extends CommonSymbolicMap<K, V> {
 
 	private PersistentMap<K, V> pmap;
 
 	public CljHashMap(PersistentMap<K, V> pmap) {
-		super();
+		super(UNSORTED_MAP);
 		this.pmap = pmap;
 	}
 
@@ -34,32 +35,6 @@ public class CljHashMap<K extends SymbolicExpression, V extends SymbolicExpressi
 	@Override
 	public int size() {
 		return pmap.size();
-	}
-
-	@Override
-	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer result = new StringBuffer("{");
-		boolean first = true;
-
-		for (Entry<K, V> entry : entries()) {
-			if (first)
-				first = false;
-			else
-				result.append(", ");
-			result.append(entry.getKey().toStringBuffer(false));
-			result.append("->");
-			result.append(entry.getValue().toStringBuffer(false));
-		}
-		result.append("}");
-		return result;
-	}
-
-	@Override
-	public StringBuffer toStringBufferLong() {
-		StringBuffer result = new StringBuffer("UnsortedMap");
-
-		result.append(toStringBuffer(true));
-		return result;
 	}
 
 	@Override
@@ -92,22 +67,6 @@ public class CljHashMap<K extends SymbolicExpression, V extends SymbolicExpressi
 		return pmap.isEmpty();
 	}
 
-	/**
-	 * Returns false, since this is a hash map, not a sorted map.
-	 */
-	@Override
-	public boolean isSorted() {
-		return false;
-	}
-
-	/**
-	 * Returns null, since this is a hash map, not a sorted map.
-	 */
-	@Override
-	public Comparator<? super K> comparator() {
-		return null;
-	}
-
 	@Override
 	public SymbolicMap<K, V> put(K key, V value) {
 		return new CljHashMap<K, V>(pmap.plus(key, value));
@@ -120,14 +79,13 @@ public class CljHashMap<K extends SymbolicExpression, V extends SymbolicExpressi
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<V> o) {
-		CljHashMap<?, ?> that = (CljHashMap<?, ?>) o;
+		if (o instanceof CljHashMap<?, ?>) {
+			CljHashMap<?, ?> that = (CljHashMap<?, ?>) o;
 
-		return pmap.equals(that.pmap);
-	}
-
-	@Override
-	protected int computeHashCode() {
-		return SymbolicCollectionKind.MAP.hashCode() ^ pmap.hashCode();
+			return pmap.equals(that.pmap);
+		} else {
+			return super.collectionEquals(o);
+		}
 	}
 
 	@Override

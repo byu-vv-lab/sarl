@@ -18,18 +18,23 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.common;
 
+import static edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind.SORTED_MAP;
+import static edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind.UNSORTED_MAP;
+
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicCollection<V> implements SymbolicMap<K, V> {
 
-	public CommonSymbolicMap() {
-		super(SymbolicCollectionKind.MAP);
+	public CommonSymbolicMap(SymbolicCollectionKind kind) {
+		super(kind);
+		assert kind == SORTED_MAP || kind == UNSORTED_MAP;
 	}
 
 	@Override
@@ -80,32 +85,61 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		return result;
 	}
 
-	/**
-	 * Place brackets around the string buffer.
-	 * 
-	 * @param buffer
-	 *            a string buffer
-	 */
-	public StringBuffer toStringBuffer() {
-		StringBuffer buffer = new StringBuffer("{");
+	@Override
+	public StringBuffer toStringBuffer(boolean atomize) {
+		StringBuffer result = new StringBuffer("{");
 		boolean first = true;
 
-		for (Entry<K, V> entry : this.entries()) {
+		for (Entry<K, V> entry : entries()) {
 			if (first)
 				first = false;
 			else
-				buffer.append(",");
-			buffer.append(entry.getKey().toString());
-			buffer.append("->");
-			buffer.append(entry.getValue().toString());
+				result.append(", ");
+			result.append(entry.getKey().toStringBuffer(false));
+			result.append("->");
+			result.append(entry.getValue().toStringBuffer(false));
 		}
-		buffer.append("}");
-		return buffer;
+		result.append("}");
+		return result;
+	}
+
+	@Override
+	public StringBuffer toStringBufferLong() {
+		StringBuffer result = new StringBuffer("UnsortedMap");
+
+		result.append(toStringBuffer(true));
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		return toStringBuffer().toString();
+		return toStringBuffer(false).toString();
+	}
+
+	@Override
+	protected int computeHashCode() {
+		int result = this.collectionKind().hashCode();
+
+		for (V value : this) {
+			result = result ^ value.hashCode();
+		}
+		return result;
+	}
+
+	@Override
+	protected boolean collectionEquals(SymbolicCollection<V> o) {
+		@SuppressWarnings("unchecked")
+		SymbolicMap<K, V> that = (SymbolicMap<K, V>) o;
+
+		for (Entry<K, V> entry : entries()) {
+			K key1 = entry.getKey();
+			V value1 = entry.getValue();
+			V value2 = that.get(key1);
+
+			if (!value1.equals(value2))
+				return false;
+		}
+		return true;
 	}
 
 }

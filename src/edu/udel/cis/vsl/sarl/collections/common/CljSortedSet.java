@@ -7,15 +7,25 @@ import com.github.krukow.clj_ds.PersistentSortedSet;
 import com.github.krukow.clj_lang.PersistentTreeSet;
 
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.collections.IF.SortedSymbolicSet;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
+/**
+ * Implementation of {@link SymbolicSortedSet} based on the Clojure
+ * {@link PersistentSortedSet} class.
+ * 
+ * @author siegel
+ *
+ * @param <T>
+ */
 public class CljSortedSet<T extends SymbolicExpression> extends
-		CommonSymbolicCollection<T> implements SymbolicSet<T> {
+		CommonSortedSet<T> {
 
-	private final static int classCode = CljSortedSet.class.hashCode();
-
+	/**
+	 * The underlying Clojure set which this class wraps.
+	 */
 	private PersistentSortedSet<T> pset;
 
 	private Comparator<T> restrict(final Comparator<? super T> c) {
@@ -27,47 +37,31 @@ public class CljSortedSet<T extends SymbolicExpression> extends
 		};
 	}
 
+	/**
+	 * Instantiates new CljSortedSet wrapping the given Clojure pset.
+	 * 
+	 * @param pset
+	 *            Clojure persistent set
+	 */
 	public CljSortedSet(PersistentSortedSet<T> pset) {
-		super(SymbolicCollectionKind.SET);
+		super();
 		this.pset = pset;
 	}
 
+	/**
+	 * Creates new empty sorted set using given comparator.
+	 * 
+	 * @param comparator
+	 *            element comparator
+	 */
 	public CljSortedSet(Comparator<? super T> comparator) {
-		super(SymbolicCollectionKind.SET);
+		super();
 		this.pset = PersistentTreeSet.create(restrict(comparator), null);
 	}
 
 	@Override
 	public int size() {
 		return pset.size();
-	}
-
-	@Override
-	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer result = new StringBuffer();
-		boolean first = true;
-
-		if (atomize)
-			result.append("{");
-
-		for (T element : this) {
-			if (first)
-				first = false;
-			else
-				result.append(",");
-			result.append(element.toStringBuffer(false));
-		}
-		if (atomize)
-			result.append("}");
-		return result;
-	}
-
-	@Override
-	public StringBuffer toStringBufferLong() {
-		StringBuffer result = new StringBuffer("SortedSet");
-
-		result.append(toStringBuffer(true));
-		return result;
 	}
 
 	@Override
@@ -81,22 +75,17 @@ public class CljSortedSet<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public boolean isSorted() {
-		return true;
-	}
-
-	@Override
 	public Comparator<T> comparator() {
 		return pset.comparator();
 	}
 
 	@Override
-	public SymbolicSet<T> add(T element) {
+	public SortedSymbolicSet<T> add(T element) {
 		return new CljSortedSet<T>(pset.plus(element));
 	}
 
 	@Override
-	public SymbolicSet<T> addAll(SymbolicSet<? extends T> set) {
+	public SortedSymbolicSet<T> addAll(SymbolicSet<? extends T> set) {
 		PersistentSortedSet<T> result = pset;
 
 		for (T element : set)
@@ -105,12 +94,12 @@ public class CljSortedSet<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public SymbolicSet<T> remove(T element) {
+	public SortedSymbolicSet<T> remove(T element) {
 		return new CljSortedSet<T>(pset.minus(element));
 	}
 
 	@Override
-	public SymbolicSet<T> removeAll(SymbolicSet<? extends T> set) {
+	public SortedSymbolicSet<T> removeAll(SymbolicSet<? extends T> set) {
 		PersistentSortedSet<T> result = pset;
 
 		for (T element : set)
@@ -119,7 +108,7 @@ public class CljSortedSet<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public SymbolicSet<T> keepOnly(SymbolicSet<? extends T> set) {
+	public SortedSymbolicSet<T> keepOnly(SymbolicSet<? extends T> set) {
 		@SuppressWarnings("unchecked")
 		SymbolicSet<T> theSet = (SymbolicSet<T>) set;
 		PersistentSortedSet<T> result = pset;
@@ -127,27 +116,18 @@ public class CljSortedSet<T extends SymbolicExpression> extends
 		for (T element : pset)
 			if (!theSet.contains(element))
 				result = result.minus(element);
-
 		return new CljSortedSet<T>(result);
 	}
 
-	/**
-	 * Sorted set comes first, then unsorted. This is sorted, so if other is
-	 * unsorted, this comes first.
-	 */
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
 		SymbolicSet<T> that = (SymbolicSet<T>) o;
 
-		return that.isSorted() && pset.equals(((CljSortedSet<T>) o).pset);
-	}
-
-	/**
-	 * Sorted get -.
-	 */
-	@Override
-	protected int computeHashCode() {
-		return classCode ^ pset.hashCode();
+		if (that instanceof CljSortedSet<?>) {
+			return pset.equals(((CljSortedSet<T>) o).pset);
+		} else {
+			return super.collectionEquals(o);
+		}
 	}
 
 	@Override

@@ -3,22 +3,21 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.collections.IF;
 
-import java.util.Comparator;
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
@@ -88,21 +87,6 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	boolean isEmpty();
 
 	/**
-	 * Is this a map whose keys are sorted?
-	 * 
-	 * @return true iff this is a sorted map
-	 */
-	boolean isSorted();
-
-	/**
-	 * If this map is sorted, returns the comparator used to sort the keys,
-	 * otherwise returns null.
-	 * 
-	 * @return the key comparator or null
-	 */
-	Comparator<? super K> comparator();
-
-	/**
 	 * Returns a symbolic map equivalent to the given one except that the entry
 	 * for the given key is modified or created so to use the given value. An
 	 * entry for the given key may or may not exist in the old map.
@@ -117,7 +101,9 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	SymbolicMap<K, V> put(K key, V value);
 
 	/**
-	 * Remove entry with given key (noop if key is not present in map).
+	 * Returns a map obtained by removing the entry with the given key, if there
+	 * is one. If there is no entry with the given key, the map returned will be
+	 * equal to this one.
 	 * 
 	 * @param key
 	 *            a symbolic expression key
