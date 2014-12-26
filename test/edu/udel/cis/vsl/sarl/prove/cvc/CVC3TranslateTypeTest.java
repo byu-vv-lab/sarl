@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import cvc3.Type;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
@@ -24,15 +26,15 @@ import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
 public class CVC3TranslateTypeTest {
-	
+
 	// Static fields: instantiated once and used for all tests...
 	private static PrintStream out = System.out;
 	private static FactorySystem factorySystem = PreUniverses
 			.newIdealFactorySystem();
 	private static PreUniverse universe = PreUniverses
 			.newPreUniverse(factorySystem);
-//	private static ExpressionFactory expressionFactory = factorySystem
-//			.expressionFactory();
+	// private static ExpressionFactory expressionFactory = factorySystem
+	// .expressionFactory();
 	// types
 	private static SymbolicRealType realType = universe.realType();
 	private static SymbolicIntegerType intType = universe.integerType();
@@ -43,7 +45,7 @@ public class CVC3TranslateTypeTest {
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
 	private ValidityChecker vc;
-	
+
 	/**
 	 * Set up each test. This method is run before each test.
 	 * 
@@ -51,21 +53,23 @@ public class CVC3TranslateTypeTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
-		cvcProver = (CVC3TheoremProver) proverFactory
-				.newProver(universe.trueExpression());
+		proverFactory = Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
+		cvcProver = (CVC3TheoremProver) proverFactory.newProver(universe
+				.trueExpression());
 		vc = cvcProver.validityChecker();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	/**
-	 * testTranslateTupleType creates cvc3 tuples and creates an array list of their types.
-	 * Their types should correspond to another array list of the expected cvc3 types.
+	 * testTranslateTupleType creates cvc3 tuples and creates an array list of
+	 * their types. Their types should correspond to another array list of the
+	 * expected cvc3 types.
 	 */
-	
+
 	@Test
 	public void testTranslateTupleType() {
 		// cvc3 int array (with int index type)
@@ -73,13 +77,13 @@ public class CVC3TranslateTypeTest {
 		// give extent, along with array type in a tuple
 		Type expected = vc.tupleType(vc.intType(), intArrayDataType);
 		Type translateResult = cvcProver.translateType(intArrayType);
-		
+
 		// diagnostics
 		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
 		assertEquals(expected, translateResult);
-		
+
 		// cvc3 tuple
 		List<SymbolicType> typesList = new ArrayList<SymbolicType>();
 		typesList.add(intType);
@@ -89,81 +93,81 @@ public class CVC3TranslateTypeTest {
 		StringObject name = universe.stringObject("twoIntRealTuple");
 		SymbolicType twoIntRealTupleType = universe.tupleType(name, types);
 		translateResult = cvcProver.translateType(twoIntRealTupleType);
-		
+
 		List<Type> cvc3Types = new ArrayList<Type>();
 		cvc3Types.add(vc.intType());
 		cvc3Types.add(vc.intType());
 		cvc3Types.add(vc.realType());
 		expected = vc.tupleType(cvc3Types);
-		
+
 		// diagnostics
 		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
 		assertEquals(expected, translateResult);
 	}
-	
+
 	/**
-	 * testTranslateFunctionType creates a list of cvc3types using intType and boolType and expected types from
-	 * the validity checker.
+	 * testTranslateFunctionType creates a list of cvc3types using intType and
+	 * boolType and expected types from the validity checker.
 	 */
-	
+
 	@Test
 	public void testTranslateFunctionType() {
-		// int -> int 
+		// int -> int
 		List<SymbolicType> typesList = new ArrayList<>();
 		typesList.add(intType);
 		SymbolicType intFunType = universe.functionType(typesList, intType);
 		Type translateResult = cvcProver.translateType(intFunType);
-		
+
 		List<Type> cvc3Types = new ArrayList<>();
 		cvc3Types.add(vc.intType());
 		Type expected = vc.funType(cvc3Types, vc.intType());
-		
+
 		// diagnostics
 		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
-		assertEquals(expected, translateResult);		
-		
+		assertEquals(expected, translateResult);
+
 		// int, int -> bool
 		typesList.add(intType);
 		intFunType = universe.functionType(typesList, boolType);
 		translateResult = cvcProver.translateType(intFunType);
-		
+
 		cvc3Types.add(vc.intType());
 		expected = vc.funType(cvc3Types, vc.boolType());
-		
+
 		// diagnostics
 		out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
 		assertEquals(expected, translateResult);
 	}
-	
+
 	/**
-	 * testTranslateFunctionType creates a list of cvc3types using union and expected types from
-	 * the validity checker.
+	 * testTranslateFunctionType creates a list of cvc3types using union and
+	 * expected types from the validity checker.
 	 */
-	
+
 	@Test
 	public void testTranslateUnionType() {
 		List<SymbolicType> typesList = new ArrayList<>();
 		typesList.add(intType);
 		typesList.add(realType);
-		SymbolicType intRealUnionType = universe
-				.unionType(universe.stringObject("union"), typesList);
+		SymbolicType intRealUnionType = universe.unionType(
+				universe.stringObject("union"), typesList);
 		Type translateResult = cvcProver.translateType(intRealUnionType);
-		
+
 		List<Type> cvc3Types = new ArrayList<>();
 		cvc3Types.add(vc.intType());
 		cvc3Types.add(vc.realType());
-//		Type expected = vc... how do I make a union type?
-		
+		// Type expected = vc... how do I make a union type?
+
 		// diagnostics
-//		out.println("expected: " + expected);
+		// out.println("expected: " + expected);
 		out.println("translateResult: " + translateResult);
 		out.println();
 	}
-	
+
 }

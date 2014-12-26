@@ -6,11 +6,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
-public class CVC4TheoremProverFactory implements TheoremProverFactory {
-
-	static {
-		System.loadLibrary("cvc4jni");
-	}
+public class RobustCVC4TheoremProverFactory implements TheoremProverFactory {
 
 	/**
 	 * The symbolic universe used for managing symbolic expressions. Initialized
@@ -18,14 +14,17 @@ public class CVC4TheoremProverFactory implements TheoremProverFactory {
 	 */
 	private PreUniverse universe;
 
+	private Prover prover;
+
 	/**
 	 * Constructs a CVC4 theorem prover factory with the given symbolic
 	 * universe.
 	 * 
 	 * @param universe
 	 */
-	public CVC4TheoremProverFactory(PreUniverse universe, Prover prover) {
+	public RobustCVC4TheoremProverFactory(PreUniverse universe, Prover prover) {
 		this.universe = universe;
+		this.prover = prover;
 	}
 
 	/**
@@ -36,6 +35,6 @@ public class CVC4TheoremProverFactory implements TheoremProverFactory {
 	 */
 	@Override
 	public TheoremProver newProver(BooleanExpression context) {
-		return new CVC4TheoremProver(universe, context);
+		return new RobustCVC4TheoremProver(universe, context, prover);
 	}
 }

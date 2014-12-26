@@ -13,6 +13,8 @@ import org.junit.Test;
 import cvc3.Expr;
 import cvc3.QueryResult;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -59,7 +61,8 @@ public class CVC3TranslateFunctionTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		proverFactory = Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
@@ -40,12 +41,13 @@ public class TheoremProverBenchmark {
 			.symbolicConstant(universe.stringObject("b"), realType);
 
 	public final static TheoremProverFactory proverFactory = Prove
-			.newCVC3TheoremProverFactory(universe);
+			.newMultiProverFactory(universe, Configurations.CONFIG);
 
 	public static CVC3TheoremProver cvcProver = (CVC3TheoremProver) proverFactory
 			.newProver(booleanExprTrue);
 
-	public final static ExpressionFactory expressionFactory = factorySystem.expressionFactory();
+	public final static ExpressionFactory expressionFactory = factorySystem
+			.expressionFactory();
 
 	public final static ValidityChecker vc = cvcProver.validityChecker();
 
@@ -54,50 +56,54 @@ public class TheoremProverBenchmark {
 		long startTime = System.nanoTime(), stopTime;
 		int scaleN = 0;
 		int scaleFactor = 50;
-		while (scaleN < N)
-		{
+		while (scaleN < N) {
 			scaleN += scaleFactor;
 			System.out.println("Building constants...");
 			List<NumericSymbolicConstant> expressions = new ArrayList<NumericSymbolicConstant>();
-			for(int i = 0; i < scaleN; i++) {
-				NumericSymbolicConstant x = (NumericSymbolicConstant)universe
-						.symbolicConstant(universe.stringObject("x" + i), universe.integerType());
+			for (int i = 0; i < scaleN; i++) {
+				NumericSymbolicConstant x = (NumericSymbolicConstant) universe
+						.symbolicConstant(universe.stringObject("x" + i),
+								universe.integerType());
 				expressions.add(x);
-				//			double percentDone = (i / N) * 100;
-				//			System.out.println(percentDone + "%");
+				// double percentDone = (i / N) * 100;
+				// System.out.println(percentDone + "%");
 			}
 			System.out.println("Building context expression...");
 			List<BooleanExpression> boolExpressions = new ArrayList<BooleanExpression>();
-			for(int i = 1; i < expressions.size(); i++) {
-				BooleanExpression xGreaterThanXminusOne = (BooleanExpression)
-						expressionFactory.expression(SymbolicOperator.LESS_THAN,
-								universe.booleanType(),expressions.get(i-1), expressions.get(i));
+			for (int i = 1; i < expressions.size(); i++) {
+				BooleanExpression xGreaterThanXminusOne = (BooleanExpression) expressionFactory
+						.expression(SymbolicOperator.LESS_THAN,
+								universe.booleanType(), expressions.get(i - 1),
+								expressions.get(i));
 				boolExpressions.add(xGreaterThanXminusOne);
-				//			double percentDone = (i / N) * 100;
-				//			System.out.println(percentDone + "%");;
+				// double percentDone = (i / N) * 100;
+				// System.out.println(percentDone + "%");;
 			}
 
-			BooleanExpression reallyBigExpression = universe.and(boolExpressions);
+			BooleanExpression reallyBigExpression = universe
+					.and(boolExpressions);
 
 			System.out.println("Constructing a new prover with the context");
 			long constructorStartTime = System.nanoTime();
-			cvcProver = (CVC3TheoremProver) proverFactory.newProver(reallyBigExpression);
+			cvcProver = (CVC3TheoremProver) proverFactory
+					.newProver(reallyBigExpression);
 			long constructorEndTime = System.nanoTime();
 			System.out.println("Done.");
 
-			long totalConstructorTime = constructorEndTime - constructorStartTime;
+			long totalConstructorTime = constructorEndTime
+					- constructorStartTime;
 
 			long totalQueryTime = 0;
 			System.out.println("Querying CVC3...");
-			for(int i = 1; i < expressions.size(); i++) {
-				BooleanExpression lessThanPrevious = universe.lessThan(expressions.get(i-1),
-						expressions.get(i));
+			for (int i = 1; i < expressions.size(); i++) {
+				BooleanExpression lessThanPrevious = universe.lessThan(
+						expressions.get(i - 1), expressions.get(i));
 
 				long queryStartTime = System.nanoTime();
 				cvcProver.valid(lessThanPrevious);
 				long queryEndTime = System.nanoTime();
 
-				//			System.out.println(((i / N) * 100) + "%");
+				// System.out.println(((i / N) * 100) + "%");
 				totalQueryTime += (queryEndTime - queryStartTime);
 			}
 
@@ -110,18 +116,17 @@ public class TheoremProverBenchmark {
 			System.out.println("Constructor: " + constructorTime + " seconds");
 			System.out.println("CVC3 Queries: " + queryTime + " seconds");
 
-			benchmarkResults.add(scaleN + "," + totalTime + "," + constructorTime + "," + queryTime);
+			benchmarkResults.add(scaleN + "," + totalTime + ","
+					+ constructorTime + "," + queryTime);
 		}
-		try
-		{
-			FileWriter f = new FileWriter(System.getProperty("user.home") + "/benchmarkResults.csv");
+		try {
+			FileWriter f = new FileWriter(System.getProperty("user.home")
+					+ "/benchmarkResults.csv");
 			for (String result : benchmarkResults)
 				f.append(result + "\n");
 			f.flush();
 			f.close();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -13,6 +13,8 @@ import cvc3.Expr;
 import cvc3.QueryResult;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -66,7 +68,8 @@ public class CVC3TranslateMathTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		proverFactory = Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();
@@ -94,9 +97,15 @@ public class CVC3TranslateMathTest {
 		Expr e = cvcProver.translate(x);
 		Expr f = cvcProver.translate(y);
 		Expr q2 = cvcProver.translate(q);
-		Expr r2= cvcProver.translate(r);
+		Expr r2 = cvcProver.translate(r);
 
-		Expr equationOne = vc.eqExpr(e, vc.plusExpr(r2, vc.multExpr(f, q2))); // e2 = f * q2 + r2
+		Expr equationOne = vc.eqExpr(e, vc.plusExpr(r2, vc.multExpr(f, q2))); // e2
+																				// =
+																				// f
+																				// *
+																				// q2
+																				// +
+																				// r2
 		Expr equationTwo = vc.leExpr(vc.ratExpr(0), r2); // 0 < r2
 		Expr equationThree = vc.ltExpr(r2, f); // r2 < f
 

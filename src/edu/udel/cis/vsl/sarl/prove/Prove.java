@@ -24,14 +24,18 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.common.CommonModelResult;
 import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
+import edu.udel.cis.vsl.sarl.prove.common.MultiProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC4TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVC4TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.z3.Z3TheoremProverFactory;
 
 public class Prove {
@@ -45,19 +49,46 @@ public class Prove {
 	public final static ValidityResult RESULT_MAYBE = new CommonValidityResult(
 			ResultType.MAYBE);
 
-	public static TheoremProverFactory newCVC3TheoremProverFactory(
-			PreUniverse universe) {
-		return new CVC3TheoremProverFactory(universe);
+	/**
+	 * Constructs a new theorem prover factory based on the given configuration.
+	 * A resulting prover resolves a query as follows: it starts by using the
+	 * first external prover in the given config. If that result is
+	 * inconclusive, it goes to the next, and so on.
+	 * 
+	 * @param universe
+	 * @param config
+	 * @return
+	 */
+	public static TheoremProverFactory newMultiProverFactory(
+			PreUniverse universe, SARLConfig config) {
+		int numProvers = config.getNumProvers();
+		TheoremProverFactory[] factories = new TheoremProverFactory[numProvers];
+		int count = 0;
+
+		for (Prover prover : config.getProvers()) {
+			factories[count] = newProverFactory(universe, prover);
+			count++;
+		}
+		return new MultiProverFactory(factories);
 	}
 
-	public static TheoremProverFactory newCVC4TheoremProverFactory(
-			PreUniverse universe) {
-		return new CVC4TheoremProverFactory(universe);
-	}
-
-	public static TheoremProverFactory newZ3TheoremProverFactory(
-			PreUniverse universe) {
-		return new Z3TheoremProverFactory(universe);
+	public static TheoremProverFactory newProverFactory(PreUniverse universe,
+			Prover prover) {
+		switch (prover.getKind()) {
+		case CVC3_API:
+			return new CVC3TheoremProverFactory(universe, prover);
+		case CVC4:
+			return new RobustCVC4TheoremProverFactory(universe, prover);
+		case CVC4_API:
+			return new CVC4TheoremProverFactory(universe, prover);
+		case Z3_API:
+			return new Z3TheoremProverFactory(universe, prover);
+		case CVC3:
+		case Z3:
+		default:
+			throw new SARLInternalException("Unknown kind of theorem prover: "
+					+ prover.getKind());
+		}
 	}
 
 	public static ValidityResult validityResult(ResultType type) {

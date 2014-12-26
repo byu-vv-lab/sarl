@@ -9,12 +9,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -25,16 +25,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
 // TODO: set this up like the QuantifierTest.
-// It should use on the interfaces.
+// It should use only the interfaces.
 // These tests deal with the model finder for queries
 // which are not valid.
 // They should check that prover answers "no" to validOrModel,
 // then examine the model and make sure it does not satisfy
 // the query.
-
-// until this class stops throwing exception, run in separate
-// Java virtual machine:
-@RunWith(JUnit4.class)
 public class ModelTest {
 
 	// Static fields: instantiated once and used for all tests...
@@ -64,27 +60,11 @@ public class ModelTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-
 		provers = new LinkedList<TheoremProver>();
-		{
-			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
-					.newProver(context);
-
-			// TheoremProver cvc4prover =
-			// Prove.newCVC4TheoremProverFactory(universe)
-			// .newProver(context);
-
-			// prover.setOutput(System.out); // for debugging
-			// cvc4prover.setOutput(System.out);
-
-			provers.add(prover);
-			// provers.add(cvc4prover); // adds cvc3 and cvc4 theorem prover to
-			// the collection
+		for (Prover info : Configurations.findConfiguration().getProvers()) {
+			provers.add(Prove.newProverFactory(universe, info).newProver(
+					context));
 		}
-
-		// TODO: until this is working, don't commit it, as it causes
-		// subsequent tests to crash...
-
 	}
 
 	@Before

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
+import edu.udel.cis.vsl.sarl.IF.config.Prover;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
@@ -38,15 +39,18 @@ public class CVC3TheoremProverFactory implements TheoremProverFactory {
 	private PreUniverse universe;
 
 	/**
-	 * Constructs a CVC3 theorem prover factory with the given symbolic universe.
+	 * Constructs a CVC3 theorem prover factory with the given symbolic
+	 * universe.
+	 * 
 	 * @param universe
 	 */
-	public CVC3TheoremProverFactory(PreUniverse universe) {
+	public CVC3TheoremProverFactory(PreUniverse universe, Prover prover) {
 		this.universe = universe;
 	}
 
 	/**
 	 * This is where the factory produces instances with a given context
+	 * 
 	 * @param context
 	 * @return a new CVC3 theorem prover
 	 */

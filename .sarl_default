@@ -1,0 +1,39 @@
+# This is a SARL configuration file.  It specifies the full path
+# to each automated theorem prover that may be used by SARL.
+# It is needed for executing the SARL test suite.
+# Other applications that use SARL as a library do not have
+# to use a SARL configuration file.  They can just specify
+# the paths using the SARL API.
+#
+# The format: one line for each tool.
+# The line has the form:
+#
+# alias-list : kind : path : version
+#
+# The alias-list is a comma-separated list of strings.
+# All of the aliases in the list refer to the same prover.
+# The kind refers to the kind of input language accepted
+# by the tool.  It is one of the following: CVC3, CVC4.
+# (More coming soon.)
+# The path is the full path to the executable tool.  The
+# version is the version string of that tool.  It is possible
+# to have multiple instances of a single tool by using different
+# aliases for each.
+# White space is ignored (except for the newlines), and
+# any line starting with '#' is ignored.
+# Example:
+#
+# cvc3,cvc3a : CVC3 : /opt/vsl/bin/cvc3 : 3.192
+# cvc3b : CVC3: /usr/local/bin/cvc3 : 2.78
+# cvc4,cvc4a : CVC4 : /usr/local/bin/cvc4 : 1.3
+#
+# SARL will look first in the current working directory
+# for a file named .sarl.  If it doesn't find that,
+# it will look in the same directory for .sarl_default.
+# If it doesn't find that, it will look in the user's
+# home directory for .sarl, then in the user's home
+# directory for sarl_default.
+
+cvc4x : CVC4     : /opt/local/bin/cvc4 : 1.4
+# cvc4a : CVC4_API :                     : 1.4
+cvc3  : CVC3_API :                     : UNKNOWN

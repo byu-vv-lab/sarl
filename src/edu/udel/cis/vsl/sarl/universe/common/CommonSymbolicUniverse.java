@@ -47,7 +47,7 @@ public class CommonSymbolicUniverse extends CommonPreUniverse implements
 
 	/**
 	 * A map from boolean valued symbolic expressions to simplifiers. The
-	 * simplifer corresponding to a key "assumption" will be the simplifier
+	 * simplifier corresponding to a key "assumption" will be the simplifier
 	 * formed from the assumption. The simplifier stores all kinds of data
 	 * obtained by analyzing the assumptions, caches all simplifications made
 	 * under that assumption, and so on. The assumption is typically the

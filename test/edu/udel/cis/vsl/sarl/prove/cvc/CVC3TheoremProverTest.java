@@ -15,6 +15,8 @@ import cvc3.Expr;
 import cvc3.Type;
 import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -50,8 +52,8 @@ public class CVC3TheoremProverTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-
-		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		proverFactory = Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();

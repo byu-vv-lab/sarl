@@ -11,6 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -71,22 +73,11 @@ public class QuantifierTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		universe.setShowProverQueries(true); // for debugging
+		universe.setShowProverQueries(false); // for debugging
 		provers = new LinkedList<TheoremProver>();
-		{
-			TheoremProver prover = Prove.newCVC3TheoremProverFactory(universe)
-					.newProver(context);
-
-			provers.add(prover);
-		}
-		{
-			// debugging:
-			// context = universe.trueExpression();
-
-			TheoremProver cvc4prover = Prove.newCVC4TheoremProverFactory(
-					universe).newProver(context);
-
-			provers.add(cvc4prover);
+		for (Prover info : Configurations.CONFIG.getProvers()) {
+			provers.add(Prove.newProverFactory(universe, info).newProver(
+					context));
 		}
 	}
 

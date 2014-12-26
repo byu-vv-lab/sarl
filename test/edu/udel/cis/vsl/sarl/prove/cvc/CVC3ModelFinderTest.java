@@ -23,6 +23,8 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -98,8 +100,10 @@ public class CVC3ModelFinderTest {
 	public void setUp() throws Exception {
 		provers = new LinkedList<TheoremProver>();
 
-		provers.add(Prove.newCVC3TheoremProverFactory(universe).newProver(
-				context));
+		provers.add(Prove.newProverFactory(
+				universe,
+				Configurations.findConfiguration().getProverWithKind(
+						ProverKind.CVC3_API)).newProver(context));
 	}
 
 	/**

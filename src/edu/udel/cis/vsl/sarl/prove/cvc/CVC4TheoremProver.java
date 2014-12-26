@@ -75,19 +75,39 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
+ * <p>
  * An implementation of TheoremProver using the automated theorem prover CVC4.
  * Transforms a theorem proving query into the language of CVC4, invokes CVC4
  * through its Java interface, and interprets the output.
+ * </p>
  * 
+ * <p>
  * Some notes about CVC4:
+ * </p>
  * 
+ * <p>
  * Documentation of mkVar: "This variable is guaranteed to be distinct from
  * every variable thus far in the ExprManager, even if it shares a name with
  * another; this is to support any kind of scoping policy on top of ExprManager.
  * The SymbolTable class can be used to store and lookup symbols by name, if
  * desired." Hence there is no need to re-name variables.
+ * </p>
  * 
- * Think about making all arrays pairs.
+ * <p>
+ * Representation of arrays: an array of incomplete array type is represented as
+ * an ordered pair (tuple) of type [int, array of T], where T is the element
+ * type. The first int is the length of the array. An array of complete array
+ * type is represented as a CVC expression of type array of T. This is because
+ * the incomplete array type does not specify the length of the arrays, so the
+ * length must be encoded in the value (as in Java arrays). The complete array
+ * type does specify the length of every array belonging to that type, so there
+ * is no need to specify the length in the value (as in C arrays).
+ * </p>
+ * 
+ * <p>
+ * MODIFICATION to ABOVE: in this implementation, all arrays are represented as
+ * ordered pairs, whether or not they are complete.
+ * </p>
  * 
  */
 public class CVC4TheoremProver implements TheoremProver {
@@ -655,6 +675,7 @@ public class CVC4TheoremProver implements TheoremProver {
 		length = bigArrayLength(array);
 		index = translate(indexExpression);
 		value = translate(valueExpression);
+		// why always big array? what if already has complete type?
 		result = bigArray(length,
 				em.mkExpr(Kind.STORE, arrayValue, index, value));
 		return result;

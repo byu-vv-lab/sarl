@@ -18,6 +18,8 @@ import org.junit.runners.JUnit4;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -63,14 +65,12 @@ public class AndTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		TheoremProver prover;
-
-		universe.setShowProverQueries(true);
+		universe.setShowProverQueries(false);
 		provers = new LinkedList<TheoremProver>();
-		prover = Prove.newCVC3TheoremProverFactory(universe).newProver(context);
-		provers.add(prover);
-		prover = Prove.newCVC4TheoremProverFactory(universe).newProver(context);
-		provers.add(prover);
+		for (Prover info : Configurations.findConfiguration().getProvers()) {
+			provers.add(Prove.newProverFactory(universe, info).newProver(
+					context));
+		}
 	}
 
 	@Before

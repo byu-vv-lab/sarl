@@ -12,6 +12,8 @@ import org.junit.Test;
 import cvc3.Expr;
 import cvc3.QueryResult;
 import cvc3.ValidityChecker;
+import edu.udel.cis.vsl.sarl.IF.config.Configurations;
+import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -53,10 +55,10 @@ public class CVC3TranslateReadWriteArrayTest {
 	// SymbolicConstants
 	private static SymbolicConstant x = universe.symbolicConstant(
 			universe.stringObject("x"), intType);
-//	private static SymbolicConstant y = universe.symbolicConstant(
-//			universe.stringObject("y"), intType);
-//	private static SymbolicConstant z = universe.symbolicConstant(
-//			universe.stringObject("z"), intType);
+	// private static SymbolicConstant y = universe.symbolicConstant(
+	// universe.stringObject("y"), intType);
+	// private static SymbolicConstant z = universe.symbolicConstant(
+	// universe.stringObject("z"), intType);
 	// Instance fields: instantiated before each test is run...
 	private TheoremProverFactory proverFactory;
 	private CVC3TheoremProver cvcProver;
@@ -69,7 +71,8 @@ public class CVC3TranslateReadWriteArrayTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		proverFactory = Prove.newCVC3TheoremProverFactory(universe);
+		proverFactory = Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 		vc = cvcProver.validityChecker();
@@ -108,7 +111,6 @@ public class CVC3TranslateReadWriteArrayTest {
 		assertEquals(expected, expr);
 
 	}
-	
 
 	/**
 	 * testTranslateArrayWriteIncomplete uses ARRAY_WRITE and ARRAY_Read to
@@ -129,7 +131,6 @@ public class CVC3TranslateReadWriteArrayTest {
 				SymbolicOperator.ARRAY_WRITE, a.type(), a, x, five);
 		SymbolicExpression s2 = expressionFactory.expression(
 				SymbolicOperator.ARRAY_READ, a.type(), s1, x);
-		
 
 		Expr expr2 = cvcProver.translate(s2);
 

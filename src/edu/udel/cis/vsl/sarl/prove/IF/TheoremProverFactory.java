@@ -36,5 +36,14 @@ public interface TheoremProverFactory {
 	 * @return a theorem prover operating under the given context
 	 */
 	TheoremProver newProver(BooleanExpression context);
+	
+	// for each prover, need: kind, path, alias, version string,
+	// class NativeProver
+	
+	// getNumNativeProvers, getNativeProver(i)
+	
+	//
+	
+	// TheoremProver newProver()
 
 }
