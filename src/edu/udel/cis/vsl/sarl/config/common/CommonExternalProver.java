@@ -2,40 +2,31 @@ package edu.udel.cis.vsl.sarl.config.common;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import edu.udel.cis.vsl.sarl.IF.config.Prover;
 
 public class CommonExternalProver implements Prover {
 
-	private Set<String> aliases;
+	private Set<String> aliases = new HashSet<>();
 
-	private ProverKind kind;
+	private List<String> options = new LinkedList<>();
 
-	private File path;
+	private ProverKind kind = null;
 
-	private String version;
+	private File path = null;
 
-	public CommonExternalProver(String[] aliases, ProverKind kind,
-			File path, String version) {
-		this.aliases = new HashSet<String>();
+	private String version = null;
 
-		for (String alias : aliases)
-			this.aliases.add(alias);
-		this.kind = kind;
-		this.path = path;
-		this.version = version;
-	}
+	private double timeout = -1;
 
-	public CommonExternalProver(Iterable<String> aliases,
-			ProverKind kind, File path, String version) {
-		this.aliases = new HashSet<String>();
+	private boolean showQueries = false;
 
-		for (String alias : aliases)
-			this.aliases.add(alias);
-		this.kind = kind;
-		this.path = path;
-		this.version = version;
+	public CommonExternalProver() {
+
 	}
 
 	@Override
@@ -60,18 +51,61 @@ public class CommonExternalProver implements Prover {
 
 	@Override
 	public String toString() {
-		String result = "Prover[";
-		boolean first = true;
+		Iterator<String> iter = aliases.iterator();
 
-		for (String alias : aliases) {
-			if (first)
-				first = false;
-			else
-				result += ",";
-			result += alias;
-		}
-		result += "; " + kind + "; " + version + "; " + path + "]";
-		return result;
+		if (iter.hasNext())
+			return iter.next();
+		return "Prover";
+	}
+
+	@Override
+	public boolean addAlias(String value) {
+		return aliases.add(value);
+	}
+
+	@Override
+	public List<String> getOptions() {
+		return options;
+	}
+
+	@Override
+	public void addOption(String value) {
+		options.add(value);
+	}
+
+	@Override
+	public double getTimeout() {
+		return timeout;
+	}
+
+	@Override
+	public void setTimeout(double value) {
+		this.timeout = value;
+	}
+
+	@Override
+	public void setKind(ProverKind value) {
+		this.kind = value;
+	}
+
+	@Override
+	public void setPath(File value) {
+		this.path = value;
+	}
+
+	@Override
+	public void setVersion(String value) {
+		this.version = value;
+	}
+
+	@Override
+	public boolean getShowQueries() {
+		return showQueries;
+	}
+
+	@Override
+	public void setShowQueries(boolean value) {
+		this.showQueries = value;
 	}
 
 }

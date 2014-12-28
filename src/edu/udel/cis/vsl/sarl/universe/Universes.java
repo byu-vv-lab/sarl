@@ -66,7 +66,7 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newIdealUniverse() {
-		return newIdealUniverse(Configurations.findConfiguration(), null);
+		return newIdealUniverse(Configurations.CONFIG, null);
 	}
 
 	public static SymbolicUniverse newMathUniverse(SARLConfig config,
@@ -86,7 +86,7 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newMathUniverse() {
-		return newMathUniverse(Configurations.findConfiguration(), null);
+		return newMathUniverse(Configurations.CONFIG, null);
 	}
 
 	public static SymbolicUniverse newHerbrandUniverse(SARLConfig config,
@@ -106,7 +106,7 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newHerbrandUniverse() {
-		return newHerbrandUniverse(Configurations.findConfiguration(), null);
+		return newHerbrandUniverse(Configurations.CONFIG, null);
 	}
 
 	public static SymbolicUniverse newStandardUniverse(SARLConfig config,
@@ -135,7 +135,7 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newStandardUniverse() {
-		return newStandardUniverse(Configurations.findConfiguration(), null);
+		return newStandardUniverse(Configurations.CONFIG, null);
 	}
 
 	// public static TrigonometricUniverse newTrigonometricUniverse() {

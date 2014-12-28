@@ -67,7 +67,7 @@ public class AndTest {
 	public static void setUpBeforeClass() throws Exception {
 		universe.setShowProverQueries(false);
 		provers = new LinkedList<TheoremProver>();
-		for (Prover info : Configurations.findConfiguration().getProvers()) {
+		for (Prover info : Configurations.CONFIG.getProvers()) {
 			provers.add(Prove.newProverFactory(universe, info).newProver(
 					context));
 		}

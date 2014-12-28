@@ -100,10 +100,9 @@ public class CVC3ModelFinderTest {
 	public void setUp() throws Exception {
 		provers = new LinkedList<TheoremProver>();
 
-		provers.add(Prove.newProverFactory(
-				universe,
-				Configurations.findConfiguration().getProverWithKind(
-						ProverKind.CVC3_API)).newProver(context));
+		provers.add(Prove.newProverFactory(universe,
+				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API))
+				.newProver(context));
 	}
 
 	/**

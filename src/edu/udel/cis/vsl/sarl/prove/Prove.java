@@ -69,7 +69,7 @@ public class Prove {
 			factories[count] = newProverFactory(universe, prover);
 			count++;
 		}
-		return new MultiProverFactory(factories);
+		return new MultiProverFactory(universe, factories);
 	}
 
 	public static TheoremProverFactory newProverFactory(PreUniverse universe,
@@ -85,6 +85,11 @@ public class Prove {
 			return new Z3TheoremProverFactory(universe, prover);
 		case CVC3:
 		case Z3:
+		
+			// these will be found by the configuration maker,
+			// so what to do with them until they are implemented
+			// throw some reasonable 
+			
 		default:
 			throw new SARLInternalException("Unknown kind of theorem prover: "
 					+ prover.getKind());

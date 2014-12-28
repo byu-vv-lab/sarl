@@ -18,7 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl;
 
-import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
 import edu.udel.cis.vsl.sarl.IF.config.Prover;
@@ -39,13 +38,6 @@ import edu.udel.cis.vsl.sarl.universe.Universes;
  */
 public class SARL {
 
-	// would like option to specify either a specific prover or
-	// an entire config
-
-	// prover
-	// config
-	// nothing
-
 	/**
 	 * Returns a new standard symbolic universe, which supports all symbolic
 	 * types, including Herbrand integer and real types, and ideal
@@ -54,6 +46,15 @@ public class SARL {
 	 * @param config
 	 *            a SARL configuration object providing information on the
 	 *            external theorem provers available to SARL
+	 * @param prover
+	 *            either one of the {@link Prover} objects in the configuration,
+	 *            or <code>null</code>. If non-null, this specifies the sole
+	 *            prover to use for resolving queries. If null, a query will be
+	 *            resolved by starting with the first prover in the
+	 *            configuration, and, if that result is inconclusive, going to
+	 *            the second, and so on, until either a conclusive result is
+	 *            achieved or every prover in the configuration has been
+	 *            exhausted.
 	 * 
 	 * @return a new standard symbolic universe
 	 */
@@ -70,6 +71,15 @@ public class SARL {
 	 * @param config
 	 *            a SARL configuration object providing information on the
 	 *            external theorem provers available to SARL
+	 * @param prover
+	 *            either one of the {@link Prover} objects in the configuration,
+	 *            or <code>null</code>. If non-null, this specifies the sole
+	 *            prover to use for resolving queries. If null, a query will be
+	 *            resolved by starting with the first prover in the
+	 *            configuration, and, if that result is inconclusive, going to
+	 *            the second, and so on, until either a conclusive result is
+	 *            achieved or every prover in the configuration has been
+	 *            exhausted.
 	 * @return an ideal symbolic universe
 	 */
 	public static SymbolicUniverse newIdealUniverse(SARLConfig config,
@@ -86,18 +96,22 @@ public class SARL {
 	 * 
 	 * <p>
 	 * The SARL configuration is determined by looking for a SARL configuration
-	 * file. First, looks in the current working directory for a file named
-	 * <code>.sarl</code>, then in that directory for a file named
-	 * <code>.sarl_default</code>, then repeats in user's home directory.
+	 * file. See {@link Configurations#findOrMakeConfiguration()} for details on
+	 * how the configuration file is found.
+	 * </p>
+	 * 
+	 * <p>
+	 * A query will be resolved by starting with the first prover in the
+	 * configuration, and, if that result is inconclusive, going to the second,
+	 * and so on, until either a conclusive result is achieved or every prover
+	 * in the configuration has been exhausted.
 	 * </p>
 	 * 
 	 * @return a new standard symbolic universe
 	 */
 	public static SymbolicUniverse newStandardUniverse() {
-		SARLConfig config = Configurations.findConfiguration();
+		SARLConfig config = Configurations.findOrMakeConfiguration();
 
-		if (config == null)
-			throw new SARLException("Could not find SARL configuration file");
 		return Universes.newStandardUniverse(config, null);
 
 	}
@@ -111,18 +125,22 @@ public class SARL {
 	 * 
 	 * <p>
 	 * The SARL configuration is determined by looking for a SARL configuration
-	 * file. First, looks in the current working directory for a file named
-	 * <code>.sarl</code>, then in that directory for a file named
-	 * <code>.sarl_default</code>, then repeats in user's home directory.
+	 * file. See {@link Configurations#findOrMakeConfiguration()} for details on
+	 * how the configuration file is found.
+	 * </p>
+	 * 
+	 * <p>
+	 * A query will be resolved by starting with the first prover in the
+	 * configuration, and, if that result is inconclusive, going to the second,
+	 * and so on, until either a conclusive result is achieved or every prover
+	 * in the configuration has been exhausted.
 	 * </p>
 	 *
 	 * @return an ideal symbolic universe
 	 */
 	public static SymbolicUniverse newIdealUniverse() {
-		SARLConfig config = Configurations.findConfiguration();
+		SARLConfig config = Configurations.findOrMakeConfiguration();
 
-		if (config == null)
-			throw new SARLException("Could not find SARL configuration file");
 		return Universes.newIdealUniverse(config, null);
 	}
 }

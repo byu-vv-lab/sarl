@@ -6,7 +6,7 @@
 	<classpathentry kind="src" path="demos"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="var" path="VSL/lib/libcvc3.jar" sourcepath="/VSL/src/cvc3-2.4.1-sources.jar"/>
+	<classpathentry kind="var" path="VSL/lib/libcvc3.jar" sourcepath="/VSL/src/cvc3-sources.jar"/>
 	<classpathentry kind="var" path="VSL/lib/pcollections.jar" sourcepath="/VSL/src/pcollections-2.1.2-sources.jar"/>
 	<classpathentry kind="var" path="VSL/lib/CVC4.jar" sourcepath="/VSL/src/cvc4-1.2-sources.jar"/>
 	<classpathentry kind="var" path="VSL/lib/clj-ds.jar" sourcepath="/VSL/src/clj-ds-sources.jar"/>

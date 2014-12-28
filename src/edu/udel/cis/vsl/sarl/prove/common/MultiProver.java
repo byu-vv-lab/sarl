@@ -4,44 +4,45 @@ import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
 public class MultiProver implements TheoremProver {
 
-	TheoremProver[] provers;
+	private PreUniverse universe;
 
-	public MultiProver(TheoremProver[] provers) {
+	private TheoremProver[] provers;
+
+	public MultiProver(PreUniverse universe, TheoremProver[] provers) {
+		this.universe = universe;
 		this.provers = provers;
-		assert provers.length >= 1;
 	}
 
 	@Override
 	public PreUniverse universe() {
-		return provers[0].universe();
+		return universe;
 	}
 
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
-		ValidityResult result = null;
-
 		for (TheoremProver prover : provers) {
-			result = prover.valid(predicate);
+			ValidityResult result = prover.valid(predicate);
+
 			if (result.getResultType() != ResultType.MAYBE)
-				break;
+				return result;
 		}
-		return result;
+		return Prove.RESULT_MAYBE;
 	}
 
 	@Override
 	public ValidityResult validOrModel(BooleanExpression predicate) {
-		ValidityResult result = null;
-
 		for (TheoremProver prover : provers) {
-			result = prover.validOrModel(predicate);
+			ValidityResult result = prover.validOrModel(predicate);
+
 			if (result.getResultType() != ResultType.MAYBE)
-				break;
+				return result;
 		}
-		return result;
+		return Prove.RESULT_MAYBE;
 	}
 
 }

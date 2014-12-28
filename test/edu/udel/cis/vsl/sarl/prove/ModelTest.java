@@ -61,7 +61,7 @@ public class ModelTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		provers = new LinkedList<TheoremProver>();
-		for (Prover info : Configurations.findConfiguration().getProvers()) {
+		for (Prover info : Configurations.CONFIG.getProvers()) {
 			provers.add(Prove.newProverFactory(universe, info).newProver(
 					context));
 		}
