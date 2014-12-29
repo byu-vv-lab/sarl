@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.StreamTokenizer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -170,22 +172,21 @@ public class ConfigFactory {
 	}
 
 	/**
-	 * Checks that an executable prover actually can be executed and created an
-	 * entry for it in the configuration file specified by the given stream.
+	 * Checks that an executable prover actually can be executed and creates a
+	 * corresponding {@link ProverInfo} object for it.
 	 * 
 	 * @param kind
 	 *            the kind of theorem prover
 	 * @param alias
 	 *            the alias string to use in the configuration entry
-	 * @param stream
-	 *            the stream writing to the configuration file
 	 * @param executableFile
 	 *            the executable theorem prover
-	 * @return <code>true</code> if the prover could be executed correctly and
-	 *         an entry was created, else <code>false</code>
+	 * @return a new {@link ProverInfo} object corresponding to the specified
+	 *         prover, or <code>null</code> if the prover could not be executed
+	 *         correctly
 	 */
-	private static boolean processProver(ProverKind kind, String alias,
-			PrintStream stream, File executableFile) {
+	private static ProverInfo processProver(ProverKind kind, String alias,
+			File executableFile) {
 		String fullPath = executableFile.getAbsolutePath();
 		ProcessBuilder pb = new ProcessBuilder(fullPath, versionCommand(kind));
 		Process process = null;
@@ -203,7 +204,7 @@ public class ConfigFactory {
 
 			if (pos < 0) {
 				out.println("Unexpected output from " + fullPath);
-				return false;
+				return null;
 			}
 
 			String version = line.substring(pos + "version ".length());
@@ -217,61 +218,57 @@ public class ConfigFactory {
 			info.setShowQueries(false);
 			info.setShowInconclusives(false);
 			info.setShowErrors(true);
-			info.print(stream);
-			out.println("Adding " + kind + " version " + version + " in "
-					+ fullPath + " to .sarl");
+			out.println("Found " + kind + " version " + version + " at "
+					+ fullPath);
 			out.flush();
-			return true;
+			return info;
 		} catch (IOException e) {
 			if (process != null)
 				process.destroy();
 			out.println("Failed to execute " + fullPath);
-			return false;
+			return null;
 		}
 	}
 
 	/**
 	 * Checks that a candidate dynamic library prover can be loaded, and, if so,
-	 * adds an entry for it to the configuration file.
+	 * returns a new {@link ProverInfo} object corresponding to it.
 	 * 
 	 * @param kind
 	 *            the kind of the candidate theorem prover (should end in
 	 *            "_API")
 	 * @param alias
 	 *            the alias to assign to this prover in the configuration file
-	 * @param stream
-	 *            the print stream into the configuration file
 	 * @param jnidylib
 	 *            the name of the JNI dynamic library that should be loaded,
 	 *            e.g. "cvc3jni"
-	 * @return <code>true</code> if that dynamic library was loaded
-	 *         successfully, in which case an entry is also added to the
-	 *         configuration file; otherwise, <code>false</code>
+	 * @return a new {@link ProverInfo} object if that dynamic library was
+	 *         loaded successfully; otherwise, <code>null</code>
 	 */
-	private static boolean processDynamicProver(ProverKind kind, String alias,
-			PrintStream stream, String jnidylib) {
+	private static ProverInfo processDynamicProver(ProverKind kind,
+			String alias, String jnidylib) {
 		try {
 			String libraryName = System.mapLibraryName(jnidylib);
 			System.loadLibrary(jnidylib);
 
-			out.println("Adding " + kind + " implemented as native library "
-					+ libraryName + " to .sarl");
+			out.println("Found " + kind + " implemented as native library "
+					+ libraryName);
 			out.flush();
 
 			ProverInfo info = new CommonProverInfo();
 
 			info.addAlias(alias);
 			info.setKind(kind);
-			info.setPath(new File(libraryName)); // TODO: do better
+			info.setPath(new File(libraryName));
 			info.setVersion("UNKNOWN");
 			info.setTimeout(20.0);
 			info.setShowQueries(false);
 			info.setShowInconclusives(false);
 			info.setShowErrors(true);
-			info.print(stream);
-			return true;
+			// info.print(stream);
+			return info;
 		} catch (Error e) {
-			return false;
+			return null;
 		}
 	}
 
@@ -301,7 +298,7 @@ public class ConfigFactory {
 		st.parseNumbers();
 		st.eolIsSignificant(false);
 		st.slashSlashComments(true);
-		st.slashSlashComments(true);
+		st.slashStarComments(true);
 		st.lowerCaseMode(false);
 		st.wordChars('_', '_');
 		for (int token = st.nextToken(); token != TT_EOF; token = st
@@ -536,9 +533,35 @@ public class ConfigFactory {
 				configFile));
 		Map<ProverKind, Integer> executableCountMap = new HashMap<>();
 		Map<ProverKind, Integer> dynamicCountMap = new HashMap<>();
+		ArrayList<ProverInfo> provers = new ArrayList<>();
 
 		out.println("Creating SARL configuration file in " + configFile);
 		out.flush();
+		configFileStream.println("/* This is a SARL configuration file.");
+		configFileStream
+				.println(" * It contains one entry for each theorem prover SARL may use.");
+		configFileStream
+				.println(" * To resolve a query, by default, SARL will use the first prover here.");
+		configFileStream
+				.println(" * If that result in inconclusive, it will try the second prover.");
+		configFileStream
+				.println(" * And so on, until a conclusive result has been reached, or all provers");
+		configFileStream.println(" * have been exhausted.");
+		configFileStream.println(" * ");
+		configFileStream
+				.println(" * SARL looks for a configuration file using the following protocol:");
+		configFileStream
+				.println(" * It first looks in the current working directory for a file named .sarl");
+		configFileStream
+				.println(" * If that is not found, it looks in that directory for .sarl_default.");
+		configFileStream
+				.println(" * If that is not found, it looks in the user's home directory for .sarl");
+		configFileStream
+				.println(" * If that is not found, it looks in the user's home directory for .sarl_default");
+		configFileStream.println(" */");
+		configFileStream.println();
+		configFileStream.flush();
+
 		for (String dirName : pathDirs) {
 			File dir = new File(dirName);
 
@@ -559,7 +582,11 @@ public class ConfigFactory {
 
 						if (count > 0)
 							alias += "_" + count;
-						if (processProver(kind, alias, configFileStream, file)) {
+
+						ProverInfo prover = processProver(kind, alias, file);
+
+						if (prover != null) {
+							provers.add(prover);
 							executableCountMap.put(kind, count + 1);
 						}
 					}
@@ -576,13 +603,21 @@ public class ConfigFactory {
 
 			if (count > 0)
 				alias += "_" + count;
-			if (processDynamicProver(kind, alias, configFileStream, libraryName)) {
+
+			ProverInfo prover = processDynamicProver(kind, alias, libraryName);
+
+			if (prover != null) {
+				provers.add(prover);
 				dynamicCountMap.put(kind, count + 1);
 			}
 		}
-		//
+		Collections.sort(provers);
+		for (ProverInfo prover : provers) {
+			prover.print(configFileStream);
+			configFileStream.println();
+		}
 		configFileStream.close();
-		if (executableCountMap.isEmpty() && dynamicCountMap.isEmpty()) {
+		if (provers.isEmpty()) {
 			err.println("No appropriate theorem provers were found in your PATH.");
 			err.println("SARL's theorem proving capability will be very limited.");
 			err.println("Consider installing at least one of CVC3, CVC4, or Z3.");

@@ -193,4 +193,55 @@ public class CommonProverInfo implements ProverInfo {
 		out.println("}");
 		out.flush();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * The order is from most to least preferred by SARL. All executables come
+	 * before all dynamic libraries (APIs). CVC4 comes before Z3 comes before
+	 * CVC3. More recent versions come before older versions.
+	 */
+	@Override
+	public int compareTo(ProverInfo that) {
+		int result = this.kind.compareTo(that.getKind());
+
+		if (result != 0)
+			return result;
+		result = version.compareTo(that.getVersion());
+		if (result != 0)
+			return result;
+		result = aliases.toString().compareTo(that.getAliases().toString());
+		if (result != 0)
+			return result;
+		result = options.toString().compareTo(that.getOptions().toString());
+		if (result != 0)
+			return result;
+		result = path.toString().compareTo(that.getPath().toString());
+		if (result != 0)
+			return result;
+		result = Boolean.compare(showErrors, that.getShowErrors());
+		if (result != 0)
+			return result;
+		result = Boolean
+				.compare(showInconclusives, that.getShowInconclusives());
+		if (result != 0)
+			return result;
+		result = Boolean.compare(showQueries, that.getShowQueries());
+		if (result != 0)
+			return result;
+		result = Double.compare(timeout, that.getTimeout());
+		if (result != 0)
+			return result;
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ProverInfo) {
+			ProverInfo that = (ProverInfo) obj;
+
+			return this.compareTo(that) == 0;
+		}
+		return false;
+	}
 }

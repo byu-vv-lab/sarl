@@ -12,10 +12,39 @@ import java.util.Set;
  * @author siegel
  *
  */
-public interface ProverInfo {
+public interface ProverInfo extends Comparable<ProverInfo> {
 
+	/**
+	 * A classification of the different kinds of theorem provers. They are
+	 * ordered from most preferred to least preferred by SARL.
+	 */
 	public static enum ProverKind {
-		CVC3, CVC3_API, CVC4, CVC4_API, Z3, Z3_API
+		/**
+		 * CVC4 using CVC4's presentation language through its command line
+		 * interface.
+		 */
+		CVC4,
+		/**
+		 * Microsoft's Z3, using SMT-LIB2 through Z3's command line interface.
+		 */
+		Z3,
+		/**
+		 * CVC3, using CVC3's presentation language through its command line
+		 * interface.
+		 */
+		CVC3,
+		/**
+		 * Microsoft's Z3, using its Java API.
+		 */
+		Z3_API,
+		/**
+		 * CVC3, using its Java API.
+		 */
+		CVC3_API,
+		/**
+		 * CVC4, using its Java API.
+		 */
+		CVC4_API
 	};
 
 	/**
