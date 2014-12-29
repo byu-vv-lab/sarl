@@ -9,9 +9,9 @@ import cvc3.ValidityChecker;
  * expressions.
  * 
  * Since integer division and modulus operations are not supported by CVC3, this
- * is dealt with by adding auxialliary variables and constraints to the CVC3
+ * is dealt with by adding auxiliary variables and constraints to the CVC3
  * representation of the query. Given any integer division or modulus operations
- * occurring in the query, A OP B, we create auxiallary integer variables Q and
+ * occurring in the query, A OP B, we create auxiliary integer variables Q and
  * R on the CVC3 side and add constraints A=QB+R, |R|<|B|, sgn(R)=sgn(A).
  * 
  * Specifically: introduce integer variables Q and R. Introduce constraint

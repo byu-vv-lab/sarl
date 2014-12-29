@@ -203,7 +203,7 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Renaming function for keeping unique names between constants Example:
+	 * Renaming function for keeping unique names between constants. Example:
 	 * new(x) = x; new(x) = x'1; etc.
 	 * 
 	 * @param root
@@ -224,10 +224,10 @@ public class CVC3TheoremProver implements TheoremProver {
 	}
 
 	/**
-	 * Creates a "default" CVC3 Expr with a given CVC3 Type
+	 * Creates unique auxiliary variable.
 	 * 
 	 * @param type
-	 * @return the CVC3 Expr
+	 * @return the new variable
 	 */
 	private Expr newAuxVariable(Type type) {
 		return vc.varExpr(newCvcName("_x"), type);
@@ -235,7 +235,7 @@ public class CVC3TheoremProver implements TheoremProver {
 
 	/**
 	 * Returns new bound variable with a generic name "i" followed by a
-	 * distiguishing suffix.
+	 * distinguishing suffix.
 	 * 
 	 * @param type
 	 *            the type of the new bound variable

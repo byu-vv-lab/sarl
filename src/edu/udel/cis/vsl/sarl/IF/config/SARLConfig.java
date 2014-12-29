@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.IF.config;
 
-import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
 
 /**
  * A SARL configuration encapsulates information about the complete set of
@@ -13,12 +13,12 @@ public interface SARLConfig {
 
 	int getNumProvers();
 
-	Prover getProver(int index);
+	ProverInfo getProver(int index);
 
-	Iterable<Prover> getProvers();
+	Iterable<ProverInfo> getProvers();
 
-	Prover getProverWithAlias(String alias);
+	ProverInfo getProverWithAlias(String alias);
 
-	Prover getProverWithKind(ProverKind kind);
+	ProverInfo getProverWithKind(ProverKind kind);
 
 }

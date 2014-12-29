@@ -38,7 +38,8 @@ public class TheoremProverBenchmarkEquality {
 			.symbolicConstant(universe.stringObject("b"), realType);
 
 	public final static TheoremProverFactory proverFactory = Prove
-			.newMultiProverFactory(universe, Configurations.CONFIG);
+			.newMultiProverFactory(universe,
+					Configurations.getDefaultConfiguration());
 
 	public static CVC3TheoremProver cvcProver = (CVC3TheoremProver) proverFactory
 			.newProver(booleanExprTrue);

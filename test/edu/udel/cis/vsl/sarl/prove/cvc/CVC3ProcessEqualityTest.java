@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
-import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -55,8 +55,10 @@ public class CVC3ProcessEqualityTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		proverFactory = Prove.newProverFactory(universe,
-				Configurations.CONFIG.getProverWithKind(ProverKind.CVC3_API));
+		proverFactory = Prove.newProverFactory(
+				universe,
+				Configurations.getDefaultConfiguration().getProverWithKind(
+						ProverKind.CVC3_API));
 		cvcProver = (CVC3TheoremProver) proverFactory
 				.newProver(booleanExprTrue);
 	}

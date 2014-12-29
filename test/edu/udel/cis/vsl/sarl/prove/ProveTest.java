@@ -24,7 +24,7 @@ public class ProveTest {
 		universe = PreUniverses.newPreUniverse(PreUniverses
 				.newIdealFactorySystem());
 		proverFactory = Prove.newMultiProverFactory(universe,
-				Configurations.CONFIG);
+				Configurations.getDefaultConfiguration());
 	}
 
 	@Test

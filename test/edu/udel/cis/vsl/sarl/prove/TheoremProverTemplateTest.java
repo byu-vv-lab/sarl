@@ -13,7 +13,7 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -72,7 +72,8 @@ public class TheoremProverTemplateTest {
 	public static void setUpBeforeClass() throws Exception {
 		provers = new LinkedList<TheoremProver>();
 		// adjust as necessary to include only provers you want:
-		for (Prover info : Configurations.CONFIG.getProvers()) {
+		for (ProverInfo info : Configurations.getDefaultConfiguration()
+				.getProvers()) {
 			provers.add(Prove.newProverFactory(universe, info).newProver(
 					context));
 		}

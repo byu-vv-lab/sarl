@@ -19,17 +19,16 @@ public class Configurations {
 
 	/**
 	 * <p>
-	 * The single, global, default SARL configuration object, obtained by
-	 * reading the SARL configuration file. This variable is initialized when
-	 * this class ({@link Configurations}) is loaded. It is also updated by the
-	 * method {@link #findOrMakeConfiguration()}.
+	 * The single, global, default SARL configuration object. Initially
+	 * <code>null</code>, it is used to cache the result returned by method
+	 * {@link #getDefaultConfiguration()}.
 	 * </p>
 	 * 
 	 * <p>
-	 * This variable is initialized by first looking in the current working
-	 * directory for a file named <code>.sarl</code>. If no file by that name is
-	 * found, it will then look for a file named <code>.sarl_default</code>. If
-	 * that is not found, it will repeat in the user's home directory.
+	 * The value is computed by first looking in the current working directory
+	 * for a file named <code>.sarl</code>. If no file by that name is found, it
+	 * will then look for a file named <code>.sarl_default</code>. If that is
+	 * not found, it will repeat in the user's home directory.
 	 * </p>
 	 * 
 	 * <p>
@@ -39,7 +38,7 @@ public class Configurations {
 	 * immediately with a non-0 error code.
 	 * </p>
 	 */
-	public static SARLConfig CONFIG = findConfiguration();
+	private static SARLConfig DEFAULT_CONFIG = null;
 
 	/**
 	 * Creates a new {@link SARLConfig} object based on the given list of prover
@@ -49,7 +48,7 @@ public class Configurations {
 	 *            ordered collection of prover infos
 	 * @return resulting {@link SARLConfig} object wrapping those provers
 	 */
-	public static SARLConfig newConfiguration(Collection<Prover> provers) {
+	public static SARLConfig newConfiguration(Collection<ProverInfo> provers) {
 		return new CommonSARLConfig(provers);
 	}
 
@@ -77,34 +76,36 @@ public class Configurations {
 		}
 	}
 
-	/**
-	 * <p>
-	 * Finds and parses the SARL configuration file. Looks in the default
-	 * directories (first the current working directory, then the user's home
-	 * directory) for the files with the appropriate names (<code>.sarl</code>
-	 * or <code>.sarl_default</code>).
-	 * </p>
-	 * 
-	 * <p>
-	 * If no such file is found, this method will return <code>null</code>. If
-	 * the file is found, but it has syntax errors, or there is some I/O problem
-	 * when reading it, the application will terminate immediately with a non-0
-	 * exit code.
-	 * </p>
-	 * 
-	 * @return the {@link SARLConfig} object resulting from parsing the found
-	 *         file, or <code>null</code> if no such file is found
-	 */
-	public static SARLConfig findConfiguration() {
-		try {
-			return ConfigFactory.findConfig();
-		} catch (Exception e) {
-			System.err.println("SARL configuration error: " + e.getMessage());
-			System.err.flush();
-			System.exit(1);
-			return null; // unreachable
-		}
-	}
+	// /**
+	// * <p>
+	// * Finds and parses the SARL configuration file. Looks in the default
+	// * directories (first the current working directory, then the user's home
+	// * directory) for the files with the appropriate names (<code>.sarl</code>
+	// * or <code>.sarl_default</code>).
+	// * </p>
+	// *
+	// * <p>
+	// * If no such file is found, this method will return <code>null</code>. If
+	// * the file is found, but it has syntax errors, or there is some I/O
+	// problem
+	// * when reading it, the application will terminate immediately with a
+	// non-0
+	// * exit code.
+	// * </p>
+	// *
+	// * @return the {@link SARLConfig} object resulting from parsing the found
+	// * file, or <code>null</code> if no such file is found
+	// */
+	// public static SARLConfig findConfiguration() {
+	// try {
+	// return ConfigFactory.findConfig();
+	// } catch (Exception e) {
+	// System.err.println("SARL configuration error: " + e.getMessage());
+	// System.err.flush();
+	// System.exit(1);
+	// return null; // unreachable
+	// }
+	// }
 
 	/**
 	 * <p>
@@ -126,18 +127,22 @@ public class Configurations {
 	 * @return the {@link SARLConfig} object obtained by parsing the
 	 *         configuration file
 	 */
-	public static SARLConfig findOrMakeConfiguration() {
-		if (CONFIG != null)
-			return CONFIG;
+	public static SARLConfig getDefaultConfiguration() {
+		if (DEFAULT_CONFIG != null)
+			return DEFAULT_CONFIG;
 		try {
-			ConfigFactory.makeConfigFile();
-			CONFIG = findConfiguration();
+			DEFAULT_CONFIG = ConfigFactory.findConfig();
+
+			if (DEFAULT_CONFIG == null) {
+				ConfigFactory.makeConfigFile();
+				DEFAULT_CONFIG = ConfigFactory.findConfig();
+			}
 		} catch (Exception e) {
 			System.err.println("SARL configuration error: " + e.getMessage());
 			System.err.flush();
 			System.exit(1);
 		}
-		return CONFIG;
+		return DEFAULT_CONFIG;
 	}
 
 	/**

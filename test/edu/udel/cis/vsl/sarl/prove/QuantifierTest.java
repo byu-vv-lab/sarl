@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -75,7 +75,8 @@ public class QuantifierTest {
 	public static void setUpBeforeClass() throws Exception {
 		universe.setShowProverQueries(false); // for debugging
 		provers = new LinkedList<TheoremProver>();
-		for (Prover info : Configurations.CONFIG.getProvers()) {
+		for (ProverInfo info : Configurations.getDefaultConfiguration()
+				.getProvers()) {
 			provers.add(Prove.newProverFactory(universe, info).newProver(
 					context));
 		}

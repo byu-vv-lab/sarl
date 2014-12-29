@@ -20,7 +20,7 @@ package edu.udel.cis.vsl.sarl.universe;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.collections.Collections;
@@ -50,7 +50,7 @@ public class Universes {
 	// you can specify specific prover or entire config
 
 	public static SymbolicUniverse newIdealUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
@@ -66,11 +66,11 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newIdealUniverse() {
-		return newIdealUniverse(Configurations.CONFIG, null);
+		return newIdealUniverse(Configurations.getDefaultConfiguration(), null);
 	}
 
 	public static SymbolicUniverse newMathUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		FactorySystem system = PreUniverses.newIdealFactorySystem();
 		MathUniverse universe = new MathUniverse(system);
 		SimplifierFactory simplifierFactory = Ideal.newIdealSimplifierFactory(
@@ -86,11 +86,11 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newMathUniverse() {
-		return newMathUniverse(Configurations.CONFIG, null);
+		return newMathUniverse(Configurations.getDefaultConfiguration(), null);
 	}
 
 	public static SymbolicUniverse newHerbrandUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		FactorySystem system = PreUniverses.newHerbrandFactorySystem();
 		CommonSymbolicUniverse universe = new CommonSymbolicUniverse(system);
 		SimplifierFactory simplifierFactory = Simplify
@@ -106,11 +106,12 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newHerbrandUniverse() {
-		return newHerbrandUniverse(Configurations.CONFIG, null);
+		return newHerbrandUniverse(Configurations.getDefaultConfiguration(),
+				null);
 	}
 
 	public static SymbolicUniverse newStandardUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		NumberFactory numberFactory = Numbers.REAL_FACTORY;
 		ObjectFactory objectFactory = Objects.newObjectFactory(numberFactory);
 		SymbolicTypeFactory typeFactory = Types.newTypeFactory(objectFactory);
@@ -135,7 +136,8 @@ public class Universes {
 	}
 
 	public static SymbolicUniverse newStandardUniverse() {
-		return newStandardUniverse(Configurations.CONFIG, null);
+		return newStandardUniverse(Configurations.getDefaultConfiguration(),
+				null);
 	}
 
 	// public static TrigonometricUniverse newTrigonometricUniverse() {

@@ -21,8 +21,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
-import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 
 /**
@@ -33,6 +34,10 @@ import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
  *
  */
 public class ConfigFactory {
+
+	public final static PrintStream err = System.err;
+
+	public final static PrintStream out = System.out;
 
 	/**
 	 * <p>
@@ -184,7 +189,6 @@ public class ConfigFactory {
 		String fullPath = executableFile.getAbsolutePath();
 		ProcessBuilder pb = new ProcessBuilder(fullPath, versionCommand(kind));
 		Process process = null;
-		PrintStream out = System.out;
 
 		try {
 			process = pb.start();
@@ -203,16 +207,17 @@ public class ConfigFactory {
 			}
 
 			String version = line.substring(pos + "version ".length());
+			ProverInfo info = new CommonProverInfo();
 
-			stream.println("prover {");
-			stream.println("  alias = " + alias + ";");
-			stream.println("  kind = " + kind + ";");
-			stream.println("  path = \"" + fullPath + "\";");
-			stream.println("  version = \"" + version + "\";");
-			stream.println("  showQueries = false;");
-			stream.println("  timeout = 20.0; # 20 seconds");
-			stream.println("}");
-			stream.flush();
+			info.addAlias(alias);
+			info.setKind(kind);
+			info.setPath(executableFile);
+			info.setVersion(version);
+			info.setTimeout(20.0);
+			info.setShowQueries(false);
+			info.setShowInconclusives(false);
+			info.setShowErrors(true);
+			info.print(stream);
 			out.println("Adding " + kind + " version " + version + " in "
 					+ fullPath + " to .sarl");
 			out.flush();
@@ -245,8 +250,6 @@ public class ConfigFactory {
 	 */
 	private static boolean processDynamicProver(ProverKind kind, String alias,
 			PrintStream stream, String jnidylib) {
-		PrintStream out = System.out;
-
 		try {
 			String libraryName = System.mapLibraryName(jnidylib);
 			System.loadLibrary(jnidylib);
@@ -254,15 +257,18 @@ public class ConfigFactory {
 			out.println("Adding " + kind + " implemented as native library "
 					+ libraryName + " to .sarl");
 			out.flush();
-			stream.println("prover {");
-			stream.println("  alias = " + alias + ";");
-			stream.println("  kind = " + kind + ";");
-			stream.println("  path = \"" + libraryName + "\";");
-			stream.println("  version = \"" + "UNKNOWN" + "\";");
-			stream.println("  showQueries = false;");
-			stream.println("  timeout = 20.0; # 20 seconds");
-			stream.println("}");
-			stream.flush();
+
+			ProverInfo info = new CommonProverInfo();
+
+			info.addAlias(alias);
+			info.setKind(kind);
+			info.setPath(new File(libraryName)); // TODO: do better
+			info.setVersion("UNKNOWN");
+			info.setTimeout(20.0);
+			info.setShowQueries(false);
+			info.setShowInconclusives(false);
+			info.setShowErrors(true);
+			info.print(stream);
 			return true;
 		} catch (Error e) {
 			return false;
@@ -286,7 +292,7 @@ public class ConfigFactory {
 	public static SARLConfig fromFile(File configFile) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(configFile));
 		StreamTokenizer st = new StreamTokenizer(reader);
-		LinkedList<Prover> proverInfos = new LinkedList<>();
+		LinkedList<ProverInfo> proverInfos = new LinkedList<>();
 		Set<String> allAliases = new HashSet<>();
 
 		st.commentChar('#');
@@ -306,7 +312,7 @@ public class ConfigFactory {
 			if (token != '{')
 				throw parseErr(configFile, st, "expected '{'");
 
-			Prover info = new CommonExternalProver();
+			ProverInfo info = new CommonProverInfo();
 
 			for (token = st.nextToken(); token != '}'; token = st.nextToken()) {
 				String keyword;
@@ -318,7 +324,7 @@ public class ConfigFactory {
 				if (token != '=')
 					throw parseErr(configFile, st, "expected '='");
 				switch (keyword) {
-				case "alias": {
+				case "aliases": {
 					int numAliases = 0;
 
 					for (token = st.nextToken(); token != ';'; token = st
@@ -402,19 +408,37 @@ public class ConfigFactory {
 						throw parseErr(configFile, st, "expected ';'");
 					break;
 				}
-				case "showQueries": {
+				case "showQueries":
+				case "showInconclusives":
+				case "showErrors": {
 					token = st.nextToken();
 					if (token != TT_WORD)
 						throw parseErr(configFile, st, "expected word");
+
+					boolean value;
+
 					switch (st.sval) {
 					case "true":
-						info.setShowQueries(true);
+						value = true;
 						break;
 					case "false":
-						info.setShowQueries(false);
+						value = false;
 						break;
 					default:
 						throw parseErr(configFile, st, "expected true or false");
+					}
+					switch (keyword) {
+					case "showQueries":
+						info.setShowQueries(value);
+						break;
+					case "showInconclusives":
+						info.setShowInconclusives(value);
+						break;
+					case "showErrors":
+						info.setShowErrors(value);
+						break;
+					default:
+						throw new SARLInternalException("Unreachable");
 					}
 					token = st.nextToken();
 					if (token != ';')
@@ -494,10 +518,9 @@ public class ConfigFactory {
 			if (configFile.isFile()) {
 				File newLocation = new File(userDir, ".sarl.old");
 
-				System.out
-						.println("Moving existing SARL configuration file to "
-								+ newLocation.getAbsolutePath());
-				System.out.flush();
+				out.println("Moving existing SARL configuration file to "
+						+ newLocation.getAbsolutePath());
+				out.flush();
 				configFile.renameTo(newLocation);
 			} else {
 				System.err.println("Remove the non-ordinary-file "
@@ -514,9 +537,8 @@ public class ConfigFactory {
 		Map<ProverKind, Integer> executableCountMap = new HashMap<>();
 		Map<ProverKind, Integer> dynamicCountMap = new HashMap<>();
 
-		System.out.println("Creating SARL configuration file in " + configFile
-				+ " ...");
-		System.out.flush();
+		out.println("Creating SARL configuration file in " + configFile);
+		out.flush();
 		for (String dirName : pathDirs) {
 			File dir = new File(dirName);
 
@@ -561,21 +583,16 @@ public class ConfigFactory {
 		//
 		configFileStream.close();
 		if (executableCountMap.isEmpty() && dynamicCountMap.isEmpty()) {
-			System.err
-					.println("No appropriate theorem provers were found in your PATH.");
-			System.err
-					.println("SARL's theorem proving capability will be very limited.");
-			System.err
-					.println("Consider installing at least one of CVC3, CVC4, or Z3.");
-			System.err.flush();
+			err.println("No appropriate theorem provers were found in your PATH.");
+			err.println("SARL's theorem proving capability will be very limited.");
+			err.println("Consider installing at least one of CVC3, CVC4, or Z3.");
+			err.flush();
 		}
-		System.out.println("SARL configuration file created successfully in "
+		out.println("SARL configuration file created successfully in "
 				+ configFile.getAbsolutePath());
-		System.out
-				.println("By default, SARL will use all provers listed in the configuration file,");
-		System.out.println("in order, until a conclusive result is obtained.");
-		System.out
-				.println("Edit the file as necessary to remove or change the order of provers.");
-		System.out.flush();
+		out.println("By default, SARL will use all provers listed in the configuration file,");
+		out.println("in order, until a conclusive result is obtained.");
+		out.println("Edit the file as necessary to remove or change the order of provers.");
+		out.flush();
 	}
 }

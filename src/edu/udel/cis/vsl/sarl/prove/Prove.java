@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -35,6 +35,7 @@ import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.common.MultiProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC4TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVC3TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVC4TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.z3.Z3TheoremProverFactory;
 
@@ -65,7 +66,7 @@ public class Prove {
 		TheoremProverFactory[] factories = new TheoremProverFactory[numProvers];
 		int count = 0;
 
-		for (Prover prover : config.getProvers()) {
+		for (ProverInfo prover : config.getProvers()) {
 			factories[count] = newProverFactory(universe, prover);
 			count++;
 		}
@@ -73,7 +74,7 @@ public class Prove {
 	}
 
 	public static TheoremProverFactory newProverFactory(PreUniverse universe,
-			Prover prover) {
+			ProverInfo prover) {
 		switch (prover.getKind()) {
 		case CVC3_API:
 			return new CVC3TheoremProverFactory(universe, prover);
@@ -84,12 +85,9 @@ public class Prove {
 		case Z3_API:
 			return new Z3TheoremProverFactory(universe, prover);
 		case CVC3:
+			return new RobustCVC3TheoremProverFactory(universe, prover);
 		case Z3:
-		
-			// these will be found by the configuration maker,
-			// so what to do with them until they are implemented
-			// throw some reasonable 
-			
+			// not yet implemented
 		default:
 			throw new SARLInternalException("Unknown kind of theorem prover: "
 					+ prover.getKind());

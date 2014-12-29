@@ -6,26 +6,26 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
-import edu.udel.cis.vsl.sarl.IF.config.Prover.ProverKind;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 
 public class CommonSARLConfig implements SARLConfig {
 
-	private Prover[] provers;
+	private ProverInfo[] provers;
 
-	private Map<String, Prover> aliasMap = new LinkedHashMap<>();
+	private Map<String, ProverInfo> aliasMap = new LinkedHashMap<>();
 
-	public CommonSARLConfig(Collection<Prover> provers) {
+	public CommonSARLConfig(Collection<ProverInfo> provers) {
 		int size = provers.size();
 		int count = 0;
 
-		this.provers = new Prover[size];
-		for (Prover prover : provers) {
+		this.provers = new ProverInfo[size];
+		for (ProverInfo prover : provers) {
 			this.provers[count] = prover;
 			count++;
 			for (String alias : prover.getAliases()) {
-				Prover old = aliasMap.put(alias, prover);
+				ProverInfo old = aliasMap.put(alias, prover);
 
 				if (old != null)
 					throw new SARLException("Alias " + alias
@@ -40,23 +40,23 @@ public class CommonSARLConfig implements SARLConfig {
 	}
 
 	@Override
-	public Prover getProver(int index) {
+	public ProverInfo getProver(int index) {
 		return provers[index];
 	}
 
 	@Override
-	public Iterable<Prover> getProvers() {
+	public Iterable<ProverInfo> getProvers() {
 		return Arrays.asList(provers);
 	}
 
 	@Override
-	public Prover getProverWithAlias(String alias) {
+	public ProverInfo getProverWithAlias(String alias) {
 		return aliasMap.get(alias);
 	}
 
 	@Override
-	public Prover getProverWithKind(ProverKind kind) {
-		for (Prover prover : provers) {
+	public ProverInfo getProverWithKind(ProverKind kind) {
+		for (ProverInfo prover : provers) {
 			if (prover.getKind() == kind)
 				return prover;
 		}

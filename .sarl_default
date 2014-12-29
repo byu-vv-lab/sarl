@@ -1,27 +1,30 @@
-# This is a SARL configuration file.  It specifies information
-# about each automated theorem prover available to SARL.
-
-# SARL will look first in the current working directory
-# for a file named .sarl.  If it doesn't find that,
-# it will look in the same directory for .sarl_default.
-# If it doesn't find that, it will look in the user's
-# home directory for .sarl, then in the user's home
-# directory for sarl_default.
-
 prover {
-  alias = cvc4, cvc4x;
+  aliases = cvc4;
   kind = CVC4;
-  path = "/opt/local/bin/cvc4";
-  options = "--rewrite-divk";
   version = "1.4";
-  showQueries = true; # print every query
-  timeout = 20.0; # 20 seconds
-}
-
-prover {
-  alias = cvc3;
-  kind = CVC3_API;
-  version = "UNKNOWN";
-  showQueries = true;
+  path = "/opt/local/bin/cvc4";
   timeout = 20.0;
+  showQueries = false;
+  showInconclusives = false;
+  showErrors = true;
+}
+prover {
+  aliases = cvc3;
+  kind = CVC3;
+  version = "2.4.1";
+  path = "/usr/bin/cvc3";
+  timeout = 20.0;
+  showQueries = false;
+  showInconclusives = false;
+  showErrors = true;
+}
+prover {
+  aliases = cvc3_api;
+  kind = CVC3_API;
+  version = "2.4.1";
+  path = "libcvc3jni.dylib";
+  timeout = 20.0;
+  showQueries = false;
+  showInconclusives = false;
+  showErrors = true;
 }

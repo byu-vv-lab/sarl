@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.IF.config;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * @author siegel
  *
  */
-public interface Prover {
+public interface ProverInfo {
 
 	public static enum ProverKind {
 		CVC3, CVC3_API, CVC4, CVC4_API, Z3, Z3_API
@@ -114,18 +115,64 @@ public interface Prover {
 	void setVersion(String value);
 
 	/**
-	 * Should the prover print the queries.
+	 * Should the prover print all the queries?
 	 * 
 	 * @return <code>true</code> if this prover should print queries
 	 */
 	boolean getShowQueries();
 
 	/**
-	 * Tell this prover whether it should print the queries.
+	 * Tell this prover whether it should print every query.
 	 * 
 	 * @param value
 	 *            <code>true</code> if this prover should print queries
 	 */
 	void setShowQueries(boolean value);
+
+	/**
+	 * Should the prover print a message every time it reports an inconclusive
+	 * result?
+	 * 
+	 * @return <code>true</code> if a message should be printed for every
+	 *         inconclusive result
+	 */
+	boolean getShowInconclusives();
+
+	/**
+	 * Sets whether the prover prints a message every time it reports an
+	 * inconclusive result.
+	 * 
+	 * @param value
+	 *            <code>true</code> if a message should be printed for every
+	 *            inconclusive result
+	 */
+	void setShowInconclusives(boolean value);
+
+	/**
+	 * Should the prover print a message every time the underlying theorem
+	 * prover reports an error? (In any case, the error is interpreted as an
+	 * inconclusive result.)
+	 * 
+	 * @return <code>true</code> if a message should be printed for every error
+	 */
+	boolean getShowErrors();
+
+	/**
+	 * Sets whether the prover prints a message every time the underlying
+	 * theorem prover reports an error. (In any case, the error is interpreted
+	 * as an inconclusive result.)
+	 * 
+	 * @param <code>true</code> if a message should be printed for every error
+	 */
+	void setShowErrors(boolean value);
+
+	/**
+	 * Prints a complete representation of this object in the format that is
+	 * expected in a SARL configuration file.
+	 * 
+	 * @param out
+	 *            where to print
+	 */
+	void print(PrintStream out);
 
 }

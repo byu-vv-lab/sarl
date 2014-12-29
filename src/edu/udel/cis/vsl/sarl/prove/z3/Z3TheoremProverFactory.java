@@ -1,6 +1,6 @@
 package edu.udel.cis.vsl.sarl.prove.z3;
 
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
@@ -10,7 +10,7 @@ public class Z3TheoremProverFactory implements TheoremProverFactory {
 
 	private PreUniverse universe;
 
-	public Z3TheoremProverFactory(PreUniverse universe, Prover prover) {
+	public Z3TheoremProverFactory(PreUniverse universe, ProverInfo prover) {
 		this.universe = universe;
 	}
 

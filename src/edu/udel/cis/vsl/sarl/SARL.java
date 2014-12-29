@@ -20,7 +20,7 @@ package edu.udel.cis.vsl.sarl;
 
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
-import edu.udel.cis.vsl.sarl.IF.config.Prover;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
 import edu.udel.cis.vsl.sarl.universe.Universes;
 
@@ -47,19 +47,19 @@ public class SARL {
 	 *            a SARL configuration object providing information on the
 	 *            external theorem provers available to SARL
 	 * @param prover
-	 *            either one of the {@link Prover} objects in the configuration,
-	 *            or <code>null</code>. If non-null, this specifies the sole
-	 *            prover to use for resolving queries. If null, a query will be
-	 *            resolved by starting with the first prover in the
-	 *            configuration, and, if that result is inconclusive, going to
-	 *            the second, and so on, until either a conclusive result is
-	 *            achieved or every prover in the configuration has been
-	 *            exhausted.
+	 *            either one of the {@link ProverInfo} objects in the
+	 *            configuration, or <code>null</code>. If non-null, this
+	 *            specifies the sole prover to use for resolving queries. If
+	 *            null, a query will be resolved by starting with the first
+	 *            prover in the configuration, and, if that result is
+	 *            inconclusive, going to the second, and so on, until either a
+	 *            conclusive result is achieved or every prover in the
+	 *            configuration has been exhausted.
 	 * 
 	 * @return a new standard symbolic universe
 	 */
 	public static SymbolicUniverse newStandardUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		return Universes.newStandardUniverse(config, prover);
 	}
 
@@ -72,18 +72,18 @@ public class SARL {
 	 *            a SARL configuration object providing information on the
 	 *            external theorem provers available to SARL
 	 * @param prover
-	 *            either one of the {@link Prover} objects in the configuration,
-	 *            or <code>null</code>. If non-null, this specifies the sole
-	 *            prover to use for resolving queries. If null, a query will be
-	 *            resolved by starting with the first prover in the
-	 *            configuration, and, if that result is inconclusive, going to
-	 *            the second, and so on, until either a conclusive result is
-	 *            achieved or every prover in the configuration has been
-	 *            exhausted.
+	 *            either one of the {@link ProverInfo} objects in the
+	 *            configuration, or <code>null</code>. If non-null, this
+	 *            specifies the sole prover to use for resolving queries. If
+	 *            null, a query will be resolved by starting with the first
+	 *            prover in the configuration, and, if that result is
+	 *            inconclusive, going to the second, and so on, until either a
+	 *            conclusive result is achieved or every prover in the
+	 *            configuration has been exhausted.
 	 * @return an ideal symbolic universe
 	 */
 	public static SymbolicUniverse newIdealUniverse(SARLConfig config,
-			Prover prover) {
+			ProverInfo prover) {
 		return Universes.newIdealUniverse(config, prover);
 	}
 
@@ -110,7 +110,7 @@ public class SARL {
 	 * @return a new standard symbolic universe
 	 */
 	public static SymbolicUniverse newStandardUniverse() {
-		SARLConfig config = Configurations.findOrMakeConfiguration();
+		SARLConfig config = Configurations.getDefaultConfiguration();
 
 		return Universes.newStandardUniverse(config, null);
 
@@ -139,7 +139,7 @@ public class SARL {
 	 * @return an ideal symbolic universe
 	 */
 	public static SymbolicUniverse newIdealUniverse() {
-		SARLConfig config = Configurations.findOrMakeConfiguration();
+		SARLConfig config = Configurations.getDefaultConfiguration();
 
 		return Universes.newIdealUniverse(config, null);
 	}
