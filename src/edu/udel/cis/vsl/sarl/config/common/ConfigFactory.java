@@ -85,7 +85,7 @@ public class ConfigFactory {
 	private static Map<String, ProverKind> executableMap = new HashMap<>();
 
 	static {
-		// executableMap.put("cvc3", ProverKind.CVC3); // not yet implemented
+		executableMap.put("cvc3", ProverKind.CVC3); // working
 		executableMap.put("cvc4", ProverKind.CVC4); // working
 		// executableMap.put("z3", ProverKind.Z3); // not yet implemented
 	}
@@ -97,7 +97,7 @@ public class ConfigFactory {
 	private static Map<String, ProverKind> dylibMap = new HashMap<>();
 
 	static {
-		dylibMap.put("cvc3jni", ProverKind.CVC3_API);
+		// dylibMap.put("cvc3jni", ProverKind.CVC3_API); // too fragile
 		// dylibMap.put("cvc4jni", ProverKind.CVC4_API); // crashes too much
 		// dylibMap.put("z3java", ProverKind.Z3_API); // not yet implemented
 	}
