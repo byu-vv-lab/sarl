@@ -21,7 +21,12 @@ package edu.udel.cis.vsl.sarl.prove.IF;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 
 /**
- * A factory for producing instances of {@link TheoremProver}.
+ * A factory for producing instances of {@link TheoremProver}. Each instance of
+ * {@link TheoremProver} contains a specific, fixed "context". The context is a
+ * boolean symbolic expression. It is the assumption that is used for all
+ * queries asked of that theorem prover. In symbolic execution, the context is
+ * typically the "path condition". Hence a distinct theorem prover is generated
+ * for each path condition.
  * 
  * @author siegel
  * 
@@ -36,14 +41,5 @@ public interface TheoremProverFactory {
 	 * @return a theorem prover operating under the given context
 	 */
 	TheoremProver newProver(BooleanExpression context);
-	
-	// for each prover, need: kind, path, alias, version string,
-	// class NativeProver
-	
-	// getNumNativeProvers, getNativeProver(i)
-	
-	//
-	
-	// TheoremProver newProver()
 
 }

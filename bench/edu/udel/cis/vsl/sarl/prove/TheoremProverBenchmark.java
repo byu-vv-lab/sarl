@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cvc3.ValidityChecker;
 import edu.udel.cis.vsl.sarl.IF.config.Configurations;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -15,8 +14,8 @@ import edu.udel.cis.vsl.sarl.expr.IF.ExpressionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.PreUniverses;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProver;
 
 public class TheoremProverBenchmark {
 
@@ -44,13 +43,11 @@ public class TheoremProverBenchmark {
 			.newMultiProverFactory(universe,
 					Configurations.getDefaultConfiguration());
 
-	public static CVC3TheoremProver cvcProver = (CVC3TheoremProver) proverFactory
+	public static TheoremProver cvcProver = proverFactory
 			.newProver(booleanExprTrue);
 
 	public final static ExpressionFactory expressionFactory = factorySystem
 			.expressionFactory();
-
-	public final static ValidityChecker vc = cvcProver.validityChecker();
 
 	public static void main(String[] args) {
 
@@ -86,8 +83,7 @@ public class TheoremProverBenchmark {
 
 			System.out.println("Constructing a new prover with the context");
 			long constructorStartTime = System.nanoTime();
-			cvcProver = (CVC3TheoremProver) proverFactory
-					.newProver(reallyBigExpression);
+			cvcProver = proverFactory.newProver(reallyBigExpression);
 			long constructorEndTime = System.nanoTime();
 			System.out.println("Done.");
 

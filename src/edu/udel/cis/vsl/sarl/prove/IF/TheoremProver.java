@@ -29,8 +29,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * under a fixed context (i.e., a boolean expression assumed to hold).
  */
 public interface TheoremProver {
+
 	/**
-	 * Get the pre-universe associated with the theorem prover.
+	 * Get the symbolic universe associated with the theorem prover. This is the
+	 * object used to create and manipulate symbolic expressions.
+	 * 
+	 * @return the symbolic universe associated to this theorem prover
 	 */
 	PreUniverse universe();
 

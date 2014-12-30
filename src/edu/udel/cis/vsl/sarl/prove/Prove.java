@@ -21,6 +21,7 @@ package edu.udel.cis.vsl.sarl.prove;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
@@ -33,10 +34,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.common.CommonModelResult;
 import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.common.MultiProverFactory;
-import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.cvc.CVC4TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVCTheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.z3.Z3TheoremProverFactory;
 
 /**
  * This is the entry point for module prove. It provides:
@@ -122,13 +120,12 @@ public class Prove {
 		case CVC4:
 			return new RobustCVCTheoremProverFactory(universe, prover);
 		case CVC3_API:
-			return new CVC3TheoremProverFactory(universe, prover);
 		case CVC4_API:
-			return new CVC4TheoremProverFactory(universe, prover);
-		case Z3_API:
-			return new Z3TheoremProverFactory(universe, prover);
 		case Z3:
-			// not yet implemented
+		case Z3_API:
+			// return new Z3TheoremProverFactory(universe, prover);
+			throw new SARLException("Unsupported theorem prover: "
+					+ prover.getKind());
 		default:
 			throw new SARLInternalException("Unknown kind of theorem prover: "
 					+ prover.getKind());

@@ -3,11 +3,15 @@
             
 =============================== ABOUT =================================
 
-SARL is a Java library for symbolic algebra reasoning.  It supports
-the creation and manipulation of typed symbolic expressions,
-and the ability to verify the validity of first order formulas.
-It uses ("under the hood") automated theorem provers (currently
-just CVC3) to assist in the verification tasks.  It also is
+SARL is a Java library for symbolic algebra and reasoning.
+It is intended primarily to support symbolic execution.
+
+The SARL API provides for the creation and manipulation of typed
+symbolic expressions, and the ability to verify the validity of first
+order formulas.
+
+SARL uses ("under the hood") automated theorem provers (currently
+CVC3 and CVC4) to assist in the verification tasks.  It also is
 very effective at placing symbolic expressions in a canonical form,
 in order to easily tell if two expressions are equivalent.  It
 supports real (mathematical) integers and reals, as well as
@@ -21,15 +25,14 @@ siegel@udel.edu.
 ============================ INSTALLATION =============================
 
 If you only want to use SARL (and not contribute to its development)
-you only need to download and build the automated theorem prover
-CVC3 and then download sarl.jar and place it in the CLASSPATH
-for your application.  See file INSTALL in this directory
-for some hints on building CVC3.   In order for your application
-to find CVC3 you will need to set your DYLD_LIBRARY_PATH (on OS X)
-or LD_LIBRARY_PATH (on linux) to a colon-separated list of directories
-which contain the CVC3 shared libraries and the GMP (GNU Multiple
-Precision arithmetic library) shared library.  You will also need
-a Java 7 SDK.
+you only need to download/install the automated theorem provers
+CVC3 and CVC4 and then download sarl.jar and place it in the CLASSPATH
+for your application.  See file INSTALL in this directory.
+
+In order for SARL to find CVC3 and CVC4, the executables (cvc3 and
+cvc4) must be in your PATH the first time you use SARL.
+
+You will also need a Java 7 SDK.
 
 If you want to install from source (e.g., because you want to develop
 SARL), it is a bit more complicated, because SARL requires
@@ -41,25 +44,22 @@ all of the following:
    http://ant.apache.org 
  - CVC3 (automated theorem prover):
    http://www.cs.nyu.edu/acsys/cvc3/download.html
- - clj-ds (Clojure's persistent data structures in pure Java):
-   https://github.com/krukow/clj-ds
- - PCollections (another persistent data structure library):
-   http://code.google.com/p/pcollections/
+ - CVC4 (automated theorem prover):
+   http://cvc4.cs.nyu.edu/downloads/
  - JUnit (automated testing framework):
    https://github.com/KentBeck/junit/downloads
+ - Hamcrest (a library of "matchers", required by JUnit):
+   https://github.com/hamcrest/JavaHamcrest
  - JaCoCo (Java code coverage analysis tool):
    http://www.jacoco.org
 
-[Note that Hamcrest is now needed with JUnit 4.11 and later:
- - Hamcrest (a library of "matchers"):
-   https://github.com/hamcrest/JavaHamcrest
-]
-   
 See file INSTALL in this directory for detailed instructions on
 installing SARL from source.
 
 ============================== LICENSES ===============================
 
-SARL is copyright 2013 Stephen F. Siegel, Verified Software Laboratory,
-University of Delaware.  It is distributed under the terms of the GNU
-Lesser General Public License (LGPL).  See the file COPYING.LESSER.
+SARL is copyright 2013,2014, Stephen F. Siegel,
+Verified Software Laboratory, University of Delaware.
+It is distributed under the terms of the GNU
+Lesser General Public License (LGPL).
+See the file COPYING.LESSER.

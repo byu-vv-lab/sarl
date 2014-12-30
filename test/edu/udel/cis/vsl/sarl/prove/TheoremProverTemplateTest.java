@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
@@ -116,7 +117,10 @@ public class TheoremProverTemplateTest {
 	/**
 	 * Checks whether "x==y" / "5+10 < x+y" is valid. The provers should find
 	 * the predicates are invalid and provide a counterexample.
+	 * 
+	 * Ignored until model finding is implemented.
 	 */
+	@Ignore
 	@Test
 	public void validOrModelTest() {
 		BooleanExpression predicate = universe.equals(x, y);

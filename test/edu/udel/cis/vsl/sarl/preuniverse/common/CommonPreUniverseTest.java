@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import edu.nyu.acsys.CVC4.IntegerType;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -25,7 +24,6 @@ import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.ReferenceExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
-import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -516,31 +514,31 @@ public class CommonPreUniverseTest {
 	 * 
 	 * @author blutuu
 	 */
-//	@Test
-//	public void testExistsIntConcrete() {
-//		StringObject name = universe.stringObject("index");
-//		SymbolicType type = universe.integerType();
-//		IntegerNumber low, high, low2, high2;
-//		low = numberFactory.integer(1000);
-//		low2 = numberFactory.integer(2000);
-//		high = numberFactory.integer(2000);
-//		high2 = numberFactory.integer(1000);
-//		SymbolicObject x1 = universe.symbolicConstant(
-//				universe.stringObject("x1"), integerType);
-//		SymbolicType symbolicType = universe.integerType();
-//		SymbolicConstant index = universe.symbolicConstant(name, type);
-//		SymbolicExpression symbolicExpression = expressionFactory.expression(
-//				SymbolicExpression.SymbolicOperator.CONCRETE, symbolicType, x1);
-//		BooleanExpression testResult = preuniverse.existsIntConcrete(index,
-//				low, high, symbolicExpression);
-//		BooleanExpression testResult2 = preuniverse.existsIntConcrete(index,
-//				low2, high2, symbolicExpression);
-//
-//		assertEquals(preuniverse.existsIntConcrete(index, low, high,
-//				symbolicExpression), testResult);
-//		assertEquals(preuniverse.existsIntConcrete(index, low2, high2,
-//				symbolicExpression), testResult2);
-//	}
+	// @Test
+	// public void testExistsIntConcrete() {
+	// StringObject name = universe.stringObject("index");
+	// SymbolicType type = universe.integerType();
+	// IntegerNumber low, high, low2, high2;
+	// low = numberFactory.integer(1000);
+	// low2 = numberFactory.integer(2000);
+	// high = numberFactory.integer(2000);
+	// high2 = numberFactory.integer(1000);
+	// SymbolicObject x1 = universe.symbolicConstant(
+	// universe.stringObject("x1"), integerType);
+	// SymbolicType symbolicType = universe.integerType();
+	// SymbolicConstant index = universe.symbolicConstant(name, type);
+	// SymbolicExpression symbolicExpression = expressionFactory.expression(
+	// SymbolicExpression.SymbolicOperator.CONCRETE, symbolicType, x1);
+	// BooleanExpression testResult = preuniverse.existsIntConcrete(index,
+	// low, high, symbolicExpression);
+	// BooleanExpression testResult2 = preuniverse.existsIntConcrete(index,
+	// low2, high2, symbolicExpression);
+	//
+	// assertEquals(preuniverse.existsIntConcrete(index, low, high,
+	// symbolicExpression), testResult);
+	// assertEquals(preuniverse.existsIntConcrete(index, low2, high2,
+	// symbolicExpression), testResult2);
+	// }
 
 	/**
 	 * Test for equals() method in which UNIONS are passed. Multiple cases where

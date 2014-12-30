@@ -8,21 +8,12 @@ prover {
   showInconclusives = false;
   showErrors = true;
 }
+
 prover {
   aliases = cvc3;
   kind = CVC3;
   version = "2.4.1";
   path = "/usr/bin/cvc3";
-  timeout = 20.0;
-  showQueries = false;
-  showInconclusives = false;
-  showErrors = true;
-}
-prover {
-  aliases = cvc3_api;
-  kind = CVC3_API;
-  version = "2.4.1";
-  path = "libcvc3jni.dylib";
   timeout = 20.0;
   showQueries = false;
   showInconclusives = false;
