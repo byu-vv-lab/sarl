@@ -33,8 +33,8 @@ import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
  * <p>
- * A CVC3Translator object is used to translate a single symbolic expression to
- * the language of CVC3. The expression is specified and the translation takes
+ * A CVCTranslator object is used to translate a single symbolic expression to
+ * the language of CVC. The expression is specified and the translation takes
  * place at construction time. The result is available in two parts: the
  * resulting declarations and the resulting translated expression. These are
  * obtained by two getter methods: {@link #getDeclarations()} and
@@ -55,22 +55,24 @@ import edu.udel.cis.vsl.sarl.util.Pair;
  * </p>
  * 
  * <p>
- * CVC3 does not like tuples of length 1. Therefore all SARL tuples (x) of
- * length 1 are translated to just x, and the SARL tuple type [T] is translated
- * to just T.
+ * CVC does not like tuples of length 1. Therefore all SARL tuples (x) of length
+ * 1 are translated to just x, and the SARL tuple type [T] is translated to just
+ * T.
  * </p>
  * 
  * @author siegel
  *
  */
+public class CVCTranslator {
 
-// just translate every symbolic constant to a new name in CVC
-// maintain a map between them
-//
-// need for any pair of symbolic expression (n,d) the
-// associated aux variables for intdiv and intmod (q,r).
-
-public class CVC3Translator {
+	/**
+	 * If <code>true</code>, integer division and modulus expressions will be
+	 * translated by introducing auxiliary variables for quotient and remainder,
+	 * and new constraints (one of which will be quadratic). This seems to work
+	 * well for CVC3, which does not support the integer division or modulus
+	 * operations.
+	 */
+	private boolean simplifyIntDivision;
 
 	/**
 	 * The symbolic universe used to create and manipulate SARL symbolic
@@ -79,9 +81,9 @@ public class CVC3Translator {
 	private PreUniverse universe;
 
 	/**
-	 * The number of auxiliary CVC3 variables created. These are the variables
+	 * The number of auxiliary CVC variables created. These are the variables
 	 * that do not correspond to any SARL variable but are needed for some
-	 * reason to translate an expression. Includes both ordinary and bound CVC3
+	 * reason to translate an expression. Includes both ordinary and bound CVC
 	 * variables.
 	 */
 	private int cvcAuxVarCount;
@@ -93,8 +95,8 @@ public class CVC3Translator {
 	private int sarlAuxVarCount;
 
 	/**
-	 * Mapping of SARL symbolic expression to corresponding CVC3 expression.
-	 * Used to cache the results of translation.
+	 * Mapping of SARL symbolic expression to corresponding CVC expression. Used
+	 * to cache the results of translation.
 	 */
 	private Map<SymbolicExpression, FastList<String>> expressionMap;
 
@@ -106,27 +108,27 @@ public class CVC3Translator {
 	private Map<Pair<SymbolicType, SymbolicType>, String> castMap;
 
 	/**
-	 * Map from SARL symbolic constants to corresponding CVC3 expressions.
+	 * Map from SARL symbolic constants to corresponding CVC expressions.
 	 * Entries are a subset of those of {@link #expressionMap}.
 	 */
 	private Map<SymbolicConstant, FastList<String>> variableMap;
 
 	/**
-	 * Mapping of SARL symbolic type to corresponding CVC3 type. Used to cache
+	 * Mapping of SARL symbolic type to corresponding CVC type. Used to cache
 	 * results of translation.
 	 */
 	private Map<SymbolicType, FastList<String>> typeMap;
 
 	/**
 	 * Integer division map. Given a pair (a,b) of expressions of integer type,
-	 * This returns the pair of CVC3 variables (q,r) representing the quotient
+	 * This returns the pair of CVC variables (q,r) representing the quotient
 	 * and remainder resulting from the integer division a div b.
 	 */
 	private Map<Pair<NumericExpression, NumericExpression>, Pair<FastList<String>, FastList<String>>> intDivMap;
 
 	/**
 	 * The declarations section resulting from the translation. This contains
-	 * all the declarations of symbols used in the resulting CVC3 input.
+	 * all the declarations of symbols used in the resulting CVC input.
 	 */
 	private FastList<String> cvcDeclarations;
 
@@ -138,7 +140,9 @@ public class CVC3Translator {
 
 	// Constructors...
 
-	CVC3Translator(PreUniverse universe, SymbolicExpression theExpression) {
+	CVCTranslator(PreUniverse universe, SymbolicExpression theExpression,
+			boolean simplifyIntDivision) {
+		this.simplifyIntDivision = simplifyIntDivision;
 		this.universe = universe;
 		this.cvcAuxVarCount = 0;
 		this.sarlAuxVarCount = 0;
@@ -146,13 +150,17 @@ public class CVC3Translator {
 		this.castMap = new HashMap<>();
 		this.variableMap = new HashMap<>();
 		this.typeMap = new HashMap<>();
-		this.intDivMap = new HashMap<>();
+		if (simplifyIntDivision)
+			this.intDivMap = new HashMap<>();
+		else
+			this.intDivMap = null;
 		this.cvcDeclarations = new FastList<>();
 		this.cvcTranslation = translate(theExpression);
 	}
 
-	CVC3Translator(CVC3Translator startingContext,
+	CVCTranslator(CVCTranslator startingContext,
 			SymbolicExpression theExpression) {
+		this.simplifyIntDivision = startingContext.simplifyIntDivision;
 		this.universe = startingContext.universe;
 		this.cvcAuxVarCount = startingContext.cvcAuxVarCount;
 		this.sarlAuxVarCount = startingContext.sarlAuxVarCount;
@@ -160,7 +168,10 @@ public class CVC3Translator {
 		this.castMap = new HashMap<>(startingContext.castMap);
 		this.variableMap = new HashMap<>(startingContext.variableMap);
 		this.typeMap = new HashMap<>(startingContext.typeMap);
-		this.intDivMap = new HashMap<>(startingContext.intDivMap);
+		if (simplifyIntDivision)
+			this.intDivMap = new HashMap<>(startingContext.intDivMap);
+		else
+			intDivMap = null;
 		this.cvcDeclarations = new FastList<>();
 		this.cvcTranslation = translate(theExpression);
 	}
@@ -200,13 +211,13 @@ public class CVC3Translator {
 	}
 
 	/**
-	 * Creates a new CVC3 (ordinary) variable of given type with unique name;
+	 * Creates a new CVC (ordinary) variable of given type with unique name;
 	 * increments {@link #cvcAuxVarCount}.
 	 * 
 	 * @param type
-	 *            a CVC3 type; it is consumed, so cannot be used after invoking
+	 *            a CVC type; it is consumed, so cannot be used after invoking
 	 *            this method
-	 * @return the new CVC3 variable
+	 * @return the new CVC variable
 	 */
 	private String newCvcAuxVar(FastList<String> type) {
 		String name = "t" + cvcAuxVarCount;
@@ -438,10 +449,10 @@ public class CVC3Translator {
 
 	/**
 	 * Translates any concrete SymbolicExpression with concrete type to
-	 * equivalent CVC3 Expr using the ExprManager.
+	 * equivalent CVC Expr using the ExprManager.
 	 * 
 	 * @param expr
-	 * @return the CVC3 equivalent Expr
+	 * @return the CVC equivalent Expr
 	 */
 	private FastList<String> translateConcrete(SymbolicExpression expr) {
 		SymbolicType type = expr.type();
@@ -470,7 +481,7 @@ public class CVC3Translator {
 			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
 			int n = sequence.size();
 
-			if (n == 1) { // no tuples of length 1 in CVC3
+			if (n == 1) { // no tuples of length 1 in CVC
 				result = translate(sequence.get(0));
 			} else {
 				result = new FastList<String>("(");
@@ -541,11 +552,11 @@ public class CVC3Translator {
 	}
 
 	/**
-	 * Translates an array-read expression a[i] into equivalent CVC3 expression
+	 * Translates an array-read expression a[i] into equivalent CVC expression
 	 * 
 	 * @param expr
 	 *            a SARL symbolic expression of form a[i]
-	 * @return an equivalent CVC3 expression
+	 * @return an equivalent CVC expression
 	 */
 	private FastList<String> translateArrayRead(SymbolicExpression expr) {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
@@ -562,14 +573,14 @@ public class CVC3Translator {
 	}
 
 	/**
-	 * Translates an tuple-read expression t.i into equivalent CVC3 expression.
+	 * Translates an tuple-read expression t.i into equivalent CVC expression.
 	 * 
 	 * Recall: TUPLE_READ: 2 arguments: arg0 is the tuple expression. arg1 is an
 	 * IntObject giving the index in the tuple.
 	 * 
 	 * @param expr
 	 *            a SARL symbolic expression of form t.i
-	 * @return an equivalent CVC3 expression
+	 * @return an equivalent CVC expression
 	 */
 	private FastList<String> translateTupleRead(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
@@ -592,11 +603,11 @@ public class CVC3Translator {
 
 	/**
 	 * Translates an array-write (or array update) SARL symbolic expression to
-	 * equivalent CVC3 expression.
+	 * equivalent CVC expression.
 	 * 
 	 * @param expr
 	 *            a SARL array update expression "a WITH [i] := v"
-	 * @return the result of translating to CVC3
+	 * @return the result of translating to CVC
 	 */
 	private FastList<String> translateArrayWrite(SymbolicExpression expr) {
 		FastList<String> result = pretranslateArrayWrite(expr);
@@ -607,7 +618,7 @@ public class CVC3Translator {
 
 	/**
 	 * Translates a tuple-write (or tuple update) SARL symbolic expression to
-	 * equivalent CVC3 expression.
+	 * equivalent CVC expression.
 	 * 
 	 * Recall: TUPLE_WRITE: 3 arguments: arg0 is the original tuple expression,
 	 * arg1 is an IntObject giving the index, arg2 is the new value to write
@@ -615,7 +626,7 @@ public class CVC3Translator {
 	 * 
 	 * @param expr
 	 *            a SARL tuple update expression
-	 * @return the result of translating to CVC3
+	 * @return the result of translating to CVC
 	 */
 	private FastList<String> translateTupleWrite(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
@@ -642,11 +653,11 @@ public class CVC3Translator {
 
 	/**
 	 * Translates a multiple array-write (or array update) SARL symbolic
-	 * expression to equivalent CVC3 expression.
+	 * expression to equivalent CVC expression.
 	 * 
 	 * @param expr
 	 *            a SARL expression of kind DENSE_ARRAY_WRITE
-	 * @return the result of translating expr to CVC3
+	 * @return the result of translating expr to CVC
 	 */
 	private FastList<String> translateDenseArrayWrite(SymbolicExpression expr) {
 		FastList<String> result = pretranslateDenseArrayWrite(expr);
@@ -657,12 +668,12 @@ public class CVC3Translator {
 
 	/**
 	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
-	 * expression to equivalent CVC3 expression.
+	 * expression to equivalent CVC expression.
 	 * 
 	 * @param expr
 	 *            a SARL expression of kind
 	 *            {@link SymbolicOperator#DENSE_TUPLE_WRITE}
-	 * @return result of translating to CVC3
+	 * @return result of translating to CVC
 	 */
 	private FastList<String> translateDenseTupleWrite(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
@@ -712,11 +723,11 @@ public class CVC3Translator {
 
 	/**
 	 * Translates SymbolicExpressions of the type "exists" and "forall" into the
-	 * CVC3 equivalent.
+	 * CVC equivalent.
 	 * 
 	 * @param expr
 	 *            a SARL "exists" or "forall" expression
-	 * @return result of translating to CVC3
+	 * @return result of translating to CVC
 	 */
 	private FastList<String> translateQuantifier(SymbolicExpression expr) {
 		// syntax: FORALL (x : T) : pred
@@ -786,13 +797,13 @@ public class CVC3Translator {
 	}
 
 	/**
-	 * Translates a SymbolicExpression that represents a = b into the CVC3
+	 * Translates a SymbolicExpression that represents a = b into the CVC
 	 * equivalent.
 	 * 
 	 * @param expr
 	 *            SARL symbolic expression with kind
 	 *            {@link SymbolicOperator.EQUALS}
-	 * @return the equivalent CVC3
+	 * @return the equivalent CVC
 	 */
 	private FastList<String> translateEquality(SymbolicExpression expr) {
 		SymbolicExpression leftExpression = (SymbolicExpression) expr
@@ -848,7 +859,7 @@ public class CVC3Translator {
 	 * 
 	 * @param expr
 	 *            a "union extract" expression
-	 * @return result of translating to CVC3
+	 * @return result of translating to CVC
 	 */
 	private FastList<String> translateUnionExtract(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
@@ -885,7 +896,7 @@ public class CVC3Translator {
 	 * 
 	 * @param expr
 	 *            a "union inject" expression
-	 * @return the CVC3 translation of that expression
+	 * @return the CVC translation of that expression
 	 */
 	private FastList<String> translateUnionInject(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
@@ -921,7 +932,7 @@ public class CVC3Translator {
 	 * 
 	 * @param expr
 	 *            a "union test" expression
-	 * @return the CVC3 translation of that expression
+	 * @return the CVC translation of that expression
 	 */
 	private FastList<String> translateUnionTest(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
@@ -1159,11 +1170,11 @@ public class CVC3Translator {
 	}
 
 	/**
-	 * Translates a SARL symbolic expression to the language of CVC3.
+	 * Translates a SARL symbolic expression to the language of CVC.
 	 * 
 	 * @param expression
 	 *            a non-null SymbolicExpression
-	 * @return translation to CVC3 as a fast list of strings
+	 * @return translation to CVC as a fast list of strings
 	 */
 	private FastList<String> translateWork(SymbolicExpression expression) {
 		SymbolicOperator operator = expression.operator();
@@ -1180,8 +1191,9 @@ public class CVC3Translator {
 			result = translateApply(expression);
 			break;
 		case ARRAY_LAMBDA:
+			// TODO: are they supported in CVC3?
 			throw new UnsupportedOperationException(
-					"Array lambdas are not supported in CVC3");
+					"Array lambdas are not supported");
 		case ARRAY_READ:
 			result = translateArrayRead(expression);
 			break;
@@ -1216,8 +1228,15 @@ public class CVC3Translator {
 			result = translateQuantifier(expression);
 			break;
 		case INT_DIVIDE:
-			result = getIntDivInfo((NumericExpression) expression.argument(0),
-					(NumericExpression) expression.argument(1)).left;
+			if (simplifyIntDivision) {
+				result = getIntDivInfo(
+						(NumericExpression) expression.argument(0),
+						(NumericExpression) expression.argument(1)).left;
+			} else {
+				result = translateBinary(" DIV ",
+						(SymbolicExpression) expression.argument(0),
+						(SymbolicExpression) expression.argument(1));
+			}
 			break;
 		case LENGTH:
 			result = lengthOfArray((SymbolicExpression) expression.argument(0));
@@ -1233,8 +1252,14 @@ public class CVC3Translator {
 					(SymbolicExpression) expression.argument(1));
 			break;
 		case MODULO:
-			result = getIntDivInfo((NumericExpression) expression.argument(0),
-					(NumericExpression) expression.argument(1)).right;
+			if (simplifyIntDivision)
+				result = getIntDivInfo(
+						(NumericExpression) expression.argument(0),
+						(NumericExpression) expression.argument(1)).right;
+			else
+				result = translateBinary(" MOD ",
+						(SymbolicExpression) expression.argument(0),
+						(SymbolicExpression) expression.argument(1));
 			break;
 		case MULTIPLY:
 			result = translateBinaryOrAssoc(" * ", "1", expression);
@@ -1420,7 +1445,7 @@ public class CVC3Translator {
 
 	/**
 	 * Returns the result of translating the symbolic expression specified at
-	 * construction into the language of CVC3. The result is returned as a
+	 * construction into the language of CVC. The result is returned as a
 	 * {@link FastList}. The elements of that list are Strings, which,
 	 * concatenated, yield the translation result. In most cases you never want
 	 * to convert the result to a single string. Rather, you should iterate over
@@ -1434,7 +1459,7 @@ public class CVC3Translator {
 
 	/**
 	 * Returns the text of the declarations of the CVC symbols that occur in the
-	 * translated expression. Typically, the declarations are submitted to CVC3
+	 * translated expression. Typically, the declarations are submitted to CVC
 	 * first, followed by a query or assertion of the translated expression.
 	 * 
 	 * @return the declarations of the CVC symbols

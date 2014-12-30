@@ -22,6 +22,8 @@ public class CommonProverInfo implements ProverInfo {
 
 	private Set<String> aliases = new HashSet<>();
 
+	private String firstAlias = null;
+
 	private List<String> options = new LinkedList<>();
 
 	private ProverKind kind = null;
@@ -53,6 +55,11 @@ public class CommonProverInfo implements ProverInfo {
 	}
 
 	@Override
+	public String getFirstAlias() {
+		return firstAlias;
+	}
+
+	@Override
 	public ProverKind getKind() {
 		return kind;
 	}
@@ -78,6 +85,8 @@ public class CommonProverInfo implements ProverInfo {
 
 	@Override
 	public boolean addAlias(String value) {
+		if (firstAlias == null)
+			firstAlias = value;
 		return aliases.add(value);
 	}
 

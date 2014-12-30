@@ -18,65 +18,57 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.prove.cvc;
 
+import static edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind.CVC3;
+import static edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind.CVC4;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.LinkedList;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
+import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.util.FastList;
+import edu.udel.cis.vsl.sarl.util.ProcessControl;
 
 /**
- * An implementation of {@link TheoremProver} using the automated theorem prover
- * CVC4, and in which CVC4 is run in a separate process for each query.
- * Transforms a theorem proving query into the language of CVC4, invokes CVC4
- * through its command line interface, and interprets the output.
+ * An implementation of {@link TheoremProver} using one of the automated theorem
+ * provers CVC3 or CVC4. Transforms a theorem proving query into the language of
+ * CVC, invokes CVC through its command line interface in a new process, and
+ * interprets the output.
  * 
  * @author siegel
  */
-public class RobustCVC4TheoremProver implements TheoremProver {
-
-	// more robust preconditioning: rename all symbolic constants
-	// find out which parts of the assumption are relevant.
-	// canonicalize order of symbolic constants:
-
-	// consider assumption as conjunction of boolean expressions (b).
-	// undirected graph:
-	// nodes: all free (not bound) symbolic constants occurring in
-	// the predicate and assumption.
-	// edges: {u,v} if for some b, u,v occur in b.
-	// N0=all free symbolic constants occurring in the predicate
-	// (N,E)=all nodes, edges reachable from N0 in graph.
-	// ignore: all edges, nodes not in (N,E).
-
-	// This is common to all theorem provers.
-	// step 1: given context, store it as now in TheoremProver
-	// step 2: when predicate comes in, perform graph computation,
-	// yielding reduced context (for this predicate).
-	// step 3: canonicalize variable names across both reduced
-	// context and predicate, using graph structure.
-	// order N0 (put predicate in BNF, use type, etc).
-	// then order edges in graph
-	// (by kind of constraint, degree, etc.). This puts total
-	// order on DFS o
+public class RobustCVCTheoremProver implements TheoremProver {
 
 	// ************************** Static Fields *************************** //
 
-	public final static String prompt = "CVC4> ";
-
-	public final static char[] promptChars = prompt.toCharArray();
-
+	/**
+	 * Nick-name for <code>stderr</code>, where warnings and error messages will
+	 * be sent.
+	 */
 	public final static PrintStream err = System.err;
 
 	// ****************************** Fields ****************************** //
 
+	/**
+	 * Info object on underlying theorem prover, which will have
+	 * {@link ProverKind} either {@link ProverKind#CVC3} or
+	 * {@link ProverKind#CVC4}
+	 */
 	private ProverInfo info;
 
+	/**
+	 * Java object for producing new OS-level processes executing a specified
+	 * command.
+	 */
 	private ProcessBuilder processBuilder;
 
 	/**
@@ -86,39 +78,54 @@ public class RobustCVC4TheoremProver implements TheoremProver {
 	private PreUniverse universe;
 
 	/**
-	 * The translation of the given context to a CVC4 expression. Created once
+	 * The translation of the given context to a CVC3 expression. Created once
 	 * during instantiation and never modified.
 	 */
-	private CVC4Translator assumptionTranslator;
+	private CVCTranslator assumptionTranslator;
 
 	// *************************** Constructors *************************** //
 
 	/**
-	 * Constructs new CVC4 theorem prover with given symbolic universe.
+	 * Constructs new CVC theorem prover for the given context.
 	 * 
 	 * @param universe
 	 *            the controlling symbolic universe
 	 * @param context
 	 *            the assumption(s) the prover will use for queries
+	 * @param ProverInfo
+	 *            information object on the underlying theorem prover, which
+	 *            must have {@link ProverKind} either {@link ProverKind#CVC3} or
+	 *            {@link ProverKind#CVC4}
 	 */
-	RobustCVC4TheoremProver(PreUniverse universe, BooleanExpression context,
+	RobustCVCTheoremProver(PreUniverse universe, BooleanExpression context,
 			ProverInfo info) {
+		LinkedList<String> command = new LinkedList<>();
+
 		assert universe != null;
 		assert context != null;
 		assert info != null;
 		this.universe = universe;
 		this.info = info;
 		// The following is apparently necessary since the same bound symbolic
-		// constant can be used in different scopes in the context; CVC4
+		// constant can be used in different scopes in the context; CVC*
 		// requires that these map to distinct variables.
 		context = (BooleanExpression) universe.cleanBoundVariables(context);
-		this.assumptionTranslator = new CVC4Translator(universe, context);
-		// set up process builder with command
-		// also try "--use-theory=idl"
-		// make these options part of the config?
-		this.processBuilder = new ProcessBuilder(info.getPath()
-				.getAbsolutePath(), "--rewrite-divk", "--quiet",
-				"--interactive", "--lang=cvc4");
+		this.assumptionTranslator = new CVCTranslator(universe, context, true);
+		command.add(info.getPath().getAbsolutePath());
+		command.addAll(info.getOptions());
+		if (info.getKind() == CVC3) {
+			command.add("-lang");
+			command.add("presentation");
+		} else if (info.getKind() == CVC4) {
+			command.add("--quiet");
+			command.add("--lang=cvc4");
+			command.add("--no-interactive");
+			command.add("--rewrite-divk");
+			// also try "--use-theory=idl", which can sometimes solve non-linear
+			// queries
+		} else
+			throw new SARLInternalException("unreachable");
+		this.processBuilder = new ProcessBuilder(command);
 	}
 
 	@Override
@@ -126,53 +133,45 @@ public class RobustCVC4TheoremProver implements TheoremProver {
 		return universe;
 	}
 
-	private ValidityResult readCVCOutput(BufferedReader in) {
+	private ValidityResult readCVCOutput(BufferedReader cvcOut,
+			BufferedReader cvcErr) {
 		try {
-			String line = in.readLine();
+			String line = cvcOut.readLine();
 
-			// debug:
-			// System.out.println(line);
-			// System.out.flush();
-			line = line.replace(prompt, "");
+			if (line == null) {
+				if (info.getShowErrors() || info.getShowInconclusives()) {
+					for (String errline = cvcErr.readLine(); errline != null; errline = cvcErr
+							.readLine()) {
+						err.println(errline);
+					}
+					err.flush();
+				}
+				return Prove.RESULT_MAYBE;
+			}
 			line = line.trim();
-			if ("valid".equals(line))
+			if ((info.getKind() == CVC3 ? "Valid." : "valid").equals(line))
 				return Prove.RESULT_YES;
-			if ("invalid".equals(line))
+			if ((info.getKind() == CVC3 ? "Invalid." : "invalid").equals(line))
 				return Prove.RESULT_NO;
 			if (info.getShowInconclusives()) {
-				StringBuffer sb = new StringBuffer(line);
-				int promptpos = 0;
-				int read;
-
-				sb.append('\n');
-				while (true) {
-					read = in.read();
-					if (read == -1)
-						break;
-					if (read == promptChars[promptpos]) {
-						promptpos++;
-						if (promptpos >= promptChars.length)
-							break;
-					} else {
-						for (int j = 0; j < promptpos; j++)
-							sb.append(promptChars[j]);
-						promptpos = 0;
-						sb.append((char) read);
-					}
+				err.println(info.getFirstAlias()
+						+ " inconclusive with message: " + line);
+				for (line = cvcOut.readLine(); line != null; line = cvcOut
+						.readLine()) {
+					err.println(line);
 				}
-				err.println("CVC4 inconclusive with message: " + sb);
 			}
 			return Prove.RESULT_MAYBE;
 		} catch (IOException e) {
 			if (info.getShowErrors())
-				err.println("I/O error reading CVC4 output: " + e.getMessage());
+				err.println("I/O error reading " + info.getFirstAlias()
+						+ " output: " + e.getMessage());
 			return Prove.RESULT_MAYBE;
 		}
 	}
 
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
-		// TODO: clean bound vars on predicate?
 		PrintStream out = universe.getOutputStream();
 		int id = universe.numProverValidCalls();
 		FastList<String> assumptionDecls = assumptionTranslator
@@ -185,30 +184,34 @@ public class RobustCVC4TheoremProver implements TheoremProver {
 		universe.incrementProverValidCount();
 		if (show) {
 			out.println();
-			out.print("CVC4 assumptions " + id + ":\n");
+			out.print(info.getFirstAlias() + " assumptions " + id + ":\n");
 			assumptionDecls.print(out);
 			assumptionText.print(out);
+			out.println();
 			out.flush();
 		}
 		try {
 			process = processBuilder.start();
 		} catch (IOException e) {
 			if (info.getShowErrors())
-				err.println("I/O exception reading CVC4 output: "
-						+ e.getMessage());
+				err.println("I/O exception reading " + info.getFirstAlias()
+						+ " output: " + e.getMessage());
 			result = Prove.RESULT_MAYBE;
 		}
 
 		PrintStream stdin = new PrintStream(process.getOutputStream());
 		BufferedReader stdout = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
+		BufferedReader stderr = new BufferedReader(new InputStreamReader(
+				process.getErrorStream()));
 
 		assumptionDecls.print(stdin);
 		stdin.print("ASSERT ");
 		assumptionText.print(stdin);
 		stdin.println(";");
+		predicate = (BooleanExpression) universe.cleanBoundVariables(predicate);
 
-		CVC4Translator translator = new CVC4Translator(assumptionTranslator,
+		CVCTranslator translator = new CVCTranslator(assumptionTranslator,
 				predicate);
 		FastList<String> predicateDecls = translator.getDeclarations();
 		FastList<String> predicateText = translator.getTranslation();
@@ -218,16 +221,27 @@ public class RobustCVC4TheoremProver implements TheoremProver {
 		predicateText.print(stdin);
 		stdin.println(";\n");
 		stdin.flush();
+		stdin.close();
 		if (show) {
-			out.print("\nCVC4 predicate   " + id + ":\n");
+			out.print("\n" + info.getFirstAlias() + " predicate   " + id
+					+ ":\n");
 			predicateDecls.print(out);
 			predicateText.print(out);
 			out.println();
 			out.flush();
 		}
-		result = readCVCOutput(stdout);
+		if (info.getTimeout() > 0
+				&& !ProcessControl.waitForProcess(process, info.getTimeout())) {
+			if (info.getShowErrors() || info.getShowInconclusives())
+				err.println(info.getFirstAlias() + " query       " + id
+						+ ": time out");
+			result = Prove.RESULT_MAYBE;
+		} else {
+			result = readCVCOutput(stdout, stderr);
+		}
 		if (show) {
-			out.println("CVC4 result      " + id + ": " + result);
+			out.println(info.getFirstAlias() + " result      " + id + ": "
+					+ result);
 			out.flush();
 		}
 		if (process != null)
@@ -242,6 +256,6 @@ public class RobustCVC4TheoremProver implements TheoremProver {
 
 	@Override
 	public String toString() {
-		return "RobustCVC4TheoremProver";
+		return "RobustCVCTheoremProver[" + info.getFirstAlias() + "]";
 	}
 }

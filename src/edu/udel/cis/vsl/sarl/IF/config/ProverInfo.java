@@ -56,6 +56,13 @@ public interface ProverInfo extends Comparable<ProverInfo> {
 	Set<String> getAliases();
 
 	/**
+	 * Returns one of the alias strings in the set of aliases.
+	 * 
+	 * @return an alias string
+	 */
+	String getFirstAlias();
+
+	/**
 	 * Adds the given string to the set of aliases.
 	 * 
 	 * @param value

@@ -35,18 +35,42 @@ import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.common.MultiProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC3TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.CVC4TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVC3TheoremProverFactory;
-import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVC4TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVCTheoremProverFactory;
 import edu.udel.cis.vsl.sarl.prove.z3.Z3TheoremProverFactory;
 
+/**
+ * This is the entry point for module prove. It provides:
+ * <ul>
+ * <li>constants of type {@link ValidityResult} corresponding to the three
+ * different kinds of validity results: {@link #RESULT_YES}, {@link #RESULT_NO},
+ * and {@link #RESULT_MAYBE}</li>
+ * <li>methods for producing new {@link TheoremProverFactory} instances.</li>
+ * <li>various other methods dealing with prover results</li>
+ * </ul>
+ * 
+ * @author siegel
+ *
+ */
 public class Prove {
 
+	/**
+	 * A constant of type {@link ValidityResult} which has {@link ResultType}
+	 * {@link ResultType.YES}.
+	 */
 	public final static ValidityResult RESULT_YES = new CommonValidityResult(
 			ResultType.YES);
 
+	/**
+	 * A constant of type {@link ValidityResult} which has {@link ResultType}
+	 * {@link ResultType.NO}.
+	 */
 	public final static ValidityResult RESULT_NO = new CommonValidityResult(
 			ResultType.NO);
 
+	/**
+	 * A constant of type {@link ValidityResult} which has {@link ResultType}
+	 * {@link ResultType.MAYBE}.
+	 */
 	public final static ValidityResult RESULT_MAYBE = new CommonValidityResult(
 			ResultType.MAYBE);
 
@@ -57,8 +81,14 @@ public class Prove {
 	 * inconclusive, it goes to the next, and so on.
 	 * 
 	 * @param universe
+	 *            the symbolic universe used to manage and produce symbolic
+	 *            expressions
 	 * @param config
-	 * @return
+	 *            a SARL configuration object specifying some sequence of
+	 *            theorem provers which are available
+	 * @return a new theorem prover factory which may use all of the provers
+	 *         specified in the config, in order, until a conclusive result is
+	 *         reached or all provers have been exhausted
 	 */
 	public static TheoremProverFactory newMultiProverFactory(
 			PreUniverse universe, SARLConfig config) {
@@ -73,19 +103,30 @@ public class Prove {
 		return new MultiProverFactory(universe, factories);
 	}
 
+	/**
+	 * Constructs a new theorem prover factory based on a single underlying
+	 * theorem prover.
+	 * 
+	 * @param universe
+	 *            the symbolic universe used to produce and manipulate symbolic
+	 *            expressions
+	 * @param prover
+	 *            a {@link ProverInfo} object providing information on the
+	 *            specific underlying theorem prover which will be used
+	 * @return the new theorem prover factory based on the given prover
+	 */
 	public static TheoremProverFactory newProverFactory(PreUniverse universe,
 			ProverInfo prover) {
 		switch (prover.getKind()) {
+		case CVC3:
+		case CVC4:
+			return new RobustCVCTheoremProverFactory(universe, prover);
 		case CVC3_API:
 			return new CVC3TheoremProverFactory(universe, prover);
-		case CVC4:
-			return new RobustCVC4TheoremProverFactory(universe, prover);
 		case CVC4_API:
 			return new CVC4TheoremProverFactory(universe, prover);
 		case Z3_API:
 			return new Z3TheoremProverFactory(universe, prover);
-		case CVC3:
-			return new RobustCVC3TheoremProverFactory(universe, prover);
 		case Z3:
 			// not yet implemented
 		default:
@@ -94,6 +135,17 @@ public class Prove {
 		}
 	}
 
+	/**
+	 * Returns one of the constants {@link #RESULT_YES}, {@link #RESULT_NO},
+	 * {@link #RESULT_MAYBE}, corresponding to the given type.
+	 * 
+	 * @param type
+	 *            a non-null {@link ResultType}
+	 * @return either {@link #RESULT_YES}, {@link #RESULT_NO}, or
+	 *         {@link #RESULT_MAYBE}, depending on whether <code>type</code> is
+	 *         {@link ResultType#YES}, {@link ResultType#NO}, or
+	 *         {@link ResultType#MAYBE}, respectively.
+	 */
 	public static ValidityResult validityResult(ResultType type) {
 		switch (type) {
 		case YES:
@@ -107,6 +159,21 @@ public class Prove {
 		}
 	}
 
+	/**
+	 * Constructs a new {@link ModelResult} wrapping the given mapping from
+	 * symbolic constants to symbolic expressions. The represents the case where
+	 * a validity result is {@link ResultType#NO} and, in addition, a specific
+	 * counter example has been found. The counterexample specifies a concrete
+	 * value for each symbolic constant which was used in the query, in such a
+	 * way that the queried predicate evaluates to <code>false</code> and the
+	 * queried assumption evaluates to <code>true</code>.
+	 * 
+	 * @param model
+	 *            mapping giving concrete value to each symbolic constant
+	 *            occurring in the query
+	 * @return new instance of {@link ModelResult} wrapping the given
+	 *         <code>mode</code>.
+	 */
 	public static ModelResult modelResult(
 			Map<SymbolicConstant, SymbolicExpression> model) {
 		return new CommonModelResult(model);
