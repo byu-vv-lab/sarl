@@ -228,6 +228,7 @@ public class RobustCVCTheoremProver implements TheoremProver {
 			predicateDecls.print(out);
 			predicateText.print(out);
 			out.println();
+			out.println();
 			out.flush();
 		}
 		if (info.getTimeout() > 0
