@@ -37,9 +37,43 @@ import edu.udel.cis.vsl.sarl.IF.config.SARLConfig;
  */
 public class ConfigFactory {
 
+	// Fields...
+
+	/**
+	 * Nickname for <code>System.err</code>.
+	 */
 	public final static PrintStream err = System.err;
 
+	/**
+	 * Nickname for <code>System.out</code>.
+	 */
 	public final static PrintStream out = System.out;
+
+	/**
+	 * Map from the typical file names of the executable theorem provers to the
+	 * kind of theorem prover. Add more entries as needed.
+	 */
+	private static Map<String, ProverKind> executableMap = new HashMap<>();
+
+	static {
+		executableMap.put("cvc3", ProverKind.CVC3); // working
+		executableMap.put("cvc4", ProverKind.CVC4); // working
+		// executableMap.put("z3", ProverKind.Z3); // not yet implemented
+	}
+
+	/**
+	 * Map from the names of the (JNI) dynamic libraries to the kind of the
+	 * theorem prover. Add more entries as needed.
+	 */
+	private static Map<String, ProverKind> dylibMap = new HashMap<>();
+
+	static {
+		// dylibMap.put("cvc3jni", ProverKind.CVC3_API); // too fragile
+		// dylibMap.put("cvc4jni", ProverKind.CVC4_API); // crashes too much
+		// dylibMap.put("z3java", ProverKind.Z3_API); // not yet implemented
+	}
+
+	// Private methods...
 
 	/**
 	 * <p>
@@ -78,30 +112,6 @@ public class ConfigFactory {
 		default:
 			return null;
 		}
-	}
-
-	/**
-	 * Map from the typical file names of the executable theorem provers to the
-	 * kind of theorem prover. Add more entries as needed.
-	 */
-	private static Map<String, ProverKind> executableMap = new HashMap<>();
-
-	static {
-		executableMap.put("cvc3", ProverKind.CVC3); // working
-		executableMap.put("cvc4", ProverKind.CVC4); // working
-		// executableMap.put("z3", ProverKind.Z3); // not yet implemented
-	}
-
-	/**
-	 * Map from the names of the (JNI) dynamic libraries to the kind of the
-	 * theorem prover. Add more entries as needed.
-	 */
-	private static Map<String, ProverKind> dylibMap = new HashMap<>();
-
-	static {
-		// dylibMap.put("cvc3jni", ProverKind.CVC3_API); // too fragile
-		// dylibMap.put("cvc4jni", ProverKind.CVC4_API); // crashes too much
-		// dylibMap.put("z3java", ProverKind.Z3_API); // not yet implemented
 	}
 
 	/**
@@ -149,24 +159,23 @@ public class ConfigFactory {
 	}
 
 	/**
-	 * Looks for a SARL configuration file in the specified directory. First
-	 * looks for file named ".sarl", and if that doesn't exist, looks for one
-	 * name ".sarl_default".
+	 * Determines whether a file with a specified name exists in a specified
+	 * directory. The file must be a regular file, not a directory.
 	 * 
 	 * @param dir
 	 *            directory in which to look
-	 * @return the SARL configuration file or <code>null</code> if it cannot be
-	 *         found in the given directory
+	 * @param filename
+	 *            name of file
+	 * @return if the directory exists and the file exists and is a regular file
+	 *         in that directory: the {@link File} object corresponding to the
+	 *         file; otherwise <code>null</code>
 	 */
-	private static File findSARLConfigInDir(File dir) {
+	private static File getFile(File dir, String filename) {
 		if (dir.isDirectory()) {
-			File configFile = new File(dir, ".sarl");
+			File file = new File(dir, filename);
 
-			if (configFile.isFile())
-				return configFile;
-			configFile = new File(dir, ".sarl_default");
-			if (configFile.isFile())
-				return configFile;
+			if (file.isFile())
+				return file;
 		}
 		return null;
 	}
@@ -459,18 +468,31 @@ public class ConfigFactory {
 	}
 
 	/**
-	 * Looks for a SARL configuration file, first in the current working
-	 * directory, and, if not found there, then in the user's home directory.
+	 * Looks for a SARL configuration file by first looking in the current
+	 * working directory for a file named <code>.sarl</code>. If no file by that
+	 * name is found, it looks in the user's home directory for
+	 * <code>.sarl</code>. If that is not found, it looks in the current working
+	 * directory for a file named <code>.sarl_default</code>. If that is not
+	 * found, it looks in the home directory for <code>.sarl_default</code>.
 	 * 
 	 * @return the SARL configuration file, or <code>null</code> if not found
 	 */
 	public static File findSARLConfigFile() {
-		File result = findSARLConfigInDir(new File(
-				System.getProperty("user.dir")));
+		File workingDir = new File(System.getProperty("user.dir"));
+		File result = getFile(workingDir, ".sarl");
 
 		if (result != null)
 			return result;
-		result = findSARLConfigInDir(new File(System.getProperty("user.home")));
+
+		File homeDir = new File(System.getProperty("user.home"));
+
+		result = getFile(homeDir, ".sarl");
+		if (result != null)
+			return result;
+		result = getFile(workingDir, ".sarl_default");
+		if (result != null)
+			return result;
+		result = getFile(homeDir, ".sarl_default");
 		return result;
 	}
 
@@ -597,9 +619,9 @@ public class ConfigFactory {
 		configFileStream
 				.println(" * It first looks in the current working directory for a file named .sarl");
 		configFileStream
-				.println(" * If that is not found, it looks in that directory for .sarl_default.");
-		configFileStream
 				.println(" * If that is not found, it looks in the user's home directory for .sarl");
+		configFileStream
+				.println(" * If that is not found, it looks in the current working directory for .sarl_default.");
 		configFileStream
 				.println(" * If that is not found, it looks in the user's home directory for .sarl_default");
 		configFileStream.println(" */");

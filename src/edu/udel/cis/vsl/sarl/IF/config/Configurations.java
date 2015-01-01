@@ -27,8 +27,10 @@ public class Configurations {
 	 * <p>
 	 * The value is computed by first looking in the current working directory
 	 * for a file named <code>.sarl</code>. If no file by that name is found, it
-	 * will then look for a file named <code>.sarl_default</code>. If that is
-	 * not found, it will repeat in the user's home directory.
+	 * looks in the user's home directory for <code>.sarl</code>. If that is not
+	 * found, it looks in the current working directory for a file named
+	 * <code>.sarl_default</code>. If that is not found, it looks in the home
+	 * directory for <code>.sarl_default</code>.
 	 * </p>
 	 * 
 	 * <p>
@@ -76,37 +78,6 @@ public class Configurations {
 		}
 	}
 
-	// /**
-	// * <p>
-	// * Finds and parses the SARL configuration file. Looks in the default
-	// * directories (first the current working directory, then the user's home
-	// * directory) for the files with the appropriate names (<code>.sarl</code>
-	// * or <code>.sarl_default</code>).
-	// * </p>
-	// *
-	// * <p>
-	// * If no such file is found, this method will return <code>null</code>. If
-	// * the file is found, but it has syntax errors, or there is some I/O
-	// problem
-	// * when reading it, the application will terminate immediately with a
-	// non-0
-	// * exit code.
-	// * </p>
-	// *
-	// * @return the {@link SARLConfig} object resulting from parsing the found
-	// * file, or <code>null</code> if no such file is found
-	// */
-	// public static SARLConfig findConfiguration() {
-	// try {
-	// return ConfigFactory.findConfig();
-	// } catch (Exception e) {
-	// System.err.println("SARL configuration error: " + e.getMessage());
-	// System.err.flush();
-	// System.exit(1);
-	// return null; // unreachable
-	// }
-	// }
-
 	/**
 	 * <p>
 	 * Looks for a SARL configuration file, and, if one is not found, creates
@@ -115,7 +86,7 @@ public class Configurations {
 	 * it will be created by searching the user's <code>PATH</code> for
 	 * appropriate theorem provers. In either case, the configuration file is
 	 * parsed, and the resulting {@link SARLConfig} object is returned. The
-	 * public static variable {@link #CONFIG} will also be updated.
+	 * public static variable {@link #DEFAULT_CONFIG} will also be updated.
 	 * </p>
 	 * 
 	 * <p>
