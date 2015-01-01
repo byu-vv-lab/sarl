@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 
 /**
@@ -252,5 +253,21 @@ public class CommonProverInfo implements ProverInfo {
 			return this.compareTo(that) == 0;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isExecutable() {
+		switch (kind) {
+		case CVC3:
+		case CVC4:
+		case Z3:
+			return true;
+		case CVC3_API:
+		case CVC4_API:
+		case Z3_API:
+			return false;
+		default:
+			throw new SARLInternalException("unreachable");
+		}
 	}
 }

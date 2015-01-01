@@ -132,10 +132,11 @@ public class Configurations {
 			return DEFAULT_CONFIG;
 		try {
 			DEFAULT_CONFIG = ConfigFactory.findConfig();
-
 			if (DEFAULT_CONFIG == null) {
 				ConfigFactory.makeConfigFile();
 				DEFAULT_CONFIG = ConfigFactory.findConfig();
+			} else {
+				ConfigFactory.checkConfig(DEFAULT_CONFIG);
 			}
 		} catch (Exception e) {
 			System.err.println("SARL configuration error: " + e.getMessage());

@@ -185,49 +185,47 @@ public class ConfigFactory {
 	 *         prover, or <code>null</code> if the prover could not be executed
 	 *         correctly
 	 */
-	private static ProverInfo processProver(ProverKind kind, String alias,
-			File executableFile) {
+	private static ProverInfo processExecutableProver(ProverKind kind,
+			String alias, File executableFile) {
 		String fullPath = executableFile.getAbsolutePath();
 		ProcessBuilder pb = new ProcessBuilder(fullPath, versionCommand(kind));
 		Process process = null;
+		String line;
 
 		try {
 			process = pb.start();
 
 			BufferedReader stdout = new BufferedReader(new InputStreamReader(
 					process.getInputStream()));
-			String line = stdout.readLine().trim();
 
+			line = stdout.readLine().trim();
 			process.destroy();
-
-			int pos = line.lastIndexOf("version ");
-
-			if (pos < 0) {
-				out.println("Unexpected output from " + fullPath);
-				return null;
-			}
-
-			String version = line.substring(pos + "version ".length());
-			ProverInfo info = new CommonProverInfo();
-
-			info.addAlias(alias);
-			info.setKind(kind);
-			info.setPath(executableFile);
-			info.setVersion(version);
-			info.setTimeout(20.0);
-			info.setShowQueries(false);
-			info.setShowInconclusives(false);
-			info.setShowErrors(true);
-			out.println("Found " + kind + " version " + version + " at "
-					+ fullPath);
-			out.flush();
-			return info;
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			if (process != null)
 				process.destroy();
 			out.println("Failed to execute " + fullPath);
 			return null;
 		}
+
+		int pos = line.lastIndexOf("version ");
+
+		if (pos < 0) {
+			out.println("Unexpected output from " + fullPath);
+			return null;
+		}
+
+		String version = line.substring(pos + "version ".length());
+		ProverInfo info = new CommonProverInfo();
+
+		info.addAlias(alias);
+		info.setKind(kind);
+		info.setPath(executableFile);
+		info.setVersion(version);
+		info.setTimeout(20.0);
+		info.setShowQueries(false);
+		info.setShowInconclusives(false);
+		info.setShowErrors(true);
+		return info;
 	}
 
 	/**
@@ -247,29 +245,26 @@ public class ConfigFactory {
 	 */
 	private static ProverInfo processDynamicProver(ProverKind kind,
 			String alias, String jnidylib) {
+		String libraryName;
+
 		try {
-			String libraryName = System.mapLibraryName(jnidylib);
+			libraryName = System.mapLibraryName(jnidylib);
 			System.loadLibrary(jnidylib);
-
-			out.println("Found " + kind + " implemented as native library "
-					+ libraryName);
-			out.flush();
-
-			ProverInfo info = new CommonProverInfo();
-
-			info.addAlias(alias);
-			info.setKind(kind);
-			info.setPath(new File(libraryName));
-			info.setVersion("UNKNOWN");
-			info.setTimeout(20.0);
-			info.setShowQueries(false);
-			info.setShowInconclusives(false);
-			info.setShowErrors(true);
-			// info.print(stream);
-			return info;
-		} catch (Error e) {
+		} catch (Throwable e) {
 			return null;
 		}
+
+		ProverInfo info = new CommonProverInfo();
+
+		info.addAlias(alias);
+		info.setKind(kind);
+		info.setPath(new File(libraryName));
+		info.setVersion("UNKNOWN");
+		info.setTimeout(20.0);
+		info.setShowQueries(false);
+		info.setShowInconclusives(false);
+		info.setShowErrors(true);
+		return info;
 	}
 
 	// Public methods...
@@ -480,6 +475,55 @@ public class ConfigFactory {
 	}
 
 	/**
+	 * Checks that a {@link SARLConfig} object corresponds to the actual system
+	 * on which we are running.
+	 * 
+	 * @param config
+	 *            a {@link SARLConfig} object
+	 * @throws SARLException
+	 *             if a theorem prover specified in the config is not found, or
+	 *             cannot be executed/loaded, or does not have the version
+	 *             specified
+	 */
+	public static void checkConfig(SARLConfig config) throws SARLException {
+		for (ProverInfo info : config.getProvers()) {
+			if (info.isExecutable()) {
+				ProverInfo reread = processExecutableProver(info.getKind(),
+						info.getFirstAlias(), info.getPath());
+
+				if (reread == null)
+					throw new SARLException("no theorem prover "
+							+ info.getFirstAlias() + " at " + info.getPath());
+				if (!reread.getVersion().equals(info.getVersion()))
+					throw new SARLException("expected version "
+							+ info.getVersion() + " for "
+							+ info.getFirstAlias() + " but found "
+							+ reread.getVersion());
+			} else {
+				for (Entry<String, ProverKind> entry : dylibMap.entrySet()) {
+					if (entry.getValue() == info.getKind()) {
+						File path = new File(System.mapLibraryName(entry
+								.getKey()));
+
+						if (path.equals(info.getPath())) {
+							try {
+								System.loadLibrary(entry.getKey());
+								return;
+							} catch (Throwable e) {
+								throw new SARLException(
+										"unable to load dynamic library "
+												+ path);
+							}
+						}
+					}
+				}
+				throw new SARLException("dynamic library " + info.getPath()
+						+ " for " + info.getFirstAlias() + " not found");
+			}
+		}
+	}
+
+	/**
 	 * Finds and parses the SARL configuration file.
 	 * 
 	 * @return {@link SARLConfig} object resulting from parsing the
@@ -583,9 +627,14 @@ public class ConfigFactory {
 						if (count > 0)
 							alias += "_" + count;
 
-						ProverInfo prover = processProver(kind, alias, file);
+						ProverInfo prover = processExecutableProver(kind,
+								alias, file);
 
 						if (prover != null) {
+							out.println("Found " + kind + " version "
+									+ prover.getVersion() + " at "
+									+ prover.getPath());
+							out.flush();
 							provers.add(prover);
 							executableCountMap.put(kind, count + 1);
 						}
@@ -607,6 +656,9 @@ public class ConfigFactory {
 			ProverInfo prover = processDynamicProver(kind, alias, libraryName);
 
 			if (prover != null) {
+				out.println("Found " + kind + " implemented as native library "
+						+ libraryName);
+				out.flush();
 				provers.add(prover);
 				dynamicCountMap.put(kind, count + 1);
 			}
