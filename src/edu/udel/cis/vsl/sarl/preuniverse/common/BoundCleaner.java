@@ -55,6 +55,12 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  */
 public class BoundCleaner {
 
+	/**
+	 * Special string which will be used to give unique name to new variables.
+	 * "'" is good but not for Z3.
+	 */
+	private final static String specialString = "__";
+
 	private ExpressionSubstituter substituter;
 
 	private CollectionFactory collectionFactory;
@@ -274,7 +280,7 @@ public class BoundCleaner {
 			{
 				SingletonMap<SymbolicExpression, SymbolicExpression> substitutionMap;
 
-				newName = name + "'" + count;
+				newName = name + specialString + count;
 				count++;
 				newBoundVariable = universe.symbolicConstant(
 						universe.stringObject(newName), boundVariable.type());

@@ -35,6 +35,7 @@ import edu.udel.cis.vsl.sarl.prove.common.CommonModelResult;
 import edu.udel.cis.vsl.sarl.prove.common.CommonValidityResult;
 import edu.udel.cis.vsl.sarl.prove.common.MultiProverFactory;
 import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVCTheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.z3.RobustZ3TheoremProverFactory;
 
 /**
  * This is the entry point for module prove. It provides:
@@ -119,9 +120,10 @@ public class Prove {
 		case CVC3:
 		case CVC4:
 			return new RobustCVCTheoremProverFactory(universe, prover);
+		case Z3:
+			return new RobustZ3TheoremProverFactory(universe, prover);
 		case CVC3_API:
 		case CVC4_API:
-		case Z3:
 		case Z3_API:
 			// return new Z3TheoremProverFactory(universe, prover);
 			throw new SARLException("Unsupported theorem prover: "

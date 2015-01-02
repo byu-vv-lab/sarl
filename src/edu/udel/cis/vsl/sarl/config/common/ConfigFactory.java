@@ -58,7 +58,7 @@ public class ConfigFactory {
 	static {
 		executableMap.put("cvc3", ProverKind.CVC3); // working
 		executableMap.put("cvc4", ProverKind.CVC4); // working
-		// executableMap.put("z3", ProverKind.Z3); // not yet implemented
+		executableMap.put("z3", ProverKind.Z3); // almost working
 	}
 
 	/**

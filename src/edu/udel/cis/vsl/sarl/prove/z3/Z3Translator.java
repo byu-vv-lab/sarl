@@ -1,5 +1,6 @@
-package edu.udel.cis.vsl.sarl.prove.cvc;
+package edu.udel.cis.vsl.sarl.prove.z3;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,67 +13,126 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
+import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.util.FastList;
-import edu.udel.cis.vsl.sarl.util.FastNode;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
- * <p>
- * A CVCTranslator object is used to translate a single symbolic expression to
- * the language of CVC. The expression is specified and the translation takes
- * place at construction time. The result is available in two parts: the
- * resulting declarations and the resulting translated expression. These are
- * obtained by two getter methods: {@link #getDeclarations()} and
- * {@link #getTranslation()}, respectively.
- * </p>
+ * Notes on the Z3 language:
  * 
- * <p>
- * In SARL, a complete array type T[N] is considered a sub-type of the
- * incomplete type T[]. Therefore an expression of type T[N] may be used
- * wherever one of type T[] is expected. For example, a function that takes
- * something of type T[] as an argument may be called with something of type
- * T[N]. The translation must take this into account by using the same
- * representation for expressions of both types. This translator represents any
- * such expression as an ordered pair (len,val), where len is an expression of
- * integer type representing the length of the array object, and val is an
- * expression of array type (with domain the set of integers) specifying the
- * values of the array.
- * </p>
+ * <pre>
+ * // Invocation:
+ * z3 -smt2 -in
  * 
- * <p>
- * CVC does not like tuples of length 1. Therefore all SARL tuples (x) of length
- * 1 are translated to just x, and the SARL tuple type [T] is translated to just
- * T.
- * </p>
+ * // Commands:
+ * (assert expr)
+ * (check-sat).
+ * 
+ * To check if predicate is valid under context:
+ * (assert context)
+ * (assert (not predicate))
+ * (check-sat)
+ * if result is "sat": answer is NO (not valid)
+ * if result is "unsat": answer is YES (valid)
+ * otherwise, MAYBE
+ * 
+ * // Basic Types:
+ * Int
+ * Bool
+ * Real
+ * 
+ * // Constants
+ * true
+ * false
+ * integers, decimals, fractions can be written (/ a b)
+ * 
+ * // Boolean ops
+ * and or not ite =>
+ *  
+ * // Symbolic constants:
+ * (declare-const all1 (Array Int Int))
+ * 
+ * // Symbolic constants of functional type:
+ * (declare-fun f (Int Bool) Int)
+ * 
+ * // Tuples:
+ * (declare-datatypes () ((T1 (mk-T1 (proj_0 Int) (proj_1 Real)))))
+ * (declare-datatypes () ((T2 (mk-T2 (proj_0 Real) (proj_1 Int)))))
+ * (simplify (mk-T1 2 3.1))
+ * (simplify (proj_0 (mk-T1 2 3.1)))
+ * (simplify (= (mk-T1 2 3.1) (mk-T1 2 3.1)))
+ * update(t, i, new_val) is equivalent to mk_tuple(proj_0(t), ..., new_val, ..., proj_n(t))
+ * 
+ * // Arrays:
+ * (declare-const a1 (Array Int Int))
+ * (select a1 index)
+ * (store a index value)
+ * 
+ * // Constant arrays:
+ * (declare-const all1 (Array Int Int))
+ * (assert (= all1 ((as const (Array Int Int)) 1)))
+ * 
+ * // Lambdas: no lambda expressions; use macros:
+ * (define-fun mydiv ((x Real) (y Real)) Real
+ *   (if (not (= y 0.0))
+ *       (/ x y)
+ *       0.0))
+ * 
+ * declare them and then use the function name where the macro was called for
+ * 
+ * // Array lambdas:
+ * just make an assertion that says the elements of the array are equal to the
+ * evaluation of the function
+ * 
+ * // Union types
+ * // union of Int and Real:
+ * (declare-datatypes () ((U1 (inject_1_0 (extract_1_0 Int)) (inject_1_1 (extract_1_1 Real)))))
+ * (simplify (inject_1_0 34))
+ * (simplify (is-inject_1_0 (inject_1_0 34)))
+ * 
+ * // Integer division and modulus
+ * There is both mod and remainder:
+ * 
+ * (assert (= r1 (div a 4))) ; integer division
+ * (assert (= r2 (mod a 4))) ; mod
+ * (assert (= r3 (rem a 4))) ; remainder
+ * (assert (= r4 (div a (- 4)))) ; integer division
+ * (assert (= r5 (mod a (- 4)))) ; mod
+ * (assert (= r6 (rem a (- 4)))) ; remainder
+ * 
+ * (simplify (mod 10 -4))
+ * 2
+ * (simplify (rem 10 -4))
+ * (- 2)
+ * (simplify (div 10 -4))
+ * (- 2)
+ * 
+ * First order quantifiers:
+ * 
+ * (forall ((x Int)) (p x))
+ * 
+ * </pre>
  * 
  * @author siegel
  *
  */
-public class CVCTranslator {
-
-	/**
-	 * If <code>true</code>, integer division and modulus expressions will be
-	 * translated by introducing auxiliary variables for quotient and remainder,
-	 * and new constraints (one of which will be quadratic). This seems to work
-	 * well for CVC3, which does not support the integer division or modulus
-	 * operations.
-	 */
-	private boolean simplifyIntDivision;
+public class Z3Translator {
 
 	/**
 	 * The symbolic universe used to create and manipulate SARL symbolic
@@ -81,12 +141,12 @@ public class CVCTranslator {
 	private PreUniverse universe;
 
 	/**
-	 * The number of auxiliary CVC variables created. These are the variables
+	 * The number of auxiliary Z3 variables created. These are the variables
 	 * that do not correspond to any SARL variable but are needed for some
-	 * reason to translate an expression. Includes both ordinary and bound CVC
+	 * reason to translate an expression. Includes both ordinary and bound Z3
 	 * variables.
 	 */
-	private int cvcAuxVarCount;
+	private int z3AuxVarCount;
 
 	/**
 	 * The number of auxiliary SARL variables created. These are used for
@@ -95,7 +155,7 @@ public class CVCTranslator {
 	private int sarlAuxVarCount;
 
 	/**
-	 * Mapping of SARL symbolic expression to corresponding CVC expression. Used
+	 * Mapping of SARL symbolic expression to corresponding Z3 expression. Used
 	 * to cache the results of translation.
 	 */
 	private Map<SymbolicExpression, FastList<String>> expressionMap;
@@ -108,81 +168,90 @@ public class CVCTranslator {
 	private Map<Pair<SymbolicType, SymbolicType>, String> castMap;
 
 	/**
-	 * Map from SARL symbolic constants to corresponding CVC expressions.
-	 * Entries are a subset of those of {@link #expressionMap}.
-	 * 
-	 * NOTE: currently, this is not being used for anything.
+	 * Map from SARL symbolic constants to corresponding Z3 expressions. Entries
+	 * are a subset of those of {@link #expressionMap}.
 	 */
 	private Map<SymbolicConstant, FastList<String>> variableMap;
 
 	/**
-	 * Mapping of SARL symbolic type to corresponding CVC type. Used to cache
+	 * Mapping of SARL symbolic type to corresponding Z3 type. Used to cache
 	 * results of translation.
 	 */
 	private Map<SymbolicType, FastList<String>> typeMap;
 
 	/**
-	 * Integer division map. Given a pair (a,b) of expressions of integer type,
-	 * This returns the pair of CVC variables (q,r) representing the quotient
-	 * and remainder resulting from the integer division a div b.
+	 * Has the "bigArray" type been defined?
 	 */
-	private Map<Pair<NumericExpression, NumericExpression>, Pair<FastList<String>, FastList<String>>> intDivMap;
+	private boolean bigArrayDefined = false;
 
 	/**
 	 * The declarations section resulting from the translation. This contains
 	 * all the declarations of symbols used in the resulting CVC input.
 	 */
-	private FastList<String> cvcDeclarations;
+	private FastList<String> z3Declarations;
 
 	/**
 	 * The expression which is the result of translating the given symbolic
 	 * expression.
 	 */
-	private FastList<String> cvcTranslation;
+	private FastList<String> z3Translation;
 
 	// Constructors...
 
-	CVCTranslator(PreUniverse universe, SymbolicExpression theExpression,
+	Z3Translator(PreUniverse universe, SymbolicExpression theExpression,
 			boolean simplifyIntDivision) {
-		this.simplifyIntDivision = simplifyIntDivision;
 		this.universe = universe;
-		this.cvcAuxVarCount = 0;
+		this.z3AuxVarCount = 0;
 		this.sarlAuxVarCount = 0;
 		this.expressionMap = new HashMap<>();
 		this.castMap = new HashMap<>();
 		this.variableMap = new HashMap<>();
 		this.typeMap = new HashMap<>();
-		if (simplifyIntDivision)
-			this.intDivMap = new HashMap<>();
-		else
-			this.intDivMap = null;
-		this.cvcDeclarations = new FastList<>();
-		this.cvcTranslation = translate(theExpression);
+		this.z3Declarations = new FastList<>();
+		this.z3Translation = translate(theExpression);
 	}
 
-	CVCTranslator(CVCTranslator startingContext,
-			SymbolicExpression theExpression) {
-		this.simplifyIntDivision = startingContext.simplifyIntDivision;
+	Z3Translator(Z3Translator startingContext, SymbolicExpression theExpression) {
 		this.universe = startingContext.universe;
-		this.cvcAuxVarCount = startingContext.cvcAuxVarCount;
+		this.z3AuxVarCount = startingContext.z3AuxVarCount;
 		this.sarlAuxVarCount = startingContext.sarlAuxVarCount;
 		this.expressionMap = new HashMap<>(startingContext.expressionMap);
 		this.castMap = new HashMap<>(startingContext.castMap);
 		this.variableMap = new HashMap<>(startingContext.variableMap);
 		this.typeMap = new HashMap<>(startingContext.typeMap);
-		if (simplifyIntDivision)
-			this.intDivMap = new HashMap<>(startingContext.intDivMap);
-		else
-			intDivMap = null;
-		this.cvcDeclarations = new FastList<>();
-		this.cvcTranslation = translate(theExpression);
+		this.z3Declarations = new FastList<>();
+		this.z3Translation = translate(theExpression);
 	}
 
 	// Private methods...
 
+	private void requireBigArray() {
+		if (!bigArrayDefined) {
+			z3Declarations
+					.add("(declare-datatypes (T) ((BigArray (mk-BigArray (bigArray-len Int) (bigArray-val (Array Int T))))))\n");
+			bigArrayDefined = true;
+		}
+	}
+
+	private String tupleTypeName(SymbolicTupleType tupleType) {
+		return "Tuple-" + tupleType.name().getString();
+	}
+
+	private String tupleConstructor(SymbolicTupleType tupleType) {
+		return "mk-" + tupleTypeName(tupleType);
+	}
+
+	private String tupleProjector(SymbolicTupleType tupleType, int index) {
+		return "proj-" + tupleTypeName(tupleType) + "_" + index;
+	}
+
+	private String unionTypeName(SymbolicUnionType unionType) {
+		return "Union-" + unionType.name().getString();
+	}
+
 	/**
 	 * Computes the name of the index-th selector function into a union type.
-	 * This is the function that taken an element of the union and returns an
+	 * This is the function that takes an element of the union and returns an
 	 * element of the index-th member type.
 	 * 
 	 * @param unionType
@@ -192,8 +261,8 @@ public class CVCTranslator {
 	 *            union type
 	 * @return the name of the index-th selector function
 	 */
-	private String selector(SymbolicUnionType unionType, int index) {
-		return unionType.name().toString() + "_extract_" + index;
+	private String unionSelector(SymbolicUnionType unionType, int index) {
+		return unionTypeName(unionType) + "_extract_" + index;
 	}
 
 	/**
@@ -208,26 +277,30 @@ public class CVCTranslator {
 	 *            the union type
 	 * @return the name of the index-th constructor function
 	 */
-	private String constructor(SymbolicUnionType unionType, int index) {
-		return unionType.name().toString() + "_inject_" + index;
+	private String unionConstructor(SymbolicUnionType unionType, int index) {
+		return unionTypeName(unionType) + "_inject_" + index;
+	}
+
+	private String unionTester(SymbolicUnionType unionType, int index) {
+		return "is-" + unionConstructor(unionType, index);
 	}
 
 	/**
-	 * Creates a new CVC (ordinary) variable of given type with unique name;
-	 * increments {@link #cvcAuxVarCount}.
+	 * Creates a new Z3 (ordinary) variable of given type with unique name;
+	 * increments {@link #z3AuxVarCount}. CANNOT be used for a function type.
 	 * 
 	 * @param type
-	 *            a CVC type; it is consumed, so cannot be used after invoking
+	 *            a Z3 type; it is consumed, so cannot be used after invoking
 	 *            this method
-	 * @return the new CVC variable
+	 * @return the new Z3 variable
 	 */
-	private String newCvcAuxVar(FastList<String> type) {
-		String name = "t" + cvcAuxVarCount;
+	private String newZ3AuxVar(FastList<String> type) {
+		String name = "t" + z3AuxVarCount;
 
-		cvcDeclarations.addAll(name, ":");
-		cvcDeclarations.append(type);
-		cvcDeclarations.add(";\n");
-		cvcAuxVarCount++;
+		z3Declarations.addAll("(declare-const ", name);
+		z3Declarations.append(type);
+		z3Declarations.add(")\n");
+		z3AuxVarCount++;
 		return name;
 	}
 
@@ -253,10 +326,10 @@ public class CVCTranslator {
 	 * type which is the contents.
 	 * 
 	 * @param length
-	 *            CVC expression yielding length of array; it is consumed (so
+	 *            Z3 expression yielding length of array; it is consumed (so
 	 *            cannot be used after invoking this method)
 	 * @param value
-	 *            CVC expression of type "array-of-T"; it is consumed (so cannot
+	 *            Z3 expression of type "array-of-T"; it is consumed (so cannot
 	 *            be used after invoking this method)
 	 * @return ordered pair (tuple), consisting of length and value
 	 */
@@ -264,9 +337,10 @@ public class CVCTranslator {
 			FastList<String> value) {
 		FastList<String> result = new FastList<String>();
 
-		result.addAll("(");
+		requireBigArray();
+		result.addAll("(mk-BigArray ");
 		result.append(length);
-		result.add(",");
+		result.add(" ");
 		result.append(value);
 		result.add(")");
 		return result;
@@ -274,8 +348,8 @@ public class CVCTranslator {
 
 	/**
 	 * <p>
-	 * Given a SARL expression of array type, this method computes the CVC
-	 * representation of the length of that array. This is a CVC expression of
+	 * Given a SARL expression of array type, this method computes the Z3
+	 * representation of the length of that array. This is a Z3 expression of
 	 * integer type.
 	 * </p>
 	 * 
@@ -289,7 +363,7 @@ public class CVCTranslator {
 	 * 
 	 * @param array
 	 *            a SARL expression of array type
-	 * @return translation into CVC of length of that array
+	 * @return translation into Z3 of length of that array
 	 */
 	private FastList<String> lengthOfArray(SymbolicExpression array) {
 		SymbolicArrayType type = (SymbolicArrayType) array.type();
@@ -312,10 +386,10 @@ public class CVCTranslator {
 		case DENSE_ARRAY_WRITE:
 			return lengthOfArray((SymbolicExpression) array.argument(0));
 		default:
-			FastList<String> result = new FastList<>("(");
+			FastList<String> result = new FastList<>("(bigArray-len ");
 
 			result.append(translate(array));
-			result.add(").0");
+			result.add(")");
 			return result;
 		}
 	}
@@ -329,42 +403,38 @@ public class CVCTranslator {
 				.extractNumber(extentExpression);
 		SymbolicSequence<?> elements = (SymbolicSequence<?>) array.argument(0);
 		int size = elements.size();
-		FastList<String> cvcArrayType = new FastList<>("ARRAY INT OF (");
+		FastList<String> z3ArrayType = new FastList<>("(Array Int ");
 
-		cvcArrayType.append(translateType(elementType));
-		cvcArrayType.add(")");
+		z3ArrayType.append(translateType(elementType));
+		z3ArrayType.add(")");
 		assert extentNumber != null && extentNumber.intValue() == size;
 
-		FastList<String> result = new FastList<>(newCvcAuxVar(cvcArrayType));
+		FastList<String> result = new FastList<>(newZ3AuxVar(z3ArrayType));
 
-		if (size > 0) {
-			result.add(" WITH [0] := (");
-			result.append(translate(elements.get(0)));
+		for (int i = 0; i < size; i++) {
+			result.addFront("(store ");
+			result.addAll(" ", Integer.toString(i), " ");
+			result.append(translate(elements.get(i)));
 			result.add(")");
-			for (int i = 1; i < size; i++) {
-				result.addAll(", [", Integer.toString(i), "] := (");
-				result.append(translate(elements.get(i)));
-				result.add(")");
-			}
 		}
 		return result;
 	}
 
 	private FastList<String> pretranslateArrayWrite(
 			SymbolicExpression arrayWrite) {
-		// syntax: a WITH [10] := 2/3
+		// syntax: (store a index value)
 		SymbolicExpression arrayExpression = (SymbolicExpression) arrayWrite
 				.argument(0);
 		NumericExpression indexExpression = (NumericExpression) arrayWrite
 				.argument(1);
 		SymbolicExpression valueExpression = (SymbolicExpression) arrayWrite
 				.argument(2);
-		FastList<String> result = new FastList<>("(");
+		FastList<String> result = new FastList<>("(store ");
 
 		result.append(valueOfArray(arrayExpression));
-		result.add(") WITH [");
+		result.add(" ");
 		result.append(translate(indexExpression));
-		result.add("] := (");
+		result.add(" ");
 		result.append(translate(valueExpression));
 		result.add(")");
 		return result;
@@ -372,28 +442,20 @@ public class CVCTranslator {
 
 	private FastList<String> pretranslateDenseArrayWrite(
 			SymbolicExpression denseArrayWrite) {
-		// syntax: a WITH [10] := 2/3, [42] := 3/2;
+		// syntax: lots of nested stores
 		SymbolicExpression arrayExpression = (SymbolicExpression) denseArrayWrite
 				.argument(0);
 		SymbolicSequence<?> elements = (SymbolicSequence<?>) denseArrayWrite
 				.argument(1);
 		int n = elements.size();
-		FastList<String> result = new FastList<>("(");
-		boolean first = true;
+		FastList<String> result = valueOfArray(arrayExpression);
 
-		result.append(valueOfArray(arrayExpression));
-		result.add(")");
 		for (int i = 0; i < n; i++) {
 			SymbolicExpression element = elements.get(i);
 
 			if (!element.isNull()) {
-				if (first) {
-					result.add(" WITH ");
-					first = false;
-				} else {
-					result.add(", ");
-				}
-				result.addAll("[", Integer.toString(i), "] := (");
+				result.addFront("(store ");
+				result.addAll(" ", Integer.toString(i), " ");
 				result.append(translate(element));
 				result.add(")");
 			}
@@ -402,9 +464,9 @@ public class CVCTranslator {
 	}
 
 	/**
-	 * Given a SARL expression of array type, this method computes the CVC
+	 * Given a SARL expression of array type, this method computes the Z3
 	 * representation of array type corresponding to that array. The result will
-	 * be a CVC expression of type array-of-T, where T is the element type.
+	 * be a Z3 expression of type array-of-T, where T is the element type.
 	 * 
 	 * @param array
 	 * @return
@@ -413,7 +475,8 @@ public class CVCTranslator {
 		// the idea is to catch any expression which would be translated
 		// as an explicit ordered pair [len,val] and return just the val.
 		// for expressions that are not translated to an explicit
-		// ordered pair, just append ".1" to get the array value component.
+		// ordered pair, just apply bigArray-val to get the array value
+		// component.
 		switch (array.operator()) {
 		case CONCRETE:
 			return pretranslateConcreteArray(array);
@@ -422,24 +485,24 @@ public class CVCTranslator {
 		case DENSE_ARRAY_WRITE:
 			return pretranslateDenseArrayWrite(array);
 		default: {
-			FastList<String> result = new FastList<>("(");
+			FastList<String> result = new FastList<>("(bigArray-val ");
 
 			result.append(translate(array));
-			result.add(").1");
+			result.add(")");
 			return result;
 		}
 		}
 	}
 
 	/**
-	 * Translates a concrete SARL array into language of CVC.
+	 * Translates a concrete SARL array into language of Z3.
 	 * 
 	 * @param arrayType
 	 *            a SARL complete array type
 	 * @param elements
 	 *            a sequence of elements whose types are all the element type of
 	 *            the arrayType
-	 * @return CVC translation of the concrete array
+	 * @return Z3 translation of the concrete array
 	 */
 	private FastList<String> translateConcreteArray(SymbolicExpression array) {
 		FastList<String> result = pretranslateConcreteArray(array);
@@ -451,10 +514,11 @@ public class CVCTranslator {
 
 	/**
 	 * Translates any concrete SymbolicExpression with concrete type to
-	 * equivalent CVC Expr using the ExprManager.
+	 * equivalent Z3 expression using the ExprManager.
 	 * 
 	 * @param expr
-	 * @return the CVC equivalent Expr
+	 *            any symbolic expression of kind CONCRETE
+	 * @return the Z3 equivalent expression
 	 */
 	private FastList<String> translateConcrete(SymbolicExpression expr) {
 		SymbolicType type = expr.type();
@@ -468,34 +532,40 @@ public class CVCTranslator {
 			break;
 		case BOOLEAN:
 			result = new FastList<>(
-					((BooleanObject) object).getBoolean() ? "TRUE" : "FALSE");
+					((BooleanObject) object).getBoolean() ? "true" : "false");
 			break;
 		case CHAR:
 			result = new FastList<>(
 					Integer.toString((int) ((CharObject) object).getChar()));
 			break;
 		case INTEGER:
-		case REAL:
 			result = new FastList<>(object.toString());
 			break;
-		case TUPLE: {
-			// syntax:(x,y,z)
-			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
-			int n = sequence.size();
+		case REAL: {
+			RationalNumber number = (RationalNumber) ((NumberObject) object)
+					.getNumber();
+			String numerator = number.numerator().toString(), denominator = number
+					.denominator().toString();
 
-			if (n == 1) { // no tuples of length 1 in CVC
-				result = translate(sequence.get(0));
-			} else {
-				result = new FastList<String>("(");
-				if (n > 0) { // possible to have tuple with 0 components
-					result.append(translate(sequence.get(0)));
-					for (int i = 1; i < n; i++) {
-						result.add(",");
-						result.append(translate(sequence.get(i)));
-					}
-				}
-				result.add(")");
+			if (denominator.equals("1"))
+				result = new FastList<>(numerator);
+			else
+				result = new FastList<>("(/ ", numerator, " ", denominator, ")");
+			break;
+		}
+		case TUPLE: {
+			// syntax: (mk-T e0 e1 ...)
+			SymbolicSequence<?> sequence = (SymbolicSequence<?>) object;
+
+			// declare the tuple type if you haven't already
+			translateType(type);
+			result = new FastList<String>("("
+					+ tupleConstructor((SymbolicTupleType) type));
+			for (SymbolicExpression member : sequence) {
+				result.add(" ");
+				result.append(translate(member));
 			}
+			result.add(")");
 			break;
 		}
 		default:
@@ -504,12 +574,29 @@ public class CVCTranslator {
 		return result;
 	}
 
+	private FastList<String> functionDeclaration(String name,
+			SymbolicFunctionType functionType) {
+		FastList<String> result = new FastList<>("(declare-fun ", name, " (");
+		boolean first = true;
+
+		for (SymbolicType inputType : functionType.inputTypes()) {
+			if (first)
+				first = false;
+			else
+				result.add(" ");
+			result.append(translateType(inputType));
+		}
+		result.add(") ");
+		result.append(translateType(functionType.outputType()));
+		result.add(")\n");
+		return result;
+	}
+
 	/**
-	 * Translates a symbolic constant. It is assumed that this is the first time
-	 * the symbolic constant has been seen. It returns simply the name of the
+	 * Translates a symbolic constant. It returns simply the name of the
 	 * symbolic constant (in the form of a <code>FastList</code> of strings).
 	 * For an ordinary (i.e., not quantified) symbolic constant, this method
-	 * also adds to {@link #cvcDeclarations} a declaration of the symbolic
+	 * also adds to {@link #z3Declarations} a declaration of the symbolic
 	 * constant.
 	 * 
 	 * @param symbolicConstant
@@ -521,96 +608,123 @@ public class CVCTranslator {
 	private FastList<String> translateSymbolicConstant(
 			SymbolicConstant symbolicConstant, boolean isBoundVariable) {
 		String name = symbolicConstant.name().getString();
-		SymbolicType symbolicType = symbolicConstant.type();
-		FastList<String> type = translateType(symbolicType);
 		FastList<String> result = new FastList<>(name);
+		SymbolicType symbolicType = symbolicConstant.type();
 
-		if (!isBoundVariable) {
-			cvcDeclarations.addAll(name, " : ");
-			cvcDeclarations.append(type);
-			cvcDeclarations.add(";\n");
+		if (symbolicType.typeKind() == SymbolicTypeKind.FUNCTION) {
+			z3Declarations.append(functionDeclaration(name,
+					(SymbolicFunctionType) symbolicType));
+		} else {
+			if (!isBoundVariable) {
+				FastList<String> z3Type = translateType(symbolicType);
+
+				z3Declarations.addAll("(declare-const ", name, " ");
+				z3Declarations.append(z3Type);
+				z3Declarations.add(")\n");
+			}
 		}
-		this.variableMap.put(symbolicConstant, result);
+		this.variableMap.put(symbolicConstant, result); // currently not used
+		this.expressionMap.put(symbolicConstant, result);
 		return result.clone();
 	}
 
 	/**
-	 * Syntax example:
+	 * There is no lambda expression in Z3, but you can use the macro facility
 	 * 
 	 * <pre>
-	 * LAMBDA (x: REAL, i:INT): x + i - 1
+	 * (define-fun funcName ((x1 T1) (x2 T2) ...) T expr)
 	 * </pre>
 	 * 
-	 * @param expr
-	 * @return
+	 * where T1, T2, ... are the input types, T is the output type, x1, x2, ...,
+	 * are the formal parameters, and expr is the function body. This method
+	 * creates a fresh function symbol, and adds the macro to
+	 * {@link #z3Declarations}.
+	 * 
+	 * @param lambdaExpression
+	 *            symbolic expression of kind {@link SymbolicOperator#LAMBDA}
+	 * @return new function macro symbol representing the lambda
 	 */
-	private FastList<String> translateLambda(SymbolicExpression expr) {
-		FastList<String> result = new FastList<>("LAMBDA (",
-				((SymbolicConstant) expr.argument(0)).name().getString(), ":");
+	private FastList<String> translateLambda(SymbolicExpression lambdaExpression) {
+		SymbolicFunctionType functionType = (SymbolicFunctionType) lambdaExpression
+				.type();
+		SymbolicConstant inputVar = (SymbolicConstant) lambdaExpression
+				.argument(0);
+		SymbolicExpression body = (SymbolicExpression) lambdaExpression
+				.argument(1);
+		String name = "_lambda_" + z3AuxVarCount;
+		FastList<String> z3SymbolicConstant = translateSymbolicConstant(
+				inputVar, true);
+		FastList<String> z3InputType = translateType(inputVar.type());
+		FastList<String> z3OutputType = translateType(functionType.outputType());
+		FastList<String> z3Body = translate(body);
 
-		result.append(translateType(expr.type()));
-		result.add("):");
-		result.append(translate((SymbolicExpression) expr.argument(1)));
-		return result;
+		z3Declarations.addAll("(define-fun ", name, "((");
+		z3Declarations.append(z3SymbolicConstant);
+		z3Declarations.add(" ");
+		z3Declarations.append(z3InputType);
+		z3Declarations.add(")) ");
+		z3Declarations.append(z3OutputType);
+		z3Declarations.add(" ");
+		z3Declarations.append(z3Body);
+		z3Declarations.add(")\n");
+		z3AuxVarCount++;
+		return new FastList<>(name);
 	}
 
 	/**
-	 * Translates an array-read expression a[i] into equivalent CVC expression
+	 * Translates an array-read expression a[i] into equivalent Z3 expression.
+	 * Syntax: <code>(select a index)</code>.
 	 * 
 	 * @param expr
 	 *            a SARL symbolic expression of form a[i]
-	 * @return an equivalent CVC expression
+	 * @return an equivalent Z3 expression
 	 */
 	private FastList<String> translateArrayRead(SymbolicExpression expr) {
 		SymbolicExpression arrayExpression = (SymbolicExpression) expr
 				.argument(0);
 		NumericExpression indexExpression = (NumericExpression) expr
 				.argument(1);
-		FastList<String> result = new FastList<>("(");
+		FastList<String> result = new FastList<>("(select ");
 
 		result.append(valueOfArray(arrayExpression));
-		result.add(")[");
+		result.add(" ");
 		result.append(translate(indexExpression));
-		result.add("]");
+		result.add(")");
 		return result;
 	}
 
 	/**
-	 * Translates an tuple-read expression t.i into equivalent CVC expression.
+	 * Translates a tuple-read expression t.i into equivalent Z3 expression.
 	 * 
 	 * Recall: TUPLE_READ: 2 arguments: arg0 is the tuple expression. arg1 is an
 	 * IntObject giving the index in the tuple.
 	 * 
 	 * @param expr
-	 *            a SARL symbolic expression of form t.i
-	 * @return an equivalent CVC expression
+	 *            a SARL symbolic expression of kind
+	 *            {@link SymbolicOperator#TUPLE_READ}
+	 * @return an equivalent Z3 expression
 	 */
 	private FastList<String> translateTupleRead(SymbolicExpression expr) {
+		// we can assume the tuple type has already been declared
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
-		int tupleLength = ((SymbolicTupleType) expr.type()).sequence()
-				.numTypes();
 		int index = ((IntObject) expr.argument(1)).getInt();
+		FastList<String> result = new FastList<>(tupleProjector(
+				(SymbolicTupleType) tupleExpression.type(), index), " ");
 
-		if (tupleLength == 1) {
-			assert index == 0;
-			return translate((SymbolicExpression) expr.argument(0));
-		} else {
-			FastList<String> result = new FastList<>("(");
-
-			result.append(translate(tupleExpression));
-			result.add(")." + index);
-			return result;
-		}
+		result.append(translate(tupleExpression));
+		result.add(")");
+		return result;
 	}
 
 	/**
 	 * Translates an array-write (or array update) SARL symbolic expression to
-	 * equivalent CVC expression.
+	 * equivalent Z3 expression.
 	 * 
 	 * @param expr
-	 *            a SARL array update expression "a WITH [i] := v"
-	 * @return the result of translating to CVC
+	 *            a SARL array expression of kind
+	 *            {@link SymbolicOperator#ARRAY_WRITE}
+	 * @return the result of translating to Z3
 	 */
 	private FastList<String> translateArrayWrite(SymbolicExpression expr) {
 		FastList<String> result = pretranslateArrayWrite(expr);
@@ -620,47 +734,61 @@ public class CVCTranslator {
 	}
 
 	/**
+	 * <p>
 	 * Translates a tuple-write (or tuple update) SARL symbolic expression to
-	 * equivalent CVC expression.
+	 * equivalent Z3 expression.
+	 * </p>
 	 * 
+	 * <p>
 	 * Recall: TUPLE_WRITE: 3 arguments: arg0 is the original tuple expression,
 	 * arg1 is an IntObject giving the index, arg2 is the new value to write
 	 * into the tuple.
+	 * </p>
+	 * 
+	 * <pre>
+	 * update(t, i, new_val) is equivalent to
+	 * (mk-TupleName (proj_0 t) ... new_val ... (proj_n t))
+	 * </pre>
 	 * 
 	 * @param expr
-	 *            a SARL tuple update expression
-	 * @return the result of translating to CVC
+	 *            a SARL expression of kind {@link SymbolicOperator#TUPLE_WRITE}
+	 * @return the result of translating to Z3
 	 */
 	private FastList<String> translateTupleWrite(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
+		SymbolicTupleType tupleType = (SymbolicTupleType) tupleExpression
+				.type();
+		FastList<String> t = translate(tupleExpression);
 		int index = ((IntObject) expr.argument(1)).getInt();
 		SymbolicExpression valueExpression = (SymbolicExpression) expr
 				.argument(2);
 		int tupleLength = ((SymbolicTupleType) expr.type()).sequence()
 				.numTypes();
+		FastList<String> result = new FastList<>(tupleConstructor(tupleType));
 
-		if (tupleLength == 1) {
-			assert index == 0;
-			return translate(valueExpression);
-		} else {
-			FastList<String> result = new FastList<>("(");
-
-			result.append(translate(tupleExpression));
-			result.addAll(") WITH .", Integer.toString(index), " := (");
-			result.append(translate(valueExpression));
-			result.add(")");
-			return result;
+		for (int i = 0; i < tupleLength; i++) {
+			result.add(" ");
+			if (i == index) {
+				result.append(translate(valueExpression));
+			} else {
+				result.addAll("(", tupleProjector(tupleType, i), " ");
+				result.append(t.clone());
+				result.add(")");
+			}
 		}
+		result.add(")");
+		return result;
 	}
 
 	/**
 	 * Translates a multiple array-write (or array update) SARL symbolic
-	 * expression to equivalent CVC expression.
+	 * expression to equivalent Z3 expression.
 	 * 
 	 * @param expr
-	 *            a SARL expression of kind DENSE_ARRAY_WRITE
-	 * @return the result of translating expr to CVC
+	 *            a SARL expression of kind
+	 *            {@link SymbolicOperator#DENSE_ARRAY_WRITE}
+	 * @return the result of translating expr to Z3
 	 */
 	private FastList<String> translateDenseArrayWrite(SymbolicExpression expr) {
 		FastList<String> result = pretranslateDenseArrayWrite(expr);
@@ -670,80 +798,94 @@ public class CVCTranslator {
 	}
 
 	/**
-	 * Translate a multiple tuple-write (or tuple update) SARL symbolic
-	 * expression to equivalent CVC expression.
+	 * <p>
+	 * Translates a multiple tuple-write (or tuple update) SARL symbolic
+	 * expression to equivalent Z3 expression.
+	 * </p>
+	 * 
+	 * <p>
+	 * Syntax: <code>(mk-T e0 e1 ...)</code>, where <code>e</code>i is
+	 * <code>(proj_i tup)</code> if there is no i-th element in the sequence or
+	 * the i-th element in the sequence is NULL, otherwise the i-th element of
+	 * the sequence.
+	 * </p>
 	 * 
 	 * @param expr
 	 *            a SARL expression of kind
 	 *            {@link SymbolicOperator#DENSE_TUPLE_WRITE}
-	 * @return result of translating to CVC
+	 * @return result of translating to Z3
 	 */
 	private FastList<String> translateDenseTupleWrite(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
-		int tupleLength = ((SymbolicTupleType) expr.type()).sequence()
-				.numTypes();
-		// syntax t WITH .0 := blah, .1 := blah, ...
+		SymbolicTupleType tupleType = (SymbolicTupleType) tupleExpression
+				.type();
 		SymbolicSequence<?> values = (SymbolicSequence<?>) expr.argument(1);
 		int numValues = values.size();
+		FastList<String> origin = translate(tupleExpression);
 
 		if (numValues == 0) {
-			return translate(tupleExpression);
+			return origin;
 		}
-		if (tupleLength == 1) {
-			assert numValues == 1;
-			SymbolicExpression value = values.get(0);
 
-			if (value.isNull()) {
-				return translate(tupleExpression);
+		FastList<String> result = new FastList<>("(",
+				tupleConstructor(tupleType));
+
+		result.append(translate(tupleExpression));
+		for (int i = 0; i < numValues; i++) {
+			SymbolicExpression value = values.get(i);
+
+			result.add(" ");
+			if (!value.isNull()) {
+				result.append(translate(value));
 			} else {
-				return translate(value);
+				result.addAll("(", tupleProjector(tupleType, i), " ");
+				result.append(origin.clone());
+				result.add(")");
 			}
-		} else {
-			FastList<String> result = new FastList<>("(");
-			boolean first = true;
-
-			result.append(translate(tupleExpression));
-			result.add(")");
-			for (int i = 0; i < numValues; i++) {
-				SymbolicExpression value = values.get(i);
-
-				if (!value.isNull()) {
-					if (first) {
-						result.add(" WITH ");
-						first = false;
-					} else {
-						result.add(", ");
-					}
-					result.addAll(".", Integer.toString(i), " := (");
-					result.append(translate(value));
-					result.add(")");
-				}
-			}
-			return result;
 		}
+
+		int tupleLength = tupleType.sequence().numTypes();
+
+		for (int i = numValues; i < tupleLength; i++) {
+			result.addAll("(", tupleProjector(tupleType, i), " ");
+			result.append(origin.clone());
+			result.add(")");
+		}
+		result.add(")");
+		return result;
 	}
 
 	/**
 	 * Translates SymbolicExpressions of the type "exists" and "forall" into the
-	 * CVC equivalent.
+	 * Z3 equivalent.
 	 * 
 	 * @param expr
 	 *            a SARL "exists" or "forall" expression
-	 * @return result of translating to CVC
+	 * @return result of translating to Z3
 	 */
 	private FastList<String> translateQuantifier(SymbolicExpression expr) {
-		// syntax: FORALL (x : T) : pred
+		// syntax: (forall ((x T)) expr)
 		SymbolicOperator kind = expr.operator();
 		SymbolicConstant boundVariable = (SymbolicConstant) expr.argument(0);
-		String name = boundVariable.name().getString();
 		BooleanExpression predicate = (BooleanExpression) expr.argument(1);
-		FastList<String> result = new FastList<>(kind.toString());
+		FastList<String> result = new FastList<String>("(");
 
-		expressionMap.put(boundVariable, new FastList<>(name));
-		result.addAll(" (", name, " : ");
+		switch (kind) {
+		case FORALL:
+			result.add("forall");
+			break;
+		case EXISTS:
+			result.add("exists");
+			break;
+		default:
+			throw new SARLInternalException("unreachable");
+		}
+		result.add(" ((");
+		result.append(translateSymbolicConstant(boundVariable, true));
+		result.add(" ");
 		result.append(translateType(boundVariable.type()));
-		result.add(") : (");
+		result.add(")) ");
 		result.append(translate(predicate));
 		result.add(")");
 		return result;
@@ -751,7 +893,7 @@ public class CVCTranslator {
 
 	/**
 	 * Given two SARL symbolic expressions of compatible type, this returns the
-	 * CVC translation of the assertion that the two expressions are equal.
+	 * Z3 translation of the assertion that the two expressions are equal.
 	 * Special handling is needed for arrays, to basically say:
 	 * 
 	 * <pre>
@@ -763,7 +905,7 @@ public class CVCTranslator {
 	 * @param expr2
 	 *            a SARL symbolic expression of type compatible with that of
 	 *            <code>expr1</code>
-	 * @return result of translating into CVC the assertion "expr1=expr2"
+	 * @return result of translating into Z3 the assertion "expr1=expr2"
 	 */
 	private FastList<String> processEquality(SymbolicExpression expr1,
 			SymbolicExpression expr2) {
@@ -771,28 +913,30 @@ public class CVCTranslator {
 
 		if (expr1.type().typeKind() == SymbolicTypeKind.ARRAY) {
 			// lengths are equal and forall i (0<=i<length).a[i]=b[i].
-			// syntax: ((len1) = (len2)) AND
-			// FORALL (i : INT) : (( 0 <= i AND i < len1) => ( ... ))
+			// syntax:
+			// (and (= len1 len2)
+			// (forall ((i Int)) (=> (and (<= 0 i) (< i len1)) <rec-call>)))
 			FastList<String> extent1 = lengthOfArray(expr1);
 			NumericSymbolicConstant index = newSarlAuxVar();
 			String indexString = index.name().getString();
 			SymbolicExpression read1 = universe.arrayRead(expr1, index);
 			SymbolicExpression read2 = universe.arrayRead(expr2, index);
 
-			result = new FastList<>("((");
+			result = new FastList<>("(and (= ");
 			result.append(extent1.clone());
-			result.add(") = (");
+			result.add(" ");
 			result.append(lengthOfArray(expr2));
-			result.addAll(")) AND FORALL (", indexString, " : INT) : ((0 <= ",
-					indexString, " AND ", indexString, " < ");
+			result.addAll(") (forall ((", indexString,
+					" Int)) (=> (and (<= 0 ", indexString, ") (< ",
+					indexString, " ");
 			result.append(extent1);
-			result.add(") => (");
+			result.add(")) ");
 			result.append(processEquality(read1, read2));
-			result.add(")");
+			result.add(")))");
 		} else {
-			result = new FastList<>("(");
+			result = new FastList<>("(= ");
 			result.append(translate(expr1));
-			result.add(") = (");
+			result.add(" ");
 			result.append(translate(expr2));
 			result.add(")");
 		}
@@ -824,7 +968,7 @@ public class CVCTranslator {
 	 * Translates a union-extract expression. The result has the form
 	 * 
 	 * <pre>
-	 * UT_extract_i(y)
+	 * (UT_extract_i y)
 	 * </pre>
 	 * 
 	 * where <code>UT</code> is the name of the union type, <code>y</code> is
@@ -846,31 +990,34 @@ public class CVCTranslator {
 	 * Note that the union type will be declared as follows:
 	 * 
 	 * <pre>
-	 * DATATYPE
-	 *   UT = UT_inject_0(UT_extract_0 : T0) | UT_inject_1(UT_extract_1 : T1) | ...
-	 * END;
+	 * (declare-datatypes () ((UT
+	 *     (UT-inject_0 (UT-extract_0 T0))
+	 *     (UT-inject_1 (UT-extract_1 T1))
+	 *     ...
+	 *  )))
 	 * </pre>
 	 * 
 	 * Usage:
 	 * 
 	 * <pre>
-	 *   UT_inject_i(x)
-	 *   UT_extract_i(y)
+	 *   (UT-inject_i x)
+	 *   (UT-extract_i y)
 	 * </pre>
 	 * 
 	 * </p>
 	 * 
 	 * @param expr
-	 *            a "union extract" expression
-	 * @return result of translating to CVC
+	 *            a "union extract" expression, kind
+	 *            {@link SymbolicOperator#UNION_EXTRACT}
+	 * @return result of translating to Z3
 	 */
 	private FastList<String> translateUnionExtract(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
 		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
-		FastList<String> result = new FastList<>(selector(unionType, index));
+		FastList<String> result = new FastList<>("(", unionSelector(unionType,
+				index), " ");
 
-		result.add("(");
 		result.append(translate(arg));
 		result.add(")");
 		return result;
@@ -881,7 +1028,7 @@ public class CVCTranslator {
 	 * Translates a union-inject expression. The result has the form
 	 * 
 	 * <pre>
-	 * UT_inject_i(x)
+	 * (UT-inject_i x)
 	 * </pre>
 	 * 
 	 * where <code>UT</code> is the name of the union type, <code>x</code> is
@@ -899,15 +1046,15 @@ public class CVCTranslator {
 	 * 
 	 * @param expr
 	 *            a "union inject" expression
-	 * @return the CVC translation of that expression
+	 * @return the Z3 translation of that expression
 	 */
 	private FastList<String> translateUnionInject(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
 		SymbolicUnionType unionType = (SymbolicUnionType) expr.type();
-		FastList<String> result = new FastList<>(constructor(unionType, index));
+		FastList<String> result = new FastList<>("(", unionConstructor(
+				unionType, index), " ");
 
-		result.add("(");
 		result.append(translate(arg));
 		result.add(")");
 		return result;
@@ -918,7 +1065,7 @@ public class CVCTranslator {
 	 * Translates a union-test expression. The result has the form
 	 * 
 	 * <pre>
-	 * is_UT_inject_i(y)
+	 * (is-UT-inject_i y)
 	 * </pre>
 	 * 
 	 * where <code>UT</code> is the name of the union type, <code>y</code> is
@@ -935,16 +1082,15 @@ public class CVCTranslator {
 	 * 
 	 * @param expr
 	 *            a "union test" expression
-	 * @return the CVC translation of that expression
+	 * @return the Z3 translation of that expression
 	 */
 	private FastList<String> translateUnionTest(SymbolicExpression expr) {
 		int index = ((IntObject) expr.argument(0)).getInt();
 		SymbolicExpression arg = (SymbolicExpression) expr.argument(1);
 		SymbolicUnionType unionType = (SymbolicUnionType) arg.type();
-		FastList<String> result = new FastList<>("is_"
-				+ constructor(unionType, index));
+		FastList<String> result = new FastList<>("(", unionTester(unionType,
+				index), " ");
 
-		result.add("(");
 		result.append(translate(arg));
 		result.add(")");
 		return result;
@@ -965,15 +1111,13 @@ public class CVCTranslator {
 
 		if (castFunction == null) {
 			castFunction = "cast" + castMap.size();
-			cvcDeclarations.addAll(castFunction, " : (");
-			cvcDeclarations.append(translateType(originalType));
-			cvcDeclarations.add(") -> (");
-			cvcDeclarations.append(translateType(newType));
-			cvcDeclarations.add(");\n");
+			z3Declarations
+					.append(functionDeclaration(castFunction, universe
+							.functionType(Arrays.asList(originalType), newType)));
 			castMap.put(key, castFunction);
 		}
 
-		FastList<String> result = new FastList<>(castFunction, "(");
+		FastList<String> result = new FastList<>("(", castFunction, " ");
 
 		result.append(translate(argument));
 		result.add(")");
@@ -985,16 +1129,11 @@ public class CVCTranslator {
 				.argument(0);
 		SymbolicSequence<?> arguments = (SymbolicSequence<?>) expression
 				.argument(1);
-		boolean first = true;
 		FastList<String> result = new FastList<String>("(");
 
 		result.append(translate(function));
-		result.add(")(");
 		for (SymbolicExpression arg : arguments) {
-			if (first)
-				first = false;
-			else
-				result.add(", ");
+			result.add(" ");
 			result.append(translate(arg));
 		}
 		result.add(")");
@@ -1002,7 +1141,7 @@ public class CVCTranslator {
 	}
 
 	private FastList<String> translateNegative(SymbolicExpression expression) {
-		FastList<String> result = new FastList<>("-(");
+		FastList<String> result = new FastList<>("(- ");
 
 		result.append(translate((SymbolicExpression) expression.argument(0)));
 		result.add(")");
@@ -1010,7 +1149,7 @@ public class CVCTranslator {
 	}
 
 	private FastList<String> translateNEQ(SymbolicExpression expression) {
-		FastList<String> result = new FastList<>("NOT(");
+		FastList<String> result = new FastList<>("(not ");
 
 		result.append(processEquality(
 				(SymbolicExpression) expression.argument(0),
@@ -1020,7 +1159,7 @@ public class CVCTranslator {
 	}
 
 	private FastList<String> translateNot(SymbolicExpression expression) {
-		FastList<String> result = new FastList<>("NOT(");
+		FastList<String> result = new FastList<>("(not ");
 
 		result.append(translate((SymbolicExpression) expression.argument(0)));
 		result.add(")");
@@ -1030,92 +1169,30 @@ public class CVCTranslator {
 	private FastList<String> translatePower(SymbolicExpression expression) {
 		// apparently "^" but not documented
 		SymbolicObject exponent = expression.argument(1);
-		FastList<String> result = new FastList<>("(");
+		FastList<String> result = new FastList<>("(^ ");
 
 		result.append(translate((SymbolicExpression) expression.argument(0)));
-		result.add(")^");
+		result.add(" ");
 		if (exponent instanceof IntObject)
 			result.add(exponent.toString());
 		else {
-			result.add("(");
 			result.append(translate((SymbolicExpression) exponent));
-			result.add(")");
 		}
+		result.add(")");
 		return result;
 	}
 
 	private FastList<String> translateCond(SymbolicExpression expression) {
-		// syntax: IF b THEN x ELSE y ENDIF
-		FastList<String> result = new FastList<>("IF (");
+		// syntax: (ite b x y)
+		FastList<String> result = new FastList<>("(ite ");
 
 		result.append(translate((SymbolicExpression) expression.argument(0)));
-		result.add(") THEN (");
+		result.add(" ");
 		result.append(translate((SymbolicExpression) expression.argument(1)));
-		result.add(") ELSE (");
+		result.add(" ");
 		result.append(translate((SymbolicExpression) expression.argument(2)));
-		result.add(") ENDIF");
+		result.add(")");
 		return result;
-	}
-
-	private Pair<FastList<String>, FastList<String>> getIntDivInfo(
-			NumericExpression arg1, NumericExpression arg2) {
-		// numerator-denominator pair:
-		Pair<NumericExpression, NumericExpression> ndpair = new Pair<>(arg1,
-				arg2);
-		// quotient-remainder pair:
-		Pair<FastList<String>, FastList<String>> qrpair = intDivMap.get(ndpair);
-
-		if (qrpair == null) {
-			FastList<String> quotient = new FastList<>(
-					newCvcAuxVar(new FastList<String>("INT")));
-			FastList<String> remainder = new FastList<>(
-					newCvcAuxVar(new FastList<String>("INT")));
-			FastList<String> numerator = translate(arg1);
-			FastList<String> denominator = translate(arg2);
-
-			// numerator = quotient*denominator + remainder
-			FastList<String> constraint1 = new FastList<>("(");
-
-			constraint1.append(numerator.clone());
-			constraint1.add(") = (");
-			constraint1.append(quotient.clone());
-			constraint1.add(")*(");
-			constraint1.append(denominator.clone());
-			constraint1.add(") + (");
-			constraint1.append(remainder.clone());
-			constraint1.add(")");
-
-			FastList<String> constraint2;
-			FastNode<String> denomFirst = denominator.getFirst();
-
-			if ("2".equals(denomFirst.getData())
-					&& denomFirst.getNext() == null) {
-				// (remainder)=0 OR (remainder)=1
-				constraint2 = new FastList<>("(");
-				constraint2.append(remainder.clone());
-				constraint2.add(")=0 OR (");
-				constraint2.append(remainder.clone());
-				constraint2.add(")=1");
-			} else {
-				// 0 <= (remainder) AND (remainder) < (denominator)
-				constraint2 = new FastList<>("0 <= (");
-				constraint2.append(remainder.clone());
-				constraint2.add(") AND (");
-				constraint2.append(remainder.clone());
-				constraint2.add(") < (");
-				constraint2.append(denominator.clone());
-				constraint2.add(")");
-			}
-			cvcDeclarations.add("ASSERT ");
-			cvcDeclarations.append(constraint1);
-			cvcDeclarations.add(";\n");
-			cvcDeclarations.add("ASSERT ");
-			cvcDeclarations.append(constraint2);
-			cvcDeclarations.add(";\n");
-			qrpair = new Pair<>(quotient, remainder);
-			intDivMap.put(ndpair, qrpair);
-		}
-		return new Pair<>(qrpair.left.clone(), qrpair.right.clone());
 	}
 
 	private FastList<String> translateAssoc(String operator,
@@ -1127,29 +1204,23 @@ public class CVCTranslator {
 		} else if (size == 1) {
 			return translate(terms.getFirst());
 		} else {
-			boolean first = true;
-			FastList<String> result = new FastList<>();
+			FastList<String> result = new FastList<>("(", operator);
 
 			for (SymbolicExpression term : terms) {
-				if (first) {
-					first = false;
-				} else {
-					result.add(operator);
-				}
-				result.add("(");
+				result.add(" ");
 				result.append(translate(term));
-				result.add(")");
 			}
+			result.add(")");
 			return result;
 		}
 	}
 
 	private FastList<String> translateBinary(String operator,
 			SymbolicExpression arg0, SymbolicExpression arg1) {
-		FastList<String> result = new FastList<>("(");
+		FastList<String> result = new FastList<>("(", operator, " ");
 
 		result.append(translate(arg0));
-		result.addAll(") ", operator, " (");
+		result.addAll(" ");
 		result.append(translate(arg1));
 		result.add(")");
 		return result;
@@ -1185,18 +1256,17 @@ public class CVCTranslator {
 
 		switch (operator) {
 		case ADD:
-			result = translateBinaryOrAssoc(" + ", "0", expression);
+			result = translateBinaryOrAssoc("+", "0", expression);
 			break;
 		case AND:
-			result = translateBinaryOrAssoc(" AND ", "TRUE", expression);
+			result = translateBinaryOrAssoc("and", "true", expression);
 			break;
 		case APPLY:
 			result = translateApply(expression);
 			break;
 		case ARRAY_LAMBDA:
-			// TODO: are they supported in CVC3?
-			throw new UnsupportedOperationException(
-					"Array lambdas are not supported");
+			result = translateLambda(expression);
+			break;
 		case ARRAY_READ:
 			result = translateArrayRead(expression);
 			break;
@@ -1219,7 +1289,7 @@ public class CVCTranslator {
 			result = translateDenseTupleWrite(expression);
 			break;
 		case DIVIDE: // real division
-			result = translateBinary(" / ",
+			result = translateBinary("/",
 					(SymbolicExpression) expression.argument(0),
 					(SymbolicExpression) expression.argument(1));
 			break;
@@ -1231,41 +1301,30 @@ public class CVCTranslator {
 			result = translateQuantifier(expression);
 			break;
 		case INT_DIVIDE:
-			if (simplifyIntDivision) {
-				result = getIntDivInfo(
-						(NumericExpression) expression.argument(0),
-						(NumericExpression) expression.argument(1)).left;
-			} else {
-				result = translateBinary(" DIV ",
-						(SymbolicExpression) expression.argument(0),
-						(SymbolicExpression) expression.argument(1));
-			}
+			result = translateBinary("div",
+					(SymbolicExpression) expression.argument(0),
+					(SymbolicExpression) expression.argument(1));
 			break;
 		case LENGTH:
 			result = lengthOfArray((SymbolicExpression) expression.argument(0));
 			break;
 		case LESS_THAN:
-			result = translateBinary(" < ",
+			result = translateBinary("<",
 					(SymbolicExpression) expression.argument(0),
 					(SymbolicExpression) expression.argument(1));
 			break;
 		case LESS_THAN_EQUALS:
-			result = translateBinary(" <= ",
+			result = translateBinary("<=",
 					(SymbolicExpression) expression.argument(0),
 					(SymbolicExpression) expression.argument(1));
 			break;
 		case MODULO:
-			if (simplifyIntDivision)
-				result = getIntDivInfo(
-						(NumericExpression) expression.argument(0),
-						(NumericExpression) expression.argument(1)).right;
-			else
-				result = translateBinary(" MOD ",
-						(SymbolicExpression) expression.argument(0),
-						(SymbolicExpression) expression.argument(1));
+			result = translateBinary("mod",
+					(SymbolicExpression) expression.argument(0),
+					(SymbolicExpression) expression.argument(1));
 			break;
 		case MULTIPLY:
-			result = translateBinaryOrAssoc(" * ", "1", expression);
+			result = translateBinaryOrAssoc("*", "1", expression);
 			break;
 		case NEGATIVE:
 			result = translateNegative(expression);
@@ -1277,13 +1336,13 @@ public class CVCTranslator {
 			result = translateNot(expression);
 			break;
 		case OR:
-			result = translateBinaryOrAssoc(" OR ", "FALSE", expression);
+			result = translateBinaryOrAssoc("or", "false", expression);
 			break;
 		case POWER:
 			result = translatePower(expression);
 			break;
 		case SUBTRACT:
-			result = translateBinary(" - ",
+			result = translateBinary("-",
 					(SymbolicExpression) expression.argument(0),
 					(SymbolicExpression) expression.argument(1));
 			break;
@@ -1329,102 +1388,86 @@ public class CVCTranslator {
 
 		switch (kind) {
 		case BOOLEAN:
-			result = new FastList<>("BOOLEAN");
+			result = new FastList<>("Bool");
 			break;
 		case INTEGER:
 		case CHAR:
-			result = new FastList<>("INT");
+			result = new FastList<>("Int");
 			break;
 		case REAL:
-			result = new FastList<>("REAL");
+			result = new FastList<>("Real");
 			break;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
 
-			result = new FastList<>("ARRAY INT OF (");
+			requireBigArray();
+			result = new FastList<>("(BigArray ");
 			result.append(translateType(arrayType.elementType()));
 			result.add(")");
-			result.addFront("[INT, ");
-			result.add("]");
 			break;
 		}
 		case TUPLE: {
 			SymbolicTupleType tupleType = (SymbolicTupleType) type;
 			SymbolicTypeSequence sequence = tupleType.sequence();
 			int numTypes = sequence.numTypes();
+			String typeName = tupleTypeName(tupleType);
 
-			if (numTypes == 1) {
-				result = translateType(sequence.getType(0));
-			} else {
-				boolean first = true;
+			// before doing anything translate the member types,
+			// because these could modify z3Declarations.
+			// check if this happens in CVC translator?
+			for (SymbolicType memberType : sequence)
+				translateType(memberType);
 
-				result = new FastList<>("[");
-				for (SymbolicType memberType : sequence) {
-					if (first)
-						first = false;
-					else
-						result.add(", ");
-					result.append(translateType(memberType));
-				}
-				result.add("]");
+			z3Declarations.add("(declare-datatypes () ((");
+			z3Declarations.addAll(typeName, " (", tupleConstructor(tupleType));
+
+			for (int i = 0; i < numTypes; i++) {
+				SymbolicType memberType = sequence.getType(i);
+
+				z3Declarations.addAll(" (", tupleProjector(tupleType, i), " ");
+				z3Declarations.append(translateType(memberType));
+				z3Declarations.add(")");
 			}
+			z3Declarations.add("))))\n");
+			result = new FastList<>(typeName);
 			break;
 		}
 		case FUNCTION: {
-			SymbolicFunctionType funcType = (SymbolicFunctionType) type;
-			SymbolicTypeSequence inputs = funcType.inputTypes();
-			int numInputs = inputs.numTypes();
-			boolean first = true;
-
-			if (numInputs == 0)
-				throw new SARLException(
-						"CVC* requires a function type to have at least one input");
-			result = new FastList<>("(");
-			for (SymbolicType inputType : inputs) {
-				if (first)
-					first = false;
-				else
-					result.add(", ");
-				result.append(translateType(inputType));
-			}
-			result.add(") -> (");
-			result.append(translateType(funcType.outputType()));
-			result.add(")");
-			break;
+			throw new SARLException("Z3 does not have a function type");
 		}
 		case UNION: {
-			// this is the first time this type has been encountered, so
-			// it must be declared...
-			//
-			// Declaration of a union type UT, with member types T0, T1, ...:
-			//
-			// DATATYPE
-			// UT = UT_inject_0(UT_extract_0 : T0) | UT_inject_1(UT_extract_1 :
-			// T1) | ...
-			// END;
-			//
-			// Usage:
-			//
-			// UT_inject_i(x)
-			// UT_extract_i(y)
+			/**
+			 * <pre>
+			 * 			 (declare-datatypes () ((UT
+			 * 			     (UT-inject_0 (UT-extract_0 T0))
+			 * 			     (UT-inject_1 (UT-extract_1 T1))
+			 * 			     ...
+			 * 			  )))
+			 * </pre>
+			 */
 			SymbolicUnionType unionType = (SymbolicUnionType) type;
+			String typeName = unionTypeName(unionType);
 			SymbolicTypeSequence sequence = unionType.sequence();
-			String name = unionType.name().getString();
 			int n = sequence.numTypes();
 
-			cvcDeclarations.addAll("DATATYPE\n", name, " = ");
+			// before doing anything translate the member types,
+			// because these could modify z3Declarations.
+			// check if this happens in CVC translator?
+			for (SymbolicType memberType : sequence)
+				translateType(memberType);
+
+			z3Declarations.addAll("(declare-datatypes () ((", typeName);
 			for (int i = 0; i < n; i++) {
 				SymbolicType memberType = sequence.getType(i);
 
-				if (i > 0)
-					cvcDeclarations.add(" | ");
-				cvcDeclarations.addAll(constructor(unionType, i), "(",
-						selector(unionType, i), " : ");
-				cvcDeclarations.append(translateType(memberType));
-				cvcDeclarations.add(")");
+				z3Declarations.addAll("\n    (",
+						unionConstructor(unionType, i), " (",
+						unionSelector(unionType, i), " ");
+				z3Declarations.append(translateType(memberType));
+				z3Declarations.add("))");
 			}
-			cvcDeclarations.add("END;\n");
-			result = new FastList<>(name);
+			z3Declarations.add("\n)))\n");
+			result = new FastList<>(typeName);
 			break;
 		}
 		default:
@@ -1448,7 +1491,7 @@ public class CVCTranslator {
 
 	/**
 	 * Returns the result of translating the symbolic expression specified at
-	 * construction into the language of CVC. The result is returned as a
+	 * construction into the language of Z3. The result is returned as a
 	 * {@link FastList}. The elements of that list are Strings, which,
 	 * concatenated, yield the translation result. In most cases you never want
 	 * to convert the result to a single string. Rather, you should iterate over
@@ -1457,18 +1500,17 @@ public class CVCTranslator {
 	 * @return result of translation of the specified symbolic expression
 	 */
 	FastList<String> getTranslation() {
-		return cvcTranslation;
+		return z3Translation;
 	}
 
 	/**
-	 * Returns the text of the declarations of the CVC symbols that occur in the
+	 * Returns the text of the declarations of the Z3 symbols that occur in the
 	 * translated expression. Typically, the declarations are submitted to CVC
 	 * first, followed by a query or assertion of the translated expression.
 	 * 
-	 * @return the declarations of the CVC symbols
+	 * @return the declarations of the Z3 symbols
 	 */
 	FastList<String> getDeclarations() {
-		return cvcDeclarations;
+		return z3Declarations;
 	}
-
 }
