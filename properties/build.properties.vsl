@@ -3,7 +3,6 @@
 # changed, then this file need to be updated accordingly.
 root=/opt/vsl
 libdir=${root}/lib
-z3.lib.jar=${libdir}/com.microsoft.z3.jar
 hamcrest.jar=${libdir}/hamcrest-core.jar
 jacoco.jar=${root}/src/jacoco/lib/jacocoant.jar
 junit.jar=${libdir}/junit.jar

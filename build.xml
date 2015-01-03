@@ -40,7 +40,6 @@
 
 	<path id="src.compile.classpath">
 		<pathelement location="${src.dir}" />
-		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<target name="compile" description="Compile all java source files.">
@@ -52,7 +51,6 @@
 	<target name="jar" depends="compile" description="Jar up all class files.">
 		<jar destfile="${jar-path}">
 			<fileset dir="${bin.dir}" />
-			<zipfileset includes="**/*.class" src="${z3.lib.jar}" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
@@ -66,7 +64,6 @@
 		<pathelement location="${bin.dir}" />
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${hamcrest.jar}" />
-		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<path id="test.execute.classpath">
@@ -74,7 +71,6 @@
 		<pathelement location="${bin.dir}" />
 		<pathelement location="${junit.jar}" />
 		<pathelement location="${hamcrest.jar}" />
-		<pathelement location="${z3.lib.jar}" />
 	</path>
 
 	<target name="test-init">
