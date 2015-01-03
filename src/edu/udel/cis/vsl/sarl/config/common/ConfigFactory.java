@@ -58,7 +58,7 @@ public class ConfigFactory {
 	static {
 		executableMap.put("cvc3", ProverKind.CVC3); // working
 		executableMap.put("cvc4", ProverKind.CVC4); // working
-		executableMap.put("z3", ProverKind.Z3); // almost working
+		executableMap.put("z3", ProverKind.Z3); // working
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class ConfigFactory {
 		info.setKind(kind);
 		info.setPath(executableFile);
 		info.setVersion(version);
-		info.setTimeout(20.0);
+		info.setTimeout(10.0);
 		info.setShowQueries(false);
 		info.setShowInconclusives(false);
 		info.setShowErrors(true);
@@ -269,7 +269,7 @@ public class ConfigFactory {
 		info.setKind(kind);
 		info.setPath(new File(libraryName));
 		info.setVersion("UNKNOWN");
-		info.setTimeout(20.0);
+		info.setTimeout(10.0);
 		info.setShowQueries(false);
 		info.setShowInconclusives(false);
 		info.setShowErrors(true);
@@ -595,38 +595,29 @@ public class ConfigFactory {
 
 		String path = System.getenv("PATH");
 		String[] pathDirs = path.split(File.pathSeparator);
-		PrintStream configFileStream = new PrintStream(new FileOutputStream(
-				configFile));
+		PrintStream stream = new PrintStream(new FileOutputStream(configFile));
 		Map<ProverKind, Integer> executableCountMap = new HashMap<>();
 		Map<ProverKind, Integer> dynamicCountMap = new HashMap<>();
 		ArrayList<ProverInfo> provers = new ArrayList<>();
 
 		out.println("Creating SARL configuration file in " + configFile);
 		out.flush();
-		configFileStream.println("/* This is a SARL configuration file.");
-		configFileStream
-				.println(" * It contains one entry for each theorem prover SARL may use.");
-		configFileStream
-				.println(" * To resolve a query, by default, SARL will use the first prover here.");
-		configFileStream
-				.println(" * If that result in inconclusive, it will try the second prover.");
-		configFileStream
-				.println(" * And so on, until a conclusive result has been reached, or all provers");
-		configFileStream.println(" * have been exhausted.");
-		configFileStream.println(" * ");
-		configFileStream
-				.println(" * SARL looks for a configuration file using the following protocol:");
-		configFileStream
-				.println(" * It first looks in the current working directory for a file named .sarl");
-		configFileStream
-				.println(" * If that is not found, it looks in the user's home directory for .sarl");
-		configFileStream
-				.println(" * If that is not found, it looks in the current working directory for .sarl_default.");
-		configFileStream
-				.println(" * If that is not found, it looks in the user's home directory for .sarl_default");
-		configFileStream.println(" */");
-		configFileStream.println();
-		configFileStream.flush();
+		stream.println("/* This is a SARL configuration file.");
+		stream.println(" * It contains one entry for each theorem prover SARL may use.");
+		stream.println(" * To resolve a query, by default, SARL will use the first prover here.");
+		stream.println(" * If that result in inconclusive, it will try the second prover.");
+		stream.println(" * And so on, until a conclusive result has been reached, or all provers");
+		stream.println(" * have been exhausted.");
+		stream.println(" * ");
+		stream.println(" * SARL looks for a configuration file by looking in the following");
+		stream.println(" * places in order:");
+		stream.println(" * 1. .sarl in current working directory");
+		stream.println(" * 2. .sarl in user's home directory");
+		stream.println(" * 3. .sarl_default in current working directory");
+		stream.println(" * 4. .sarl_default in user's home directory");
+		stream.println(" */");
+		stream.println();
+		stream.flush();
 
 		for (String dirName : pathDirs) {
 			File dir = new File(dirName);
@@ -687,10 +678,10 @@ public class ConfigFactory {
 		}
 		Collections.sort(provers);
 		for (ProverInfo prover : provers) {
-			prover.print(configFileStream);
-			configFileStream.println();
+			prover.print(stream);
+			stream.println();
 		}
-		configFileStream.close();
+		stream.close();
 		if (provers.isEmpty()) {
 			err.println("No appropriate theorem provers were found in your PATH.");
 			err.println("SARL's theorem proving capability will be very limited.");
