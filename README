@@ -46,6 +46,8 @@ all of the following:
    http://www.cs.nyu.edu/acsys/cvc3/download.html
  - CVC4 (automated theorem prover):
    http://cvc4.cs.nyu.edu/downloads/
+ - Z3 (automated theorem prover)
+   http://z3.codeplex.com/SourceControl/latest
  - JUnit (automated testing framework):
    https://github.com/KentBeck/junit/downloads
  - Hamcrest (a library of "matchers", required by JUnit):

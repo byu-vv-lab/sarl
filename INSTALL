@@ -1,23 +1,53 @@
                     SARL Installation Instructions
 
-======================= Installation from source =======================
+===================== Installing Theorem Provers =====================
+
+SARL can be used without any external theorem provers
+but it is unlikely to be able to resolve complex queries.
+For SARL to perform more precise analysis, it needs access
+to one or more high-quality automated theorem provers.
+You should install at least one of the theorem provers below.
+The more you install, the more precise SARL analysis will
+be.
+
+Note that SARL only requires the binary executable
+version of each prover; you can ignore the libraries, various
+API bindings, etc.   You just need to ensure that
+each binary executable is in your PATH when you run
+"civl config".   The currently supported provers are:
+  
+   - CVC3, http://www.cs.nyu.edu/acsys/cvc3/download.html
+     download the latest, optimized build with static library
+     and executable for your OS.  Place the executable file
+     "cvc3" in your PATH.  You can discard everything else.
+     Alternatively, on some linux systems, CVC3 can be installed
+     using the package manager via "sudo apt-get install cvc3".
+     This will place cvc3 in /usr/bin.
+     
+   - CVC4,  http://cvc4.cs.nyu.edu/downloads/
+   
+   - Z3, http://z3.codeplex.com/SourceControl/latest
+
+======================= Installing for Users ========================
+
+SARL is distributed as JAR file.  It is written in Java 7.
+
+===================== Installation from Source ====================== 
 
 1. Install a Java 7 SDK if you have not already.  Go to
-http://www.oracle.com/technetwork/java/javase/downloads/ for the
-latest from Oracle.  On linux, you can optionally sudo apt-get install
-openjdk-7-jdk.
+
+  http://www.oracle.com/technetwork/java/javase/downloads/
+
+for the latest from Oracle.  On linux, you can instead use
+the package manager:
+
+  sudo apt-get install openjdk-7-jdk
 
 2. Install Apache ant, if you don't already have it
 (http://ant.apache.org).
 
 3. Download the tgz archive of VSL dependencies from 
-   http://vsl.cis.udel.edu/tools/vsl_depend,
-   choosing the right .tgz according to your platform:
-	
-	vsl_linux32-1.0.tgz	- 32-bit linux
-	vsl_linux64-1.0.tgz	- 64-bit linux
-	vsl_osx64-1.0.tgz	- 64-bit osx
-	
+   http://vsl.cis.udel.edu/tools/vsl_depend
    Unzip the .tgz file and you will have the folder vsl.
    Move vsl to /opt (you might need to use "sudo" for this.
    Also, if you don't already have a directory called /opt, 
@@ -43,19 +73,23 @@ openjdk-7-jdk.
 to create a build.properties file by copying the content from
 build_default.properties and modifying the value of entry "root"
 to be the path to your VSL dependencies folder. The newly created file
-build.properties will automatically be used by ant to to build the .jar file.
+build.properties will automatically be used by ant to to build the
+.jar file.
 
 7. Type "ant" and everything should build without warnings or errors
-and produce sarl.jar.  Type "ant test" to run a JUnit test suite.  All
-tests should pass.
+and produce sarl.jar.
+
+8.  Type "ant test" to run a JUnit test suite.  If you do not already
+have a SARL configuration file (.sarl) in your home directory, SARL
+will try to create one by looking for the theorem provers in your PATH.
+After this, all  tests should pass.
 
 If there are any problems, email siegel at udel dot edu.
 
-============== Installation from source using Eclipse ==================
+============= Installation from source using Eclipse ================
 
-1. Start with Eclipse IDE for Java/EE developers, available at
+1. Start with the latest Eclipse IDE for Java/EE developers,
 http://www.eclipse.org/downloads/
-You need at least version Kepler (which comes with JUnit 4.11)
 
 2. Do steps 1-3 from above if you have not already.
 
@@ -72,30 +106,24 @@ Project Wizard as usual, naming it "SARL". The .project, .classpath,
 and other Eclipse meta-data are already in the SVN archive, saving you
 a bunch of work.
 
-6. Navigate to Preferences -> Java -> Build Path -> ClassPath 
-Variables, and then select "New..." to create a classpath variable VSL, 
-and specify its value to be /opt/vsl.
-
-7. Navigate to Preferences -> Run/Debug ->
-String Substitution -> New..., and then define an entry 
-vsl_lib and set its value to be /opt/vsl/lib.
-
-8. If your VSL dependencies path is not in /opt/vsl, then you need
+6. If your VSL dependencies path is not in /opt/vsl, then you need
 to create a build.properties file by copying the content from
 build_default.properties and modifying the value of entry "root"
 to be the path to your VSL dependencies folder. The newly created file
-build.properties will automatically be used by ant to to build the .jar file.
+build.properties will automatically be used by ant to to build
+the .jar file.
 
-9. Do a clean build.  Everything should compile.  Generate the sarl.jar
+7. Do a clean build.  Everything should compile.  Generate the sarl.jar
 by right-clicking (or ctrl-click on OS X) the build.xml file and
 Run As->Ant Build.  
 
-10. Go to Run->Run Configurations.... Create a new JUnit configuration.
+8. Go to Run->Run Configurations.... Create a new JUnit configuration.
 Name it SARL Tests. Select "Run all tests in the selected project..."
 and navigate to the folder "test" in the SARL project.
 The Test runner should be JUnit 4. Under the Arguments tab, type
-"-ea" (without the quotes) in the VM arguments area (to enable assertion
-checking). Under the Environment tab, create an entry 
-DYLD_LIBRARY_PATH (OS X) or LD_LIBRARY_PATH (linux), 
-specify its value by clicking Variables... and choose vsl_lib from the list, 
-or you may type ${vsl_lib} in the value entry.
+"-ea" (without the quotes) in the VM arguments area (to enable
+assertion checking).
+
+9. You may also use the command line to run the test suite, build
+the documentation, etc.  "ant test" will run all of the tests
+and generate the JUnit report.
