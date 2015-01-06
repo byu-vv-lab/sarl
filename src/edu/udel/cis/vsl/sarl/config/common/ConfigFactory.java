@@ -140,6 +140,62 @@ public class ConfigFactory {
 	}
 
 	/**
+	 * Compares two version strings. Both are assumed to have form
+	 * something.something....
+	 * 
+	 * @param version1
+	 *            a version string
+	 * @param version2
+	 *            a version string
+	 * @return a negative int if version1 is lower than version2; 0 if they are
+	 *         equal; a positive int if version1 is higher that version2
+	 */
+	private static int compareVersions(String version1, String version2) {
+		if (version1 == null) { // null lower than everything
+			return version2 == null ? 0 : -1;
+		}
+		if (version2 == null) {
+			return 1;
+		}
+
+		String[] split1 = version1.split("\\."), split2 = version2.split("\\.");
+		int n1 = split1.length, n2 = split2.length;
+
+		for (int i = 0; i < n1; i++) {
+			if (i >= n2) { // anything higher than nothing
+				return 1;
+			}
+
+			String s1 = split1[i], s2 = split2[i];
+			Integer x1, x2;
+			int result;
+
+			try {
+				x1 = new Integer(s1);
+			} catch (NumberFormatException e) {
+				x1 = null;
+			}
+			try {
+				x2 = new Integer(s2);
+			} catch (NumberFormatException e) {
+				x2 = null;
+			}
+			if (x1 != null & x2 != null) { // two numbers: numerical order
+				result = x1 - x2;
+			} else if (x1 != null) { // number higher than non-number
+				result = 1;
+			} else if (x2 != null) {// number higher than non-number
+				result = -1;
+			} else { // two non-numbers: alphabetical order
+				result = s1.compareTo(s2);
+			}
+			if (result != 0)
+				return result;
+		}
+		return 0;
+	}
+
+	/**
 	 * Returns an exception object in the case where a SARL configuration file
 	 * has incorrect syntax.
 	 * 
@@ -596,9 +652,9 @@ public class ConfigFactory {
 		String path = System.getenv("PATH");
 		String[] pathDirs = path.split(File.pathSeparator);
 		PrintStream stream = new PrintStream(new FileOutputStream(configFile));
-		Map<ProverKind, Integer> executableCountMap = new HashMap<>();
-		Map<ProverKind, Integer> dynamicCountMap = new HashMap<>();
+		Map<ProverKind, ProverInfo> executableFoundMap = new HashMap<>();
 		ArrayList<ProverInfo> provers = new ArrayList<>();
+		HashSet<String> seenPaths = new HashSet<>();
 
 		out.println("Creating SARL configuration file in " + configFile);
 		out.flush();
@@ -621,8 +677,12 @@ public class ConfigFactory {
 
 		for (String dirName : pathDirs) {
 			File dir = new File(dirName);
+			String fullDirName = dir.getAbsolutePath();
 
 			if (dir.isDirectory()) {
+				if (!seenPaths.add(fullDirName))
+					continue;
+
 				File[] files = dir.listFiles();
 
 				for (File file : files) {
@@ -633,39 +693,49 @@ public class ConfigFactory {
 					ProverKind kind = executableMap.get(name);
 
 					if (kind != null) {
-						int count = executableCountMap.containsKey(kind) ? executableCountMap
-								.get(kind) : 0;
 						String alias = kind.toString().toLowerCase();
-
-						if (count > 0)
-							alias += "_" + count;
-
 						ProverInfo prover = processExecutableProver(kind,
 								alias, file);
 
 						if (prover != null) {
-							out.println("Found " + kind + " version "
+							String msg = kind + " version "
 									+ prover.getVersion() + " at "
-									+ prover.getPath());
-							out.flush();
-							provers.add(prover);
-							executableCountMap.put(kind, count + 1);
+									+ prover.getPath();
+							ProverInfo oldProver = executableFoundMap.get(kind);
+
+							if (oldProver != null) {
+								int compare = compareVersions(
+										prover.getVersion(),
+										oldProver.getVersion());
+
+								if (compare == 0) {
+									out.println("Ignoring equivalent " + msg);
+									out.flush();
+									continue;
+								}
+								if (compare < 0) {
+									out.println("Ignoring older " + msg);
+									out.flush();
+									continue;
+								}
+								out.println("Replacing previous " + kind
+										+ " with " + msg);
+								out.flush();
+							} else {
+								out.println("Adding " + msg);
+							}
+							executableFoundMap.put(kind, prover);
 						}
 					}
 				}
 			}
 		}
+		provers.addAll(executableFoundMap.values());
 		// now the dynamic libraries...
 		for (Entry<String, ProverKind> entry : dylibMap.entrySet()) {
 			String libraryName = entry.getKey();
 			ProverKind kind = entry.getValue();
-			int count = dynamicCountMap.containsKey(kind) ? dynamicCountMap
-					.get(kind) : 0;
 			String alias = kind.toString().toLowerCase();
-
-			if (count > 0)
-				alias += "_" + count;
-
 			ProverInfo prover = processDynamicProver(kind, alias, libraryName);
 
 			if (prover != null) {
@@ -673,7 +743,6 @@ public class ConfigFactory {
 						+ libraryName);
 				out.flush();
 				provers.add(prover);
-				dynamicCountMap.put(kind, count + 1);
 			}
 		}
 		Collections.sort(provers);
