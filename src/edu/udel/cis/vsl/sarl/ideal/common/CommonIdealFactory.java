@@ -1549,7 +1549,7 @@ public class CommonIdealFactory implements IdealFactory {
 					: ((RationalExpression) difference).numerator(this);
 
 			if (zeroThing instanceof Monomial) {
-				Monic monic = ((Monomial) difference).monic(this);
+				Monic monic = ((Monomial) zeroThing).monic(this);
 
 				zeroThing = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
 						.primitive(this) : monic;
