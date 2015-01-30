@@ -25,6 +25,7 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
@@ -113,29 +114,55 @@ public class CommonReasoner implements Reasoner {
 		if (predicate == null)
 			throw new SARLException("Argument to Reasoner.valid is null.");
 		else {
-			BooleanExpression simplifiedPredicate = (BooleanExpression) simplifier
-					.apply(predicate);
-			ValidityResult result;
+			ValidityResult result = null;
+			BooleanExpression fullContext = getFullContext();
 
 			universe().incrementValidCount();
-			if (simplifiedPredicate.isTrue())
-				result = Prove.RESULT_YES;
-			else if (simplifiedPredicate.isFalse())
-				result = Prove.RESULT_NO;
-			else {
-				result = validityCache.get(simplifiedPredicate);
-				if (result != null)
-					return result;
-				if (prover == null)
-					prover = factory.newProver(getReducedContext());
-				result = prover.valid(simplifiedPredicate);
-				validityCache.put(predicate, result);
+			if (fullContext.isTrue()) {
+				ResultType resultType = predicate.getValidity();
+
+				if (resultType != null) {
+					switch (resultType) {
+					case MAYBE:
+						result = Prove.RESULT_MAYBE;
+						break;
+					case NO:
+						result = Prove.RESULT_NO;
+						break;
+					case YES:
+						result = Prove.RESULT_YES;
+						break;
+					default:
+						throw new SARLInternalException("unrechable");
+					}
+				}
+			}
+			if (result == null) {
+				BooleanExpression simplifiedPredicate = (BooleanExpression) simplifier
+						.apply(predicate);
+
+				if (simplifiedPredicate.isTrue())
+					result = Prove.RESULT_YES;
+				else if (simplifiedPredicate.isFalse())
+					result = Prove.RESULT_NO;
+				else {
+					result = validityCache.get(simplifiedPredicate);
+					if (result == null) {
+						if (prover == null)
+							prover = factory.newProver(getReducedContext());
+						result = prover.valid(simplifiedPredicate);
+						validityCache.put(predicate, result);
+					}
+				}
 			}
 			if (showQuery) {
 				int id = universe().numValidCalls() - 1;
 				PrintStream out = universe().getOutputStream();
 
 				out.println("Query " + id + " result:     " + result);
+			}
+			if (fullContext.isTrue()) {
+				predicate.setValidity(result.getResultType());
 			}
 			return result;
 		}

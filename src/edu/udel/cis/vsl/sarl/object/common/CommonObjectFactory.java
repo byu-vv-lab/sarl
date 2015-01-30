@@ -128,6 +128,9 @@ public class CommonObjectFactory implements ObjectFactory {
 			SymbolicObject result = objectMap.get(object);
 
 			if (result == null) {
+				// set temp. ID to some non-negative number so it looks
+				// canonic to prevent infinite cycles in canonizeChildren...
+				((CommonSymbolicObject) object).setId(0);
 				((CommonSymbolicObject) object).canonizeChildren(this);
 				// that changed objectList, objectMap.
 				((CommonSymbolicObject) object).setId(objectList.size());

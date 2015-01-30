@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.expr.IF;
 
@@ -31,86 +31,86 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 public interface BooleanExpressionFactory {
 
 	/**
-	 * Allows CnfFactory to simplify expensive (p || !p) expressions as
-	 * the they are created.  Default is false.  Setting to true will
-	 * decrease performance in certain CnfFactory methods.
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as the they
+	 * are created. Default is false. Setting to true will decrease performance
+	 * in certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
 	 * 
 	 * @return void
 	 */
 	void setBooleanExpressionSimplification(boolean value);
-	
+
 	/**
-	 * Whether or not CnfFactory methods are allowed to simplify expensive
-	 * (p || !p) expressions.
+	 * Whether or not CnfFactory methods are allowed to simplify expensive (p ||
+	 * !p) expressions.
 	 * 
 	 * @return boolean value: false = default
 	 */
 	boolean getBooleanExpressionSimplification();
-	
+
 	/**
 	 * Returns an expression, given the operator and collection of arguments
+	 * 
 	 * @param operator
-	 * 		A SymbolicOperator
+	 *            A SymbolicOperator
 	 * @param args
-	 * 		Collection of arguments
-	 * @return
-	 * 		Returns a BooleanExpression
+	 *            Collection of arguments
+	 * @return Returns a BooleanExpression
 	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			Collection<SymbolicObject> args);
 
 	/**
 	 * Returns an expression, given the operator and an array of arguments
+	 * 
 	 * @param operator
-	 * 		A SymbolicOperator
+	 *            A SymbolicOperator
 	 * @param args
-	 * 		Array of arguments
-	 * @return
-	 * 		Returns a BooleanExpression
+	 *            Array of arguments
+	 * @return Returns a BooleanExpression
 	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject[] args);
 
 	/**
 	 * Returns an expression, given the operator and an argument
+	 * 
 	 * @param operator
-	 * 		A SymbolicOperator
+	 *            A SymbolicOperator
 	 * @param arg0
-	 * 		A SymbolicObject 
-	 * @return
-	 * 		Returns a BooleanExpression
+	 *            A SymbolicObject
+	 * @return Returns a BooleanExpression
 	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0);
 
 	/**
 	 * Returns an expression, given the operator and two arguments
+	 * 
 	 * @param operator
-	 * 		A SymbolicOperator
+	 *            A SymbolicOperator
 	 * @param arg0
-	 * 		A SymbolicObject
+	 *            A SymbolicObject
 	 * @param arg1
-	 * 		A SymbolicObject 
-	 * @return
-	 * 		Returns a BooleanExpression
+	 *            A SymbolicObject
+	 * @return Returns a BooleanExpression
 	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1);
 
 	/**
 	 * Returns an expression, given the operator and three arguments
+	 * 
 	 * @param operator
-	 * 		A SymbolicOperator
+	 *            A SymbolicOperator
 	 * @param arg0
-	 * 		A SymbolicObject
+	 *            A SymbolicObject
 	 * @param arg1
-	 * 		A SymbolicObject
+	 *            A SymbolicObject
 	 * @param arg2
-	 * 		A SymbolicObject 
-	 * @return
-	 * 		Returns a BooleanExpression
+	 *            A SymbolicObject
+	 * @return Returns a BooleanExpression
 	 */
 	BooleanExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2);
@@ -122,7 +122,6 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression trueExpr();
 
-	
 	/**
 	 * Returns a false BooleanExpression
 	 * 
@@ -169,7 +168,7 @@ public interface BooleanExpressionFactory {
 	 * @return disjunction of arg0 and arg1
 	 */
 	BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1);
-	
+
 	/**
 	 * Returns a symbolic expression which represents the disjunction of the
 	 * expressions in the given array args. Each expression in args must have
@@ -239,6 +238,5 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression exists(SymbolicConstant boundVariable,
 			BooleanExpression predicate);
-
 
 }

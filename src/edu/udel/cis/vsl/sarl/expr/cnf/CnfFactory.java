@@ -48,12 +48,13 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	private SymbolicType _booleanType;
 
-	private BooleanExpression trueExpr, falseExpr;
-	
-	/** Whether or not Functions check for instances of (p || !p) 
-	 * A value of False will increase performance
+	private CnfExpression trueExpr, falseExpr;
+
+	/**
+	 * Whether or not Functions check for instances of (p || !p) A value of
+	 * False will increase performance
 	 */
-	public Boolean simplify = false; 
+	public Boolean simplify = false;
 
 	public CnfFactory(SymbolicTypeFactory typeFactory,
 			ObjectFactory objectFactory, CollectionFactory collectionFactory) {
@@ -71,12 +72,12 @@ public class CnfFactory implements BooleanExpressionFactory {
 			SymbolicExpression y) {
 		return collectionFactory.singletonHashSet(x).add(y);
 	}
-	
+
 	@Override
 	public void setBooleanExpressionSimplification(boolean value) {
 		simplify = value;
 	}
-	
+
 	@Override
 	public boolean getBooleanExpressionSimplification() {
 		return simplify;
@@ -85,32 +86,32 @@ public class CnfFactory implements BooleanExpressionFactory {
 	// Public functions specified in BooleanExpressionFactory...
 
 	@Override
-	public BooleanExpression booleanExpression(SymbolicOperator operator,
+	public CnfExpression booleanExpression(SymbolicOperator operator,
 			Collection<SymbolicObject> args) {
 		return new CnfExpression(operator, _booleanType, args);
 	}
 
 	@Override
-	public BooleanExpression booleanExpression(SymbolicOperator operator,
+	public CnfExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject[] args) {
 		return new CnfExpression(operator, _booleanType, args);
 	}
 
 	@Override
-	public BooleanExpression booleanExpression(SymbolicOperator operator,
+	public CnfExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0) {
 		return new CnfExpression(operator, _booleanType, arg0);
 	}
 
 	@Override
-	public BooleanExpression booleanExpression(SymbolicOperator operator,
+	public CnfExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1) {
 		return new CnfExpression(operator, _booleanType, arg0, arg1);
 
 	}
 
 	@Override
-	public BooleanExpression booleanExpression(SymbolicOperator operator,
+	public CnfExpression booleanExpression(SymbolicOperator operator,
 			SymbolicObject arg0, SymbolicObject arg1, SymbolicObject arg2) {
 		return new CnfExpression(operator, _booleanType, arg0, arg1, arg2);
 
@@ -122,22 +123,22 @@ public class CnfFactory implements BooleanExpressionFactory {
 	}
 
 	@Override
-	public BooleanExpression trueExpr() {
+	public CnfExpression trueExpr() {
 		return trueExpr;
 	}
 
 	@Override
-	public BooleanExpression falseExpr() {
+	public CnfExpression falseExpr() {
 		return falseExpr;
 	}
 
 	@Override
-	public BooleanExpression symbolic(BooleanObject object) {
+	public CnfExpression symbolic(BooleanObject object) {
 		return object.getBoolean() ? trueExpr : falseExpr;
 	}
 
 	@Override
-	public BooleanExpression symbolic(boolean value) {
+	public CnfExpression symbolic(boolean value) {
 		return value ? trueExpr : falseExpr;
 	}
 
@@ -265,48 +266,60 @@ public class CnfFactory implements BooleanExpressionFactory {
 	@Override
 	public BooleanExpression not(BooleanExpression arg) {
 		CnfExpression cnf = (CnfExpression) arg;
-		SymbolicOperator operator = cnf.operator();
+		CnfExpression result = cnf.getNegation();
 
-		switch (operator) {
-		case CONCRETE: {
-			BooleanObject value = (BooleanObject) arg.argument(0);
-			boolean booleanValue = value.getBoolean();
+		if (result == null) {
+			SymbolicOperator operator = cnf.operator();
 
-			return booleanValue ? falseExpr : trueExpr;
-		}
-		case AND: {
-			BooleanExpression result = falseExpr;
+			switch (operator) {
+			case CONCRETE: {
+				BooleanObject value = (BooleanObject) arg.argument(0);
+				boolean booleanValue = value.getBoolean();
 
-			for (BooleanExpression clause : cnf.booleanSetArg(0))
-				result = or(result, not(clause));
-			return result;
+				result = booleanValue ? falseExpr : trueExpr;
+				break;
+			}
+			case AND:
+				result = falseExpr;
+				for (BooleanExpression clause : cnf.booleanSetArg(0))
+					result = (CnfExpression) or(result, not(clause));
+				break;
+			case OR:
+				result = trueExpr;
+				for (BooleanExpression clause : cnf.booleanSetArg(0))
+					result = (CnfExpression) and(result, not(clause));
+				break;
+			case NOT:
+				result = (CnfExpression) cnf.booleanArg(0);
+				break;
+			case FORALL:
+				result = booleanExpression(SymbolicOperator.EXISTS,
+						(SymbolicConstant) cnf.argument(0),
+						not(cnf.booleanArg(1)));
+				break;
+			case EXISTS:
+				result = booleanExpression(SymbolicOperator.FORALL,
+						(SymbolicConstant) cnf.argument(0),
+						not(cnf.booleanArg(1)));
+				break;
+			case EQUALS:
+				result = booleanExpression(SymbolicOperator.NEQ,
+						(SymbolicExpression) cnf.argument(0),
+						(SymbolicExpression) cnf.argument(1));
+				break;
+			case NEQ:
+				result = booleanExpression(SymbolicOperator.EQUALS,
+						(SymbolicExpression) cnf.argument(0),
+						(SymbolicExpression) cnf.argument(1));
+				break;
+			default:
+				result = booleanExpression(SymbolicOperator.NOT, cnf);
+				break;
+			}
+			cnf.setNegation(result);
+			result.setNegation(cnf);
 		}
-		case OR: {
-			BooleanExpression result = trueExpr;
-
-			for (BooleanExpression clause : cnf.booleanSetArg(0))
-				result = and(result, not(clause));
-			return result;
-		}
-		case NOT:
-			return cnf.booleanArg(0);
-		case FORALL:
-			return booleanExpression(SymbolicOperator.EXISTS,
-					(SymbolicConstant) cnf.argument(0), not(cnf.booleanArg(1)));
-		case EXISTS:
-			return booleanExpression(SymbolicOperator.FORALL,
-					(SymbolicConstant) cnf.argument(0), not(cnf.booleanArg(1)));
-		case EQUALS:
-			return booleanExpression(SymbolicOperator.NEQ,
-					(SymbolicExpression) cnf.argument(0),
-					(SymbolicExpression) cnf.argument(1));
-		case NEQ:
-			return booleanExpression(SymbolicOperator.EQUALS,
-					(SymbolicExpression) cnf.argument(0),
-					(SymbolicExpression) cnf.argument(1));
-		default:
-			return booleanExpression(SymbolicOperator.NOT, cnf);
-		}
+		return result;
 	}
 
 	@Override
