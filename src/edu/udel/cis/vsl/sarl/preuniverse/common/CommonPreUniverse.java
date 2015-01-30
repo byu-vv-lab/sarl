@@ -855,7 +855,7 @@ public class CommonPreUniverse implements PreUniverse {
 			return lambda((SymbolicConstant) args[0],
 					(SymbolicExpression) args[1]);
 		case LENGTH:
-			return length((SymbolicConstant) args[0]);
+			return length((SymbolicExpression) args[0]);
 		case LESS_THAN:
 			return lessThan((NumericExpression) args[0],
 					(NumericExpression) args[1]);
