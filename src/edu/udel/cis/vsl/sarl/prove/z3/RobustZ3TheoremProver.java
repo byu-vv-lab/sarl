@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
@@ -44,7 +45,7 @@ import edu.udel.cis.vsl.sarl.util.ProcessControl;
  * Invocation:
  * 
  * <pre>
- * z3 -smt2 -in
+ * z3 - smt2 - in
  * </pre>
  * 
  * Commands:
@@ -118,7 +119,7 @@ public class RobustZ3TheoremProver implements TheoremProver {
 	 *            must have {@link ProverKind} {@link ProverKind#Z3}
 	 */
 	RobustZ3TheoremProver(PreUniverse universe, BooleanExpression context,
-			ProverInfo info) {
+			ProverInfo info) throws TheoremProverException {
 		LinkedList<String> command = new LinkedList<>();
 
 		assert universe != null;
@@ -178,6 +179,74 @@ public class RobustZ3TheoremProver implements TheoremProver {
 		}
 	}
 
+	private ValidityResult runZ3(BooleanExpression predicate, int id,
+			boolean show, PrintStream out) throws TheoremProverException {
+		Process process = null;
+		ValidityResult result = null;
+
+		try {
+			process = processBuilder.start();
+		} catch (Throwable e) {
+			if (info.getShowErrors())
+				err.println("I/O exception reading " + info.getFirstAlias()
+						+ " output: " + e.getMessage());
+			result = Prove.RESULT_MAYBE;
+		}
+		if (result == null) {
+			PrintStream stdin = new PrintStream(process.getOutputStream());
+			BufferedReader stdout = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));
+			BufferedReader stderr = new BufferedReader(new InputStreamReader(
+					process.getErrorStream()));
+			FastList<String> assumptionDecls = assumptionTranslator
+					.getDeclarations();
+			FastList<String> assumptionText = assumptionTranslator
+					.getTranslation();
+
+			assumptionDecls.print(stdin);
+			stdin.print("(assert ");
+			assumptionText.print(stdin);
+			stdin.println(")");
+			predicate = (BooleanExpression) universe
+					.cleanBoundVariables(predicate);
+
+			Z3Translator translator = new Z3Translator(assumptionTranslator,
+					predicate);
+			FastList<String> predicateDecls = translator.getDeclarations();
+			FastList<String> predicateText = translator.getTranslation();
+
+			predicateDecls.print(stdin);
+			stdin.print("(assert (not ");
+			predicateText.print(stdin);
+			stdin.println("))");
+			stdin.println("(check-sat)");
+			stdin.flush();
+			stdin.close();
+			if (show) {
+				out.print("\n" + info.getFirstAlias() + " predicate   " + id
+						+ ":\n");
+				predicateDecls.print(out);
+				predicateText.print(out);
+				out.println();
+				out.println();
+				out.flush();
+			}
+			if (info.getTimeout() > 0
+					&& !ProcessControl.waitForProcess(process,
+							info.getTimeout())) {
+				if (info.getShowErrors() || info.getShowInconclusives())
+					err.println(info.getFirstAlias() + " query       " + id
+							+ ": time out");
+				result = Prove.RESULT_MAYBE;
+			} else {
+				result = readZ3Output(stdout, stderr);
+			}
+		}
+		if (process != null)
+			process.destroy();
+		return result;
+	}
+
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		PrintStream out = universe.getOutputStream();
@@ -185,8 +254,6 @@ public class RobustZ3TheoremProver implements TheoremProver {
 		FastList<String> assumptionDecls = assumptionTranslator
 				.getDeclarations();
 		FastList<String> assumptionText = assumptionTranslator.getTranslation();
-		Process process = null;
-		ValidityResult result;
 		boolean show = universe.getShowProverQueries() || info.getShowQueries();
 
 		universe.incrementProverValidCount();
@@ -198,64 +265,21 @@ public class RobustZ3TheoremProver implements TheoremProver {
 			out.println();
 			out.flush();
 		}
+
+		ValidityResult result;
+
 		try {
-			process = processBuilder.start();
-		} catch (Throwable e) {
-			if (info.getShowErrors())
-				err.println("I/O exception reading " + info.getFirstAlias()
-						+ " output: " + e.getMessage());
+			result = runZ3(predicate, id, show, out);
+		} catch (TheoremProverException e) {
+			if (show)
+				err.println("Warning: " + e.getMessage());
 			result = Prove.RESULT_MAYBE;
-		}
-
-		PrintStream stdin = new PrintStream(process.getOutputStream());
-		BufferedReader stdout = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
-		BufferedReader stderr = new BufferedReader(new InputStreamReader(
-				process.getErrorStream()));
-
-		assumptionDecls.print(stdin);
-		stdin.print("(assert ");
-		assumptionText.print(stdin);
-		stdin.println(")");
-		predicate = (BooleanExpression) universe.cleanBoundVariables(predicate);
-
-		Z3Translator translator = new Z3Translator(assumptionTranslator,
-				predicate);
-		FastList<String> predicateDecls = translator.getDeclarations();
-		FastList<String> predicateText = translator.getTranslation();
-
-		predicateDecls.print(stdin);
-		stdin.print("(assert (not ");
-		predicateText.print(stdin);
-		stdin.println("))");
-		stdin.println("(check-sat)");
-		stdin.flush();
-		stdin.close();
-		if (show) {
-			out.print("\n" + info.getFirstAlias() + " predicate   " + id
-					+ ":\n");
-			predicateDecls.print(out);
-			predicateText.print(out);
-			out.println();
-			out.println();
-			out.flush();
-		}
-		if (info.getTimeout() > 0
-				&& !ProcessControl.waitForProcess(process, info.getTimeout())) {
-			if (info.getShowErrors() || info.getShowInconclusives())
-				err.println(info.getFirstAlias() + " query       " + id
-						+ ": time out");
-			result = Prove.RESULT_MAYBE;
-		} else {
-			result = readZ3Output(stdout, stderr);
 		}
 		if (show) {
 			out.println(info.getFirstAlias() + " result      " + id + ": "
 					+ result);
 			out.flush();
 		}
-		if (process != null)
-			process.destroy();
 		return result;
 	}
 

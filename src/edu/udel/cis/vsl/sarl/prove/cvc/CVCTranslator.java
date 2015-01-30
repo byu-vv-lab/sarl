@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -143,7 +144,7 @@ public class CVCTranslator {
 	// Constructors...
 
 	CVCTranslator(PreUniverse universe, SymbolicExpression theExpression,
-			boolean simplifyIntDivision) {
+			boolean simplifyIntDivision) throws TheoremProverException {
 		this.simplifyIntDivision = simplifyIntDivision;
 		this.universe = universe;
 		this.cvcAuxVarCount = 0;
@@ -161,7 +162,7 @@ public class CVCTranslator {
 	}
 
 	CVCTranslator(CVCTranslator startingContext,
-			SymbolicExpression theExpression) {
+			SymbolicExpression theExpression) throws TheoremProverException {
 		this.simplifyIntDivision = startingContext.simplifyIntDivision;
 		this.universe = startingContext.universe;
 		this.cvcAuxVarCount = startingContext.cvcAuxVarCount;
@@ -1179,7 +1180,8 @@ public class CVCTranslator {
 	 *            a non-null SymbolicExpression
 	 * @return translation to CVC as a fast list of strings
 	 */
-	private FastList<String> translateWork(SymbolicExpression expression) {
+	private FastList<String> translateWork(SymbolicExpression expression)
+			throws TheoremProverException {
 		SymbolicOperator operator = expression.operator();
 		FastList<String> result;
 
@@ -1195,8 +1197,8 @@ public class CVCTranslator {
 			break;
 		case ARRAY_LAMBDA:
 			// TODO: are they supported in CVC3?
-			throw new UnsupportedOperationException(
-					"Array lambdas are not supported");
+			throw new TheoremProverException(
+					"Array lambdas are not supported by CVC");
 		case ARRAY_READ:
 			result = translateArrayRead(expression);
 			break;
@@ -1434,7 +1436,8 @@ public class CVCTranslator {
 		return result.clone();
 	}
 
-	private FastList<String> translate(SymbolicExpression expression) {
+	private FastList<String> translate(SymbolicExpression expression)
+			throws TheoremProverException {
 		FastList<String> result = expressionMap.get(expression);
 
 		if (result == null) {

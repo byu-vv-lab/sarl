@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo;
 import edu.udel.cis.vsl.sarl.IF.config.ProverInfo.ProverKind;
@@ -96,9 +97,11 @@ public class RobustCVCTheoremProver implements TheoremProver {
 	 *            information object on the underlying theorem prover, which
 	 *            must have {@link ProverKind} either {@link ProverKind#CVC3} or
 	 *            {@link ProverKind#CVC4}
+	 * @throws TheoremProverException
+	 *             if the context contains something CVC just can't handle
 	 */
 	RobustCVCTheoremProver(PreUniverse universe, BooleanExpression context,
-			ProverInfo info) {
+			ProverInfo info) throws TheoremProverException {
 		LinkedList<String> command = new LinkedList<>();
 
 		assert universe != null;
@@ -170,6 +173,73 @@ public class RobustCVCTheoremProver implements TheoremProver {
 		}
 	}
 
+	private ValidityResult runCVC(BooleanExpression predicate, int id,
+			boolean show, PrintStream out) throws TheoremProverException {
+		Process process = null;
+		ValidityResult result = null;
+
+		try {
+			process = processBuilder.start();
+		} catch (IOException e) {
+			if (info.getShowErrors())
+				err.println("I/O exception reading " + info.getFirstAlias()
+						+ " output: " + e.getMessage());
+			result = Prove.RESULT_MAYBE;
+		}
+		if (result == null) {
+			PrintStream stdin = new PrintStream(process.getOutputStream());
+			BufferedReader stdout = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));
+			BufferedReader stderr = new BufferedReader(new InputStreamReader(
+					process.getErrorStream()));
+			FastList<String> assumptionDecls = assumptionTranslator
+					.getDeclarations();
+			FastList<String> assumptionText = assumptionTranslator
+					.getTranslation();
+
+			assumptionDecls.print(stdin);
+			stdin.print("ASSERT ");
+			assumptionText.print(stdin);
+			stdin.println(";");
+			predicate = (BooleanExpression) universe
+					.cleanBoundVariables(predicate);
+
+			CVCTranslator translator = new CVCTranslator(assumptionTranslator,
+					predicate);
+			FastList<String> predicateDecls = translator.getDeclarations();
+			FastList<String> predicateText = translator.getTranslation();
+
+			predicateDecls.print(stdin);
+			stdin.print("QUERY ");
+			predicateText.print(stdin);
+			stdin.println(";\n");
+			stdin.flush();
+			stdin.close();
+			if (show) {
+				out.print("\n" + info.getFirstAlias() + " predicate   " + id
+						+ ":\n");
+				predicateDecls.print(out);
+				predicateText.print(out);
+				out.println();
+				out.println();
+				out.flush();
+			}
+			if (info.getTimeout() > 0
+					&& !ProcessControl.waitForProcess(process,
+							info.getTimeout())) {
+				if (info.getShowErrors() || info.getShowInconclusives())
+					err.println(info.getFirstAlias() + " query       " + id
+							+ ": time out");
+				result = Prove.RESULT_MAYBE;
+			} else {
+				result = readCVCOutput(stdout, stderr);
+			}
+		}
+		if (process != null)
+			process.destroy();
+		return result;
+	}
+
 	@Override
 	public ValidityResult valid(BooleanExpression predicate) {
 		PrintStream out = universe.getOutputStream();
@@ -177,8 +247,6 @@ public class RobustCVCTheoremProver implements TheoremProver {
 		FastList<String> assumptionDecls = assumptionTranslator
 				.getDeclarations();
 		FastList<String> assumptionText = assumptionTranslator.getTranslation();
-		Process process = null;
-		ValidityResult result;
 		boolean show = universe.getShowProverQueries() || info.getShowQueries();
 
 		universe.incrementProverValidCount();
@@ -190,63 +258,21 @@ public class RobustCVCTheoremProver implements TheoremProver {
 			out.println();
 			out.flush();
 		}
+
+		ValidityResult result;
+
 		try {
-			process = processBuilder.start();
-		} catch (IOException e) {
-			if (info.getShowErrors())
-				err.println("I/O exception reading " + info.getFirstAlias()
-						+ " output: " + e.getMessage());
+			result = runCVC(predicate, id, show, out);
+		} catch (TheoremProverException e) {
+			if (show)
+				err.println("Warning: " + e.getMessage());
 			result = Prove.RESULT_MAYBE;
-		}
-
-		PrintStream stdin = new PrintStream(process.getOutputStream());
-		BufferedReader stdout = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
-		BufferedReader stderr = new BufferedReader(new InputStreamReader(
-				process.getErrorStream()));
-
-		assumptionDecls.print(stdin);
-		stdin.print("ASSERT ");
-		assumptionText.print(stdin);
-		stdin.println(";");
-		predicate = (BooleanExpression) universe.cleanBoundVariables(predicate);
-
-		CVCTranslator translator = new CVCTranslator(assumptionTranslator,
-				predicate);
-		FastList<String> predicateDecls = translator.getDeclarations();
-		FastList<String> predicateText = translator.getTranslation();
-
-		predicateDecls.print(stdin);
-		stdin.print("QUERY ");
-		predicateText.print(stdin);
-		stdin.println(";\n");
-		stdin.flush();
-		stdin.close();
-		if (show) {
-			out.print("\n" + info.getFirstAlias() + " predicate   " + id
-					+ ":\n");
-			predicateDecls.print(out);
-			predicateText.print(out);
-			out.println();
-			out.println();
-			out.flush();
-		}
-		if (info.getTimeout() > 0
-				&& !ProcessControl.waitForProcess(process, info.getTimeout())) {
-			if (info.getShowErrors() || info.getShowInconclusives())
-				err.println(info.getFirstAlias() + " query       " + id
-						+ ": time out");
-			result = Prove.RESULT_MAYBE;
-		} else {
-			result = readCVCOutput(stdout, stderr);
 		}
 		if (show) {
 			out.println(info.getFirstAlias() + " result      " + id + ": "
 					+ result);
 			out.flush();
 		}
-		if (process != null)
-			process.destroy();
 		return result;
 	}
 

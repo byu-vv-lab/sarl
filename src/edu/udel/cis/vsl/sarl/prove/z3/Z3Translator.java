@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -24,9 +24,9 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
@@ -1250,7 +1250,8 @@ public class Z3Translator {
 	 *            a non-null SymbolicExpression
 	 * @return translation to CVC as a fast list of strings
 	 */
-	private FastList<String> translateWork(SymbolicExpression expression) {
+	private FastList<String> translateWork(SymbolicExpression expression)
+			throws TheoremProverException {
 		SymbolicOperator operator = expression.operator();
 		FastList<String> result;
 
@@ -1265,8 +1266,7 @@ public class Z3Translator {
 			result = translateApply(expression);
 			break;
 		case ARRAY_LAMBDA:
-			result = translateLambda(expression);
-			break;
+			throw new TheoremProverException("Z3 does not handle array lambdas");
 		case ARRAY_READ:
 			result = translateArrayRead(expression);
 			break;
@@ -1433,7 +1433,7 @@ public class Z3Translator {
 			break;
 		}
 		case FUNCTION: {
-			throw new SARLException("Z3 does not have a function type");
+			throw new TheoremProverException("Z3 does not have a function type");
 		}
 		case UNION: {
 			/**
@@ -1477,7 +1477,8 @@ public class Z3Translator {
 		return result.clone();
 	}
 
-	private FastList<String> translate(SymbolicExpression expression) {
+	private FastList<String> translate(SymbolicExpression expression)
+			throws TheoremProverException {
 		FastList<String> result = expressionMap.get(expression);
 
 		if (result == null) {

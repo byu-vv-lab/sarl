@@ -1,5 +1,8 @@
 package edu.udel.cis.vsl.sarl.prove.common;
 
+import java.util.ArrayList;
+
+import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
@@ -20,12 +23,20 @@ public class MultiProverFactory implements TheoremProverFactory {
 	@Override
 	public TheoremProver newProver(BooleanExpression context) {
 		int numProvers = factories.length;
-		TheoremProver[] provers = new TheoremProver[numProvers];
+		ArrayList<TheoremProver> provers = new ArrayList<>();
 
 		for (int i = 0; i < numProvers; i++) {
-			provers[i] = factories[i].newProver(context);
+			try {
+				TheoremProver prover = factories[i].newProver(context);
+
+				provers.add(prover);
+			} catch (TheoremProverException e) {
+				// thrown if the context contained something that class
+				// of theorem prover just can't handle
+				// ignore this prover.
+			}
 		}
-		return new MultiProver(universe, provers);
+		return new MultiProver(universe, provers.toArray(new TheoremProver[0]));
 	}
 
 }
