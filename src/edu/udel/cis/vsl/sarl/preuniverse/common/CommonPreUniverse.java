@@ -2053,10 +2053,60 @@ public class CommonPreUniverse implements PreUniverse {
 			throw err("Argument function to method arrayLambda was null");
 		if (function.operator() != SymbolicOperator.LAMBDA)
 			throw err("Function must be LAMBDA type");
-		// TODO: Make sure the function takes an index (Integer) and outputs
-		// elementType
-		return expression(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
 
+		if (function.type().typeKind() != SymbolicTypeKind.FUNCTION)
+			throw err("function must have a function type, not "
+					+ function.type());
+
+		SymbolicFunctionType functionType = (SymbolicFunctionType) function
+				.type();
+		SymbolicTypeSequence inputSeq = functionType.inputTypes();
+		int numInputs = inputSeq.numTypes();
+
+		if (numInputs != 1)
+			throw err("function in array lambda must take one input, not "
+					+ numInputs + ": " + functionType);
+
+		SymbolicType inputType = inputSeq.getType(0);
+
+		if (inputType.typeKind() != SymbolicTypeKind.INTEGER)
+			throw err("input type of array lambda function must be integer, not "
+					+ inputType + ": " + functionType);
+
+		SymbolicType outputType = functionType.outputType();
+
+		if (compatible(outputType, arrayType.elementType()).isFalse()) {
+			throw err("Return type of array lambda function is incompatible with element type:\n"
+					+ "element type: "
+					+ arrayType.elementType()
+					+ "\n"
+					+ "lambda function type: "
+					+ functionType
+					+ "\n"
+					+ "lambda function output type: " + outputType + "\n");
+		}
+
+		NumericExpression lengthExpression = arrayType.extent();
+		Number lengthNumber = this.extractNumber(lengthExpression);
+
+		if (lengthNumber != null) {
+			int length = ((IntegerNumber) lengthNumber).intValue();
+
+			if (length < DENSE_ARRAY_MAX_SIZE) {
+				SymbolicExpression[] elements = new SymbolicExpression[length];
+				SymbolicConstant boundVar = (SymbolicConstant) function
+						.argument(0);
+				SymbolicExpression elementExpr = (SymbolicExpression) function
+						.argument(1);
+
+				for (int i = 0; i < length; i++) {
+					elements[i] = substitute(elementExpr, boundVar, integer(i));
+				}
+				return expression(SymbolicOperator.CONCRETE, arrayType,
+						collectionFactory.sequence(elements));
+			}
+		}
+		return expression(SymbolicOperator.ARRAY_LAMBDA, arrayType, function);
 	}
 
 	@Override

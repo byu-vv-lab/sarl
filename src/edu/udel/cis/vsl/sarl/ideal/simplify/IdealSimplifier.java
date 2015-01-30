@@ -42,10 +42,11 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**
- * An implementation of SimplifierIF for the Ideal Universe. Provides methods to
- * take a symbolic expression from an ideal universe and return a "simplified"
- * version of the expression which is equivalent to the original in the
- * mathematical "ideal" semantics. Similar method is provided for types.
+ * An implementation of {@link Simplifier} for the "Ideal" (mathematical)
+ * Universe. Provides methods to take a symbolic expression from an ideal
+ * universe and return a "simplified" version of the expression which is
+ * equivalent to the original in the mathematical "ideal" semantics. Similar
+ * method is provided for types.
  * 
  * @author siegel
  * 
@@ -842,7 +843,7 @@ public class IdealSimplifier extends CommonSimplifier {
 	}
 
 	/**
-	 * Exracts bounds from expression of the form e>0 (strict true) or e>=0
+	 * Extracts bounds from expression of the form e>0 (strict true) or e>=0
 	 * (strict false). Updates aBoundMap and aBooleanMap.
 	 */
 	private boolean extractGT0Bounds(boolean strict, Polynomial poly,
@@ -912,9 +913,9 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	/**
 	 * This method inserts into the simplification cache all facts from the
-	 * assumption that are not otherwised encoded in the constantMap,
-	 * booleanMap, or boundMap. It is to be invoked only after the assumption
-	 * has been simplified for the final time.
+	 * assumption that are not otherwise encoded in the {@link #constantMap},
+	 * {@link #booleanMap}, or {@link #boundMap}. It is to be invoked only after
+	 * the assumption has been simplified for the final time.
 	 */
 	private void extractRemainingFacts() {
 		SymbolicOperator operator = assumption.operator();
@@ -958,9 +959,6 @@ public class IdealSimplifier extends CommonSimplifier {
 		return simplifyGenericExpression(expression);
 	}
 
-	/**
-	 *   
-	 */
 	@Override
 	public Interval assumptionAsInterval(SymbolicConstant symbolicConstant) {
 		if (intervalComputed) {

@@ -359,7 +359,12 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 			return result;
 		}
 		case ARRAY_LAMBDA:
-			return toStringBufferLong();
+			result.append("(");
+			result.append(type.toStringBuffer(false));
+			result.append(")<");
+			result.append(arguments[0].toStringBuffer(false));
+			result.append(">");
+			return result;
 		case ARRAY_READ:
 			result.append(arguments[0].toStringBuffer(true));
 			result.append("[");

@@ -45,7 +45,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 
 /**
- * A partial implementation of Simplifer which can be extended.
+ * A partial implementation of {@link Simplifier} which can be extended.
  * 
  * @author siegel
  * 
@@ -91,7 +91,7 @@ public abstract class CommonSimplifier implements Simplifier {
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
-		case CHAR://add char type here, TODO need to check if this is correct
+		case CHAR:
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
