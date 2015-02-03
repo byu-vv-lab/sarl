@@ -61,7 +61,7 @@ public class BoundCleaner {
 	 */
 	private final static String specialString = "__";
 
-	private ExpressionSubstituter substituter;
+	// private ExpressionSubstituter substituter;
 
 	private CollectionFactory collectionFactory;
 
@@ -79,12 +79,13 @@ public class BoundCleaner {
 	private Map<String, Integer> countMap = new HashMap<>();
 
 	public BoundCleaner(PreUniverse universe,
-			CollectionFactory collectionFactory,
-			SymbolicTypeFactory typeFactory, ExpressionSubstituter substituter) {
+			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory
+	// , ExpressionSubstituter substituter
+	) {
 		this.universe = universe;
 		this.collectionFactory = collectionFactory;
 		this.typeFactory = typeFactory;
-		this.substituter = substituter;
+		// this.substituter = substituter;
 	}
 
 	private SymbolicCollection<?> cleanGenericCollection(
@@ -286,7 +287,7 @@ public class BoundCleaner {
 						universe.stringObject(newName), boundVariable.type());
 				substitutionMap = new SingletonMap<SymbolicExpression, SymbolicExpression>(
 						boundVariable, newBoundVariable);
-				newArg1 = substituter.substitute(newArg1, substitutionMap);
+				newArg1 = universe.substitute(newArg1, substitutionMap);
 			}
 			countMap.put(name, count);
 			if (arg1 == newArg1 && boundVariable == newBoundVariable)

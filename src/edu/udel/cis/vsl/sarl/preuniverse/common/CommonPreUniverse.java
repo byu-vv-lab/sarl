@@ -12,6 +12,7 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NTReferenceExpression;
@@ -127,10 +128,10 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private Comparator<SymbolicObject> objectComparator;
 
-	/**
-	 * The object used to perform substitutions on symbolic expressions.
-	 */
-	private ExpressionSubstituter substituter;
+	// /**
+	// * The object used to perform substitutions on symbolic expressions.
+	// */
+	// private ExpressionSubstituter substituter;
 
 	/**
 	 * The object used to give quantified (bound) variables unique names.
@@ -212,10 +213,11 @@ public class CommonPreUniverse implements PreUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		substituter = new ExpressionSubstituter(this, collectionFactory,
-				typeFactory);
-		cleaner = new BoundCleaner(this, collectionFactory, typeFactory,
-				substituter);
+		// substituter = new ExpressionSubstituter(this, collectionFactory,
+		// typeFactory);
+		cleaner = new BoundCleaner(this, collectionFactory, typeFactory
+		// ,substituter
+		);
 		arrayIndex = (NumericSymbolicConstant) canonic(symbolicConstant(
 				stringObject("i"), integerType));
 	}
@@ -1304,13 +1306,18 @@ public class CommonPreUniverse implements PreUniverse {
 	public SymbolicExpression substituteSymbolicConstants(
 			SymbolicExpression expression,
 			Map<SymbolicConstant, SymbolicExpression> map) {
-		return substituter.substitute(expression, new OptimizedMap(map));
+		UnaryOperator<SymbolicExpression> substituter = substituter(new OptimizedMap(
+				map));
+
+		return substituter.apply(expression);
 	}
 
 	@Override
 	public SymbolicExpression substitute(SymbolicExpression expression,
 			Map<SymbolicExpression, SymbolicExpression> map) {
-		return substituter.substitute(expression, map);
+		UnaryOperator<SymbolicExpression> substituter = substituter(map);
+
+		return substituter.apply(expression);
 	}
 
 	@Override
@@ -2461,86 +2468,6 @@ public class CommonPreUniverse implements PreUniverse {
 		}
 	}
 
-	/*
-	 * The version Julian wrote is incorrect because it processes the types in
-	 * inside-out order. Consider e.g. array of array of tuple.
-	 */
-	// @Override
-	// /*
-	// * Written by Julian Piane This is an improved version of referenceTest
-	// * which allows for SymbolicTypes of infinite embedded size. These
-	// * enhancements change the runtime from roughly exponential to a clear
-	// O(n)
-	// * time. Current tests are being done to compare the efficiencies of the
-	// * method on different Symbolic Types.
-	// */
-	// public SymbolicType referencedType(SymbolicType type,
-	// ReferenceExpression reference) {
-	//
-	// while (reference != null && type != null) {
-	// switch (reference.referenceKind()) {
-	// case NULL:
-	// throw new SARLException(
-	// "Cannot compute referencedType of the null reference expression:\n"
-	// + type + "\n" + reference);
-	// case IDENTITY:
-	// return type;
-	// case ARRAY_ELEMENT: {
-	// ArrayElementReference ref = (ArrayElementReference) reference;
-	// reference = ref.getParent();
-	//
-	// if (type instanceof SymbolicArrayType)
-	// type = ((SymbolicArrayType) type).elementType();
-	// else
-	// throw new SARLException(
-	// "Incompatible type and reference:\n" + type + "\n"
-	// + reference);
-	// }
-	// break;
-	// case TUPLE_COMPONENT: {
-	// TupleComponentReference ref = (TupleComponentReference) reference;
-	// reference = ref.getParent();
-	//
-	// if (type instanceof SymbolicTupleType)
-	// type = ((SymbolicTupleType) type).sequence().getType(
-	// ref.getIndex().getInt());
-	// else
-	// throw new SARLException(
-	// "Incompatible type and reference:\n" + type + "\n"
-	// + reference);
-	// }
-	// break;
-	// case UNION_MEMBER: {
-	// UnionMemberReference ref = (UnionMemberReference) reference;
-	// reference = ref.getParent();
-	//
-	// if (type instanceof SymbolicUnionType)
-	// type = ((SymbolicUnionType) type).sequence().getType(
-	// ref.getIndex().getInt());
-	// else
-	// throw new SARLException(
-	// "Incompatible type and reference:\n" + type + "\n"
-	// + reference);
-	// }
-	// break;
-	// case OFFSET: {
-	// OffsetReference ref = (OffsetReference) reference;
-	// reference = ref.getParent();
-	//
-	// return type;
-	// }
-	// default:
-	// throw new SARLInternalException("Unknown reference kind: "
-	// + reference);// unreachable
-	// }
-	// }
-	// if (reference == null)
-	// throw new SARLException("referencedType given null reference");
-	// if (type == null)
-	// throw new SARLException("referencedType given null type");
-	// return null;
-	// }
-
 	@Override
 	public ReferenceExpression identityReference() {
 		return expressionFactory.identityReference();
@@ -2829,5 +2756,12 @@ public class CommonPreUniverse implements PreUniverse {
 	public SymbolicExpression entrySet(SymbolicExpression map) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> substituter(
+			Map<SymbolicExpression, SymbolicExpression> map) {
+		return new ExpressionSubstituter(this, collectionFactory, typeFactory,
+				map);
 	}
 }

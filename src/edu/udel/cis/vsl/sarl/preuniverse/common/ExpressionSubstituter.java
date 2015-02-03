@@ -21,11 +21,13 @@ package edu.udel.cis.vsl.sarl.preuniverse.common;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -46,7 +48,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
-public class ExpressionSubstituter {
+public class ExpressionSubstituter implements UnaryOperator<SymbolicExpression> {
 
 	private CollectionFactory collectionFactory;
 
@@ -54,15 +56,23 @@ public class ExpressionSubstituter {
 
 	private PreUniverse universe;
 
+	private Map<SymbolicExpression, SymbolicExpression> map;
+
+	private Map<SymbolicExpression, SymbolicExpression> cache = new HashMap<>();
+
 	public ExpressionSubstituter(PreUniverse universe,
-			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory) {
+			CollectionFactory collectionFactory,
+			SymbolicTypeFactory typeFactory,
+			Map<SymbolicExpression, SymbolicExpression> map) {
 		this.universe = universe;
 		this.collectionFactory = collectionFactory;
 		this.typeFactory = typeFactory;
+		this.map = map;
+
 	}
 
 	/**
-	 * Performs subsitution on each symbolic expression in any kind of
+	 * Performs substitution on each symbolic expression in any kind of
 	 * SymbolicCollection (set, map, ...). The result will be a
 	 * SymbolicCollection that is not necessarily the same kind as the original.
 	 * For most cases, this is OK: e.g., if this is going to be used as an
@@ -370,10 +380,21 @@ public class ExpressionSubstituter {
 		}
 	}
 
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			Map<SymbolicExpression, SymbolicExpression> map) {
-		return substituteExpression(expression, map,
-				new ArrayDeque<SymbolicConstant>());
+	@Override
+	public SymbolicExpression apply(SymbolicExpression expression) {
+		SymbolicExpression result = cache.get(expression);
+
+		if (result == null) {
+			result = substituteExpression(expression, map,
+					new ArrayDeque<SymbolicConstant>());
+			cache.put(expression, result);
+		} else {
+			// TODO: performance debugging experiments:
+			// System.out.println("* Substitution cache hit! *");
+			// if (!expression.isCanonic())
+			// System.out.println("$$$$$$$$$$$$ NOT CANONIC $$$$$$$$$$$$$$$");
+		}
+		return result;
 	}
 
 }

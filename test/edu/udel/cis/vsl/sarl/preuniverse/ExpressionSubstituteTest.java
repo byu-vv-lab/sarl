@@ -131,8 +131,10 @@ public class ExpressionSubstituteTest {
 	@SuppressWarnings("static-access")
 	@Test
 	public void expressionSubstituteTest() {
-		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1);
 		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
+
+		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1,
+				newMap);
 
 		// constructor test
 		assertEquals(this.factory1, factory1);
@@ -140,27 +142,27 @@ public class ExpressionSubstituteTest {
 		assertEquals(this.typeFactory1, typeFactory1);
 
 		// case Null expression
-		assertEquals(expr1.substitute(expression1, newMap), expression1);
+		assertEquals(expr1.apply(expression1), expression1);
 
 		// case arraytype
-		assertEquals(expr1.substitute(expression2, newMap), expression2);
+		assertEquals(expr1.apply(expression2), expression2);
 
 		// case tupletype
-		assertEquals(expr1.substitute(expression3, newMap), expression3);
+		assertEquals(expr1.apply(expression3), expression3);
 
 		// case unionType
-		assertEquals(expr1.substitute(expression4, newMap), expression4);
+		assertEquals(expr1.apply(expression4), expression4);
 
 		// case functionType
-		assertEquals(expr1.substitute(expression5, newMap), expression5);
+		assertEquals(expr1.apply(expression5), expression5);
 
 		// case completeArrayType
-		assertEquals(expr1.substitute(expression6, newMap), expression6);
+		assertEquals(expr1.apply(expression6), expression6);
 
 		// case typesequence
-		assertEquals(expr1.substitute(expression7, newMap), expression7);
+		assertEquals(expr1.apply(expression7), expression7);
 
 		// expression collection
-		assertEquals(expr1.substitute(expression8, newMap), expression8);
+		assertEquals(expr1.apply(expression8), expression8);
 	}
 }
