@@ -24,6 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
+import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
@@ -179,8 +180,12 @@ public class ObjectComparator implements Comparator<SymbolicObject> {
 			case STRING:
 				return ((StringObject) o1).getString().compareTo(
 						((StringObject) o2).getString());
+			case CHAR:
+				return Character.compare(((CharObject) o1).getChar(),
+						((CharObject) o2).getChar());
 			default:
-				throw new SARLInternalException("unreachable");
+				throw new SARLInternalException(
+						"unreachable: unknown object kind: " + kind);
 			}
 		}
 	}
