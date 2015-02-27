@@ -297,25 +297,29 @@ public class IdealSimplifier extends CommonSimplifier {
 		if (oldBounds == null)
 			return null;
 
-		// have bounds on X, now simplify aX+b=0.
-		// aX+b=0 => solve for X=-b/a (check int arith)
-		// is -b/a within the bounds? if not: return FALSE
-		// if yes: no simplification.
+		// Know: lower <? pseudoValue <? upper
+		// (Here "<?" means "<" or "<=".). So
+		// lower - pseudoValue <? 0
+		// upper - pseudoValue >? 0
+		// if either of these is not true, you have a contradiction,
+		// simplify to "false".
 
+		// leftSign = sign of (lower-pseudoValue)
+		// rightSign = sign of (upper-pseudoValue)
 		int leftSign, rightSign;
 
 		{
 			Number lower = oldBounds.lower();
 
 			if (lower == null)
-				leftSign = -1;
+				leftSign = -1; // -infinity
 			else
 				leftSign = info.numberFactory.subtract(lower, pseudoValue)
 						.signum();
 
 			Number upper = oldBounds.upper();
 
-			if (upper == null)
+			if (upper == null) // +infinity
 				rightSign = 1;
 			else
 				rightSign = info.numberFactory.subtract(upper, pseudoValue)
@@ -325,7 +329,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		if (leftSign > 0 || (leftSign == 0 && oldBounds.strictLower()))
 			return info.falseExpr;
 		if (rightSign < 0 || (rightSign == 0 && oldBounds.strictUpper()))
-			return info.trueExpr;
+			return info.falseExpr;
 		return null;
 	}
 
