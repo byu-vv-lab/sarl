@@ -33,7 +33,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Primitive;
 import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 
 /**
- * A numeric primitive expression. Other class may want to extend this.
+ * A numeric primitive expression. Other classes may want to extend this.
  * Examples: symbolic constant, array read, tuple read, function application,
  * when those have numeric type.
  * 
@@ -134,8 +134,12 @@ public class NumericPrimitive extends IdealExpression implements Primitive {
 	}
 
 	/**
-	 * Note this might need to be overridden for certain kinds of numeric
-	 * primitives, e.g., ReducedPolynomials.
+	 * {@inheritDoc}.
+	 * 
+	 * <p>
+	 * Just returns this. Note this might need to be overridden for certain
+	 * kinds of numeric primitives, e.g., {@link ReducedPolynomial}s.
+	 * </p>
 	 */
 	@Override
 	public Polynomial expand(IdealFactory factory) {

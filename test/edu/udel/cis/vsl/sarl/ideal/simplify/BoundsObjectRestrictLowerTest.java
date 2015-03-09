@@ -24,7 +24,7 @@ import org.junit.Test;
  * @author danfried
  * 
  * @see BoundsObject
- * @see BoundsObject.restrictLower
+ * @see CommonInterval.restrictLower
  *
  */
 public class BoundsObjectRestrictLowerTest {

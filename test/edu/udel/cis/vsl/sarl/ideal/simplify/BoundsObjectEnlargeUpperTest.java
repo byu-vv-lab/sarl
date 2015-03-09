@@ -25,8 +25,8 @@ import org.junit.Test;
  * 
  * @author danfried
  *
- * @see BoundsObject.enlargeUpper
- * @see BoundsObject.enlargeTo
+ * @see CommonInterval.enlargeUpper
+ * @see CommonInterval.enlargeTo
  */
 public class BoundsObjectEnlargeUpperTest {
 

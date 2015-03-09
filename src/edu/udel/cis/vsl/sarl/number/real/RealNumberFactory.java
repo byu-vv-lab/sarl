@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
@@ -24,14 +24,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
 /**
- * Creates an environment to manipulate RealNumbers with percision
- * Includes various overrides to perform tasks while maintaining precision
+ * An implementation of number factory based on infinite precision real
+ * arithmetic.
  */
 public class RealNumberFactory implements NumberFactory {
 
@@ -46,6 +47,16 @@ public class RealNumberFactory implements NumberFactory {
 	private BinaryOperator<IntegerNumber> multiplier;
 
 	private Exponentiator<IntegerNumber> exponentiator;
+
+	/**
+	 * The empty integer interval: (0,0).
+	 */
+	private Interval emptyIntegerInterval;
+
+	/**
+	 * The empty real interval: (0.0, 0.0).
+	 */
+	private Interval emptyRealInterval;
 
 	/**
 	 * Uses a new factory to multiply two integer arguments.
@@ -71,6 +82,10 @@ public class RealNumberFactory implements NumberFactory {
 		zeroRational = fraction(zeroInteger, oneInteger);
 		oneRational = fraction(oneInteger, oneInteger);
 		multiplier = new IntMultiplier(this);
+		emptyIntegerInterval = new CommonInterval(true, zeroInteger, true,
+				zeroInteger, true);
+		emptyRealInterval = new CommonInterval(false, zeroRational, true,
+				zeroRational, true);
 	}
 
 	@Override
@@ -128,13 +143,14 @@ public class RealNumberFactory implements NumberFactory {
 		if (signum == 0) {
 			throw new ArithmeticException("Division by 0");
 		}
-		//ensures any negation is in numerator
-		//protects signum method in RealRational
+		// ensures any negation is in numerator
+		// protects signum method in RealRational
 		if (signum < 0) {
 			numerator = numerator.negate();
 			denominator = denominator.negate();
 		}
-		//interesting statement. replaces any denominator with one when numerator is zero.
+		// interesting statement. replaces any denominator with one when
+		// numerator is zero.
 		if (numerator.signum() == 0) {
 			denominator = BigInteger.ONE;
 		} else {
@@ -489,7 +505,8 @@ public class RealNumberFactory implements NumberFactory {
 	}
 
 	/**
-	 * Returns a RationalNumber generated from two strings while simultaneously eliminating the value E from the strings
+	 * Returns a RationalNumber generated from two strings while simultaneously
+	 * eliminating the value E from the strings
 	 */
 	public RationalNumber rationalWithoutE(String string) {
 		String left, right; // substrings to left/right of decimal point
@@ -901,4 +918,186 @@ public class RealNumberFactory implements NumberFactory {
 			}
 		}
 	}
+
+	@Override
+	public Interval emptyIntegerInterval() {
+		return emptyIntegerInterval;
+	}
+
+	@Override
+	public Interval emptyRealInterval() {
+		return emptyRealInterval;
+	}
+
+	@Override
+	public Interval newInterval(boolean isIntegral, Number lower,
+			boolean strictLower, Number upper, boolean strictUpper) {
+		return new CommonInterval(isIntegral, lower, strictLower, upper,
+				strictUpper);
+	}
+
+	@Override
+	public Interval intersection(Interval i1, Interval i2) {
+		boolean isIntegral = i1.isIntegral();
+
+		assert isIntegral == i2.isIntegral();
+
+		Number lo1 = i1.lower(), lo2 = i2.lower(), hi1 = i1.upper(), hi2 = i2
+				.upper();
+		boolean sl1 = i1.strictLower(), sl2 = i2.strictLower(), su1 = i1
+				.strictUpper(), su2 = i2.strictUpper();
+		Number lo, hi;
+		boolean sl, su;
+
+		if (lo1 == null) {
+			lo = lo2;
+			sl = sl2;
+		} else {
+			if (lo2 == null) {
+				lo = lo1;
+				sl = sl1;
+			} else {
+				int compare = lo1.compareTo(lo2);
+
+				if (compare < 0) {
+					lo = lo2;
+					sl = sl2;
+				} else if (compare == 0) {
+					lo = lo1;
+					sl = sl1 || sl2;
+				} else {
+					lo = lo1;
+					sl = sl1;
+				}
+			}
+		}
+		if (hi1 == null) {
+			hi = hi2;
+			su = su2;
+		} else {
+			if (hi2 == null) {
+				hi = hi1;
+				su = su1;
+			} else {
+				int compare = hi1.compareTo(hi2);
+
+				if (compare > 0) {
+					hi = hi2;
+					su = su2;
+				} else if (compare == 0) {
+					hi = hi1;
+					su = su1 || su2;
+				} else {
+					hi = hi1;
+					su = su1;
+				}
+			}
+		}
+		if (lo != null && hi != null) {
+			int compare = hi.compareTo(lo);
+
+			if (compare < 0) {
+				return isIntegral ? emptyIntegerInterval : emptyRealInterval;
+			} else if (compare == 0) {
+				if (sl || su) {
+					return isIntegral ? emptyIntegerInterval
+							: emptyRealInterval;
+				}
+			}
+		}
+		return new CommonInterval(i1.isIntegral(), lo, sl, hi, su);
+	}
+
+	@Override
+	public void union(Interval i1, Interval i2, IntervalUnion result) {
+		// under construction...
+		if (i1.isEmpty()) {
+			result.status = 0;
+			result.union = i2;
+			return;
+		} else if (i2.isEmpty()) {
+			result.status = 0;
+			result.union = i1;
+			return;
+		} else {
+			boolean isIntegral = i1.isIntegral();
+
+			assert isIntegral == i2.isIntegral();
+
+			Number lo1 = i1.lower(), lo2 = i2.lower(), hi1 = i1.upper(), hi2 = i2
+					.upper();
+			boolean sl1 = i1.strictLower(), sl2 = i2.strictLower(), su1 = i1
+					.strictUpper(), su2 = i2.strictUpper();
+			Number lo, hi;
+			boolean sl, su;
+
+			int compare1 = hi1.compareTo(lo2);
+
+			if (compare1 < 0) { // hi1<lo2
+				result.status = -1;
+			} else if (compare1 == 0) { // hi1=lo2
+				if (!su1 || !sl2) { // <...)[...>
+					lo = lo1;
+					hi = hi2;
+					sl = sl1;
+					su = su2;
+					result.status = 0;
+				} else { // <...)(...>
+					result.status = -1;
+				}
+			} else { // hi1>lo2
+				int compare2 = lo1.compareTo(hi2);
+
+				if (compare2 < 0) { // lo1<hi2
+					int compareLo = lo1.compareTo(lo2);
+
+					if (compareLo < 0) {
+						lo = lo1;
+						sl = sl1;
+					} else if (compareLo == 0) {
+						lo = lo1;
+						sl = sl1 && sl2;
+					} else {
+						lo = lo2;
+						sl = sl2;
+					}
+
+					int compareHi = hi1.compareTo(hi2);
+
+					if (compareHi < 0) {
+						hi = hi2;
+						su = su2;
+					} else if (compareHi == 0) {
+						hi = hi1;
+						su = su1 && su2;
+					} else {
+						hi = hi1;
+						su = su1;
+					}
+					result.status = 0;
+				} else if (compare2 == 0) { // lo1=hi2
+					if (!sl1 || !su2) {
+						lo = lo2;
+						hi = hi1;
+						sl = sl2;
+						su = su1;
+						result.status = 0;
+					} else {
+						result.status = 1;
+					}
+				} else { // lo1>hi2
+					result.status = 1;
+				}
+			}
+			if (result.status != 0) {
+				result.union = null;
+			} else {
+				// keep working....
+				// result.union = new CommonInterval(i1.isIntegral(), lo, sl,
+				// hi,
+				// su);
+			}
+		}
+	}
+
 }

@@ -17,7 +17,7 @@ import org.junit.Test;
  * 
  * @author danfried
  *
- *@see BoundsObject.clone
+ *@see CommonInterval.clone
  */
 public class BoundsObjectCloneTest {
 

@@ -23,8 +23,10 @@ import java.math.BigInteger;
 /**
  * A number factory is used to produce concrete rational and integer numbers.
  * The rational and integer numbers live in two separate worlds. Different
- * implementations of this interface may make different chocies regarding
+ * implementations of this interface may make different choices regarding
  * numerical precision, rounding policies, and other factors.
+ * 
+ * TODO: add methods for producing and manipulating intervals here.
  */
 public interface NumberFactory {
 
@@ -238,8 +240,8 @@ public interface NumberFactory {
 	RationalNumber rational(Number number);
 
 	/**
-	 * Returns a positive value  of 1 if arg0>arg1, 0 if arg0 equals arg1, -1 if
-	 * arg0<arg1.
+	 * Returns a positive value if arg0 is greater than arg1, 0 if arg0 equals
+	 * arg1, a negative value if arg0 is less than arg1.
 	 */
 	int compare(Number arg0, Number arg1);
 
@@ -284,5 +286,125 @@ public interface NumberFactory {
 	 * @return the corresponding IntegerNumber
 	 */
 	IntegerNumber integer(long value);
+
+	// Intervals...
+
+	/**
+	 * Returns the empty integer interval: (0,0).
+	 * 
+	 * @return empty integer interval
+	 */
+	Interval emptyIntegerInterval();
+
+	/**
+	 * Returns the empty real interval: (0.0, 0.0).
+	 * 
+	 * @return empty real interval
+	 */
+	Interval emptyRealInterval();
+
+	/**
+	 * Returns a new {@link Interval} as specified. A value of <code>null</code>
+	 * for the lower bound represents negative infinity; for the upper bound it
+	 * represents positive infinity.
+	 * 
+	 * Preconditions: the parameters must specify an interval in "normal form",
+	 * i.e., the following must all hold:
+	 * 
+	 * <ul>
+	 * <li>if the type is integral, then the upper and lower bounds must be
+	 * instances of {@link IntegerNumber}, else they must be instances of
+	 * {@link RationalNumber}</li>
+	 * 
+	 * <li>if the lower bound is <code>null</code>, <code>strictLower</code>
+	 * must be <code>true</code>; if the upper bound is <code>null</code>,
+	 * <code>strictUpper</code> must be <code>true</code></li>
+	 * 
+	 * <li>if both bounds are non-<code>null</code>, the lower bound must be
+	 * less than or equal to the upper bound</li>
+	 * 
+	 * <li>if the bounds are non-<code>null</code> and equal: either (1) both
+	 * <code>strictLower</code> and <code>strictUpper</code> will be
+	 * <code>false</code>, or (2) <code>strictLower</code> and
+	 * <code>strictUpper</code> will be <code>true</code> and the upper and
+	 * lower bounds will be 0. The first case represents an interval consisting
+	 * of a single point; the second case represents the empty interval.</li>
+	 * 
+	 * <li>if the type is integral: if the lower bound is non-<code>null</code>
+	 * then <code>strictLower</code> will be <code>false</code>; if the upper
+	 * bound is non-<code>null</code> then <code>strictUpper</code> will be
+	 * <code>false</code>.</li>
+	 * </ul>
+	 * 
+	 * @param isIntegral
+	 *            does the interval have integer type (as opposed to real type)?
+	 * @param lower
+	 *            the lower bound of the interval
+	 * @param strictLower
+	 *            is the lower bound strict, i.e., "(", as opposed to "["?
+	 * @param upper
+	 *            the upper bound of the interval
+	 * @param strictUpper
+	 *            is the upper bound strict, i.e., ")", as opposed to "]"?
+	 * @return a new interval object as specified
+	 */
+	Interval newInterval(boolean isIntegral, Number lower, boolean strictLower,
+			Number upper, boolean strictUpper);
+
+	/**
+	 * Returns the interval which is the intersection of the two given
+	 * intervals. The two given intervals must have the same type.
+	 * 
+	 * @param i1
+	 *            an interval
+	 * @param i2
+	 *            an interval with same type (integer or real) as
+	 *            <code>i1</code>
+	 * @return the interval representing the intersection of <code>i1</code> and
+	 *         <code>i2</code>
+	 */
+	Interval intersection(Interval i1, Interval i2);
+
+	/**
+	 * A simple type for recording the result of attempting to take the union of
+	 * two intervals i1 and i2. There are three possibilities:
+	 * <ol>
+	 * <li>the union of the two intervals is an interval. In this case,
+	 * <code>status=0</code> and <code>union</code> is the union of the two
+	 * intervals.</li>
+	 * <li>i1 is strictly less than i2 and the union is not an interval. In this
+	 * case, <code>status<0</code> and <code>union</code> is <code>null</code>.</li>
+	 * <li>i1 is strictly greater than i2 and the union is not an interval. In
+	 * this case, <code>status>0</code> and <code>union</code> is
+	 * <code>null</code>.
+	 * </ol>
+	 * 
+	 * @author siegel
+	 *
+	 */
+	public class IntervalUnion {
+		public int status;
+		public Interval union;
+	};
+
+	/**
+	 * Computes the union of two intervals or reports that the union is not an
+	 * interval and why. The result is stored in the <code>result</code> object.
+	 * If the union of the two intervals is an interval,
+	 * <code>result.status</code> will be set to 0 and <code>result.union</code>
+	 * will hold the union interval. Otherwise, the status will be set to either
+	 * a negative or positive integer and <code>result.union</code> will be set
+	 * to <code>null</code>. A positive status indicates that every element of
+	 * i1 is greater than every element of i2; a negative status indicates every
+	 * element of i1 is less than every element of i2.
+	 *
+	 * @param i1
+	 *            an interval
+	 * @param i2
+	 *            an interval of same type as <code>i1</code>
+	 * @return an interval which is the union of <code>i1</code> and
+	 *         <code>i2</code> or <code>null</code>
+	 */
+	void union(Interval i1, Interval i2, IntervalUnion result);
 
 }

@@ -29,6 +29,13 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
+/**
+ * Entry point for the idea module, providing static methods to create an
+ * {@link IdealFactory} and a {@link SimplifierFactory}.
+ * 
+ * @author siegel
+ *
+ */
 public class Ideal {
 
 	public static IdealFactory newIdealFactory(NumberFactory numberFactory,

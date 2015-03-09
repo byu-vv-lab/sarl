@@ -39,6 +39,8 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
 import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
+import edu.udel.cis.vsl.sarl.ideal.common.NTPolynomial;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.common.CommonSimplifier;
 
 /**
@@ -102,10 +104,16 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	/**
 	 * The keys in this map are pseudo-primitive factored polynomials. See
-	 * AffineExpression for the definition. The value is the constant value that
-	 * has been determined to be the value of that pseudo.
+	 * {@link AffineExpression} for the definition. The value is the constant
+	 * value that has been determined to be the value of that pseudo.
 	 */
 	private Map<Polynomial, Number> constantMap = new HashMap<Polynomial, Number>();
+
+	// TODO: if it is determined that p=0, then all primitives occurring
+	// in the factorization of of p are 0:
+	// put all of these into the constantMap. If it is determined that
+	// p!=0, then all primitives occurring in a factorization of p are non-0.
+	// Put these facts into the booleanMap.
 
 	/**
 	 * Has the interval interpretation of this context been computed?
@@ -113,8 +121,8 @@ public class IdealSimplifier extends CommonSimplifier {
 	private boolean intervalComputed = false;
 
 	/**
-	 * The interpretation of the context as an Interval, or null if it cannot be
-	 * so interpreted.
+	 * The interpretation of the context as an Interval, or <code>null</code> if
+	 * it cannot be so interpreted.
 	 */
 	private Interval interval = null;
 
@@ -134,6 +142,17 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * Begin Simplification Routines...................................... *
 	 ***********************************************************************/
 
+	/**
+	 * Determines if the operator is one of the relation operators
+	 * {@link SymbolicOperator#LESS_THAN},
+	 * {@link SymbolicOperator#LESS_THAN_EQUALS},
+	 * {@link SymbolicOperator#EQUALS}, or {@link SymbolicOperator#NEQ}.
+	 * 
+	 * @param operator
+	 *            a non-<code>null</code> symbolic operator
+	 * @return <code>true</code> iff <code>operator</code> is one of the four
+	 *         relationals
+	 */
 	private boolean isRelational(SymbolicOperator operator) {
 		switch (operator) {
 		case LESS_THAN:
@@ -146,13 +165,36 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 	}
 
+	/**
+	 * Determines whether the expression is a numeric relational expression,
+	 * i.e., the operator is one of the four relation operators and argument 0
+	 * has numeric type.
+	 * 
+	 * @param expression
+	 *            any non-<code>null</code> symbolic expression
+	 * @return <code>true</code> iff the expression is relational with numeric
+	 *         arguments
+	 */
 	private boolean isNumericRelational(SymbolicExpression expression) {
 		return isRelational(expression.operator())
 				&& ((SymbolicExpression) expression.argument(0)).isNumeric();
 	}
 
-	private Constant pseudoReplacement(Polynomial fp) {
-		AffineExpression affine = info.affineFactory.affine(fp);
+	/**
+	 * Attempts to determine the value of a polynomial using the information in
+	 * the {@link #constantMap}. The polynomial is converted to affine form
+	 * aX+b, where X is pseudo-primitive, and the constant map is used to
+	 * determine a value for X, which can then be used to determine a value for
+	 * the polynomial. If the constant map does not have a value for X, returns
+	 * <code>null</code>.
+	 * 
+	 * @param polynomial
+	 *            any non-<code>null</code> polynomial
+	 * @return either a constant value for that polynomial or <code>null</code>
+	 *         if no constant value can be determined
+	 */
+	private Constant pseudoReplacement(Polynomial polynomial) {
+		AffineExpression affine = info.affineFactory.affine(polynomial);
 		Polynomial pseudo = affine.pseudo();
 		Number pseudoValue = constantMap.get(pseudo);
 
@@ -164,19 +206,22 @@ public class IdealSimplifier extends CommonSimplifier {
 	}
 
 	/**
+	 * <p>
 	 * Simplifies a polynomial. Assumes the polynomial is not currently in the
 	 * simplification cache. Does NOT assume that the generic simplification has
 	 * been performed on this polynomial.
+	 * </p>
 	 * 
-	 * Have to be careful here: some polynomials (instances of NYPolynomial)
-	 * contain extrinsic data, namely, the factorization. So you can't just
-	 * apply generic simplification to them or they will lose that extrinsic
-	 * data.
-	 * 
+	 * <p>
+	 * Have to be careful here: some polynomials (instances of
+	 * {@link NTPolynomial}) contain extrinsic data, namely, the factorization.
+	 * So you can't just apply generic simplification to them or they will lose
+	 * that extrinsic data.
+	 * </p>
 	 * 
 	 * @param polynomial
-	 *            a polynomial which does not have an entry in the
-	 *            simplification cache
+	 *            a non-<code>null</code> polynomial which does not have an
+	 *            entry in the simplification cache
 	 * @return simplified version of the polynomial
 	 */
 	private Polynomial simplifyPolynomial(Polynomial polynomial) {
@@ -200,16 +245,32 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 	}
 
-	// 4 relations: 0<, 0<=, 0==, 0!=
-
-	// 0<p/q <=> (0<p && 0<q) || (0<-p && 0<-q)
-
-	// 0<=p/q <=> (0<=p && 0<q) || (0<=-p && 0<-q)
-
-	// 0==p/q <=> 0==p
-
-	// 0!=p/q <=> 0!=p
-
+	/**
+	 * Simplifies a relational expression. The ideal factory ensures that every
+	 * relational expression will be in one of the following four forms: 0&ltx;,
+	 * 0&lt;=x, 0==x, 0!=x.
+	 * 
+	 * These are simplified according to the following rules:
+	 * 
+	 * <ul>
+	 * <li>
+	 * 0&lt;p/q &lt;=&gt; (0&lt;p &amp;&amp; 0&lt;q) || (0&lt;-p &amp;&amp;
+	 * 0&lt;-q)</li>
+	 * <li>
+	 * 0&lt;=p/q &lt;=&gt; (0&lt;=p &amp;&amp; 0&lt;q) || (0&lt;=-p &amp;&amp;
+	 * 0&lt;-q)</li>
+	 * <li>
+	 * 0==p/q &lt;=&gt; 0==p</li>
+	 * <li>
+	 * 0!=p/q &lt;=&gt; 0!=p</li>
+	 * </ul>
+	 * 
+	 * @param expression
+	 *            boolean-valued binary expression of one of the four forms
+	 *            described above; in particular argument 0 must be 0
+	 * @return the simplified version of the expression, which may be the
+	 *         original expression if no further simplifications were possible
+	 */
 	private BooleanExpression simplifyRelationalWork(
 			BooleanExpression expression) {
 		SymbolicOperator operator = expression.operator();
@@ -241,7 +302,8 @@ public class IdealSimplifier extends CommonSimplifier {
 	 * 
 	 * @param expression
 	 *            any boolean expression
-	 * @return
+	 * @return simplified version of the expression, which may be the original
+	 *         expression
 	 */
 	private BooleanExpression simplifyRelational(BooleanExpression expression) {
 		BooleanExpression result1 = (BooleanExpression) simplifyGenericExpression(expression);
@@ -260,18 +322,19 @@ public class IdealSimplifier extends CommonSimplifier {
 	}
 
 	/**
-	 * Attempts to simplify the expression fp=0. Returns null if no
-	 * simplification is possible, else returns a CnfBoolean expression
-	 * equivalent to fp=0.
+	 * Attempts to simplify the expression poly=0. Returns <code>null</code> if
+	 * no simplification is possible, else returns a {@link BooleanExpression}
+	 * equivalent to poly=0.
 	 * 
-	 * @param fp
-	 *            the factored polynomial
-	 * @return null or a CnfBoolean expression equivalent to fp=0
+	 * @param poly
+	 *            a non-<code>null</code>, non-constant {@link Polynomial}
+	 * @return <code>null</code> or a {@link BooleanExpression} equivalent to
+	 *         poly=0
 	 */
-	private BooleanExpression simplifyEQ0(Polynomial fp) {
-		SymbolicType type = fp.type();
-		AffineExpression affine = info.affineFactory.affine(fp);
-		Polynomial pseudo = affine.pseudo(); // non-null since fp non-constant
+	private BooleanExpression simplifyEQ0(Polynomial poly) {
+		SymbolicType type = poly.type();
+		AffineExpression affine = info.affineFactory.affine(poly);
+		Polynomial pseudo = affine.pseudo(); // non-null since zep non-constant
 		Number pseudoValue = constantMap.get(pseudo);
 
 		if (pseudoValue != null)
@@ -594,8 +657,10 @@ public class IdealSimplifier extends CommonSimplifier {
 				processHerbrandCast(expression, lower);
 			}
 		}
+
 		boolean satisfiable = LinearSolver.reduceConstantMap(info.idealFactory,
 				constantMap);
+
 		if (debug) {
 			printBoundMap(info.out);
 			printConstantMap(info.out);
@@ -664,7 +729,6 @@ public class IdealSimplifier extends CommonSimplifier {
 			// p & (q0 | ... | qn) = (p & q0) | ... | (p & qn)
 			// copies of original maps, corresponding to p. these never
 			// change...
-			// TODO: HEY, USE IMMUTABLE MAPS!
 			Map<Polynomial, BoundsObject> originalBoundMap = copyBoundMap(aBoundMap);
 			Map<BooleanExpression, Boolean> originalBooleanMap = copyBooleanMap(aBooleanMap);
 			Iterator<? extends BooleanExpression> clauses = or
@@ -733,12 +797,9 @@ public class IdealSimplifier extends CommonSimplifier {
 
 			switch (operator) {
 			case EQUALS: // 0==x
-				return extractEQ0Bounds(false, arg, aBoundMap, aBooleanMap);
+				return extractEQ0Bounds(arg, aBoundMap, aBooleanMap);
 			case NEQ: {
-				boolean result = extractEQ0Bounds(true, arg, aBoundMap,
-						aBooleanMap);
-
-				return result;
+				return extractNEQ0Bounds(arg, aBoundMap, aBooleanMap);
 			}
 			case LESS_THAN: // 0<x
 				return extractGT0Bounds(true, arg, aBoundMap, aBooleanMap);
@@ -776,42 +837,38 @@ public class IdealSimplifier extends CommonSimplifier {
 		}
 	}
 
-	// TODO: go further and perform backwards substitution...
-
-	private boolean extractEQ0Bounds(boolean not, Polynomial fp,
+	/**
+	 * Given the fact that poly==0, for some {@link Polynomial} poly, updates
+	 * the specified bound map and boolean map appropriately.
+	 * 
+	 * @param poly
+	 *            a non-<code>null</code> polynomial
+	 * @param aBoundMap
+	 *            a bound map: a map from pseudo-primitive polynomials to bound
+	 *            objects specifying an interval bound for those polynomials
+	 * @param aBooleanMap
+	 *            a map specifying a concrete boolean value for some set of
+	 *            boolean-valued symbolic expressions
+	 * @return <code>false</code> if it is determined that the given assertion
+	 *         is inconsistent with the information in the bound map and boolean
+	 *         map; else <code>true</code>
+	 */
+	private boolean extractEQ0Bounds(Polynomial poly,
 			Map<Polynomial, BoundsObject> aBoundMap,
 			Map<BooleanExpression, Boolean> aBooleanMap) {
-		if (not)
-			return extractNEQ0Bounds(fp, aBoundMap, aBooleanMap);
+		if (poly instanceof Constant)
+			return poly.isZero();
 
-		int degree = fp.degree();
-
-		if (fp instanceof Constant)
-			return fp.isZero();
-
-		// this branch is here as a compromise. Gaussian elimination
-		// takes a long time and most of the time it is only useful
-		// for degree 1 polynomials.
-		if (!info.linearizePolynomials && degree > 1)
-			return true;
-
-		AffineExpression affine = info.affineFactory.affine(fp);
+		AffineExpression affine = info.affineFactory.affine(poly);
 		Polynomial pseudo = affine.pseudo();
 		RationalNumber coefficient = info.numberFactory.rational(affine
 				.coefficient());
 		RationalNumber offset = info.numberFactory.rational(affine.offset());
 		RationalNumber rationalValue = info.numberFactory
 				.negate(info.numberFactory.divide(offset, coefficient));
-		Number value;
+		Number value; // same as rationalValue but IntegerNumber if type is
+						// integer
 		BoundsObject bound = aBoundMap.get(pseudo);
-
-		// TODO: if a monomial==0 then you know at least
-		// one of the primitives==0. This is a disjunction
-		// over the primitive powers occurring in the monomial.
-		// if there is only one primitive ...
-		// alternatively, could do this as soon as the
-		// expression monomial==0 is created; see equals method
-		// in the ideal factory
 
 		if (pseudo.type().isInteger()) {
 			if (info.numberFactory.isIntegral(rationalValue)) {
@@ -835,14 +892,73 @@ public class IdealSimplifier extends CommonSimplifier {
 		return true;
 	}
 
-	private boolean extractNEQ0Bounds(Polynomial fp,
+	/**
+	 * Given the fact that poly!=0, for some {@link Polynomial} poly, updates
+	 * the specified bound map and boolean map appropriately.
+	 * 
+	 * @param poly
+	 *            a non-<code>null</code> polynomial
+	 * @param aBoundMap
+	 *            a bound map: a map from pseudo-primitive polynomials to bound
+	 *            objects specifying an interval bound for those polynomials
+	 * @param aBooleanMap
+	 *            a map specifying a concrete boolean value for some set of
+	 *            boolean-valued symbolic expressions
+	 * @return <code>false</code> if it is determined that the given assertion
+	 *         is inconsistent with the information in the bound map and boolean
+	 *         map; else <code>true</code>
+	 */
+	private boolean extractNEQ0Bounds(Polynomial poly,
 			Map<Polynomial, BoundsObject> aBoundMap,
 			Map<BooleanExpression, Boolean> aBooleanMap) {
-		// some ideas: if a monomial!=0 then all of the primitives!=0.
-		// this is a conjunction of formulas over the primitives.
+		if (poly instanceof Constant)
+			return !poly.isZero();
 
-		// if a pseudo is non-zero, you could tighten its
-		// bounds.
+		// poly=aX+b. if X=-b/a, contradiction.
+		SymbolicType type = poly.type();
+		AffineExpression affine = info.affineFactory.affine(poly);
+		Polynomial pseudo = affine.pseudo();
+		RationalNumber coefficient = info.numberFactory.rational(affine
+				.coefficient());
+		RationalNumber offset = info.numberFactory.rational(affine.offset());
+		RationalNumber rationalValue = info.numberFactory
+				.negate(info.numberFactory.divide(offset, coefficient));
+		Number value; // same as rationalValue but IntegerNumber if type is
+						// integer
+		BoundsObject bound = aBoundMap.get(pseudo);
+		Polynomial zero = info.idealFactory.zero(type);
+
+		if (type.isInteger()) {
+			if (info.numberFactory.isIntegral(rationalValue)) {
+				value = info.numberFactory.integerValue(rationalValue);
+			} else {
+				// an integer cannot equal a non-integer.
+				aBooleanMap.put(info.idealFactory.neq(zero, poly), true);
+				return true;
+			}
+		} else {
+			value = rationalValue;
+		}
+		// interpret fact pseudo!=value, where pseudo is in bound
+		if (bound == null) {
+			// for now, nothing can be done, since the bounds are
+			// plain intervals. we need a more precise abstraction
+			// than intervals here.
+		} else if (bound.contains(value)) {
+			// is value an end-point? Might be able to sharpen bound...
+			if (bound.lower != null && bound.lower.equals(value)
+					&& !bound.strictLower) {
+				bound.restrictLower(bound.lower, true);
+			}
+			if (bound.upper != null && bound.upper.equals(value)
+					&& !bound.strictUpper) {
+				bound.restrictUpper(bound.upper, true);
+			}
+			if (bound.isEmpty()) {
+				return false;
+			}
+		}
+		aBooleanMap.put(info.universe.neq(zero, poly), true);
 		return true;
 	}
 

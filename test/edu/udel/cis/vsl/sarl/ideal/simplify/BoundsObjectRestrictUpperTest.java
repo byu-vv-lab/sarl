@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author danfried
  * 
  * @see BoundsObject
- * @see BoundsObject.restrictUpper
+ * @see CommonInterval.restrictUpper
  *
  */
 public class BoundsObjectRestrictUpperTest {

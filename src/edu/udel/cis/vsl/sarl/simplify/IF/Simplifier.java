@@ -29,6 +29,7 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
+ * <p>
  * A simplifier is an object for simplifying symbolic expressions. It is created
  * with a given "context", which is a boolean-valued symbolic expression. The
  * context itself can be simplified; the simplified version of the context can
@@ -38,10 +39,13 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * removed. The solved values for those symbolic constants can be obtained from
  * method {@link #substitutionMap}. The contexts are all fixed at instantiation
  * and cannot be modified.
+ * </p>
  * 
+ * <p>
  * Any symbolic expression can then be simplified (subject to the context) using
  * the method {@link Transform#apply} (provided by the supertype
  * {@link Transform}).
+ * </p>
  * 
  * Example:
  * 
@@ -70,7 +74,11 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  */
 public interface Simplifier extends UnaryOperator<SymbolicExpression> {
 
-	/** Returns the pre-universe associated to this simplifier */
+	/**
+	 * Returns the pre-universe associated to this simplifier
+	 * 
+	 * @return the associated pre-universe
+	 * */
 	PreUniverse universe();
 
 	/**
@@ -99,6 +107,7 @@ public interface Simplifier extends UnaryOperator<SymbolicExpression> {
 	BooleanExpression getReducedContext();
 
 	/**
+	 * <p>
 	 * Returns the full context associated to this Reasoner. This expression may
 	 * differ from the original one used to create the Reasoner because it was
 	 * simplified or put into a canonical form. The full context includes
@@ -106,8 +115,11 @@ public interface Simplifier extends UnaryOperator<SymbolicExpression> {
 	 * solved value. (For the context without those equations, use method
 	 * {@link #getReducedContext}). Hence the expression returned is equivalent
 	 * to the original given expression.
+	 * </p>
 	 * 
+	 * <p>
 	 * This context will not change after creation.
+	 * </p>
 	 * 
 	 * @return the reduced context associated to this Reasoner
 	 * */

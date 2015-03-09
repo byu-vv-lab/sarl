@@ -25,7 +25,7 @@ import org.junit.Test;
  * 
  * @author danfried
  * 
- * @see BoundsObject.equals
+ * @see CommonInterval.equals
  *
  */
 public class BoundsObjectEqualsTest {

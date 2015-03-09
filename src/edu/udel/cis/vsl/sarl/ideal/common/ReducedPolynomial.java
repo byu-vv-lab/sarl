@@ -53,6 +53,14 @@ public class ReducedPolynomial extends NumericPrimitive {
 		return (SymbolicMap<Monic, Monomial>) argument(0);
 	}
 
+	/**
+	 * Expands this reduced polynomial by re-building a polynomial from the
+	 * terms of this one. The result is a polynomial which is not an instance of
+	 * {@link ReducedPolynomial}.
+	 * 
+	 * @return a polynomial equivalent to this one but which is not a
+	 *         {@link ReducedPolynomial}.
+	 */
 	@Override
 	public Polynomial expand(IdealFactory factory) {
 		return factory.polynomial(termMap(), this);

@@ -19,7 +19,7 @@ import org.junit.Test;
  * @author danfried
  * 
  * @see BoundsObject
- * @see BoundsObject.newLowerBound
+ * @see CommonInterval.newLowerBound
  *
  */
 public class BoundsObjectNewLowerTest {

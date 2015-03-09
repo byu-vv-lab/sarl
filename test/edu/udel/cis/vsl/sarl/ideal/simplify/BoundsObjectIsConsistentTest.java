@@ -22,7 +22,7 @@ import org.junit.Test;
  * 
  * @author danfried
  * 
- * @see BoundsObject.isConsistent
+ * @see CommonInterval.isConsistent
  *
  */
 public class BoundsObjectIsConsistentTest {

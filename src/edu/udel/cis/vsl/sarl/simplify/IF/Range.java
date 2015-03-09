@@ -1,0 +1,106 @@
+package edu.udel.cis.vsl.sarl.simplify.IF;
+
+import edu.udel.cis.vsl.sarl.IF.number.Number;
+
+/**
+ * An abstract representation of a set of {@link Number}s. Each instance is
+ * typed: it is either a set of integers, or a set of reals. The two types are
+ * incompatible.
+ * 
+ * @author siegel
+ */
+public interface Range {
+
+	/**
+	 * Is this an integer set?
+	 * 
+	 * @return <code>true</code> if this is a set of integers;
+	 *         <code>false</code> if this is a set of reals
+	 */
+	boolean isIntegral();
+
+	/**
+	 * Is this set empty?
+	 * 
+	 * @return <code>true</code> iff this is the empty set
+	 */
+	boolean isEmpty();
+
+	/**
+	 * Does this set contain the given number as a member?
+	 * 
+	 * @param number
+	 *            any non-<code>null</code> {@link Number} of the appropriate
+	 *            type
+	 * @return <code>true</code> iff this set contains the given number
+	 */
+	boolean containsNumber(Number number);
+
+	/**
+	 * Is this set a superset of the given one?
+	 * 
+	 * @param set
+	 *            a number set of the same type (integer/real) as this one
+	 * @return <code>true</code> iff this one contains the given one
+	 */
+	boolean contains(Range set);
+
+	/**
+	 * Is the intersection of this set with the given one nonempty?
+	 * 
+	 * @param set
+	 *            a number set of the same type (integer/real) as this one
+	 * @return <code>true</code> iff the intersection of the two sets is
+	 *         nonempty
+	 */
+	boolean intersects(Range set);
+
+	/**
+	 * Computes the complement of this set. If this has integer type, that is
+	 * the set of all integers not in this set. If this has real type, it is the
+	 * set of all reals not in this set.
+	 * 
+	 * @return the complement of this set
+	 */
+	Range complement();
+
+	/**
+	 * Computes the union of this set with the given one.
+	 * 
+	 * @param set
+	 *            a number set of the same type (integer/real) as this one
+	 * @return the union of the two sets
+	 */
+	Range union(Range set);
+
+	/**
+	 * Computes the intersection of this set with the given one.
+	 * 
+	 * @param set
+	 *            a number set of the same type (integer/real) as this one
+	 * @return the intersection of the two sets
+	 */
+	Range intersect(Range set);
+
+	/**
+	 * Returns the set difference of this set with that one. That is the set
+	 * consisting of all numbers in this set that are not in that one.
+	 * 
+	 * @param set
+	 *            a number set of the same type (integer/real) as this one
+	 * @return this - that (the set difference)
+	 */
+	Range minus(Range set);
+
+	/**
+	 * Computes the set aX+b, where X is this set. That is, the set of all
+	 * numbers of the form ax+b, where x is in this set.
+	 * 
+	 * @param a
+	 *            a number of the same type as this set
+	 * @param b
+	 *            a number of the same type as this set
+	 * @return the set aX+b, where X is the set of numbers in this set
+	 */
+	Range affineTransform(Number a, Number b);
+}

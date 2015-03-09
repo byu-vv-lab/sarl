@@ -28,7 +28,7 @@ import org.junit.Test;
  * 
  * @author danfried
  * 
- * @see BoundsObject.makeConstant
+ * @see CommonInterval.makeConstant
  *
  */
 public class BoundsObjectMakeConstantTest {

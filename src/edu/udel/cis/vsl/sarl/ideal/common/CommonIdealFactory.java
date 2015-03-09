@@ -58,48 +58,6 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
-/**
- * <pre>
- * Number    : a CONCRETE number object
- * 					Ex: a real constant '3'
- * Primitive : any symbol or number raised to the 1st power
- * 					Ex: 'x' or 'y'
- * PrimitivePower  : a Primitive raised to any non-negative power
- * 					Ex: (x^2), (y^5) etc.
- * Monic  : Two or more PrimitivePowers multiplied together. It always has a leading coefficient as 1
- * 					Ex: [(x^2)*y], [(x^5)*(y^5)*(z^10)]
- * Monomial : a Monic multiplied by a constant, integer or a real number
- * 					Ex: 3*x*y, [10*(x^2)*(y^8)*(z^7)]
- * Polynomial  : Two or more Monomials added together
- * 					Ex: [10*(x^3)]+[4*(x^2)]+[3*x]+1
- * RationalExpression  : Polynomial divided by a Polynomial
- * 					Ex: [5*(x^2)+6*(x^2)*y+3*y] / [7*(x^2)+3*x]
- * factpoly  : FACTPOLY polynomial fact | polynomial
- *                  Ex: (x+1)^2
- *                           (SUM ((POWER (x, 2)), (MULTIPLY (2, x)), 1))
- *                           (POWER (SUM (x, 1), 2))
- * fact  : MULTIPLY Number Monic | Monic
- * </pre>
- * 
- * Rules of the normal form:
- * <ul>
- * <li>Any numeric expression will have one of the following 8 forms:
- * RationalExpression, factpoly, Polynomial, Monomial, Monic, PrimitivePower,
- * Number, Primitive. Also, a numeric expression of integer type will not have
- * rational form
- * <li>NO MIXING OF TYPES: If an expression is of real type, all of the
- * descendant arguments will have real type; conversely if an expression is of
- * integer type, all of the descendant arguments will have integer type</li>
- * <li>the two polynomial arguments which divide each other in the
- * RationalExpression will have no common factors</li>
- * <li>the polynomial argument of FACTPOLY cannot be a Monomial</li>
- * <li>the polynomial argument of FACTPOLY must be a Monic polynomial, i.e.,
- * have leading coefficient as 1</li>
- * <li>the fact argument of FACTPOLY, when multiplied out, will yield the same
- * Polynomial as the polynomial argument of FACTPOLY</li>
- * </ul>
- * 
- */
 public class CommonIdealFactory implements IdealFactory {
 
 	private NumberFactory numberFactory;
@@ -380,6 +338,22 @@ public class CommonIdealFactory implements IdealFactory {
 		return ntPolynomial(termMap, factorization);
 	}
 
+	/**
+	 * Computes the a constant c as follows: if the type is real, c is the
+	 * coefficient of the leading term (which is a term of highest degree); if
+	 * the type is integer, this is the GCD of absolute values of the
+	 * coefficients of the terms. This constant is typically uses as the
+	 * constant factor in a factorization of the polynomial represented by the
+	 * term map.
+	 * 
+	 * @param type
+	 *            integer or real type
+	 * @param termMap
+	 *            a non-<code>null</code>, non-empty term map: map from monics x
+	 *            to monomials y such that the monic of y equals x.
+	 * @return the constant factor as specified above, which will be a non-zero
+	 *         constant of the specified type
+	 */
 	private Constant getConstantFactor(SymbolicType type,
 			SymbolicMap<Monic, Monomial> termMap) {
 		if (type.isReal())
@@ -1483,16 +1457,6 @@ public class CommonIdealFactory implements IdealFactory {
 				: isPositive((RationalExpression) difference);
 	}
 
-	/**
-	 * returns true if arg0 is less than arg1. Both the arguments must be of
-	 * integer data type.
-	 * 
-	 * @param arg0
-	 *            - a NumericExpression of integer type
-	 * @param arg1
-	 *            - a NumericExpression of integer type
-	 * @return - a true value if arg0 > arg1, else returns false.
-	 */
 	public BooleanExpression integerLessThan(NumericExpression arg0,
 			NumericExpression arg1) {
 		return lessThanEquals(add(arg0, oneInt), arg1);
@@ -1534,6 +1498,29 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	@Override
+	public Polynomial zeroEssence(NumericExpression expr) {
+		Polynomial result = expr instanceof Polynomial ? (Polynomial) expr
+				: ((RationalExpression) expr).numerator(this);
+
+		if (result instanceof Monomial) {
+			Monic monic = ((Monomial) expr).monic(this);
+
+			result = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
+					.primitive(this) : monic;
+		} else {
+			Monomial factorization = result.factorization(this);
+			Monic monic = factorization.monic(this);
+
+			if (monic instanceof PrimitivePower)
+				monic = ((PrimitivePower) monic).primitive(this);
+			// in monic, the primitives may be instances of
+			// ReducedPolynomial. Need to expand them...
+			result = monic.expand(this);
+		}
+		return result;
+	}
+
+	@Override
 	public BooleanExpression equals(NumericExpression arg0,
 			NumericExpression arg1) {
 		if (arg0.equals(arg1))
@@ -1544,22 +1531,10 @@ public class CommonIdealFactory implements IdealFactory {
 		NumericExpression difference = subtract(arg1, arg0);
 		Number number = extractNumber(difference);
 
-		if (number == null) {
-			Polynomial zeroThing = difference instanceof Polynomial ? (Polynomial) difference
-					: ((RationalExpression) difference).numerator(this);
-
-			if (zeroThing instanceof Monomial) {
-				Monic monic = ((Monomial) zeroThing).monic(this);
-
-				zeroThing = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
-						.primitive(this) : monic;
-			} else {
-				// TODO: divide by leading coefficient of polynomial if real?
-				// use factorization?
-			}
+		if (number == null)
 			return booleanFactory.booleanExpression(SymbolicOperator.EQUALS,
-					zero(arg0.type()), zeroThing);
-		} else
+					zero(arg0.type()), zeroEssence(difference));
+		else
 			return number.signum() == 0 ? trueExpr : falseExpr;
 	}
 
@@ -1573,22 +1548,10 @@ public class CommonIdealFactory implements IdealFactory {
 		NumericExpression difference = subtract(arg1, arg0);
 		Number number = extractNumber(difference);
 
-		if (number == null) {
-			Polynomial zeroThing = difference instanceof Polynomial ? (Polynomial) difference
-					: ((RationalExpression) difference).numerator(this);
-
-			if (zeroThing instanceof Monomial) {
-				Monic monic = ((Monomial) difference).monic(this);
-
-				zeroThing = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
-						.primitive(this) : monic;
-			} else {
-				// TODO: divide by leading coefficient of polynomial if real?
-				// use factorization?
-			}
+		if (number == null)
 			return booleanFactory.booleanExpression(SymbolicOperator.NEQ,
-					zero(arg0.type()), zeroThing);
-		} else
+					zero(arg0.type()), zeroEssence(difference));
+		else
 			return number.signum() != 0 ? trueExpr : falseExpr;
 	}
 }

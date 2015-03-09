@@ -6,6 +6,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
+import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVCTheoremProver;
 
 /**
  * Factory for producing new instances of {@link RobustCVCTheoremProver}.

@@ -20,7 +20,7 @@ import org.junit.Test;
  * 
  * @author danfried
  * 
- * @see BoundsObject.isReal
+ * @see CommonInterval.isReal
  *
  */
 public class BoundsObjectIsRealTest {

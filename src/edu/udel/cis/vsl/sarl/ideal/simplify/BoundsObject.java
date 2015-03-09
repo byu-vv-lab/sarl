@@ -18,6 +18,9 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.simplify;
 
+// TODO: eventually replace this with a real implementation of
+// Interval
+
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
@@ -327,11 +330,9 @@ public class BoundsObject implements Interval {
 	}
 
 	/**
-	 * Indicates if the bounds of a BoundsObject are in the form
-	 * "lower <= Symbolic Expression <= upper".
+	 * Determines whether the interval specified by this object is non-empty.
 	 * 
-	 * @return (Boolean value) True if a lower bound is not of a greater value
-	 *         than the upper bound, false otherwise
+	 * @return <code>true</code> iff the bound is non-empty
 	 */
 	public boolean isConsistent() {
 		int compare;
@@ -414,8 +415,9 @@ public class BoundsObject implements Interval {
 	}
 
 	/**
-	 * Modifies the lower bound of a BoundsObject if the desired new lower bound
-	 * is of a lower absolute value.
+	 * Modifies the lower bound/lower strict of this object if the new lower
+	 * bound is greater than the current lower bound, or equals the current
+	 * lower bound and the current lower bound is not strict.
 	 * 
 	 * @param thatLower
 	 *            The desired, new, lower bound for the BoundsObject calling
@@ -493,6 +495,40 @@ public class BoundsObject implements Interval {
 		result += " " + (strictUpper ? "<" : "<=") + " ";
 		result += (upper == null ? "+infty" : upper.toString());
 		return result;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return !isConsistent();
+	}
+
+	@Override
+	public boolean contains(Number number) {
+		if (lower != null) {
+			int compare = factory.compare(number, lower);
+
+			if (compare < 0) { // number < lower
+				return false;
+			} else if (compare == 0) {
+				return !strictLower;
+			}
+		}
+		if (upper != null) {
+			int compare = factory.compare(upper, number);
+
+			if (compare < 0) { // upper < number
+				return false;
+			} else if (compare == 0) {
+				return !strictUpper;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public int compare(Number number) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

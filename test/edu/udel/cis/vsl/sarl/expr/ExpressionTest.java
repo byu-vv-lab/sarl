@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.expr;
 
@@ -69,8 +69,10 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.universe.Universes;
+
 /**
- * ExpressionTest tests methods found in edu.udel.cis.vsl.sarl.expr.comm package.
+ * ExpressionTest tests methods found in edu.udel.cis.vsl.sarl.expr.comm
+ * package.
  * 
  * @author Siegel
  *
@@ -95,7 +97,7 @@ public class ExpressionTest {
 	private NumericSymbolicConstant x; // real symbolic constant "X"
 	private NumericSymbolicConstant xInt; // Int symbolic constant "X"
 	private NumericSymbolicConstant y; // real symbolic constant "Y"
-	private BooleanSymbolicConstant b,b2;
+	private BooleanSymbolicConstant b, b2;
 	private SymbolicConstant t;
 	private NumericExpression two; // real 2.0
 	private NumericExpression three; // real 3.0
@@ -127,6 +129,7 @@ public class ExpressionTest {
 
 	/**
 	 * setUp() initializes many of the variables used in the following tests.
+	 * 
 	 * @throws Exception
 	 */
 	@Before
@@ -246,7 +249,7 @@ public class ExpressionTest {
 				SymbolicOperator.APPLY, sUniverse.referenceType(), test6, s2);
 		OffsetReference testOffset = expressionFactory.offsetReference(
 				(ReferenceExpression) s1.get(0), sUniverse.integer(1));
-		
+
 		assertEquals(testoffset, testOffset);
 	}
 
@@ -270,12 +273,12 @@ public class ExpressionTest {
 				SymbolicOperator.CONCRETE, referenceType1, zeroSequence);
 		SymbolicExpression test2 = expressionFactory.expression(
 				SymbolicOperator.CONCRETE, referenceType1, oneSequence);
-		assertEquals(test.operator(),SymbolicOperator.CONCRETE);
-		assertEquals(test.type(),referenceType1);
-		assertEquals(test2.operator(),SymbolicOperator.CONCRETE);
-		assertEquals(test2.type(),referenceType1);
-//		assertEquals(test.toString(), "(Ref<int>)<0>");
-//		assertEquals(test2.toString(), "(Ref<int>)<1>");
+		assertEquals(test.operator(), SymbolicOperator.CONCRETE);
+		assertEquals(test.type(), referenceType1);
+		assertEquals(test2.operator(), SymbolicOperator.CONCRETE);
+		assertEquals(test2.type(), referenceType1);
+		// assertEquals(test.toString(), "(Ref<int>)<0>");
+		// assertEquals(test2.toString(), "(Ref<int>)<1>");
 	}
 
 	@Test
@@ -308,13 +311,13 @@ public class ExpressionTest {
 				SymbolicOperator.ADD, booleanType, args2);
 		SymbolicExpression test3 = expressionFactory.expression(
 				SymbolicOperator.ADD, referenceType, args3);
-		
-		assertEquals(test1.type(),integerType);
-		assertEquals(test1.operator(),SymbolicOperator.ADD);
-		assertEquals(test2.type(),booleanType);
-		assertEquals(test2.operator(),SymbolicOperator.ADD);
-		assertEquals(test3.type(),referenceType);
-		assertEquals(test3.operator(),SymbolicOperator.ADD);
+
+		assertEquals(test1.type(), integerType);
+		assertEquals(test1.operator(), SymbolicOperator.ADD);
+		assertEquals(test2.type(), booleanType);
+		assertEquals(test2.operator(), SymbolicOperator.ADD);
+		assertEquals(test3.type(), referenceType);
+		assertEquals(test3.operator(), SymbolicOperator.ADD);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 	}
@@ -332,11 +335,11 @@ public class ExpressionTest {
 		BooleanExpression b2;
 		ReferenceExpression r1;
 		ReferenceExpression r2;
-		
-		 b1 = sUniverse.trueExpression();
-		 b2 = sUniverse.falseExpression();
-		 r1 = sUniverse.identityReference();
-		 r2 = sUniverse.identityReference();
+
+		b1 = sUniverse.trueExpression();
+		b2 = sUniverse.falseExpression();
+		r1 = sUniverse.identityReference();
+		r2 = sUniverse.identityReference();
 		SymbolicObject[] ExpressionList = { two, three };
 		SymbolicObject[] ExpressionList2 = { b1, b2 };
 		SymbolicObject[] ExpressionList3 = { r1, r2 };
@@ -348,13 +351,13 @@ public class ExpressionTest {
 				SymbolicOperator.ADD, booleanType, ExpressionList2);
 		SymbolicExpression test3 = expressionFactory.expression(
 				SymbolicOperator.ADD, referenceType, ExpressionList3);
-		
-		assertEquals(test1.type(),integerType);
-		assertEquals(test1.operator(),SymbolicOperator.ADD);
-		assertEquals(test2.type(),booleanType);
-		assertEquals(test2.operator(),SymbolicOperator.ADD);
-		assertEquals(test3.type(),referenceType);
-		assertEquals(test3.operator(),SymbolicOperator.ADD);
+
+		assertEquals(test1.type(), integerType);
+		assertEquals(test1.operator(), SymbolicOperator.ADD);
+		assertEquals(test2.type(), booleanType);
+		assertEquals(test2.operator(), SymbolicOperator.ADD);
+		assertEquals(test3.type(), referenceType);
+		assertEquals(test3.operator(), SymbolicOperator.ADD);
 		assertEquals(test1.toString(), "2+3");
 		assertEquals(test2.toString(), "true+false");
 	}
@@ -370,7 +373,7 @@ public class ExpressionTest {
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression xpyp1 = sUniverse.power(xpy, n);
 		NumericExpression xpyp2 = sUniverse.power(xpy, two);
-		
+
 		assertEquals(xpyp1.toString(),
 				"X^4+4*((X^3)*Y)+6*((X^2)*(Y^2))+4*(X*(Y^3))+Y^4");
 		assertEquals(xpyp2.toString(), "(X+Y)^2");
@@ -388,7 +391,7 @@ public class ExpressionTest {
 	public void toStringBuffer1Add() {
 		NumericExpression xpy = sUniverse.add(x, y);
 		NumericExpression test1 = sUniverse.add(xpy, two);
-		
+
 		assertEquals(test1.toString(), "X+Y+2");
 		// add test atomize
 		assertEquals(test1.toStringBuffer(true).toString(), "(X+Y+2)");
@@ -402,11 +405,11 @@ public class ExpressionTest {
 	public void toStringBuffer1Cond() {
 		SymbolicExpression test2 = sUniverse.cond(sUniverse.equals(x, two),
 				three, two);
-		
-		assertEquals(test2.toString(), "(0 == -1*X+2) ? 3 : 3");
+
+		assertEquals(test2.toString(), "(0 == X+-2) ? 3 : 3");
 		// cond test atomize
 		assertEquals(test2.toStringBuffer(true).toString(),
-				"((0 == -1*X+2) ? 3 : 3)");
+				"((0 == X+-2) ? 3 : 3)");
 	}
 
 	@Test
@@ -416,7 +419,7 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Divide() {
 		NumericExpression test3 = sUniverse.divide(x, y);
-		
+
 		assertEquals(test3.toString(), "X/Y");
 		// divide test atomize
 		assertEquals(test3.toStringBuffer(true).toString(), "(X/Y)");
@@ -429,11 +432,12 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Exists() {
 		BooleanExpression test4 = sUniverse.exists(x, sUniverse.equals(x, y));
-		
-		assertEquals(test4.toString(), "exists X : real . (0 == -1*X+Y)");
+
+		System.out.println(test4);
+		assertEquals(test4.toString(), "exists X : real . (0 == X+-1*Y)");
 		// exists test atomize
 		assertEquals(test4.toStringBuffer(true).toString(),
-				"(exists X : real . (0 == -1*X+Y))");
+				"(exists X : real . (0 == X+-1*Y))");
 	}
 
 	@Test
@@ -443,11 +447,11 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1ForAll() {
 		BooleanExpression test5 = sUniverse.forall(x, sUniverse.equals(x, y));
-		
-		assertEquals(test5.toString(), "forall X : real . (0 == -1*X+Y)");
+
+		assertEquals(test5.toString(), "forall X : real . (0 == X+-1*Y)");
 		// forall test atomize
 		assertEquals(test5.toStringBuffer(true).toString(),
-				"(forall X : real . (0 == -1*X+Y))");
+				"(forall X : real . (0 == X+-1*Y))");
 	}
 
 	@Test
@@ -457,8 +461,8 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Length() {
 		NumericExpression test6 = sUniverse.length(zz);
-		
-		//System.out.println(test6);
+
+		// System.out.println(test6);
 		assertEquals(test6.toString(), "length(X)");
 	}
 
@@ -469,10 +473,10 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1LessThan() {
 		BooleanExpression test7 = sUniverse.lessThan(x, three);
-		
-		//for (SymbolicObject expr : test7.arguments())
-			//out.println(expr.toString());
-		
+
+		// for (SymbolicObject expr : test7.arguments())
+		// out.println(expr.toString());
+
 		assertEquals(test7.toString(), "0 < -1*X+3");
 		// Less_than test atomize
 		assertEquals(test7.toStringBuffer(true).toString(), "(0 < -1*X+3)");
@@ -485,7 +489,7 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1LessThanEqual() {
 		BooleanExpression test8 = sUniverse.lessThanEquals(x, three);
-		
+
 		assertEquals(test8.toString(), "0 <= -1*X+3");
 		// Less_than_equals test atomize
 		assertEquals(test8.toStringBuffer(true).toString(), "(0 <= -1*X+3)");
@@ -498,7 +502,7 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Modulo() {
 		NumericExpression test9 = sUniverse.modulo(xInt, threeInt);
-		
+
 		assertEquals(test9.toString(), "X%3");
 		// Modulo test atomize
 		assertEquals(test9.toStringBuffer(true).toString(), "(X%3)");
@@ -511,10 +515,10 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Neq() {
 		BooleanExpression test10 = sUniverse.neq(x, y);
-		
-		assertEquals(test10.toString(), "0 != -1*X+Y");
+
+		assertEquals(test10.toString(), "0 != X+-1*Y");
 		// Neg test atomize
-		assertEquals(test10.toStringBuffer(true).toString(), "(0 != -1*X+Y)");
+		assertEquals(test10.toStringBuffer(true).toString(), "(0 != X+-1*Y)");
 	}
 
 	@Test
@@ -525,7 +529,7 @@ public class ExpressionTest {
 	public void toStringBuffer1Negative() {
 		NumericExpression negExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.NEGATIVE, integerType, two);
-		
+
 		assertEquals(negExp.toString(), "-2");
 		// Neg test atomize
 		assertEquals(negExp.toStringBuffer(true).toString(), "(-2)");
@@ -538,7 +542,7 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1Not() {
 		BooleanExpression test11 = sUniverse.not(b);
-		
+
 		assertEquals(test11.toString(), "!X");
 		// not test atomize
 		assertEquals(test11.toStringBuffer(true).toString(), "(!X)");
@@ -552,7 +556,7 @@ public class ExpressionTest {
 	public void toStringBuffer1Lambda() {
 		BooleanExpression a = sUniverse.not(b);
 		SymbolicExpression test11 = sUniverse.lambda(x, a);
-		
+
 		assertEquals(test11.toString(), "lambda X : real . (!X)");
 		// atomize
 		assertEquals(test11.toStringBuffer(true).toString(),
@@ -580,7 +584,7 @@ public class ExpressionTest {
 	public void toStringBuffer1IntDivide() {
 		NumericExpression intExp = (NumericExpression) expressionFactory
 				.expression(SymbolicOperator.INT_DIVIDE, integerType, x, y);
-		
+
 		assertEquals(intExp.toStringBuffer(false).toString(), "X div Y");
 		// atomize
 		assertEquals(intExp.toStringBuffer(true).toString(), "(X div Y)");
@@ -613,7 +617,7 @@ public class ExpressionTest {
 	 */
 	public void toStringBuffer1TupleRead() {
 		SymbolicExpression test = sUniverse.tupleRead(t, zeroIntObj);
-		
+
 		assertEquals(test.toStringBuffer(false).toString(), "X.0");
 		assertEquals(test.toStringBuffer(true).toString(), "(X.0)");
 	}
@@ -631,13 +635,14 @@ public class ExpressionTest {
 		// subtract test atomize
 		assertEquals(intExp.toStringBuffer(true).toString(), "(X - Y)");
 	}
-	
+
 	@Test
 	/**
 	 * Tests toStringBufferLong() method from CommonSymbolicExpression class
 	 */
 	public void toStringBufferLong() {
-		StringBuffer tstStringBuff = new StringBuffer(xpyDxty.getClass().getSimpleName());
+		StringBuffer tstStringBuff = new StringBuffer(xpyDxty.getClass()
+				.getSimpleName());
 		tstStringBuff.append("[");
 		tstStringBuff.append(xpyDxty.operator());
 		tstStringBuff.append("; ");
@@ -645,164 +650,192 @@ public class ExpressionTest {
 		tstStringBuff.append("; ");
 		tstStringBuff.append("{");
 		Boolean first = true;
-		
+
 		for (SymbolicObject obj : xpyDxty.arguments()) {
-				if (first)
-					first = false;
-				else
-					tstStringBuff.append(",");
-				if (obj == null)
-					tstStringBuff.append("null");
-				else
-					tstStringBuff.append(obj.toStringBufferLong());
+			if (first)
+				first = false;
+			else
+				tstStringBuff.append(",");
+			if (obj == null)
+				tstStringBuff.append("null");
+			else
+				tstStringBuff.append(obj.toStringBufferLong());
 		}
-		tstStringBuff.append("}");	
+		tstStringBuff.append("}");
 		tstStringBuff.append("]");
-			
-		assertEquals(xpyDxty.toStringBufferLong().toString(),tstStringBuff.toString());
+
+		assertEquals(xpyDxty.toStringBufferLong().toString(),
+				tstStringBuff.toString());
 	}
-	
+
 	@Test
-	public void cnfSymbolicAsserts(){
+	public void cnfSymbolicAsserts() {
 		BooleanExpressionFactory frst = Expressions.newCnfFactory(stf, of, cf);
 		SymbolicObject obj1 = sUniverse.booleanObject(true);
 		SymbolicObject obj2 = sUniverse.booleanObject(false);
-		SymbolicObject[] ExpressionList = {obj1,obj2};
+		SymbolicObject[] ExpressionList = { obj1, obj2 };
 		SymbolicOperator Soperator = SymbolicOperator.AND;
-		CnfExpression cnf = (CnfExpression) frst.booleanExpression(Soperator, ExpressionList);
-		
+		CnfExpression cnf = (CnfExpression) frst.booleanExpression(Soperator,
+				ExpressionList);
+
 		assertFalse(cnf.isCanonic());
 	}
-	
+
 	@Test
-	public void cnfFactoryForall(){
+	public void cnfFactoryForall() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
-		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
-		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(
+				pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(
+				qobject, booleanType);
 		BooleanExpression andtrue = bef.and(p, q);
 		BooleanExpression foralltrue = bef.forall(b, q);
 		BooleanExpression foralltrue2 = bef.forall(b, p);
-		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
-		BooleanExpression FORALL2 = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue2);
+		BooleanExpression FORALL = bef.booleanExpression(
+				SymbolicOperator.FORALL, foralltrue);
+		BooleanExpression FORALL2 = bef.booleanExpression(
+				SymbolicOperator.FORALL, foralltrue2);
 		CnfExpression cnf = (CnfExpression) FORALL;
 		CnfExpression cnf2 = (CnfExpression) FORALL2;
-		
-		assertEquals(bef.and((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.forall(b, andtrue));
+
+		assertEquals(bef.and((BooleanExpression) cnf2.argument(0),
+				(BooleanExpression) cnf.argument(0)), bef.forall(b, andtrue));
 	}
-	
+
 	@Test
-	public void cnfFactoryExists(){
+	public void cnfFactoryExists() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
-		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
-		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(
+				pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(
+				qobject, booleanType);
 		BooleanExpression ortrue = bef.or(p, q);
 		BooleanExpression existstrue = bef.exists(b, q);
 		BooleanExpression existstrue2 = bef.exists(b, p);
-		BooleanExpression EXISTS = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue);
-		BooleanExpression EXISTS2 = bef.booleanExpression(SymbolicOperator.EXISTS, existstrue2);
+		BooleanExpression EXISTS = bef.booleanExpression(
+				SymbolicOperator.EXISTS, existstrue);
+		BooleanExpression EXISTS2 = bef.booleanExpression(
+				SymbolicOperator.EXISTS, existstrue2);
 		CnfExpression cnf = (CnfExpression) EXISTS;
 		CnfExpression cnf2 = (CnfExpression) EXISTS2;
-		//System.out.println(cnf.argument(0));
-		//BooleanExpression foralltrue2 = bef.forall(boundVariable, a);
-		
-		assertEquals(bef.or((BooleanExpression) cnf2.argument(0), (BooleanExpression) cnf.argument(0)), bef.exists(b, ortrue));
-		}
+		// System.out.println(cnf.argument(0));
+		// BooleanExpression foralltrue2 = bef.forall(boundVariable, a);
+
+		assertEquals(bef.or((BooleanExpression) cnf2.argument(0),
+				(BooleanExpression) cnf.argument(0)), bef.exists(b, ortrue));
+	}
 
 	@Test
-	public void CnFFactoryNot(){
+	public void CnFFactoryNot() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
 		BooleanExpression testingfalse = sUniverse.bool(false);
 		StringObject pobject = sUniverse.stringObject("a");
 		StringObject qobject = sUniverse.stringObject("b");
-		//StringObject robject = sUniverse.stringObject("c");
-		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(pobject, booleanType);
-		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(qobject, booleanType);
-		//SymbolicConstant r = sUniverse.symbolicConstant(robject, booleanType);
-		//BooleanExpression falseExpr= bef.falseExpr();
-		//BooleanExpression trueExpr= bef.trueExpr();
+		// StringObject robject = sUniverse.stringObject("c");
+		BooleanExpression p = (BooleanExpression) sUniverse.symbolicConstant(
+				pobject, booleanType);
+		BooleanExpression q = (BooleanExpression) sUniverse.symbolicConstant(
+				qobject, booleanType);
+		// SymbolicConstant r = sUniverse.symbolicConstant(robject,
+		// booleanType);
+		// BooleanExpression falseExpr= bef.falseExpr();
+		// BooleanExpression trueExpr= bef.trueExpr();
 		BooleanExpression testingtrue = sUniverse.bool(true);
-		//BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
-		BooleanExpression andtrue =  bef.and(p, q);
+		// BooleanExpression[] ANDset = {testingtrue,trueExpr, testingfalse};
+		BooleanExpression andtrue = bef.and(p, q);
 		BooleanExpression ortrue = bef.or(p, q);
-		//BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND, andtrue);
-		//BooleanExpression OR = bef.booleanExpression(SymbolicOperator.OR, ortrue);
+		// BooleanExpression AND = bef.booleanExpression(SymbolicOperator.AND,
+		// andtrue);
+		// BooleanExpression OR = bef.booleanExpression(SymbolicOperator.OR,
+		// ortrue);
 		BooleanExpression nottrue = bef.not(q);
-		//BooleanExpression NOT = bef.booleanExpression(SymbolicOperator.NOT, nottrue);
-		//BooleanExpression neqtrue = bef.equiv(q, p);
-		//BooleanExpression NEQ = bef.booleanExpression(SymbolicOperator.EQUALS, neqtrue);
+		// BooleanExpression NOT = bef.booleanExpression(SymbolicOperator.NOT,
+		// nottrue);
+		// BooleanExpression neqtrue = bef.equiv(q, p);
+		// BooleanExpression NEQ =
+		// bef.booleanExpression(SymbolicOperator.EQUALS, neqtrue);
 		BooleanExpression foralltrue = bef.forall(b, testingtrue);
-		//BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
+		// BooleanExpression FORALL =
+		// bef.booleanExpression(SymbolicOperator.FORALL, foralltrue);
 		BooleanExpression existstrue = bef.exists(b, testingfalse);
-		//BooleanExpression FORALLTEST = bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
-		//CnfExpression cnf = (CnfExpression) AND;
-		
+		// BooleanExpression FORALLTEST =
+		// bef.booleanExpression(SymbolicOperator.FORALL, ANDset);
+		// CnfExpression cnf = (CnfExpression) AND;
+
 		assertEquals(bef.or(bef.not(p), bef.not(q)), bef.not(andtrue));
 		assertEquals(bef.and(bef.not(p), bef.not(q)), bef.not(ortrue));
 		assertEquals(q, bef.not(nottrue));
-		
+
 		BooleanExpression foralltruechk = bef.exists(b, testingfalse);
-		BooleanExpression EXISTS = bef.booleanExpression(SymbolicOperator.EXISTS, foralltruechk);
+		BooleanExpression EXISTS = bef.booleanExpression(
+				SymbolicOperator.EXISTS, foralltruechk);
 		CnfExpression cnf2 = (CnfExpression) EXISTS;
 		BooleanExpression existschk = bef.forall(b, testingtrue);
-		BooleanExpression FORALL = bef.booleanExpression(SymbolicOperator.FORALL, existschk);
+		BooleanExpression FORALL = bef.booleanExpression(
+				SymbolicOperator.FORALL, existschk);
 		CnfExpression cnf3 = (CnfExpression) FORALL;
-		
-		//checked tests
-		//for not(forall) since it is not, check with reverse(i.e. exists)
+
+		// checked tests
+		// for not(forall) since it is not, check with reverse(i.e. exists)
 		assertEquals(cnf2.argument(0), bef.not(foralltrue));
-		//for not(exists)
+		// for not(exists)
 		assertEquals(cnf3.argument(0), bef.not(existstrue));
-		//assertEquals(false, bef.not(FORALL));
-		//assertEquals(testingfalse, bef.not(NEQ));
-		//System.out.println(andtrue.operator());
-		//System.out.println(cnf.arguments()[0]);
-		//System.out.println(cnf.argument(0));
-		//System.out.println(cnf.booleanArg(0));
-		//A or A AND B or B? is that what it is?
-		//assertEquals(testingtrue, bef.not(AND));
-		//assertEquals(testingtrue, bef.not(FORALLTEST));
+		// assertEquals(false, bef.not(FORALL));
+		// assertEquals(testingfalse, bef.not(NEQ));
+		// System.out.println(andtrue.operator());
+		// System.out.println(cnf.arguments()[0]);
+		// System.out.println(cnf.argument(0));
+		// System.out.println(cnf.booleanArg(0));
+		// A or A AND B or B? is that what it is?
+		// assertEquals(testingtrue, bef.not(AND));
+		// assertEquals(testingtrue, bef.not(FORALLTEST));
 	}
-	
+
 	@Test
 	public void newCnfFactory() {
 		BooleanExpressionFactory bef = Expressions.newCnfFactory(stf, of, cf);
-		
+
 		assertNotNull(bef);
 	}
-	
+
 	@Test
 	/** 
 	 * Tests divide() method in CommonNumericExpressionFactory class
 	 */
 	public void cnefDivide() {
-		NumericExpression xpyDxtyH = sUniverse.divide(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		//NumericExpression testExpr = cnef.expression(xpyDxty.operator(), xpyDxty.type(), xpy,xty);
-		
+		NumericExpression xpyDxtyH = sUniverse.divide(
+				cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
+		// NumericExpression testExpr = cnef.expression(xpyDxty.operator(),
+		// xpyDxty.type(), xpy,xty);
+
 		assertEquals(cnef.divide(xpy, xty), xpyDxty);
-		assertEquals(xpyDxty.argument(0),xpy);
-		assertEquals(xpyDxty.argument(1),xty);
-		assertEquals(xpyDxty.numArguments(),2);
+		assertEquals(xpyDxty.argument(0), xpy);
+		assertEquals(xpyDxty.argument(1), xty);
+		assertEquals(xpyDxty.numArguments(), 2);
 		assertEquals(xpyDxty.operator(), SymbolicOperator.DIVIDE);
-		//assertEquals(xpyDxty, testExpr);
-		assertEquals(xpyDxtyH.type(),herbrandType);
-		assertEquals(cnef.divide(cnef.cast(xpy, herbrandType),  cnef.cast(xty, herbrandType)), xpyDxtyH);
-		//assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(), "((X+Y)/X*Y)");
+		// assertEquals(xpyDxty, testExpr);
+		assertEquals(xpyDxtyH.type(), herbrandType);
+		assertEquals(
+				cnef.divide(cnef.cast(xpy, herbrandType),
+						cnef.cast(xty, herbrandType)), xpyDxtyH);
+		// assertEquals(cnef.divide(xpy, xty).toStringBuffer(true).toString(),
+		// "((X+Y)/X*Y)");
 	}
-	
+
 	@Test
 	/**
 	 * Tests herbrandFactory() method in CommonNumericExpressionFactory class
 	 */
 	public void cnefHerbrandFactory() {
 		NumericExpressionFactory hf = cnef.herbrandFactory();
-		
+
 		assertEquals(hf, herbrandFactory);
 	}
-	
+
 	@Test
 	/**
 	 * Tests minus() method in CommonNumericExpressionFactory class
@@ -810,31 +843,36 @@ public class ExpressionTest {
 	public void cnefMinus() {
 		NumericExpression minus = cnef.minus(xpy);
 		NumericExpression minusH = cnef.minus(cnef.cast(xpy, herbrandType));
-		
-		//assertEquals(minus.argument(0), xpy);
-		assertEquals(minus.numArguments(),1);
+
+		// assertEquals(minus.argument(0), xpy);
+		assertEquals(minus.numArguments(), 1);
 		assertEquals(minus, sUniverse.minus(xpy));
 		assertEquals(minus, idealFactory.minus(xpy));
 		assertEquals(minus.toStringBuffer(true).toString(), "(-1*X+-1*Y)");
-		//assertEquals(minusH.type(), herbrandType);
+		// assertEquals(minusH.type(), herbrandType);
 		assertEquals(minusH, sUniverse.minus(cnef.cast(xpy, herbrandType)));
 		assertEquals(minusH, idealFactory.minus(cnef.cast(xpy, herbrandType)));
-		assertEquals(minusH.toStringBuffer(true).toString(), "(-1*(hreal)(hreal)(X+Y))");
+		assertEquals(minusH.toStringBuffer(true).toString(),
+				"(-1*(hreal)(hreal)(X+Y))");
 	}
-	
+
 	@Test
 	/**
 	 * Tests modulo() method in CommonNumericExpressionFactory class
 	 */
 	public void cnefModulo() {
 		NumericExpression expr1 = sUniverse.multiply(threeInt, threeInt);
-		NumericExpression expr1H = cnef.cast(sUniverse.multiply(threeInt, threeInt), herbrandIntType);
+		NumericExpression expr1H = cnef.cast(
+				sUniverse.multiply(threeInt, threeInt), herbrandIntType);
 		NumericExpression expr2 = sUniverse.divide(twoInt, xInt);
-		NumericExpression expr2H = cnef.cast(sUniverse.divide(twoInt, xInt), herbrandIntType);
+		NumericExpression expr2H = cnef.cast(sUniverse.divide(twoInt, xInt),
+				herbrandIntType);
 		NumericExpression moduloExpression = cnef.modulo(expr1, expr2);
 		NumericExpression moduloExpressionH = cnef.modulo(expr1H, expr2H);
-		NumericExpression testExpr = cnef.expression(moduloExpression.operator(), moduloExpression.type(), expr1,expr2);
-		
+		NumericExpression testExpr = cnef.expression(
+				moduloExpression.operator(), moduloExpression.type(), expr1,
+				expr2);
+
 		assertEquals(moduloExpression, testExpr);
 		assertEquals(moduloExpression.numArguments(), 2);
 		assertEquals(moduloExpression.argument(0), expr1);
@@ -842,13 +880,15 @@ public class ExpressionTest {
 		assertEquals(moduloExpression.operator(), SymbolicOperator.MODULO);
 		assertEquals(moduloExpression, sUniverse.modulo(expr1, expr2));
 		assertEquals(moduloExpression, testExpr);
-		assertEquals(moduloExpression,idealFactory.modulo(expr1, expr2));
-		//assertEquals(moduloExpression.toStringBuffer(true).toString(), "(9%(2 div X))");
+		assertEquals(moduloExpression, idealFactory.modulo(expr1, expr2));
+		// assertEquals(moduloExpression.toStringBuffer(true).toString(),
+		// "(9%(2 div X))");
 		assertEquals(moduloExpressionH, sUniverse.modulo(expr1H, expr2H));
 		assertEquals(moduloExpressionH, idealFactory.modulo(expr1H, expr2H));
-		//assertEquals(moduloExpressionH.toStringBuffer(true).toString(), "(9%(hint)(hint)(2 div X))");
+		// assertEquals(moduloExpressionH.toStringBuffer(true).toString(),
+		// "(9%(hint)(hint)(2 div X))");
 	}
-	
+
 	@Test
 	/**
 	 * Tests power() method in CommonNumericExpressionFactory class
@@ -863,8 +903,10 @@ public class ExpressionTest {
 		NumericExpression powerExpressionH = cnef.power(expr1H, expr2H);
 		NumericExpression powerExpression2 = cnef.power(expr1, fiveIntObj);
 		NumericExpression powerExpression2H = cnef.power(expr1H, fiveIntObj);
-		NumericExpression testExpr = cnef.expression(powerExpression.operator(), powerExpression.type(), expr1,expr2);
-		
+		NumericExpression testExpr = cnef.expression(
+				powerExpression.operator(), powerExpression.type(), expr1,
+				expr2);
+
 		assertEquals(powerExpression.numArguments(), 2);
 		assertEquals(powerExpression.argument(0), expr1);
 		assertEquals(powerExpression.argument(1), expr2);
@@ -879,23 +921,25 @@ public class ExpressionTest {
 		assertEquals(powerExpression2H, sUniverse.power(expr1H, fiveIntObj));
 		assertEquals(powerExpression2H, idealFactory.power(expr1H, fiveIntObj));
 	}
-	
+
 	@Test
 	/**
 	 * Tests extractNumber() method in CommonNumericExpressionFactory class
 	 */
 	public void cnefExtractNumber() {
-		NumericExpression expr1 = sUniverse.multiply(xInt,threeInt);
+		NumericExpression expr1 = sUniverse.multiply(xInt, threeInt);
 		NumericExpression expr1H = cnef.cast(expr1, herbrandType);
-		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum = cnef.extractNumber(expr1);
-		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum2 = cnef.extractNumber(expr1H);
-		
+		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum = cnef
+				.extractNumber(expr1);
+		edu.udel.cis.vsl.sarl.IF.number.Number extractedNum2 = cnef
+				.extractNumber(expr1H);
+
 		assertEquals(extractedNum, sUniverse.extractNumber(expr1));
 		assertEquals(extractedNum, idealFactory.extractNumber(expr1));
 		assertEquals(extractedNum2, sUniverse.extractNumber(expr1H));
 		assertEquals(extractedNum2, idealFactory.extractNumber(expr1H));
 	}
-	
+
 	@Test
 	/**
 	 * Test lessThan() method in CommonNumericExpressionFactory class
@@ -903,19 +947,22 @@ public class ExpressionTest {
 	public void cneflessThan() {
 		BooleanExpression lessThan = cnef.lessThan(xpy, xty);
 		// This line causes an Assertion Error. Why?
-		//BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		
+		// BooleanExpression lessThanH = cnef.lessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType));
+
 		assertEquals(lessThan.numArguments(), 2);
 		// These 2 asserts fail
-		//assertEquals(lessThan.argument(0), xpy);
-		//assertEquals(lessThan.argument(1), xty);
+		// assertEquals(lessThan.argument(0), xpy);
+		// assertEquals(lessThan.argument(1), xty);
 		assertEquals(lessThan.operator(), SymbolicOperator.LESS_THAN);
 		assertEquals(lessThan, sUniverse.lessThan(xpy, xty));
 		assertEquals(lessThan, idealFactory.lessThan(xpy, xty));
-		//assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		//assertEquals(lessThanH, idealFactory.lessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(lessThanH, sUniverse.lessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(lessThanH, idealFactory.lessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType)));
 	}
-	
+
 	@Test
 	/**
 	 * Tests notLessThan() method in CommonNumericExpressionFactory class
@@ -923,16 +970,19 @@ public class ExpressionTest {
 	public void cnefNotLessThan() {
 		BooleanExpression notLessThan = cnef.notLessThan(xpy, xty);
 		// This line causes an Assertion Error. Why?
-		//BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		
+		// BooleanExpression notLessThanH = cnef.notLessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType));
+
 		// No notLessThan method for sUniverse?
 		assertEquals(notLessThan.numArguments(), 2);
-		//assertEquals(notLessThan, sUniverse.notLessThan(xpy, xty));
+		// assertEquals(notLessThan, sUniverse.notLessThan(xpy, xty));
 		assertEquals(notLessThan, idealFactory.notLessThan(xpy, xty));
-		//assertEquals(notLessThanH, sUniverse.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		//assertEquals(notLessThanH, idealFactory.notLessThan(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(notLessThanH, sUniverse.notLessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(notLessThanH, idealFactory.notLessThan(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType)));
 	}
-	
+
 	@Test
 	/**
 	 * Tests notLessThanEquals() method in CommonNumericExpressionFactory class
@@ -940,85 +990,115 @@ public class ExpressionTest {
 	public void cnefNotLessThanEquals() {
 		BooleanExpression notLessThanEquals = cnef.notLessThanEquals(xpy, xty);
 		// This line causes an Assertion Error. Why?
-		//BooleanExpression notLessThanEqualsH = cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		
+		// BooleanExpression notLessThanEqualsH =
+		// cnef.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty,
+		// herbrandType));
+
 		// No notLessThanEquals method for sUniverse?
 		assertEquals(notLessThanEquals.numArguments(), 2);
-		//assertEquals(notLessThanEquals, sUniverse.notLessThanEquals(xpy, xty));
-		assertEquals(notLessThanEquals, idealFactory.notLessThanEquals(xpy, xty));
-		//assertEquals(notLessThanEqualsH, sUniverse.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		//assertEquals(notLessThanEqualsH, idealFactory.notLessThanEquals(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(notLessThanEquals, sUniverse.notLessThanEquals(xpy,
+		// xty));
+		assertEquals(notLessThanEquals,
+				idealFactory.notLessThanEquals(xpy, xty));
+		// assertEquals(notLessThanEqualsH,
+		// sUniverse.notLessThanEquals(cnef.cast(xpy, herbrandType),
+		// cnef.cast(xty, herbrandType)));
+		// assertEquals(notLessThanEqualsH,
+		// idealFactory.notLessThanEquals(cnef.cast(xpy, herbrandType),
+		// cnef.cast(xty, herbrandType)));
 	}
-	
+
 	@Test
 	/**
 	 * Tests all 4 constructors in CommonNumericExpressionFactory class
 	 */
 	public void cnefExpression() {
-		NumericExpression[] args = {xpy, xty};
-		NumericExpression[] argsH = {cnef.cast(xpy, herbrandType)};
-		Collection<SymbolicObject> args2= new ArrayList<SymbolicObject>(Arrays.asList(args));
-		Collection<SymbolicObject> args2H = new ArrayList<SymbolicObject>(Arrays.asList(argsH));
+		NumericExpression[] args = { xpy, xty };
+		NumericExpression[] argsH = { cnef.cast(xpy, herbrandType) };
+		Collection<SymbolicObject> args2 = new ArrayList<SymbolicObject>(
+				Arrays.asList(args));
+		Collection<SymbolicObject> args2H = new ArrayList<SymbolicObject>(
+				Arrays.asList(argsH));
 		NumericExpression expr1 = cnef.expression(addOperator, realType, args);
 		NumericExpression expr2 = cnef.expression(addOperator, realType, args2);
 		NumericExpression expr3 = cnef.expression(addOperator, realType, xpy);
-		NumericExpression expr4 = cnef.expression(addOperator, realType, xpy, x, y);
-		NumericExpression expr1H = cnef.expression(addOperator, herbrandType, argsH);
-		NumericExpression expr2H = cnef.expression(addOperator, herbrandType, args2H);
-		NumericExpression expr3H = cnef.expression(addOperator, herbrandType, cnef.cast(xpy, herbrandType));
-		NumericExpression expr4H = cnef.expression(addOperator, herbrandType, cnef.cast(xpy, herbrandType), 
-												cnef.cast(x, herbrandType), cnef.cast(y, herbrandType));
-		
+		NumericExpression expr4 = cnef.expression(addOperator, realType, xpy,
+				x, y);
+		NumericExpression expr1H = cnef.expression(addOperator, herbrandType,
+				argsH);
+		NumericExpression expr2H = cnef.expression(addOperator, herbrandType,
+				args2H);
+		NumericExpression expr3H = cnef.expression(addOperator, herbrandType,
+				cnef.cast(xpy, herbrandType));
+		NumericExpression expr4H = cnef.expression(addOperator, herbrandType,
+				cnef.cast(xpy, herbrandType), cnef.cast(x, herbrandType),
+				cnef.cast(y, herbrandType));
+
 		assertEquals(expr1, expr2);
 		assertEquals(expr1H, expr2H);
 		assertNotEquals(expr1, expr1H);
 		assertNotEquals(expr2, expr2H);
 		assertNotEquals(expr3, expr3H);
 		assertNotEquals(expr4, expr4H);
-		assertEquals(expr1, herbrandFactory.expression(addOperator, realType, args2));
-		assertEquals(expr2, idealFactory.expression(addOperator, realType, args));
-		assertEquals(expr1, idealFactory.expression(addOperator, realType, args2));
-		assertEquals(expr2, herbrandFactory.expression(addOperator, realType, args));
-		assertEquals(expr1H, herbrandFactory.expression(addOperator, herbrandType, args2H));
-		assertEquals(expr2H, idealFactory.expression(addOperator, herbrandType, argsH));
-		assertEquals(expr1H, idealFactory.expression(addOperator, herbrandType, args2H));
-		assertEquals(expr2H, herbrandFactory.expression(addOperator, herbrandType, argsH));
+		assertEquals(expr1,
+				herbrandFactory.expression(addOperator, realType, args2));
+		assertEquals(expr2,
+				idealFactory.expression(addOperator, realType, args));
+		assertEquals(expr1,
+				idealFactory.expression(addOperator, realType, args2));
+		assertEquals(expr2,
+				herbrandFactory.expression(addOperator, realType, args));
+		assertEquals(expr1H,
+				herbrandFactory.expression(addOperator, herbrandType, args2H));
+		assertEquals(expr2H,
+				idealFactory.expression(addOperator, herbrandType, argsH));
+		assertEquals(expr1H,
+				idealFactory.expression(addOperator, herbrandType, args2H));
+		assertEquals(expr2H,
+				herbrandFactory.expression(addOperator, herbrandType, argsH));
 	}
-	
+
 	@Test
 	/**
 	 * Tests subtract() method in CommonNumericExpressionFactory class
 	 */
 	public void cnefSubtract() {
 		NumericExpression expr1 = cnef.subtract(xpy, xty);
-		//NumericExpression testExpr = cnef.expression(expr1.operator(), expr1.type(), xty, xpy);
-		//This lines causes an assertion error. Why?
-		//NumericExpression expr1H = cnef.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType));
-		
-		//assertEquals(expr1, testExpr);
+		// NumericExpression testExpr = cnef.expression(expr1.operator(),
+		// expr1.type(), xty, xpy);
+		// This lines causes an assertion error. Why?
+		// NumericExpression expr1H = cnef.subtract(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType));
+
+		// assertEquals(expr1, testExpr);
 		// these 4 tests fail.
-		//assertEquals(expr1.numArguments(),2);
-		//assertEquals(expr1.argument(0), xpy);
-		//assertEquals(expr1.argument(1), xty);
-		//assertEquals(expr1.operator(), SymbolicOperator.SUBTRACT);
+		// assertEquals(expr1.numArguments(),2);
+		// assertEquals(expr1.argument(0), xpy);
+		// assertEquals(expr1.argument(1), xty);
+		// assertEquals(expr1.operator(), SymbolicOperator.SUBTRACT);
 		assertEquals(expr1, sUniverse.subtract(xpy, xty));
 		assertEquals(expr1, idealFactory.subtract(xpy, xty));
-		//assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
-		//assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy, herbrandType), cnef.cast(xty, herbrandType)));
+		// assertEquals(expr1H, sUniverse.subtract(cnef.cast(xpy, herbrandType),
+		// cnef.cast(xty, herbrandType)));
+		// assertEquals(expr1H, herbrandFactory.subtract(cnef.cast(xpy,
+		// herbrandType), cnef.cast(xty, herbrandType)));
 	}
-	
+
 	@Test
 	public void standardSimplifierFactory() {
-		//This test fails with a Null Pointer Exception.
-		//Professor is going to look into the issue.
-		
-		//NumberFactory n = Numbers.REAL_FACTORY;
+		// This test fails with a Null Pointer Exception.
+		// Professor is going to look into the issue.
+
+		// NumberFactory n = Numbers.REAL_FACTORY;
 		BooleanExpressionFactory bf = Expressions.newCnfFactory(stf, of, cf);
-		//NumericExpressionFactory i = ((CommonNumericExpressionFactory) n).idealFactory();
-		IdealFactory idf = new CommonIdealFactory(nf, of, stf, cf, bf );
+		// NumericExpressionFactory i = ((CommonNumericExpressionFactory)
+		// n).idealFactory();
+		IdealFactory idf = new CommonIdealFactory(nf, of, stf, cf, bf);
 		NumberFactory n2 = idf.numberFactory();
-		ExpressionFactory sef = Expressions.newStandardExpressionFactory(n2, of, stf, cf);
-		SimplifierFactory sf = Expressions.standardSimplifierFactory(sef, universe);
+		ExpressionFactory sef = Expressions.newStandardExpressionFactory(n2,
+				of, stf, cf);
+		SimplifierFactory sf = Expressions.standardSimplifierFactory(sef,
+				universe);
 		assertNotNull(sf);
 	}
 }

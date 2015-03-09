@@ -16,7 +16,7 @@ import org.junit.Test;
  * 
  * @author danfried
  * 
- * @see BoundsObject.toString
+ * @see CommonInterval.toString
  *
  */
 public class BoundsObjectToStringTest {
