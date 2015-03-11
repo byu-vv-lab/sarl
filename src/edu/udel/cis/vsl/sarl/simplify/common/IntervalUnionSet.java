@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
@@ -13,7 +15,7 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Range;
 
 /**
  * Implementation of {@link Range} in which a set is represented as a finite
- * union of intervals. Under construction.
+ * union of intervals. This class is immutable. Under construction.
  * 
  * @author siegel
  *
@@ -125,6 +127,12 @@ public class IntervalUnionSet implements Range {
 
 	@Override
 	public Range complement() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BooleanExpression symbolicRepresentation(SymbolicConstant x) {
 		// TODO Auto-generated method stub
 		return null;
 	}

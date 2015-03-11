@@ -200,41 +200,38 @@ public interface IdealFactory extends NumericExpressionFactory {
 	Polynomial add(Polynomial p1, Polynomial p2);
 
 	/**
-	 * Returns the expression by removing the constant term present in the
-	 * passed argument.
+	 * Given a polynomial p with constant term c, returns p-c.
 	 * 
 	 * @param polynomial
-	 *            - Numeric Expression of type Polynomial
+	 *            a non-<code>null</code> instance of {@link Polynomial}
 	 * 
-	 * @param type
-	 *            Polynomial
-	 * 
-	 * @return a polynomial of type Polynomial, without the constant term. If
-	 *         the constant term is passed as an argument, then returns zero
+	 * @return result of subtracting the constant term from the polynomial
 	 */
 	Polynomial subtractConstantTerm(Polynomial polynomial);
 
 	/**
-	 * Divides each term in a polynomial with a constant of type Constant
+	 * Divides each term in a polynomial with by a constant. The polynomial and
+	 * constant must have the same type. If the type is integer, this will
+	 * perform integer division on each term; this is only equivalent to integer
+	 * division of the polynomial by the constant if the constant divides each
+	 * term.
+	 * 
 	 * 
 	 * @param polynomial
-	 *            - Numeric Expression of type Polynomial
+	 *            a non-<code>null</code> instance of {@link Polynomial}
 	 * @param constant
-	 *            - a concrete number. Wraps a NumberObject, which wraps a
-	 *            Number
+	 *            a concrete number of the same type as the
+	 *            <code>polynomial</code>
 	 * 
-	 * @param type
-	 *            Polynomial
-	 * 
-	 * @return a polynomial with the common factors, which are common to the
-	 *         constant of type Constant, removed in each term
+	 * @return the polynomial that results from dividing the given polynomial by
+	 *         the given constant
 	 */
 	Polynomial divide(Polynomial polynomial, Constant constant);
 
 	/**
 	 * Given a numeric expression e of integer or real type, returns a (possibly
 	 * simpler) polynomial p of the same type which has the property that e=0 if
-	 * and only if p=0.
+	 * and only if p=0. Example: e=x^5, p=x.
 	 * 
 	 * @param expr
 	 *            a non-<code>null</code> numeric expression

@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.simplify.IF;
 
+import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 
 /**
@@ -103,4 +105,23 @@ public interface Range {
 	 * @return the set aX+b, where X is the set of numbers in this set
 	 */
 	Range affineTransform(Number a, Number b);
+
+	/**
+	 * Given a symbolic constant x, returns a boolean expression which holds iff
+	 * x is in this range.
+	 * 
+	 * <p>
+	 * Example: suppose this range is the interval (0,1]. Given x, this method
+	 * will return the boolean symbolic expression <code>x>0 && x<=1</code>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Example: (0,1] U [4,5]. Given x, returns
+	 * <code>(x>0 && x<=1) || (x>=4 && x<=5)</code>.
+	 * </p>
+	 * 
+	 * @param x
+	 * @return
+	 */
+	BooleanExpression symbolicRepresentation(SymbolicConstant x);
 }

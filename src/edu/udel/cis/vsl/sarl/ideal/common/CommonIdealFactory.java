@@ -58,6 +58,12 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
+/**
+ * Implementation of a {@link NumericExpressionFactory} based on the theories of
+ * mathematical real and integer arithmetic.
+ * 
+ * @author Stephen F. Siegel
+ */
 public class CommonIdealFactory implements IdealFactory {
 
 	private NumberFactory numberFactory;
@@ -142,53 +148,7 @@ public class CommonIdealFactory implements IdealFactory {
 				}, oneReal);
 	}
 
-	@Override
-	public void init() {
-	}
-
-	@Override
-	public NumberFactory numberFactory() {
-		return numberFactory;
-	}
-
-	@Override
-	public BooleanExpressionFactory booleanFactory() {
-		return booleanFactory;
-	}
-
-	@Override
-	public ObjectFactory objectFactory() {
-		return objectFactory;
-	}
-
-	// Basic symbolic objects...
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptyMap() {
-		return (SymbolicMap<K, V>) emptyMap;
-	}
-
-	@Override
-	public IntObject oneIntObject() {
-		return oneIntObject;
-	}
-
-	@Override
-	public <K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
-			K key, V value) {
-		return collectionFactory.singletonSortedMap(comparator, key, value);
-	}
-
-	// Constants...
-
-	@Override
-	public Constant intConstant(int value) {
-		if (value == 1)
-			return oneInt;
-		return new NTConstant(integerType,
-				objectFactory.numberObject(numberFactory.integer(value)));
-	}
+	// ************************** Private Methods *************************
 
 	private Constant canonicIntConstant(int value) {
 		return objectFactory.canonic(intConstant(value));
@@ -213,59 +173,10 @@ public class CommonIdealFactory implements IdealFactory {
 				object);
 	}
 
-	@Override
-	public Constant constant(Number number) {
-		return constant(objectFactory.numberObject(number));
-	}
-
-	@Override
-	public Constant zeroInt() {
-		return zeroInt;
-	}
-
-	@Override
-	public Constant zeroReal() {
-		return zeroReal;
-	}
-
-	@Override
-	public Constant zero(SymbolicType type) {
-		return type.isInteger() ? zeroInt : zeroReal;
-	}
-
-	@Override
-	public One oneInt() {
-		return oneInt;
-	}
-
-	@Override
-	public One oneReal() {
-		return oneReal;
-	}
-
-	@Override
-	public One one(SymbolicType type) {
-		return type.isInteger() ? oneInt : oneReal;
-	}
-
-	// PrimitivePowers...
-
 	private NTPrimitivePower ntPrimitivePower(Primitive primitive,
 			IntObject exponent) {
 		return new NTPrimitivePower(primitive, exponent);
 	}
-
-	PrimitivePower primitivePower(Primitive primitive, IntObject exponent) {
-		if (exponent.isZero())
-			throw new IllegalArgumentException(
-					"Exponent to primitive power must be positive: "
-							+ primitive);
-		if (exponent.isOne())
-			return primitive;
-		return ntPrimitivePower(primitive, exponent);
-	}
-
-	// Monics...
 
 	private NTMonic ntMonic(SymbolicType type,
 			SymbolicMap<NumericPrimitive, PrimitivePower> monicMap) {
@@ -281,30 +192,9 @@ public class CommonIdealFactory implements IdealFactory {
 		return ntMonic(type, monicMap);
 	}
 
-	// Monomials...
-
 	private NTMonomial ntMonomial(Constant constant, Monic monic) {
 		return new NTMonomial(constant, monic);
 	}
-
-	@Override
-	public Monomial monomial(Constant constant, Monic monic) {
-		if (constant.isZero())
-			return constant;
-		if (constant.isOne())
-			return monic;
-		if (monic.isTrivialMonic())
-			return constant;
-		// zirkel: A constant times big-O is just big-O
-		if (monic.operator() == SymbolicOperator.APPLY
-				&& ((SymbolicConstant) monic.argument(0)).name().toString()
-						.equals("BIG_O")) {
-			return monic;
-		}
-		return ntMonomial(constant, monic);
-	}
-
-	// ReducedPolynomials and Polynomials...
 
 	/**
 	 * Returns a new reduced polynomial from the given type and term map. The
@@ -326,16 +216,6 @@ public class CommonIdealFactory implements IdealFactory {
 	private NTPolynomial ntPolynomial(SymbolicMap<Monic, Monomial> termMap,
 			Monomial factorization) {
 		return new NTPolynomial(termMap, factorization);
-	}
-
-	@Override
-	public Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
-			Monomial factorization) {
-		if (termMap.size() == 0)
-			return zero(factorization.type());
-		if (termMap.size() == 1)
-			return termMap.getFirst();
-		return ntPolynomial(termMap, factorization);
 	}
 
 	/**
@@ -387,40 +267,10 @@ public class CommonIdealFactory implements IdealFactory {
 		return polynomial(termMap, factorization);
 	}
 
-	@Override
-	public Polynomial subtractConstantTerm(Polynomial polynomial) {
-		SymbolicType type = polynomial.type();
-
-		if (polynomial instanceof Constant)
-			return zero(type);
-		else {
-			Constant constant = polynomial.constantTerm(this);
-
-			if (constant.isZero())
-				return polynomial;
-			if (polynomial instanceof NTPolynomial) {
-				SymbolicMap<Monic, Monomial> termMap = polynomial.termMap(this)
-						.remove(one(type));
-
-				if (termMap.size() == 1)
-					return termMap.getFirst();
-				assert termMap.size() > 1;
-				return polynomialWithTrivialFactorization(type, termMap);
-			} else
-				throw new SARLInternalException("unreachable");
-		}
-	}
-
-	// Rational expressions
-
 	private NTRationalExpression ntRationalExpression(Polynomial numerator,
 			Polynomial denominator) {
 		return new NTRationalExpression(numerator, denominator);
 	}
-
-	/************************ FACTORIZATION ***************************/
-
-	// Extract Commonality...
 
 	private Monic[] extractCommonality(Monic fact1, Monic fact2) {
 		SymbolicType type = fact1.type();
@@ -483,13 +333,6 @@ public class CommonIdealFactory implements IdealFactory {
 				monomial(fact2.monomialConstant(this), monicTriple[2]) };
 	}
 
-	/***************************** ADD ********************************/
-
-	Constant add(Constant c1, Constant c2) {
-		return constant(objectFactory.numberObject(numberFactory.add(
-				c1.number(), c2.number())));
-	}
-
 	private SymbolicMap<Monic, Monomial> add(
 			SymbolicMap<Monic, Monomial> termMap1,
 			SymbolicMap<Monic, Monomial> termMap2) {
@@ -497,7 +340,7 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
-	 * Add to polynomials that have no common factors.
+	 * Adds two polynomials that have no common factors.
 	 * 
 	 * @param p1
 	 *            a Polynomial
@@ -516,35 +359,6 @@ public class CommonIdealFactory implements IdealFactory {
 			return newMap.getFirst();
 		else
 			return polynomialWithTrivialFactorization(type, newMap);
-	}
-
-	/**
-	 * Adds two polynomials, forming the factorization by factoring out common
-	 * factors from the two factorizations.
-	 * 
-	 * @param p1
-	 *            a Polynomial
-	 * @param p2
-	 *            a Polynomial
-	 * @return the sum p1+p2
-	 */
-	@Override
-	public Polynomial add(Polynomial p1, Polynomial p2) {
-		assert p1.type().equals(p2.type());
-		if (p1.isZero())
-			return p2;
-		if (p2.isZero())
-			return p1;
-
-		Monomial fact1 = p1.factorization(this);
-		Monomial fact2 = p2.factorization(this);
-		Monomial[] triple = extractCommonality(fact1, fact2);
-		// p1+p2=a(q1+q2)
-
-		if (triple[0].isOne())
-			return addNoCommon(p1, p2);
-		return multiply(triple[0].expand(this),
-				addNoCommon(triple[1].expand(this), triple[2].expand(this)));
 	}
 
 	private RationalExpression addRational(RationalExpression r1,
@@ -566,8 +380,6 @@ public class CommonIdealFactory implements IdealFactory {
 
 		return divide(numerator, denominator);
 	}
-
-	/************************** MULTIPLY ******************************/
 
 	private Constant multiply(Constant c1, Constant c2) {
 		return constant(objectFactory.numberObject(numberFactory.multiply(
@@ -655,32 +467,6 @@ public class CommonIdealFactory implements IdealFactory {
 		return result;
 	}
 
-	@Override
-	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
-		if (poly1.isZero())
-			return poly1;
-		if (poly2.isZero())
-			return poly2;
-		if (poly1.isOne())
-			return poly2;
-		if (poly2.isOne())
-			return poly1;
-		if (poly1 instanceof Monomial && poly2 instanceof Monomial)
-			return multiply((Monomial) poly1, (Monomial) poly2);
-		else {
-			SymbolicMap<Monic, Monomial> termMap1 = poly1.termMap(this);
-			SymbolicMap<Monic, Monomial> termMap2 = poly2.termMap(this);
-			SymbolicMap<Monic, Monomial> newTermMap = multiply(termMap1,
-					termMap2);
-			Monomial fact1 = poly1.factorization(this);
-			Monomial fact2 = poly2.factorization(this);
-			Monomial newFact = multiply(fact1, fact2);
-			Polynomial result = polynomial(newTermMap, newFact);
-
-			return result;
-		}
-	}
-
 	private RationalExpression multiplyRational(RationalExpression r1,
 			RationalExpression r2) {
 		// (n1/d1)*(n2/d2)
@@ -695,8 +481,6 @@ public class CommonIdealFactory implements IdealFactory {
 		return divide(multiply(r1.numerator(this), r2.numerator(this)),
 				multiply(r1.denominator(this), r2.denominator(this)));
 	}
-
-	/*************************** DIVIDE *******************************/
 
 	/**
 	 * Divides two constants. The constants must have the same type. If the type
@@ -745,60 +529,6 @@ public class CommonIdealFactory implements IdealFactory {
 	private Monomial divide(Monomial monomial, Constant constant) {
 		return monomial(divide(monomial.monomialConstant(this), constant),
 				monomial.monic(this));
-	}
-
-	/**
-	 * Divides each term in a polynomial by a constant. The polynomial and
-	 * constant must have the same type. If the type is integer, this will
-	 * perform integer division on each term; this is only equivalent to integer
-	 * division of the polynomial by the constant if the constant divides each
-	 * term.
-	 * 
-	 */
-	@Override
-	public Polynomial divide(Polynomial polynomial, Constant constant) {
-		return polynomial(divide(polynomial.termMap(this), constant),
-				divide(polynomial.factorization(this), constant));
-	}
-
-	/**
-	 * Divides two polynomials of real type. Result is a RationalExpression.
-	 * Simplifications are performed by canceling common factors as possible.
-	 * 
-	 * @param numerator
-	 *            a polynomial of real type
-	 * @param denominator
-	 *            a polynomial of real type
-	 * @return numerator/denominator
-	 */
-	private RationalExpression divide(Polynomial numerator,
-			Polynomial denominator) {
-		assert numerator.type().isReal();
-		assert denominator.type().isReal();
-		if (numerator.isZero())
-			return numerator;
-		if (denominator.isOne())
-			return numerator;
-		else { // cancel common factors...
-			Monomial[] triple = extractCommonality(
-					numerator.factorization(this),
-					denominator.factorization(this));
-			Constant denomConstant;
-
-			if (!triple[0].isOne()) {
-				numerator = triple[1].expand(this);
-				denominator = triple[2].expand(this);
-			}
-			denomConstant = denominator.factorization(this).monomialConstant(
-					this);
-			if (!denomConstant.isOne()) {
-				denominator = divide(denominator, denomConstant);
-				numerator = divide(numerator, denomConstant);
-			}
-			if (denominator.isOne())
-				return numerator;
-			return ntRationalExpression(numerator, denominator);
-		}
 	}
 
 	/**
@@ -978,16 +708,49 @@ public class CommonIdealFactory implements IdealFactory {
 		}
 	}
 
-	/*************************** NEGATE *******************************/
-
 	private Constant negate(Constant constant) {
 		return constant(objectFactory.numberObject(numberFactory
 				.negate(constant.number())));
 	}
 
-	Monomial negate(Monomial monomial) {
-		return monomial(negate(monomial.monomialConstant(this)),
-				monomial.monic(this));
+	/**
+	 * Divides two polynomials of real type. Result is a RationalExpression.
+	 * Simplifications are performed by canceling common factors as possible.
+	 * 
+	 * @param numerator
+	 *            a polynomial of real type
+	 * @param denominator
+	 *            a polynomial of real type
+	 * @return numerator/denominator
+	 */
+	private RationalExpression divide(Polynomial numerator,
+			Polynomial denominator) {
+		assert numerator.type().isReal();
+		assert denominator.type().isReal();
+		if (numerator.isZero())
+			return numerator;
+		if (denominator.isOne())
+			return numerator;
+		else { // cancel common factors...
+			Monomial[] triple = extractCommonality(
+					numerator.factorization(this),
+					denominator.factorization(this));
+			Constant denomConstant;
+
+			if (!triple[0].isOne()) {
+				numerator = triple[1].expand(this);
+				denominator = triple[2].expand(this);
+			}
+			denomConstant = denominator.factorization(this).monomialConstant(
+					this);
+			if (!denomConstant.isOne()) {
+				denominator = divide(denominator, denomConstant);
+				numerator = divide(numerator, denomConstant);
+			}
+			if (denominator.isOne())
+				return numerator;
+			return ntRationalExpression(numerator, denominator);
+		}
 	}
 
 	private SymbolicMap<Monic, Monomial> negate(
@@ -996,62 +759,32 @@ public class CommonIdealFactory implements IdealFactory {
 
 	}
 
+	/**
+	 * Negates a polynomial, i.e., given a polynomial p in normal form, returns
+	 * the polynomial -p in normal form.
+	 * 
+	 * @param polynomial
+	 *            a non-<code>null</code> polynomial
+	 * @return negation of that polynomial
+	 */
 	private Polynomial negate(Polynomial polynomial) {
 		return polynomial(negate(polynomial.termMap(this)),
 				negate(polynomial.factorization(this)));
 	}
 
+	/**
+	 * Negates a rational expression, i.e., given a rational expression p/q,
+	 * returns the rational expression -p/q.
+	 * 
+	 * @param rational
+	 *            a non-<code>null</code> {@link RationalExpression}
+	 * @return negation of that rational expression in normal form
+	 */
 	private RationalExpression negate(RationalExpression rational) {
 		// TODO: here NO NEED TO go through all division checks, factorizations,
 		// etc. just need to negate numerator. Need divideNoCommon...
 		return divide(negate(rational.numerator(this)),
 				rational.denominator(this));
-	}
-
-	/*************************** EXPORTED *****************************/
-
-	// Methods specified in interface NumericExpressionFactory...
-
-	@Override
-	public NumericPrimitive expression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject[] arguments) {
-		return new NumericPrimitive(operator, numericType, arguments);
-	}
-
-	@Override
-	public NumericPrimitive expression(SymbolicOperator operator,
-			SymbolicType numericType, Collection<SymbolicObject> arguments) {
-		return new NumericPrimitive(operator, numericType, arguments);
-	}
-
-	@Override
-	public NumericPrimitive expression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject arg0) {
-		return new NumericPrimitive(operator, numericType, arg0);
-	}
-
-	@Override
-	public NumericPrimitive expression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1) {
-		return new NumericPrimitive(operator, numericType, arg0, arg1);
-	}
-
-	@Override
-	public NumericPrimitive expression(SymbolicOperator operator,
-			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
-			SymbolicObject arg2) {
-		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
-	}
-
-	@Override
-	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
-		if (arg0 instanceof Constant && arg1 instanceof Constant)
-			return add((Constant) arg0, (Constant) arg1);
-		if (arg0.type().isInteger())
-			return add((Polynomial) arg0, (Polynomial) arg1);
-		else
-			return addRational((RationalExpression) arg0,
-					(RationalExpression) arg1);
 	}
 
 	private NumericExpression addWithCast(
@@ -1069,24 +802,6 @@ public class CommonIdealFactory implements IdealFactory {
 				result = add(result, castToReal((NumericExpression) arg));
 		}
 		return result;
-	}
-
-	@Override
-	public NumericExpression subtract(NumericExpression arg0,
-			NumericExpression arg1) {
-		return add(arg0, minus(arg1));
-	}
-
-	@Override
-	public NumericExpression multiply(NumericExpression arg0,
-			NumericExpression arg1) {
-		if (arg0 instanceof Constant && arg1 instanceof Constant)
-			return multiply((Constant) arg0, (Constant) arg1);
-		if (arg0.type().isInteger())
-			return multiply((Polynomial) arg0, (Polynomial) arg1);
-		else
-			return multiplyRational((RationalExpression) arg0,
-					(RationalExpression) arg1);
 	}
 
 	private NumericExpression multiplyWithCast(
@@ -1107,67 +822,6 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
-	 * Returns a symbolic expression which is the result of dividing arg0 with
-	 * arg1. The two given expressions must have the same (numeric) type: either
-	 * both integers, or both real.
-	 * 
-	 * @param arg0
-	 *            - a symbolic expression of a numeric type
-	 * @param arg1
-	 *            - a symbolic expression of the same numeric type
-	 * 
-	 * @return arg0 / arg1
-	 * 
-	 *         Note: this must handle both integer and real division.
-	 */
-	@Override
-	public NumericExpression divide(NumericExpression arg0,
-			NumericExpression arg1) {
-		if (arg0 instanceof Constant && arg1 instanceof Constant)
-			return divide((Constant) arg0, (Constant) arg1);
-		if (arg0.type().isInteger())
-			return intDividePolynomials((Polynomial) arg0, (Polynomial) arg1);
-		if (arg0 instanceof Polynomial && arg1 instanceof Polynomial)
-			return divide((Polynomial) arg0, (Polynomial) arg1);
-		return divide((RationalExpression) arg0, (RationalExpression) arg1);
-	}
-
-	@Override
-	public NumericExpression modulo(NumericExpression arg0,
-			NumericExpression arg1) {
-		return intModulusPolynomials((Polynomial) arg0, (Polynomial) arg1);
-	}
-
-	@Override
-	public NumericExpression minus(NumericExpression arg) {
-		if (arg.isZero())
-			return arg;
-		if (arg instanceof Constant)
-			return negate((Constant) arg);
-		if (arg instanceof Polynomial)
-			return negate((Polynomial) arg);
-		else
-			return negate((RationalExpression) arg);
-	}
-
-	@Override
-	public NumericExpression power(NumericExpression base, IntObject exponent) {
-		NumericExpression result = one(base.type());
-		int n = exponent.getInt();
-
-		assert n >= 0;
-		while (n > 0) {
-			if (n % 2 != 0) {
-				result = multiply(result, base);
-				n -= 1;
-			}
-			base = multiply(base, base);
-			n /= 2;
-		}
-		return result;
-	}
-
-	/**
 	 * Exponentiation with exponent positive concrete IntegerNumber.
 	 * 
 	 * @param base
@@ -1182,67 +836,6 @@ public class CommonIdealFactory implements IdealFactory {
 			return realExponentiator.exp(base, exponent);
 		else
 			return integerExponentiator.exp(base, exponent);
-	}
-
-	/**
-	 * Raises base to exponent power, where exponent may be any kind of number.
-	 * Handles special case where exponent is a concrete integer number.
-	 * 
-	 * TODO: (a^b)^c=a^(bc). (a^b)(a^c)=a^(b+c)
-	 * 
-	 */
-	@Override
-	public NumericExpression power(NumericExpression base,
-			NumericExpression exponent) {
-		Number exponentNumber = extractNumber(exponent);
-
-		if (exponentNumber != null) {
-			if (exponentNumber instanceof IntegerNumber) {
-				IntegerNumber exponentInteger = (IntegerNumber) exponentNumber;
-				int signum = exponentNumber.signum();
-
-				if (signum > 0)
-					return powerNumber(base, exponentInteger);
-				else {
-					boolean isInteger = base.type().isInteger();
-
-					if (signum < 0) {
-						if (isInteger)
-							throw new SARLException(
-									"Power expression with integer base and negative exponent:\n"
-											+ base + "\n" + exponent);
-						return invert((RationalExpression) powerNumber(base,
-								numberFactory.negate(exponentInteger)));
-					} else {
-						if (base.isZero())
-							throw new SARLException("0^0 is undefined");
-						return isInteger ? oneInt : oneReal;
-					}
-				}
-			}
-		}
-		return expression(SymbolicOperator.POWER, base.type(), base, exponent);
-	}
-
-	@Override
-	public NumericExpression cast(NumericExpression numericExpression,
-			SymbolicType newType) {
-		if (numericExpression.type().isIdeal() && newType.equals(realType))
-			return castToReal(numericExpression);
-		if (numericExpression.type().isReal() && newType.equals(integerType)) {
-			RationalNumber number = (RationalNumber) extractNumber(numericExpression);
-
-			if (number != null) {
-				int sign = number.signum();
-
-				if (sign >= 0) {
-					return constant(numberFactory.floor(number));
-				} else {
-					return constant(numberFactory.ceil(number));
-				}
-			}
-		}
-		return expression(SymbolicOperator.CAST, newType, numericExpression);
 	}
 
 	/**
@@ -1319,39 +912,6 @@ public class CommonIdealFactory implements IdealFactory {
 		default:
 			throw new SARLInternalException("Should be unreachable");
 		}
-	}
-
-	@Override
-	public Number extractNumber(NumericExpression expression) {
-		if (expression instanceof Constant)
-			return ((Constant) expression).number();
-		return null;
-	}
-
-	@Override
-	public NumericExpression number(NumberObject numberObject) {
-		return constant(numberObject);
-	}
-
-	@Override
-	public NumericSymbolicConstant symbolicConstant(StringObject name,
-			SymbolicType type) {
-		return new IdealSymbolicConstant(name, type);
-	}
-
-	@Override
-	public SymbolicTypeFactory typeFactory() {
-		return typeFactory;
-	}
-
-	@Override
-	public CollectionFactory collectionFactory() {
-		return collectionFactory;
-	}
-
-	@Override
-	public IdealComparator comparator() {
-		return comparator;
 	}
 
 	private BooleanExpression isPositive(Polynomial polynomial) {
@@ -1438,6 +998,298 @@ public class CommonIdealFactory implements IdealFactory {
 		return number.signum() >= 0 ? trueExpr : falseExpr;
 	}
 
+	private BooleanExpression lessThanEqualsMain(NumericExpression arg0,
+			NumericExpression arg1) {
+		NumericExpression difference = subtract(arg1, arg0);
+
+		return difference instanceof Polynomial ? isNonnegative((Polynomial) difference)
+				: isNonnegative((RationalExpression) difference);
+	}
+
+	// ********************* Package-private methods **********************
+
+	PrimitivePower primitivePower(Primitive primitive, IntObject exponent) {
+		if (exponent.isZero())
+			throw new IllegalArgumentException(
+					"Exponent to primitive power must be positive: "
+							+ primitive);
+		if (exponent.isOne())
+			return primitive;
+		return ntPrimitivePower(primitive, exponent);
+	}
+
+	Constant add(Constant c1, Constant c2) {
+		return constant(objectFactory.numberObject(numberFactory.add(
+				c1.number(), c2.number())));
+	}
+
+	Monomial negate(Monomial monomial) {
+		return monomial(negate(monomial.monomialConstant(this)),
+				monomial.monic(this));
+	}
+
+	// ********** Methods specified in NumericExpressionFactory ***********
+
+	@Override
+	public void init() {
+	}
+
+	@Override
+	public NumberFactory numberFactory() {
+		return numberFactory;
+	}
+
+	@Override
+	public BooleanExpressionFactory booleanFactory() {
+		return booleanFactory;
+	}
+
+	@Override
+	public ObjectFactory objectFactory() {
+		return objectFactory;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <K extends SymbolicExpression, V extends SymbolicExpression> SymbolicMap<K, V> emptyMap() {
+		return (SymbolicMap<K, V>) emptyMap;
+	}
+
+	@Override
+	public One oneInt() {
+		return oneInt;
+	}
+
+	@Override
+	public One oneReal() {
+		return oneReal;
+	}
+
+	@Override
+	public NumericPrimitive expression(SymbolicOperator operator,
+			SymbolicType numericType, SymbolicObject[] arguments) {
+		return new NumericPrimitive(operator, numericType, arguments);
+	}
+
+	@Override
+	public NumericPrimitive expression(SymbolicOperator operator,
+			SymbolicType numericType, Collection<SymbolicObject> arguments) {
+		return new NumericPrimitive(operator, numericType, arguments);
+	}
+
+	@Override
+	public NumericPrimitive expression(SymbolicOperator operator,
+			SymbolicType numericType, SymbolicObject arg0) {
+		return new NumericPrimitive(operator, numericType, arg0);
+	}
+
+	@Override
+	public NumericPrimitive expression(SymbolicOperator operator,
+			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1) {
+		return new NumericPrimitive(operator, numericType, arg0, arg1);
+	}
+
+	@Override
+	public NumericPrimitive expression(SymbolicOperator operator,
+			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
+			SymbolicObject arg2) {
+		return new NumericPrimitive(operator, numericType, arg0, arg1, arg2);
+	}
+
+	@Override
+	public NumericExpression add(NumericExpression arg0, NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return add((Constant) arg0, (Constant) arg1);
+		if (arg0.type().isInteger())
+			return add((Polynomial) arg0, (Polynomial) arg1);
+		else
+			return addRational((RationalExpression) arg0,
+					(RationalExpression) arg1);
+	}
+
+	@Override
+	public NumericExpression subtract(NumericExpression arg0,
+			NumericExpression arg1) {
+		return add(arg0, minus(arg1));
+	}
+
+	@Override
+	public NumericExpression multiply(NumericExpression arg0,
+			NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return multiply((Constant) arg0, (Constant) arg1);
+		if (arg0.type().isInteger())
+			return multiply((Polynomial) arg0, (Polynomial) arg1);
+		else
+			return multiplyRational((RationalExpression) arg0,
+					(RationalExpression) arg1);
+	}
+
+	/**
+	 * Returns a symbolic expression which is the result of dividing arg0 with
+	 * arg1. The two given expressions must have the same (numeric) type: either
+	 * both integers, or both real.
+	 * 
+	 * @param arg0
+	 *            - a symbolic expression of a numeric type
+	 * @param arg1
+	 *            - a symbolic expression of the same numeric type
+	 * 
+	 * @return arg0 / arg1
+	 * 
+	 *         Note: this must handle both integer and real division.
+	 */
+	@Override
+	public NumericExpression divide(NumericExpression arg0,
+			NumericExpression arg1) {
+		if (arg0 instanceof Constant && arg1 instanceof Constant)
+			return divide((Constant) arg0, (Constant) arg1);
+		if (arg0.type().isInteger())
+			return intDividePolynomials((Polynomial) arg0, (Polynomial) arg1);
+		if (arg0 instanceof Polynomial && arg1 instanceof Polynomial)
+			return divide((Polynomial) arg0, (Polynomial) arg1);
+		return divide((RationalExpression) arg0, (RationalExpression) arg1);
+	}
+
+	@Override
+	public NumericExpression modulo(NumericExpression arg0,
+			NumericExpression arg1) {
+		return intModulusPolynomials((Polynomial) arg0, (Polynomial) arg1);
+	}
+
+	@Override
+	public NumericExpression minus(NumericExpression arg) {
+		if (arg.isZero())
+			return arg;
+		if (arg instanceof Constant)
+			return negate((Constant) arg);
+		if (arg instanceof Polynomial)
+			return negate((Polynomial) arg);
+		else
+			return negate((RationalExpression) arg);
+	}
+
+	@Override
+	public NumericExpression power(NumericExpression base, IntObject exponent) {
+		NumericExpression result = one(base.type());
+		int n = exponent.getInt();
+
+		assert n >= 0;
+		while (n > 0) {
+			if (n % 2 != 0) {
+				result = multiply(result, base);
+				n -= 1;
+			}
+			base = multiply(base, base);
+			n /= 2;
+		}
+		return result;
+	}
+
+	/**
+	 * Raises base to exponent power, where exponent may be any kind of number.
+	 * Handles special case where exponent is a concrete integer number.
+	 * 
+	 * TODO: (a^b)^c=a^(bc). (a^b)(a^c)=a^(b+c)
+	 * 
+	 */
+	@Override
+	public NumericExpression power(NumericExpression base,
+			NumericExpression exponent) {
+		Number exponentNumber = extractNumber(exponent);
+
+		if (exponentNumber != null) {
+			if (exponentNumber instanceof IntegerNumber) {
+				IntegerNumber exponentInteger = (IntegerNumber) exponentNumber;
+				int signum = exponentNumber.signum();
+
+				if (signum > 0)
+					return powerNumber(base, exponentInteger);
+				else {
+					boolean isInteger = base.type().isInteger();
+
+					if (signum < 0) {
+						if (isInteger)
+							throw new SARLException(
+									"Power expression with integer base and negative exponent:\n"
+											+ base + "\n" + exponent);
+						return invert((RationalExpression) powerNumber(base,
+								numberFactory.negate(exponentInteger)));
+					} else {
+						if (base.isZero())
+							throw new SARLException("0^0 is undefined");
+						return isInteger ? oneInt : oneReal;
+					}
+				}
+			}
+		}
+		return expression(SymbolicOperator.POWER, base.type(), base, exponent);
+	}
+
+	@Override
+	public NumericExpression cast(NumericExpression numericExpression,
+			SymbolicType newType) {
+		if (numericExpression.type().isIdeal() && newType.equals(realType))
+			return castToReal(numericExpression);
+		if (numericExpression.type().isReal() && newType.equals(integerType)) {
+			RationalNumber number = (RationalNumber) extractNumber(numericExpression);
+
+			if (number != null) {
+				int sign = number.signum();
+
+				if (sign >= 0) {
+					return constant(numberFactory.floor(number));
+				} else {
+					return constant(numberFactory.ceil(number));
+				}
+			}
+		}
+		return expression(SymbolicOperator.CAST, newType, numericExpression);
+	}
+
+	@Override
+	public Number extractNumber(NumericExpression expression) {
+		if (expression instanceof Constant)
+			return ((Constant) expression).number();
+		return null;
+	}
+
+	@Override
+	public NumericExpression number(NumberObject numberObject) {
+		return constant(numberObject);
+	}
+
+	@Override
+	public NumericSymbolicConstant symbolicConstant(StringObject name,
+			SymbolicType type) {
+		return new IdealSymbolicConstant(name, type);
+	}
+
+	@Override
+	public SymbolicTypeFactory typeFactory() {
+		return typeFactory;
+	}
+
+	@Override
+	public CollectionFactory collectionFactory() {
+		return collectionFactory;
+	}
+
+	@Override
+	public IdealComparator comparator() {
+		return comparator;
+	}
+
+	// 4 relations: 0<, 0<=, 0==, 0!=
+
+	// 0<p/q <=> (0<p && 0<q) || (0<-p && 0<-q)
+
+	// 0<=p/q <=> (0<=p && 0<q) || (0<=-p && 0<-q)
+
+	// 0==p/q <=> 0==p
+
+	// 0!=p/q <=> 0!=
+
 	@Override
 	public BooleanExpression lessThan(NumericExpression arg0,
 			NumericExpression arg1) {
@@ -1460,14 +1312,6 @@ public class CommonIdealFactory implements IdealFactory {
 	public BooleanExpression integerLessThan(NumericExpression arg0,
 			NumericExpression arg1) {
 		return lessThanEquals(add(arg0, oneInt), arg1);
-	}
-
-	private BooleanExpression lessThanEqualsMain(NumericExpression arg0,
-			NumericExpression arg1) {
-		NumericExpression difference = subtract(arg1, arg0);
-
-		return difference instanceof Polynomial ? isNonnegative((Polynomial) difference)
-				: isNonnegative((RationalExpression) difference);
 	}
 
 	@Override
@@ -1498,33 +1342,11 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	@Override
-	public Polynomial zeroEssence(NumericExpression expr) {
-		Polynomial result = expr instanceof Polynomial ? (Polynomial) expr
-				: ((RationalExpression) expr).numerator(this);
-
-		if (result instanceof Monomial) {
-			Monic monic = ((Monomial) expr).monic(this);
-
-			result = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
-					.primitive(this) : monic;
-		} else {
-			Monomial factorization = result.factorization(this);
-			Monic monic = factorization.monic(this);
-
-			if (monic instanceof PrimitivePower)
-				monic = ((PrimitivePower) monic).primitive(this);
-			// in monic, the primitives may be instances of
-			// ReducedPolynomial. Need to expand them...
-			result = monic.expand(this);
-		}
-		return result;
-	}
-
-	@Override
 	public BooleanExpression equals(NumericExpression arg0,
 			NumericExpression arg1) {
 		if (arg0.equals(arg1))
 			return trueExpr;
+		// if they are constants but not equal, return false:
 		if (arg0 instanceof Constant && arg1 instanceof Constant)
 			return falseExpr;
 
@@ -1554,4 +1376,186 @@ public class CommonIdealFactory implements IdealFactory {
 		else
 			return number.signum() != 0 ? trueExpr : falseExpr;
 	}
+
+	// ***************** Methods specified in IdealFactory ******************
+
+	@Override
+	public Polynomial zeroEssence(NumericExpression expr) {
+		Polynomial result = expr instanceof Polynomial ? (Polynomial) expr
+				: ((RationalExpression) expr).numerator(this);
+
+		if (result instanceof Monomial) {
+			Monic monic = ((Monomial) expr).monic(this);
+
+			result = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
+					.primitive(this) : monic;
+		} else {
+			Monomial factorization = result.factorization(this);
+			Monic monic = factorization.monic(this);
+
+			if (monic instanceof PrimitivePower)
+				monic = ((PrimitivePower) monic).primitive(this);
+			// in monic, the primitives may be instances of
+			// ReducedPolynomial. Need to expand them...
+			result = monic.expand(this);
+		}
+		return result;
+	}
+
+	@Override
+	public IntObject oneIntObject() {
+		return oneIntObject;
+	}
+
+	@Override
+	public <K extends NumericExpression, V extends SymbolicExpression> SymbolicMap<K, V> singletonMap(
+			K key, V value) {
+		return collectionFactory.singletonSortedMap(comparator, key, value);
+	}
+
+	@Override
+	public Constant intConstant(int value) {
+		if (value == 1)
+			return oneInt;
+		return new NTConstant(integerType,
+				objectFactory.numberObject(numberFactory.integer(value)));
+	}
+
+	@Override
+	public Constant constant(Number number) {
+		return constant(objectFactory.numberObject(number));
+	}
+
+	@Override
+	public Constant zeroInt() {
+		return zeroInt;
+	}
+
+	@Override
+	public Constant zeroReal() {
+		return zeroReal;
+	}
+
+	@Override
+	public Constant zero(SymbolicType type) {
+		return type.isInteger() ? zeroInt : zeroReal;
+	}
+
+	@Override
+	public One one(SymbolicType type) {
+		return type.isInteger() ? oneInt : oneReal;
+	}
+
+	@Override
+	public Monomial monomial(Constant constant, Monic monic) {
+		if (constant.isZero())
+			return constant;
+		if (constant.isOne())
+			return monic;
+		if (monic.isTrivialMonic())
+			return constant;
+		// zirkel: A constant times big-O is just big-O
+		if (monic.operator() == SymbolicOperator.APPLY
+				&& ((SymbolicConstant) monic.argument(0)).name().toString()
+						.equals("BIG_O")) {
+			return monic;
+		}
+		return ntMonomial(constant, monic);
+	}
+
+	@Override
+	public Polynomial polynomial(SymbolicMap<Monic, Monomial> termMap,
+			Monomial factorization) {
+		if (termMap.size() == 0)
+			return zero(factorization.type());
+		if (termMap.size() == 1)
+			return termMap.getFirst();
+		return ntPolynomial(termMap, factorization);
+	}
+
+	@Override
+	public Polynomial subtractConstantTerm(Polynomial polynomial) {
+		SymbolicType type = polynomial.type();
+
+		if (polynomial instanceof Constant)
+			return zero(type);
+		else {
+			Constant constant = polynomial.constantTerm(this);
+
+			if (constant.isZero())
+				return polynomial;
+			if (polynomial instanceof NTPolynomial) {
+				SymbolicMap<Monic, Monomial> termMap = polynomial.termMap(this)
+						.remove(one(type));
+
+				if (termMap.size() == 1)
+					return termMap.getFirst();
+				assert termMap.size() > 1;
+				return polynomialWithTrivialFactorization(type, termMap);
+			} else
+				throw new SARLInternalException("unreachable");
+		}
+	}
+
+	/**
+	 * Adds two polynomials, forming the factorization by factoring out common
+	 * factors from the two factorizations.
+	 * 
+	 * @param p1
+	 *            a Polynomial
+	 * @param p2
+	 *            a Polynomial
+	 * @return the sum p1+p2
+	 */
+	@Override
+	public Polynomial add(Polynomial p1, Polynomial p2) {
+		assert p1.type().equals(p2.type());
+		if (p1.isZero())
+			return p2;
+		if (p2.isZero())
+			return p1;
+
+		Monomial fact1 = p1.factorization(this);
+		Monomial fact2 = p2.factorization(this);
+		Monomial[] triple = extractCommonality(fact1, fact2);
+		// p1+p2=a(q1+q2)
+
+		if (triple[0].isOne())
+			return addNoCommon(p1, p2);
+		return multiply(triple[0].expand(this),
+				addNoCommon(triple[1].expand(this), triple[2].expand(this)));
+	}
+
+	@Override
+	public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
+		if (poly1.isZero())
+			return poly1;
+		if (poly2.isZero())
+			return poly2;
+		if (poly1.isOne())
+			return poly2;
+		if (poly2.isOne())
+			return poly1;
+		if (poly1 instanceof Monomial && poly2 instanceof Monomial)
+			return multiply((Monomial) poly1, (Monomial) poly2);
+		else {
+			SymbolicMap<Monic, Monomial> termMap1 = poly1.termMap(this);
+			SymbolicMap<Monic, Monomial> termMap2 = poly2.termMap(this);
+			SymbolicMap<Monic, Monomial> newTermMap = multiply(termMap1,
+					termMap2);
+			Monomial fact1 = poly1.factorization(this);
+			Monomial fact2 = poly2.factorization(this);
+			Monomial newFact = multiply(fact1, fact2);
+			Polynomial result = polynomial(newTermMap, newFact);
+
+			return result;
+		}
+	}
+
+	@Override
+	public Polynomial divide(Polynomial polynomial, Constant constant) {
+		return polynomial(divide(polynomial.termMap(this), constant),
+				divide(polynomial.factorization(this), constant));
+	}
+
 }
