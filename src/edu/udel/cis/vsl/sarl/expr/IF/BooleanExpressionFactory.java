@@ -31,13 +31,12 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 public interface BooleanExpressionFactory {
 
 	/**
-	 * Allows CnfFactory to simplify expensive (p || !p) expressions as the they
-	 * are created. Default is false. Setting to true will decrease performance
-	 * in certain CnfFactory methods.
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as they are
+	 * created. Default is false. Setting to true will decrease performance in
+	 * certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
 	 * 
-	 * @return void
 	 */
 	void setBooleanExpressionSimplification(boolean value);
 
@@ -228,7 +227,7 @@ public interface BooleanExpressionFactory {
 			BooleanExpression predicate);
 
 	/**
-	 * Returns the existenially quantified expression exists(x).e.
+	 * Returns the existentially quantified expression exists(x).e.
 	 * 
 	 * @param boundVariable
 	 *            the bound variable x
@@ -238,5 +237,19 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression exists(SymbolicConstant boundVariable,
 			BooleanExpression predicate);
+
+	// This about this..
+
+	// SymbolicSet<BooleanExpression> getConjunctiveClauses(BooleanExpression
+	// predicate)
+
+	// BooleanExpression and(SymbolicSet<BooleanExpression> clauses)
+	// a possibly faster version of and.
+	// Cnf will have to check all members are instances of correct class
+	// or
+	//
+	// BooleanExpression[] getConjunctiveClauses(BooleanExpression predicate);
+	// BooleanExpression conjunctiveWeakending(BooleanExpression predicate,
+	// BitSet clausesToKeep);
 
 }

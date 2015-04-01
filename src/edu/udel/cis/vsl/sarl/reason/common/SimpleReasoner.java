@@ -124,7 +124,7 @@ public class SimpleReasoner implements Reasoner {
 		return universe().extractNumber(simple);
 	}
 
-	@Override
+//	@Override
 	public UnaryOperator<SymbolicExpression> simplifier() {
 		return new UnaryOperator<SymbolicExpression>() {
 			@Override
@@ -133,25 +133,4 @@ public class SimpleReasoner implements Reasoner {
 			}
 		};
 	}
-
-	// TODO: do some more intelligent things:
-	// 1. separate variables. Consider set of symbolic constants that occur
-	// in predicate. Make undirected graph in which nodes are all symbolic
-	// constants and there is an edge (x,y) if there is a clause in the and
-	// expression which is the assumption such that both x and y occur in the
-	// clause. Find all nodes/edges reachable from the symbolic constants
-	// occurring in the predicate. These are the only ones that need to
-	// considered in the proof.
-	//
-	// Problem: what about:
-
-	// pc: 0<=X1<=10 && a[X1-1]<5.0
-	// query X1>0 ?
-	// for some reason, can eliminate the constraint involving a as it imposes
-	// no constraint on X1 (as long as it is satisfiable---but our contract
-	// says result is undefined if pc not satisfiable)
-
-	// pc: 0<=X1<=10 && X2<=X1
-	// query X1>0 ? leave these to CVC3
-
 }

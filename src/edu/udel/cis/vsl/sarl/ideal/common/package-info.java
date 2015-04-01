@@ -11,7 +11,7 @@
  * contrast, a primitive power with exponent 1 is equivalent to the primitive
  * power.) The idea is to have a canonical representation of each element.
  * 
- * Most of the arithemtic logic is contained in the class
+ * Most of the arithmetic logic is contained in the class
  * {@link edu.udel.cis.vsl.sarl.ideal.common.CommonIdealFactory}. A number of
  * additional utility classes are defined simply to help the factory (e.g.,
  * {@link edu.udel.cis.vsl.sarl.ideal.common.MonomialAdder},

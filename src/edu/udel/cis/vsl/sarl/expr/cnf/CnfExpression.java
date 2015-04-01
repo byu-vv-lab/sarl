@@ -174,7 +174,7 @@ public class CnfExpression extends CommonSymbolicExpression implements
 
 	/**
 	 * Getter method that returns the BooleanExpression at argument i when
-	 * arguments is a collect.
+	 * arguments is a collection.
 	 * 
 	 * @param i
 	 * 
@@ -188,9 +188,9 @@ public class CnfExpression extends CommonSymbolicExpression implements
 
 	/**
 	 * Returns the i-th argument of this expression in the case where the i-th
-	 * argument should be an instance of SymbolicSet<BooleanExpression>. A
-	 * SARLException is thrown if that argument is not an instance of that type,
-	 * or if i is out of range.
+	 * argument should be an instance of {@link SymbolicSet}&lt;
+	 * {@link BooleanExpression}&gt;. A SARLException is thrown if that argument
+	 * is not an instance of that type, or if i is out of range.
 	 * 
 	 * @param i
 	 *            integer in range [0,numArgs-1]

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
@@ -2763,5 +2764,11 @@ public class CommonPreUniverse implements PreUniverse {
 			Map<SymbolicExpression, SymbolicExpression> map) {
 		return new ExpressionSubstituter(this, collectionFactory, typeFactory,
 				map);
+	}
+
+	@Override
+	public Set<SymbolicConstant> getFreeSymbolicConstants(
+			SymbolicExpression expr) {
+		return new ExpressionWalker(expr).getResult();
 	}
 }

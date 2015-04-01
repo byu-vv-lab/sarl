@@ -58,7 +58,7 @@ public class Universes {
 		TheoremProverFactory proverFactory = prover == null ? Prove
 				.newMultiProverFactory(universe, config) : Prove
 				.newProverFactory(universe, prover);
-		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(universe,
 				simplifierFactory, proverFactory);
 
 		universe.setReasonerFactory(reasonerFactory);
@@ -78,7 +78,7 @@ public class Universes {
 		TheoremProverFactory proverFactory = prover == null ? Prove
 				.newMultiProverFactory(universe, config) : Prove
 				.newProverFactory(universe, prover);
-		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(universe,
 				simplifierFactory, proverFactory);
 
 		universe.setReasonerFactory(reasonerFactory);
@@ -98,7 +98,7 @@ public class Universes {
 		TheoremProverFactory proverFactory = prover == null ? Prove
 				.newMultiProverFactory(universe, config) : Prove
 				.newProverFactory(universe, prover);
-		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(universe,
 				simplifierFactory, proverFactory);
 
 		universe.setReasonerFactory(reasonerFactory);
@@ -128,7 +128,7 @@ public class Universes {
 		TheoremProverFactory proverFactory = prover == null ? Prove
 				.newMultiProverFactory(universe, config) : Prove
 				.newProverFactory(universe, prover);
-		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(
+		ReasonerFactory reasonerFactory = Reason.newReasonerFactory(universe,
 				simplifierFactory, proverFactory);
 
 		universe.setReasonerFactory(reasonerFactory);

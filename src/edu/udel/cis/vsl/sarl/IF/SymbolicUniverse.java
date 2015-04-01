@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -52,24 +53,27 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 
 /**
+ * <p>
  * A symbolic universe is used for the creation and manipulation of
- * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s. The symbolic objects
- * created by this universe are said to belong to this universe. Every symbolic
- * object belongs to one universe, though a reference to the universe is not
- * necessarily stored in the object.
+ * {@link SymbolicObject}s. The symbolic objects created by this universe are
+ * said to belong to this universe. Every symbolic object belongs to one
+ * universe, though a reference to the universe is not necessarily stored in the
+ * object.
+ * </p>
  * 
- * {@link edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression}s are one kind of
- * symbolic object. Other symbolic objects include
- * {@link edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection}s (such as
- * sequences, sets, and maps),
- * {@link edu.udel.cis.vsl.sarl.IF.type.SymbolicType}s, and various concrete
- * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s.
- * 
- * {@link edu.udel.cis.vsl.sarl.IF.object.SymbolicObject}s implement the
- * Immutable Pattern: all symbolic objects are immutable, i.e., they cannot be
- * modified after they are created.
+ * <p>
+ * {@SymbolicExpression}s are one kind of symbolic object.
+ * Other symbolic objects include {@link SymbolicCollection}s (such as
+ * sequences, sets, and maps), {@link SymbolicType}s, and various concrete
+ * {@link SymbolicObject}s.
+ * </p>
+ * <p>
+ * {@link SymbolicObject}s implement the Immutable Pattern: all symbolic objects
+ * are immutable, i.e., they cannot be modified after they are created.
+ * </p>
  * 
  * @author siegel
  */
@@ -237,8 +241,8 @@ public interface SymbolicUniverse {
 	 * argument has Herbrand integer type will be treated as uninterpreted
 	 * functions: no simplifications or other transformations will be performed.
 	 * 
-	 * Note: to create a concrete number of herbrand integer type, create an
-	 * ideal concrete integer then cast it to the herbrand type.
+	 * Note: to create a concrete number of Herbrand integer type, create an
+	 * ideal concrete integer then cast it to the Herbrand type.
 	 * 
 	 * @return the Herbrand integer type
 	 */
@@ -356,8 +360,21 @@ public interface SymbolicUniverse {
 	SymbolicUnionType unionType(StringObject name,
 			Iterable<? extends SymbolicType> memberTypes);
 
+	/**
+	 * Under construction.
+	 * 
+	 * @param elementType
+	 * @return
+	 */
 	SymbolicSetType setType(SymbolicType elementType);
 
+	/**
+	 * Under construction.
+	 * 
+	 * @param keyType
+	 * @param valueType
+	 * @return
+	 */
 	SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType);
 
 	/**
@@ -396,19 +413,6 @@ public interface SymbolicUniverse {
 	 */
 	SymbolicExpression make(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments);
-
-	/**
-	 * Returns a Reasoner for the given context. A Reasoner provides
-	 * simplification and reasoning services. The context is the boolean
-	 * expression assumed to hold by the reasoner. The Reasoner can be used to
-	 * determine if a boolean predicate is valid; it may use an external theorem
-	 * prover to assist in this task.
-	 * 
-	 * @param context
-	 *            the boolean expression assumed to hold by the Reasoner
-	 * @return a Reasoner with the given context
-	 */
-	Reasoner reasoner(BooleanExpression context);
 
 	/**
 	 * The total number of calls made to methods
@@ -726,22 +730,6 @@ public interface SymbolicUniverse {
 	 * @return Number value or null
 	 */
 	Number extractNumber(NumericExpression expression);
-
-	/**
-	 * Attempts to extract a concrete numeric value from the given expression,
-	 * using the assumption if necessary to simplify the expression. For
-	 * example, if the assumption is "N=5" and the expression is "N", this
-	 * method will probably return the number 5. If it cannot obtain a concrete
-	 * value for whatever reason, it will return null.
-	 * 
-	 * @param assumption
-	 *            a boolean expression that is assumed to hold
-	 * @param expression
-	 *            a symbolic expression of numeric type
-	 * @return a concrete Number or null
-	 */
-	Number extractNumber(BooleanExpression assumption,
-			NumericExpression expression);
 
 	// Characters and string expressions:
 
@@ -1326,8 +1314,6 @@ public interface SymbolicUniverse {
 	 * @throws SARLException
 	 *             if index is negative or greater than or equal to the length
 	 *             of the given concrete array
-	 * 
-	 * 
 	 */
 	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index);
@@ -1459,6 +1445,7 @@ public interface SymbolicUniverse {
 			SymbolicExpression value);
 
 	// Sets...
+	// Under construction...
 
 	SymbolicExpression emptySet(SymbolicSetType setType);
 
@@ -1544,63 +1531,124 @@ public interface SymbolicUniverse {
 
 	// References
 
-	/** Returns the type of all reference expressions. */
+	/**
+	 * <p>
+	 * Returns the type of all reference expressions. A reference expression is
+	 * a kind of symbolic expression used to represent a reference to a
+	 * subexpression of other expressions. It may be thought of as a sequence of
+	 * directions for navigating to a particular node in a tree, starting from
+	 * the root. For example, a reference expression <i>r</i> might encode
+	 * "the 3rd element of the 2nd component". Given an expression <i>e</i> of
+	 * tuple type in which the 2nd component has array type, that <i>r</i>
+	 * specifies a particular element of a particular component of <i>e</i>.
+	 * </p>
+	 * 
+	 * <p>
+	 * A reference may also be thought of as a <i>function</i> which takes a
+	 * symbolic expression (of a compatible type) and returns a sub-expression
+	 * of that expression.
+	 * </p>
+	 * 
+	 * @return the type of all reference expressions
+	 */
 	SymbolicType referenceType();
 
 	/**
 	 * Returns the "null reference", a symbolic expression of reference type
 	 * which is not equal to a reference value returned by any of the other
 	 * methods, and which cannot be dereferenced.
+	 * 
+	 * @return the null reference
 	 */
 	ReferenceExpression nullReference();
 
 	/**
-	 * Given a reference and a value, returns the sub-expression of value
-	 * specified by the reference. Throws exception if the reference is not of
-	 * the correct form for the type of value.
+	 * Given a <code>reference</code> and a <code>value</code>, returns the
+	 * sub-expression of <code>value</code> specified by the reference. Throws
+	 * exception if the reference is not of the correct form for the type of
+	 * <code>value</code>.
+	 * 
+	 * @param value
+	 *            a non-<code>null</code> symbolic expression
+	 * @param reference
+	 *            a non-<code>null</code> reference into a sub-expression of
+	 *            <code>value</code>
+	 * @return the sub-expression of <code>value</code> specified by the
+	 *         reference
 	 */
 	SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference);
 
 	/**
-	 * Returns the type referenced by a reference into an object of the given
-	 * type. Example: if type is array-of-int and the reference is an array
-	 * element reference, this method returns int.
+	 * Returns the type referenced by a reference into an expression of the
+	 * given type. Example: if <code>type</code> is <i>array-of-integer</i> and
+	 * <code>reference</code> is an array element reference, this method returns
+	 * <i>integer</i>.
 	 * 
 	 * @param type
-	 *            a symbolic type
+	 *            a non-<code>null</code> symbolic type
 	 * @param reference
-	 *            a reference that is compatible with that type, i.e., can
-	 *            reference into a value of that type
+	 *            a reference that is compatible with <code>type</code>, i.e.,
+	 *            can reference into an expression of that type
 	 * @return the component of the given type which is referenced by the given
 	 *         reference
 	 */
 	SymbolicType referencedType(SymbolicType type, ReferenceExpression reference);
 
 	/**
-	 * Returns the identity (or "trivial") reference I. This is the reference
-	 * characterized by the property that dereference(I,v) returns v for any
-	 * symbolic expression v.
+	 * Returns the identity (or "trivial") reference <code>I</code>. This is the
+	 * reference characterized by the property that
+	 * <code>dereference(I,v)</code> returns <code>v</code> for any symbolic
+	 * expression <code>v</code>.
+	 * 
+	 * @return the identity reference
 	 */
 	ReferenceExpression identityReference();
 
 	/**
-	 * Given a reference to an array and an index (integer), returns a reference
-	 * to the element of the array at that index
+	 * Given a reference to an array and an <code>index</code> (integer),
+	 * returns a reference to the element of the array at that index. Think of
+	 * this as tacking on one more instruction to the sequence of directions
+	 * specified by a reference. For example, if <code>arrayReference</code>
+	 * encodes "2nd component of element 3" and <code>index</code> is
+	 * <code>X+Y</code>, the result returned specifies "element <code>X+Y</code>
+	 * of the 2nd component of element 3".
+	 * 
+	 * @param arrayReference
+	 *            a non-<code>null</code> reference for which the referenced
+	 *            sub-expression has array type
+	 * @param index
+	 *            a non-<code>null</code> expression of integer type
+	 * @return a reference to the <code>index</code>-th element of the
+	 *         referenced array
 	 */
 	ArrayElementReference arrayElementReference(
 			ReferenceExpression arrayReference, NumericExpression index);
 
 	/**
 	 * Given a reference to a tuple, and a field index, returns a reference to
-	 * that component of the tuple
+	 * that component of the tuple. Think of this as tacking on one more
+	 * instruction to the sequence of directions specified by a reference. For
+	 * example, if <code>tupleReference</code> encodes
+	 * "2nd component of element 3" and <code>fieldIndex</code> is 15, the
+	 * result returned specifies "the 15-th component of the 2nd component of
+	 * element 3".
+	 * 
+	 * @param tupleReference
+	 *            a non-<code>null</code> reference for which the referenced
+	 *            sub-expression has tuple type
+	 * @param fieldIndex
+	 *            a non-<code>null</code> concrete integer object specifying the
+	 *            component of the tuple (indexed from 0)
+	 * @return a reference to the <code>fieldIndex</code>-th element of the
+	 *         referenced tuple
 	 */
 	TupleComponentReference tupleComponentReference(
 			ReferenceExpression tupleReference, IntObject fieldIndex);
 
 	/**
 	 * Given a reference to a union (expression of union type) and an index of a
-	 * member type of that union, returns a reference to the underlying element
+	 * member type of that union, returns a reference to the underlying element.
 	 */
 	UnionMemberReference unionMemberReference(
 			ReferenceExpression unionReference, IntObject memberIndex);
@@ -1612,8 +1660,67 @@ public interface SymbolicUniverse {
 	 * Given a symbolic expression value, a reference to a point within that
 	 * value, and a subValue, returns the symbolic expression obtained by
 	 * replacing the referenced part of value with subValue.
+	 * 
+	 * @param value
+	 *            a non-<code>null</code> symbolic expression
+	 * @param reference
+	 *            a non-<code>null</code> reference to a subexpression of
+	 *            <code>value</code>
+	 * @param subValue
+	 *            a non-<code>null</code> expression with type compatible with
+	 *            that of the referenced sub-expression of <code>value</code>
+	 * @return the expression that results from taking <code>value</code> and
+	 *         replacing the referenced sub-expression with
+	 *         <code>subValue</code>
 	 */
 	SymbolicExpression assign(SymbolicExpression value,
 			ReferenceExpression reference, SymbolicExpression subValue);
+
+	/**
+	 * Returns the set of unbound symbolic constants occurring in an expression.
+	 * Each symbolic constant will occur at most once in the collection
+	 * returned.
+	 * 
+	 * @param expr
+	 *            a non-<code>null</code> symbolic expression
+	 * @return set of unbound symbolic constants occurring in <code>expr</code>
+	 */
+	Set<SymbolicConstant> getFreeSymbolicConstants(SymbolicExpression expr);
+
+	// BooleanExpression[] getConjunctiveClauses(BooleanExpression expr);
+
+	// ************************************************************************
+
+	// Methods in SymbolicUniverse not in PreUniverse
+	// these generally require use of theorem provers/simplifiers
+
+	/**
+	 * Returns a Reasoner for the given context. A Reasoner provides
+	 * simplification and reasoning services. The context is the boolean
+	 * expression assumed to hold by the reasoner. The Reasoner can be used to
+	 * determine if a boolean predicate is valid; it may use an external theorem
+	 * prover to assist in this task.
+	 * 
+	 * @param context
+	 *            the boolean expression assumed to hold by the Reasoner
+	 * @return a Reasoner with the given context
+	 */
+	Reasoner reasoner(BooleanExpression context);
+
+	/**
+	 * Attempts to extract a concrete numeric value from the given expression,
+	 * using the assumption if necessary to simplify the expression. For
+	 * example, if the assumption is "N=5" and the expression is "N", this
+	 * method will probably return the number 5. If it cannot obtain a concrete
+	 * value for whatever reason, it will return null.
+	 * 
+	 * @param assumption
+	 *            a boolean expression that is assumed to hold
+	 * @param expression
+	 *            a symbolic expression of numeric type
+	 * @return a concrete Number or null
+	 */
+	Number extractNumber(BooleanExpression assumption,
+			NumericExpression expression);
 
 }

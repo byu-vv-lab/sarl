@@ -37,9 +37,6 @@ import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
  * Examples: symbolic constant, array read, tuple read, function application,
  * when those have numeric type.
  * 
- * Note: might want NumericSymbolicConstant extends NumericPrimitive, as opposed
- * to other kinds of symbolic constants.
- * 
  * @author siegel
  * 
  */

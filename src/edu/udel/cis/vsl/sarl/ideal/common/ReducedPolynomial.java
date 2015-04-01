@@ -26,15 +26,19 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Monomial;
 import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
 
 /**
+ * <p>
  * A reduced polynomial is a polynomial satisfying: (1) if the type is real then
  * the leading coefficient of the polynomial is 1, (2) if the type is integer
  * then the leading coefficient is positive and the GCD of the absolute values
  * of the coefficients is 1, and (3) there is no known nontrivial factorization
  * of the polynomial.
+ * </p>
  * 
+ * <p>
  * A reduced polynomial is treated as a primitive, i.e., it may be used as a
  * "variable" in polynomial expressions. This is to express factorizations: a
  * factorization is a monomial in which the "variables" are reduced polynomials.
+ * </p>
  * 
  * @author siegel
  * 

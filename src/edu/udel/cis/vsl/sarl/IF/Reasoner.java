@@ -100,8 +100,6 @@ public interface Reasoner {
 	 */
 	Interval assumptionAsInterval(SymbolicConstant symbolicConstant);
 
-	UnaryOperator<SymbolicExpression> simplifier();
-
 	/**
 	 * <p>
 	 * Simplify the given expression under the context. The simplified

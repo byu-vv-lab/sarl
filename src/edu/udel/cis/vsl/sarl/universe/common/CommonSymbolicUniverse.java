@@ -18,9 +18,6 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.universe.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -45,16 +42,6 @@ public class CommonSymbolicUniverse extends CommonPreUniverse implements
 	 */
 	private ReasonerFactory reasonerFactory;
 
-	/**
-	 * A map from boolean valued symbolic expressions to simplifiers. The
-	 * simplifier corresponding to a key "assumption" will be the simplifier
-	 * formed from the assumption. The simplifier stores all kinds of data
-	 * obtained by analyzing the assumptions, caches all simplifications made
-	 * under that assumption, and so on. The assumption is typically the
-	 * "path condition" of symbolic execution.
-	 */
-	private Map<BooleanExpression, Reasoner> reasonerMap = new HashMap<BooleanExpression, Reasoner>();
-
 	// Constructor...
 
 	/**
@@ -72,15 +59,7 @@ public class CommonSymbolicUniverse extends CommonPreUniverse implements
 
 	@Override
 	public Reasoner reasoner(BooleanExpression context) {
-		Reasoner result = reasonerMap.get(context);
-
-		if (result == null) {
-			BooleanExpression canonicContext = (BooleanExpression) canonic(context);
-
-			result = reasonerFactory.newReasoner(canonicContext);
-			reasonerMap.put(canonicContext, result);
-		}
-		return result;
+		return reasonerFactory.getReasoner(context);
 	}
 
 	public void setReasonerFactory(ReasonerFactory reasonerFactory) {

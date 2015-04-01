@@ -58,11 +58,11 @@ public interface BooleanExpression extends SymbolicExpression {
 	 * Is this boolean expression valid, i.e., equivalent to true, i.e., a
 	 * tautology? The result is cached here for convenience using method
 	 * {@link #setValidity(ResultType)}. There are four possible values: (1)
-	 * null: nothing is known and nothing has been tried to figure it out, (2)
-	 * YES: it is definitely valid, (3) NO: it is definitely not valid, and (4)
-	 * MAYBE: unknown. The difference between null and MAYBE is that with MAYBE
-	 * you know we already tried to figure out if it is valid and couldn't,
-	 * hence, there is no need to try again.
+	 * <code>null</code>: nothing is known and nothing has been tried to figure
+	 * it out, (2) YES: it is definitely valid, (3) NO: it is definitely not
+	 * valid, and (4) MAYBE: unknown. The difference between <code>null</code>
+	 * and MAYBE is that with MAYBE you know we already tried to figure out if
+	 * it is valid and couldn't, hence, there is no need to try again.
 	 * 
 	 * @see #setValidity(ResultType)
 	 * @return the cached validity result

@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.ideal.IF;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -28,8 +29,72 @@ import edu.udel.cis.vsl.sarl.expr.IF.NumericExpressionFactory;
 import edu.udel.cis.vsl.sarl.ideal.common.One;
 
 /**
+ * <p>
  * An {@link IdealFactory} provides a few services beyond those guaranteed by an
  * arbitrary {@link NumericExpressionFactory}.
+ * </p>
+ * 
+ * The ideal factory produces and manipulates the following kinds of numeric
+ * expressions:
+ * 
+ * <p>
+ * A {@link Constant} represents a concrete value. Each constant has either
+ * integer or real type.
+ * </p>
+ * 
+ * <p>
+ * A {@link Primitive} expression is one which is not concrete and cannot be
+ * expressed as a sum or product or quotient of other expressions. Examples:
+ * symbolic constants, array read expressions of integer or real type, tuple
+ * read expressions of integer or real types, function applications for
+ * functions returning integer or real.
+ * </p>
+ * 
+ * <p>
+ * Any value which is the result of raising a primitive expression to a concrete
+ * positive integer power is an instance of {@link PrimitivePower}. Any
+ * {@link Primitive} is also a {@link PrimitivePower} by taking the exponent to
+ * be 1.
+ * </p>
+ * 
+ * <p>
+ * A {@link Monic} is the product of {@link PrimitivePower}s. Any
+ * {@link PrimitivePower} is also a {@link Monic}: it is the product of a single
+ * primitive-power. The {@link Constant} 1 (integer or real) is also a
+ * {@link Monic}: it is the empty product. The integer and real 1s are the only
+ * constants which are also {@link Monic}s.
+ * </p>
+ * 
+ * <p>
+ * A {@link Monomial} is the product of a {@link Constant} and a {@link Monic}.
+ * Any {@link Constant} is also a {@link Monomial} by taking 1 for the monic.
+ * Any {@link Monic} is also a {@link Monomial} by taking 1 for the constant.
+ * </p>
+ * 
+ * <p>
+ * A {@link Polynomial} is the sum of {@link Monomial}s. Any {@link Monomial} is
+ * a {@link Polynomial} (a sum with one term).
+ * </p>
+ * 
+ * <p>
+ * A {@link RationalExpression} is the quotient of two {@link Polynomial}s. Any
+ * {@link Polynomial} is also a {@link RationalExpression} by taking the
+ * denominator to be the (polynomial) 1. Any {@link RationalExpression} of
+ * integer type is also a {@link Polynomial}. (The result of integer division of
+ * two integer polynomials may be a {@link Primitive} expression with operator
+ * {@link SymbolicOperator#INT_DIVIDE}.)
+ * </p>
+ * 
+ * A relational numeric expression will always be in one of the following forms:
+ * 
+ * <ul>
+ * <li><code>0&lt;p</code></li>
+ * <li><code>0&le;p</code></li>
+ * <li><code>0=p</code></li>
+ * <li><code>0&ne;p</code></li>
+ * </ul>
+ * 
+ * where <code>p</code> is a {@link Polynomial}.
  * 
  * @author siegel
  * 

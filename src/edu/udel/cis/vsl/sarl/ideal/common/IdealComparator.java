@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.ideal.IF.Constant;
@@ -33,27 +34,40 @@ import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
 import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
 
 /**
+ * <p>
  * Comparator for ideal numeric expressions. This comparator is very heavily
  * used in most numeric operations (e.g., adding and multiplying polynomials) so
  * performance is critical.
+ * </p>
  * 
+ * <p>
  * The order is defined as follows. First come all expressions of integer type,
  * then all of real type. Within a type, first all the NTRationalExpression,
  * then everything else. "Everything else" are instances of Polynomial.
  * Polynomials are sorted first by degree: larger degree comes first (since
  * that's the way you typically write them). Given two polynomials of the same
  * degree:
+ * </p>
  * 
+ * <ul>
+ * 
+ * <li>
  * if the two polynomials are monomials of the same degree, compare monics, then
- * constants
+ * constants</li>
  * 
+ * <li>
  * to compare two monics of the same degree: use dictionary order on the
- * primitive powers
+ * primitive powers</li>
  * 
- * to compare two primitive power of same degree: compare the bases
+ * <li>
+ * to compare two primitive powers of same degree: compare the bases</li>
  * 
+ * <li>
  * If the two polynomials of the same degree are not monomials, then compare
  * their leading terms. If those are equal, move to the next pair of terms. Etc.
+ * </li>
+ * 
+ * </ul>
  * 
  * TODO: all of these expressions should be assigned order numbers for fast
  * comparisons.
@@ -63,85 +77,95 @@ import edu.udel.cis.vsl.sarl.ideal.IF.RationalExpression;
  */
 public class IdealComparator implements Comparator<NumericExpression> {
 
+	/**
+	 * The comparator to use for all {@link SymbolicObject}s other than
+	 * {@link IdealExpression}s.
+	 */
 	private Comparator<SymbolicObject> objectComparator;
 
+	/**
+	 * The comparator to use for comparing two {@link SymbolicType}s.
+	 */
 	private Comparator<SymbolicType> typeComparator;
 
+	/**
+	 * The ideal factory associated with this ideal comparator. There is a 1-1
+	 * correspondence between ideal factories and ideal comparators.
+	 */
 	private CommonIdealFactory idealFactory;
 
+	/**
+	 * Constructs a new {@link IdealComparator} associated with the given ideal
+	 * factory.
+	 * 
+	 * @param idealFactory
+	 *            the ideal factory associated with the new comparator
+	 */
 	public IdealComparator(CommonIdealFactory idealFactory) {
 		this.idealFactory = idealFactory;
 		this.objectComparator = idealFactory.objectFactory().comparator();
 		this.typeComparator = idealFactory.typeFactory().typeComparator();
 	}
 
+	/**
+	 * Should debugging output be printed?
+	 */
 	private static boolean debug = false;
 
 	/**
-	 * Compares two NumericExpressions that are of the same type.
-	 * 
-	 * Note: Currently, these expression should be of similar type. An
-	 * optimization task here is to improve this method in such a way that it
-	 * can compare two numeric expressions of different type.
-	 * 
-	 * @param o1
-	 *            - NumericExpression
-	 * @param o2
-	 *            - NumericExpression of the same type
-	 */
-	@Override
-	public int compare(NumericExpression o1, NumericExpression o2) {
-		if (debug) {
-			int result;
-
-			System.out.print("Comparing " + o1 + " and " + o2 + ": ");
-			result = compareWork(o1, o2);
-			System.out.println(result);
-			System.out.flush();
-			return result;
-		} else
-			return compareWork(o1, o2);
-	}
-
-	/**
 	 * <p>
-	 * Compares IdealExpressions, placing a total order on the set of all
-	 * IdealExpressions.
+	 * Compares two {IdealExpression}s.
 	 * </p>
 	 * 
-	 * 
+	 * <p>
+	 * Implementation notes:
+	 * </p>
 	 * 
 	 * <p>
-	 * First compare types. Within a type, first all the NTRationalExpression,
-	 * then everything else. "Everything else" are instances of Polynomial.
-	 * Polynomials are sorted first by degree: larger degree comes first (since
-	 * that's the way you typically write them). Given two polynomials of the
-	 * same degree:
+	 * First compare types. Within a type, first all the
+	 * {@link NTRationalExpression}, then everything else. "Everything else" are
+	 * instances of {@link Polynomial}. {@link Polynomial}s are sorted first by
+	 * degree: larger degree comes first (since that's the way you typically
+	 * write them). Given two {@link Polynomial}s of the same degree:
+	 * 
 	 * <ul>
 	 * 
-	 * <li>if the two polynomials are monomials of the same degree, compare
-	 * monics, then constants</li>
+	 * <li>if the two {@link Polynomial}s are {@link Monomial}s of the same
+	 * degree, compare {@link Monic}s, then {@link Constant}s</li>
 	 * 
-	 * <li>to compare two monics of the same degree: use dictionary order on the
-	 * primitive powers</li>
+	 * <li>to compare two {@link Monic}s of the same degree: use dictionary
+	 * order on the {@link PrimitivePower}s</li>
 	 * 
-	 * <li>to compare two primitive power of same degree: compare the bases</li>
+	 * <li>to compare two {@link PrimitivePower}s of same degree: compare the
+	 * {@link Primitive} bases</li>
+	 * 
 	 * </ul>
 	 * </p>
 	 * 
 	 * <p>
-	 * Expression of two different types might be compared as follows: if a is
-	 * int and b is real, the expression "a>0 && b>0" might be represented by a
-	 * sorted list containing the two entries a>0 and b>0. Hence these two
-	 * entries will be compared. To compare a>0 and b>0, the comparison first
-	 * compares the operators, they are equal (both are >). Then it compares the
-	 * arguments, so it will compare a and b. At this point it is comparing two
-	 * expressions of different types. As an optimization, consider making a
-	 * version of the comparator that assumes the two expressions have the same
-	 * type.
+	 * Here is an example of why it is necessary to be able to compare
+	 * expressions of two different types. If a has integer type and b has real
+	 * type, the expression <code>a&gt;0 && b&gt;0</code> might be represented
+	 * by a sorted list containing the two entries <code>a&gt;0</code> and
+	 * <code>b&gt;0</code>. Hence these two entries will be compared. To compare
+	 * <code>a&gt;0</code> and <code>b&gt;0</code>, the comparison first
+	 * compares the operators, they are equal (both are <code>&gt</code>). Then
+	 * it compares the arguments, so it will compare <code>a</code> and
+	 * <code>b</code>. At this point it is comparing two expressions of
+	 * different types. As an optimization, consider making a version of the
+	 * comparator that assumes the two expressions have the same type.
 	 * </p>
+	 * 
+	 * @param o1
+	 *            a non-<code>null</code> {@link IdealExpression}
+	 * 
+	 * @param o2
+	 *            a non-<code>null</code> {@link IdealExpression}
+	 * @return a negative integer if <code>o1</code> occurs before
+	 *         <code>o2</code> in the total order; 0 if <code>o1</code> equals
+	 *         <code>o2</code>; otherwise a positive integer
 	 */
-	public int compareWork(NumericExpression o1, NumericExpression o2) {
+	private int compareWork(NumericExpression o1, NumericExpression o2) {
 		IdealExpression e1 = (IdealExpression) o1;
 		IdealExpression e2 = (IdealExpression) o2;
 		SymbolicType t1 = e1.type();
@@ -162,6 +186,18 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		}
 	}
 
+	/**
+	 * Compares two {@link Polynomial}s of the same type.
+	 * 
+	 * @param p1
+	 *            a non-<code>null</code> {@link Polynomial}
+	 * @param p2
+	 *            a non-<code>null</code> {@link Polynomial} of the same type as
+	 *            <code>p1</code>
+	 * @return a negative integer if <code>p1</code> occurs before
+	 *         <code>p2</code> in the total order; 0 if they are equal;
+	 *         otherwise a positive integer
+	 */
 	private int comparePolynomials(Polynomial p1, Polynomial p2) {
 		int result = p2.degree() - p1.degree();
 
@@ -191,6 +227,18 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		return 0;
 	}
 
+	/**
+	 * Compares two {@link Monomial}s of the same type.
+	 * 
+	 * @param m1
+	 *            a non-<code>null</code> {@link Monomial}
+	 * @param m2
+	 *            a non-<code>null</code> {@link Monomial} of the same type as
+	 *            <code>m1</code>
+	 * @return a negative integer if <code>m1</code> occurs before
+	 *         <code>m2</code> in the total order; 0 if they are equal;
+	 *         otherwise a positive integer
+	 */
 	private int compareMonomials(Monomial m1, Monomial m2) {
 		int result = m2.degree() - m1.degree();
 
@@ -204,12 +252,13 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
-	 * Compares two monics of the same type.
+	 * Compares two {@link Monic}s of the same type.
 	 * 
 	 * @param m1
-	 *            a monic
+	 *            a non-<code>null</code> {@link Monic}
 	 * @param m2
-	 *            a monic of the same type as <code>m1</code>
+	 *            a non-<code>null</code> {@link Monic} of the same type as
+	 *            <code>m1</code>
 	 * @return a negative integer if m1 precedes m2, 0 if they are equal, else a
 	 *         positive integer
 	 */
@@ -240,16 +289,17 @@ public class IdealComparator implements Comparator<NumericExpression> {
 	}
 
 	/**
-	 * Compares two numeric primitives of the same type.
+	 * Compares two {@link Primitive}s of the same type.
 	 * 
 	 * @param p1
-	 *            a numeric primitive
+	 *            a non-<code>null</code> {@link Primitive}
 	 * @param p2
-	 *            a numeric primitive of same type
+	 *            a non-<code>null</code> {@link Primitive} of the same type as
+	 *            <code>p1</code>
 	 * @return a negative integer if p1 precedes p2, 0 if they are equals, else
 	 *         a positive integer
 	 */
-	public int comparePrimitives(Primitive p1, Primitive p2) {
+	private int comparePrimitives(Primitive p1, Primitive p2) {
 		int result = p1.operator().compareTo(p2.operator());
 
 		if (result != 0)
@@ -270,10 +320,34 @@ public class IdealComparator implements Comparator<NumericExpression> {
 		}
 	}
 
+	/**
+	 * Compares two {@link Constant}s. Uses the comparator in the underlying
+	 * {@link NumberFactory}.
+	 * 
+	 * @param c1
+	 *            a non-<code>null</code> {@link Constant}
+	 * @param c2
+	 *            a non-<code>null</code> {@link Constant}
+	 * @return a negative integer if <code>c1</code> precedes <code>c2</code> in
+	 *         the total order; 0 if they are equal; otherwise a positive
+	 *         integer.
+	 */
 	private int compareConstants(Constant c1, Constant c2) {
 		return idealFactory.numberFactory().compare(c1.number(), c2.number());
 	}
 
+	/**
+	 * Compares two {@link RationalExpression}s of the same type.
+	 * 
+	 * @param e1
+	 *            a non-<code>null</code> {@link RationalExpression}
+	 * @param e2
+	 *            a non-<code>null</code> {@link RationalExpression} of same
+	 *            type as <code>e1</code>
+	 * @return a negative integer if <code>e1</code> precedes <code>e2</code> in
+	 *         the total order; 0 if they are equal; otherwise a positive
+	 *         integer.
+	 */
 	private int compareRationals(RationalExpression e1, RationalExpression e2) {
 		int result = comparePolynomials(e1.numerator(idealFactory),
 				e2.numerator(idealFactory));
@@ -284,8 +358,30 @@ public class IdealComparator implements Comparator<NumericExpression> {
 				e2.denominator(idealFactory));
 	}
 
-	public Comparator<SymbolicObject> objectComparator() {
-		return objectComparator;
+	/**
+	 * Compares two {IdealExpression}s, printing debugging output if the
+	 * {@link #debug} flag is <code>true</code>
+	 * 
+	 * @param o1
+	 *            a non-<code>null</code> {@link IdealExpression}
+	 * @param o2
+	 *            a non-<code>null</code> {@link IdealExpression}
+	 * @return a negative integer if <code>o1</code> occurs before
+	 *         <code>o2</code> in the total order; 0 if <code>o1</code> equals
+	 *         <code>o2</code>; otherwise a positive integer
+	 */
+	@Override
+	public int compare(NumericExpression o1, NumericExpression o2) {
+		if (debug) {
+			int result;
+
+			System.out.print("Comparing " + o1 + " and " + o2 + ": ");
+			result = compareWork(o1, o2);
+			System.out.println(result);
+			System.out.flush();
+			return result;
+		} else
+			return compareWork(o1, o2);
 	}
 
 }

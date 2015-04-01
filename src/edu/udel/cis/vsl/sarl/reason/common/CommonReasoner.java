@@ -26,7 +26,6 @@ import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -56,7 +55,7 @@ public class CommonReasoner implements Reasoner {
 
 	private TheoremProverFactory factory;
 
-	private HashMap<BooleanExpression, ValidityResult> validityCache = new HashMap<BooleanExpression, ValidityResult>();
+	private Map<BooleanExpression, ValidityResult> validityCache = new HashMap<>();
 
 	public CommonReasoner(Simplifier simplifier, TheoremProverFactory factory) {
 		this.simplifier = simplifier;
@@ -206,14 +205,14 @@ public class CommonReasoner implements Reasoner {
 		return universe().extractNumber(simple);
 	}
 
-	@Override
-	public UnaryOperator<SymbolicExpression> simplifier() {
-		return new UnaryOperator<SymbolicExpression>() {
-			@Override
-			public SymbolicExpression apply(SymbolicExpression x) {
-				return simplify(x);
-			}
-		};
-	}
+	// @Override
+	// public UnaryOperator<SymbolicExpression> simplifier() {
+	// return new UnaryOperator<SymbolicExpression>() {
+	// @Override
+	// public SymbolicExpression apply(SymbolicExpression x) {
+	// return simplify(x);
+	// }
+	// };
+	// }
 
 }

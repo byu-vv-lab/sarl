@@ -68,6 +68,17 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	// Helpers...
 
+	/**
+	 * Returns a symbolic hash set with one or two elements. If <code>x</code>
+	 * and <code>y</code> are equal, this will return the singleton set
+	 * containing the element; otherwise the set with exactly two elements.
+	 * 
+	 * @param x
+	 *            one of the two elements, non-<code>null</code>
+	 * @param y
+	 *            the other element, non-<code>null</code>
+	 * @return the set with members x and y
+	 */
 	private SymbolicSet<SymbolicExpression> hashSet(SymbolicExpression x,
 			SymbolicExpression y) {
 		return collectionFactory.singletonHashSet(x).add(y);

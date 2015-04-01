@@ -118,8 +118,8 @@ public class ExpressionSubstituter implements UnaryOperator<SymbolicExpression> 
 	}
 
 	/**
-	 * Returns a SymbolicSequence consisting obtained by substituting values in
-	 * a given SymbolicSequence.
+	 * Returns a SymbolicSequence obtained by substituting values in a given
+	 * SymbolicSequence.
 	 * 
 	 * @param sequence
 	 *            a SymbolicSequence
@@ -158,7 +158,7 @@ public class ExpressionSubstituter implements UnaryOperator<SymbolicExpression> 
 	}
 
 	/**
-	 * Performs subsitution on a SymbolicCollection. The kind of collection
+	 * Performs substitution on a SymbolicCollection. The kind of collection
 	 * returned is not necessarily the same as the given one. Only sequences
 	 * need to be preserved because other collections are all processed through
 	 * method make anyway.
@@ -190,8 +190,7 @@ public class ExpressionSubstituter implements UnaryOperator<SymbolicExpression> 
 		case BOOLEAN:
 		case INTEGER:
 		case REAL:
-		case CHAR: // add char here, because printf in MPI programs will make
-					// char part of bundle type.
+		case CHAR:
 			return type;
 		case ARRAY: {
 			SymbolicArrayType arrayType = (SymbolicArrayType) type;
@@ -389,7 +388,7 @@ public class ExpressionSubstituter implements UnaryOperator<SymbolicExpression> 
 					new ArrayDeque<SymbolicConstant>());
 			cache.put(expression, result);
 		} else {
-			// TODO: performance debugging experiments:
+			// performance debugging experiments:
 			// System.out.println("* Substitution cache hit! *");
 			// if (!expression.isCanonic())
 			// System.out.println("$$$$$$$$$$$$ NOT CANONIC $$$$$$$$$$$$$$$");

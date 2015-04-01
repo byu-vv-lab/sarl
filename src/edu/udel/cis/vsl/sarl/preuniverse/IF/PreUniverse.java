@@ -5,7 +5,10 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Set;
 
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.ArrayElementReference;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -39,7 +42,25 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 
+/**
+ * A {@link PreUniverse} provides most of the services of a
+ * {@link SymbolicUniverse}, but not those that require reasoning, specifically
+ * theorem proving and simplification.
+ * 
+ * The functionality of a symbolic universe is partitioned in this way to
+ * provide a hierarchical design to SARL. The simplification/proving modules
+ * require the basic symbolic algebra services provided by a {@link PreUniverse}
+ * . A full {@link SymbolicUniverse} requires the simplification and proving
+ * modules. A hierarchy in the USES relation is achieved
+ * 
+ * @author siegel
+ *
+ */
 public interface PreUniverse {
+
+	// ************************************************************************
+	// * Methods SHARED with SymbolicUniverse
+	// ************************************************************************
 
 	// General...
 
@@ -178,6 +199,13 @@ public interface PreUniverse {
 	BooleanExpression compatible(SymbolicType type0, SymbolicType type1);
 
 	/**
+	 * Returns the "pure" version of the type, i.e., the type obtained by making
+	 * every array type incomplete. This is applied recusively down all
+	 * components of the type tree.
+	 */
+	SymbolicType pureType(SymbolicType type);
+
+	/**
 	 * The boolean type.
 	 * 
 	 * @return the boolean type
@@ -196,8 +224,8 @@ public interface PreUniverse {
 	 * argument has Herbrand integer type will be treated as uninterpreted
 	 * functions: no simplifications or other transformations will be performed.
 	 * 
-	 * Note: to create a concrete number of herbrand integer type, create an
-	 * ideal concrete integer then cast it to the herbrand type.
+	 * Note: to create a concrete number of Herbrand integer type, create an
+	 * ideal concrete integer then cast it to the Herbrand type.
 	 * 
 	 * @return the Herbrand integer type
 	 */
@@ -249,6 +277,11 @@ public interface PreUniverse {
 
 	// TODO: floating point types
 
+	/**
+	 * Returns the character type.
+	 * 
+	 * @return the character type
+	 */
 	SymbolicType characterType();
 
 	/**
@@ -310,8 +343,21 @@ public interface PreUniverse {
 	SymbolicUnionType unionType(StringObject name,
 			Iterable<? extends SymbolicType> memberTypes);
 
+	/**
+	 * Under construction.
+	 * 
+	 * @param elementType
+	 * @return
+	 */
 	SymbolicSetType setType(SymbolicType elementType);
 
+	/**
+	 * Under construction.
+	 * 
+	 * @param keyType
+	 * @param valueType
+	 * @return
+	 */
 	SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType);
 
 	/**
@@ -326,6 +372,8 @@ public interface PreUniverse {
 	 * @return the type of an entry in the map
 	 */
 	SymbolicTupleType entryType(SymbolicMapType mapType);
+
+	// Other...
 
 	UnaryOperator<SymbolicExpression> substituter(
 			Map<SymbolicExpression, SymbolicExpression> map);
@@ -350,7 +398,9 @@ public interface PreUniverse {
 			SymbolicObject[] arguments);
 
 	/**
-	 * The total number of valid calls made.
+	 * The total number of calls made to methods
+	 * {@link Reasoner#valid(BooleanExpression)} and
+	 * {@link Reasoner#validOrModel(BooleanExpression)}.
 	 * 
 	 * @return the total number of validity calls
 	 */
@@ -403,16 +453,6 @@ public interface PreUniverse {
 	 * @return the NumberObject wrapping that Number
 	 */
 	NumberObject numberObject(Number value);
-
-	/**
-	 * Returns the charObject wrapping the given char value. These are SARL
-	 * char, not Java char.
-	 * 
-	 * @param value
-	 *            a SARL char
-	 * @return the CharObject wrapping that char
-	 */
-	CharObject charObject(char value);
 
 	/**
 	 * Returns the StringObject wrapping the given String value. A StringObject
@@ -558,46 +598,39 @@ public interface PreUniverse {
 	NumericExpression oneReal();
 
 	/**
-	 * Creates a concrete expression from the given integer.
 	 * 
 	 * @param value
-	 *            a Java integer type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         integer
+	 *            an Java int
+	 * @return a concrete rational representation of this integer value.
+	 *         basically returns (value/1), which is a rational
 	 */
-
 	NumericExpression rational(int value);
 
 	/**
-	 * Creates a concrete expression from the given long.
 	 * 
 	 * @param value
-	 *            a Java long type
-	 * @return a concrete symbolic expression of real type representing the long
+	 *            a Java long
+	 * @return a concrete rational representation of this long value. basically
+	 *         returns (value/1), which is a rational
 	 */
-
 	NumericExpression rational(long value);
 
 	/**
-	 * Creates a concrete expression from the given BigInteger.
 	 * 
 	 * @param value
-	 *            a Java.Math BigInteger type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         BigInteger
+	 *            a Java BigInteger
+	 * @return a concrete rational representation of this BigInteger value.
+	 *         basically returns (value/1), which is a rational
 	 */
-
 	NumericExpression rational(BigInteger value);
 
 	/**
-	 * Creates a concrete expression from the given float.
 	 * 
 	 * @param value
-	 *            a Java float type
-	 * @return a concrete symbolic expression of real type representing the
-	 *         float
+	 *            a Java float
+	 * @return a concrete rational representation of this float value. basically
+	 *         returns (value/1), which is a rational
 	 */
-
 	NumericExpression rational(float value);
 
 	/**
@@ -614,8 +647,8 @@ public interface PreUniverse {
 	NumericExpression rational(double value);
 
 	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by
-	 * performing real division.
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
 	 * 
 	 * @param numerator
 	 *            a Java int
@@ -627,8 +660,8 @@ public interface PreUniverse {
 	NumericExpression rational(int numerator, int denominator);
 
 	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by
-	 * performing real division.
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
 	 * 
 	 * @param numerator
 	 *            a Java long
@@ -637,21 +670,19 @@ public interface PreUniverse {
 	 * @return the real number formed by dividing numerator by denominator, as a
 	 *         symbolic expression
 	 */
-
 	NumericExpression rational(long numerator, long denominator);
 
 	/**
-	 * Returns the symbolic concrete real number (numerator/denominator) by
-	 * performing real division.
+	 * Returns the symbolic concrete real number numerator/denominator (real
+	 * division).
 	 * 
 	 * @param numerator
-	 *            a Java.Math.BigInteger
+	 *            a Java BigInteger
 	 * @param denominator
-	 *            a Java.Math.BigInteger
+	 *            a Java BigInteger
 	 * @return the real number formed by dividing numerator by denominator, as a
 	 *         symbolic expression
 	 */
-
 	NumericExpression rational(BigInteger numerator, BigInteger denominator);
 
 	// General Numbers...
@@ -683,37 +714,51 @@ public interface PreUniverse {
 	 */
 	Number extractNumber(NumericExpression expression);
 
-	// Character and string...
+	// Characters and string expressions:
+
 	/**
+	 * Returns a concrete symbolic expression of character type which wraps the
+	 * given Java char.
 	 * 
-	 * @param char
-	 * 
-	 * @return SymbolicExpression char by given char type theChar
+	 * @param theChar
+	 *            the Java char
+	 * @return symbolic expression wrapping theChar
 	 */
 	SymbolicExpression character(char theChar);
 
 	/**
+	 * If the given expression is a concrete character expression, this returns
+	 * the character value, else it returns null.
 	 * 
-	 * @param String
+	 * @param expression
+	 *            a symbolic expression
+	 * @return the character is wraps or null
+	 */
+	Character extractCharacter(SymbolicExpression expression);
+
+	/**
+	 * Returns a symbolic expression of type array of char which is a literal
+	 * array consisting of the sequence of characters in the given string.
 	 * 
-	 * @return SymbolicExpression String by given String type theString
+	 * @param theString
+	 *            a Java string
+	 * @return the string represented as a symbolic expression of type
+	 *         array-of-char
 	 */
 	SymbolicExpression stringExpression(String theString);
-
-	Character extractCharacter(SymbolicExpression expression);
 
 	// Numeric operations...
 
 	/**
 	 * Returns a symbolic expression which is the result of adding the two given
-	 * symbolic exprssions. The two given expressions must have the same
+	 * symbolic expressions. The two given expressions must have the same
 	 * (numeric) type: either both integers, or both real.
 	 * 
 	 * @param arg0
 	 *            a symbolic expression of a numeric type
 	 * @param arg1
 	 *            a symbolic expression of the same numeric type
-	 * @return expression representing the sum
+	 * @return arg0+arg1
 	 */
 	NumericExpression add(NumericExpression arg0, NumericExpression arg1);
 
@@ -743,7 +788,7 @@ public interface PreUniverse {
 
 	/**
 	 * Returns a symbolic expression which is the result of multiplying the two
-	 * given symbolic exprssions. The two given expressions must have the same
+	 * given symbolic expressions. The two given expressions must have the same
 	 * (numeric) type: either both integers, or both real.
 	 * 
 	 * @param arg0
@@ -788,20 +833,18 @@ public interface PreUniverse {
 	 *            a symbolic expression of integer type
 	 * @param arg1
 	 *            a symbolic expression of integer type
-	 * @return an expression representing arg0 % arg1
+	 * @return arg0 % arg1
 	 */
 	NumericExpression modulo(NumericExpression arg0, NumericExpression arg1);
 
 	/**
-	 * Returns a symbolic expression which is the result of subtracting the
-	 * given two numerical expressions. The given expression must be non-null
-	 * and have either integer or real type.
+	 * Returns a symbolic expression which is the negative of the given
+	 * numerical expression. The given expression must be non-null and have
+	 * either integer or real type.
 	 * 
-	 * @param arg0
+	 * @param arg
 	 *            a symbolic expression of integer or real type
-	 * @param arg1
-	 *            a symbolic expression of integer or real type
-	 * @return an expression representing ar0 - arg1
+	 * @return -arg
 	 */
 	NumericExpression minus(NumericExpression arg);
 
@@ -811,37 +854,31 @@ public interface PreUniverse {
 	 * necessarily return an expression with operator POWER.
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            the base expression in the power expression
 	 * @param exponent
-	 *            a non-negative concrete IntObject exponent
-	 * @return the expression after applying power operation
+	 *            a non-negative concrete integer exponent
 	 */
 	NumericExpression power(NumericExpression base, IntObject exponent);
 
 	/**
-	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
-	 * This method might actually multiply out the expression, i.e., it does not
-	 * necessarily return an expression with operator POWER.
+	 * Shorthand for power(base, intObject(exponent)).
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            he base expression in the power expression
+	 * 
 	 * @param exponent
 	 *            a non-negative concrete integer exponent
-	 * @return the expression after applying power operation
-	 * 
+	 * @return power(base, intObject(exponent))
 	 */
 	NumericExpression power(NumericExpression base, int exponent);
 
 	/**
-	 * Concrete power operator: e^b, where b is a concrete non-negative integer.
-	 * This method might actually multiply out the expression, i.e., it does not
-	 * necessarily return an expression with operator POWER.
+	 * General power operator: e^b. Both e and b are numeric expressions.
 	 * 
 	 * @param base
-	 *            the base expression
+	 *            the base expression in the power expression
 	 * @param exponent
-	 *            the exponent expression
-	 * @return the expression after applying power operation
+	 *            the exponent in the power expression
 	 */
 	NumericExpression power(NumericExpression base, NumericExpression exponent);
 
@@ -872,23 +909,9 @@ public interface PreUniverse {
 	BooleanExpression falseExpression();
 
 	/**
-	 * The symbolic expression wrapping the given boolean object (true or
-	 * false).
-	 */
-	BooleanExpression bool(BooleanObject object);
-
-	/**
-	 * Short cut for symbolic(booleanObject(value)).
-	 * 
-	 * @param value
-	 * @return symbolic expression wrapping boolean value
-	 */
-	BooleanExpression bool(boolean value);
-
-	/**
-	 * Allows CnfFactory to simplify expensive (p || !p) expressions as the they
-	 * are created. Default is false. Setting to true will decrease performance
-	 * in certain CnfFactory methods.
+	 * Allows CnfFactory to simplify expensive (p || !p) expressions as they are
+	 * created. Default is false. Setting to true will decrease performance in
+	 * certain CnfFactory methods.
 	 * 
 	 * @param boolean value: false = default
 	 * 
@@ -903,6 +926,20 @@ public interface PreUniverse {
 	 * @return boolean value: false = default
 	 */
 	boolean getBooleanExpressionSimplification();
+
+	/**
+	 * The symbolic expression wrapping the given boolean object (true or
+	 * false).
+	 */
+	BooleanExpression bool(BooleanObject object);
+
+	/**
+	 * Short cut for symbolic(booleanObject(value)).
+	 * 
+	 * @param value
+	 * @return symbolic expression wrapping boolean value
+	 */
+	BooleanExpression bool(boolean value);
 
 	/**
 	 * Returns a symbolic expression representing the conjunction of the two
@@ -1040,18 +1077,6 @@ public interface PreUniverse {
 	BooleanExpression neq(SymbolicExpression arg0, SymbolicExpression arg1);
 
 	/**
-	 * Does the integer a divide the integer b evenly? I.e, does there exist an
-	 * integer n such that b=a*n?
-	 * 
-	 * @param a
-	 *            a symbolic expression of integer type
-	 * @param b
-	 *            a symbolic expression of integer type
-	 * @return a symbolic expression of boolean type holding iff a divides b
-	 */
-	BooleanExpression divides(NumericExpression a, NumericExpression b);
-
-	/**
 	 * Returns the universally quantified expression forall(x).e.
 	 * 
 	 * @param boundVariable
@@ -1084,7 +1109,7 @@ public interface PreUniverse {
 			BooleanExpression predicate);
 
 	/**
-	 * Returns the existenially quantified expression exists(x).e.
+	 * Returns the existentially quantified expression exists(x).e.
 	 * 
 	 * @param boundVariable
 	 *            the bound variable x
@@ -1114,6 +1139,18 @@ public interface PreUniverse {
 	BooleanExpression existsInt(NumericSymbolicConstant index,
 			NumericExpression low, NumericExpression high,
 			BooleanExpression predicate);
+
+	/**
+	 * Does the integer a divide the integer b evenly? I.e, does there exist an
+	 * integer n such that b=a*n?
+	 * 
+	 * @param a
+	 *            a symbolic expression of integer type
+	 * @param b
+	 *            a symbolic expression of integer type
+	 * @return a symbolic expression of boolean type holding iff a divides b
+	 */
+	BooleanExpression divides(NumericExpression a, NumericExpression b);
 
 	// Functions...
 
@@ -1206,8 +1243,33 @@ public interface PreUniverse {
 			Iterable<? extends SymbolicExpression> elements);
 
 	/**
+	 * Returns array of length 0.
+	 * 
+	 * @param elementType
+	 *            the type of the non-existent elements of this array
+	 * @return array of length 0 of given type
+	 */
+	SymbolicExpression emptyArray(SymbolicType elementType);
+
+	/**
+	 * Returns an array in which every element has the same value.
+	 * 
+	 * @param elementType
+	 *            the element type of the array
+	 * @param length
+	 *            the length of the array
+	 * @param value
+	 *            the value of each element
+	 * @return an array of specified length in which every element is value
+	 */
+	SymbolicExpression constantArray(SymbolicType elementType,
+			NumericExpression length, SymbolicExpression value);
+
+	/**
 	 * Appends an element to the end of a concrete symbolic array. Returns a new
 	 * array expression which is same as old with new element appended to end.
+	 * 
+	 * TODO: extend to arbitrary arrays, not just symbolic
 	 * 
 	 * @param concreteArray
 	 *            a concrete array
@@ -1220,36 +1282,41 @@ public interface PreUniverse {
 			SymbolicExpression element);
 
 	/**
-	 * Remove an element from array at the given position. Returns a new array
-	 * expression which is same as old except the removed element won't be
-	 * included
+	 * Removes an element in a specified position in a concrete symbolic array.
+	 * Returns a new array which is same as old except the element has been
+	 * removed and the remaining elements have been shifted down to remove the
+	 * gap. The resulting array has length 1 less than the original one.
+	 * 
+	 * TODO: extend to arbitrary arrays, not just symbolic
 	 * 
 	 * @param concreteArray
-	 *            the given concrete array
+	 *            a concrete array
 	 * @param index
-	 *            the position where the element will be deleted
-	 * 
-	 * 
-	 * @return an array obtained by removing element from given array
+	 *            an int index
+	 * @return array obtained by removing element at specified index
+	 * @throws SARLException
+	 *             if index is negative or greater than or equal to the length
+	 *             of the given concrete array
 	 */
-
 	SymbolicExpression removeElementAt(SymbolicExpression concreteArray,
 			int index);
 
+	/**
+	 * Inserts value an position index in array, shifting subsequence elements
+	 * "up".
+	 * 
+	 * @param concreteArray
+	 *            a concrete array
+	 * @param index
+	 *            an int index in the range [0,length], where length is the
+	 *            length of the original array. If index=length, this is the
+	 *            same as append.
+	 * @param value
+	 *            expression to insert
+	 * @return array obtained by inserting the element at specified index
+	 */
 	SymbolicExpression insertElementAt(SymbolicExpression concreteArray,
 			int index, SymbolicExpression value);
-
-	/**
-	 * Returns an array of length 0.
-	 * 
-	 * @param elementType
-	 *            the type of the non-existent elements of this array
-	 * @return an empty array with length 0 of given type
-	 */
-	SymbolicExpression emptyArray(SymbolicType elementType);
-
-	SymbolicExpression constantArray(SymbolicType elementType,
-			NumericExpression length, SymbolicExpression value);
 
 	/**
 	 * Returns the length of any symbolic expression of array type. This is a
@@ -1270,8 +1337,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type representing the position
-	 *            of the element within the array
+	 *            symbolic expression of integer type
 	 * @return expression representing value of index-th element of the array
 	 */
 	SymbolicExpression arrayRead(SymbolicExpression array,
@@ -1285,8 +1351,7 @@ public interface PreUniverse {
 	 * @param array
 	 *            the given array
 	 * @param index
-	 *            symbolic expression of integer type representing the position
-	 *            of the element within the array
+	 *            symbolic expression of integer type
 	 * @param value
 	 *            the new value for the element at position index
 	 * @return expression representing the result of changing the index-th
@@ -1363,6 +1428,7 @@ public interface PreUniverse {
 			SymbolicExpression value);
 
 	// Sets...
+	// Under construction...
 
 	SymbolicExpression emptySet(SymbolicSetType setType);
 
@@ -1446,76 +1512,126 @@ public interface PreUniverse {
 	SymbolicExpression cond(BooleanExpression predicate,
 			SymbolicExpression trueCase, SymbolicExpression falseCase);
 
-	// References...
+	// References
 
-	/** Returns the type of all reference expressions. */
+	/**
+	 * <p>
+	 * Returns the type of all reference expressions. A reference expression is
+	 * a kind of symbolic expression used to represent a reference to a
+	 * subexpression of other expressions. It may be thought of as a sequence of
+	 * directions for navigating to a particular node in a tree, starting from
+	 * the root. For example, a reference expression <i>r</i> might encode
+	 * "the 3rd element of the 2nd component". Given an expression <i>e</i> of
+	 * tuple type in which the 2nd component has array type, that <i>r</i>
+	 * specifies a particular element of a particular component of <i>e</i>.
+	 * </p>
+	 * 
+	 * <p>
+	 * A reference may also be thought of as a <i>function</i> which takes a
+	 * symbolic expression (of a compatible type) and returns a sub-expression
+	 * of that expression.
+	 * </p>
+	 * 
+	 * @return the type of all reference expressions
+	 */
 	SymbolicType referenceType();
 
 	/**
 	 * Returns the "null reference", a symbolic expression of reference type
 	 * which is not equal to a reference value returned by any of the other
 	 * methods, and which cannot be dereferenced.
+	 * 
+	 * @return the null reference
 	 */
 	ReferenceExpression nullReference();
 
 	/**
-	 * Given a reference and a value, returns the sub-expression of value
-	 * specified by the reference. Throws exception if the reference is not of
-	 * the correct form for the type of value.
+	 * Given a <code>reference</code> and a <code>value</code>, returns the
+	 * sub-expression of <code>value</code> specified by the reference. Throws
+	 * exception if the reference is not of the correct form for the type of
+	 * <code>value</code>.
 	 * 
 	 * @param value
-	 *            a SymbolicExpression which you would like to dereference from
+	 *            a non-<code>null</code> symbolic expression
 	 * @param reference
-	 *            a ReferenceExpression which is compatible with the value and
-	 *            points to the sub-expression you would like to dereference.
-	 * @return the ssub-expression inside value pointed to by reference.
+	 *            a non-<code>null</code> reference into a sub-expression of
+	 *            <code>value</code>
+	 * @return the sub-expression of <code>value</code> specified by the
+	 *         reference
 	 */
 	SymbolicExpression dereference(SymbolicExpression value,
 			ReferenceExpression reference);
 
 	/**
-	 * Returns the type referenced by a reference into an object of the given
-	 * type. You can only use this method to get the type referenced into a
-	 * SymbolicType, not a SymbolicExpression. Example: if type is
-	 * array-of-array-of-int and the reference is an array element reference,
-	 * this method returns array-of-int. If the reference was an array element's
-	 * array element, this method woud return int.
+	 * Returns the type referenced by a reference into an expression of the
+	 * given type. Example: if <code>type</code> is <i>array-of-integer</i> and
+	 * <code>reference</code> is an array element reference, this method returns
+	 * <i>integer</i>.
 	 * 
 	 * @param type
-	 *            a symbolic type which contains a subtype you would like to get
-	 *            with your reference.
+	 *            a non-<code>null</code> symbolic type
 	 * @param reference
-	 *            a reference that is compatible with that type, i.e., can
-	 *            reference into a value of that type
+	 *            a reference that is compatible with <code>type</code>, i.e.,
+	 *            can reference into an expression of that type
 	 * @return the component of the given type which is referenced by the given
 	 *         reference
 	 */
 	SymbolicType referencedType(SymbolicType type, ReferenceExpression reference);
 
 	/**
-	 * Returns the identity (or "trivial") reference I. This is the reference
-	 * characterized by the property that dereference(I,v) returns v for any
-	 * symbolic expression v.
+	 * Returns the identity (or "trivial") reference <code>I</code>. This is the
+	 * reference characterized by the property that
+	 * <code>dereference(I,v)</code> returns <code>v</code> for any symbolic
+	 * expression <code>v</code>.
+	 * 
+	 * @return the identity reference
 	 */
 	ReferenceExpression identityReference();
 
 	/**
-	 * Given a reference to an array and an index (integer), returns a reference
-	 * to the element of the array at that index
+	 * Given a reference to an array and an <code>index</code> (integer),
+	 * returns a reference to the element of the array at that index. Think of
+	 * this as tacking on one more instruction to the sequence of directions
+	 * specified by a reference. For example, if <code>arrayReference</code>
+	 * encodes "2nd component of element 3" and <code>index</code> is
+	 * <code>X+Y</code>, the result returned specifies "element <code>X+Y</code>
+	 * of the 2nd component of element 3".
+	 * 
+	 * @param arrayReference
+	 *            a non-<code>null</code> reference for which the referenced
+	 *            sub-expression has array type
+	 * @param index
+	 *            a non-<code>null</code> expression of integer type
+	 * @return a reference to the <code>index</code>-th element of the
+	 *         referenced array
 	 */
 	ArrayElementReference arrayElementReference(
 			ReferenceExpression arrayReference, NumericExpression index);
 
 	/**
 	 * Given a reference to a tuple, and a field index, returns a reference to
-	 * that component of the tuple
+	 * that component of the tuple. Think of this as tacking on one more
+	 * instruction to the sequence of directions specified by a reference. For
+	 * example, if <code>tupleReference</code> encodes
+	 * "2nd component of element 3" and <code>fieldIndex</code> is 15, the
+	 * result returned specifies "the 15-th component of the 2nd component of
+	 * element 3".
+	 * 
+	 * @param tupleReference
+	 *            a non-<code>null</code> reference for which the referenced
+	 *            sub-expression has tuple type
+	 * @param fieldIndex
+	 *            a non-<code>null</code> concrete integer object specifying the
+	 *            component of the tuple (indexed from 0)
+	 * @return a reference to the <code>fieldIndex</code>-th element of the
+	 *         referenced tuple
 	 */
 	TupleComponentReference tupleComponentReference(
 			ReferenceExpression tupleReference, IntObject fieldIndex);
 
 	/**
 	 * Given a reference to a union (expression of union type) and an index of a
-	 * member type of that union, returns a reference to the underlying element
+	 * member type of that union, returns a reference to the underlying element.
 	 */
 	UnionMemberReference unionMemberReference(
 			ReferenceExpression unionReference, IntObject memberIndex);
@@ -1527,9 +1643,46 @@ public interface PreUniverse {
 	 * Given a symbolic expression value, a reference to a point within that
 	 * value, and a subValue, returns the symbolic expression obtained by
 	 * replacing the referenced part of value with subValue.
+	 * 
+	 * @param value
+	 *            a non-<code>null</code> symbolic expression
+	 * @param reference
+	 *            a non-<code>null</code> reference to a subexpression of
+	 *            <code>value</code>
+	 * @param subValue
+	 *            a non-<code>null</code> expression with type compatible with
+	 *            that of the referenced sub-expression of <code>value</code>
+	 * @return the expression that results from taking <code>value</code> and
+	 *         replacing the referenced sub-expression with
+	 *         <code>subValue</code>
 	 */
 	SymbolicExpression assign(SymbolicExpression value,
 			ReferenceExpression reference, SymbolicExpression subValue);
+
+	/**
+	 * Returns the set of unbound symbolic constants occurring in an expression.
+	 * 
+	 * @param expr
+	 *            a non-<code>null</code> symbolic expression
+	 * @return set of unbound symbolic constants occurring in <code>expr</code>
+	 */
+	Set<SymbolicConstant> getFreeSymbolicConstants(SymbolicExpression expr);
+
+	// BooleanExpression[] getConjunctiveClauses(BooleanExpression expr);
+
+	// ************************************************************************
+	// * Methods NOT also in SymbolicUniverse
+	// ************************************************************************
+
+	/**
+	 * Returns the charObject wrapping the given char value. These are SARL
+	 * char, not Java char.
+	 * 
+	 * @param value
+	 *            a SARL char
+	 * @return the CharObject wrapping that char
+	 */
+	CharObject charObject(char value);
 
 	void incrementValidCount();
 
@@ -1547,8 +1700,6 @@ public interface PreUniverse {
 
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection);
-
-	SymbolicType pureType(SymbolicType type);
 
 	/**
 	 * Changes the names of the bound variables in the expression so that every

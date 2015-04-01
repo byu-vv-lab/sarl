@@ -47,6 +47,21 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 /**
  * A partial implementation of {@link Simplifier} which can be extended.
  * 
+ * TODO: store reference to a simplifier factory.
+ * 
+ * apply: first compute the minimal context based on the symbolic constants
+ * occurring in the given expressions. use the simplifier factory to get the
+ * simplifier for that minimal context.
+ * 
+ * to compute the minimal context: for the context, form a undirected graph in
+ * which the nodes are the symbolic constants occurring in the context and there
+ * is an edge between u and v if u and v occur in the same clause in the Cnf
+ * form. Do this once. When apply is invoked on an expression e, set S be the
+ * set of symbolic constants occurring in e, and compute the set R of nodes in
+ * the context graph reachable from S. Form the conjunction over those nodes.
+ * That is the minimized context.
+ * 
+ * 
  * @author siegel
  * 
  */
