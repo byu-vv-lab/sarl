@@ -12,12 +12,11 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
  * A substituter used to change the names of symbolic constants. It is specified
- * by a map on {@link StringObject}s (essentially the same as Strings}. This
+ * by a map on {@link StringObject}s (essentially the same as Strings). This
  * maps the old names to the new. The substitution is applied to all symbolic
  * constants, including bound ones.
  * 
  * @author siegel
- *
  */
 public class NameSubstituter extends ExpressionSubstituter {
 
@@ -32,6 +31,11 @@ public class NameSubstituter extends ExpressionSubstituter {
 			SymbolicTypeFactory typeFactory, Map<StringObject, StringObject> map) {
 		super(universe, collectionFactory, typeFactory);
 		this.map = map;
+	}
+
+	@Override
+	protected SubstituterState newState() {
+		return null;
 	}
 
 	@Override
@@ -56,11 +60,6 @@ public class NameSubstituter extends ExpressionSubstituter {
 			}
 		}
 		return super.substituteNonquantifiedExpression(expr, state);
-	}
-
-	@Override
-	protected SubstituterState newState() {
-		return null;
 	}
 
 }

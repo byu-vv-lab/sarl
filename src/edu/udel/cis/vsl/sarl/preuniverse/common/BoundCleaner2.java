@@ -26,6 +26,7 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -53,11 +54,20 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 	 */
 	private Map<String, Integer> countMap = new HashMap<>();
 
+	/**
+	 * State of search: stack of pairs of symbolic constants. Left component of
+	 * a pair is the original bound symbolic constant, right component is the
+	 * new bound symbolic constant that will be substituted for the old one. An
+	 * entry is pushed onto the stack whenever a quantified expression is
+	 * reached, then the body of the expression is searched, then the stack is
+	 * popped.
+	 * 
+	 * @author siegel
+	 */
 	class BoundStack implements SubstituterState {
 		Deque<Pair<SymbolicConstant, SymbolicConstant>> stack = new ArrayDeque<>();
 
 		SymbolicConstant get(SymbolicConstant key) {
-			// ((BoundStack)state).stack.iterator();
 			for (Pair<SymbolicConstant, SymbolicConstant> pair : stack) {
 				if (pair.left.equals(key))
 					return pair.right;
@@ -80,32 +90,39 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 	}
 
 	@Override
+	protected SubstituterState newState() {
+		return new BoundStack();
+	}
+
+	@Override
 	protected SymbolicExpression substituteQuantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
-		SymbolicConstant boundVariable = (SymbolicConstant) expression
+		SymbolicConstant oldBoundVariable = (SymbolicConstant) expression
 				.argument(0);
-		SymbolicExpression arg1 = (SymbolicExpression) expression.argument(1);
-		String name = boundVariable.name().getString(), newName;
-		Integer count = countMap.get(name);
-		SymbolicConstant newBoundVariable;
+		String oldName = oldBoundVariable.name().getString();
+		Integer count = countMap.get(oldName);
+		SymbolicType newType = substituteType(expression.type(), state);
 
-		if (count == null) {
+		if (count == null)
 			count = 0;
-		}
-		newName = name + specialString + count;
-		count++;
-		newBoundVariable = universe.symbolicConstant(
-				universe.stringObject(newName), boundVariable.type());
-		countMap.put(name, count);
-		((BoundStack) state).push(boundVariable, newBoundVariable);
 
-		SymbolicExpression newBody = substituteExpression(arg1, state);
+		String newName = oldName + specialString + count;
+
+		count++;
+		countMap.put(oldName, count);
+
+		SymbolicConstant newBoundVariable = universe.symbolicConstant(
+				universe.stringObject(newName), oldBoundVariable.type());
+
+		((BoundStack) state).push(oldBoundVariable, newBoundVariable);
+
+		SymbolicExpression newBody = substituteExpression(
+				(SymbolicExpression) expression.argument(1), state);
 
 		((BoundStack) state).pop();
 
 		SymbolicExpression result = universe.make(expression.operator(),
-				expression.type(), new SymbolicObject[] { newBoundVariable,
-						newBody });
+				newType, new SymbolicObject[] { newBoundVariable, newBody });
 
 		return result;
 	}
@@ -113,7 +130,6 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 	@Override
 	protected SymbolicExpression substituteNonquantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
-
 		if (expression instanceof SymbolicConstant) {
 			SymbolicConstant newConstant = ((BoundStack) state)
 					.get(((SymbolicConstant) expression));
@@ -124,8 +140,4 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 		return super.substituteNonquantifiedExpression(expression, state);
 	}
 
-	@Override
-	protected SubstituterState newState() {
-		return new BoundStack();
-	}
 }

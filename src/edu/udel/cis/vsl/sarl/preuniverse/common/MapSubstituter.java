@@ -18,12 +18,33 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * substitutions. Bound variables will not be modified.
  * 
  * @author siegel
- *
  */
 public class MapSubstituter extends ExpressionSubstituter {
 
-	public class BoundStack implements SubstituterState {
-		Deque<SymbolicConstant> stack = new ArrayDeque<>();
+	/**
+	 * State of the substitution process includes a stack of bound symbolic
+	 * constants. Each time a quantified expression is encountered, a variable
+	 * is pushed onto the stack, the body of the expression is processes, and
+	 * the stack is popped. The stack is needed to determine whether a symbolic
+	 * constant is free or bound at any point.
+	 * 
+	 * @author siegel
+	 */
+	class BoundStack implements SubstituterState {
+
+		private Deque<SymbolicConstant> stack = new ArrayDeque<>();
+
+		public boolean contains(SymbolicConstant symbolicConstant) {
+			return stack.contains(symbolicConstant);
+		}
+
+		public void push(SymbolicConstant symbolicConstant) {
+			stack.push(symbolicConstant);
+		}
+
+		public void pop() {
+			stack.pop();
+		}
 	}
 
 	private Map<SymbolicExpression, SymbolicExpression> map;
@@ -37,6 +58,11 @@ public class MapSubstituter extends ExpressionSubstituter {
 	}
 
 	@Override
+	protected SubstituterState newState() {
+		return new BoundStack();
+	}
+
+	@Override
 	protected SymbolicExpression substituteQuantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
 		SymbolicType type = expression.type();
@@ -44,11 +70,11 @@ public class MapSubstituter extends ExpressionSubstituter {
 		SymbolicConstant arg0 = (SymbolicConstant) expression.argument(0);
 		SymbolicExpression arg1 = (SymbolicExpression) expression.argument(1);
 
-		((BoundStack) state).stack.push(arg0);
+		((BoundStack) state).push(arg0);
 
 		SymbolicExpression newArg1 = substituteExpression(arg1, state);
 
-		((BoundStack) state).stack.pop();
+		((BoundStack) state).pop();
 
 		if (type == newType && arg1 == newArg1)
 			return expression;
@@ -62,7 +88,7 @@ public class MapSubstituter extends ExpressionSubstituter {
 			SymbolicExpression expr, SubstituterState state) {
 		// no substitution into bound vars
 		if (expr instanceof SymbolicConstant
-				&& ((BoundStack) state).stack.contains(expr))
+				&& ((BoundStack) state).contains((SymbolicConstant) expr))
 			return expr;
 
 		SymbolicExpression result = map.get(expr);
@@ -70,11 +96,6 @@ public class MapSubstituter extends ExpressionSubstituter {
 		if (result != null)
 			return result;
 		return super.substituteNonquantifiedExpression(expr, state);
-	}
-
-	@Override
-	protected SubstituterState newState() {
-		return new BoundStack();
 	}
 
 }

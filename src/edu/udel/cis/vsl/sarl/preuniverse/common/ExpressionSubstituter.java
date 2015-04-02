@@ -27,7 +27,6 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
-import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
@@ -47,31 +46,61 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
  * A generic, abstract class for performing substitutions on symbolic
- * expressions. Concrete classes needed to implement the single method
- * {@link #substitute(SymbolicExpression)}, which specifies the "base
- * substitutions". All substitutions are determined by recursively applying the
- * substitution algorithm until a base case is reached. A base case will either
- * be an expression for which {@link #substitute(SymbolicExpression)} returns a
- * non-<code>null</code> value or a primitive object.
- * 
- * @author siegel
+ * expressions. Concrete classes must implement the interface
+ * {@link SubstituterState}, which is used store anything about the state of the
+ * search through the expression. They must also implement the method
+ * {@link #newState()} to produce the initial {@link SubstituterState}. They
+ * should also override any or all of the <code>protected</code> methods here.
  *
+ * @author siegel
  */
 public abstract class ExpressionSubstituter implements
 		UnaryOperator<SymbolicExpression> {
 
+	/**
+	 * An object for storing some information about the state of the search
+	 * through a symbolic expression. Used as the type of one of the arguments
+	 * to all the methods.
+	 * 
+	 * @author siegel
+	 */
 	public interface SubstituterState {
 
 	}
 
+	/**
+	 * Factory used for producing {@link SymbolicCollection}s.
+	 */
 	protected CollectionFactory collectionFactory;
 
+	/**
+	 * Factory used for producing {@link SymbolicType}s.
+	 */
 	protected SymbolicTypeFactory typeFactory;
 
+	/**
+	 * Universe for producing new symbolic expressions; will be used especially
+	 * for method
+	 * {@link PreUniverse#make(SymbolicOperator, SymbolicType, SymbolicObject[])}
+	 * .
+	 */
 	protected PreUniverse universe;
 
+	/**
+	 * Cached results of previous substitutions.
+	 */
 	protected Map<SymbolicExpression, SymbolicExpression> cache = new HashMap<>();
 
+	/**
+	 * Constructs new substituter based on given factories.
+	 * 
+	 * @param universe
+	 *            Universe for producing new symbolic expressions;
+	 * @param collectionFactory
+	 *            Factory used for producing {@link SymbolicCollection}s.
+	 * @param typeFactory
+	 *            Factory used for producing {@link SymbolicType}s.
+	 */
 	public ExpressionSubstituter(PreUniverse universe,
 			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory) {
 		this.universe = universe;
@@ -79,6 +108,12 @@ public abstract class ExpressionSubstituter implements
 		this.typeFactory = typeFactory;
 	}
 
+	/**
+	 * Produce the initial instance of {@link SubstituterState} to start off a
+	 * search.
+	 * 
+	 * @return new initial state
+	 */
 	protected abstract SubstituterState newState();
 
 	/**
@@ -157,10 +192,12 @@ public abstract class ExpressionSubstituter implements
 	}
 
 	/**
-	 * Performs substitution on a SymbolicCollection. The kind of collection
-	 * returned is not necessarily the same as the given one. Only sequences
-	 * need to be preserved because other collections are all processed through
-	 * method make anyway.
+	 * Performs substitution on a {@link SymbolicCollection}. The kind of
+	 * collection returned is not necessarily the same as the given one. Only
+	 * sequences need to be preserved because other collections are all
+	 * processed through method
+	 * {@link PreUniverse#make(SymbolicOperator, SymbolicType, SymbolicObject[])}
+	 * anyway.
 	 * 
 	 * @param collection
 	 *            any kind of symbolic collection
@@ -287,27 +324,29 @@ public abstract class ExpressionSubstituter implements
 
 	}
 
+	/**
+	 * Substitutes into a quantified expression. By default, this is same as for
+	 * a non-quantified expression, but this method can be overridden.
+	 * 
+	 * @param expression
+	 *            the expression to which substitution should be applied; must
+	 *            be a non-<code>null</code> quantified expression
+	 * @param state
+	 *            the current state of the search
+	 * @return the result of applying substitution to <code>expression</code>
+	 */
 	protected SymbolicExpression substituteQuantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
-		SymbolicType type = expression.type();
-		SymbolicType newType = substituteType(type, state);
-		SymbolicConstant arg0 = (SymbolicConstant) expression.argument(0);
-		SymbolicExpression arg1 = (SymbolicExpression) expression.argument(1);
-
-		// boundStack.push(arg0);
-
-		SymbolicConstant newArg0 = (SymbolicConstant) substituteExpression(
-				arg0, state);
-		SymbolicExpression newArg1 = substituteExpression(arg1, state);
-
-		// boundStack.pop();
-		if (type == newType && arg0 == newArg0 && arg1 == newArg1)
-			return expression;
-		else
-			return universe.make(expression.operator(), newType,
-					new SymbolicObject[] { arg0, newArg1 });
+		return substituteNonquantifiedExpression(expression, state);
 	}
 
+	/**
+	 * Determines if the given expression is a quantified expression.
+	 * 
+	 * @param expr
+	 *            a non-<code>null</code> symbolic expression
+	 * @return <code>true</code> iff the expression is quantified
+	 */
 	protected boolean isQuantified(SymbolicExpression expr) {
 		SymbolicOperator operator = expr.operator();
 
@@ -316,6 +355,22 @@ public abstract class ExpressionSubstituter implements
 				|| operator == SymbolicOperator.LAMBDA;
 	}
 
+	/**
+	 * Substitutes into a non-quantified expression. The <code>expression</code>
+	 * must be non-<code>null</code>. If it is the SARL "NULL" expression, it is
+	 * returned without change. Otherwise, substitution is performed recursively
+	 * on the arguments of the expression, the and the new expression is put
+	 * back together using
+	 * {@link PreUniverse#make(SymbolicOperator, SymbolicType, SymbolicObject[])}
+	 * .
+	 * 
+	 * @param expression
+	 *            the expression to which substitution should be applied; must
+	 *            be a non-<code>null</code> non-quantified expression
+	 * @param state
+	 *            the current state of the search
+	 * @return the result of applying substitution to <code>expression</code>
+	 */
 	protected SymbolicExpression substituteNonquantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
 		if (expression.isNull())
@@ -349,7 +404,17 @@ public abstract class ExpressionSubstituter implements
 	}
 
 	/**
-	 * If no changes takes place, result returned will be == given expression.
+	 * Performs substitution on a symbolic expression. Determines whether the
+	 * expression is quantified or not, can invokes the appropriate method:
+	 * {@link #substituteQuantifiedExpression(SymbolicExpression, SubstituterState)}
+	 * or
+	 * {@link #substituteNonquantifiedExpression(SymbolicExpression, SubstituterState)}
+	 * 
+	 * @param expression
+	 *            the expression to which substitution should be applied; must
+	 *            be non-<code>null</code>
+	 * @param state
+	 *            the current state of the search .
 	 */
 	protected SymbolicExpression substituteExpression(
 			SymbolicExpression expression, SubstituterState state) {
@@ -360,6 +425,16 @@ public abstract class ExpressionSubstituter implements
 		}
 	}
 
+	/**
+	 * Performs substitution on the given symbolic expression. First looks in
+	 * cache to see if substitution was already applied and returns old result
+	 * if so. Otherwise, applies the substitution algorithm to the expression,
+	 * caches, and returns the result.
+	 * 
+	 * @param expression
+	 *            a non-<code>null</code> symbolic expression
+	 * @return the result of performing substitution on <code>expression</code>
+	 */
 	@Override
 	public SymbolicExpression apply(SymbolicExpression expression) {
 		SymbolicExpression result = cache.get(expression);

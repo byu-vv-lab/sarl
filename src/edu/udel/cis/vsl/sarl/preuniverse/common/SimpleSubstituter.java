@@ -6,6 +6,7 @@ import java.util.Deque;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -19,10 +20,25 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  */
 public class SimpleSubstituter extends ExpressionSubstituter {
 
+	/**
+	 * The symbolic constant that is to be replaced.
+	 */
 	private SymbolicConstant var;
 
+	/**
+	 * The symbolic expression that shoudl be substituted for every occurrence
+	 * of {@link #var}.
+	 */
 	private SymbolicExpression value;
 
+	/**
+	 * The state of the search: a stack of bound symbolic constants. Used so
+	 * that bound variables are not replaced. When a quantified expression is
+	 * reached, an entry is pushed onto the stack, then the body of the
+	 * expression is processed, then the stack is popped.
+	 * 
+	 * @author siegel
+	 */
 	class BoundStack implements SubstituterState {
 		Deque<SymbolicConstant> stack = new ArrayDeque<>();
 	}
@@ -37,22 +53,33 @@ public class SimpleSubstituter extends ExpressionSubstituter {
 	}
 
 	@Override
+	protected SubstituterState newState() {
+		return new BoundStack();
+	}
+
+	@Override
 	protected SymbolicExpression substituteQuantifiedExpression(
 			SymbolicExpression expression, SubstituterState state) {
 		SymbolicConstant boundVariable = (SymbolicConstant) expression
 				.argument(0);
-		SymbolicExpression arg1 = (SymbolicExpression) expression.argument(1);
+		SymbolicType oldType = expression.type();
+		SymbolicType newType = substituteType(oldType, state);
 
 		((BoundStack) state).stack.push(boundVariable);
 
-		SymbolicExpression newBody = substituteExpression(arg1, state);
+		SymbolicExpression oldBody = (SymbolicExpression) expression
+				.argument(1);
+		SymbolicExpression newBody = substituteExpression(oldBody, state);
 
 		((BoundStack) state).stack.pop();
 
-		SymbolicExpression result = universe.make(expression.operator(),
-				expression.type(), new SymbolicObject[] { boundVariable,
-						newBody });
+		SymbolicExpression result;
 
+		if (oldBody == newBody && oldType == newType)
+			result = expression;
+		else
+			result = universe.make(expression.operator(), newType,
+					new SymbolicObject[] { boundVariable, newBody });
 		return result;
 	}
 
@@ -67,8 +94,4 @@ public class SimpleSubstituter extends ExpressionSubstituter {
 		return super.substituteNonquantifiedExpression(expr, state);
 	}
 
-	@Override
-	protected SubstituterState newState() {
-		return new BoundStack();
-	}
 }
