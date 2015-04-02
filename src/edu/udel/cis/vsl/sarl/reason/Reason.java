@@ -21,8 +21,7 @@ package edu.udel.cis.vsl.sarl.reason;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
-import edu.udel.cis.vsl.sarl.reason.common.CommonReasonerFactory;
-import edu.udel.cis.vsl.sarl.reason.common.ContextMinimizingReasonerFactory;
+import edu.udel.cis.vsl.sarl.reason.common.ContextMinimizingReasonerFactory2;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
 public class Reason {
@@ -30,11 +29,12 @@ public class Reason {
 	public static ReasonerFactory newReasonerFactory(PreUniverse universe,
 			SimplifierFactory simplifierFactory,
 			TheoremProverFactory proverFactory) {
-		ReasonerFactory result = new CommonReasonerFactory(simplifierFactory,
-				proverFactory);
+		ReasonerFactory result;
 
-		// comment this line out to use traditional reasoner...
-		result = new ContextMinimizingReasonerFactory(universe, result);
+		// result = new CommonReasonerFactory(simplifierFactory, proverFactory);
+
+		result = new ContextMinimizingReasonerFactory2(universe, proverFactory,
+				simplifierFactory);
 		return result;
 	}
 }

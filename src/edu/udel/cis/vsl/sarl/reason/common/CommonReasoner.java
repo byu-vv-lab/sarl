@@ -205,14 +205,4 @@ public class CommonReasoner implements Reasoner {
 		return universe().extractNumber(simple);
 	}
 
-	// @Override
-	// public UnaryOperator<SymbolicExpression> simplifier() {
-	// return new UnaryOperator<SymbolicExpression>() {
-	// @Override
-	// public SymbolicExpression apply(SymbolicExpression x) {
-	// return simplify(x);
-	// }
-	// };
-	// }
-
 }
