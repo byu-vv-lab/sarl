@@ -231,7 +231,7 @@ public class CommonPreUniverseTest {
 
 		// System.out.println("substituteArrayType - a.type(): " + a.type());
 
-		SymbolicExpression result = universe.substitute(a, map);
+		SymbolicExpression result = universe.mapSubstituter(map).apply(a);
 		// System.out.println("substituteArraytype - result: " + result);
 		// System.out.println("substituteArrayType - result.type(): " +
 		// result.type());

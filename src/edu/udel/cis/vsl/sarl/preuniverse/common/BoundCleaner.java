@@ -50,6 +50,8 @@ import edu.udel.cis.vsl.sarl.util.SingletonMap;
  * Replaces all bound variables in expressions with possible new ones so that
  * each has a unique name.
  * 
+ * TODO: could this instead be a simple extensions of ExpressionSubstituter?
+ * 
  * @author siegel
  * 
  */
@@ -60,8 +62,6 @@ public class BoundCleaner {
 	 * "'" is good but not for Z3.
 	 */
 	private final static String specialString = "__";
-
-	// private ExpressionSubstituter substituter;
 
 	private CollectionFactory collectionFactory;
 
@@ -79,9 +79,7 @@ public class BoundCleaner {
 	private Map<String, Integer> countMap = new HashMap<>();
 
 	public BoundCleaner(PreUniverse universe,
-			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory
-	// , ExpressionSubstituter substituter
-	) {
+			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory) {
 		this.universe = universe;
 		this.collectionFactory = collectionFactory;
 		this.typeFactory = typeFactory;
@@ -287,7 +285,8 @@ public class BoundCleaner {
 						universe.stringObject(newName), boundVariable.type());
 				substitutionMap = new SingletonMap<SymbolicExpression, SymbolicExpression>(
 						boundVariable, newBoundVariable);
-				newArg1 = universe.substitute(newArg1, substitutionMap);
+				newArg1 = universe.mapSubstituter(substitutionMap).apply(
+						newArg1);
 			}
 			countMap.put(name, count);
 			if (arg1 == newArg1 && boundVariable == newBoundVariable)

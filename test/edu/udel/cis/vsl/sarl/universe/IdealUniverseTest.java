@@ -37,7 +37,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.util.SingletonMap;
+
 public class IdealUniverseTest {
 
 	private static PrintStream out = System.out;
@@ -88,12 +88,9 @@ public class IdealUniverseTest {
 		SymbolicExpression u = universe.add(x, universe.multiply(two, y));
 		// SymbolicExpression v = universe.add(y, universe.multiply(two, x));
 		SymbolicExpression expected = universe.multiply(three, y);
-		Map<SymbolicConstant, SymbolicExpression> map = new SingletonMap<SymbolicConstant, SymbolicExpression>(
-				x, y);
-		SymbolicExpression newU = universe.substituteSymbolicConstants(u, map);
+		SymbolicExpression newU = universe.simpleSubstituter(x, y).apply(u);
 
 		out.println("sub1:    u = " + u);
-		out.println("sub1:  map = " + map);
 		out.println("sub1: newU = " + newU);
 		assertEquals(expected, newU);
 	}
@@ -106,12 +103,12 @@ public class IdealUniverseTest {
 		SymbolicExpression u = universe.add(x, universe.multiply(two, y));
 		SymbolicExpression expected = universe
 				.add(y, universe.multiply(two, x));
-		Map<SymbolicConstant, SymbolicExpression> map = new HashMap<SymbolicConstant, SymbolicExpression>();
+		Map<SymbolicExpression, SymbolicExpression> map = new HashMap<>();
 		SymbolicExpression newU;
 
 		map.put(x, y);
 		map.put(y, x);
-		newU = universe.substituteSymbolicConstants(u, map);
+		newU = universe.mapSubstituter(map).apply(u);
 		out.println("sub2:    u = " + u);
 		out.println("sub2:  map = " + map);
 		out.println("sub2: newU = " + newU);
@@ -126,7 +123,7 @@ public class IdealUniverseTest {
 	public void subArray1() {
 		int n = 3;
 		SymbolicConstant[] sc = new SymbolicConstant[n];
-		Map<SymbolicConstant, SymbolicExpression> map = new HashMap<SymbolicConstant, SymbolicExpression>();
+		Map<SymbolicExpression, SymbolicExpression> map = new HashMap<>();
 		SymbolicExpression array1 = universe.symbolicConstant(
 				universe.stringObject("a"), universe.arrayType(integerType));
 		SymbolicExpression array2;
@@ -138,7 +135,7 @@ public class IdealUniverseTest {
 			map.put(sc[i], sc[n - 1 - i]);
 		for (int i = 0; i < n; i++)
 			array1 = universe.arrayWrite(array1, universe.integer(i), sc[i]);
-		array2 = universe.substituteSymbolicConstants(array1, map);
+		array2 = universe.mapSubstituter(map).apply(array1);
 		out.println("subArray1: array1 = " + array1);
 		out.println("subArray1: array2 = " + array2);
 		for (int i = 0; i < n; i++)
@@ -169,28 +166,9 @@ public class IdealUniverseTest {
 		map.put(tuple1, tuple2);
 		out.println("subExpression:     expr = " + expr);
 		out.println("subExpression:     map  = " + map);
-		out.println("subExpression: expected = " + expected); 
-		actual = universe.substitute(expr, map);
+		out.println("subExpression: expected = " + expected);
+		actual = universe.mapSubstituter(map).apply(expr);
 		assertEquals(expected, actual);
-	} 
-	
-	
-	// TODO: commenting out code that breaks compilation!!!
-	
-//	@Test
-//	public void newMathTest() {   
-//		NumericExpression one = mathUniverse.oneReal();
-//		SymbolicExpression cos = mathUniverse.cosFunction; 
-//		SymbolicExpression cos2 = mathUniverse.multiply((NumericExpression) cos, (NumericExpression) cos);  
-//		SymbolicExpression sin = mathUniverse.sinFunction; 
-//		SymbolicExpression sin2 = mathUniverse.multiply((NumericExpression) sin, (NumericExpression) sin);   
-//		SymbolicExpression expected = mathUniverse.subtract(one, (NumericExpression) sin2);
-//		
-//		out.println("hello");
-//		out.println(expected);
-//		SymbolicExpression answer = trigIdentity.simplifyExpression(cos2); 
-//		assertEquals(expected,answer);
-//		
-//	}
+	}
 
 }

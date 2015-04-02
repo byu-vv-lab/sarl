@@ -60,7 +60,6 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
-import edu.udel.cis.vsl.sarl.util.SingletonMap;
 
 public class CommonPreUniverse implements PreUniverse {
 
@@ -129,15 +128,10 @@ public class CommonPreUniverse implements PreUniverse {
 	 */
 	private Comparator<SymbolicObject> objectComparator;
 
-	// /**
-	// * The object used to perform substitutions on symbolic expressions.
-	// */
-	// private ExpressionSubstituter substituter;
-
 	/**
 	 * The object used to give quantified (bound) variables unique names.
 	 */
-	private BoundCleaner cleaner;
+	private BoundCleaner2 cleaner;
 
 	/** The boolean type. */
 	private SymbolicType booleanType;
@@ -214,11 +208,7 @@ public class CommonPreUniverse implements PreUniverse {
 		denseArrayMaxSize = numberFactory.integer(DENSE_ARRAY_MAX_SIZE);
 		quantifierExpandBound = numberFactory.integer(QUANTIFIER_EXPAND_BOUND);
 		nullExpression = expressionFactory.nullExpression();
-		// substituter = new ExpressionSubstituter(this, collectionFactory,
-		// typeFactory);
-		cleaner = new BoundCleaner(this, collectionFactory, typeFactory
-		// ,substituter
-		);
+		cleaner = new BoundCleaner2(this, collectionFactory, typeFactory);
 		arrayIndex = (NumericSymbolicConstant) canonic(symbolicConstant(
 				stringObject("i"), integerType));
 	}
@@ -715,8 +705,8 @@ public class CommonPreUniverse implements PreUniverse {
 		for (IntegerNumber i = low; numberFactory.compare(i, high) < 0; i = numberFactory
 				.increment(i)) {
 			SymbolicExpression iExpression = number(numberObject(i));
-			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
-					predicate, index, iExpression);
+			BooleanExpression substitutedPredicate = (BooleanExpression) simpleSubstituter(
+					index, iExpression).apply(predicate);
 
 			result = and(result, substitutedPredicate);
 		}
@@ -730,8 +720,8 @@ public class CommonPreUniverse implements PreUniverse {
 		for (IntegerNumber i = low; numberFactory.compare(i, high) < 0; i = numberFactory
 				.increment(i)) {
 			SymbolicExpression iExpression = number(numberObject(i));
-			BooleanExpression substitutedPredicate = (BooleanExpression) substitute(
-					predicate, index, iExpression);
+			BooleanExpression substitutedPredicate = (BooleanExpression) simpleSubstituter(
+					index, iExpression).apply(predicate);
 
 			result = or(result, substitutedPredicate);
 		}
@@ -1304,24 +1294,6 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
-	public SymbolicExpression substituteSymbolicConstants(
-			SymbolicExpression expression,
-			Map<SymbolicConstant, SymbolicExpression> map) {
-		UnaryOperator<SymbolicExpression> substituter = substituter(new OptimizedMap(
-				map));
-
-		return substituter.apply(expression);
-	}
-
-	@Override
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			Map<SymbolicExpression, SymbolicExpression> map) {
-		UnaryOperator<SymbolicExpression> substituter = substituter(map);
-
-		return substituter.apply(expression);
-	}
-
-	@Override
 	public BooleanExpression bool(BooleanObject object) {
 		return booleanFactory.symbolic(object);
 	}
@@ -1430,13 +1402,13 @@ public class CommonPreUniverse implements PreUniverse {
 		return booleanFactory.equiv(arg0, arg1);
 	}
 
-	@Override
-	public SymbolicExpression substitute(SymbolicExpression expression,
-			SymbolicConstant variable, SymbolicExpression value) {
-		return substituteSymbolicConstants(expression,
-				new SingletonMap<SymbolicConstant, SymbolicExpression>(
-						variable, value));
-	}
+	// @Override
+	// public SymbolicExpression substitute(SymbolicExpression expression,
+	// SymbolicConstant variable, SymbolicExpression value) {
+	// return substituteSymbolicConstants(expression,
+	// new SingletonMap<SymbolicConstant, SymbolicExpression>(
+	// variable, value));
+	// }
 
 	@Override
 	public BooleanExpression forallInt(NumericSymbolicConstant index,
@@ -1588,8 +1560,10 @@ public class CommonPreUniverse implements PreUniverse {
 				throw err("Argument argumentSequence to method apply has more than one element"
 						+ " but since function is a lambda expression it should"
 						+ " have exactly one element");
-			result = substitute((SymbolicExpression) function.argument(1),
-					(SymbolicConstant) function.argument(0), arg);
+			// function.argument(0): bound symbolic constant : dummy variable
+			// function.argument(1): symbolic expression: body of function
+			result = simpleSubstituter((SymbolicConstant) function.argument(0),
+					arg).apply((SymbolicExpression) function.argument(1));
 		} else {
 			// TODO check the argument types...
 			result = expression(SymbolicOperator.APPLY,
@@ -2108,7 +2082,8 @@ public class CommonPreUniverse implements PreUniverse {
 						.argument(1);
 
 				for (int i = 0; i < length; i++) {
-					elements[i] = substitute(elementExpr, boundVar, integer(i));
+					elements[i] = simpleSubstituter(boundVar, integer(i))
+							.apply(elementExpr);
 				}
 				return expression(SymbolicOperator.CONCRETE, arrayType,
 						collectionFactory.sequence(elements));
@@ -2566,7 +2541,7 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	public SymbolicExpression cleanBoundVariables(SymbolicExpression expr) {
-		return cleaner.clean(expr);
+		return cleaner.apply(expr);
 	}
 
 	@Override
@@ -2760,15 +2735,29 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
-	public UnaryOperator<SymbolicExpression> substituter(
-			Map<SymbolicExpression, SymbolicExpression> map) {
-		return new ExpressionSubstituter(this, collectionFactory, typeFactory,
-				map);
-	}
-
-	@Override
 	public Set<SymbolicConstant> getFreeSymbolicConstants(
 			SymbolicExpression expr) {
 		return new ExpressionWalker(expr).getResult();
 	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> mapSubstituter(
+			Map<SymbolicExpression, SymbolicExpression> map) {
+		return new MapSubstituter(this, collectionFactory, typeFactory, map);
+	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> nameSubstituter(
+			Map<StringObject, StringObject> nameMap) {
+		return new NameSubstituter(this, collectionFactory, typeFactory,
+				nameMap);
+	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> simpleSubstituter(
+			SymbolicConstant var, SymbolicExpression value) {
+		return new SimpleSubstituter(this, collectionFactory, typeFactory, var,
+				value);
+	}
+
 }

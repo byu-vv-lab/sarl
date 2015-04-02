@@ -146,7 +146,7 @@ public class FloatModelTest {
 		this.real = universe.realType();
 		this.one = universe.oneReal();
 		listReal = Arrays.asList(new SymbolicType[] { real });
-		//listRealReal = Arrays.asList(new SymbolicType[] { real, real });
+		// listRealReal = Arrays.asList(new SymbolicType[] { real, real });
 		this.x1 = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x1"), real);
 		this.x2 = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -156,7 +156,7 @@ public class FloatModelTest {
 		this.x4 = (NumericSymbolicConstant) universe.symbolicConstant(
 				universe.stringObject("x4"), real);
 		this.unaryFunc = universe.functionType(listReal, real);
-		//this.binaryFunc = universe.functionType(listRealReal, real);
+		// this.binaryFunc = universe.functionType(listRealReal, real);
 		this.err = universe.symbolicConstant(universe.stringObject("e"),
 				unaryFunc);
 		this.errBound = (NumericSymbolicConstant) universe.symbolicConstant(
@@ -250,9 +250,9 @@ public class FloatModelTest {
 		System.out.println("difference  = " + difference);
 		pos = positivize(difference);
 		System.out.println("positivized = " + pos);
-		abs = (NumericExpression) universe.substitute(pos, emap);
+		abs = (NumericExpression) universe.mapSubstituter(emap).apply(pos);
 		System.out.println("upperBound1 = " + abs);
-		abs = (NumericExpression) universe.substitute(abs, xmap);
+		abs = (NumericExpression) universe.mapSubstituter(xmap).apply(abs);
 		System.out.println("upperBound2 = " + abs);
 		factorization = ((Polynomial) abs).factorization(idealFactory);
 		System.out.println("            = " + factorization);

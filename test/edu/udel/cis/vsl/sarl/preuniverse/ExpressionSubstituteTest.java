@@ -32,6 +32,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 import edu.udel.cis.vsl.sarl.preuniverse.common.ExpressionSubstituter;
+import edu.udel.cis.vsl.sarl.preuniverse.common.MapSubstituter;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 public class ExpressionSubstituteTest {
@@ -133,8 +134,7 @@ public class ExpressionSubstituteTest {
 	public void expressionSubstituteTest() {
 		Map<SymbolicExpression, SymbolicExpression> newMap = new HashMap<SymbolicExpression, SymbolicExpression>();
 
-		expr1 = new ExpressionSubstituter(universe, factory1, typeFactory1,
-				newMap);
+		expr1 = new MapSubstituter(universe, factory1, typeFactory1, newMap);
 
 		// constructor test
 		assertEquals(this.factory1, factory1);
