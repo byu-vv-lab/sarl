@@ -9,6 +9,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
@@ -76,11 +77,40 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 	 */
 	private int varCount = 0;
 
+	/**
+	 * Should this not change the names of symbolic constants of functional
+	 * type?
+	 */
+	private boolean ignoreFunctions;
+
+	/**
+	 * Creates new renamer.
+	 * 
+	 * @param universe
+	 *            symbolic universe for producing new {@link SymbolicExpression}
+	 *            s
+	 * @param collectionFactory
+	 *            factory for producing new {@link SymbolicCollection}s
+	 * @param typeFactory
+	 *            factory for producing new {@link SymbolicType}s
+	 * @param root
+	 *            root of new names
+	 * @param ignoreFunctions
+	 *            should this not change the names of symbolic constants of
+	 *            functional type?
+	 */
 	public CanonicalRenamer(PreUniverse universe,
 			CollectionFactory collectionFactory,
-			SymbolicTypeFactory typeFactory, String root) {
+			SymbolicTypeFactory typeFactory, String root,
+			boolean ignoreFunctions) {
 		super(universe, collectionFactory, typeFactory);
 		this.root = root;
+		this.ignoreFunctions = ignoreFunctions;
+	}
+
+	private boolean ignore(SymbolicConstant x) {
+		return ignoreFunctions
+				&& x.type().typeKind() == SymbolicTypeKind.FUNCTION;
 	}
 
 	@Override
@@ -119,7 +149,8 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 	@Override
 	protected SymbolicExpression substituteNonquantifiedExpression(
 			SymbolicExpression expr, SubstituterState state) {
-		if (expr instanceof SymbolicConstant) {
+		if (expr instanceof SymbolicConstant
+				&& !ignore((SymbolicConstant) expr)) {
 			SymbolicConstant newVar = freeMap.get((SymbolicConstant) expr);
 
 			if (newVar == null) {

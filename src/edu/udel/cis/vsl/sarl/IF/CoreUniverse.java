@@ -409,11 +409,15 @@ public interface CoreUniverse {
 	 * @param root
 	 *            the string that forms the root of the names of the new
 	 *            symbolic constants
+	 * @param ignoreFunctions
+	 *            should the renamer not rename symbolic constants of functional
+	 *            type?
 	 * @return a unary operator which take a symbolic expression and returns a
 	 *         symbolic expression in which the symbolic constants have been
 	 *         assigned canonial names
 	 */
-	UnaryOperator<SymbolicExpression> canonicalRenamer(String root);
+	UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
+			boolean ignoreFunctions);
 
 	/**
 	 * Applies the given operator to the arguments and returns the resulting

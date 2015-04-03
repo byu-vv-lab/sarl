@@ -97,8 +97,8 @@ public class CanonicalRenamerTest {
 
 	@Test
 	public void canonic1() {
-		UnaryOperator<SymbolicExpression> renamer = universe
-				.canonicalRenamer("X");
+		UnaryOperator<SymbolicExpression> renamer = universe.canonicalRenamer(
+				"X", true);
 		NumericExpression x_expected = (NumericExpression) universe
 				.symbolicConstant(universe.stringObject("X0"), realType);
 		SymbolicExpression x_new = renamer.apply(x);
@@ -130,8 +130,8 @@ public class CanonicalRenamerTest {
 		SymbolicConstant X2 = universe.symbolicConstant(
 				universe.stringObject("X2"), int5);
 		SymbolicExpression a = universe.arrayWrite(X2, universe.integer(3), X1);
-		UnaryOperator<SymbolicExpression> renamer = universe
-				.canonicalRenamer("X");
+		UnaryOperator<SymbolicExpression> renamer = universe.canonicalRenamer(
+				"X", true);
 		SymbolicExpression X1_expected = universe.symbolicConstant(
 				universe.stringObject("X0"), integerType);
 		SymbolicExpression X1_new = renamer.apply(X1);
@@ -146,5 +146,10 @@ public class CanonicalRenamerTest {
 
 		out.println(a + " -> " + a_new);
 		assertEquals(a_expected, a_new);
+	}
+
+	@Test
+	public void quantifier() {
+
 	}
 }

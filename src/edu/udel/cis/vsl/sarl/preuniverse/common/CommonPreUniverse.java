@@ -2761,8 +2761,10 @@ public class CommonPreUniverse implements PreUniverse {
 	}
 
 	@Override
-	public UnaryOperator<SymbolicExpression> canonicalRenamer(String root) {
-		return new CanonicalRenamer(this, collectionFactory, typeFactory, root);
+	public UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
+			boolean ignoreFunctions) {
+		return new CanonicalRenamer(this, collectionFactory, typeFactory, root,
+				ignoreFunctions);
 	}
 
 }
