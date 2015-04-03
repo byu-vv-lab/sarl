@@ -44,8 +44,7 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
  * An implementation of Reasoner based on a given Simplifier and
  * TheoremProverFactory.
  * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public class CommonReasoner implements Reasoner {
 

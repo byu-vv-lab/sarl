@@ -32,8 +32,7 @@ import edu.udel.cis.vsl.sarl.simplify.common.IdentitySimplifierFactory;
  * Entry point for module "simplify", providing static method to create basic
  * simplifiers, simplifier factories, and range factories.
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class Simplify {
 

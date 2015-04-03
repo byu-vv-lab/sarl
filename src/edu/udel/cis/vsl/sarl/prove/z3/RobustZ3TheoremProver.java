@@ -67,7 +67,7 @@ import edu.udel.cis.vsl.sarl.util.ProcessControl;
  * YES (valid). Otherwise, MAYBE.
  * </p>
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
 public class RobustZ3TheoremProver implements TheoremProver {
 

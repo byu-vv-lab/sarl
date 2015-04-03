@@ -71,6 +71,8 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
  * </li>
  * 
  * </ul>
+ * 
+ * @author Stephen F. Siegel
  */
 public interface Simplifier extends UnaryOperator<SymbolicExpression> {
 

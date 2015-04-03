@@ -23,7 +23,6 @@ import java.util.Map;
 
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.TheoremProverException;
-import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -36,6 +35,13 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 
+/**
+ * Very basic reasoner that does not use any theorem prover, only
+ * simplification.
+ * 
+ * @author siegel
+ *
+ */
 public class SimpleReasoner implements Reasoner {
 
 	private Simplifier simplifier;
@@ -122,15 +128,5 @@ public class SimpleReasoner implements Reasoner {
 		NumericExpression simple = (NumericExpression) simplify(expression);
 
 		return universe().extractNumber(simple);
-	}
-
-//	@Override
-	public UnaryOperator<SymbolicExpression> simplifier() {
-		return new UnaryOperator<SymbolicExpression>() {
-			@Override
-			public SymbolicExpression apply(SymbolicExpression x) {
-				return simplify(x);
-			}
-		};
 	}
 }

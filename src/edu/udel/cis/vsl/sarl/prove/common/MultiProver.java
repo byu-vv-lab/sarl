@@ -7,6 +7,14 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.Prove;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 
+/**
+ * An implementation of {@link TheoremProver} which wraps a sequence of
+ * underlying {@link TheoremProver}s. To determine validity of a formula, this
+ * prover invokes the underlying provers in sequence, until a conclusive result
+ * is obtained.
+ * 
+ * @author Stephen F. Siegel
+ */
 public class MultiProver implements TheoremProver {
 
 	private PreUniverse universe;

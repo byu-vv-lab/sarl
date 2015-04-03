@@ -27,6 +27,8 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 /**
  * Provides an abstract interface for an automated theorem prover operating
  * under a fixed context (i.e., a boolean expression assumed to hold).
+ * 
+ * @author Stephen F. Siegel
  */
 public interface TheoremProver {
 

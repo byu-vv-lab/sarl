@@ -9,7 +9,7 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
  * typed: it is either a set of integers, or a set of reals. The two types are
  * incompatible.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
 public interface Range {
 

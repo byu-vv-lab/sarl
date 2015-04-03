@@ -28,8 +28,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
  * typically the "path condition". Hence a distinct theorem prover is generated
  * for each path condition.
  * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public interface TheoremProverFactory {
 

@@ -23,6 +23,11 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
+/**
+ * Factory for producing instances of {@link IdentitySimplifier}.
+ * 
+ * @author Stephen F. Siegel
+ */
 public class IdentitySimplifierFactory implements SimplifierFactory {
 
 	private PreUniverse universe;

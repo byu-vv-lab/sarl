@@ -47,26 +47,26 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 /**
  * A partial implementation of {@link Simplifier} which can be extended.
  * 
- * TODO: store reference to a simplifier factory.
- * 
- * apply: first compute the minimal context based on the symbolic constants
- * occurring in the given expressions. use the simplifier factory to get the
- * simplifier for that minimal context.
- * 
- * to compute the minimal context: for the context, form a undirected graph in
- * which the nodes are the symbolic constants occurring in the context and there
- * is an edge between u and v if u and v occur in the same clause in the Cnf
- * form. Do this once. When apply is invoked on an expression e, set S be the
- * set of symbolic constants occurring in e, and compute the set R of nodes in
- * the context graph reachable from S. Form the conjunction over those nodes.
- * That is the minimized context.
- * 
- * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public abstract class CommonSimplifier implements Simplifier {
 
+	// Note: also need to simplify numeric relational expressions like
+	// 0<a, 0<=a, 0==a, 0!=a
+	// !(0<=a) <=> a<0 <=> -a>0 <=> 0<-a
+	// also might be able to simplify symbolic constants such as booleans
+
+	// Static fields...
+
+	/**
+	 * Keeps count of the number of simplifications performed, for performance
+	 * debugging.
+	 */
+	public static int simplifyCount = 0;
+
+	/**
+	 * The symbolic universe used to make new expressions.
+	 */
 	protected PreUniverse universe;
 
 	/** Cached simplifications. */
@@ -211,33 +211,6 @@ public abstract class CommonSimplifier implements Simplifier {
 		return theSequence.apply(this);
 	}
 
-	protected SymbolicCollection<?> simplifyGenericCollectionOLD(
-			SymbolicCollection<?> collection) {
-		int count = 0;
-		Iterator<? extends SymbolicExpression> iter = collection.iterator();
-
-		while (iter.hasNext()) {
-			SymbolicExpression x = iter.next();
-			SymbolicExpression y = apply(x);
-
-			if (x != y) {
-				// this assumes iterators will always iterate in same order
-				Iterator<? extends SymbolicExpression> iter2 = collection
-						.iterator();
-				List<SymbolicExpression> list = new LinkedList<SymbolicExpression>();
-
-				for (int i = 0; i < count; i++)
-					list.add(iter2.next());
-				list.add(y);
-				while (iter.hasNext())
-					list.add(apply(iter.next()));
-				return universe.basicCollection(list);
-			}
-			count++;
-		}
-		return collection;
-	}
-
 	protected SymbolicCollection<?> simplifyGenericCollection(
 			SymbolicCollection<?> collection) {
 		Iterator<? extends SymbolicExpression> iter = collection.iterator();
@@ -299,15 +272,21 @@ public abstract class CommonSimplifier implements Simplifier {
 	}
 
 	/**
+	 * <p>
 	 * This method simplifies an expression in a generic way that should work
 	 * correctly on any symbolic expression: it simplifies the type and the
 	 * arguments of the expression, and then rebuilds the expression using
-	 * method {@link PreUniverse@make}.
+	 * method
+	 * {@link PreUniverse#make(SymbolicOperator, SymbolicType, SymbolicObject[])}
+	 * .
+	 * </p>
 	 * 
+	 * <p>
 	 * This method does <strong>not</strong> look in the table of cached
 	 * simplification results for expression. However, the recursive calls to
-	 * the arguments may invoke the method {@link apply}, which will look for
-	 * cached results on those arguments.
+	 * the arguments may invoke the method {@link #apply(SymbolicExpression)},
+	 * which will look for cached results on those arguments.
+	 * </p>
 	 * 
 	 * @param expression
 	 *            any symbolic expression
@@ -368,14 +347,6 @@ public abstract class CommonSimplifier implements Simplifier {
 			}
 		}
 	}
-
-	// also need to simplify numeric relational expressions like
-	// 0<a, 0<=a, 0==a, 0!=a
-	// !(0<=a) <=> a<0 <=> -a>0 <=> 0<-a
-
-	// also might be able to simplify symbolic constants such as booleans
-
-	public static int simplifyCount = 0;
 
 	@Override
 	public SymbolicExpression apply(SymbolicExpression expression) {

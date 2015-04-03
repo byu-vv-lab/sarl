@@ -28,6 +28,13 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.util.EmptyMap;
 
+/**
+ * A trivial implementation of {@link Simplifier} which does nothing: given an
+ * expression, it returns the expression unchanged.
+ * 
+ * @author Stephen F. Siegel
+ *
+ */
 public class IdentitySimplifier implements Simplifier {
 
 	private PreUniverse universe;

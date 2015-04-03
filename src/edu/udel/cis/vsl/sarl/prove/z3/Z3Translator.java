@@ -34,6 +34,11 @@ import edu.udel.cis.vsl.sarl.util.FastList;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
+ * <p>
+ * Translates SARL {@link SymbolicExpression}s to the language of the automated
+ * theorem prover Z3.
+ * </p>
+ * 
  * Notes on the Z3 language:
  * 
  * <pre>
@@ -129,8 +134,7 @@ import edu.udel.cis.vsl.sarl.util.Pair;
  * 
  * </pre>
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class Z3Translator {
 

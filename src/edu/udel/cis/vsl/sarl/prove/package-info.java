@@ -12,6 +12,6 @@
  * are used to produce instances of
  * {@link edu.udel.cis.vsl.sarl.prove.IF.TheoremProver}.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
 package edu.udel.cis.vsl.sarl.prove;

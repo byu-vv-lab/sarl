@@ -8,6 +8,12 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 
+/**
+ * A factory for producing instances of {@link MultiProver}.
+ * 
+ * @author Stephen F. Siegel
+ *
+ */
 public class MultiProverFactory implements TheoremProverFactory {
 
 	private PreUniverse universe;

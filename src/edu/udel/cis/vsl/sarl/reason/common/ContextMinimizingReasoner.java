@@ -42,7 +42,7 @@ import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
  * @author Stephen F. Siegel
  *
  */
-public class ContextMinimizingReasoner2 implements Reasoner {
+public class ContextMinimizingReasoner implements Reasoner {
 
 	// Static fields...
 
@@ -68,10 +68,10 @@ public class ContextMinimizingReasoner2 implements Reasoner {
 
 	/**
 	 * The factory responsible for producing instances of
-	 * {@link ContextMinimizingReasoner2}, including this one. It is needed to
+	 * {@link ContextMinimizingReasoner}, including this one. It is needed to
 	 * produce the {@link #prover} and/or {@link #simplifier}.
 	 */
-	private ContextMinimizingReasonerFactory2 factory;
+	private ContextMinimizingReasonerFactory factory;
 
 	/**
 	 * The context (i.e., path condition) associated to this reasoner. All
@@ -103,14 +103,14 @@ public class ContextMinimizingReasoner2 implements Reasoner {
 	 * 
 	 * @param factory
 	 *            the factory used for producing this and other instances of
-	 *            {@link ContextMinimizingReasoner2}
+	 *            {@link ContextMinimizingReasoner}
 	 * @param context
 	 *            the context (i.e., path condition), the fixed, underlying
 	 *            assumption used when processing all simplification and theorem
 	 *            prover queries with this reasoner
 	 */
-	public ContextMinimizingReasoner2(
-			ContextMinimizingReasonerFactory2 factory, BooleanExpression context) {
+	public ContextMinimizingReasoner(
+			ContextMinimizingReasonerFactory factory, BooleanExpression context) {
 		this.factory = factory;
 		this.context = context;
 		this.partition = Simplify.newContextPartition(factory.getUniverse(),
@@ -131,11 +131,11 @@ public class ContextMinimizingReasoner2 implements Reasoner {
 		return prover;
 	}
 
-	private ContextMinimizingReasoner2 getReducedReasonerFor(
+	private ContextMinimizingReasoner getReducedReasonerFor(
 			SymbolicExpression expression) {
 		BooleanExpression reducedContext = partition.minimizeFor(expression,
 				factory.getUniverse());
-		ContextMinimizingReasoner2 reducedReasoner;
+		ContextMinimizingReasoner reducedReasoner;
 
 		if (reducedContext == context) {
 			reducedReasoner = this;
@@ -170,7 +170,7 @@ public class ContextMinimizingReasoner2 implements Reasoner {
 		if (result != null)
 			return result;
 
-		ContextMinimizingReasoner2 reducedReasoner = getReducedReasonerFor(predicate);
+		ContextMinimizingReasoner reducedReasoner = getReducedReasonerFor(predicate);
 
 		if (reducedReasoner != this) {
 			result = reducedReasoner.validCacheNoReduce(predicate, getModel);
@@ -360,7 +360,7 @@ public class ContextMinimizingReasoner2 implements Reasoner {
 
 	@Override
 	public SymbolicExpression simplify(SymbolicExpression expression) {
-		ContextMinimizingReasoner2 reducedReasoner = getReducedReasonerFor(expression);
+		ContextMinimizingReasoner reducedReasoner = getReducedReasonerFor(expression);
 		SymbolicExpression result = reducedReasoner.getSimplifier().apply(
 				expression);
 

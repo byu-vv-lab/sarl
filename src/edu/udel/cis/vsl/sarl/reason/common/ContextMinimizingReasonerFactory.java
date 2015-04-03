@@ -3,19 +3,21 @@ package edu.udel.cis.vsl.sarl.reason.common;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
+import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.prove.IF.TheoremProverFactory;
 import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
+import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
 /**
- * A factory for producing instances of
- * {@link ContextMinimizingReasonerFactory2}.
+ * A factory for producing instances of {@link ContextMinimizingReasoner}.
  * 
  * @author Stephen F. Siegel
  */
-public class ContextMinimizingReasonerFactory2 implements ReasonerFactory {
+public class ContextMinimizingReasonerFactory implements ReasonerFactory {
 
 	/**
 	 * Factory used to produce new {@link TheoremProver}s, which will be used by
@@ -41,7 +43,7 @@ public class ContextMinimizingReasonerFactory2 implements ReasonerFactory {
 	 * relation is determined by the {@link BooleanExpression#equals(Object)}
 	 * method.
 	 */
-	private Map<BooleanExpression, ContextMinimizingReasoner2> reasonerMap = new HashMap<>();
+	private Map<BooleanExpression, ContextMinimizingReasoner> reasonerMap = new HashMap<>();
 
 	/**
 	 * Creates new factory based on the given symbolic universe, theorem prover
@@ -57,7 +59,7 @@ public class ContextMinimizingReasonerFactory2 implements ReasonerFactory {
 	 *            used to produce new {@link Simplifier}s, which will be used by
 	 *            the reasoners to simplify expressions
 	 */
-	public ContextMinimizingReasonerFactory2(PreUniverse universe,
+	public ContextMinimizingReasonerFactory(PreUniverse universe,
 			TheoremProverFactory proverFactory,
 			SimplifierFactory simplifierFactory) {
 		this.universe = universe;
@@ -67,11 +69,11 @@ public class ContextMinimizingReasonerFactory2 implements ReasonerFactory {
 	}
 
 	@Override
-	public ContextMinimizingReasoner2 getReasoner(BooleanExpression context) {
-		ContextMinimizingReasoner2 result = reasonerMap.get(context);
+	public ContextMinimizingReasoner getReasoner(BooleanExpression context) {
+		ContextMinimizingReasoner result = reasonerMap.get(context);
 
 		if (result == null) {
-			result = new ContextMinimizingReasoner2(this, context);
+			result = new ContextMinimizingReasoner(this, context);
 			reasonerMap.put(context, result);
 		}
 		return result;

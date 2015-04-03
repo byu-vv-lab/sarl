@@ -18,29 +18,40 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF;
 
-
 /**
- * A ValidityResult represents the result of a validity query.
+ * <p>
+ * A {@link ValidityResult} represents the result of a validity query.
+ * </p>
  * 
- * It defines an enumerated Type "ResultType" with three possible values: YES,
- * NO, MAYBE. This is used to represent the result returned by an automated
- * theorem prover.
+ * <p>
+ * It defines an enumerated type {@link ResultType} with three possible values:
+ * {@link ResultType#YES}, {@link ResultType#NO}, {@link ResultType#MAYBE}. This
+ * is used to represent the result returned by an automated theorem prover.
+ * </p>
  * 
- * In the case that the result type is NO, a ValidityResult may also provide a
- * model, i.e., an assignment of concrete values to symbolic constants that
- * leads the assumption to evaluate to true and the predicate to evaluate to
- * false.
+ * <p>
+ * In the case that the result type is {@link ResultType#NO}, a
+ * {@link ValidityResult} may also provide a <i>model</i>, i.e., an assignment
+ * of concrete values to symbolic constants that leads the assumption to
+ * evaluate to <code>true</code> and the predicate to evaluate to
+ * <code>false</code>.
+ * </p>
  * 
+ * <p>
  * The subclass {@link ModelResult} provides a method to get a model
- * (counterexample). A ModelResult always has result type NO, because only
- * invalid queries can have models. However, the model returned may be null:
- * this indicates that the attempt to find a model failed for some reason.
+ * (counterexample). A {@link ModelResult} always has result type
+ * {@link ResultType#NO}, because only invalid queries can have models. However,
+ * the model returned may be <code>null</code>: this indicates that the attempt
+ * to find a model failed for some reason.
+ * </p>
  * 
- * An instance of ValidityResult of type "NO" that is not an instance of
- * ModelResult indicates that there was no attempt to find a model.
+ * <p>
+ * An instance of {@link ValidityResult} of type {@link ResultType#NO} that is
+ * not an instance of {@link ModelResult} indicates that there was no attempt to
+ * find a model.
+ * </p>
  * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public interface ValidityResult {
 

@@ -24,11 +24,10 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
  * A factory for producing instances of {@link Simplifier}. Each instance of
  * {@link Simplifier} is formed around a single "assumption", a boolean-valued
  * symbolic expression which forms the context under which all simplifications
- * take place. (In symbolic execution, the assumtion is typically the path
+ * take place. (In symbolic execution, the assumption is typically the path
  * condition.)
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public interface SimplifierFactory {
 

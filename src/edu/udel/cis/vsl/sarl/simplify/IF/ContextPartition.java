@@ -56,8 +56,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
  * cached.
  * </p>
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public interface ContextPartition {
 

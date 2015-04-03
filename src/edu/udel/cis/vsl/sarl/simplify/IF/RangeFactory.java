@@ -7,7 +7,7 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 /**
  * Factory for producing instances of {@link Range}.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  *
  */
 public interface RangeFactory {

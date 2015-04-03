@@ -21,27 +21,9 @@ package edu.udel.cis.vsl.sarl.prove.common;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 
 /**
- * A ValidityResult represents the result of a validity query.
+ * Straightforward implementation of {@link ValidityResult}.
  * 
- * It defines an enumerated Type "ResultType" with three possible values: YES,
- * NO, MAYBE. This is used to represent the result returned by an automated
- * theorem prover.
- * 
- * In the case that the result type is NO, a ValidityResult may also provide a
- * model, i.e., an assignment of concrete values to symbolic constants that
- * leads the assumption to evaluate to true and the predicate to evaluate to
- * false.
- * 
- * The subclass {@link CommonModelResult} provides a method to get a model
- * (counterexample). A ModelResult always has result type NO, because only
- * invalid queries can have models. However, the model returned may be null:
- * this indicates that the attempt to find a model failed for some reason.
- * 
- * An instance of ValidityResult of type "NO" that is not an instance of
- * ModelResult indicates that there was no attempt to find a model.
- * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public class CommonValidityResult implements ValidityResult {
 
@@ -58,11 +40,6 @@ public class CommonValidityResult implements ValidityResult {
 		this.resultType = resultType;
 	}
 
-	/**
-	 * Returns the result type of this result.
-	 * 
-	 * @return the result type
-	 */
 	@Override
 	public ResultType getResultType() {
 		return resultType;

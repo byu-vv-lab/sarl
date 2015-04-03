@@ -47,8 +47,7 @@ import edu.udel.cis.vsl.sarl.prove.z3.RobustZ3TheoremProverFactory;
  * <li>various other methods dealing with prover results</li>
  * </ul>
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class Prove {
 

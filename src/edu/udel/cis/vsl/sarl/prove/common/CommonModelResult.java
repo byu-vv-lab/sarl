@@ -25,13 +25,11 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 
 /**
- * A result to a validity query which also requested a model in case the answer
- * was "NO", and for which the answer was "NO". The model may nevertheless be
- * null, indicating the model could not be constructed for some reason (even
- * though the query is known to be invalid).
+ * Straightforward implementation of {@link ModelResult} using a Java
+ * {@link Map} to store the mapping of symbolic constants to their concrete
+ * values.
  * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public class CommonModelResult extends CommonValidityResult implements
 		ModelResult {

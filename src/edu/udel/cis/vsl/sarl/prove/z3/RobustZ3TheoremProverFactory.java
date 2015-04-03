@@ -11,8 +11,7 @@ import edu.udel.cis.vsl.sarl.prove.cvc.RobustCVCTheoremProver;
 /**
  * Factory for producing new instances of {@link RobustCVCTheoremProver}.
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class RobustZ3TheoremProverFactory implements TheoremProverFactory {
 

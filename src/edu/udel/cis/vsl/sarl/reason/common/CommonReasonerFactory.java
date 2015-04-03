@@ -28,6 +28,11 @@ import edu.udel.cis.vsl.sarl.reason.IF.ReasonerFactory;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 import edu.udel.cis.vsl.sarl.simplify.IF.SimplifierFactory;
 
+/**
+ * Factory for producing instances of {@link CommonReasoner}.
+ * 
+ * @author Stephen F. Siegel
+ */
 public class CommonReasonerFactory implements ReasonerFactory {
 
 	private Map<BooleanExpression, Reasoner> reasonerCache = new HashMap<>();
