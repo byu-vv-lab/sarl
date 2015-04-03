@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+
 /**
  * This test class provides testing coverage of the makeConstant
  * method in BoundsObject

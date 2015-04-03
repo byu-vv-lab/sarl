@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+
 /**Provides testing of the equals method of BoundsObject
  * 
  * @author danfried

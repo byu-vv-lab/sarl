@@ -17,6 +17,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+
 /**
  * Provides testing on the restrictLower method of BoundsObject,
  * which is used to adjust to a more restrictive bound on an existing BoundsObject

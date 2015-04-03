@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+
 /**Provides testing of the enlargeUpper method 
  * (and call to it from enlargeTo) of BoundsObject
  * 

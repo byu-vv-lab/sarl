@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+
 /**
  * Provides testing of the newUpperBound method, which
  * is used as one of three public constructors for a BoundsObject
