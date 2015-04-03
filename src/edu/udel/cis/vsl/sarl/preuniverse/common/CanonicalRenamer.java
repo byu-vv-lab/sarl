@@ -5,12 +5,13 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.udel.cis.vsl.sarl.IF.Predicate;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
+import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.util.Pair;
@@ -78,10 +79,10 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 	private int varCount = 0;
 
 	/**
-	 * Should this not change the names of symbolic constants of functional
-	 * type?
+	 * Which symbolic constants should be ignored? If <code>null</code>, none
+	 * will be ignored.
 	 */
-	private boolean ignoreFunctions;
+	private Predicate<SymbolicConstant> ignore;
 
 	/**
 	 * Creates new renamer.
@@ -95,22 +96,18 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 	 *            factory for producing new {@link SymbolicType}s
 	 * @param root
 	 *            root of new names
-	 * @param ignoreFunctions
-	 *            should this not change the names of symbolic constants of
-	 *            functional type?
+	 * @param ignore
+	 *            while symbolic constants should be ignored (i.e., not
+	 *            renamed)? if <code>null</code>, none will be ignored (i.e.,
+	 *            all will be renamed)
 	 */
 	public CanonicalRenamer(PreUniverse universe,
 			CollectionFactory collectionFactory,
 			SymbolicTypeFactory typeFactory, String root,
-			boolean ignoreFunctions) {
+			Predicate<SymbolicConstant> ignore) {
 		super(universe, collectionFactory, typeFactory);
 		this.root = root;
-		this.ignoreFunctions = ignoreFunctions;
-	}
-
-	private boolean ignore(SymbolicConstant x) {
-		return ignoreFunctions
-				&& x.type().typeKind() == SymbolicTypeKind.FUNCTION;
+		this.ignore = ignore;
 	}
 
 	@Override
@@ -150,7 +147,7 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 	protected SymbolicExpression substituteNonquantifiedExpression(
 			SymbolicExpression expr, SubstituterState state) {
 		if (expr instanceof SymbolicConstant
-				&& !ignore((SymbolicConstant) expr)) {
+				&& (ignore == null || !ignore.apply((SymbolicConstant) expr))) {
 			SymbolicConstant newVar = freeMap.get((SymbolicConstant) expr);
 
 			if (newVar == null) {

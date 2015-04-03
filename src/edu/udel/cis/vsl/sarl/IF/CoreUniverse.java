@@ -396,6 +396,40 @@ public interface CoreUniverse {
 			SymbolicExpression value);
 
 	/**
+	 * <p>
+	 * Returns an operator on {@link SymbolicExpression}s that replaces all
+	 * symbolic constants with (including bound ones) with symbolic constants
+	 * with unique canonical names. The names are formed by appending the
+	 * integers 0, 1, ..., to <code>root</code>. The renamer has state, so it
+	 * can be used repeatedly (applied to multiple symbolic expressions) and
+	 * will continue to generate new names for the new symbolic constants it
+	 * encounters if they have not been encountered before. Every fresh binding
+	 * of a bound variable is considered to be new, so is given a unique new
+	 * name.
+	 * </p>
+	 * 
+	 * <p>
+	 * The parameter <code>ignore</code> also provides a way to specify that
+	 * certain symbolic constants should be ignored, i.e., they should be
+	 * renamed.
+	 * </p>
+	 * 
+	 * @param root
+	 *            the string that forms the root of the names of the new
+	 *            symbolic constants
+	 * @param ignore
+	 *            a predicate providing a method that takes a
+	 *            {@link SymbolicConstant} and returns <code>true</code> or
+	 *            <code>false</code>; if it returns <code>true</code>, then that
+	 *            symbolic constant should <strong>not</strong> be renamed
+	 * @return a unary operator which take a symbolic expression and returns a
+	 *         symbolic expression in which the symbolic constants have been
+	 *         assigned canonial names
+	 */
+	UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
+			Predicate<SymbolicConstant> ignore);
+
+	/**
 	 * Returns an operator on {@link SymbolicExpression}s that replaces all
 	 * symbolic constants with (including bound ones) with symbolic constants
 	 * with unique canonical names. The names are formed by appending the
@@ -406,18 +440,19 @@ public interface CoreUniverse {
 	 * of a bound variable is considered to be new, so is given a unique new
 	 * name.
 	 * 
+	 * <p>
+	 * Equivalent to invoking {@link #canonicalRenamer(String, Predicate)} with
+	 * <code>ignore</code> the constant predicate <code>false</code>.
+	 * </p>
+	 * 
 	 * @param root
 	 *            the string that forms the root of the names of the new
 	 *            symbolic constants
-	 * @param ignoreFunctions
-	 *            should the renamer not rename symbolic constants of functional
-	 *            type?
 	 * @return a unary operator which take a symbolic expression and returns a
 	 *         symbolic expression in which the symbolic constants have been
 	 *         assigned canonial names
 	 */
-	UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
-			boolean ignoreFunctions);
+	UnaryOperator<SymbolicExpression> canonicalRenamer(String root);
 
 	/**
 	 * Applies the given operator to the arguments and returns the resulting

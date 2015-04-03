@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.udel.cis.vsl.sarl.IF.Predicate;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
@@ -2762,9 +2763,15 @@ public class CommonPreUniverse implements PreUniverse {
 
 	@Override
 	public UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
-			boolean ignoreFunctions) {
+			Predicate<SymbolicConstant> ignore) {
 		return new CanonicalRenamer(this, collectionFactory, typeFactory, root,
-				ignoreFunctions);
+				ignore);
+	}
+
+	@Override
+	public UnaryOperator<SymbolicExpression> canonicalRenamer(String root) {
+		return new CanonicalRenamer(this, collectionFactory, typeFactory, root,
+				null);
 	}
 
 }
