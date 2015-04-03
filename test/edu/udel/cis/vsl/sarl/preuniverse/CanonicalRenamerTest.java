@@ -18,7 +18,9 @@ import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -119,4 +121,30 @@ public class CanonicalRenamerTest {
 		assertEquals(expression1_expected, expression1_new);
 	}
 
+	@Test
+	public void canonic2() {
+		SymbolicArrayType int5 = universe.arrayType(integerType,
+				universe.integer(5));
+		SymbolicConstant X1 = universe.symbolicConstant(
+				universe.stringObject("X1"), integerType);
+		SymbolicConstant X2 = universe.symbolicConstant(
+				universe.stringObject("X2"), int5);
+		SymbolicExpression a = universe.arrayWrite(X2, universe.integer(3), X1);
+		UnaryOperator<SymbolicExpression> renamer = universe
+				.canonicalRenamer("X");
+		SymbolicExpression X1_expected = universe.symbolicConstant(
+				universe.stringObject("X0"), integerType);
+		SymbolicExpression X1_new = renamer.apply(X1);
+
+		out.println(X1 + " -> " + X1_new);
+		assertEquals(X1_expected, X1_new);
+
+		SymbolicExpression a_expected = universe.arrayWrite(
+				universe.symbolicConstant(universe.stringObject("X1"), int5),
+				universe.integer(3), X1_expected);
+		SymbolicExpression a_new = renamer.apply(a);
+
+		out.println(a + " -> " + a_new);
+		assertEquals(a_expected, a_new);
+	}
 }
