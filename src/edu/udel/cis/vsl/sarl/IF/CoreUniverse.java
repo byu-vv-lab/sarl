@@ -396,6 +396,26 @@ public interface CoreUniverse {
 			SymbolicExpression value);
 
 	/**
+	 * Returns an operator on {@link SymbolicExpression}s that replaces all
+	 * symbolic constants with (including bound ones) with symbolic constants
+	 * with unique canonical names. The names are formed by appending the
+	 * integers 0, 1, ..., to <code>root</code>. The renamer has state, so it
+	 * can be used repeatedly (applied to multiple symbolic expressions) and
+	 * will continue to generate new names for the new symbolic constants it
+	 * encounters if they have not been encountered before. Every fresh binding
+	 * of a bound variable is considered to be new, so is given a unique new
+	 * name.
+	 * 
+	 * @param root
+	 *            the string that forms the root of the names of the new
+	 *            symbolic constants
+	 * @return a unary operator which take a symbolic expression and returns a
+	 *         symbolic expression in which the symbolic constants have been
+	 *         assigned canonial names
+	 */
+	UnaryOperator<SymbolicExpression> canonicalRenamer(String root);
+
+	/**
 	 * Applies the given operator to the arguments and returns the resulting
 	 * expression in the form used by this universe. The arguments should have
 	 * the form required by the operator; see the documentation in the

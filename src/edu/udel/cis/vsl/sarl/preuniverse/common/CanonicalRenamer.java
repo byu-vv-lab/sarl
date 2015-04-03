@@ -1,21 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2013 Stephen F. Siegel, University of Delaware.
- * 
- * This file is part of SARL.
- * 
- * SARL is free software: you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
- * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with SARL. If not, see <http://www.gnu.org/licenses/>.
- ******************************************************************************/
 package edu.udel.cis.vsl.sarl.preuniverse.common;
 
 import java.util.ArrayDeque;
@@ -33,26 +15,14 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
- * Replaces all bound variables in expressions with new ones so that each has a
- * unique name and a name different from any unbound symbolic constant (assuming
- * no one else use the special string).
+ * A substituter used to assign new, canonical names to all symbolic constants
+ * occurring in a sequence of expressions. This class is provided with a root
+ * {@link String}, e.g., "X". Then, as it encounters symbolic constants, it
+ * renames them X0, X1, X2, ...., in that order.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
-public class BoundCleaner2 extends ExpressionSubstituter {
-
-	/**
-	 * Special string which will be used to give unique name to new variables.
-	 * "'" is good but not for Z3.
-	 */
-	private final static String specialString = "__";
-
-	/**
-	 * For each string X, the number of quantified variables named X that have
-	 * been encountered so far by this cleaner. If a variable does not occur in
-	 * this map that means the number of times is "0".
-	 */
-	private Map<String, Integer> countMap = new HashMap<>();
+public class CanonicalRenamer extends ExpressionSubstituter {
 
 	/**
 	 * State of search: stack of pairs of symbolic constants. Left component of
@@ -84,9 +54,33 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 		}
 	}
 
-	public BoundCleaner2(PreUniverse universe,
-			CollectionFactory collectionFactory, SymbolicTypeFactory typeFactory) {
+	/**
+	 * The root {@link String} to use for the new names. The integer 0, 1, ...,
+	 * will be appended to {@link #root} to form the names of the new symbolic
+	 * constants.
+	 */
+	private String root;
+
+	/**
+	 * Map from original free (not bound) symbolic constants to their newly
+	 * named versions.
+	 */
+	private Map<SymbolicConstant, SymbolicConstant> freeMap = new HashMap<>();
+
+	/**
+	 * The number of symbolic constants encountered so far. This includes both
+	 * free and bound symbolic constants. Each declaration of a bound symbolic
+	 * constant (i.e., its binding occurrence in a quantified expression) is
+	 * considered a totally new symbolic constant, so will be given a unique
+	 * name.
+	 */
+	private int varCount = 0;
+
+	public CanonicalRenamer(PreUniverse universe,
+			CollectionFactory collectionFactory,
+			SymbolicTypeFactory typeFactory, String root) {
 		super(universe, collectionFactory, typeFactory);
+		this.root = root;
 	}
 
 	@Override
@@ -99,20 +93,15 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 			SymbolicExpression expression, SubstituterState state) {
 		SymbolicConstant oldBoundVariable = (SymbolicConstant) expression
 				.argument(0);
-		String oldName = oldBoundVariable.name().getString();
-		Integer count = countMap.get(oldName);
 		SymbolicType newType = substituteType(expression.type(), state);
+		String newName = root + varCount;
 
-		if (count == null)
-			count = 0;
+		varCount++;
 
-		String newName = oldName + specialString + count;
-
-		count++;
-		countMap.put(oldName, count);
-
+		SymbolicType newBoundVariableType = substituteType(
+				oldBoundVariable.type(), state);
 		SymbolicConstant newBoundVariable = universe.symbolicConstant(
-				universe.stringObject(newName), oldBoundVariable.type());
+				universe.stringObject(newName), newBoundVariableType);
 
 		((BoundStack) state).push(oldBoundVariable, newBoundVariable);
 
@@ -129,15 +118,22 @@ public class BoundCleaner2 extends ExpressionSubstituter {
 
 	@Override
 	protected SymbolicExpression substituteNonquantifiedExpression(
-			SymbolicExpression expression, SubstituterState state) {
-		if (expression instanceof SymbolicConstant) {
-			SymbolicConstant newConstant = ((BoundStack) state)
-					.get(((SymbolicConstant) expression));
+			SymbolicExpression expr, SubstituterState state) {
+		if (expr instanceof SymbolicConstant) {
+			SymbolicConstant newVar = freeMap.get((SymbolicConstant) expr);
 
-			if (newConstant != null)
-				return newConstant;
+			if (newVar == null) {
+				SymbolicType oldType = expr.type();
+				SymbolicType newType = substituteType(oldType, state);
+
+				newVar = universe.symbolicConstant(
+						universe.stringObject(root + varCount), newType);
+				varCount++;
+				freeMap.put((SymbolicConstant) expr, newVar);
+			}
+			return newVar;
+		} else {
+			return super.substituteNonquantifiedExpression(expr, state);
 		}
-		return super.substituteNonquantifiedExpression(expression, state);
 	}
-
 }

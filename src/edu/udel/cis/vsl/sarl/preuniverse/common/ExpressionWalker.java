@@ -25,8 +25,7 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
  * Walks a symbolic expression to collect all free (unbound) symbolic constants
  * occurring anywhere in that expression.
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class ExpressionWalker {
 

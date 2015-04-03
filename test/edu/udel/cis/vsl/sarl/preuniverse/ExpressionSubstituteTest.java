@@ -1,7 +1,5 @@
 /**
- * Tests the method substitute(SymbolicExpression expression,
- * Map<SymbolicConstant, SymbolicExpression> Map) in class
- * ExpressionSubsitute.java
+ * Test substitutions.
  * 
  * @author Gunjan Majmudar
  * 
@@ -75,36 +73,19 @@ public class ExpressionSubstituteTest {
 				.arrayType(integerType, universe.integer(2));
 		tupleType = universe.tupleType(
 				universe.stringObject("SequenceofInteger"),
-				Arrays.asList(new SymbolicType[] { integerType, integerType,
-						integerType }));
-		unionType = universe.unionType(
-				universe.stringObject("union1"),
-				Arrays.asList(new SymbolicType[] { integerType, realType,
-						booleanType, intArrayType }));
+				Arrays.asList(integerType, integerType, integerType));
+		unionType = universe
+				.unionType(universe.stringObject("union1"), Arrays.asList(
+						integerType, realType, booleanType, intArrayType));
 
 		// SymbolicTypeSequence
 		sequence = tupleType.sequence();
-		sequence1 = universe.typeSequence(Arrays.asList(new SymbolicType[] {
-				integerType, realType, booleanType, intArrayType }));
+		sequence1 = universe.typeSequence(Arrays.asList(integerType, realType,
+				booleanType, intArrayType));
 		functionType = universe.functionType(sequence, realType);
 		functionType1 = universe.functionType(sequence1, realType);
 
 		// SymbolicExpression
-		expression1 = universe.nullExpression();
-		expression2 = universe.symbolicConstant(
-				universe.stringObject("intArrayTypeExpression"), intArrayType);
-		expression3 = universe.symbolicConstant(
-				universe.stringObject("TupleTypeExpression"), tupleType);
-		expression4 = universe.symbolicConstant(
-				universe.stringObject("UnionTypeExpression"), unionType);
-		expression5 = universe.symbolicConstant(
-				universe.stringObject("functionTypeExpression"), functionType);
-		expression6 = universe.symbolicConstant(
-				universe.stringObject("completeArrayTypeExpression"),
-				completeArrayType);
-		expression7 = universe.symbolicConstant(
-				universe.stringObject("typesequenceExpression"), functionType1);
-		expression8 = universe.emptyArray(integerType);
 	}
 
 	@AfterClass

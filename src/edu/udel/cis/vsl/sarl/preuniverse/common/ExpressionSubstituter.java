@@ -52,7 +52,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * {@link #newState()} to produce the initial {@link SubstituterState}. They
  * should also override any or all of the <code>protected</code> methods here.
  *
- * @author siegel
+ * @author Stephen F. Siegel
  */
 public abstract class ExpressionSubstituter implements
 		UnaryOperator<SymbolicExpression> {

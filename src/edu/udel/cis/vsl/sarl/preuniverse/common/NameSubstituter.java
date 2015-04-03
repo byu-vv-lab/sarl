@@ -16,7 +16,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * maps the old names to the new. The substitution is applied to all symbolic
  * constants, including bound ones.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
 public class NameSubstituter extends ExpressionSubstituter {
 

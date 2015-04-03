@@ -15,8 +15,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * A substituter specified by a single symbolic constant and a value that is to
  * replace that symbolic constant. Bound variables are ignored.
  * 
- * @author siegel
- *
+ * @author Stephen F. Siegel
  */
 public class SimpleSubstituter extends ExpressionSubstituter {
 

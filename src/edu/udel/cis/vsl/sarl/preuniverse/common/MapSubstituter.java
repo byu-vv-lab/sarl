@@ -17,7 +17,7 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * {@link SymbolicExpression} to {@link SymbolicExpression} to specify the base
  * substitutions. Bound variables will not be modified.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  */
 public class MapSubstituter extends ExpressionSubstituter {
 
