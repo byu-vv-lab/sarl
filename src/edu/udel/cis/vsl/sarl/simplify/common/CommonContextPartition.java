@@ -18,45 +18,9 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.ContextPartition;
 
 /**
- * <p>
- * Provides a partition of the set of conjunctive clauses of the path condition.
- * Let pc be a path condition (any boolean symbolic expression), and say pc is
- * the conjunction over some set C of clauses. Define an equivalence relation on
- * C as follows: if two clauses have a free (not bound) symbolic constant in
- * common, they are equivalent; complete by taking the transitive closure to an
- * equivalence relation. Say C is the disjoint union of P1, P2, ..., where the
- * Pi are the equivalence classes.
- * </p>
+ * Implementation of {@link ContextPartition}.
  * 
- * <p>
- * Given any symbolic constant X that occurs in the path condition, there is a
- * unique i such that X occurs in at least one clause in Pi. Let P(X) denote
- * this Pi.
- * </p>
- * 
- * <p>
- * Give any boolean symbolic expression q, let T(q) be the set of all clauses
- * P(X) where X ranges over all symbolic constants occurring in q for which X
- * also occurs in the path condition. Let subpc(pc, q) be the conjunction of
- * these P(X). The expression subpc(pc, q) can be used for the context when
- * attempting to determine the validity of q, and the result will be equivalent
- * to using the full path condition pc.
- * </p>
- * 
- * <p>
- * It is possible that the original path condition is unsatisfiable, yet pc(q)
- * is satisfiable. However in this case any result can be returned since the
- * contract for a prover leaves unspecified what is returned by "valid" when the
- * context is unsatisfiable.
- * </p>
- * 
- * <p>
- * The main method (after construction) is
- * {@link #minimizeFor(SymbolicExpression, PreUniverse)}. The results are
- * cached.
- * </p>
- * 
- * @author siegel
+ * @author Stephen F. Siegel
  *
  */
 public class CommonContextPartition implements ContextPartition {

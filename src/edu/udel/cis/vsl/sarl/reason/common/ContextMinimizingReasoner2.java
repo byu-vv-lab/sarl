@@ -23,8 +23,23 @@ import edu.udel.cis.vsl.sarl.simplify.IF.ContextPartition;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
 
 /**
+ * <p>
+ * A {@link Reasoner} based on <strong>context minimization</strong>. Given a
+ * context (the boolean expression which serves as the underlying assumption)
+ * and a predicate (the boolean expression to check for validity or to be
+ * simplified), the context minimization algorithm produces a new context which
+ * is possibly weaker than the original one, but which is guaranteed to produce
+ * an equivalent result when used as the context for validity or simplification.
+ * </p>
  * 
- * @author siegel
+ * <p>
+ * In addition, this reasoner uses simplification, caching, and calls to
+ * underlying {@link TheoremProver}s as needed.
+ * </p>
+ * 
+ * @see {@link ContextPartition}
+ * 
+ * @author Stephen F. Siegel
  *
  */
 public class ContextMinimizingReasoner2 implements Reasoner {
