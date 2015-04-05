@@ -69,8 +69,13 @@ public abstract class CommonSimplifier implements Simplifier {
 	 */
 	protected PreUniverse universe;
 
-	/** Cached simplifications. */
-	protected Map<SymbolicObject, SymbolicObject> simplifyMap = new HashMap<SymbolicObject, SymbolicObject>();
+	/**
+	 * Cached simplifications.
+	 * 
+	 * Problem here: the keys and/or values may or may not be canonic. Should we
+	 * insist that before simplifying any expression, it should be canonic?
+	 */
+	private Map<SymbolicObject, SymbolicObject> simplifyMap = new HashMap<SymbolicObject, SymbolicObject>();
 
 	public CommonSimplifier(PreUniverse universe) {
 		assert universe != null;
@@ -101,7 +106,22 @@ public abstract class CommonSimplifier implements Simplifier {
 	protected abstract SymbolicExpression simplifyExpression(
 			SymbolicExpression expression);
 
-	protected SymbolicType simplifyTypeWork(SymbolicType type) {
+	protected SymbolicObject getCachedSimplification(SymbolicObject key) {
+		return simplifyMap.get(key);
+	}
+
+	protected SymbolicObject cacheSimplification(SymbolicObject key,
+			SymbolicObject value) {
+		key = universe.canonic(key);
+		value = universe.canonic(value);
+		return simplifyMap.put(key, value);
+	}
+
+	protected void clearSimplificationCache() {
+		simplifyMap.clear();
+	}
+
+	private SymbolicType simplifyTypeWork(SymbolicType type) {
 		switch (type.typeKind()) {
 		case BOOLEAN:
 		case INTEGER:
@@ -167,16 +187,17 @@ public abstract class CommonSimplifier implements Simplifier {
 	}
 
 	protected SymbolicType simplifyType(SymbolicType type) {
-		SymbolicType result = (SymbolicType) simplifyMap.get(type);
+		SymbolicType result = (SymbolicType) getCachedSimplification(type);
 
 		if (result == null) {
 			result = simplifyTypeWork(type);
-			simplifyMap.put(type, result);
+			result = (SymbolicType) universe.canonic(result);
+			cacheSimplification(type, result);
 		}
 		return result;
 	}
 
-	protected Iterable<? extends SymbolicType> simplifyTypeSequenceWork(
+	private Iterable<? extends SymbolicType> simplifyTypeSequenceWork(
 			SymbolicTypeSequence sequence) {
 		int size = sequence.numTypes();
 
@@ -198,12 +219,12 @@ public abstract class CommonSimplifier implements Simplifier {
 		return sequence;
 	}
 
-	protected SymbolicTypeSequence simplifyTypeSequence(
+	private SymbolicTypeSequence simplifyTypeSequence(
 			SymbolicTypeSequence sequence) {
 		return universe.typeSequence(simplifyTypeSequenceWork(sequence));
 	}
 
-	protected SymbolicSequence<?> simplifySequenceWork(
+	private SymbolicSequence<?> simplifySequenceWork(
 			SymbolicSequence<?> sequence) {
 		@SuppressWarnings("unchecked")
 		SymbolicSequence<SymbolicExpression> theSequence = (SymbolicSequence<SymbolicExpression>) sequence;
@@ -211,7 +232,17 @@ public abstract class CommonSimplifier implements Simplifier {
 		return theSequence.apply(this);
 	}
 
-	protected SymbolicCollection<?> simplifyGenericCollection(
+	/**
+	 * Simplifies a collection, but possibly returning a collection of a
+	 * different kind. Reason: it just going to go through
+	 * {@link PreUniverse#make(SymbolicOperator, SymbolicType, SymbolicObject[])}
+	 * anyway. Since make only requires an {@link Iterable}, it makes absolutely
+	 * no difference what kind of collection it uses.
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	private SymbolicCollection<?> simplifyGenericCollection(
 			SymbolicCollection<?> collection) {
 		Iterator<? extends SymbolicExpression> iter = collection.iterator();
 		boolean change = false;
@@ -224,12 +255,14 @@ public abstract class CommonSimplifier implements Simplifier {
 			change = change || x != y;
 			list.add(y);
 		}
-		if (change)
-			return universe.basicCollection(list);
+		if (change) {
+			// return universe.basicCollection(list);
+			return universe.collectionFactory().sequence(list);
+		}
 		return collection;
 	}
 
-	protected SymbolicCollection<?> simplifyCollectionWork(
+	private SymbolicCollection<?> simplifyCollectionWork(
 			SymbolicCollection<?> collection) {
 		SymbolicCollectionKind kind = collection.collectionKind();
 
@@ -240,12 +273,12 @@ public abstract class CommonSimplifier implements Simplifier {
 
 	protected SymbolicCollection<?> simplifyCollection(
 			SymbolicCollection<?> collection) {
-		SymbolicCollection<?> result = (SymbolicCollection<?>) simplifyMap
-				.get(collection);
+		SymbolicCollection<?> result = (SymbolicCollection<?>) getCachedSimplification(collection);
 
 		if (result == null) {
 			result = simplifyCollectionWork(collection);
-			simplifyMap.put(collection, result);
+			result = (SymbolicCollection<?>) universe.canonic(result);
+			cacheSimplification(collection, result);
 		}
 		return result;
 	}
@@ -343,19 +376,23 @@ public abstract class CommonSimplifier implements Simplifier {
 				}
 				if (simplifiedArgs == null)
 					return expression;
-				return universe.make(operator, simplifiedType, simplifiedArgs);
+				return (SymbolicExpression) universe.canonic(universe.make(
+						operator, simplifiedType, simplifiedArgs));
 			}
 		}
 	}
 
 	@Override
 	public SymbolicExpression apply(SymbolicExpression expression) {
-		SymbolicExpression result = (SymbolicExpression) simplifyMap
-				.get(expression);
+		// ensure that the expression is canonic:
+		expression = universe.canonic(expression);
+
+		SymbolicExpression result = (SymbolicExpression) getCachedSimplification(expression);
 
 		if (result == null) {
 			result = simplifyExpression(expression);
-			simplifyMap.put(expression, result);
+			result = universe.canonic(result);
+			cacheSimplification(expression, result);
 		}
 		return result;
 	}

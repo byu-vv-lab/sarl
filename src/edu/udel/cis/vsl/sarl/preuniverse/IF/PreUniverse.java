@@ -8,6 +8,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
+import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 
 /**
@@ -53,6 +54,8 @@ public interface PreUniverse extends CoreUniverse {
 	 * @return SymbolicTypeSequence of SymbolicType - types
 	 */
 	SymbolicTypeSequence typeSequence(Iterable<? extends SymbolicType> types);
+
+	CollectionFactory collectionFactory();
 
 	<T extends SymbolicExpression> SymbolicCollection<T> basicCollection(
 			Collection<T> javaCollection);

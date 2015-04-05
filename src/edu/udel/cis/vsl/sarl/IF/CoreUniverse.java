@@ -573,51 +573,6 @@ public interface CoreUniverse {
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
 
-	// SymbolicExpression substitute(SymbolicExpression expression,
-	// Map<SymbolicExpression, SymbolicExpression> map);
-
-	// /**
-	// * Substitutes symbolic expressions for symbolic constants in a symbolic
-	// * expression.
-	// *
-	// * Each occurrence of symbolic constant X in expression will be replaced
-	// * with expression map(X), if map(X) is not null. The substitutions are
-	// all
-	// * simultaneous.
-	// *
-	// * Note that substitutions are not recursive, i.e., no substitutions are
-	// * applied to the resulting expression after the first substitution.
-	// *
-	// * Example: map={X->Y, Y->X}. expression=X/Y. result of substitution is
-	// Y/X.
-	// *
-	// * @param expression
-	// * any symbolic expression
-	// * @param map
-	// * a map from symbolic constants to symbolic expressions
-	// * @return a symbolic expression in which the symbolic constants have been
-	// * replaced by the corresponding expressions
-	// */
-	// SymbolicExpression substituteSymbolicConstants(
-	// SymbolicExpression expression,
-	// Map<SymbolicConstant, SymbolicExpression> map);
-
-	// /**
-	// * Performs substitution of a single symbolic constant. This is for
-	// * convenience; it is a special case of the method that takes an entire
-	// map.
-	// *
-	// * @param expression
-	// * the expression in which substitution should take place
-	// * @param variable
-	// * the symbolic constant which should be replaced
-	// * @param value
-	// * the thing that replaces the variable
-	// * @return the expression that results from performing the substitution on
-	// * the given expression
-	// */
-	// SymbolicExpression substitute(SymbolicExpression expression,
-	// SymbolicConstant variable, SymbolicExpression value);
 
 	// Integers...
 
@@ -1748,7 +1703,4 @@ public interface CoreUniverse {
 	 * @return set of unbound symbolic constants occurring in <code>expr</code>
 	 */
 	Set<SymbolicConstant> getFreeSymbolicConstants(SymbolicExpression expr);
-
-	// BooleanExpression[] getConjunctiveClauses(BooleanExpression expr);
-
 }

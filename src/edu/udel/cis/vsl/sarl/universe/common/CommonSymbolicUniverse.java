@@ -59,6 +59,7 @@ public class CommonSymbolicUniverse extends CommonPreUniverse implements
 
 	@Override
 	public Reasoner reasoner(BooleanExpression context) {
+		context = (BooleanExpression) canonic(context);
 		return reasonerFactory.getReasoner(context);
 	}
 

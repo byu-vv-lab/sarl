@@ -260,6 +260,10 @@ public class CommonContextPartition implements ContextPartition {
 		if (result == null) {
 			Set<SymbolicConstant> vars = universe
 					.getFreeSymbolicConstants(expr);
+			
+			// TODO: also need free symbolic constants occurring in the 
+			// expr.type()????
+			
 			Set<Integer> resultClasses = new HashSet<>();
 
 			for (SymbolicConstant var : vars) {
@@ -281,6 +285,7 @@ public class CommonContextPartition implements ContextPartition {
 				System.out.println("Minimized context: " + result);
 				System.out.println();
 			}
+			result = (BooleanExpression) universe.canonic(result);
 			minimalContextMap.put(expr, result);
 		}
 		return result;

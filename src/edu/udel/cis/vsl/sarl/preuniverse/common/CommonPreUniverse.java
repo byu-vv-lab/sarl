@@ -2774,4 +2774,9 @@ public class CommonPreUniverse implements PreUniverse {
 				null);
 	}
 
+	@Override
+	public CollectionFactory collectionFactory() {
+		return collectionFactory;
+	}
+
 }

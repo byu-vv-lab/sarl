@@ -70,6 +70,8 @@ public class ContextMinimizingReasonerFactory implements ReasonerFactory {
 
 	@Override
 	public ContextMinimizingReasoner getReasoner(BooleanExpression context) {
+		assert context.isCanonic();
+		
 		ContextMinimizingReasoner result = reasonerMap.get(context);
 
 		if (result == null) {

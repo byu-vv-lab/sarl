@@ -133,6 +133,7 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	public IdealSimplifier(SimplifierInfo info, BooleanExpression assumption) {
 		super(info.universe);
+		assert assumption.isCanonic();
 		this.info = info;
 		this.assumption = assumption;
 		initialize();
@@ -310,7 +311,7 @@ public class IdealSimplifier extends CommonSimplifier {
 		BooleanExpression result2 = null;
 
 		if (result1 != expression) {
-			result2 = (BooleanExpression) simplifyMap.get(result1);
+			result2 = (BooleanExpression) getCachedSimplification(result1);
 			if (result2 == null) {
 				if (result1.operator() == SymbolicOperator.CONCRETE)
 					result2 = result1;
@@ -550,7 +551,7 @@ public class IdealSimplifier extends CommonSimplifier {
 	private void initialize() {
 		while (true) {
 			boundMap.clear();
-			simplifyMap.clear(); // why?
+			clearSimplificationCache(); // why?
 
 			boolean satisfiable = extractBounds();
 
@@ -605,7 +606,8 @@ public class IdealSimplifier extends CommonSimplifier {
 				}
 				if (assumption.equals(newAssumption))
 					break;
-				assumption = newAssumption;
+				assumption = (BooleanExpression) universe
+						.canonic(newAssumption);
 			}
 		}
 		extractRemainingFacts();
@@ -638,7 +640,7 @@ public class IdealSimplifier extends CommonSimplifier {
 				SymbolicExpression constant = universe.cast(originalType,
 						universe.number(value));
 
-				simplifyMap.put(original, constant);
+				cacheSimplification(original, constant);
 			}
 		}
 	}
@@ -1016,7 +1018,7 @@ public class IdealSimplifier extends CommonSimplifier {
 	private void declareFact(SymbolicExpression booleanExpression, boolean truth) {
 		BooleanExpression value = truth ? info.trueExpr : info.falseExpr;
 
-		simplifyMap.put(booleanExpression, value);
+		cacheSimplification(booleanExpression, value);
 	}
 
 	private void declareClauseFact(BooleanExpression clause) {

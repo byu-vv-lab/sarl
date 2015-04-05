@@ -148,16 +148,20 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 			SymbolicExpression expr, SubstituterState state) {
 		if (expr instanceof SymbolicConstant
 				&& (ignore == null || !ignore.apply((SymbolicConstant) expr))) {
-			SymbolicConstant newVar = freeMap.get((SymbolicConstant) expr);
+			SymbolicConstant newVar = ((BoundStack) state)
+					.get((SymbolicConstant) expr);
 
 			if (newVar == null) {
-				SymbolicType oldType = expr.type();
-				SymbolicType newType = substituteType(oldType, state);
+				newVar = freeMap.get((SymbolicConstant) expr);
+				if (newVar == null) {
+					SymbolicType oldType = expr.type();
+					SymbolicType newType = substituteType(oldType, state);
 
-				newVar = universe.symbolicConstant(
-						universe.stringObject(root + varCount), newType);
-				varCount++;
-				freeMap.put((SymbolicConstant) expr, newVar);
+					newVar = universe.symbolicConstant(
+							universe.stringObject(root + varCount), newType);
+					varCount++;
+					freeMap.put((SymbolicConstant) expr, newVar);
+				}
 			}
 			return newVar;
 		} else {

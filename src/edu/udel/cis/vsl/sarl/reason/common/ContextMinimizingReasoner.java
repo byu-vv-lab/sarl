@@ -7,6 +7,7 @@ import java.util.Map;
 import edu.udel.cis.vsl.sarl.IF.ModelResult;
 import edu.udel.cis.vsl.sarl.IF.Reasoner;
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
+import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult;
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -21,6 +22,7 @@ import edu.udel.cis.vsl.sarl.prove.IF.TheoremProver;
 import edu.udel.cis.vsl.sarl.simplify.Simplify;
 import edu.udel.cis.vsl.sarl.simplify.IF.ContextPartition;
 import edu.udel.cis.vsl.sarl.simplify.IF.Simplifier;
+import edu.udel.cis.vsl.sarl.util.Pair;
 
 /**
  * <p>
@@ -46,9 +48,20 @@ public class ContextMinimizingReasoner implements Reasoner {
 
 	// Static fields...
 
-	public final static boolean debug = false;
+	/**
+	 * Print debugging information?
+	 */
+	private final static boolean debug = false;
 
-	public final static PrintStream debugOut = System.out;
+	/**
+	 * Where to print the debugging information.
+	 */
+	private final static PrintStream debugOut = System.out;
+
+	/**
+	 * Try renaming all symbolic constants in a canonical way, like in Green.
+	 */
+	private final static boolean rename = false;
 
 	// Instance fields...
 
@@ -109,8 +122,9 @@ public class ContextMinimizingReasoner implements Reasoner {
 	 *            assumption used when processing all simplification and theorem
 	 *            prover queries with this reasoner
 	 */
-	public ContextMinimizingReasoner(
-			ContextMinimizingReasonerFactory factory, BooleanExpression context) {
+	public ContextMinimizingReasoner(ContextMinimizingReasonerFactory factory,
+			BooleanExpression context) {
+		assert context.isCanonic();
 		this.factory = factory;
 		this.context = context;
 		this.partition = Simplify.newContextPartition(factory.getUniverse(),
@@ -131,6 +145,44 @@ public class ContextMinimizingReasoner implements Reasoner {
 		return prover;
 	}
 
+	/**
+	 * Use context minimization to compute a reduced context for the given
+	 * expression, AND then rename all the symbolic constants in the reduced
+	 * context and the expression.
+	 * 
+	 * @param expression
+	 *            a symbolic expression that is to be simplified or validated
+	 * @return a pair consisting of the {@link Reasoner} for the renamed,
+	 *         reduced context and the renamed expression
+	 */
+	private Pair<ContextMinimizingReasoner, SymbolicExpression> reduceAndRename(
+			SymbolicExpression expression) {
+		BooleanExpression reducedContext = partition.minimizeFor(expression,
+				factory.getUniverse());
+		UnaryOperator<SymbolicExpression> renamer = factory.getUniverse()
+				.canonicalRenamer("X");
+		BooleanExpression renamedContext = (BooleanExpression) renamer
+				.apply(reducedContext);
+		SymbolicExpression renamedExpression = renamer.apply(expression);
+		ContextMinimizingReasoner reasoner;
+
+		if (renamedContext == context) {
+			reasoner = this;
+		} else {
+			reasoner = factory.getReasoner(renamedContext);
+		}
+		return new Pair<ContextMinimizingReasoner, SymbolicExpression>(
+				reasoner, renamedExpression);
+	}
+
+	/**
+	 * Use context minimization to compute a reduced context for the given
+	 * expression.
+	 * 
+	 * @param expression
+	 *            a symbolic expression that is to be simplified or validated
+	 * @return the {@link Reasoner} for the reduced context
+	 */
 	private ContextMinimizingReasoner getReducedReasonerFor(
 			SymbolicExpression expression) {
 		BooleanExpression reducedContext = partition.minimizeFor(expression,
@@ -170,12 +222,33 @@ public class ContextMinimizingReasoner implements Reasoner {
 		if (result != null)
 			return result;
 
-		ContextMinimizingReasoner reducedReasoner = getReducedReasonerFor(predicate);
+		ContextMinimizingReasoner reducedReasoner;
+		BooleanExpression transformedPredicate;
+
+		if (rename) {
+			// note: for now, getModel won't work with renamed predicates; you
+			// need a way to get the map between the old and new names in the
+			// predicate
+			Pair<ContextMinimizingReasoner, SymbolicExpression> pair = reduceAndRename(predicate);
+
+			reducedReasoner = pair.left;
+			transformedPredicate = (BooleanExpression) pair.right;
+		} else {
+			reducedReasoner = getReducedReasonerFor(predicate);
+			transformedPredicate = predicate;
+		}
+
+		if (debug) {
+			debugOut.println("Reduced context       : "
+					+ reducedReasoner.context);
+			debugOut.println("Transformed predicate : " + transformedPredicate);
+		}
 
 		if (reducedReasoner != this) {
-			result = reducedReasoner.validCacheNoReduce(predicate, getModel);
+			result = reducedReasoner.validCacheNoReduce(transformedPredicate,
+					getModel);
 		} else {
-			result = this.validNoCacheNoReduce(predicate, getModel);
+			result = this.validNoCacheNoReduce(transformedPredicate, getModel);
 		}
 		updateCache(predicate, result);
 		return result;
@@ -245,6 +318,17 @@ public class ContextMinimizingReasoner implements Reasoner {
 		if (simplifiedPredicate != predicate) {
 			// the predicate got simpler, so start over again with
 			// checks of trivial cases, cache, etc...
+
+			if (debug) {
+				debugOut.println("Context    : " + context);
+				debugOut.println("Predicate  : " + predicate);
+				debugOut.println("Simplified : " + simplifiedPredicate);
+			}
+
+			if (simplifiedPredicate.equals(predicate)) {
+				assert false;
+			}
+
 			result = valid1(simplifiedPredicate, getModel);
 		} else if (getModel) {
 			result = getProver().validOrModel(simplifiedPredicate);
@@ -360,10 +444,21 @@ public class ContextMinimizingReasoner implements Reasoner {
 
 	@Override
 	public SymbolicExpression simplify(SymbolicExpression expression) {
+
+		if (debug) {
+			debugOut.println("Simplifying            :" + expression + " ("
+					+ expression.type() + ")");
+			debugOut.println("Simplification context : " + context);
+		}
+
 		ContextMinimizingReasoner reducedReasoner = getReducedReasonerFor(expression);
 		SymbolicExpression result = reducedReasoner.getSimplifier().apply(
 				expression);
 
+		if (debug) {
+			debugOut.println("Simplification result  : " + result + " ("
+					+ result.type() + ")");
+		}
 		return result;
 	}
 
@@ -382,6 +477,7 @@ public class ContextMinimizingReasoner implements Reasoner {
 		PreUniverse universe = factory.getUniverse();
 		boolean showQuery = universe.getShowQueries();
 
+		predicate = (BooleanExpression) universe.canonic(predicate);
 		if (showQuery) {
 			PrintStream out = universe.getOutputStream();
 			int id = universe.numValidCalls();

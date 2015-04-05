@@ -441,6 +441,7 @@ public abstract class ExpressionSubstituter implements
 
 		if (result == null) {
 			result = substituteExpression(expression, newState());
+			result = universe.canonic(result);
 			cache.put(expression, result);
 		} else {
 			// performance debugging experiments:
