@@ -407,4 +407,19 @@ public interface NumberFactory {
 	 */
 	void union(Interval i1, Interval i2, IntervalUnion result);
 
+	/**
+	 * Computes the affineTransform of the input interval <code>itv</code> with two numbers:
+	 * <code>a</code> and <code>b</code> as parameters.
+	 * 
+	 * @param itv
+	 * 			an interval
+	 * @param a
+	 * 			a number used to multiply with both upper and lower of <code>itv</code>
+	 * @param b
+	 * 			a number used to add to both upper and lower of <code>itv</code>,
+	 * 			after multiplying <code>a</code>.
+	 * @return
+	 * 			an interval which is affineTransform of <code>itv</code>
+	 */
+	Interval affineTransform(Interval itv, Number a, Number b);
 }
