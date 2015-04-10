@@ -1098,7 +1098,8 @@ public class RealNumberFactory implements NumberFactory {
 			}
 		}
 	}// Union
-	
+
+	@Override
 	public Interval affineTransform(Interval itv, Number a, Number b) {
 		// TODO: How to judge the type of Number is Int or Real?
 		assert a != null && b != null;
