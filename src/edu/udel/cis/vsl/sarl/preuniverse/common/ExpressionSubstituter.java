@@ -55,9 +55,49 @@ import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
  * </p>
  * 
  * <p>
- * Idea: instead of recursion: try using stacks. workStack and resultStack.
+ * Idea: instead of recursion: try using stacks. workStack and resultStack. In
+ * the following, the LEFT side is the top of each stack. That is where elements
+ * are pushed and popped.
+ * 
+ * Procedure: loop until work stack is empty. Take object off the top of the
+ * work stack. If the object is an operator, perform that operation on the
+ * result stack. If the object is a symbolic object: If you can simplify it in
+ * one step (by cache or because it is primitive), push the simplified result
+ * onto the result stack. Otherwise push onto the work stack: the operator
+ * followed by the arguments.
+ * 
+ * Question: how do you know where a collection begins and ends? Might have to
+ * include "size" as part of collection argument.
+ * 
  * </p>
  * 
+ * 
+ * <pre>
+ * work:  (X*Y)+Z
+ * result:
+ * 
+ * work:  (X*Y) Z +
+ * result:
+ * 
+ * work: X Y * Z +
+ * result:
+ * 
+ * work: Y * Z +
+ * result: X1
+ * 
+ * work: * Z +
+ * result: X2 X1
+ * 
+ * work: Z +
+ * result: X1*X2
+ * 
+ * work: +
+ * result: X3 X1*X2
+ * 
+ * work:
+ * result: (X1*X2)+X3
+ * 
+ * </pre>
  * 
  *
  * @author Stephen F. Siegel
