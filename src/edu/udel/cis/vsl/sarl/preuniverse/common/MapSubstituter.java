@@ -45,6 +45,11 @@ public class MapSubstituter extends ExpressionSubstituter {
 		public void pop() {
 			stack.pop();
 		}
+
+		@Override
+		public boolean isInitial() {
+			return stack.isEmpty();
+		}
 	}
 
 	private Map<SymbolicExpression, SymbolicExpression> map;

@@ -66,6 +66,15 @@ public abstract class ExpressionSubstituter implements
 	 */
 	public interface SubstituterState {
 
+		/**
+		 * Is this an initial state? If this returns <code>true</cache>
+		 * it gives permission to the ExpressionSubstituter to use its
+		 * cache to store and retrieve previous substitution results.
+		 * 
+		 * @return <code>true</code> iff this is an initial state
+		 */
+		boolean isInitial();
+
 	}
 
 	/**
@@ -87,9 +96,10 @@ public abstract class ExpressionSubstituter implements
 	protected PreUniverse universe;
 
 	/**
-	 * Cached results of previous substitutions.
+	 * Cached results of previous "top-level" substitutions, or substitutions
+	 * when state is initial.
 	 */
-	protected Map<SymbolicExpression, SymbolicExpression> cache = new HashMap<>();
+	protected Map<SymbolicObject, SymbolicObject> cache = new HashMap<>();
 
 	/**
 	 * Constructs new substituter based on given factories.
@@ -150,7 +160,7 @@ public abstract class ExpressionSubstituter implements
 				newSet.add(newElement);
 				while (iter.hasNext())
 					newSet.add(substituteExpression(iter.next(), state));
-				return collectionFactory.basicCollection(newSet);
+				return collectionFactory.sequence(newSet);
 			}
 		}
 		return set;
@@ -167,26 +177,25 @@ public abstract class ExpressionSubstituter implements
 	 */
 	private SymbolicSequence<?> substituteSequence(
 			SymbolicSequence<?> sequence, SubstituterState state) {
-		Iterator<? extends SymbolicExpression> iter = sequence.iterator();
-		int count = 0;
+		int size = sequence.size();
 
-		while (iter.hasNext()) {
-			SymbolicExpression oldElement = iter.next();
+		for (int count = 0; count < size; count++) {
+			SymbolicExpression oldElement = sequence.get(count);
 			SymbolicExpression newElement = substituteExpression(oldElement,
 					state);
 
 			if (newElement != oldElement) {
-				@SuppressWarnings("unchecked")
-				SymbolicSequence<SymbolicExpression> newSequence = (SymbolicSequence<SymbolicExpression>) sequence
-						.subSequence(0, count);
+				SymbolicExpression[] newElements = new SymbolicExpression[size];
+				int i = 0;
 
-				newSequence = newSequence.add(newElement);
-				while (iter.hasNext())
-					newSequence = newSequence.add(substituteExpression(
-							iter.next(), state));
-				return newSequence;
+				for (; i < count; i++)
+					newElements[i] = sequence.get(i);
+				newElements[i++] = newElement;
+				for (; i < size; i++)
+					newElements[i] = substituteExpression(sequence.get(i),
+							state);
+				return collectionFactory.sequence(newElements);
 			}
-			count++;
 		}
 		return sequence;
 	}
@@ -206,14 +215,30 @@ public abstract class ExpressionSubstituter implements
 	 */
 	protected SymbolicCollection<?> substituteCollection(
 			SymbolicCollection<?> collection, SubstituterState state) {
+		SymbolicCollection<?> result;
+
+		if (state.isInitial()) {
+			collection = (SymbolicCollection<?>) universe.canonic(collection);
+			result = (SymbolicCollection<?>) cache.get(collection);
+			if (result != null)
+				return result;
+		}
+
 		SymbolicCollectionKind kind = collection.collectionKind();
 
 		if (kind == SymbolicCollectionKind.SEQUENCE)
-			return substituteSequence((SymbolicSequence<?>) collection, state);
-		return substituteGenericCollection(collection, state);
+			result = substituteSequence((SymbolicSequence<?>) collection, state);
+		else
+			result = substituteGenericCollection(collection, state);
+
+		if (state.isInitial()) {
+			result = (SymbolicCollection<?>) universe.canonic(result);
+			cache.put(collection, result);
+		}
+		return result;
 	}
 
-	protected SymbolicType substituteType(SymbolicType type,
+	private SymbolicType substituteCompoundType(SymbolicType type,
 			SubstituterState state) {
 		switch (type.typeKind()) {
 		case BOOLEAN:
@@ -275,6 +300,31 @@ public abstract class ExpressionSubstituter implements
 		}
 		default:
 			throw new SARLInternalException("unreachable");
+		}
+	}
+
+	protected SymbolicType substituteType(SymbolicType type,
+			SubstituterState state) {
+		switch (type.typeKind()) {
+		case BOOLEAN:
+		case INTEGER:
+		case REAL:
+		case CHAR:
+			return type;
+		default:
+			if (state.isInitial()) {
+				type = (SymbolicType) universe.canonic(type);
+
+				SymbolicType result = (SymbolicType) cache.get(type);
+
+				if (result == null) {
+					result = substituteCompoundType(type, state);
+					result = (SymbolicType) universe.canonic(result);
+					cache.put(type, result);
+				}
+				return result;
+			}
+			return substituteCompoundType(type, state);
 		}
 	}
 
@@ -418,11 +468,24 @@ public abstract class ExpressionSubstituter implements
 	 */
 	protected SymbolicExpression substituteExpression(
 			SymbolicExpression expression, SubstituterState state) {
-		if (isQuantified(expression)) {
-			return substituteQuantifiedExpression(expression, state);
-		} else {
-			return substituteNonquantifiedExpression(expression, state);
+		SymbolicExpression result;
+
+		if (state.isInitial()) {
+			expression = universe.canonic(expression);
+			result = (SymbolicExpression) cache.get(expression);
+			if (result != null)
+				return result;
 		}
+		if (isQuantified(expression)) {
+			result = substituteQuantifiedExpression(expression, state);
+		} else {
+			result = substituteNonquantifiedExpression(expression, state);
+		}
+		if (state.isInitial()) {
+			result = universe.canonic(result);
+			cache.put(expression, result);
+		}
+		return result;
 	}
 
 	/**
@@ -437,19 +500,7 @@ public abstract class ExpressionSubstituter implements
 	 */
 	@Override
 	public SymbolicExpression apply(SymbolicExpression expression) {
-		SymbolicExpression result = cache.get(expression);
-
-		if (result == null) {
-			result = substituteExpression(expression, newState());
-			result = universe.canonic(result);
-			cache.put(expression, result);
-		} else {
-			// performance debugging experiments:
-			// System.out.println("* Substitution cache hit! *");
-			// if (!expression.isCanonic())
-			// System.out.println("$$$$$$$$$$$$ NOT CANONIC $$$$$$$$$$$$$$$");
-		}
-		return result;
+		return substituteExpression(expression, newState());
 	}
 
 }

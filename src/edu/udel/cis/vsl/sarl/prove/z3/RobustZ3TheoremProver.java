@@ -127,7 +127,7 @@ public class RobustZ3TheoremProver implements TheoremProver {
 		assert info != null;
 		this.universe = universe;
 		this.info = info;
-		context = (BooleanExpression) universe.cleanBoundVariables(context);
+		//context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.assumptionTranslator = new Z3Translator(universe, context, true);
 		command.add(info.getPath().getAbsolutePath());
 		command.addAll(info.getOptions());

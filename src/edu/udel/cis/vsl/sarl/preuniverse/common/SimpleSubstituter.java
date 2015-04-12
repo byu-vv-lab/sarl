@@ -25,7 +25,7 @@ public class SimpleSubstituter extends ExpressionSubstituter {
 	private SymbolicConstant var;
 
 	/**
-	 * The symbolic expression that shoudl be substituted for every occurrence
+	 * The symbolic expression that should be substituted for every occurrence
 	 * of {@link #var}.
 	 */
 	private SymbolicExpression value;
@@ -40,6 +40,11 @@ public class SimpleSubstituter extends ExpressionSubstituter {
 	 */
 	class BoundStack implements SubstituterState {
 		Deque<SymbolicConstant> stack = new ArrayDeque<>();
+
+		@Override
+		public boolean isInitial() {
+			return stack.isEmpty();
+		}
 	}
 
 	public SimpleSubstituter(PreUniverse universe,

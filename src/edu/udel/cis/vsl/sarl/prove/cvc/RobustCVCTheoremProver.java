@@ -112,7 +112,7 @@ public class RobustCVCTheoremProver implements TheoremProver {
 		// The following is apparently necessary since the same bound symbolic
 		// constant can be used in different scopes in the context; CVC*
 		// requires that these map to distinct variables.
-		context = (BooleanExpression) universe.cleanBoundVariables(context);
+		// context = (BooleanExpression) universe.cleanBoundVariables(context);
 		this.assumptionTranslator = new CVCTranslator(universe, context, true);
 		command.add(info.getPath().getAbsolutePath());
 		command.addAll(info.getOptions());

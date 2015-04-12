@@ -54,6 +54,11 @@ public class CanonicalRenamer extends ExpressionSubstituter {
 		void pop() {
 			stack.pop();
 		}
+
+		@Override
+		public boolean isInitial() {
+			return stack.isEmpty();
+		}
 	}
 
 	/**

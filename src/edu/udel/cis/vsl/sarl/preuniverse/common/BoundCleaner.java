@@ -82,6 +82,11 @@ public class BoundCleaner extends ExpressionSubstituter {
 		void pop() {
 			stack.pop();
 		}
+
+		@Override
+		public boolean isInitial() {
+			return stack.isEmpty();
+		}
 	}
 
 	public BoundCleaner(PreUniverse universe,

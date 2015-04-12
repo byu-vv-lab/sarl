@@ -133,7 +133,9 @@ public class IdealSimplifier extends CommonSimplifier {
 
 	public IdealSimplifier(SimplifierInfo info, BooleanExpression assumption) {
 		super(info.universe);
-		assert assumption.isCanonic();
+		// need to decide if this should be a precondition, or if
+		// it should be made canonic, or just to not care
+		// assert assumption.isCanonic();
 		this.info = info;
 		this.assumption = assumption;
 		initialize();
