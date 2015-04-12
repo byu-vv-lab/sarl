@@ -45,12 +45,20 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
 /**
+ * <p>
  * A generic, abstract class for performing substitutions on symbolic
  * expressions. Concrete classes must implement the interface
  * {@link SubstituterState}, which is used store anything about the state of the
  * search through the expression. They must also implement the method
  * {@link #newState()} to produce the initial {@link SubstituterState}. They
  * should also override any or all of the <code>protected</code> methods here.
+ * </p>
+ * 
+ * <p>
+ * Idea: instead of recursion: try using stacks. workStack and resultStack.
+ * </p>
+ * 
+ * 
  *
  * @author Stephen F. Siegel
  */
@@ -178,19 +186,16 @@ public abstract class ExpressionSubstituter implements
 	private SymbolicSequence<?> substituteSequence(
 			SymbolicSequence<?> sequence, SubstituterState state) {
 		int size = sequence.size();
+		SymbolicExpression[] newElements = new SymbolicExpression[size];
 
-		for (int count = 0; count < size; count++) {
-			SymbolicExpression oldElement = sequence.get(count);
+		for (int i = 0; i < size; i++) {
+			SymbolicExpression oldElement = sequence.get(i);
 			SymbolicExpression newElement = substituteExpression(oldElement,
 					state);
 
+			newElements[i] = newElement;
 			if (newElement != oldElement) {
-				SymbolicExpression[] newElements = new SymbolicExpression[size];
-				int i = 0;
-
-				for (; i < count; i++)
-					newElements[i] = sequence.get(i);
-				newElements[i++] = newElement;
+				i++;
 				for (; i < size; i++)
 					newElements[i] = substituteExpression(sequence.get(i),
 							state);
