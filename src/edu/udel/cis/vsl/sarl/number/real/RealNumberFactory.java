@@ -1010,7 +1010,7 @@ public class RealNumberFactory implements NumberFactory {
 
 	@Override
 	public void union(Interval i1, Interval i2, IntervalUnion result) {
-		//TODO: under construction...
+		// TODO: under construction...
 		if (i1.isEmpty()) {
 			result.status = 0;
 			result.union = i2;
@@ -1028,7 +1028,8 @@ public class RealNumberFactory implements NumberFactory {
 					.upper();
 			boolean sl1 = i1.strictLower(), sl2 = i2.strictLower(), su1 = i1
 					.strictUpper(), su2 = i2.strictUpper();
-			Number lo = null, hi = null;	//To set the result set as (-infi, +infi)
+			Number lo = null, hi = null; // To set the result set as (-infi,
+											// +infi)
 			boolean sl = false, su = false;
 
 			int compare1 = hi1.compareTo(lo2);
@@ -1089,12 +1090,13 @@ public class RealNumberFactory implements NumberFactory {
 					result.status = 1;
 				}
 			}
-			
+
 			if (result.status != 0) {
 				result.union = null;
 			} else {
-				//TODO: Debug Test
-				result.union = new CommonInterval(i1.isIntegral(), lo, sl, hi, su);
+				// TODO: Debug Test
+				result.union = new CommonInterval(i1.isIntegral(), lo, sl, hi,
+						su);
 			}
 		}
 	}// Union
@@ -1103,34 +1105,32 @@ public class RealNumberFactory implements NumberFactory {
 	public Interval affineTransform(Interval itv, Number a, Number b) {
 		// TODO: How to judge the type of Number is Int or Real?
 		assert a != null && b != null;
-		
+
 		Number lo = itv.lower(), up = itv.upper();
 		boolean isIntegral = itv.isIntegral();
 		boolean sl = itv.strictLower(), su = itv.strictUpper();
-		
-		//New upper and lower of result.union.
+
+		// New upper and lower of result.union.
 		lo = (lo == null) ? null : add(multiply(lo, a), b);
 		up = (up == null) ? null : add(multiply(up, a), b);
-		
 		if (a.signum() < 0) {
-			//if a < 0, exchange the value and strict of lo and up
+			// if a < 0, exchange the value and strict of lo and up
 			Number tempNum = lo;
 			boolean tempS = sl;
+			
 			lo = up;
 			sl = su;
 			up = tempNum;
 			su = tempS;
-		}else if (a.signum() == 0){
-			//if a = 0 and both boundaries are strict.
-			if (sl && su == true){
-				lo = multiply(lo, a);
-				up = multiply(lo, a);				
+		} else if (a.signum() == 0) {
+			// if a = 0 and both boundaries are strict.
+			if (sl || su) {
+				lo = multiply(lo, a); // TODO: change to 0?
+				up = multiply(lo, a);
 			}
-		}//if
-		
-		sl = (lo == null) ? null : sl;
+		}// if
+		sl = (lo == null) ? null : sl; // delete this??
 		su = (lo == null) ? null : su;
-		
 		return new CommonInterval(isIntegral, lo, sl, up, su);
-	}// void affineTransform(Interval itv, Number a, Number b, IntervalUnion result)
+	}
 }
