@@ -1094,7 +1094,7 @@ public class RealNumberFactory implements NumberFactory {
 			if (result.status != 0) {
 				result.union = null;
 			} else {
-				// TODO: Debug Test
+				// TODO: Testing
 				result.union = new CommonInterval(i1.isIntegral(), lo, sl, hi,
 						su);
 			}
@@ -1103,11 +1103,17 @@ public class RealNumberFactory implements NumberFactory {
 
 	@Override
 	public Interval affineTransform(Interval itv, Number a, Number b) {
-		// TODO: How to judge the type of Number is Int or Real?
-		assert a != null && b != null;
+		// TODO: Testing
+		assert itv != null && a != null && b != null;
+		if (itv.upper() instanceof IntegerNumber){
+			assert (a instanceof IntegerNumber);
+			assert (b instanceof IntegerNumber);
+		}else{
+			assert (a instanceof RationalNumber);
+			assert (b instanceof RationalNumber);			
+		}
 
 		Number lo = itv.lower(), up = itv.upper();
-		boolean isIntegral = itv.isIntegral();
 		boolean sl = itv.strictLower(), su = itv.strictUpper();
 
 		// New upper and lower of result.union.
@@ -1117,20 +1123,18 @@ public class RealNumberFactory implements NumberFactory {
 			// if a < 0, exchange the value and strict of lo and up
 			Number tempNum = lo;
 			boolean tempS = sl;
-			
+
 			lo = up;
 			sl = su;
 			up = tempNum;
 			su = tempS;
 		} else if (a.signum() == 0) {
-			// if a = 0 and both boundaries are strict.
+			// if a = 0 and either boundary is strict.
 			if (sl || su) {
-				lo = multiply(lo, a); // TODO: change to 0?
-				up = multiply(lo, a);
+				lo = a;
+				up = a;
 			}
-		}// if
-		sl = (lo == null) ? null : sl; // delete this??
-		su = (lo == null) ? null : su;
-		return new CommonInterval(isIntegral, lo, sl, up, su);
+		}// if - else
+		return new CommonInterval(itv.isIntegral(), lo, sl, up, su);
 	}
 }
