@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
@@ -918,5 +919,167 @@ public class NumberFactoryTest {
 		Number b = factory.number("10");
 		factory.divide(a, b);
 	}
+	
+	/**
+	 * @Exception NullPointerException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that 
+	 * all of those should be not null. This
+	 * test ensures that the throwing of the exception when any of those three
+	 * parameters is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void numberAffineTransformNullInputOfInterval_itv(){
+		Number a = factory.number("1");
+		Number b = factory.number("1");
+		Interval itv = null;
+		factory.affineTransform(itv, a, b);		
+	}	
+	
+	/**
+	 * @Exception NullPointerException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that 
+	 * all of those should be not null. This
+	 * test ensures that the throwing of the exception when any of those three
+	 * parameters is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void numberAffineTransformNullInputOfNumber_a(){
+		Number a = null;
+		Number b = factory.number("1");
+		Number lo = factory.number("-10");
+		Number up = factory.number("10");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}	
+
+	/**
+	 * @Exception NullPointerException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that 
+	 * all of those should be not null. This
+	 * test ensures that the throwing of the exception when any of those three
+	 * parameters is null.
+	 */
+	@Test(expected=NullPointerException.class)
+	public void numberAffineTransformNullInputOfNumber_b(){
+		Number a = factory.number("1");
+		Number b = null;
+		Number lo = factory.number("-10");
+		Number up = factory.number("10");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}
+
+	/**
+	 * @Exception IllegalArgumentException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that either of two
+	 * numbers has different type with the interval (rational number or integer number). 
+	 * This test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAffineTransformInvalInputOfIntegerNumber_a(){
+		Number a = factory.number("3");
+		Number b = factory.number("3.14");
+		Number lo = factory.number("-4.27");
+		Number up = factory.number("4.27");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}
+
+	/**
+	 * @Exception IllegalArgumentException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that either of two
+	 * numbers has different type with the interval (rational number or integer number). 
+	 * This test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAffineTransformInvalInputOfRationalNumber_a(){
+		Number a = factory.number("3.14");
+		Number b = factory.number("3");
+		Number lo = factory.number("-4");
+		Number up = factory.number("4");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}
+
+	/**
+	 * @Exception IllegalArgumentException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that either of two
+	 * numbers has different type with the interval (rational number or integer number). 
+	 * This test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAffineTransformInvalInputOfIntegerNumber_b(){
+		Number a = factory.number("3.14");
+		Number b = factory.number("3");
+		Number lo = factory.number("-4.27");
+		Number up = factory.number("4.27");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}
+
+	/**
+	 * @Exception IllegalArgumentException is thrown for the affineTransform method
+	 * when trying to affineTransform an interval and two numbers that either of two
+	 * numbers has different type with the interval (rational number or integer number). 
+	 * This test ensures that the throwing of the exception does not rely
+	 * on the order of the incompatible number arguments.
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void numberAffineTransformInvalInputOfRationalNumber_b(){
+		Number a = factory.number("3");
+		Number b = factory.number("3.14");
+		Number lo = factory.number("-4");
+		Number up = factory.number("4");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		
+		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert(lo instanceof RealRational) == (up instanceof RealRational);
+		
+		factory.affineTransform(itv, a, b);		
+	}
+	
+	// TODO: Add both -infi and +infi interval test
+	// TODO: Add a equals to either negative number or 0 test
 	
 }
