@@ -919,31 +919,31 @@ public class NumberFactoryTest {
 		Number b = factory.number("10");
 		factory.divide(a, b);
 	}
-	
+
 	/**
 	 * @Exception NullPointerException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that 
-	 * all of those should be not null. This
-	 * test ensures that the throwing of the exception when any of those three
-	 * parameters is null.
+	 *            when trying to affineTransform an interval and two numbers
+	 *            that all of those should be not null. This test ensures that
+	 *            the throwing of the exception when any of those three
+	 *            parameters is null.
 	 */
-	@Test(expected=NullPointerException.class)
-	public void numberAffineTransformNullInputOfInterval_itv(){
+	@Test(expected = NullPointerException.class)
+	public void intervalAffineTransformNullInputOfInterval_itv() {
 		Number a = factory.number("1");
 		Number b = factory.number("1");
 		Interval itv = null;
-		factory.affineTransform(itv, a, b);		
-	}	
-	
+		factory.affineTransform(itv, a, b);
+	}
+
 	/**
 	 * @Exception NullPointerException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that 
-	 * all of those should be not null. This
-	 * test ensures that the throwing of the exception when any of those three
-	 * parameters is null.
+	 *            when trying to affineTransform an interval and two numbers
+	 *            that all of those should be not null. This test ensures that
+	 *            the throwing of the exception when any of those three
+	 *            parameters is null.
 	 */
-	@Test(expected=NullPointerException.class)
-	public void numberAffineTransformNullInputOfNumber_a(){
+	@Test(expected = NullPointerException.class)
+	public void intervalAffineTransformNullInputOfNumber_a() {
 		Number a = null;
 		Number b = factory.number("1");
 		Number lo = factory.number("-10");
@@ -952,22 +952,22 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
-	}	
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
+	}
 
 	/**
 	 * @Exception NullPointerException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that 
-	 * all of those should be not null. This
-	 * test ensures that the throwing of the exception when any of those three
-	 * parameters is null.
+	 *            when trying to affineTransform an interval and two numbers
+	 *            that all of those should be not null. This test ensures that
+	 *            the throwing of the exception when any of those three
+	 *            parameters is null.
 	 */
-	@Test(expected=NullPointerException.class)
-	public void numberAffineTransformNullInputOfNumber_b(){
+	@Test(expected = NullPointerException.class)
+	public void intervalAffineTransformNullInputOfNumber_b() {
 		Number a = factory.number("1");
 		Number b = null;
 		Number lo = factory.number("-10");
@@ -976,22 +976,23 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
 	}
 
 	/**
-	 * @Exception IllegalArgumentException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that either of two
-	 * numbers has different type with the interval (rational number or integer number). 
-	 * This test ensures that the throwing of the exception does not rely
-	 * on the order of the incompatible number arguments.
+	 * @Exception IllegalArgumentException is thrown for the affineTransform
+	 *            method when trying to affineTransform an interval and two
+	 *            numbers that either of two numbers has different type with the
+	 *            interval (rational number or integer number). This test
+	 *            ensures that the throwing of the exception does not rely on
+	 *            the order of the incompatible number arguments.
 	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void numberAffineTransformInvalInputOfIntegerNumber_a(){
+	@Test(expected = IllegalArgumentException.class)
+	public void numberAffineTransformInvalInputOfIntegerNumber_a() {
 		Number a = factory.number("3");
 		Number b = factory.number("3.14");
 		Number lo = factory.number("-4.27");
@@ -1000,22 +1001,23 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
 	}
 
 	/**
-	 * @Exception IllegalArgumentException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that either of two
-	 * numbers has different type with the interval (rational number or integer number). 
-	 * This test ensures that the throwing of the exception does not rely
-	 * on the order of the incompatible number arguments.
+	 * @Exception IllegalArgumentException is thrown for the affineTransform
+	 *            method when trying to affineTransform an interval and two
+	 *            numbers that either of two numbers has different type with the
+	 *            interval (rational number or integer number). This test
+	 *            ensures that the throwing of the exception does not rely on
+	 *            the order of the incompatible number arguments.
 	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void numberAffineTransformInvalInputOfRationalNumber_a(){
+	@Test(expected = IllegalArgumentException.class)
+	public void intervalAffineTransformInvalInputOfRationalNumber_a() {
 		Number a = factory.number("3.14");
 		Number b = factory.number("3");
 		Number lo = factory.number("-4");
@@ -1024,22 +1026,23 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
 	}
 
 	/**
-	 * @Exception IllegalArgumentException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that either of two
-	 * numbers has different type with the interval (rational number or integer number). 
-	 * This test ensures that the throwing of the exception does not rely
-	 * on the order of the incompatible number arguments.
+	 * @Exception IllegalArgumentException is thrown for the affineTransform
+	 *            method when trying to affineTransform an interval and two
+	 *            numbers that either of two numbers has different type with the
+	 *            interval (rational number or integer number). This test
+	 *            ensures that the throwing of the exception does not rely on
+	 *            the order of the incompatible number arguments.
 	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void numberAffineTransformInvalInputOfIntegerNumber_b(){
+	@Test(expected = IllegalArgumentException.class)
+	public void intervalAffineTransformInvalInputOfIntegerNumber_b() {
 		Number a = factory.number("3.14");
 		Number b = factory.number("3");
 		Number lo = factory.number("-4.27");
@@ -1048,22 +1051,23 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
 	}
 
 	/**
-	 * @Exception IllegalArgumentException is thrown for the affineTransform method
-	 * when trying to affineTransform an interval and two numbers that either of two
-	 * numbers has different type with the interval (rational number or integer number). 
-	 * This test ensures that the throwing of the exception does not rely
-	 * on the order of the incompatible number arguments.
+	 * @Exception IllegalArgumentException is thrown for the affineTransform
+	 *            method when trying to affineTransform an interval and two
+	 *            numbers that either of two numbers has different type with the
+	 *            interval (rational number or integer number). This test
+	 *            ensures that the throwing of the exception does not rely on
+	 *            the order of the incompatible number arguments.
 	 */
-	@Test(expected=IllegalArgumentException.class)
-	public void numberAffineTransformInvalInputOfRationalNumber_b(){
+	@Test(expected = IllegalArgumentException.class)
+	public void intervalAffineTransformInvalInputOfRationalNumber_b() {
 		Number a = factory.number("3");
 		Number b = factory.number("3.14");
 		Number lo = factory.number("-4");
@@ -1072,14 +1076,165 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		
-		assert(lo instanceof RealInteger) == (up instanceof RealInteger);
-		assert(lo instanceof RealRational) == (up instanceof RealRational);
-		
-		factory.affineTransform(itv, a, b);		
+
+		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof RealRational) == (up instanceof RealRational);
+
+		factory.affineTransform(itv, a, b);
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the interval argument with a
+	 * negative infinity as its lower boundary value. The result interval should
+	 * keep its lower boundary value as negative infinity.
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithLowerValue_NegInfinity() {
+		Number a = factory.number("314");
+		Number b = factory.number("314");
+		Number lo = null;
+		Number up = factory.number("1");
+		boolean isIntegral = up instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.lower() == null);
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the interval argument with a
+	 * positive infinity as its upper boundary value. The result interval should
+	 * keep its upper boundary value as positive infinity.
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithUpperValue_PosInfinity() {
+		Number a = factory.number("314");
+		Number b = factory.number("314");
+		Number lo = factory.number("-1");
+		Number up = null;
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.upper() == null);
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the first Number argument a
+	 * with a value of "-1" and the second Number argument b with a value of
+	 * "0". The both boundaries' absolute value of result interval should be
+	 * reversed.
+	 */
+	@Test
+	public void intervalAffineTransformWithNumber_a_LessThanZero() {
+		Number a = factory.number("-1");
+		Number b = factory.number("0");
+		Number lo = factory.number("314");
+		Number up = factory.number("427");
+		Number reslo = factory.number("-427");
+		Number resup = factory.number("-314");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.lower().compareTo(reslo) == 0);
+		assert (result.upper().compareTo(resup) == 0);
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the first Number argument a
+	 * with a value of "0" and both boundaries not strict. The result interval
+	 * should be "[b, b]".
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithBothBoundNotStrictAndNumber_a_isZero() {
+		Number a = factory.number("0");
+		Number b = factory.number("314");
+		Number lo = null;
+		Number up = factory.number("427");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = false;
+		boolean su = false;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval expectedRes = factory.newInterval(isIntegral, b, sl, b, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.equals(expectedRes));
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the first Number argument a
+	 * with a value of "0" and lower boundary strict. The result interval
+	 * should be "(0,0)".
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithLowerBoundStrictAndNumber_a_isZero() {
+		Number a = factory.number("0");
+		Number b = factory.number("314");
+		Number lo = null;
+		Number up = factory.number("427");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = false;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval expectedRes = factory.newInterval(isIntegral, a, sl, a, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.equals(expectedRes));
 	}
 	
-	// TODO: Add both -infi and +infi interval test
-	// TODO: Add a equals to either negative number or 0 test
-	
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the first Number argument a
+	 * with a value of "0" and upper boundary strict. The result interval
+	 * should be "(0,0)".
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithUpperBoundStrictAndNumber_a_isZero() {
+		Number a = factory.number("0");
+		Number b = factory.number("314");
+		Number lo = null;
+		Number up = factory.number("427");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = false;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval expectedRes = factory.newInterval(isIntegral, a, sl, a, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.equals(expectedRes));
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the first Number argument a
+	 * with a value of "0" and both boundaries strict. The result interval
+	 * should be "(0,0)".
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithBothBoundStrictAndNumber_a_isZero() {
+		Number a = factory.number("0");
+		Number b = factory.number("314");
+		Number lo = null;
+		Number up = factory.number("427");
+		boolean isIntegral = lo instanceof RealInteger;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval expectedRes = factory.newInterval(isIntegral, a, sl, a, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assert (result.equals(expectedRes));
+	}
 }
