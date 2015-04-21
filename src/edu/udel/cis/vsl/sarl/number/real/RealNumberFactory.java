@@ -1010,7 +1010,6 @@ public class RealNumberFactory implements NumberFactory {
 
 	@Override
 	public void union(Interval i1, Interval i2, IntervalUnion result) {
-		// TODO: under construction...
 		if (i1.isEmpty()) {
 			result.status = 0;
 			result.union = i2;
@@ -1094,23 +1093,43 @@ public class RealNumberFactory implements NumberFactory {
 			if (result.status != 0) {
 				result.union = null;
 			} else {
-				// TODO: Testing
 				result.union = new CommonInterval(i1.isIntegral(), lo, sl, hi,
 						su);
 			}
 		}
-	}// Union
+	}
 
 	@Override
 	public Interval affineTransform(Interval itv, Number a, Number b) {
 		// TODO: Testing
-		assert itv != null && a != null && b != null;
-		if (itv.upper() instanceof IntegerNumber){
-			assert (a instanceof IntegerNumber);
-			assert (b instanceof IntegerNumber);
-		}else{
-			assert (a instanceof RationalNumber);
-			assert (b instanceof RationalNumber);			
+		if (itv == null) 
+			throw new NullPointerException(
+					"The interval parameter itv cannot be null.");
+		if (a == null) 
+			throw new NullPointerException(
+					"The number parameter a cannot be null.");
+		if (b == null) 
+			throw new NullPointerException(
+					"The number parameter b cannot be null.");
+		assert (itv.upper().getClass() == itv.lower().getClass());
+		if (itv.upper() instanceof IntegerNumber) {
+			if (!(a instanceof IntegerNumber))
+				throw new IllegalArgumentException(
+						"Mixed numeric types not allowed:\n" + itv.upper()
+								+ "\n" + a);
+			if (!(b instanceof IntegerNumber))
+				throw new IllegalArgumentException(
+						"Mixed numeric types not allowed:\n" + itv.upper()
+								+ "\n" + b);
+		} else if (itv.upper() instanceof RationalNumber) {
+			if (!(a instanceof RationalNumber))
+				throw new IllegalArgumentException(
+						"Mixed numeric types not allowed:\n" + itv.upper()
+								+ "\n" + a);
+			if (!(b instanceof RationalNumber))
+				throw new IllegalArgumentException(
+						"Mixed numeric types not allowed:\n" + itv.upper()
+								+ "\n" + b);
 		}
 
 		Number lo = itv.lower(), up = itv.upper();
