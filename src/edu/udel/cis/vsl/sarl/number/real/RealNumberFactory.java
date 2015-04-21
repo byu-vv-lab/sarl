@@ -1102,13 +1102,13 @@ public class RealNumberFactory implements NumberFactory {
 	@Override
 	public Interval affineTransform(Interval itv, Number a, Number b) {
 		// TODO: Testing
-		if (itv == null) 
+		if (itv == null)
 			throw new NullPointerException(
 					"The interval parameter itv cannot be null.");
-		if (a == null) 
+		if (a == null)
 			throw new NullPointerException(
 					"The number parameter a cannot be null.");
-		if (b == null) 
+		if (b == null)
 			throw new NullPointerException(
 					"The number parameter b cannot be null.");
 		assert (itv.upper().getClass() == itv.lower().getClass());
