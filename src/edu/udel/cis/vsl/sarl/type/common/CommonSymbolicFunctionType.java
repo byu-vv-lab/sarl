@@ -109,4 +109,12 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 		this.pureType = pureType;
 	}
 
+	@Override
+	protected void commitChildren() {
+		inputTypes.commit();
+		outputType.commit();
+		if (pureType != null)
+			pureType.commit();
+	}
+
 }

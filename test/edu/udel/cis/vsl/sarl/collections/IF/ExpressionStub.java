@@ -120,11 +120,13 @@ public class ExpressionStub implements SymbolicExpression {
 	public SymbolicType type() {
 		return null;
 	}
-	
-	public String toString()
-	{
+
+	public String toString() {
 		return this.name;
 	}
-	
-	
+
+	@Override
+	public void commit() {
+	}
+
 }

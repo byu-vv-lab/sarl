@@ -1,6 +1,7 @@
 package edu.udel.cis.vsl.sarl.preuniverse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -72,9 +73,10 @@ public class TupleTest {
 	@After
 	public void tearDown() throws Exception {
 	}
+
 	/**
-	 * Tests the method universe.tupleType() that is used to create multiple types 
-	 * and then compare these types with each other
+	 * Tests the method universe.tupleType() that is used to create multiple
+	 * types and then compare these types with each other
 	 * 
 	 * @author malsulmi
 	 * 
@@ -117,6 +119,7 @@ public class TupleTest {
 		assertEquals(tupleType1, tupleType3);
 
 	}
+
 	/**
 	 * Tests the method universe.tuple() for creating tuples with an exception
 	 * of creating tuples that doesn't match a previously created tuple type
@@ -140,6 +143,7 @@ public class TupleTest {
 				Arrays.asList(new SymbolicExpression[] { universe.integer(1),
 						universe.integer(2) }));
 	}
+
 	/**
 	 * Tests the method universe.tuple() for creating tuples with an exception
 	 * of creating tuples that doesn't match a previously created tuple type
@@ -164,9 +168,11 @@ public class TupleTest {
 						universe.integer(2), universe.integer(2) }));
 
 	}
+
 	/**
-	 * Tests the method universe.tupleWrite(IntObject position, SymbolicExpression element ) for writing an element to tuple
-	 *  with an exception of passing non compatible element to a tuple
+	 * Tests the method universe.tupleWrite(IntObject position,
+	 * SymbolicExpression element ) for writing an element to tuple with an
+	 * exception of passing non compatible element to a tuple
 	 * 
 	 * @author malsulmi
 	 * 
@@ -195,9 +201,11 @@ public class TupleTest {
 		tuple = universe.tupleWrite(tuple, i1, universe.rational(3));
 
 	}
+
 	/**
-	 * Tests the method universe.compatible(SymbolicType type1, SymbolicType type2 ) 
-	 * to compare two different symbolic types and return whether they are equal 
+	 * Tests the method universe.compatible(SymbolicType type1, SymbolicType
+	 * type2 ) to compare two different symbolic types and return whether they
+	 * are equal
 	 * 
 	 * @author malsulmi
 	 * 
@@ -270,7 +278,8 @@ public class TupleTest {
 
 	/**
 	 * Tests the method universe.tuple( ) with creating complicated tuple types
-	 * here, it tests tuple of arrays and then performs some operations such as tupleRead
+	 * here, it tests tuple of arrays and then performs some operations such as
+	 * tupleRead
 	 * 
 	 * @author malsulmi
 	 * 
@@ -321,8 +330,9 @@ public class TupleTest {
 	}
 
 	/**
-	 * Tests the method universe.tuple( ) with creating much complicated tuple types
-	 * here, it tests multiple levels of tuples, with one containing arrays and then performs some operations such as tupleRead
+	 * Tests the method universe.tuple( ) with creating much complicated tuple
+	 * types here, it tests multiple levels of tuples, with one containing
+	 * arrays and then performs some operations such as tupleRead
 	 * 
 	 * @author malsulmi
 	 * 
@@ -342,61 +352,51 @@ public class TupleTest {
 		SymbolicExpression intArray;
 		SymbolicExpression realArray;
 		SymbolicExpression readingResult;
-		BooleanExpression boolExp;
 
 		// creating a tuple type containing two different array types
-		type1 = universe.tupleType(
-				universe.stringObject("Type1"),
-				Arrays.asList(new SymbolicType[] { arrayIntegerType,
-						arrayRealType }));
+		type1 = universe.tupleType(universe.stringObject("Type1"),
+				Arrays.asList(arrayIntegerType, arrayRealType));
 		// creating a tuple type containing three primitive types
-		type2 = universe.tupleType(
-				universe.stringObject("Type2"),
-				Arrays.asList(new SymbolicType[] { integerType, integerType,
-						realType }));
+		type2 = universe.tupleType(universe.stringObject("Type2"),
+				Arrays.asList(integerType, integerType, realType));
 		// creating a tuple type containing the previous two types + real type
 		type3 = universe.tupleType(universe.stringObject("Type3"),
 				Arrays.asList(new SymbolicType[] { type1, type2, realType }));
 
 		// an array of integer
-		intArray = universe.array(
-				integerType,
-				Arrays.asList(new NumericExpression[] { universe.integer(2),
-						universe.integer(8) }));
+		intArray = universe.array(integerType,
+				Arrays.asList(universe.integer(2), universe.integer(8)));
 		// an array of real
-		realArray = universe.array(
-				realType,
-				Arrays.asList(new NumericExpression[] { universe.rational(6.7),
-						universe.rational(9.99), universe.rational(9) }));
+		realArray = universe.array(realType, Arrays.asList(
+				universe.rational(6.7), universe.rational(9.99),
+				universe.rational(9)));
 
 		// creating the 1st tuple
-		tuple1 = universe
-				.tuple(type1,
-						Arrays.asList(new SymbolicExpression[] { intArray,
-								realArray }));
+		tuple1 = universe.tuple(type1, Arrays.asList(intArray, realArray));
+		tuple1.commit();
 		// creating the 2nd tuple
-		tuple2 = universe.tuple(
-				type2,
-				Arrays.asList(new NumericExpression[] { universe.integer(50),
-						universe.integer(40), universe.rational(3.14) }));
+		tuple2 = universe.tuple(type2, Arrays.asList(universe.integer(50),
+				universe.integer(40), universe.rational(3.14)));
+		tuple2.commit();
 		// creating the 3rd tuple
-		tuple3 = universe.tuple(
-				type3,
-				Arrays.asList(new SymbolicExpression[] { tuple1, tuple2,
-						universe.rational(8.9) }));
-
+		tuple3 = universe.tuple(type3,
+				Arrays.asList(tuple1, tuple2, universe.rational(8.9)));
+		tuple3.commit();
 		// reading the first position in tuple3
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
+		readingResult.commit();
 		// checking if it equals to tuple1
 		assertEquals(tuple1, readingResult);
 		// extracting the array from the resulted tuple
 		readingResult = universe
 				.tupleRead(readingResult, universe.intObject(0));
+		readingResult.commit();
 		// checking if the result equals to intArrray
 		assertEquals(intArray, readingResult);
 
 		// reading the second position in tuple3
 		readingResult = universe.tupleRead(tuple3, universe.intObject(1));
+		readingResult.commit();
 		// checking if it equals to tuple2
 		assertEquals(tuple2, readingResult);
 
@@ -408,34 +408,40 @@ public class TupleTest {
 		} catch (java.lang.IndexOutOfBoundsException ex) {
 
 			readingResult = universe.tupleRead(tuple3, universe.intObject(2));
+			readingResult.commit();
 			assertEquals(universe.rational(8.9), readingResult);
 
 		}
 		readingResult = universe.tupleRead(tuple3, universe.intObject(0));
+		readingResult.commit();
 		readingResult = universe
 				.tupleRead(readingResult, universe.intObject(1));
+		readingResult.commit();
+
 		try {
 			// here, we expect an exception since appending invalid type
 			readingResult = universe
 					.append(readingResult, universe.integer(50));
+			readingResult.commit();
 		} catch (SARLException ex) {
 			readingResult = universe.append(readingResult,
 					universe.rational(50));
+			readingResult.commit();
 		}
 		// writing the array back to the tuple1
 		tuple1 = universe.tupleWrite(tuple1, universe.intObject(1),
 				readingResult);
+		tuple1.commit();
 		readingResult = universe.tupleWrite(tuple3, universe.intObject(0),
 				tuple1);
 		// it should return false expression
-		boolExp = universe.equals(readingResult, tuple3);
-		assertEquals(universe.bool(false), boolExp);
-
+		assertNotEquals(readingResult, tuple3);
 	}
 
 	/**
-	 * Tests the method universe.tuple( ) with creating much complicated tuple types
-	 * here, it tests using tuples containing symbolic constants and apply some boolean reasoning operations 
+	 * Tests the method universe.tuple( ) with creating much complicated tuple
+	 * types here, it tests using tuples containing symbolic constants and apply
+	 * some boolean reasoning operations
 	 * 
 	 * @author malsulmi
 	 * 

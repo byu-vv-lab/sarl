@@ -165,10 +165,6 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				&& Arrays.equals(arguments, that.arguments);
 	}
 
-	/**
-	 * Returns the type HashCode if not Null and all the Expressions arguments'
-	 * Hashcodes
-	 */
 	@Override
 	protected int computeHashCode() {
 		int numArgs = this.numArguments();
@@ -181,25 +177,16 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		return result;
 	}
 
-	/**
-	 * Returns an individual argument within the SymbolicExpression
-	 */
 	@Override
 	public SymbolicObject argument(int index) {
 		return arguments[index];
 	}
 
-	/**
-	 * Returns the operator
-	 */
 	@Override
 	public SymbolicOperator operator() {
 		return operator;
 	}
 
-	/**
-	 * Returns the number of arguments within the SymbolicExpression
-	 */
 	@Override
 	public int numArguments() {
 		return arguments.length;
@@ -682,5 +669,15 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	@Override
 	public boolean isNumeric() {
 		return this instanceof NumericExpression;
+	}
+
+	@Override
+	protected void commitChildren() {
+		if (type != null)
+			type.commit();
+		for (SymbolicObject arg : arguments) {
+			if (arg != null)
+				arg.commit();
+		}
 	}
 }

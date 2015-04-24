@@ -146,4 +146,15 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	public void setPureType(SymbolicUnionType pureType) {
 		this.pureType = pureType;
 	}
+
+	@Override
+	protected void commitChildren() {
+		sequence.commit();
+		if (name != null)
+			name.commit();
+		if (pureType != null)
+			pureType.commit();
+		for (SymbolicType key : indexMap.keySet())
+			key.commit();
+	}
 }

@@ -73,7 +73,7 @@ public class ReferenceTest {
 
 	private SymbolicArrayType arrayType = universe.arrayType(realType);
 
-	//private SymbolicArrayType array2dType = universe.arrayType(arrayType);
+	// private SymbolicArrayType array2dType = universe.arrayType(arrayType);
 
 	private SymbolicTupleType tupleType = universe.tupleType(
 			universe.stringObject("tuple"),
@@ -126,6 +126,8 @@ public class ReferenceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		a1.commit();
+		a2.commit();
 	}
 
 	@After
@@ -149,8 +151,8 @@ public class ReferenceTest {
 
 	@Test
 	public void array() {
-		SymbolicExpression expected = universe.array(realType, Arrays
-				.asList(new SymbolicExpression[] { threeR, twoR, threeR }));
+		SymbolicExpression expected = universe.array(realType,
+				Arrays.asList(threeR, twoR, threeR));
 
 		out.println("arrayElement: ar0 = " + ar0);
 		out.println("arrayElement: ar1 = " + ar1);
@@ -160,10 +162,8 @@ public class ReferenceTest {
 		assertEquals(expected, universe.assign(a1, ar0, threeR));
 		assertEquals(twoR, universe.dereference(a1, ar1));
 		assertEquals(
-				universe.array(
-						realType,
-						Arrays.asList(new SymbolicExpression[] { oneR, threeR,
-								threeR })), universe.assign(a1, ar1, threeR));
+				universe.array(realType, Arrays.asList(oneR, threeR, threeR)),
+				universe.assign(a1, ar1, threeR));
 		assertEquals(universe.arrayRead(a2, zero),
 				universe.dereference(a2, ar0));
 		assertEquals(universe.arrayRead(a2, two), universe.dereference(a2, ar2));
@@ -196,6 +196,9 @@ public class ReferenceTest {
 				Arrays.asList(new SymbolicExpression[] { twoR, threeR }));
 		SymbolicExpression b = universe.array(arrayType,
 				Arrays.asList(new SymbolicExpression[] { b0, b1 }));
+		
+		b.commit();
+		
 		ArrayElementReference ar00 = universe.arrayElementReference(ar0, zero);
 		ArrayElementReference ar11 = universe.arrayElementReference(ar1, one);
 		SymbolicExpression c0 = b0;
@@ -245,7 +248,8 @@ public class ReferenceTest {
 	@Test
 	public void offset() {
 		OffsetReference or0 = universe.offsetReference(identityReference, zero);
-		//OffsetReference or1 = universe.offsetReference(identityReference, one);
+		// OffsetReference or1 = universe.offsetReference(identityReference,
+		// one);
 
 		assertEquals(x, universe.dereference(x, or0));
 	}

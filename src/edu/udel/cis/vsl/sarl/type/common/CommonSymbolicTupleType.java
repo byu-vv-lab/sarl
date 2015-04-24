@@ -116,4 +116,13 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 		this.pureType = pureType;
 	}
 
+	@Override
+	protected void commitChildren() {
+		sequence.commit();
+		if (name != null)
+			name.commit();
+		if (pureType != null)
+			pureType.commit();
+	}
+
 }

@@ -74,7 +74,9 @@ public class CollectionTest {
 		SymbolicSequence<SymbolicExpression> seq0, seq1, seq2;
 
 		seq0 = collectionFactory.emptySequence();
+		seq0.commit();
 		seq1 = seq0.add(x);
+		seq1.commit();
 		seq2 = seq1.add(y);
 		System.out.println("seq2 = " + seq2);
 		assertEquals(0, comparator.compare(seq0, seq0));

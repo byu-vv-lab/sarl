@@ -18,16 +18,25 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.object.common;
 
-import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 /**
  * A partial implementation of {@link SymbolicObject}.
  * 
+ * State: MUTABLE, COMMITTED, HASHED, CANONIC, id
+ * 
+ * id: -999 = mutable, -998=committed, -997=hashed, >=0=canonic
+ * 
  * @author siegel
  * 
  */
 public abstract class CommonSymbolicObject implements SymbolicObject {
+
+	private final static int MUTABLE = -999;
+
+	private final static int COMMITTED = MUTABLE + 1;
+
+	private final static int HASHED = COMMITTED + 1;
 
 	/**
 	 * If true, more detailed string representations of symbolic objects will be
@@ -45,24 +54,13 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 */
 	private int hashCode;
 
-	/**
-	 * Has the hash code of this object been computed and cached in field
-	 * {@link #hashCode}?
-	 */
-	private boolean hashed = false;
+	private int state = MUTABLE;
 
-	/**
-	 * If this is a canonic object (the unique representative of its equivalence
-	 * class), this will be its unique ID number, which is a nonnegative
-	 * integer. Otherwise, {@link #id} will be -1.
-	 */
-	private int id = -1;
-
-	/**
-	 * An infinite-precision rational number associated to this object to
-	 * facilitate comparisons. CURRENTLY NOT USED.
-	 */
-	private RationalNumber order;
+	// /**
+	// * An infinite-precision rational number associated to this object to
+	// * facilitate comparisons. CURRENTLY NOT USED.
+	// */
+	// private RationalNumber order;
 
 	/**
 	 * Instantiates object and sets {@link #kind} as specified.
@@ -74,25 +72,29 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		this.kind = kind;
 	}
 
-	/**
-	 * Sets the {@link #order} field to the specified number.
-	 * 
-	 * @param number
-	 *            an infinite precision rational number
-	 */
-	public void setOrder(RationalNumber number) {
-		order = number;
-	}
+	// /**
+	// * Sets the {@link #order} field to the specified number.
+	// *
+	// * @param number
+	// * an infinite precision rational number
+	// */
+	// public void setOrder(RationalNumber number) {
+	// order = number;
+	// }
 
-	/**
-	 * @return the rational number {@link #order}.
-	 */
-	public RationalNumber getOrder() {
-		return order;
-	}
+	// /**
+	// * @return the rational number {@link #order}.
+	// */
+	// public RationalNumber getOrder() {
+	// return order;
+	// }
 
 	public boolean isCanonic() {
-		return id >= 0;
+		return state >= 0;
+	}
+
+	public boolean isCommitted() {
+		return state >= COMMITTED;
 	}
 
 	/**
@@ -101,11 +103,11 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * @param id
 	 */
 	void setId(int id) {
-		this.id = id;
+		this.state = id;
 	}
 
 	public int id() {
-		return id;
+		return state;
 	}
 
 	@Override
@@ -124,11 +126,22 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 	@Override
 	public int hashCode() {
-		if (!hashed) {
+		if (state < HASHED) {
 			hashCode = computeHashCode();
-			hashed = true;
+			if (state == COMMITTED)
+				state = HASHED;
 		}
 		return hashCode;
+	}
+
+	protected abstract void commitChildren();
+
+	@Override
+	public void commit() {
+		if (state == MUTABLE) {
+			state = COMMITTED;
+			commitChildren();
+		}
 	}
 
 	/**
@@ -151,10 +164,11 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 
 			if (kind != that.kind)
 				return false;
-			if (id >= 0 && that.id >= 0) {
-				return id == that.id;
+			if (state >= 0 && that.state >= 0) {
+				return state == that.state;
 			}
-			if (hashed && that.hashed && hashCode != that.hashCode)
+			if (state >= HASHED && that.state >= HASHED
+					&& hashCode != that.hashCode)
 				return false;
 			return intrinsicEquals(that);
 		}

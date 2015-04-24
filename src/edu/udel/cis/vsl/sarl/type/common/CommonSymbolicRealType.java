@@ -105,4 +105,8 @@ public class CommonSymbolicRealType extends CommonSymbolicType implements
 	public SymbolicType getPureType() {
 		return this;
 	}
+
+	@Override
+	protected void commitChildren() {
+	}
 }

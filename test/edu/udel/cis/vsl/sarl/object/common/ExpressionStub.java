@@ -121,4 +121,8 @@ public class ExpressionStub implements SymbolicExpression {
 		return null;
 	}
 
+	@Override
+	public void commit() {
+	}
+
 }

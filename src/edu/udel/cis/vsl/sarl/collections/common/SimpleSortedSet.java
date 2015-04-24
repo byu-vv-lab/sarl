@@ -15,21 +15,13 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 public class SimpleSortedSet<T extends SymbolicExpression> extends
 		CommonSortedSet<T> {
 
+	private final static SymbolicExpression[] emptyArray = new SymbolicExpression[0];
+
+	int size;
+
 	private T[] elements;
 
 	private Comparator<T> elementComparator;
-
-	/**
-	 * Constructs new empty set with given comparator.
-	 * 
-	 * @param comparator
-	 *            the element comparator
-	 */
-	@SuppressWarnings("unchecked")
-	SimpleSortedSet(Comparator<? super T> comparator) {
-		this.elements = (T[]) new SymbolicExpression[0];
-		this.elementComparator = (Comparator<T>) comparator;
-	}
 
 	/**
 	 * Constructs new instance using the given elements array as the elements
@@ -41,10 +33,36 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 	 *            the array of elements that will be used as the main field
 	 */
 	@SuppressWarnings("unchecked")
-	SimpleSortedSet(Comparator<? super T> comparator, T[] elements) {
+	protected SimpleSortedSet(int size, Comparator<? super T> comparator,
+			T[] elements) {
 		super();
+		this.size = size;
 		elementComparator = (Comparator<T>) comparator;
 		this.elements = elements;
+	}
+
+	/**
+	 * Constructs new empty set with given comparator.
+	 * 
+	 * @param comparator
+	 *            the element comparator
+	 */
+	@SuppressWarnings("unchecked")
+	protected SimpleSortedSet(Comparator<? super T> comparator) {
+		this(0, comparator, (T[]) emptyArray);
+	}
+
+	/**
+	 * Constructs new instance using the given elements array as the elements
+	 * field. The array is not copied.
+	 * 
+	 * @param comparator
+	 *            the element comparator
+	 * @param elements
+	 *            the array of elements that will be used as the main field
+	 */
+	protected SimpleSortedSet(Comparator<? super T> comparator, T[] elements) {
+		this(elements.length, comparator, elements);
 	}
 
 	/**
@@ -57,7 +75,8 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 	 *            the sorted list of elements
 	 */
 	@SuppressWarnings("unchecked")
-	SimpleSortedSet(Comparator<? super T> comparator, List<? extends T> list) {
+	protected SimpleSortedSet(Comparator<? super T> comparator,
+			List<? extends T> list) {
 		super();
 		// safe since we are only restricting the elements that will be
 		// compared:
@@ -65,16 +84,17 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		// safe since this array is immutable:
 		this.elements = (T[]) new SymbolicExpression[list.size()];
 		list.toArray(this.elements);
+		this.size = elements.length;
 	}
 
 	SimpleSortedSet(Comparator<? super T> comparator, Set<? extends T> javaSet) {
 		super();
 
-		int size = javaSet.size();
+		this.size = javaSet.size();
 		@SuppressWarnings("unchecked")
 		Comparator<T> comparator2 = (Comparator<T>) comparator;
 		@SuppressWarnings("unchecked")
-		T[] newArray = (T[]) new SymbolicExpression[size];
+		T[] newArray = (T[]) new SymbolicExpression[this.size];
 
 		javaSet.toArray(newArray);
 		Arrays.sort(newArray, comparator);
@@ -93,7 +113,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 	 * @return index of the element or -1
 	 */
 	private int find(T element) {
-		int lo = 0, hi = elements.length - 1;
+		int lo = 0, hi = size - 1;
 
 		while (lo <= hi) {
 			int mid = (lo + hi) / 2;
@@ -113,7 +133,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 	@Override
 	public int size() {
-		return elements.length;
+		return size;
 	}
 
 	@Override
@@ -123,7 +143,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 			@Override
 			public boolean hasNext() {
-				return nextIndex < elements.length;
+				return nextIndex < size;
 			}
 
 			@Override
@@ -137,7 +157,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 			@Override
 			public void remove() {
 				throw new SARLException(
-						"cannot remove element from an immutable set");
+						"cannot remove element from a set using iterator");
 			}
 		};
 	}
@@ -154,7 +174,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 	@Override
 	public SortedSymbolicSet<T> add(T element) {
-		int lo = 0, hi = elements.length - 1;
+		int lo = 0, hi = size - 1;
 
 		// loop invariant: hi-lo >= -1.
 		// hi>=lo -> hi-((lo+hi)/2 + 1) >= -1.
@@ -177,14 +197,30 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		// Example: hi=length-1, lo=length
 		// lo is where element should be inserted
 
-		@SuppressWarnings("unchecked")
-		T[] newElements = (T[]) new SymbolicExpression[elements.length + 1];
+		if (isCommitted()) {
+			@SuppressWarnings("unchecked")
+			T[] newElements = (T[]) new SymbolicExpression[newLength(size)];
 
-		System.arraycopy(elements, 0, newElements, 0, lo);
-		newElements[lo] = element;
-		System.arraycopy(elements, lo, newElements, lo + 1, elements.length
-				- lo);
-		return new SimpleSortedSet<T>(elementComparator, newElements);
+			System.arraycopy(elements, 0, newElements, 0, lo);
+			newElements[lo] = element;
+			System.arraycopy(elements, lo, newElements, lo + 1, size - lo);
+			return new SimpleSortedSet<T>(size + 1, elementComparator,
+					newElements);
+		} else {
+			if (size == elements.length) {
+				@SuppressWarnings("unchecked")
+				T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
+
+				System.arraycopy(elements, 0, newArray, 0, lo);
+				System.arraycopy(elements, lo, newArray, lo + 1, size - lo);
+				elements = newArray;
+			} else {
+				System.arraycopy(elements, lo, elements, lo + 1, size - lo);
+			}
+			elements[lo] = element;
+			size++;
+			return this;
+		}
 	}
 
 	/**
@@ -201,16 +237,21 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		if (set instanceof SortedSymbolicSet<?>) {
 			List<T> merged = addAll_helper((SortedSymbolicSet<? extends T>) set);
 
-			return new SimpleSortedSet<T>(elementComparator, merged);
+			if (isCommitted()) {
+				return new SimpleSortedSet<T>(elementComparator, merged);
+			} else {
+				size = merged.size();
+				if (size > elements.length) {
+					@SuppressWarnings("unchecked")
+					T[] ts = (T[]) new SymbolicExpression[newLength(size)];
+
+					elements = ts;
+				}
+				merged.toArray(elements);
+				return this;
+			}
 		} else {
-			// SymbolicExpression[] thatArray = toArray(set);
-			// // following is safe since we are only going to put elements
-			// // of type T into the array:
-			// @SuppressWarnings("unchecked")
-			// T[] thatArrayCast = (T[]) thatArray;
-			//
-			// // sort the given set. or sequence of inserts
-			// Arrays.sort(thatArrayCast, elementComparator);
+			// requires some work: sorting, etc.
 			throw new SARLException(
 					"Combining sorted and unsorted sets not yet implemented");
 		}
@@ -222,27 +263,38 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 		if (index < 0) {
 			return this;
-		} else {
+		} else if (isCommitted()) {
 			@SuppressWarnings("unchecked")
-			T[] newElements = (T[]) new SymbolicExpression[elements.length - 1];
+			T[] newArray = (T[]) new SymbolicExpression[size - 1];
 
-			System.arraycopy(elements, 0, newElements, 0, index);
-			System.arraycopy(elements, index + 1, newElements, index,
-					elements.length - index - 1);
-			return new SimpleSortedSet<T>(elementComparator, newElements);
+			System.arraycopy(elements, 0, newArray, 0, index);
+			System.arraycopy(elements, index + 1, newArray, index, size - index
+					- 1);
+			return new SimpleSortedSet<T>(size - 1, elementComparator, newArray);
+		} else {
+			System.arraycopy(elements, index + 1, elements, index, size - index
+					- 1);
+			size--;
+			return this;
 		}
 	}
 
 	@Override
 	public SortedSymbolicSet<T> removeAll(SymbolicSet<? extends T> set) {
-		if (this.size() == 0)
-			return this;
-		if (set.size() == 0)
+		if (this.size() == 0 || set.size() == 0)
 			return this;
 		if (set instanceof SortedSymbolicSet<?>) {
 			List<T> merged = removeAll_helper((SortedSymbolicSet<? extends T>) set);
 
-			return new SimpleSortedSet<T>(elementComparator, merged);
+			if (isCommitted()) {
+				return new SimpleSortedSet<T>(elementComparator, merged);
+			} else {
+				// TODO: you could probably do this in place in elements,
+				// without going through a List
+				merged.toArray(elements);
+				size = merged.size();
+				return this;
+			}
 		} else {
 			throw new SARLException(
 					"Combining sorted and unsorted sets not yet implemented");
@@ -254,12 +306,27 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		if (this.size() == 0)
 			return this;
 		if (set.size() == 0) {
-			return new SimpleSortedSet<T>(elementComparator);
+			if (isCommitted()) {
+				return new SimpleSortedSet<T>(elementComparator);
+			} else {
+				@SuppressWarnings("unchecked")
+				T[] empty = (T[]) emptyArray;
+
+				elements = empty;
+				size = 0;
+				return this;
+			}
 		}
 		if (set instanceof SortedSymbolicSet<?>) {
 			List<T> merged = keepOnly_helper((SortedSymbolicSet<? extends T>) set);
 
-			return new SimpleSortedSet<T>(elementComparator, merged);
+			if (isCommitted()) {
+				return new SimpleSortedSet<T>(elementComparator, merged);
+			} else {
+				merged.toArray(elements);
+				size = merged.size();
+				return this;
+			}
 		} else {
 			throw new SARLException(
 					"Combining sorted and unsorted sets not yet implemented");
@@ -268,11 +335,26 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		int n = elements.length;
-
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < size; i++) {
 			elements[i] = factory.canonic(elements[i]);
 		}
 	}
 
+	@Override
+	protected void commitChildren() {
+		for (int i = 0; i < size; i++)
+			elements[i].commit();
+	}
+
+	@Override
+	public void commit() {
+		if (size != elements.length) {
+			@SuppressWarnings("unchecked")
+			T[] newArray = (T[]) new SymbolicExpression[size];
+
+			System.arraycopy(elements, 0, newArray, 0, size);
+			elements = newArray;
+		}
+		super.commit();
+	}
 }

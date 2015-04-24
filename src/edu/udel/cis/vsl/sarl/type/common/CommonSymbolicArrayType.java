@@ -139,4 +139,12 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		this.pureType = pureType;
 	}
 
+	@Override
+	protected void commitChildren() {
+		if (elementType != null)
+			elementType.commit();
+		if (pureType != null)
+			pureType.commit();
+	}
+
 }

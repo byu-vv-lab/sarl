@@ -215,14 +215,14 @@ public class CommonNumberObjectTest {
 		assertEquals("1/2", this.realrational.toStringBufferLong().toString());
 	}
 
-	/**
-	 * Test for CommonSymbolicObject.setOrder() and getOrder()
-	 */
-	@Test
-	public void testSetGetOrder() {
-		this.newrealint.setOrder(this.realfactory.oneRational());
-		assertEquals("1", this.newrealint.getOrder().toString());
-	}
+	// /**
+	// * Test for CommonSymbolicObject.setOrder() and getOrder()
+	// */
+	// @Test
+	// public void testSetGetOrder() {
+	// this.newrealint.setOrder(this.realfactory.oneRational());
+	// assertEquals("1", this.newrealint.getOrder().toString());
+	// }
 
 	/**
 	 * Test for CommonSymbolicObject.equals()

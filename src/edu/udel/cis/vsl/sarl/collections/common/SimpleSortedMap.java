@@ -25,24 +25,53 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 	// Static fields...
 
+	/**
+	 * An empty array used to form new empty instances of SimpleSortedMap. They
+	 * can all shared the same array since an empty array can never be modified.
+	 */
 	private static SimpleEntry[] emptyArray = new SimpleEntry[0];
 
+	/**
+	 * The comparator used to compare keys, which defines the total order on the
+	 * entries in this map.
+	 */
 	private Comparator<? super K> comparator;
 
+	/**
+	 * The current number of entries in this map. Note that this is in general
+	 * less or equal to the length of the array {@link #entries}.
+	 */
+	private int size;
+
+	/**
+	 * The array containing the entries in this map. Only the first
+	 * {@link #size} elements of the array contain useful data. The remaining
+	 * elements are just extra space that will be used in case the map grows.
+	 * When this object is committed (made immutable), this array will be
+	 * "trimmed" so that its length is exactly equal to {@link #size}: no more
+	 * extra space is needed since the once the map is committed it can never
+	 * grow.
+	 */
 	private Entry<K, V>[] entries;
 
 	// Constructors...
 
-	protected SimpleSortedMap(Comparator<? super K> comparator,
+	protected SimpleSortedMap(Comparator<? super K> comparator, int size,
 			Entry<K, V>[] entries) {
 		super();
 		this.comparator = comparator;
+		this.size = size;
 		this.entries = entries;
+	}
+
+	protected SimpleSortedMap(Comparator<? super K> comparator,
+			Entry<K, V>[] entries) {
+		this(comparator, entries.length, entries);
 	}
 
 	@SuppressWarnings("unchecked")
 	protected SimpleSortedMap(Comparator<? super K> comparator) {
-		this(comparator, (Entry<K, V>[]) emptyArray);
+		this(comparator, 0, (Entry<K, V>[]) emptyArray);
 	}
 
 	/**
@@ -58,9 +87,7 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 	protected SimpleSortedMap(Map<K, V> javaMap,
 			Comparator<? super K> comparator) {
 		super();
-
-		int size = javaMap.size();
-
+		size = javaMap.size();
 		this.comparator = comparator;
 		// safety: Java won't let you instantiate a generic array,
 		// but I know that all the keys will belong to K and values
@@ -84,7 +111,7 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * @return index of the entry with that key, or -1 if there is none
 	 */
 	private int find(K key) {
-		int lo = 0, hi = entries.length - 1;
+		int lo = 0, hi = size - 1;
 
 		while (lo <= hi) {
 			int mid = (lo + hi) / 2;
@@ -108,7 +135,17 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 	@Override
 	public SortedSymbolicMap<K, V> put(K key, V value) {
-		int lo = 0, hi = entries.length - 1;
+		int lo = 0, hi = size - 1;
+		
+		// TODO: debugging
+		
+		System.out.println("PUTTING: key="+key+"  value="+value);
+		System.out.println("PUT: SIZE = "+size);
+		System.out.flush();
+		if (size == 0 && !isCommitted()) {
+			System.out.println("NON COMMITTED EMPTY !!!");
+			System.out.flush();
+		}
 
 		// loop invariant: hi-lo >= -1.
 		// hi>=lo -> hi-((lo+hi)/2 + 1) >= -1.
@@ -119,18 +156,25 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 			int keyComparison = comparator.compare(entry.getKey(), key);
 
 			if (keyComparison == 0) {
-				if (value.equals(entry.getValue()))
+				if (isCommitted()) {
+					if (value.equals(entry.getValue()))
+						return this;
+
+					@SuppressWarnings("unchecked")
+					Entry<K, V> newEntry = (Entry<K, V>) new SimpleEntry(key,
+							value);
+					// new version replacing old entry with new one at mid
+					@SuppressWarnings("unchecked")
+					Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[entries.length];
+
+					System.arraycopy(entries, 0, newEntries, 0, size);
+					newEntries[mid] = newEntry;
+					return new SimpleSortedMap<K, V>(comparator, size,
+							newEntries);
+				} else {
+					entry.setValue(value);
 					return this;
-
-				@SuppressWarnings("unchecked")
-				Entry<K, V> newEntry = (Entry<K, V>) new SimpleEntry(key, value);
-				// new version replacing old entry with new one at mid
-				@SuppressWarnings("unchecked")
-				Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[entries.length];
-
-				System.arraycopy(entries, 0, newEntries, 0, entries.length);
-				newEntries[mid] = newEntry;
-				return new SimpleSortedMap<K, V>(comparator, newEntries);
+				}
 			} else if (keyComparison < 0) { // x<element
 				lo = mid + 1;
 			} else { // x>element
@@ -142,15 +186,32 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 		// Example: hi=length-1, lo=length
 		// lo is where element should be inserted
 		// new version inserting new entry at position lo
+
 		@SuppressWarnings("unchecked")
 		Entry<K, V> newEntry = (Entry<K, V>) new SimpleEntry(key, value);
+
+		if (!isCommitted() && size < entries.length) {
+			// shift up the subsequence starting from lo...
+			System.arraycopy(entries, lo, entries, lo + 1, size - lo);
+			entries[lo] = newEntry;
+			size++;
+			return this;
+		}
+
 		@SuppressWarnings("unchecked")
-		Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[entries.length + 1];
+		Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[newLength(size)];
 
 		System.arraycopy(entries, 0, newEntries, 0, lo);
 		newEntries[lo] = newEntry;
-		System.arraycopy(entries, lo, newEntries, lo + 1, entries.length - lo);
-		return new SimpleSortedMap<K, V>(comparator, newEntries);
+		System.arraycopy(entries, lo, newEntries, lo + 1, size - lo);
+
+		if (isCommitted()) {
+			return new SimpleSortedMap<K, V>(comparator, size + 1, newEntries);
+		} else {
+			entries = newEntries;
+			size++;
+			return this;
+		}
 	}
 
 	@Override
@@ -160,13 +221,21 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 		if (index < 0) {
 			return this;
 		} else {
-			@SuppressWarnings("unchecked")
-			Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[entries.length - 1];
+			if (isCommitted()) {
+				@SuppressWarnings("unchecked")
+				Entry<K, V>[] newEntries = (Entry<K, V>[]) new SimpleEntry[size - 1];
 
-			System.arraycopy(entries, 0, newEntries, 0, index);
-			System.arraycopy(entries, index + 1, newEntries, index,
-					entries.length - index - 1);
-			return new SimpleSortedMap<K, V>(comparator, newEntries);
+				System.arraycopy(entries, 0, newEntries, 0, index);
+				System.arraycopy(entries, index + 1, newEntries, index, size
+						- index - 1);
+				return new SimpleSortedMap<K, V>(comparator, size - 1,
+						newEntries);
+			} else {
+				System.arraycopy(entries, index + 1, entries, index, size
+						- index - 1);
+				size--;
+				return this;
+			}
 		}
 	}
 
@@ -187,7 +256,7 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 			@Override
 			public boolean hasNext() {
-				return nextIndex < entries.length;
+				return nextIndex < size;
 			}
 
 			@Override
@@ -221,7 +290,7 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 			@Override
 			public boolean hasNext() {
-				return nextIndex < entries.length;
+				return nextIndex < size;
 			}
 
 			@Override
@@ -255,7 +324,7 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 			@Override
 			public boolean hasNext() {
-				return nextIndex < entries.length;
+				return nextIndex < size;
 			}
 
 			@Override
@@ -285,12 +354,12 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 	@Override
 	public boolean isEmpty() {
-		return entries.length == 0;
+		return size == 0;
 	}
 
 	@Override
 	public int size() {
-		return entries.length;
+		return size;
 	}
 
 	@Override
@@ -300,13 +369,48 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
-		for (Entry<K, V> entry : entries) {
-			V oldValue = entry.getValue();
-			V newValue = factory.canonic(oldValue);
+		for (int i = 0; i < size; i++) {
+			Entry<K, V> entry = entries[i];
+			K oldKey = entry.getKey(), newKey = factory.canonic(oldKey);
 
-			if (oldValue != newValue)
-				entry.setValue(newValue);
+			if (oldKey != newKey) {
+				@SuppressWarnings("unchecked")
+				Entry<K, V> newEntry = (Entry<K, V>) new SimpleEntry(newKey,
+						factory.canonic(entry.getValue()));
+
+				// TODO: debugging
+				System.out.println("*** OLD: "+oldKey.getClass()+"    *** NEW: "+newKey.getClass());
+				System.out.flush();
+				
+				entries[i] = newEntry;
+			} else {
+				V oldValue = entry.getValue(), newValue = factory
+						.canonic(oldValue);
+
+				if (oldValue != newValue)
+					entry.setValue(newValue);
+			}
 		}
+	}
+
+	@Override
+	protected void commitChildren() {
+		for (Entry<K, V> entry : entries) {
+			entry.getKey().commit();
+			entry.getValue().commit();
+		}
+	}
+
+	@Override
+	public void commit() {
+		if (size != entries.length) {
+			@SuppressWarnings("unchecked")
+			Entry<K, V>[] newEntries = (Entry<K, V>[]) new Entry<?, ?>[size];
+
+			System.arraycopy(entries, 0, newEntries, 0, size);
+			entries = newEntries;
+		}
+		super.commit();
 	}
 
 }
@@ -316,6 +420,11 @@ class SimpleEntry implements Entry<SymbolicExpression, SymbolicExpression> {
 	SymbolicExpression value;
 
 	SimpleEntry(SymbolicExpression key, SymbolicExpression value) {
+		
+		// TODO: debugging
+		
+		System.out.println("********* key = "+key);
+		
 		this.key = key;
 		this.value = value;
 	}
@@ -332,6 +441,7 @@ class SimpleEntry implements Entry<SymbolicExpression, SymbolicExpression> {
 
 	@Override
 	public SymbolicExpression setValue(SymbolicExpression value) {
+		// check committed?
 		SymbolicExpression oldValue = this.value;
 
 		this.value = value;

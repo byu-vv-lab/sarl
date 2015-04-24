@@ -124,4 +124,14 @@ public class CommonSymbolicMapType extends CommonSymbolicType implements
 	public SymbolicTupleType getEntryType() {
 		return entryType;
 	}
+
+	@Override
+	protected void commitChildren() {
+		keyType.commit();
+		valueType.commit();
+		if (entryType != null)
+			entryType.commit();
+		if (pureType != null)
+			pureType.commit();
+	}
 }

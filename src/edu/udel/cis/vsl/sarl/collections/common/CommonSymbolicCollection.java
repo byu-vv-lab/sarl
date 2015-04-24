@@ -26,6 +26,15 @@ import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 		extends CommonSymbolicObject implements SymbolicCollection<T> {
 
+	protected final static int START_LENGTH = 4;
+
+	/**
+	 * The length of the array will keep doubling when increases are needed,
+	 * until it reaches this threshold. Then it will only increase by increments
+	 * of this threshold.
+	 */
+	protected final static int DOUBLING_THRESHOLD = 256;
+
 	private SymbolicCollectionKind collectionKind;
 
 	CommonSymbolicCollection(SymbolicCollectionKind kind) {
@@ -59,6 +68,12 @@ public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 		if (size() != that.size())
 			return false;
 		return collectionEquals(that);
+	}
+
+	protected int newLength(int oldLength) {
+		return oldLength == 0 ? START_LENGTH
+				: oldLength < DOUBLING_THRESHOLD ? 2 * oldLength : oldLength
+						+ DOUBLING_THRESHOLD;
 	}
 
 	@Override

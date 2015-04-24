@@ -101,4 +101,11 @@ public class CommonSymbolicSetType extends CommonSymbolicType implements
 		this.pureType = pureType;
 	}
 
+	@Override
+	protected void commitChildren() {
+		elementType.commit();
+		if (pureType != null)
+			pureType.commit();
+	}
+
 }

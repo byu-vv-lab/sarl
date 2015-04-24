@@ -399,7 +399,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * 
 	 * @param object
 	 *            any number object
-	 * @return an instance of {@link Constant} corresonding to that number
+	 * @return an instance of {@link Constant} corresponding to that number
 	 */
 	private Constant constant(NumberObject object) {
 		if (object.isOne())
@@ -602,9 +602,15 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
+	 * <p>
 	 * Extracts the common factors from two monics. Given monics f1 and f2, this
 	 * computes the monic p such that: f1=p*g1, f2=p*g2, and g1 and g2 have no
 	 * primitives in common.
+	 * </p>
+	 * 
+	 * <p>
+	 * Does not modify the arguments.
+	 * </p>
 	 * 
 	 * @param fact1
 	 *            a non-<code>null</code> monic
@@ -618,6 +624,10 @@ public class CommonIdealFactory implements IdealFactory {
 				.monicFactors(this);
 		SymbolicMap<NumericPrimitive, PrimitivePower> map2 = fact2
 				.monicFactors(this);
+
+		map1.commit();
+		map2.commit();
+
 		SymbolicMap<NumericPrimitive, PrimitivePower> commonMap = collectionFactory
 				.emptySortedMap();
 		SymbolicMap<NumericPrimitive, PrimitivePower> newMap1 = map1, newMap2 = map2;

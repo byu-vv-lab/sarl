@@ -57,7 +57,7 @@ public class ArrayOperationsDemo {
 	/**
 	 * array used for testing many operations
 	 */
-	SymbolicExpression array1, emptyArray, array2, array3, array4, array5, array6;
+	SymbolicExpression array1, emptyArray;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -87,7 +87,9 @@ public class ArrayOperationsDemo {
 		numericList = Arrays.asList(new NumericExpression[] {ten, twenty, thirty, fourty});
 		numericList2 = Arrays.asList(new NumericExpression[] {fifty, hundred, thousand});
 		array1 = myUniverse.array(integerType, numericList);
+		array1.commit();
 		emptyArray = myUniverse.emptyArray(integerType);
+		emptyArray.commit();
 
 	}
 
@@ -97,11 +99,18 @@ public class ArrayOperationsDemo {
 
 	@Test
 	public void test() {
+		SymbolicExpression  array2, array3, array4, array5, array6;
+
 		array2 = myUniverse.append(array1, one);
+		array2.commit();
 		array3 = myUniverse.removeElementAt(array2, 4);
+		array3.commit();
 		array4 = myUniverse.arrayWrite(array2, one, fifty);
+		array4.commit();
 		array5 = myUniverse.denseArrayWrite(emptyArray, numericList2);
+		array5.commit();
 		array6 = myUniverse.arrayWrite(array4, one, hundred);
+		array6.commit();
 		
 		System.out.println("Array Operations");
 		System.out.println("** Creating and Mainpulating Arrays **");

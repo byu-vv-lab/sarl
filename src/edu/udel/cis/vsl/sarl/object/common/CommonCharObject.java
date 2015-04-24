@@ -37,8 +37,9 @@ public class CommonCharObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Compares the boolean values of two boolean objects
-	 * Know that o has kind BOOLEAN and is not == to this.
+	 * Compares the boolean values of two boolean objects Know that o has kind
+	 * BOOLEAN and is not == to this.
+	 * 
 	 * @return Boolean
 	 */
 	@Override
@@ -79,6 +80,11 @@ public class CommonCharObject extends CommonSymbolicObject implements
 	@Override
 	public StringBuffer toStringBufferLong() {
 		return new StringBuffer(Character.toString(value));
+	}
+
+	@Override
+	protected void commitChildren() {
+		// no children; so nothing to do
 	}
 
 }

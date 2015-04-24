@@ -33,8 +33,8 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		SymbolicIntegerType {
 
 	/**
-	 * a constant to store the hashCode of this object,
-	 * so that it will be calculated once and saved.
+	 * a constant to store the hashCode of this object, so that it will be
+	 * calculated once and saved.
 	 */
 	private final static int classCode = CommonSymbolicIntegerType.class
 			.hashCode();
@@ -52,7 +52,7 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 	 * a constructor to create a new CommonSymbolicIntegerType
 	 * 
 	 * @param kind
-	 * 			the kind of this integerType
+	 *            the kind of this integerType
 	 */
 	public CommonSymbolicIntegerType(IntegerKind kind) {
 		super(SymbolicTypeKind.INTEGER);
@@ -75,8 +75,8 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 	}
 
 	/**
-	 * this method is empty because CommonSymbolicIntegerType
-	 * doesn't have children
+	 * this method is empty because CommonSymbolicIntegerType doesn't have
+	 * children
 	 */
 	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
@@ -116,12 +116,16 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 	}
 
 	/**
-	 * @return the same object because no lengths are used in 
-	 * CommonSymbolicIntegerType
+	 * @return the same object because no lengths are used in
+	 *         CommonSymbolicIntegerType
 	 */
 	@Override
 	public SymbolicType getPureType() {
 		return this;
+	}
+
+	@Override
+	protected void commitChildren() {
 	}
 
 }
