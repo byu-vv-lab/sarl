@@ -1136,8 +1136,8 @@ public class RealNumberFactory implements NumberFactory {
 		boolean sl = itv.strictLower(), su = itv.strictUpper();
 
 		// New upper and lower of result.union.
-		lo = (lo == null) ? null : add(multiply(lo, a), b);
-		up = (up == null) ? null : add(multiply(up, a), b);
+		lo = lo == null ? null : add(multiply(lo, a), b);
+		up = up == null ? null : add(multiply(up, a), b);
 		if (a.signum() < 0) {
 			// if a < 0, exchange the value and strict of lo and up
 			Number tempNum = lo;
