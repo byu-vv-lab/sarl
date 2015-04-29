@@ -331,6 +331,11 @@ public class CommonIdealFactory implements IdealFactory {
 		this.integerExponentiator = new Exponentiator<NumericExpression>(
 				new BinaryOperator<NumericExpression>() {
 
+					// TODO:
+					// note: the Exponentiator requires only that
+					// multiply does not modify the second arg. So
+					// it is safe to use multiplyTo here.
+
 					@Override
 					public NumericExpression apply(NumericExpression x,
 							NumericExpression y) {
@@ -575,6 +580,9 @@ public class CommonIdealFactory implements IdealFactory {
 		if (c.isOne())
 			factorization = reducedPolynomial(type, termMap);
 		else
+			// TODO: use divideTo here?  need to add comment that
+			// says this method can modify the termMap if it isn't
+			// committed.
 			factorization = monomial(c,
 					reducedPolynomial(type, divide(termMap, c)));
 		return polynomial(termMap, factorization);
@@ -625,6 +633,8 @@ public class CommonIdealFactory implements IdealFactory {
 		SymbolicMap<NumericPrimitive, PrimitivePower> map2 = fact2
 				.monicFactors(this);
 
+		// TODO: what should this method be allowed to modify?
+		
 		map1.commit();
 		map2.commit();
 

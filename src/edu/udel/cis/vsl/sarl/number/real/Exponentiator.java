@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
@@ -59,7 +59,7 @@ public class Exponentiator<T> {
 	// e = b0*1 + b1*2 + b2*4 + b3*8 + b4*16 + ...
 	// binaryPower = a^1, a^2, a^4, a^8, a^16,...
 	// a^e = ...
-	
+
 	/**
 	 * Calculates the binary expansion of an exponential
 	 * 
@@ -125,8 +125,8 @@ public class Exponentiator<T> {
 				if (i > 0)
 					binaryPower = multiplier.apply(binaryPower, binaryPower);
 				if (binaryExpansion[i])
-					result = (result == null ? binaryPower : multiplier.apply(
-							result, binaryPower));
+					result = result == null ? binaryPower : multiplier.apply(
+							result, binaryPower);
 			}
 			return result;
 		} else {
