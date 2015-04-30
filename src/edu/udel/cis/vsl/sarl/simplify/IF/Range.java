@@ -3,6 +3,7 @@ package edu.udel.cis.vsl.sarl.simplify.IF;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
 /**
  * An abstract representation of a set of {@link Number}s. Each instance is
@@ -121,7 +122,11 @@ public interface Range {
 	 * </p>
 	 * 
 	 * @param x
-	 * @return
+	 *            variable to use in the new expression
+	 * @param universe
+	 *            symbolic universe used to construct the symbolic expression
+	 * @return a boolean expression involving x which holds iff x is in this set
 	 */
-	BooleanExpression symbolicRepresentation(SymbolicConstant x);
+	BooleanExpression symbolicRepresentation(SymbolicConstant x,
+			PreUniverse universe);
 }

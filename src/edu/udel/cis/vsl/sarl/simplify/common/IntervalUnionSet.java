@@ -13,11 +13,35 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory.IntervalUnion;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
+import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Range;
 
 /**
  * Implementation of {@link Range} in which a set is represented as a finite
  * union of intervals. This class is immutable. Under construction.
+ * 
+ * The following are invariants. They force there to be a unique representation
+ * for each set of numbers:
+ * 
+ * 1. An empty interval cannot occur in the list.
+ * 
+ * 2. All of the intervals in the list are disjoint.
+ * 
+ * 3. The intervals in the list are ordered from least to greatest.
+ * 
+ * 4. If an interval has the form {a,+infty}, then it is open on the right. If
+ * an interval has the form {-infty,a}, then it is open on the left.
+ * 
+ * 5. If {a,b} and {b,c} are two consecutive intervals in the list, the the
+ * first one must be open on the right and the second one must be open on the
+ * left.
+ * 
+ * 6. If the range set has integer type, all of the intervals are integer
+ * intervals. If it has real type, all of the intervals are real intervals.
+ * 
+ * 7. If the range set has integer type, all of the intervals are closed, except
+ * for +infty and -infty.
+ * 
  * 
  * @author siegel
  *
@@ -500,21 +524,28 @@ public class IntervalUnionSet implements Range {
 		ListIterator<Interval> origItvIter = intervals.listIterator();
 
 		if (!(origItvIter.hasNext())) { // The set is empty
+
+			// TODO: strictLower MUST BE TRUE when the corresponding end point
+			// is null (infty/-infty)
+
 			tempItv = numberFactory.newInterval(this.isIntegral(), null, false,
 					null, false);
-			resItv.intervals.add(0, tempItv);
+			resItv.intervals.add(tempItv);
 			return resItv; // Return Univ [null, null]
 		}// if
 
 		curItv = origItvIter.next();
-
-		if (curItv.lower() == null && curItv.upper() == null
-				&& (curItv.strictLower() || curItv.strictUpper()) == false
-				&& (!origItvIter.hasNext())) { // The set contains exactly one
-												// Univ-set.
-			lo = this.isIntegral() ? numberFactory.number("0") : numberFactory
-					.number("0.0");
+		if (curItv.lower() == null && curItv.upper() == null) {
+			// The set
+			// contains
+			// exactly one
+			// Univ-set.
+			lo = this.isIntegral() ? numberFactory.zeroInteger()
+					: numberFactory.zeroRational();
 			sl = true;
+
+			// TODO: don't parse the strings to create numbers (performance)
+
 			up = this.isIntegral() ? numberFactory.number("0") : numberFactory
 					.number("0.0");
 			su = true;
@@ -524,9 +555,8 @@ public class IntervalUnionSet implements Range {
 			return resItv;
 		}// if
 
-		if (curItv.lower() == curItv.upper()
-				&& (curItv.strictLower() && curItv.strictUpper()) == true
-				&& (!origItvIter.hasNext())) {
+		if (curItv.lower() == curItv.upper() && curItv.strictLower()
+				&& curItv.strictUpper()) {
 			// The set contains exactly one empty-set.
 			lo = null;
 			sl = false;
@@ -582,9 +612,11 @@ public class IntervalUnionSet implements Range {
 	}
 
 	@Override
-	public BooleanExpression symbolicRepresentation(SymbolicConstant x) {
+	public BooleanExpression symbolicRepresentation(SymbolicConstant x,
+			PreUniverse universe) {
 		// TODO Auto-generated method stub
-
+		// Number number;
+		// universe.number(number);
 		return null;
 	}
 
