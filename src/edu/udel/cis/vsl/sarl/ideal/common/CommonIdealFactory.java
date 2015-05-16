@@ -2018,7 +2018,7 @@ public class CommonIdealFactory implements IdealFactory {
 				: ((RationalExpression) expr).numerator(this);
 
 		if (result instanceof Monomial) {
-			Monic monic = ((Monomial) expr).monic(this);
+			Monic monic = ((Monomial) result).monic(this);
 
 			result = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
 					.primitive(this) : monic;
