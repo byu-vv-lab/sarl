@@ -932,12 +932,39 @@ public class RealNumberFactory implements NumberFactory {
 	@Override
 	public Interval newInterval(boolean isIntegral, Number lower,
 			boolean strictLower, Number upper, boolean strictUpper) {
-		return new CommonInterval(isIntegral, lower, strictLower, upper,
-				strictUpper);
+		/*
+		 * If the range set has integer type, all of the intervals are closed,
+		 * except for +infty and -infty.
+		 */
+		boolean sL = lower != null ? !isIntegral && strictLower : true;
+		boolean sU = upper != null ? !isIntegral && strictUpper : true;
+
+		if (lower != null && upper != null && (lower.compareTo(upper) == 0)) {
+			if (strictLower || strictUpper) {
+				lower = isIntegral ? zeroInteger : zeroRational;
+				upper = isIntegral ? zeroInteger : zeroRational;
+				sL = true;
+				sU = true;
+			}
+		}
+		return new CommonInterval(isIntegral, lower, sL, upper, sU);
 	}
 
 	@Override
 	public Interval intersection(Interval i1, Interval i2) {
+		if (i1 == null) {
+			throw new NullPointerException(
+					"The interval parameter i1 cannot be null.");
+		} else if (i2 == null) {
+			throw new NullPointerException(
+					"The interval parameter i2 cannot be null.");
+		} else {
+			if (i1.isIntegral() != i2.isIntegral()) {
+				throw new IllegalArgumentException(
+						"The type of parameters i1 and i2 are mismached.");
+			}
+		}
+
 		boolean isIntegral = i1.isIntegral();
 
 		assert isIntegral == i2.isIntegral();
@@ -1010,6 +1037,21 @@ public class RealNumberFactory implements NumberFactory {
 
 	@Override
 	public void union(Interval i1, Interval i2, IntervalUnion result) {
+		if (i1 == null) {
+			throw new NullPointerException(
+					"The interval parameter i1 cannot be null.");
+		} else if (i2 == null) {
+			throw new NullPointerException(
+					"The interval parameter i2 cannot be null.");
+		} else if (result == null) {
+			throw new NullPointerException(
+					"The intervalUnion parameter result cannot be null.");
+		} else {
+			if (i1.isIntegral() != i2.isIntegral()) {
+				throw new IllegalArgumentException(
+						"The type of parameters i1 and i2 are mismached.");
+			}
+		}
 		if (i1.isEmpty()) {
 			result.status = 0;
 			result.union = i2;
@@ -1031,8 +1073,13 @@ public class RealNumberFactory implements NumberFactory {
 											// +infi)
 			boolean sl = false, su = false;
 
-			int compare1 = hi1.compareTo(lo2);
-
+			int compare1 = 0;
+			
+			if (hi1 == null || lo2 == null){
+				compare1 = 1;
+			}else{
+				compare1 = hi1.compareTo(lo2);
+			}
 			if (compare1 < 0) { // hi1<lo2
 				result.status = -1;
 			} else if (compare1 == 0) { // hi1=lo2
@@ -1046,10 +1093,22 @@ public class RealNumberFactory implements NumberFactory {
 					result.status = -1;
 				}
 			} else { // hi1>lo2
-				int compare2 = lo1.compareTo(hi2);
-
+				int compare2 = 0;
+				
+				if (lo1 == null || hi2 == null){
+					compare2 = -1;
+				}else{
+					compare2 = lo1.compareTo(hi2);
+				}
 				if (compare2 < 0) { // lo1<hi2
-					int compareLo = lo1.compareTo(lo2);
+					int compareLo = 0;
+					if (lo1 == null){
+						compareLo = -1;
+					}else if (lo2 == null){
+						compareLo = 1;
+					}else{
+						compareLo = lo1.compareTo(lo2);
+					}
 
 					if (compareLo < 0) { // lo1<lo2
 						lo = lo1;
@@ -1062,8 +1121,15 @@ public class RealNumberFactory implements NumberFactory {
 						sl = sl2;
 					}
 
-					int compareHi = hi1.compareTo(hi2);
-
+					int compareHi = 0;
+					
+					if (hi1 == null){
+						compareHi = 1;
+					}else if(hi2 == null){
+						compareHi = -1;
+					}else{
+						compareHi = hi1.compareTo(hi2);
+					}
 					if (compareHi < 0) {
 						hi = hi2;
 						su = su2;
@@ -1111,8 +1177,7 @@ public class RealNumberFactory implements NumberFactory {
 		if (b == null)
 			throw new NullPointerException(
 					"The number parameter b cannot be null.");
-		assert (itv.upper().getClass() == itv.lower().getClass());
-		if (itv.upper() instanceof IntegerNumber) {
+		if (itv.isIntegral()) {
 			if (!(a instanceof IntegerNumber))
 				throw new IllegalArgumentException(
 						"Mixed numeric types not allowed:\n" + itv.upper()
@@ -1121,7 +1186,7 @@ public class RealNumberFactory implements NumberFactory {
 				throw new IllegalArgumentException(
 						"Mixed numeric types not allowed:\n" + itv.upper()
 								+ "\n" + b);
-		} else if (itv.upper() instanceof RationalNumber) {
+		} else{
 			if (!(a instanceof RationalNumber))
 				throw new IllegalArgumentException(
 						"Mixed numeric types not allowed:\n" + itv.upper()
@@ -1135,11 +1200,15 @@ public class RealNumberFactory implements NumberFactory {
 		Number lo = itv.lower(), up = itv.upper();
 		boolean sl = itv.strictLower(), su = itv.strictUpper();
 
+		if (lo != null && up != null){
+			if (lo.isZero() && up.isZero() && sl && su){
+				return new CommonInterval(itv.isIntegral(), lo, sl, up, su);
+			}
+		}
 		// New upper and lower of result.union.
 		lo = lo == null ? null : add(multiply(lo, a), b);
 		up = up == null ? null : add(multiply(up, a), b);
 		if (a.signum() < 0) {
-			// if a < 0, exchange the value and strict of lo and up
 			Number tempNum = lo;
 			boolean tempS = sl;
 
@@ -1148,12 +1217,68 @@ public class RealNumberFactory implements NumberFactory {
 			up = tempNum;
 			su = tempS;
 		} else if (a.signum() == 0) {
-			// if a = 0 and either boundary is strict.
-			if (sl || su) {
-				lo = a;
-				up = a;
-			}
+				lo = b;
+				up = b;
+				sl = false;
+				su = false;
 		}// if - else
 		return new CommonInterval(itv.isIntegral(), lo, sl, up, su);
+	}
+
+	@Override
+	public int compare(Interval i1, Interval i2) {
+		if (i1 == null) {
+			throw new NullPointerException(
+					"The interval parameter i1 cannot be null.");
+		}
+		if (i2 == null) {
+			throw new NullPointerException(
+					"The interval parameter i2 cannot be null.");
+		} else {
+			if (i1.isIntegral() != i2.isIntegral())
+				throw new IllegalArgumentException(
+						"The type of parameters i1 and i2 are mismached.");
+		}
+
+		int cmpLo = 0;
+		int cmpUp = 0;
+		int rtn = 0;
+
+		if (i1.lower() == null && i2.lower() == null) {
+			cmpLo = 0;
+		} else if (i1.lower() == null && i2.lower() != null) {
+			cmpLo = -1;
+		} else if (i1.lower() != null && i2.lower() == null) {
+			cmpLo = 1;
+		} else {
+			cmpLo = i1.lower().compareTo(i2.lower());
+		}
+		if (cmpLo == 0) {
+			if (i1.strictLower() == i2.strictLower()) {
+				cmpLo = 0;
+			} else if (i1.strictLower()) {
+				cmpLo = -1;
+			} else if (i2.strictLower()) {
+				cmpLo = 1;
+			}
+		}
+		if (i1.upper() == null && i2.upper() == null) {
+			cmpUp = 0;
+		} else if (i1.upper() == null && i2.upper() != null) {
+			cmpUp = -1;
+		} else if (i1.upper() != null && i2.upper() == null) {
+			cmpUp = 1;
+		} else {
+			cmpUp = i1.upper().compareTo(i2.upper());
+		}
+		if (i1.strictUpper() == i2.strictUpper()) {
+			cmpUp = 0;
+		} else if (i1.strictUpper()) {
+			cmpUp = -1;
+		} else if (i2.strictUpper()) {
+			cmpUp = 1;
+		}
+		rtn = cmpLo == 0 ? cmpUp : cmpLo;
+		return rtn;
 	}
 }
