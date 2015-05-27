@@ -137,11 +137,12 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	protected abstract void commitChildren();
 
 	@Override
-	public void commit() {
+	public SymbolicObject commit() {
 		if (state == MUTABLE) {
 			state = COMMITTED;
 			commitChildren();
 		}
+		return this;
 	}
 
 	/**

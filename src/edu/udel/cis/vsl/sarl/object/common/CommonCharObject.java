@@ -87,4 +87,8 @@ public class CommonCharObject extends CommonSymbolicObject implements
 		// no children; so nothing to do
 	}
 
+	@Override
+	public CharObject commit() {
+		return (CharObject) super.commit();
+	}
 }

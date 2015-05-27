@@ -150,6 +150,6 @@ public interface SymbolicObject {
 	 */
 	StringBuffer toStringBufferLong();
 
-	void commit();
+	SymbolicObject commit();
 
 }

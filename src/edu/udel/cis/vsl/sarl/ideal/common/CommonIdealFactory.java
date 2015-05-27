@@ -330,15 +330,12 @@ public class CommonIdealFactory implements IdealFactory {
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
 		this.integerExponentiator = new Exponentiator<NumericExpression>(
 				new BinaryOperator<NumericExpression>() {
-
-					// TODO:
 					// note: the Exponentiator requires only that
-					// multiply does not modify the second arg. So
-					// it is safe to use multiplyTo here.
-
+					// multiply does not modify the second arg.
 					@Override
 					public NumericExpression apply(NumericExpression x,
 							NumericExpression y) {
+						y.commit();
 						return multiply((Polynomial) x, (Polynomial) y);
 					}
 
@@ -357,6 +354,15 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	// ************************** Private Methods *************************
+
+	// all of these methods are allowed to modify their arguments
+	// in any way they want (if they are not committed). The
+	// arguments should therefore be considered consumed and destroyed
+	// if they are not committed.
+
+	// w=addMut(x,y)
+	//
+	// w=add(x,y) : just commits both args, then calls addMut
 
 	/**
 	 * Returns the canonic {@link Constant} of integer type with the value
@@ -580,7 +586,7 @@ public class CommonIdealFactory implements IdealFactory {
 		if (c.isOne())
 			factorization = reducedPolynomial(type, termMap);
 		else
-			// TODO: use divideTo here?  need to add comment that
+			// TODO: use divideTo here? need to add comment that
 			// says this method can modify the termMap if it isn't
 			// committed.
 			factorization = monomial(c,
@@ -634,7 +640,14 @@ public class CommonIdealFactory implements IdealFactory {
 				.monicFactors(this);
 
 		// TODO: what should this method be allowed to modify?
-		
+		// let us say it should be able to modify fact1 and fact2
+		// (for example, by replacing them with the newFact1,
+		// newFact2 that are returned.) The contract does not
+		// have to specify how they are modified.
+
+		// however do not want to iterate over map1 while changing
+		// map1.
+
 		map1.commit();
 		map2.commit();
 
@@ -678,6 +691,8 @@ public class CommonIdealFactory implements IdealFactory {
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
 	 * 
+	 * TODO: state whether fact1, fact2, can be modified
+	 * 
 	 * @param fact1
 	 *            a factorization
 	 * @param fact2
@@ -701,6 +716,8 @@ public class CommonIdealFactory implements IdealFactory {
 	 * coefficients are added. If the result is 0, no entry for that monic will
 	 * appear in the result. Otherwise, an entry for that monic will appear in
 	 * the result with the value the sum of the two values.
+	 * 
+	 * TODO: which term maps can be modified?
 	 * 
 	 * @param termMap1
 	 *            a non-<code>null</code> polynomial term map
@@ -743,7 +760,7 @@ public class CommonIdealFactory implements IdealFactory {
 
 	/**
 	 * Adds two rational expressions. The factorizations are used so that in the
-	 * resulting rational expression, the numerator and denominator have not
+	 * resulting rational expression, the numerator and denominator have no
 	 * common factors.
 	 * 
 	 * @param r1

@@ -79,4 +79,9 @@ public class CommonStringObject extends CommonSymbolicObject implements
 		// no children; so nothing to do
 	}
 
+	@Override
+	public StringObject commit() {
+		return (StringObject) super.commit();
+	}
+
 }
