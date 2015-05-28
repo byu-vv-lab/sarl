@@ -50,6 +50,11 @@ public class IntervalUnionSet implements Range {
 
 	private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
+	// TODO: is List the best choice of data structure? 
+	// Lists are good when you need to modify the structure
+	// by adding or removing elements.  Since IntervalUnionSet is
+	// immutable, why not use an array?
+	
 	/**
 	 * Ordered list of intervals; the value set is the union of these intervals.
 	 */
@@ -89,9 +94,19 @@ public class IntervalUnionSet implements Range {
 			int oldSize = res.intervals.size();
 
 			IntervalUnionSet tmp = new IntervalUnionSet(itvs[i]);
+			
+			// TODO: can you change the return type of #union
+			// to IntervalUnionSet so this cast is unnecessary?
+			
 			res = (IntervalUnionSet) this.union(tmp);
 
 			int newSize = res.intervals.size();
+			
+			// TODO: I don't understand this at all.
+			// why is the following necessary?
+			// why not just perform the union at each iteration?
+			// maybe this should be a static method instead
+			// of a constructor.
 
 			if (newSize > oldSize) {
 				intervals.add(res.intervals.get(oldSize));
@@ -124,8 +139,16 @@ public class IntervalUnionSet implements Range {
 		ListIterator<Interval> iter = intervals.listIterator();
 
 		if (!(iter.hasNext())) {
+			
+			// TODO: why can't you have an empty integer set?
+			
 			return areNotIntegral; // When this set is empty, return false
 		}// if
+		
+		// TODO: why do you have to iterate over all intervals?
+		// all of the intervals should have the same type
+		// (integer or real).
+		
 		while (iter.hasNext()) {
 			Interval curItv = iter.next();
 
@@ -148,12 +171,23 @@ public class IntervalUnionSet implements Range {
 			throw new NullPointerException(
 					"The Number parameter number cannot be null.");
 		}
+		
+		// TODO: is it really worth it to do this check, or should
+		// it just be part of the contract precondition? Performance!
+		
 		if (isIntegral() != (number instanceof IntegerNumber)) {
 			throw new IllegalArgumentException(
 					"The Type of the input is mismatched with the set.");
 		}
 
 		ListIterator<Interval> iter = intervals.listIterator();
+		
+		// TODO: this does not seem as fast as it could be.
+		// You can stop as soon as the upper bound of the current
+		// interval exceeds the number.
+		
+		// if you use an array instead of a List you could
+		// do a binary search
 
 		while (iter.hasNext()) {
 			Interval curItv = iter.next();
