@@ -35,6 +35,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
+import edu.udel.cis.vsl.sarl.util.Pair;
 
 public interface CoreUniverse {
 
@@ -276,6 +277,17 @@ public interface CoreUniverse {
 	 * @return the incomplete array type
 	 */
 	SymbolicArrayType arrayType(SymbolicType elementType);
+
+	/**
+	 * Returns the dimension of a given array and the base type of that array.
+	 * Note that a non-array type object will be taken as an one dimensional
+	 * array of length one.
+	 * 
+	 * @param array
+	 * @return A {@link Pair} consists of dimension (left) and base type
+	 *         (right).
+	 */
+	Pair<Integer, SymbolicType> arrayDimensionAndBaseType(SymbolicType type);
 
 	/**
 	 * The tuple type defined by the given sequence of component types. The

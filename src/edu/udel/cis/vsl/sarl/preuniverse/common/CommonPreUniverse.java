@@ -61,6 +61,7 @@ import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
+import edu.udel.cis.vsl.sarl.util.Pair;
 
 public class CommonPreUniverse implements PreUniverse {
 
@@ -1028,6 +1029,20 @@ public class CommonPreUniverse implements PreUniverse {
 	@Override
 	public SymbolicArrayType arrayType(SymbolicType elementType) {
 		return typeFactory.arrayType(elementType);
+	}
+
+	@Override
+	public Pair<Integer, SymbolicType> arrayDimensionAndBaseType(
+			SymbolicType arrayType) {
+		SymbolicType elementType;
+		int dimension = 0;
+
+		elementType = arrayType;
+		do {
+			elementType = ((SymbolicArrayType) elementType).elementType();
+			dimension++;
+		} while (elementType.typeKind().equals(SymbolicTypeKind.ARRAY));
+		return new Pair<>(dimension, elementType);
 	}
 
 	public SymbolicTypeSequence typeSequence(SymbolicType[] types) {
