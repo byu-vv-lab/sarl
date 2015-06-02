@@ -36,6 +36,8 @@ public class BasicCollection<T extends SymbolicExpression> extends
 	public BasicCollection(Collection<T> javaCollection) {
 		super(SymbolicCollectionKind.BASIC);
 		this.javaCollection = javaCollection;
+		for (T obj : javaCollection)
+			obj.makeChild();
 	}
 
 	@Override

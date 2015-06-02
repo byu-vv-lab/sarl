@@ -355,14 +355,10 @@ public class CommonIdealFactory implements IdealFactory {
 
 	// ************************** Private Methods *************************
 
-	// all of these methods are allowed to modify their arguments
+	// All of these methods are allowed to modify their arguments
 	// in any way they want (if they are not committed). The
 	// arguments should therefore be considered consumed and destroyed
 	// if they are not committed.
-
-	// w=addMut(x,y)
-	//
-	// w=add(x,y) : just commits both args, then calls addMut
 
 	/**
 	 * Returns the canonic {@link Constant} of integer type with the value
@@ -401,6 +397,15 @@ public class CommonIdealFactory implements IdealFactory {
 	 */
 	private Constant canonicRealConstant(int value) {
 		return objectFactory.canonic(realConstant(value));
+	}
+
+	private Constant setConstant(Constant constant, NumberObject value) {
+		if (value.isOne())
+			return value.isInteger() ? oneInt : oneReal;
+		if (!constant.isImmutable() && constant instanceof NTConstant) {
+			((NTConstant) constant).setValue(value);
+		}
+		return new NTConstant(value.isInteger() ? integerType : realType, value);
 	}
 
 	/**
@@ -565,17 +570,24 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
+	 * <p>
 	 * Constructs a {@link Polynomial} based on the given term map, using a
 	 * "trivial" factorization. The constant factor c in the trivial
 	 * factorization is obtained in the real type by taking the leading
 	 * coefficient; in the integer case by taking the GCD of the absolute values
 	 * of the coefficients. The factorization is then "c (p/c)^1", where p is
 	 * the polynomial defined by the <code>termMap</code>.
+	 * </p>
+	 * 
+	 * <p>
+	 * If <code>termMap</code> is mutable, this method may modify it and use it
+	 * as the term map of the polynomial returned.
+	 * </p>
 	 * 
 	 * @param type
 	 *            integer or real type
 	 * @param termMap
-	 *            term map consistent with type
+	 *            term map consistent with type; may be modified if mutable
 	 * @return polynomial with trivial factorization
 	 */
 	private Polynomial polynomialWithTrivialFactorization(SymbolicType type,
@@ -586,9 +598,7 @@ public class CommonIdealFactory implements IdealFactory {
 		if (c.isOne())
 			factorization = reducedPolynomial(type, termMap);
 		else
-			// TODO: use divideTo here? need to add comment that
-			// says this method can modify the termMap if it isn't
-			// committed.
+			// note that "divide" may modify termMap:
 			factorization = monomial(c,
 					reducedPolynomial(type, divide(termMap, c)));
 		return polynomial(termMap, factorization);
@@ -623,7 +633,7 @@ public class CommonIdealFactory implements IdealFactory {
 	 * </p>
 	 * 
 	 * <p>
-	 * Does not modify the arguments.
+	 * Could modify either or both monic arguments if they are not committed.
 	 * </p>
 	 * 
 	 * @param fact1
@@ -639,15 +649,8 @@ public class CommonIdealFactory implements IdealFactory {
 		SymbolicMap<NumericPrimitive, PrimitivePower> map2 = fact2
 				.monicFactors(this);
 
-		// TODO: what should this method be allowed to modify?
-		// let us say it should be able to modify fact1 and fact2
-		// (for example, by replacing them with the newFact1,
-		// newFact2 that are returned.) The contract does not
-		// have to specify how they are modified.
-
-		// however do not want to iterate over map1 while changing
-		// map1.
-
+		// Need to commit these because you are using them to initialize
+		// newMap1 and newMap2:
 		map1.commit();
 		map2.commit();
 
@@ -661,8 +664,13 @@ public class CommonIdealFactory implements IdealFactory {
 			PrimitivePower ppower2 = map2.get(base);
 
 			if (ppower2 != null) {
-				IntObject exponent1 = ppower1.primitivePowerExponent(this);
-				IntObject exponent2 = ppower2.primitivePowerExponent(this);
+				IntObject exponent1 = ppower1.primitivePowerExponent(this)
+						.commit();
+				IntObject exponent2 = ppower2.primitivePowerExponent(this)
+						.commit();
+
+				// note: IntObjects are mutable if not committed.
+
 				IntObject minExponent = exponent1.minWith(exponent2);
 				IntObject newExponent1 = exponent1.minus(minExponent);
 				IntObject newExponent2 = exponent2.minus(minExponent);
@@ -686,12 +694,18 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	/**
+	 * <p>
 	 * Given two factorizations f1 and f2, this returns an array of length 3
 	 * containing 3 factorizations a, g1, g2 (in that order), satisfying
 	 * f1=a*g1, f2=a*g2, g1 and g2 have no factors in common, a is a monic
 	 * factorization (its constant is 1).
+	 * </p>
 	 * 
-	 * TODO: state whether fact1, fact2, can be modified
+	 * <p>
+	 * May modify <code>fact1</code> and/or <code>fact2</code> is these are not
+	 * committed.
+	 * </p>
+	 * 
 	 * 
 	 * @param fact1
 	 *            a factorization
@@ -700,12 +714,17 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @return the array {a,g1,g2}
 	 */
 	private Monomial[] extractCommonality(Monomial fact1, Monomial fact2) {
+		Constant c1 = fact1.monomialConstant(this), c2 = fact2
+				.monomialConstant(this);
+
+		c1.commit();
+		c2.commit();
+
 		Monic[] monicTriple = extractCommonality(fact1.monic(this),
 				fact2.monic(this));
 
-		return new Monomial[] { monicTriple[0],
-				monomial(fact1.monomialConstant(this), monicTriple[1]),
-				monomial(fact2.monomialConstant(this), monicTriple[2]) };
+		return new Monomial[] { monicTriple[0], monomial(c1, monicTriple[1]),
+				monomial(c2, monicTriple[2]) };
 	}
 
 	/**
@@ -716,8 +735,6 @@ public class CommonIdealFactory implements IdealFactory {
 	 * coefficients are added. If the result is 0, no entry for that monic will
 	 * appear in the result. Otherwise, an entry for that monic will appear in
 	 * the result with the value the sum of the two values.
-	 * 
-	 * TODO: which term maps can be modified?
 	 * 
 	 * @param termMap1
 	 *            a non-<code>null</code> polynomial term map
@@ -1696,8 +1713,14 @@ public class CommonIdealFactory implements IdealFactory {
 	 * @return the sum of the two constants
 	 */
 	Constant add(Constant c1, Constant c2) {
-		return constant(objectFactory.numberObject(numberFactory.add(
-				c1.number(), c2.number())));
+		if (c1.isImmutable()) {
+			return constant(objectFactory.numberObject(numberFactory.add(
+					c1.number(), c2.number())));
+		} else {
+			// TODO: for now...
+			return constant(objectFactory.numberObject(numberFactory.add(
+					c1.number(), c2.number())));
+		}
 	}
 
 	/**
@@ -2055,7 +2078,7 @@ public class CommonIdealFactory implements IdealFactory {
 				: ((RationalExpression) expr).numerator(this);
 
 		if (result instanceof Monomial) {
-			Monic monic = ((Monomial) expr).monic(this);
+			Monic monic = ((Monomial) result).monic(this);
 
 			result = monic instanceof PrimitivePower ? ((PrimitivePower) monic)
 					.primitive(this) : monic;

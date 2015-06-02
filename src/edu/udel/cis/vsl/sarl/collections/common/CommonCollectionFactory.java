@@ -122,7 +122,14 @@ public class CommonCollectionFactory implements CollectionFactory {
 	@Override
 	public <T extends SymbolicExpression> SymbolicSequence<T> sequence(
 			Iterable<? extends T> elements) {
-		return new SimpleSequence<T>(elements);
+		if (elements instanceof Collection<?>) {
+			@SuppressWarnings("unchecked")
+			Collection<T> collection = (Collection<T>) elements;
+			
+			return new SimpleSequence<T>(collection);
+		} else {
+			return new SimpleSequence<T>(elements);
+		}
 	}
 
 	@Override

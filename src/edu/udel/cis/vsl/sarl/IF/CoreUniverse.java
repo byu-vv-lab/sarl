@@ -573,7 +573,6 @@ public interface CoreUniverse {
 	 */
 	SymbolicConstant symbolicConstant(StringObject name, SymbolicType type);
 
-
 	// Integers...
 
 	/**
@@ -1321,7 +1320,7 @@ public interface CoreUniverse {
 	 * removed and the remaining elements have been shifted down to remove the
 	 * gap. The resulting array has length 1 less than the original one.
 	 * 
-	 * TODO: extend to arbitrary arrays, not just symbolic
+	 * TODO: extend to arbitrary arrays, not just concrete
 	 * 
 	 * @param concreteArray
 	 *            a concrete array
@@ -1696,7 +1695,8 @@ public interface CoreUniverse {
 	/**
 	 * Returns the set of unbound symbolic constants occurring in an expression.
 	 * Each symbolic constant will occur at most once in the collection
-	 * returned.
+	 * returned. This includes symbolic constants that occur in types (for
+	 * example, array lengths).
 	 * 
 	 * @param expr
 	 *            a non-<code>null</code> symbolic expression

@@ -17,8 +17,8 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
  * @author siegel
  *
  */
-public abstract class CommonSortedSet<T extends SymbolicExpression>
-		extends CommonSymbolicCollection<T> implements SortedSymbolicSet<T> {
+public abstract class CommonSortedSet<T extends SymbolicExpression> extends
+		CommonSymbolicCollection<T> implements SortedSymbolicSet<T> {
 
 	public final static int classCode = SymbolicCollectionKind.SORTED_SET
 			.hashCode();
@@ -35,12 +35,14 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 	// protected methods...
 
 	/**
+	 * <p>
 	 * This method can be used to help implement the
 	 * {@link #keepOnly(SymbolicSet)} method. Given a sorted symbolic set
 	 * (sorted using the same comparator as this), it returns the subset of this
 	 * set consisting of those elements which are also in the given one (i.e.,
 	 * the intersection). The result is returned as a list, with the elements
 	 * appearing in order.
+	 * </p>
 	 * 
 	 * @param set
 	 *            a sorted symbolic set using same comparator as this
@@ -48,6 +50,7 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 	 *         in order
 	 */
 	protected List<T> keepOnly_helper(SortedSymbolicSet<? extends T> set) {
+		boolean immutable = this.isImmutable();
 		Comparator<T> comparator = this.comparator();
 		LinkedList<T> merged = new LinkedList<>();
 		Iterator<T> iter1 = this.iterator();
@@ -55,18 +58,43 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 		T x1 = iter1.hasNext() ? iter1.next() : null;
 		T x2 = iter2.hasNext() ? iter2.next() : null;
 
-		while (x1 != null && x2 != null) {
-			int compare = comparator.compare(x1, x2);
+		if (immutable) {
+			// this does not call commit because the way this
+			// method will be used, every element of the new
+			// set will have addChild() invoked on it in
+			// construction
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
 
-			if (compare == 0) {
-				merged.add(x1);
-				x1 = iter1.hasNext() ? iter1.next() : null;
-				x2 = iter2.hasNext() ? iter2.next() : null;
-			} else if (compare < 0) {
-				x1 = iter1.hasNext() ? iter1.next() : null;
-			} else {
-				x2 = iter2.hasNext() ? iter2.next() : null;
+				if (compare == 0) {
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				} else if (compare < 0) {
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
 			}
+		} else {
+			// same as above but release elements of this set
+			// that are not being kept ...
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
+
+				if (compare == 0) {
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				} else if (compare < 0) {
+					x1.release(); // x1 is being removed from this
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
+			}
+			while (iter1.hasNext())
+				iter1.next().release();
 		}
 		return merged;
 	}
@@ -74,7 +102,9 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 	/**
 	 * This method can be used to help implement {@link #addAll(SymbolicSet)}.
 	 * Given any kind of sorted set, it returns the elements of the union of
-	 * this set and the given one, sorted, as a list.
+	 * this set and the given one, sorted, as a list. It also commits all the
+	 * elements in the given <code>set</code> that are not in this one, since
+	 * they will be shared between the new set and <code>set</code>.
 	 * 
 	 * @param set
 	 *            a sorted symbolic set using the same comparator as this
@@ -88,29 +118,76 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 		T x1 = iter1.hasNext() ? iter1.next() : null;
 		T x2 = iter2.hasNext() ? iter2.next() : null;
 
-		while (x1 != null && x2 != null) {
-			int compare = comparator.compare(x1, x2);
+		if (this.isImmutable()) {
+			// no need to commit since resulting list will be used
+			// in constructor
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
 
-			if (compare == 0) {
-				merged.add(x1);
-				x1 = iter1.hasNext() ? iter1.next() : null;
-				x2 = iter2.hasNext() ? iter2.next() : null;
-			} else if (compare < 0) {
-				merged.add(x1);
-				x1 = iter1.hasNext() ? iter1.next() : null;
-			} else {
-				merged.add(x2);
-				x2 = iter2.hasNext() ? iter2.next() : null;
+				if (compare == 0) {
+					// x1.commit();
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				} else if (compare < 0) {
+					// x1.commit();
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					// x2.commit();
+					merged.add(x2);
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
 			}
-		}
-		if (x1 != null) {
-			merged.add(x1);
-			while (iter1.hasNext())
-				merged.add(iter1.next());
-		} else if (x2 != null) {
-			merged.add(x2);
-			while (iter2.hasNext())
-				merged.add(iter2.next());
+			if (x1 != null) {
+				// x1.commit();
+				merged.add(x1);
+				while (iter1.hasNext()) {
+					x1 = iter1.next();
+					// x1.commit();
+					merged.add(x1);
+				}
+			} else if (x2 != null) {
+				// x2.commit();
+				merged.add(x2);
+				while (iter2.hasNext()) {
+					x2 = iter2.next();
+					// x2.commit();
+					merged.add(x2);
+				}
+			}
+		} else { // mutable
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
+
+				if (compare == 0) {
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				} else if (compare < 0) {
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					x2.commit(); // since it will now appear in two sets
+					merged.add(x2);
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
+			}
+			if (x1 != null) {
+				merged.add(x1);
+				while (iter1.hasNext()) {
+					x1 = iter1.next();
+					merged.add(x1);
+				}
+			} else if (x2 != null) {
+				x2.commit();
+				merged.add(x2); // since it will now appear in two sets
+				while (iter2.hasNext()) {
+					x2 = iter2.next();
+					x2.commit();
+					merged.add(x2);
+				}
+			}
 		}
 		return merged;
 	}
@@ -133,23 +210,54 @@ public abstract class CommonSortedSet<T extends SymbolicExpression>
 		T x1 = iter1.hasNext() ? iter1.next() : null;
 		T x2 = iter2.hasNext() ? iter2.next() : null;
 
-		while (x1 != null && x2 != null) {
-			int compare = comparator.compare(x1, x2);
+		if (this.isImmutable()) {
+			// no need to commit since resulting list will be used
+			// in constructor...
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
 
-			if (compare == 0) {
-				x1 = iter1.hasNext() ? iter1.next() : null;
-				x2 = iter2.hasNext() ? iter2.next() : null;
-			} else if (compare < 0) {
-				merged.add(x1);
-				x1 = iter1.hasNext() ? iter1.next() : null;
-			} else {
-				x2 = iter2.hasNext() ? iter2.next() : null;
+				if (compare == 0) {
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				} else if (compare < 0) {
+					// x1.commit();
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
 			}
-		}
-		if (x1 != null) {
-			merged.add(x1);
-			while (iter1.hasNext())
-				merged.add(iter1.next());
+			if (x1 != null) {
+				// x1.commit();
+				merged.add(x1);
+				while (iter1.hasNext()) {
+					x1 = iter1.next();
+					// x1.commit();
+					merged.add(x1);
+				}
+			}
+		} else { // mutable
+			while (x1 != null && x2 != null) {
+				int compare = comparator.compare(x1, x2);
+
+				if (compare == 0) {
+					x1 = iter1.hasNext() ? iter1.next() : null;
+					x2 = iter2.hasNext() ? iter2.next() : null;
+					x1.release(); // removing x1
+				} else if (compare < 0) {
+					merged.add(x1);
+					x1 = iter1.hasNext() ? iter1.next() : null;
+				} else {
+					x2 = iter2.hasNext() ? iter2.next() : null;
+				}
+			}
+			if (x1 != null) {
+				merged.add(x1);
+				while (iter1.hasNext()) {
+					x1 = iter1.next();
+					merged.add(x1);
+				}
+			}
 		}
 		return merged;
 	}

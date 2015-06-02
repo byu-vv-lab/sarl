@@ -92,6 +92,8 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		this.size = size;
 		this.elements = elements;
 		this.numNull = numNull;
+		for (int i = 0; i < size; i++)
+			elements[i].makeChild();
 	}
 
 	/**
@@ -125,9 +127,11 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		this.elements = elements;
 
 		numNull = 0;
-		for (SymbolicExpression expr : elements)
+		for (SymbolicExpression expr : elements) {
+			expr.makeChild();
 			if (expr.isNull())
 				numNull++;
+		}
 		size = elements.length;
 	}
 
@@ -155,9 +159,11 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		elements.toArray(tempArray);
 		this.elements = tempArray;
 		numNull = 0;
-		for (SymbolicExpression expr : this.elements)
+		for (SymbolicExpression expr : this.elements) {
+			expr.makeChild();
 			if (expr.isNull())
 				numNull++;
+		}
 	}
 
 	/**
@@ -172,6 +178,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		ArrayList<T> tempList = new ArrayList<T>();
 
 		for (T element : elements) {
+			element.makeChild();
 			if (element.isNull())
 				numNull++;
 			tempList.add(element);
@@ -198,6 +205,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		T[] newArray = (T[]) new SymbolicExpression[START_LENGTH];
 
 		newArray[0] = element;
+		element.makeChild();
 		this.size = 1;
 		this.elements = newArray;
 		this.numNull = element.isNull() ? 1 : 0;
@@ -275,14 +283,15 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> add(T element) {
-		if (!isCommitted() && size < elements.length) {
+		if (!isImmutable() && size < elements.length) {
+			element.makeChild();
 			elements[size] = element;
 			if (element.isNull())
 				numNull++;
+			size++;
 			return this;
 		}
-
-		// if we are assuming committed=>size=length,
+		// if we are assuming committed => size=length,
 		// then at this point we know size=length.
 		// Otherwise it is possible that this is committed
 		// and size<length. In any case, we need to make
@@ -294,11 +303,12 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 		System.arraycopy(elements, 0, newArray, 0, size);
 		newArray[size] = element;
-		if (isCommitted()) {
+		if (isImmutable()) {
 			return new SimpleSequence<T>(size + 1, newArray, newNumNull);
 		} else {
 			elements = newArray;
 			numNull = newNumNull;
+			element.makeChild();
 			size++;
 			return this;
 		}
@@ -312,7 +322,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			newNumNull--;
 		if (element.isNull())
 			newNumNull++;
-		if (isCommitted()) {
+		if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[size];
 
@@ -320,6 +330,8 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			newArray[index] = element;
 			return new SimpleSequence<T>(size, newArray, newNumNull);
 		} else {
+			elements[index].release();
+			element.makeChild();
 			numNull = newNumNull;
 			elements[index] = element;
 			return this;
@@ -330,7 +342,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	public SymbolicSequence<T> remove(int index) {
 		int newNumNull = elements[index].isNull() ? numNull - 1 : numNull;
 
-		if (isCommitted()) {
+		if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[size - 1];
 
@@ -339,6 +351,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 					- 1);
 			return new SimpleSequence<T>(size - 1, newArray, newNumNull);
 		} else {
+			elements[index].release();
 			System.arraycopy(elements, index + 1, elements, index, size - index
 					- 1);
 			size--;
@@ -358,7 +371,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			newNumNull += index - size;
 		if (value.isNull())
 			newNumNull++;
-		if (isCommitted()) {
+		if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[newLength(index)];
 
@@ -375,8 +388,11 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 				System.arraycopy(elements, 0, newArray, 0, size);
 				elements = newArray;
 			}
-			for (int i = size; i < index; i++)
+			for (int i = size; i < index; i++) {
+				filler.makeChild();
 				elements[i] = filler;
+			}
+			value.makeChild();
 			elements[index] = value;
 			numNull = newNumNull;
 			size = index + 1;
@@ -401,7 +417,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	@Override
 	public <U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform) {
-		if (isCommitted()) {
+		if (isImmutable()) {
 			for (int i = 0; i < size; i++) {
 				T t = elements[i];
 				U u = transform.apply(t);
@@ -423,10 +439,15 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 			numNull = 0;
 			for (int i = 0; i < size; i++) {
-				U newElement = transform.apply(elements[i]);
+				T t = elements[i];
+				U u = transform.apply(t);
 
-				newArray[i] = newElement;
-				if (newElement.isNull())
+				if (t != u) {
+					t.release();
+					u.makeChild();
+				}
+				newArray[i] = u;
+				if (u.isNull())
 					numNull++;
 			}
 		}
@@ -488,7 +509,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	public SymbolicSequence<T> insert(int index, T element) {
 		int newNumNull = element.isNull() ? numNull + 1 : numNull;
 
-		if (isCommitted()) {
+		if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
 
@@ -509,6 +530,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 				System.arraycopy(elements, index, elements, index + 1, size
 						- index);
 			}
+			element.makeChild();
 			elements[index] = element;
 			size++;
 			numNull = newNumNull;
@@ -535,7 +557,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	 * trims the internal array used to store the elements to the exact size.
 	 */
 	@Override
-	public void commit() {
+	public SymbolicSequence<T> commit() {
 		if (size != elements.length) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[size];
@@ -544,5 +566,6 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			elements = newArray;
 		}
 		super.commit();
+		return this;
 	}
 }

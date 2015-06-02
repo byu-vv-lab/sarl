@@ -38,22 +38,22 @@ public class CommonInterval implements Interval {
 
 	protected boolean strictUpper;
 
-	// private NumberFactory factory = Numbers.REAL_FACTORY;
-
 	public CommonInterval(boolean isIntegral, Number lower,
 			boolean strictLower, Number upper, boolean strictUpper) {
 		if (isIntegral) {
 			assert (lower == null || lower instanceof IntegerNumber)
 					&& (upper == null || upper instanceof IntegerNumber);
-			assert (lower == null && !strictLower)
-					|| (lower != null && strictLower);
-			assert (upper == null && !strictUpper)
-					|| (upper != null && strictUpper);
+			assert (lower == null && strictLower)
+					|| (lower != null && !strictLower)
+					|| lower.isZero();
+			assert (upper == null && strictUpper)
+					|| (upper != null && !strictUpper)
+					|| lower.isZero();
 		} else {
 			assert (lower == null || lower instanceof RationalNumber)
 					&& (upper == null || upper instanceof RationalNumber);
-			assert lower != null || !strictLower;
-			assert upper != null || !strictUpper;
+			assert lower != null || strictLower;
+			assert upper != null || strictUpper;
 		}
 		if (lower != null && upper != null) {
 			int compare = lower.compareTo(upper);

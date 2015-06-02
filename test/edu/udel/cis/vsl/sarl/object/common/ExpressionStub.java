@@ -122,7 +122,30 @@ public class ExpressionStub implements SymbolicExpression {
 	}
 
 	@Override
-	public void commit() {
+	public ExpressionStub commit() {
+		return this;
+	}
+
+	@Override
+	public boolean isImmutable() {
+		return true;
+	}
+
+	@Override
+	public boolean isFree() {
+		return false;
+	}
+
+	@Override
+	public void makeChild() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void release() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

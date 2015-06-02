@@ -408,18 +408,30 @@ public interface NumberFactory {
 	void union(Interval i1, Interval i2, IntervalUnion result);
 
 	/**
-	 * Computes the affineTransform of the input interval <code>itv</code> with two numbers:
-	 * <code>a</code> and <code>b</code> as parameters.
+	 * Computes the affineTransform of the input interval <code>itv</code> with
+	 * two numbers: <code>a</code> and <code>b</code> as parameters.
 	 * 
 	 * @param itv
-	 * 			an interval
+	 *            an interval
 	 * @param a
-	 * 			a number used to multiply with both upper and lower of <code>itv</code>
+	 *            a number used to multiply with both upper and lower of
+	 *            <code>itv</code>
 	 * @param b
-	 * 			a number used to add to both upper and lower of <code>itv</code>,
-	 * 			after multiplying <code>a</code>.
-	 * @return
-	 * 			an interval which is affineTransform of <code>itv</code>
+	 *            a number used to add to both upper and lower of
+	 *            <code>itv</code>, after multiplying <code>a</code>.
+	 * @return an interval which is affineTransform of <code>itv</code>
 	 */
 	Interval affineTransform(Interval itv, Number a, Number b);
+
+	/**
+	 * Returns 1 if <code>arg0</code> on the right side of <code>arg1</code>, 0
+	 * if <code>arg0</code> is same with <code>arg1</code>, -1 if
+	 * <code>arg0</code> on the left side of <code>arg1</code>.
+	 * 
+	 * @param arg0
+	 *            an Interval
+	 * @param arg1
+	 *            an Interval
+	 */
+	int compare(Interval arg0, Interval arg1);
 }

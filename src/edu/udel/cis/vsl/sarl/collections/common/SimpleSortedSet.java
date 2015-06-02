@@ -39,6 +39,8 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		this.size = size;
 		elementComparator = (Comparator<T>) comparator;
 		this.elements = elements;
+		for (T element : elements)
+			element.makeChild();
 	}
 
 	/**
@@ -85,12 +87,14 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		this.elements = (T[]) new SymbolicExpression[list.size()];
 		list.toArray(this.elements);
 		this.size = elements.length;
+		for (T element : elements)
+			element.makeChild();
 	}
 
 	SimpleSortedSet(Comparator<? super T> comparator, Set<? extends T> javaSet) {
 		super();
-
 		this.size = javaSet.size();
+
 		@SuppressWarnings("unchecked")
 		Comparator<T> comparator2 = (Comparator<T>) comparator;
 		@SuppressWarnings("unchecked")
@@ -100,6 +104,8 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		Arrays.sort(newArray, comparator);
 		this.elementComparator = comparator2;
 		this.elements = newArray;
+		for (T element : elements)
+			element.makeChild();
 	}
 
 	/**
@@ -196,8 +202,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		// Example: hi=-1, lo=0
 		// Example: hi=length-1, lo=length
 		// lo is where element should be inserted
-
-		if (isCommitted()) {
+		if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newElements = (T[]) new SymbolicExpression[newLength(size)];
 
@@ -217,27 +222,21 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 			} else {
 				System.arraycopy(elements, lo, elements, lo + 1, size - lo);
 			}
+			element.makeChild();
 			elements[lo] = element;
 			size++;
 			return this;
 		}
 	}
 
-	/**
-	 * Computes the union of this and set. Precondition: this has at least one
-	 * element and set has at least one element and set is sorted.
-	 * 
-	 * @param set
-	 *            a symbolic set whose elements belong to T and which has at
-	 *            least one element
-	 * @return symbolic set which is sorted and union of this and set
-	 */
 	@Override
 	public SortedSymbolicSet<T> addAll(SymbolicSet<? extends T> set) {
 		if (set instanceof SortedSymbolicSet<?>) {
+			// note that addAll_helper will commit elements in set not in
+			// this...
 			List<T> merged = addAll_helper((SortedSymbolicSet<? extends T>) set);
 
-			if (isCommitted()) {
+			if (isImmutable()) {
 				return new SimpleSortedSet<T>(elementComparator, merged);
 			} else {
 				size = merged.size();
@@ -263,7 +262,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 
 		if (index < 0) {
 			return this;
-		} else if (isCommitted()) {
+		} else if (isImmutable()) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[size - 1];
 
@@ -275,6 +274,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 			System.arraycopy(elements, index + 1, elements, index, size - index
 					- 1);
 			size--;
+			element.release();
 			return this;
 		}
 	}
@@ -286,7 +286,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		if (set instanceof SortedSymbolicSet<?>) {
 			List<T> merged = removeAll_helper((SortedSymbolicSet<? extends T>) set);
 
-			if (isCommitted()) {
+			if (isImmutable()) {
 				return new SimpleSortedSet<T>(elementComparator, merged);
 			} else {
 				// TODO: you could probably do this in place in elements,
@@ -306,7 +306,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		if (this.size() == 0)
 			return this;
 		if (set.size() == 0) {
-			if (isCommitted()) {
+			if (isImmutable()) {
 				return new SimpleSortedSet<T>(elementComparator);
 			} else {
 				@SuppressWarnings("unchecked")
@@ -320,7 +320,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		if (set instanceof SortedSymbolicSet<?>) {
 			List<T> merged = keepOnly_helper((SortedSymbolicSet<? extends T>) set);
 
-			if (isCommitted()) {
+			if (isImmutable()) {
 				return new SimpleSortedSet<T>(elementComparator, merged);
 			} else {
 				merged.toArray(elements);
@@ -347,7 +347,7 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public void commit() {
+	public SortedSymbolicSet<T> commit() {
 		if (size != elements.length) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[size];
@@ -356,5 +356,6 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 			elements = newArray;
 		}
 		super.commit();
+		return this;
 	}
 }

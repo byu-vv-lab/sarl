@@ -3,26 +3,27 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.IF.object;
 
 /**
- * A symbolic object wrapping a single Java "int" value.
+ * A symbolic object wrapping a single Java "int" value. Note that if an
+ * IntObject is not committed, it may (or may not) be modified by certain
+ * methods specified here.
  * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 
@@ -34,7 +35,7 @@ public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 	int getInt();
 
 	/**
-	 * Returns the minimum of this and that as an IntObject.
+	 * Returns the minimum of this and that as an {@link IntObject}.
 	 * 
 	 * @param that
 	 *            any IntObject
@@ -43,28 +44,31 @@ public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 	IntObject minWith(IntObject that);
 
 	/**
-	 * Returns the maximum of this and that as an IntObject.
+	 * Returns the maximum of this and that as an IntObject. If this object is
+	 * not committed, this method may (or may not) modify this.
 	 * 
 	 * @param that
-	 *            any IntObject
+	 *            any non-<code>null</code> {@link IntObject}
 	 * @return the maximum of this and that
 	 */
 	IntObject maxWith(IntObject that);
 
 	/**
-	 * Returns the result of subtracting that from this, as an IntObject.
+	 * Returns the result of subtracting that from this, as an {@link IntObject}
+	 * . If this object is mutable, this method may (or may not) modify this.
 	 * 
 	 * @param that
-	 *            any IntObject
+	 *            any non-<code>null</code> {@link IntObject}
 	 * @return this-that
 	 */
 	IntObject minus(IntObject that);
 
 	/**
-	 * Returns the result of addting this and that, as an IntObject.
+	 * Returns the result of adding this and that, as an {@link IntObject}. If
+	 * this object is mutable, this method may (or may not) modify this.
 	 * 
 	 * @param that
-	 *            any IntObject
+	 *            any non-<code>null</code> {@link IntObject}
 	 * @return this+that
 	 */
 	IntObject plus(IntObject that);
@@ -104,5 +108,13 @@ public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 	 * @return true iff the int value is negative
 	 */
 	boolean isNegative();
+
+	/**
+	 * Commits this int object, i.e., makes it immutable.
+	 * 
+	 * @returns this
+	 */
+	@Override
+	IntObject commit();
 
 }

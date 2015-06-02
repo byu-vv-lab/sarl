@@ -42,12 +42,12 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
 	@Override
 	public int computeHashCode() {
-		return symbolicObjectKind().hashCode() ^ new Integer(value).hashCode();
+		return symbolicObjectKind().hashCode() ^ value;
 	}
 
 	@Override
 	public String toString() {
-		return new Integer(value).toString();
+		return Integer.toString(value);
 	}
 
 	@Override
@@ -62,12 +62,22 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
 	@Override
 	public IntObject minus(IntObject that) {
-		return new CommonIntObject(value - that.getInt());
+		if (isImmutable()) {
+			return new CommonIntObject(value - that.getInt());
+		} else {
+			value = value - that.getInt();
+			return this;
+		}
 	}
 
 	@Override
 	public IntObject plus(IntObject that) {
-		return new CommonIntObject(value + that.getInt());
+		if (isImmutable()) {
+			return new CommonIntObject(value + that.getInt());
+		} else {
+			value = value + that.getInt();
+			return this;
+		}
 	}
 
 	@Override
@@ -114,9 +124,7 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
-		StringBuffer buffer = new StringBuffer(Integer.toString(value));
-		return buffer;
-
+		return new StringBuffer(Integer.toString(value));
 	}
 
 	@Override
@@ -127,6 +135,11 @@ public class CommonIntObject extends CommonSymbolicObject implements IntObject {
 	@Override
 	protected void commitChildren() {
 		// no children; so nothing to do
+	}
+
+	@Override
+	public IntObject commit() {
+		return (IntObject) super.commit();
 	}
 
 }

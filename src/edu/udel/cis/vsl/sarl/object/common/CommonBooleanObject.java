@@ -19,7 +19,6 @@
 package edu.udel.cis.vsl.sarl.object.common;
 
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
-import edu.udel.cis.vsl.sarl.IF.object.StringObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 public class CommonBooleanObject extends CommonSymbolicObject implements

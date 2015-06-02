@@ -163,21 +163,23 @@ public interface CollectionFactory {
 			T element);
 
 	/**
-	 * Returns the empty sequence.
+	 * Returns the (canonic) empty sequence.
 	 * 
 	 * @return the empty sequence
 	 */
 	<T extends SymbolicExpression> SymbolicSequence<T> emptySequence();
 
 	/**
-	 * Returns an empty sorted symbolic map using default comparator on keys.
+	 * Returns a (canonic) empty sorted symbolic map using default comparator on
+	 * keys.
 	 * 
 	 * @return an empty sorted symbolic map
 	 */
 	<K extends SymbolicExpression, V extends SymbolicExpression> SortedSymbolicMap<K, V> emptySortedMap();
 
 	/**
-	 * Returns an empty sorted symbolic map using given comparator on keys.
+	 * Returns a (canonic) empty sorted symbolic map using given comparator on
+	 * keys.
 	 * 
 	 * @return an empty sorted symbolic map
 	 */
@@ -185,7 +187,7 @@ public interface CollectionFactory {
 			Comparator<? super K> comparator);
 
 	/**
-	 * Returns an empty hash symbolic map.
+	 * Returns a (canonic) empty hash symbolic map.
 	 * 
 	 * @return an empty hash symbolic map
 	 */

@@ -262,7 +262,7 @@ public class CommonContextPartition implements ContextPartition {
 					.getFreeSymbolicConstants(expr);
 			
 			// TODO: also need free symbolic constants occurring in the 
-			// expr.type()????
+			// expr.type()????     the method above should do that.
 			
 			Set<Integer> resultClasses = new HashSet<>();
 

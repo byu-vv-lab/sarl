@@ -680,4 +680,30 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 				arg.commit();
 		}
 	}
+
+	/**
+	 * <p>
+	 * Sets the index-th argument to <code>value</code>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Preconditions: this symbolic expression is not committed; it has at least
+	 * index+1 arguments.
+	 * </p>
+	 * 
+	 * <p>
+	 * Use at your own risk. This method does not do anything to check if the
+	 * given value is an appropriate argument for the expression.
+	 * </p>
+	 * 
+	 * @param index
+	 *            integer in range [0,numArgs-1]
+	 * @param value
+	 *            symbolic object to become the new argument in position
+	 *            <code>index</code>
+	 */
+	protected void setArgument(int index, SymbolicObject value) {
+		assert !isImmutable();
+		arguments[index] = value;
+	}
 }

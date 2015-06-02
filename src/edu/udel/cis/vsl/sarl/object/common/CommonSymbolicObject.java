@@ -21,21 +21,39 @@ package edu.udel.cis.vsl.sarl.object.common;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 
 /**
- * A partial implementation of {@link SymbolicObject}.
+ * A partial implementation of {@link SymbolicObject}. Does not maintain the
+ * children; it is up to each concrete class to figure out how to do that for
+ * itself.
  * 
- * State: MUTABLE, COMMITTED, HASHED, CANONIC, id
- * 
- * id: -999 = mutable, -998=committed, -997=hashed, >=0=canonic
- * 
- * @author siegel
- * 
+ * @author Stephen F. Siegel
  */
 public abstract class CommonSymbolicObject implements SymbolicObject {
 
-	private final static int MUTABLE = -999;
+	// Constants (static fields):
 
-	private final static int COMMITTED = MUTABLE + 1;
+	/**
+	 * Indicates an object is <strong>free</strong>: mutable and the child of
+	 * any object.
+	 */
+	private final static int FREE = -1000;
 
+	/**
+	 * Indicates an object is <strong>owned</strong>: mutable but is the child
+	 * of exactly one other object (its parent).
+	 */
+	private final static int OWNED = FREE + 1;
+
+	/**
+	 * Indicates an object is <strong>committed</strong> but not yet hashed. The
+	 * object is immutable but its hash code has not been computed and cached,
+	 * and it is not canonic.
+	 */
+	private final static int COMMITTED = OWNED + 1;
+
+	/**
+	 * Indicates that an object is <strong>committed</strong> and hashed. The
+	 * cached hash code is stored in instance field {@link #hashCode}.
+	 */
 	private final static int HASHED = COMMITTED + 1;
 
 	/**
@@ -43,6 +61,8 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * returned by the {@link #toString()} method.
 	 */
 	private final static boolean debug = false;
+
+	// Instance fields:
 
 	/**
 	 * What kind of the symbolic object is this? Set upon construction.
@@ -54,13 +74,21 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 */
 	private int hashCode;
 
-	private int state = MUTABLE;
+	/**
+	 * If this object is canonic, {@link #status} will be a nonnegative integer
+	 * which is the canonic ID number of this object. Otherwise, it will be one
+	 * of {@link #FREE}, {@link #OWNED}, {@link #COMMITTED}, {@link #HASHED}:
+	 * all of which are negative.
+	 */
+	private int status = FREE;
 
 	// /**
 	// * An infinite-precision rational number associated to this object to
 	// * facilitate comparisons. CURRENTLY NOT USED.
 	// */
 	// private RationalNumber order;
+
+	// Constructors:
 
 	/**
 	 * Instantiates object and sets {@link #kind} as specified.
@@ -71,6 +99,162 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	protected CommonSymbolicObject(SymbolicObjectKind kind) {
 		this.kind = kind;
 	}
+
+	// Abstract methods:
+
+	/**
+	 * Commits the children of this object.
+	 */
+	protected abstract void commitChildren();
+
+	/**
+	 * Computes the hash code to be returned by method {@link #hashCode()}. If
+	 * this object is immutable, the result returned will be cached in
+	 * {@link #hashCode}.
+	 * 
+	 * @return the hash code
+	 */
+	protected abstract int computeHashCode();
+
+	/**
+	 * Is the given symbolic object equal to this one---assuming the given
+	 * symbolic object is of the same kind as this one? Must be defined in any
+	 * concrete subclass.
+	 * 
+	 * @param that
+	 *            a symbolic object of the same kind as this one
+	 * @return true iff they define the same type
+	 */
+	protected abstract boolean intrinsicEquals(SymbolicObject o);
+
+	/**
+	 * Canonizes the children of this symbolic object. Replaces each child with
+	 * the canonic version of that child.
+	 * 
+	 * @param factory
+	 *            the object factory that is responsible for this symbolic
+	 *            object
+	 */
+	public abstract void canonizeChildren(CommonObjectFactory factory);
+
+	// Package-private methods:
+
+	/**
+	 * Sets the canonic id of this object.
+	 * 
+	 * @param id
+	 *            the number to be the canonic ID; must be nonnegative
+	 */
+	void setId(int id) {
+		this.status = id;
+	}
+
+	// Protected methods:
+
+	/**
+	 * Places parentheses around the given string buffer.
+	 * 
+	 * @param buffer
+	 *            a string buffer
+	 */
+	protected void atomize(StringBuffer buffer) {
+		buffer.insert(0, '(');
+		buffer.append(')');
+	}
+
+	// Public methods specified in Object:
+
+	@Override
+	public int hashCode() {
+		if (status < HASHED) {
+			hashCode = computeHashCode();
+			if (status == COMMITTED)
+				status = HASHED;
+		}
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o instanceof CommonSymbolicObject) {
+			CommonSymbolicObject that = (CommonSymbolicObject) o;
+
+			if (kind != that.kind)
+				return false;
+			if (status >= 0 && that.status >= 0) {
+				return status == that.status;
+			}
+			if (status >= HASHED && that.status >= HASHED
+					&& hashCode != that.hashCode)
+				return false;
+			return intrinsicEquals(that);
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		if (debug)
+			return toStringBufferLong().toString();
+		else
+			return toStringBuffer(false).toString();
+	}
+
+	// Public methods specified in SymbolicObject:
+
+	@Override
+	public boolean isFree() {
+		return status <= FREE;
+	}
+
+	@Override
+	public boolean isCanonic() {
+		return status >= 0;
+	}
+
+	@Override
+	public boolean isImmutable() {
+		return status >= COMMITTED;
+	}
+
+	@Override
+	public int id() {
+		return status;
+	}
+
+	@Override
+	public SymbolicObjectKind symbolicObjectKind() {
+		return kind;
+	}
+
+	@Override
+	public SymbolicObject commit() {
+		if (status < COMMITTED) {
+			status = COMMITTED;
+			commitChildren();
+		}
+		return this;
+	}
+
+	@Override
+	public void makeChild() {
+		if (status == FREE) {
+			status = OWNED;
+		} else if (status == OWNED) {
+			commit();
+		}
+	}
+
+	@Override
+	public void release() {
+		if (status == OWNED) {
+			status = FREE;
+		}
+	}
+
+	// Future work...
 
 	// /**
 	// * Sets the {@link #order} field to the specified number.
@@ -88,121 +272,5 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	// public RationalNumber getOrder() {
 	// return order;
 	// }
-
-	public boolean isCanonic() {
-		return state >= 0;
-	}
-
-	public boolean isCommitted() {
-		return state >= COMMITTED;
-	}
-
-	/**
-	 * Sets the id.
-	 * 
-	 * @param id
-	 */
-	void setId(int id) {
-		this.state = id;
-	}
-
-	public int id() {
-		return state;
-	}
-
-	@Override
-	public SymbolicObjectKind symbolicObjectKind() {
-		return kind;
-	}
-
-	/**
-	 * Computes the hash code to be returned by hashCode(). This is run the
-	 * first time hashCode is run. The hash is cached for future calls to
-	 * hashCode();
-	 * 
-	 * @return hash code
-	 */
-	protected abstract int computeHashCode();
-
-	@Override
-	public int hashCode() {
-		if (state < HASHED) {
-			hashCode = computeHashCode();
-			if (state == COMMITTED)
-				state = HASHED;
-		}
-		return hashCode;
-	}
-
-	protected abstract void commitChildren();
-
-	@Override
-	public SymbolicObject commit() {
-		if (state == MUTABLE) {
-			state = COMMITTED;
-			commitChildren();
-		}
-		return this;
-	}
-
-	/**
-	 * Is the given symbolic object equal to this one---assuming the given
-	 * symbolic object is of the same kind as this one? Must be defined in any
-	 * concrete subclass.
-	 * 
-	 * @param that
-	 *            a symbolic object of the same kind as this one
-	 * @return true iff they define the same type
-	 */
-	protected abstract boolean intrinsicEquals(SymbolicObject o);
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o instanceof CommonSymbolicObject) {
-			CommonSymbolicObject that = (CommonSymbolicObject) o;
-
-			if (kind != that.kind)
-				return false;
-			if (state >= 0 && that.state >= 0) {
-				return state == that.state;
-			}
-			if (state >= HASHED && that.state >= HASHED
-					&& hashCode != that.hashCode)
-				return false;
-			return intrinsicEquals(that);
-		}
-		return false;
-	}
-
-	/**
-	 * Canonizes the children of this symbolic object. Replaces each child with
-	 * the canonic version of that child.
-	 * 
-	 * @param factory
-	 *            the object factory that is responsible for this symbolic
-	 *            object
-	 */
-	public abstract void canonizeChildren(CommonObjectFactory factory);
-
-	/**
-	 * Places parentheses around the string buffer.
-	 * 
-	 * @param buffer
-	 *            a string buffer
-	 */
-	protected void atomize(StringBuffer buffer) {
-		buffer.insert(0, '(');
-		buffer.append(')');
-	}
-
-	@Override
-	public String toString() {
-		if (debug)
-			return toStringBufferLong().toString();
-		else
-			return toStringBuffer(false).toString();
-	}
 
 }

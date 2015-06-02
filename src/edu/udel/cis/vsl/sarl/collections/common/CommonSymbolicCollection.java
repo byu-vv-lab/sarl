@@ -23,6 +23,13 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
+/**
+ * Partial implementation of {@link SymbolicCollection}.
+ * 
+ * @author Stephen F. Siegel
+ *
+ * @param <T>
+ */
 public abstract class CommonSymbolicCollection<T extends SymbolicExpression>
 		extends CommonSymbolicObject implements SymbolicCollection<T> {
 

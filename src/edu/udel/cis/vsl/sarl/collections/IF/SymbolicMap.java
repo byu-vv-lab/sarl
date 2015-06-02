@@ -87,9 +87,18 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	boolean isEmpty();
 
 	/**
+	 * <p>
 	 * Returns a symbolic map equivalent to the given one except that the entry
 	 * for the given key is modified or created so to use the given value. An
 	 * entry for the given key may or may not exist in the old map.
+	 * </p>
+	 * n
+	 * 
+	 * <p>
+	 * If this map is mutable, this method will modify and return this map
+	 * itself. Otherwise, a new map will be created if any modifications are
+	 * needed.
+	 * </p>
 	 * 
 	 * @param key
 	 *            a symbolic expression key
@@ -101,9 +110,17 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	SymbolicMap<K, V> put(K key, V value);
 
 	/**
+	 * <p>
 	 * Returns a map obtained by removing the entry with the given key, if there
 	 * is one. If there is no entry with the given key, the map returned will be
 	 * equal to this one.
+	 * </p>
+	 * 
+	 * <p>
+	 * If this map is mutable, this method will modify and return this map
+	 * itself. Otherwise, a new map will be created if any modifications are
+	 * needed.
+	 * </p>
 	 * 
 	 * @param key
 	 *            a symbolic expression key
@@ -113,9 +130,17 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	SymbolicMap<K, V> remove(K key);
 
 	/**
+	 * <p>
 	 * Returns a map obtained by applying the given unary operator to the values
 	 * of this map, without changing the keys. If the unary operator returns
-	 * null on an element, that entry is removed from the map.
+	 * <code>null</code> on an element, that entry is removed from the map.
+	 * </p>
+	 * 
+	 * <p>
+	 * If this map is mutable, this method will modify and return this map
+	 * itself. Otherwise, a new map will be created if any modifications are
+	 * needed.
+	 * </p>
 	 * 
 	 * @param operator
 	 *            a unary operator on values
@@ -124,6 +149,7 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	SymbolicMap<K, V> apply(UnaryOperator<V> operator);
 
 	/**
+	 * <p>
 	 * Combines that map with this one using the given binary operator. Iterates
 	 * over the union of the key sets of the two maps. If a given key exists in
 	 * only one map, the value associated to it in the new map is the same as
@@ -131,7 +157,9 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * applying the binary operator to the two old values. If the result of
 	 * applying the binary operator is null, the element is removed from the
 	 * map.
+	 * </p>
 	 * 
+	 * <p>
 	 * Examples:
 	 * <ul>
 	 * <li>adding polynomials: apply takes two monomials with same monic. adds
@@ -143,8 +171,14 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * 
 	 * <li>multiplying polynomial factorizations: like above</li>
 	 * </ul>
+	 * </p>
 	 * 
-	 * Eventually would like efficient persistent implementation as in Clojure.
+	 * <p>
+	 * If this map is mutable, this method will modify and return this map
+	 * itself. Otherwise, a new map will be created if any modifications are
+	 * needed. The given map will not be modified in any case (except for
+	 * possible commits).
+	 * </p>
 	 * 
 	 * @param operator
 	 *            a binary operator which can be applied to the values in the

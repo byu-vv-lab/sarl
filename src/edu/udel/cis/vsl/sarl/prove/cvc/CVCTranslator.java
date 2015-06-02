@@ -589,7 +589,7 @@ public class CVCTranslator {
 	private FastList<String> translateTupleRead(SymbolicExpression expr) {
 		SymbolicExpression tupleExpression = (SymbolicExpression) expr
 				.argument(0);
-		int tupleLength = ((SymbolicTupleType) expr.type()).sequence()
+		int tupleLength = ((SymbolicTupleType) tupleExpression.type()).sequence()
 				.numTypes();
 		int index = ((IntObject) expr.argument(1)).getInt();
 

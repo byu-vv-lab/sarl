@@ -21,8 +21,8 @@ package edu.udel.cis.vsl.sarl.ideal.IF;
 import edu.udel.cis.vsl.sarl.IF.object.IntObject;
 
 /**
- * A power of a Primitive expression, x^i, where x is a Primitive and i is a
- * concrete positive int.
+ * A power of a {@link Primitive} expression, x^i, where x is a
+ * {@link Primitive} and i is a concrete positive int.
  * 
  * @author siegel
  * 

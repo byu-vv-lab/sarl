@@ -111,8 +111,7 @@ public class ContextMinimizingReasoner implements Reasoner {
 	// Constructors...
 
 	/**
-	 * Constructs new context-minimizing reasoner with initially
-	 * <code>null</code> <code>partition</code>.
+	 * Constructs new context-minimizing reasoner.
 	 * 
 	 * @param factory
 	 *            the factory used for producing this and other instances of
@@ -311,29 +310,32 @@ public class ContextMinimizingReasoner implements Reasoner {
 	 */
 	private ValidityResult validNoCacheNoReduce(BooleanExpression predicate,
 			boolean getModel) {
-		BooleanExpression simplifiedPredicate = (BooleanExpression) getSimplifier()
+		BooleanExpression newContext = getSimplifier().getReducedContext();
+		BooleanExpression newPredicate = (BooleanExpression) simplifier
 				.apply(predicate);
 		ValidityResult result;
+		ContextMinimizingReasoner newReasoner; // may be same as old
 
-		if (simplifiedPredicate != predicate) {
-			// the predicate got simpler, so start over again with
-			// checks of trivial cases, cache, etc...
-
-			if (debug) {
-				debugOut.println("Context    : " + context);
-				debugOut.println("Predicate  : " + predicate);
-				debugOut.println("Simplified : " + simplifiedPredicate);
-			}
-
-			if (simplifiedPredicate.equals(predicate)) {
-				assert false;
-			}
-
-			result = valid1(simplifiedPredicate, getModel);
-		} else if (getModel) {
-			result = getProver().validOrModel(simplifiedPredicate);
+		if (newContext == context) {
+			newReasoner = this;
 		} else {
-			result = getProver().valid(simplifiedPredicate);
+			newReasoner = factory.getReasoner(newContext);
+		}
+		if (newPredicate != predicate || newContext != context) {
+			// the predicate or context got simpler, so start over again with
+			// checks of trivial cases, cache, etc...
+			if (debug) {
+				debugOut.println("Context              : " + context);
+				debugOut.println("Simplified context   : " + newContext);
+				debugOut.println("Predicate            : " + predicate);
+				debugOut.println("Simplified predicate : " + newPredicate);
+				debugOut.flush();
+			}
+			result = newReasoner.valid1(newPredicate, getModel);
+		} else if (getModel) {
+			result = getProver().validOrModel(newPredicate);
+		} else {
+			result = getProver().valid(newPredicate);
 		}
 		return result;
 	}

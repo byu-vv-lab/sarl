@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
@@ -115,6 +115,26 @@ public class NTConstant extends IdealExpression implements Constant {
 	@Override
 	public Constant constantTerm(IdealFactory factory) {
 		return this;
+	}
+
+	/**
+	 * If this constant is committed, returns a new {@link NTConstant} wrapping
+	 * <code>value</code>, else changes the underlying value of this constant to
+	 * <code>value</code>.
+	 * 
+	 * @param value
+	 *            a non-<code>null</code> number object with same type as the
+	 *            type of this constant
+	 * @return a constant wrapping <code>value</code>: either this one or a new
+	 *         one
+	 */
+	Constant setValue(NumberObject value) {
+		if (isImmutable()) {
+			return new NTConstant(this.type(), value);
+		} else {
+			this.setArgument(0, value);
+			return this;
+		}
 	}
 
 }

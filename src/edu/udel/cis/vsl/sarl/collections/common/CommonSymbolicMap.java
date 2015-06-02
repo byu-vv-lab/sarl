@@ -29,6 +29,20 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicMap;
 import edu.udel.cis.vsl.sarl.util.BinaryOperator;
 
+/**
+ * Partial implementation of a {@link SymbolicMap}, either sorted or unsorted.
+ * Note that the methods defined here work correctly whether or not this map is
+ * mutable. That is because they operate on the maps only through the methods
+ * provided in the {@link SymbolicMap} interface, and those methods work
+ * correctly in either case.
+ * 
+ * @author siegel
+ *
+ * @param <K>
+ *            type for the keys in the map
+ * @param <V>
+ *            type for the values in the map
+ */
 public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends SymbolicExpression>
 		extends CommonSymbolicCollection<V> implements SymbolicMap<K, V> {
 
