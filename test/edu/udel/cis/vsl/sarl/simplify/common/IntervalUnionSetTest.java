@@ -746,7 +746,7 @@ public class IntervalUnionSetTest {
 		Interval itv = nf.newInterval(INT_ZERO instanceof RealInteger,
 				INT_ZERO, false, INT_TEN, false);
 		IntervalUnionSet src = new IntervalUnionSet(itv);
-		IntervalUnionSetTest res = (IntervalUnionSetTest) src.affineTransform(
+		IntervalUnionSet res = (IntervalUnionSet) src.affineTransform(
 				null, INT_NEG_TEN);
 
 		p(res.toString());
@@ -757,7 +757,7 @@ public class IntervalUnionSetTest {
 		Interval itv = nf.newInterval(INT_ZERO instanceof RealInteger,
 				INT_ZERO, false, INT_TEN, false);
 		IntervalUnionSet src = new IntervalUnionSet(itv);
-		IntervalUnionSetTest res = (IntervalUnionSetTest) src.affineTransform(
+		IntervalUnionSet res = (IntervalUnionSet) src.affineTransform(
 				INT_TEN, null);
 
 		p(res.toString());
