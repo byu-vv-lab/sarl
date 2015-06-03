@@ -121,6 +121,9 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * symbolic object is of the same kind as this one? Must be defined in any
 	 * concrete subclass.
 	 * 
+	 * Preconditions: this != o, o.symbolicObjectKind() ==
+	 * this.symbolicObjectKind
+	 * 
 	 * @param that
 	 *            a symbolic object of the same kind as this one
 	 * @return true iff they define the same type

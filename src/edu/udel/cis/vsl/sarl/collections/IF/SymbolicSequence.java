@@ -114,15 +114,13 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	SymbolicSequence<T> subSequence(int start, int end);
 
 	/**
-	 * Takes in an anonymous class that contains an apply method that will
-	 * transform a SymbolicObject into a different SymbolicObject. The
-	 * Collections apply method will iterate over all elements in it and call
-	 * the passed in classes apply method on the SymbolicObject
+	 * Applies the given transformation to every element in the given sequence.
+	 * If this sequence consists of elements t1,t2,... and the transform is f,
+	 * the result is the sequence consisting of f(t1),f(t2),...
 	 * 
-	 * @param Transform
-	 *            <T, U>
-	 * @return Returns a new Sequence with all of the original collections
-	 *         elements transformed.
+	 * @param transform
+	 *            a mapping from T to U
+	 * @return the sequence of transformed elements
 	 */
 	<U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform);

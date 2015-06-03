@@ -96,24 +96,25 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			elements[i].makeChild();
 	}
 
-	/**
-	 * Constructs new sequence under the assumption that the size of the new
-	 * sequence is exactly equal to <code>elements.length</code>, i.e., all of
-	 * the members of <code>elements</code> will be used to form the new
-	 * sequence.
-	 * 
-	 * 
-	 * @param elements
-	 *            the elements of the sequence; object will be used, not copied.
-	 *            All elements of elements must be non-<code>null</code> (but
-	 *            <code>NULL</code> is OK)
-	 * @param numNull
-	 *            the number of elements of elements which are <code>NULL</code>
-	 * @see {@link #SimpleSequence(int, SymbolicExpression[], int)}
-	 */
-	SimpleSequence(T[] elements, int numNull) {
-		this(elements.length, elements, numNull);
-	}
+	// not used. consider deleting...
+	// /**
+	// * Constructs new sequence under the assumption that the size of the new
+	// * sequence is exactly equal to <code>elements.length</code>, i.e., all of
+	// * the members of <code>elements</code> will be used to form the new
+	// * sequence.
+	// *
+	// *
+	// * @param elements
+	// * the elements of the sequence; object will be used, not copied.
+	// * All elements of elements must be non-<code>null</code> (but
+	// * <code>NULL</code> is OK)
+	// * @param numNull
+	// * the number of elements of elements which are <code>NULL</code>
+	// * @see {@link #SimpleSequence(int, SymbolicExpression[], int)}
+	// */
+	// SimpleSequence(T[] elements, int numNull) {
+	// this(elements.length, elements, numNull);
+	// }
 
 	/**
 	 * Creates new instance from given elements. Computes how many of those
@@ -223,8 +224,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 				first = false;
 			else
 				result.append(",");
-			result.append(element == null ? "null" : element
-					.toStringBuffer(false));
+			result.append(element.toStringBuffer(false));
 		}
 		result.append(">");
 		return result;
@@ -460,9 +460,6 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 	@Override
 	protected boolean collectionEquals(SymbolicCollection<T> o) {
-		if (this == o)
-			return true;
-
 		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
 
 		if (this.numNull != that.getNumNull())
@@ -546,8 +543,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	@Override
 	protected void commitChildren() {
 		for (T element : elements)
-			if (element != null)
-				element.commit();
+			element.commit();
 	}
 
 	/**
