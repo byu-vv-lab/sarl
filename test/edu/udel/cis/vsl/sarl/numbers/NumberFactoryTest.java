@@ -1648,6 +1648,26 @@ public class NumberFactoryTest {
 
 	/**
 	 * Testing the affineTransform method with an input of one Interval and two
+	 * Number arguments. This covers the cases of the empty interval argument
+	 * with two numbers. The result interval should be empty.
+	 */
+	@Test
+	public void intervalAffineTransformIntervalWithEmptyInterval() {
+		IntegerNumber a = factory.integer(1);
+		IntegerNumber b = factory.integer(2);
+		IntegerNumber lo = factory.zeroInteger();
+		IntegerNumber up = factory.zeroInteger();
+		boolean isIntegral = true;
+		boolean sl = true;
+		boolean su = true;
+		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
+		Interval result = factory.affineTransform(itv, a, b);
+
+		assertTrue(result.isEmpty());
+	}
+
+	/**
+	 * Testing the affineTransform method with an input of one Interval and two
 	 * Number arguments. This covers the cases of the interval argument with a
 	 * negative infinity as its lower boundary value. The result interval should
 	 * keep its lower boundary value as negative infinity.
@@ -1734,7 +1754,6 @@ public class NumberFactoryTest {
 				false);
 		Interval result = factory.affineTransform(itv, a, b);
 
-		System.out.println(result.toString());
 		assert (result.equals(expectedRes));
 	}
 
@@ -1860,7 +1879,7 @@ public class NumberFactoryTest {
 	}
 
 	@Test
-	public void compareInterval_PointInterval1_EqualsToPoint_Interval2() {
+	public void compareInterval_PointInterval1_EqualsTo_PointInterval2() {
 		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
 				INT_ONE, false);
 		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
@@ -2018,19 +2037,31 @@ public class NumberFactoryTest {
 
 	@Test
 	public void compareInterval_Interval1_LeftDisjoint_Interval2() {
-		Interval int_interval1 = factory.newInterval(true, INT_ZERO, false,
+		Interval int_interval1a = factory.newInterval(true, INT_ZERO, false,
 				INT_ONE, false);
-		Interval int_interval2 = factory.newInterval(true, INT_TWO, false,
+		Interval int_interval1b = factory.newInterval(true, null, true,
+				INT_ONE, false);
+		Interval int_interval2a = factory.newInterval(true, INT_TWO, false,
 				INT_THREE, false);
-		Interval rat_interval1 = factory.newInterval(false, RAT_ZERO, false,
+		Interval int_interval2b = factory.newInterval(true, INT_TWO, false,
+				null, true);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ZERO, false,
 				RAT_ONE, false);
-		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, true,
+		Interval rat_interval1b = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, true,
 				RAT_THREE, true);
-		int result1 = factory.compare(int_interval1, int_interval2);
-		int result2 = factory.compare(rat_interval1, rat_interval2);
+		Interval rat_interval2b = factory.newInterval(false, RAT_ZERO, true,
+				null, true);
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1b, int_interval2b);
+		int result3 = factory.compare(rat_interval1a, rat_interval2a);
+		int result4 = factory.compare(rat_interval1b, rat_interval2b);
 
 		assertEquals(-4, result1);
 		assertEquals(-4, result2);
+		assertEquals(-4, result3);
+		assertEquals(-4, result4);
 	}
 
 	@Test
@@ -2039,8 +2070,12 @@ public class NumberFactoryTest {
 				INT_ONE, false);
 		Interval int_interval1b = factory.newInterval(true, INT_ZERO, false,
 				INT_TWO, false);
-		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+		Interval int_interval1c = factory.newInterval(true, null, true,
+				INT_TWO, false);
+		Interval int_interval2a = factory.newInterval(true, INT_ONE, false,
 				INT_THREE, false);
+		Interval int_interval2b = factory.newInterval(true, INT_ONE, false,
+				null, true);
 		Interval rat_interval1a = factory.newInterval(false, RAT_ZERO, false,
 				RAT_ONE, false);
 		Interval rat_interval1b = factory.newInterval(false, RAT_ZERO, false,
@@ -2049,16 +2084,27 @@ public class NumberFactoryTest {
 				RAT_THREE, true);
 		Interval rat_interval1d = factory.newInterval(false, RAT_ONE, false,
 				RAT_THREE, true);
+		Interval rat_interval1e = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
 		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, false,
 				RAT_THREE, false);
 		Interval rat_interval2b = factory.newInterval(false, RAT_ONE, true,
 				RAT_THREE, false);
-		int result1 = factory.compare(int_interval1a, int_interval2);
-		int result2 = factory.compare(int_interval1b, int_interval2);
-		int result3 = factory.compare(rat_interval1a, rat_interval2a);
-		int result4 = factory.compare(rat_interval1b, rat_interval2a);
-		int result5 = factory.compare(rat_interval1c, rat_interval2a);
-		int result6 = factory.compare(rat_interval1d, rat_interval2b);
+		Interval rat_interval2c = factory.newInterval(false, RAT_ZERO, true,
+				RAT_THREE, false);
+		Interval rat_interval2d = factory.newInterval(false, RAT_ZERO, false,
+				null, true);
+
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1b, int_interval2a);
+		int result3 = factory.compare(int_interval1c, int_interval2b);
+		int result4 = factory.compare(rat_interval1a, rat_interval2a);
+		int result5 = factory.compare(rat_interval1b, rat_interval2a);
+		int result6 = factory.compare(rat_interval1c, rat_interval2a);
+		int result7 = factory.compare(rat_interval1c, rat_interval2b);
+		int result8 = factory.compare(rat_interval1d, rat_interval2b);
+		int result9 = factory.compare(rat_interval1a, rat_interval2c);
+		int result10 = factory.compare(rat_interval1e, rat_interval2d);
 
 		assertEquals(-2, result1);
 		assertEquals(-2, result2);
@@ -2066,34 +2112,179 @@ public class NumberFactoryTest {
 		assertEquals(-2, result4);
 		assertEquals(-2, result5);
 		assertEquals(-2, result6);
+		assertEquals(-2, result7);
+		assertEquals(-2, result8);
+		assertEquals(-2, result9);
+		assertEquals(-2, result10);
 	}
 
 	@Test
 	public void compareInterval_Interval1_Contains_Interval2() {
+		Interval int_interval1a = factory.newInterval(true, INT_ZERO, false,
+				INT_TWO, false);
+		Interval int_interval1b = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval int_interval1c = factory.newInterval(true, INT_ZERO, false,
+				INT_THREE, false);
+		Interval int_interval1d = factory.newInterval(true, null, true,
+				INT_THREE, false);
+		Interval int_interval1e = factory.newInterval(true, INT_ZERO, false,
+				null, true);
+		Interval int_interval2a = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval int_interval2b = factory.newInterval(true, null, true,
+				INT_ZERO, false);
+		Interval int_interval2c = factory.newInterval(true, INT_THREE, false,
+				null, true);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, true);
+		Interval rat_interval1b = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		Interval rat_interval1c = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval1d = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
+		Interval rat_interval1e = factory.newInterval(false, RAT_ZERO, false,
+				null, true);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_interval2b = factory.newInterval(false, null, true,
+				RAT_ZERO, true);
+		Interval rat_interval2c = factory.newInterval(false, RAT_ZERO, true,
+				null, true);
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1b, int_interval2a);
+		int result3 = factory.compare(int_interval1c, int_interval2a);
+		int result4 = factory.compare(int_interval1d, int_interval2b);
+		int result5 = factory.compare(int_interval1e, int_interval2c);
+		int result6 = factory.compare(rat_interval1a, rat_interval2a);
+		int result7 = factory.compare(rat_interval1b, rat_interval2a);
+		int result8 = factory.compare(rat_interval1c, rat_interval2a);
+		int result9 = factory.compare(rat_interval1d, rat_interval2b);
+		int result10 = factory.compare(rat_interval1e, rat_interval2c);
+
+		assertEquals(-3, result1);
+		assertEquals(3, result2);
+		assertEquals(-3, result3);
+		assertEquals(3, result4);
+		assertEquals(-3, result5);
+		assertEquals(-3, result6);
+		assertEquals(3, result7);
+		assertEquals(-3, result8);
+		assertEquals(3, result9);
+		assertEquals(-3, result10);
 	}
 
 	@Test
-	public void compareInterval_Interval1_SameRange_Interval2() {
+	public void compareInterval_Interval1_EqualsTo_Interval2() {
+		Interval int_intervala = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval int_intervalb = factory.newInterval(true, null, true, null,
+				true);
+		Interval int_intervalc = factory.newInterval(true, null, true,
+				INT_ZERO, false);
+		Interval int_intervald = factory.newInterval(true, INT_ZERO, false,
+				null, true);
+		Interval rat_intervala = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		Interval rat_intervalb = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, true);
+		Interval rat_intervalc = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_intervald = factory.newInterval(false, null, true,
+				RAT_ZERO, true);
+		Interval rat_intervale = factory.newInterval(false, RAT_ZERO, true,
+				null, true);
+		int result1 = factory.compare(int_intervala, int_intervala);
+		int result2 = factory.compare(int_intervalb, int_intervalb);
+		int result3 = factory.compare(int_intervalc, int_intervalc);
+		int result4 = factory.compare(int_intervald, int_intervald);
+		int result5 = factory.compare(rat_intervala, rat_intervala);
+		int result6 = factory.compare(rat_intervalb, rat_intervalb);
+		int result7 = factory.compare(rat_intervalc, rat_intervalc);
+		int result8 = factory.compare(rat_intervald, rat_intervald);
+		int result9 = factory.compare(rat_intervale, rat_intervale);
 
+		assertEquals(0, result1);
+		assertEquals(0, result2);
+		assertEquals(0, result3);
+		assertEquals(0, result4);
+		assertEquals(0, result5);
+		assertEquals(0, result6);
+		assertEquals(0, result7);
+		assertEquals(0, result8);
+		assertEquals(0, result9);
 	}
 
 	@Test
 	public void compareInterval_Interval1_IsContainedBy_Interval2() {
+		Interval int_interval1a = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval int_interval1b = factory.newInterval(true, null, true,
+				INT_ZERO, false);
+		Interval int_interval1c = factory.newInterval(true, INT_THREE, false,
+				null, true);
+		Interval int_interval2a = factory.newInterval(true, INT_ZERO, false,
+				INT_TWO, false);
+		Interval int_interval2b = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval int_interval2c = factory.newInterval(true, INT_ZERO, false,
+				INT_THREE, false);
+		Interval int_interval2d = factory.newInterval(true, null, true,
+				INT_THREE, false);
+		Interval int_interval2e = factory.newInterval(true, INT_ZERO, false,
+				null, true);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_interval1b = factory.newInterval(false, null, true,
+				RAT_ZERO, true);
+		Interval rat_interval1c = factory.newInterval(false, RAT_ZERO, true,
+				null, true);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, true);
+		Interval rat_interval2b = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		Interval rat_interval2c = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval2d = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
+		Interval rat_interval2e = factory.newInterval(false, RAT_ZERO, false,
+				null, true);
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1a, int_interval2b);
+		int result3 = factory.compare(int_interval1a, int_interval2c);
+		int result4 = factory.compare(int_interval1b, int_interval2d);
+		int result5 = factory.compare(int_interval1c, int_interval2e);
+		int result6 = factory.compare(rat_interval1a, rat_interval2a);
+		int result7 = factory.compare(rat_interval1a, rat_interval2b);
+		int result8 = factory.compare(rat_interval1a, rat_interval2c);
+		int result9 = factory.compare(rat_interval1b, rat_interval2d);
+		int result10 = factory.compare(rat_interval1c, rat_interval2e);
 
+		assertEquals(1, result1);
+		assertEquals(-1, result2);
+		assertEquals(1, result3);
+		assertEquals(-1, result4);
+		assertEquals(1, result5);
+		assertEquals(1, result6);
+		assertEquals(-1, result7);
+		assertEquals(1, result8);
+		assertEquals(-1, result9);
+		assertEquals(1, result10);
 	}
 
 	@Test
 	public void compareInterval_Interval1_RightIntersect_Interval2() {
-		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
-				INT_THREE, false);
 		Interval int_interval2a = factory.newInterval(true, INT_ZERO, false,
 				INT_ONE, false);
 		Interval int_interval2b = factory.newInterval(true, INT_ZERO, false,
 				INT_TWO, false);
-		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, false,
-				RAT_THREE, false);
-		Interval rat_interval1b = factory.newInterval(false, RAT_ONE, true,
-				RAT_THREE, false);
+		Interval int_interval2c = factory.newInterval(true, null, true,
+				INT_TWO, false);
+		Interval int_interval1a = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval int_interval1b = factory.newInterval(true, INT_ONE, false,
+				null, true);
 		Interval rat_interval2a = factory.newInterval(false, RAT_ZERO, false,
 				RAT_ONE, false);
 		Interval rat_interval2b = factory.newInterval(false, RAT_ZERO, false,
@@ -2102,12 +2293,27 @@ public class NumberFactoryTest {
 				RAT_THREE, true);
 		Interval rat_interval2d = factory.newInterval(false, RAT_ONE, false,
 				RAT_THREE, true);
-		int result1 = factory.compare(int_interval1, int_interval2a);
-		int result2 = factory.compare(int_interval1, int_interval2b);
-		int result3 = factory.compare(rat_interval1a, rat_interval2a);
-		int result4 = factory.compare(rat_interval1a, rat_interval2b);
-		int result5 = factory.compare(rat_interval1a, rat_interval2c);
-		int result6 = factory.compare(rat_interval1b, rat_interval2d);
+		Interval rat_interval2e = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval1b = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		Interval rat_interval1c = factory.newInterval(false, RAT_ZERO, true,
+				RAT_THREE, false);
+		Interval rat_interval1d = factory.newInterval(false, RAT_ZERO, false,
+				null, true);
+
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1a, int_interval2b);
+		int result3 = factory.compare(int_interval1b, int_interval2c);
+		int result4 = factory.compare(rat_interval1a, rat_interval2a);
+		int result5 = factory.compare(rat_interval1a, rat_interval2b);
+		int result6 = factory.compare(rat_interval1a, rat_interval2c);
+		int result7 = factory.compare(rat_interval1b, rat_interval2c);
+		int result8 = factory.compare(rat_interval1b, rat_interval2d);
+		int result9 = factory.compare(rat_interval1c, rat_interval2a);
+		int result10 = factory.compare(rat_interval1d, rat_interval2e);
 
 		assertEquals(2, result1);
 		assertEquals(2, result2);
@@ -2115,24 +2321,39 @@ public class NumberFactoryTest {
 		assertEquals(2, result4);
 		assertEquals(2, result5);
 		assertEquals(2, result6);
-
+		assertEquals(2, result7);
+		assertEquals(2, result8);
+		assertEquals(2, result9);
+		assertEquals(2, result10);
 	}
 
 	@Test
 	public void compareInterval_Interval1_RightDisjoint_Interval2() {
-		Interval int_interval1 = factory.newInterval(true, INT_TWO, false,
+		Interval int_interval1a = factory.newInterval(true, INT_TWO, false,
 				INT_THREE, false);
-		Interval int_interval2 = factory.newInterval(true, INT_ZERO, false,
+		Interval int_interval1b = factory.newInterval(true, INT_TWO, false,
+				null, true);
+		Interval int_interval2a = factory.newInterval(true, INT_ZERO, false,
 				INT_ONE, false);
-		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+		Interval int_interval2b = factory.newInterval(true, null, true,
+				INT_ONE, false);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, true,
 				RAT_THREE, true);
-		Interval rat_interval2 = factory.newInterval(false, RAT_ZERO, false,
+		Interval rat_interval1b = factory.newInterval(false, RAT_ZERO, true,
+				null, true);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ZERO, false,
 				RAT_ONE, false);
-		int result1 = factory.compare(int_interval1, int_interval2);
-		int result2 = factory.compare(rat_interval1, rat_interval2);
+		Interval rat_interval2b = factory.newInterval(false, null, true,
+				RAT_ZERO, false);
+		int result1 = factory.compare(int_interval1a, int_interval2a);
+		int result2 = factory.compare(int_interval1b, int_interval2b);
+		int result3 = factory.compare(rat_interval1a, rat_interval2a);
+		int result4 = factory.compare(rat_interval1b, rat_interval2b);
 
 		assertEquals(4, result1);
 		assertEquals(4, result2);
+		assertEquals(4, result3);
+		assertEquals(4, result4);
 	}
 	// TODO:
 }

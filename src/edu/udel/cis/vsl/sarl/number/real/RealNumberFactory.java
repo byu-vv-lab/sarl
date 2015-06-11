@@ -1206,8 +1206,8 @@ public class RealNumberFactory implements NumberFactory {
 		boolean sl = itv.strictLower(), su = itv.strictUpper();
 
 		if (lo != null && up != null) {
-			if (lo.isZero() && up.isZero() && sl && su) {
-				return new CommonInterval(itv.isIntegral(), lo, sl, up, su);
+			if (itv.isEmpty()) {
+				return  newInterval(itv.isIntegral(), up, su, up, su);
 			}
 		}
 		// New upper and lower of result.union.
@@ -1235,7 +1235,6 @@ public class RealNumberFactory implements NumberFactory {
 		assert i1 != null && i2 != null;
 		assert i1.isIntegral() == i2.isIntegral();
 		
-		int invalidInput = 6;
 		int disjoint = 4;
 		int contains2 = 3; // i1 contains i2
 		int intersectNC = 2; // No contain
@@ -1278,11 +1277,7 @@ public class RealNumberFactory implements NumberFactory {
 		}
 		if (cmpL1L2 < 0) {
 			if (cmpU1U2 < 0) {
-				if (up1 == null || lo2 == null) {
-					cmpU1L2 = 1;
-				} else {
-					cmpU1L2 = compare(up1, lo2);
-				}
+				cmpU1L2 = compare(up1, lo2);
 				if (cmpU1L2 < 0) {
 					// Left Disjoint
 					return -disjoint;
@@ -1323,11 +1318,7 @@ public class RealNumberFactory implements NumberFactory {
 				// Right Intersect i2 contains i1
 				return contains1;
 			} else if (cmpU1U2 > 0) {
-				if (lo1 == null || up2 == null) {
-					cmpL1U2 = -1;
-				} else {
-					cmpL1U2 = compare(lo1, up2);
-				}
+				cmpL1U2 = compare(lo1, up2);
 				if (cmpL1U2 < 0) {
 					// Right Intersect No Contain
 					return intersectNC;
@@ -1380,8 +1371,8 @@ public class RealNumberFactory implements NumberFactory {
 						// Left Intersect No contain
 						return -intersectNC;
 					} else {
-						// Right Intersect i2 contains i1
-						return contains1;
+						// Left Intersect i2 contains i1
+						return -contains1;
 					}
 				}
 			} else if (cmpU1U2 > 0) {
@@ -1403,8 +1394,8 @@ public class RealNumberFactory implements NumberFactory {
 						// Right Intersect No contain
 						return intersectNC;
 					} else {
-						// Left Intersect i1 contains i2
-						return -contains2;
+						// Right Intersect i1 contains i2
+						return contains2;
 					}
 				}
 			} else {
@@ -1431,15 +1422,11 @@ public class RealNumberFactory implements NumberFactory {
 					} else if (!su1 && su2) {
 						// Right Intersect i1 contains i2
 						return contains2;
-					} else {
-						// Exactly Same
-						return exactlySame;
-					}
+					}// else  Exactly Same
 				}
 			}
 		}
-		System.out.println("[Warning] Invalid inputs: i1: " + i1.toString()
-				+ ", i2: " + i2.toString() + " !");
-		return invalidInput;
+		// Exactly Same
+		return exactlySame;
 	}
 }
