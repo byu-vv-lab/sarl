@@ -39,6 +39,29 @@ public class NumberFactoryTest {
 	private static BigInteger bigTwenty = new BigInteger("20");
 	private static BigInteger bigThirty = new BigInteger("30");
 	private static BigInteger bigThirtyOne = new BigInteger("31");
+	private static IntegerNumber INT_ZERO = factory.zeroInteger();
+	private static IntegerNumber INT_ONE = factory.integer(bigOne);
+	private static IntegerNumber INT_TWO = factory.integer(bigTwo);
+	private static IntegerNumber INT_THREE = factory.integer(bigThree);
+	private static IntegerNumber INT_FIVE = factory.integer(bigFive);
+	private static IntegerNumber INT_SIX = factory.integer(bigSix);
+	private static IntegerNumber INT_EIGHT = factory.integer(bigEight);
+	private static IntegerNumber INT_TEN = factory.integer(bigTen);
+	private static IntegerNumber INT_N_ONE = factory.integer(bigNegativeOne);
+	private static IntegerNumber INT_N_THREE = factory
+			.integer(bigNegativeThree);
+	private static IntegerNumber INT_N_TEN = factory.integer(bigNegativeTen);
+	private static RationalNumber RAT_ZERO = factory.rational(INT_ZERO);
+	private static RationalNumber RAT_ONE = factory.rational(INT_ONE);
+	private static RationalNumber RAT_TWO = factory.rational(INT_TWO);
+	private static RationalNumber RAT_THREE = factory.rational(INT_THREE);
+	private static RationalNumber RAT_FIVE = factory.rational(INT_FIVE);
+	private static RationalNumber RAT_SIX = factory.rational(INT_SIX);
+	private static RationalNumber RAT_EIGHT = factory.rational(INT_EIGHT);
+	private static RationalNumber RAT_TEN = factory.rational(INT_TEN);
+	private static RationalNumber RAT_N_ONE = factory.rational(INT_N_ONE);
+	private static RationalNumber RAT_N_THREE = factory.rational(INT_N_THREE);
+	private static RationalNumber RAT_N_TEN = factory.rational(INT_N_TEN);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -1731,7 +1754,8 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		Interval expectedRes = factory.newInterval(isIntegral, b, false, b, false);
+		Interval expectedRes = factory.newInterval(isIntegral, b, false, b,
+				false);
 		Interval result = factory.affineTransform(itv, a, b);
 
 		assert (result.equals(expectedRes));
@@ -1753,7 +1777,8 @@ public class NumberFactoryTest {
 		boolean sl = false;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		Interval expectedRes = factory.newInterval(isIntegral, b, false, b, false);
+		Interval expectedRes = factory.newInterval(isIntegral, b, false, b,
+				false);
 		Interval result = factory.affineTransform(itv, a, b);
 
 		assert (result.equals(expectedRes));
@@ -1775,9 +1800,338 @@ public class NumberFactoryTest {
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
-		Interval expectedRes = factory.newInterval(isIntegral, b, false, b, false);
+		Interval expectedRes = factory.newInterval(isIntegral, b, false, b,
+				false);
 		Interval result = factory.affineTransform(itv, a, b);
 
 		assert (result.equals(expectedRes));
 	}
+
+	// TODO:
+	@Test(expected = NullPointerException.class)
+	public void compareIntervalNullInput() {
+		Interval null_interval1 = null;
+		Interval null_interval2 = null;
+		
+		factory.compare(null_interval1, null_interval2);
+	}
+
+	@Ignore
+	// (expected=ArgumentMismatchException.class)
+	public void compareIntervalMismatchInputType() {
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		
+		factory.compare(rat_interval1, int_interval2);
+	}
+
+	@Test
+	public void compareIntervalEmptyInput1() {
+		Interval int_interval1 = factory.emptyIntegerInterval();
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		int result = factory.compare(int_interval1, int_interval2);
+
+		assertEquals(1, result);
+	}
+
+	@Test
+	public void compareIntervalEmptyInput2() {
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_interval2 = factory.emptyRealInterval();
+		int result = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(-3, result);
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_LeftDisjoint_PointInterval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_ONE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_TWO, false,
+				INT_TWO, false);
+		int result = factory.compare(int_interval1, int_interval2);
+
+		assertEquals(-4, result);
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_EqualsToPoint_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_ONE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_ONE, false);
+		int result = factory.compare(int_interval1, int_interval2);
+
+		assertEquals(0, result);
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_RightDisjoint_PointInterval2() {
+		Interval rat_interval1 = factory.newInterval(false, RAT_THREE, false,
+				RAT_THREE, false);
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);
+		int result = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(4, result);
+	}
+
+	@Test
+	public void compareInterval_Interval1_LeftDisjoint_PointInterval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval int_interval2 = factory.newInterval(true, INT_THREE, false,
+				INT_THREE, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_interval2 = factory.newInterval(false, RAT_THREE, false,
+				RAT_THREE, false);		
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(-4, result1);	
+		assertEquals(-4, result2);
+	}
+
+	@Test
+	public void compareInterval_Interval1_Contains_PointInterval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval int_interval2a = factory.newInterval(true, INT_ONE, false,
+				INT_ONE, false);
+		Interval int_interval2b = factory.newInterval(true, INT_TWO, false,
+				INT_TWO, false);
+		Interval int_interval2c = factory.newInterval(true, INT_THREE, false,
+				INT_THREE, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);		
+		Interval rat_interval2b = factory.newInterval(false, RAT_TWO, false,
+				RAT_TWO, false);		
+		Interval rat_interval2c = factory.newInterval(false, RAT_THREE, false,
+				RAT_THREE, false);			
+		int result1 = factory.compare(int_interval1, int_interval2a);
+		int result2 = factory.compare(rat_interval1, rat_interval2b);	
+		int result3 = factory.compare(int_interval1, int_interval2c);
+		int result4 = factory.compare(rat_interval1, rat_interval2a);	
+		int result5 = factory.compare(int_interval1, int_interval2b);
+		int result6 = factory.compare(rat_interval1, rat_interval2c);
+		
+		assertEquals(3, result1);
+		assertEquals(-3, result2);
+		assertEquals(-3, result3);
+		assertEquals(3, result4);
+		assertEquals(-3, result5);
+		assertEquals(-3, result6);
+	}
+
+	@Test
+	public void compareInterval_Interval1_RightDisjoint_PointInterval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);		
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(4, result1);	
+		assertEquals(4, result2);
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_LeftDisjoint_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);	
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);	
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(-4, result1);	
+		assertEquals(-4, result2);
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_IsContainedBy_Interval2() {
+		Interval int_interval1a = factory.newInterval(true, INT_ONE, false,
+				INT_ONE, false);
+		Interval int_interval1b = factory.newInterval(true, INT_TWO, false,
+				INT_TWO, false);
+		Interval int_interval1c = factory.newInterval(true, INT_THREE, false,
+				INT_THREE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);		
+		Interval rat_interval1b = factory.newInterval(false, RAT_TWO, false,
+				RAT_TWO, false);		
+		Interval rat_interval1c = factory.newInterval(false, RAT_THREE, false,
+				RAT_THREE, false);
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);		
+		int result1 = factory.compare(int_interval1a, int_interval2);
+		int result2 = factory.compare(rat_interval1b, rat_interval2);	
+		int result3 = factory.compare(int_interval1c, int_interval2);
+		int result4 = factory.compare(rat_interval1a, rat_interval2);	
+		int result5 = factory.compare(int_interval1b, int_interval2);
+		int result6 = factory.compare(rat_interval1c, rat_interval2);
+		
+		assertEquals(-1, result1);
+		assertEquals(1, result2);
+		assertEquals(1, result3);
+		assertEquals(-1, result4);
+		assertEquals(1, result5);
+		assertEquals(1, result6);		
+	}
+
+	@Test
+	public void compareInterval_PointInterval1_RightDisjoint_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_THREE, false,
+				INT_THREE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_TWO, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_THREE, false,
+				RAT_THREE, false);	
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);	
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(4, result1);	
+		assertEquals(4, result2);
+
+	}
+
+	@Test
+	public void compareInterval_Interval1_LeftDisjoint_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ZERO, false,
+				INT_ONE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_TWO, false,
+				INT_THREE, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ZERO, false,
+				RAT_ONE, false);	
+		Interval rat_interval2 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);	
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(-4, result1);	
+		assertEquals(-4, result2);
+	}
+
+	@Test
+	public void compareInterval_Interval1_LeftIntersect_Interval2() {
+		Interval int_interval1a = factory.newInterval(true, INT_ZERO, false,
+				INT_ONE, false);
+		Interval int_interval1b = factory.newInterval(true, INT_ZERO, false,
+				INT_TWO, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ZERO, false,
+				RAT_ONE, false);
+		Interval rat_interval1b = factory.newInterval(false, RAT_ZERO, false,
+				RAT_TWO, false);
+		Interval rat_interval1c = factory.newInterval(false, RAT_ZERO, false,
+				RAT_THREE, true);
+		Interval rat_interval1d = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, true);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval2b = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		int result1 = factory.compare(int_interval1a, int_interval2);
+		int result2 = factory.compare(int_interval1b, int_interval2);
+		int result3 = factory.compare(rat_interval1a, rat_interval2a);
+		int result4 = factory.compare(rat_interval1b, rat_interval2a);
+		int result5 = factory.compare(rat_interval1c, rat_interval2a);
+		int result6 = factory.compare(rat_interval1d, rat_interval2b);
+
+		assertEquals(-2, result1);	
+		assertEquals(-2, result2);
+		assertEquals(-2, result3);	
+		assertEquals(-2, result4);
+		assertEquals(-2, result5);	
+		assertEquals(-2, result6);
+	}
+
+	@Test
+	public void compareInterval_Interval1_Contains_Interval2() {
+	}
+
+	@Test
+	public void compareInterval_Interval1_SameRange_Interval2() {
+
+	}
+
+	@Test
+	public void compareInterval_Interval1_IsContainedBy_Interval2() {
+
+	}
+
+	@Test
+	public void compareInterval_Interval1_RightIntersect_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_ONE, false,
+				INT_THREE, false);
+		Interval int_interval2a = factory.newInterval(true, INT_ZERO, false,
+				INT_ONE, false);
+		Interval int_interval2b = factory.newInterval(true, INT_ZERO, false,
+				INT_TWO, false);
+		Interval rat_interval1a = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, false);
+		Interval rat_interval1b = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, false);
+		Interval rat_interval2a = factory.newInterval(false, RAT_ZERO, false,
+				RAT_ONE, false);
+		Interval rat_interval2b = factory.newInterval(false, RAT_ZERO, false,
+				RAT_TWO, false);
+		Interval rat_interval2c = factory.newInterval(false, RAT_ZERO, false,
+				RAT_THREE, true);
+		Interval rat_interval2d = factory.newInterval(false, RAT_ONE, false,
+				RAT_THREE, true);
+		int result1 = factory.compare(int_interval1, int_interval2a);
+		int result2 = factory.compare(int_interval1, int_interval2b);
+		int result3 = factory.compare(rat_interval1a, rat_interval2a);
+		int result4 = factory.compare(rat_interval1a, rat_interval2b);
+		int result5 = factory.compare(rat_interval1a, rat_interval2c);
+		int result6 = factory.compare(rat_interval1b, rat_interval2d);
+
+		assertEquals(2, result1);	
+		assertEquals(2, result2);
+		assertEquals(2, result3);	
+		assertEquals(2, result4);
+		assertEquals(2, result5);	
+		assertEquals(2, result6);
+
+	}
+
+	@Test
+	public void compareInterval_Interval1_RightDisjoint_Interval2() {
+		Interval int_interval1 = factory.newInterval(true, INT_TWO, false,
+				INT_THREE, false);
+		Interval int_interval2 = factory.newInterval(true, INT_ZERO, false,
+				INT_ONE, false);
+		Interval rat_interval1 = factory.newInterval(false, RAT_ONE, true,
+				RAT_THREE, true);	
+		Interval rat_interval2 = factory.newInterval(false, RAT_ZERO, false,
+				RAT_ONE, false);	
+		int result1 = factory.compare(int_interval1, int_interval2);
+		int result2 = factory.compare(rat_interval1, rat_interval2);
+
+		assertEquals(4, result1);	
+		assertEquals(4, result2);
+	}
+	// TODO:
 }
