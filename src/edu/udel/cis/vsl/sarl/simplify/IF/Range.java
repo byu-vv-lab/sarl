@@ -71,7 +71,8 @@ public interface Range {
 	 * Computes the union of this set with the given one.
 	 * 
 	 * @param set
-	 *            a number set of the same type (integer/real) as this one
+	 *            a non-null number set of the same type (integer/real) as this
+	 *            one
 	 * @return the union of the two sets
 	 */
 	Range union(Range set);
