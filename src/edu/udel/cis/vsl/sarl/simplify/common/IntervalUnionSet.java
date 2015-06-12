@@ -9,7 +9,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory.IntervalUnion;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Range;
 
@@ -48,33 +47,36 @@ public class IntervalUnionSet implements Range {
 	private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
 	/**
-	 * A boolean value to
+	 * A boolean value to represent whether this {@link IntervalUnionSet} is
+	 * integral or not: <code>true</code> - it is integral, <code>false</code> -
+	 * it is rational.
 	 */
 	private boolean isInt;
 
 	/**
-	 * 
+	 * The number of {@link Interval}s in this {@link IntervalUnionSet} ensuring
+	 * specified invariants of it.
 	 */
 	private int size;
 
 	/**
-	 * Ordered array of intervals; the value set is the union of these
+	 * An sorted array of intervals; the value set is the union of these
 	 * intervals.
 	 */
 	private Interval[] intervalArr;
 
 	/**
-	 * Constructs an interval union set
+	 * Constructs an {@link IntervalUnionSet} with defined type and size.
 	 * 
 	 * @param isIntegral
 	 *            A boolean value to represent whether the set is integral.
-	 * @param sz
+	 * @param numIntervals
 	 *            A natural number to represent the number of disjointed
 	 *            intervals in the set. It would be 0, iff the set is empty.
 	 */
-	private IntervalUnionSet(boolean isIntegral, int sz) {
+	private IntervalUnionSet(boolean isIntegral, int numIntervals) {
 		isInt = isIntegral;
-		size = sz;
+		size = numIntervals;
 		if (size > 0) {
 			intervalArr = new Interval[size];
 		} else {
@@ -103,15 +105,11 @@ public class IntervalUnionSet implements Range {
 	 */
 	public IntervalUnionSet(Number number) {
 		assert number != null;
-		if (number == null) {
-			throw new NullPointerException(
-					"The number used to construct an IntervalUnionSet can NOT be null.");
-		}
 
 		Interval interval = numberFactory.newInterval(
 				number instanceof IntegerNumber, number, false, number, false);
 
-		isInt = number instanceof RealInteger;
+		isInt = number instanceof IntegerNumber;
 		size = 1;
 		intervalArr = new Interval[size];
 		intervalArr[0] = interval;
@@ -121,13 +119,11 @@ public class IntervalUnionSet implements Range {
 	 * Constructs an interval union set with exactly one interval.
 	 * 
 	 * @param interval
-	 *            a non-<code>null</code> interval. (To ensure invariants, it
-	 *            can NOT be an empty interval.)
+	 *            a non-<code>null</code> interval.
 	 */
 	public IntervalUnionSet(Interval interval) {
 		// intervals are immutable, so re-use:
 		assert interval != null;
-		assert !interval.isEmpty();
 		isInt = interval.isIntegral();
 		if (interval.isEmpty()) {
 			size = 0;
@@ -305,7 +301,7 @@ public class IntervalUnionSet implements Range {
 	public IntervalUnionSet addNumber(Number number) {
 		// TODO: Optimize (use full word instead of abbreviation)
 		assert number != null;
-		assert (number instanceof RealInteger) == isInt;
+		assert (number instanceof IntegerNumber) == isInt;
 
 		Interval pointInterval = numberFactory.newInterval(
 				number instanceof IntegerNumber, number, false, number, false);
@@ -329,7 +325,7 @@ public class IntervalUnionSet implements Range {
 	public boolean containsNumber(Number number) {
 		// TODO: Optimize : search the number directly.
 		assert number != null;
-		assert (number instanceof RealInteger) == isInt;
+		assert (number instanceof IntegerNumber) == isInt;
 
 		int lIdx = 0;
 		int rIdx = size - 1;
@@ -756,7 +752,7 @@ public class IntervalUnionSet implements Range {
 	@Override
 	public IntervalUnionSet affineTransform(Number a, Number b) {
 		assert a != null && b != null;
-		assert (a instanceof RealInteger == b instanceof RealInteger) == isInt;
+		assert (a instanceof IntegerNumber == b instanceof IntegerNumber) == isInt;
 
 		int curIdx = 0;
 		Interval[] tempArr = new Interval[size];
