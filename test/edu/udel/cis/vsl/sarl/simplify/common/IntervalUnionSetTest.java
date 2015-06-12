@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
@@ -145,13 +146,13 @@ public class IntervalUnionSetTest {
 		p(actual.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
-	public void constructIUS_INumber_Int_Null() {
+	@Test(expected = AssertionError.class)
+	public void constructIUS_Number_Int_Null() {
 		IntegerNumber nullNum = null;
 		IntervalUnionSet actual = new IntervalUnionSet(nullNum);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = AssertionError.class)
 	public void constructIUS_Number_Rat_Null() {
 		RationalNumber nullNum = null;
 		IntervalUnionSet actual = new IntervalUnionSet(nullNum);
@@ -175,7 +176,7 @@ public class IntervalUnionSetTest {
 		p(actual.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = AssertionError.class)
 	public void constructIUS_Interval_Null() {
 		Interval nullInterval = null;
 		IntervalUnionSet actual = new IntervalUnionSet(nullInterval);
@@ -216,7 +217,7 @@ public class IntervalUnionSetTest {
 		p(actual.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = AssertionError.class)
 	public void constructIUS_IntervalList_NullList() {
 		Interval[] nullArr = null;
 		IntervalUnionSet actual = new IntervalUnionSet(nullArr);
@@ -233,7 +234,7 @@ public class IntervalUnionSetTest {
 		assertEquals(expected.toString(), actual.toString());
 	}
 
-	@Test
+	@Test(expected=AssertionError.class)
 	public void constructIUS_IntervalList_Rat_SomeNull() {
 		// All of intervals in the array are non-<code>null</code> intervals.
 		Interval[] expectedArr = new Interval[ARR_SIZE];
