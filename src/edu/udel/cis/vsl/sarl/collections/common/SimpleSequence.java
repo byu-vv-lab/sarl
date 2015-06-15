@@ -12,10 +12,10 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**
- * Implementation based on arrays. The entire array is copied with every
- * operation. Performance can be good for small sized.
+ * Implementation of sequences based on arrays. Performance can be good for
+ * small sizes.
  * 
- * @author siegel
+ * @author Stephen F. Siegel
  * 
  * @param <T>
  *            the kind of symbolic expressions that will be put in the
@@ -23,6 +23,8 @@ import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
  */
 public class SimpleSequence<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> implements SymbolicSequence<T> {
+
+	// Static constants...
 
 	/**
 	 * A constant used in computing the hash code for an object of this class.
@@ -38,6 +40,8 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	 * array of length 0 can never be modified.
 	 */
 	private final static SymbolicExpression[] emptyArray = new SymbolicExpression[0];
+
+	// Instances fields...
 
 	/**
 	 * The current size, or number of elements, in this sequence. Note that this
@@ -65,6 +69,8 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	 */
 	private int numNull;
 
+	// Constructors...
+
 	/**
 	 * Creates the sequence with specified size and elements.
 	 * 
@@ -87,7 +93,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	 *            the number of elements of the sequence which are
 	 *            <code>NULL</code>
 	 */
-	SimpleSequence(int size, T[] elements, int numNull) {
+	protected SimpleSequence(int size, T[] elements, int numNull) {
 		super(SymbolicCollectionKind.SEQUENCE);
 		this.size = size;
 		this.elements = elements;
@@ -211,6 +217,54 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		this.elements = newArray;
 		this.numNull = element.isNull() ? 1 : 0;
 	}
+
+	// Protected methods...
+
+	@Override
+	protected boolean collectionEquals(SymbolicCollection<T> o) {
+		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
+
+		if (this.numNull != that.getNumNull())
+			return false;
+
+		// we already know they have the same size since it is a
+		// precondition of this method...
+
+		if (o instanceof SimpleSequence<?>) {
+			SimpleSequence<T> simpleThat = (SimpleSequence<T>) o;
+
+			for (int i = 0; i < size; i++)
+				if (!this.elements[i].equals(simpleThat.elements[i]))
+					return false;
+			return true;
+		}
+
+		Iterator<T> these = this.iterator();
+		Iterator<T> those = that.iterator();
+
+		while (these.hasNext()) {
+			if (!these.next().equals(those.next()))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	protected int computeHashCode() {
+		int result = classCode;
+
+		for (int i = 0; i < size; i++)
+			result = result ^ elements[i].hashCode();
+		return result;
+	}
+
+	@Override
+	protected void commitChildren() {
+		for (T element : elements)
+			element.commit();
+	}
+
+	// Public methods...
 
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
@@ -459,44 +513,6 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	protected boolean collectionEquals(SymbolicCollection<T> o) {
-		SymbolicSequence<T> that = (SymbolicSequence<T>) o;
-
-		if (this.numNull != that.getNumNull())
-			return false;
-
-		// we already know they have the same size since it is a
-		// precondition of this method...
-
-		if (o instanceof SimpleSequence<?>) {
-			SimpleSequence<T> simpleThat = (SimpleSequence<T>) o;
-
-			for (int i = 0; i < size; i++)
-				if (!this.elements[i].equals(simpleThat.elements[i]))
-					return false;
-			return true;
-		}
-
-		Iterator<T> these = this.iterator();
-		Iterator<T> those = that.iterator();
-
-		while (these.hasNext()) {
-			if (!these.next().equals(those.next()))
-				return false;
-		}
-		return true;
-	}
-
-	@Override
-	protected int computeHashCode() {
-		int result = classCode;
-
-		for (int i = 0; i < size; i++)
-			result = result ^ elements[i].hashCode();
-		return result;
-	}
-
-	@Override
 	public void canonizeChildren(CommonObjectFactory factory) {
 		for (int i = 0; i < size; i++)
 			elements[i] = factory.canonic(elements[i]);
@@ -538,12 +554,6 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	@Override
 	public int getNumNull() {
 		return numNull;
-	}
-
-	@Override
-	protected void commitChildren() {
-		for (T element : elements)
-			element.commit();
 	}
 
 	/**

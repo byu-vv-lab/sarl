@@ -1,4 +1,4 @@
-package edu.udel.cis.vsl.sarl.IF;
+package edu.udel.cis.vsl.sarl.collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,6 +13,8 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.udel.cis.vsl.sarl.SARL;
+import edu.udel.cis.vsl.sarl.IF.SARLException;
+import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
@@ -20,9 +22,16 @@ import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 import edu.udel.cis.vsl.sarl.collections.common.CommonSymbolicCollection;
+import edu.udel.cis.vsl.sarl.collections.common.SimpleSequence;
 import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 
+/**
+ * Test of type {@link SymbolicSequence}. This test suite was designed to obtain
+ * 100% statement and branch coverage of class {@link SimpleSequence}.
+ * 
+ * @author Stephen F. Siegel
+ */
 public class SequenceTest {
 
 	private static PreUniverse universe = (PreUniverse) SARL
@@ -453,6 +462,20 @@ public class SequenceTest {
 	}
 
 	@Test
+	public void apply1Immut() {
+		SymbolicExpression x2 = universe.integer(2);
+		SymbolicSequence<SymbolicExpression> seq = cf.singletonSequence(x2);
+
+		seq.commit();
+
+		SymbolicSequence<SymbolicExpression> expected = cf
+				.singletonSequence((SymbolicExpression) universe
+						.symbolicConstant(universe.stringObject("b"), intType));
+
+		assertEquals(expected, seq.apply(trans1));
+	}
+
+	@Test
 	public void applyNullMut() {
 		SymbolicExpression x1 = universe.integer(1);
 		SymbolicExpression x2 = universe.integer(2);
@@ -477,6 +500,34 @@ public class SequenceTest {
 
 		seq.apply(identity);
 		assertEquals(expected, seq);
+	}
+
+	@Test
+	public void applyIdImmut() {
+		SymbolicExpression x1 = universe.integer(1);
+		SymbolicExpression x2 = universe.integer(2);
+		SymbolicSequence<SymbolicExpression> seq = cf
+				.sequence(new SymbolicExpression[] { x1, x2 });
+		SymbolicSequence<SymbolicExpression> expected = cf
+				.sequence(new SymbolicExpression[] { x1, x2 });
+
+		seq.commit();
+		assertEquals(expected, seq.apply(identity));
+	}
+
+	@Test
+	public void apply1Immutb() {
+		SymbolicExpression x0 = universe.integer(0);
+		SymbolicExpression x2 = universe.integer(2);
+		SymbolicExpression b = universe.symbolicConstant(
+				universe.stringObject("b"), intType);
+		SymbolicSequence<SymbolicExpression> seq = cf
+				.sequence(new SymbolicExpression[] { x2, x0 });
+		SymbolicSequence<SymbolicExpression> expected = cf
+				.sequence(new SymbolicExpression[] { b, x0 });
+
+		seq.commit();
+		assertEquals(expected, seq.apply(trans1));
 	}
 
 	@Test
@@ -534,6 +585,16 @@ public class SequenceTest {
 	}
 
 	@Test
+	public void setExtendEasy() {
+		SymbolicExpression x1 = universe.integer(1);
+		SymbolicSequence<SymbolicExpression> seq = cf.singletonSequence(x1);
+		SymbolicExpression x2 = universe.integer(2);
+
+		seq.setExtend(0, x2, universe.nullExpression());
+		assertEquals(cf.singletonSequence(x2), seq);
+	}
+
+	@Test
 	public void setExtendNull() {
 		SymbolicSequence<SymbolicExpression> seq = cf.emptySequence();
 		SymbolicExpression x1 = universe.integer(1);
@@ -543,6 +604,43 @@ public class SequenceTest {
 				.asList(x1, x1, universe.nullExpression()));
 
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void setExtendMut() {
+		SymbolicExpression x1 = universe.integer(1), x2 = universe.integer(2);
+		SymbolicExpression ne = universe.nullExpression();
+		SymbolicSequence<SymbolicExpression> seq = cf.singletonSequence(x1);
+
+		seq.setExtend(3, x2, ne);
+		assertEquals(cf.sequence(Arrays.asList(x1, ne, ne, x2)), seq);
+	}
+
+	@Test
+	public void setExtendBig() {
+		SymbolicExpression x1 = universe.integer(1);
+		SymbolicExpression ne = universe.nullExpression();
+		SymbolicSequence<SymbolicExpression> seq = cf.singletonSequence(x1);
+		int n = 100;
+
+		seq = seq.setExtend(n, x1, ne);
+		assertEquals(x1, seq.get(0));
+		for (int i = 1; i < n; i++) {
+			assertEquals(ne, seq.get(i));
+		}
+		assertEquals(x1, seq.get(n));
+	}
+
+	@Test
+	public void setExtendNullFiller() {
+		SymbolicSequence<SymbolicExpression> seq = cf.emptySequence();
+		SymbolicExpression x1 = universe.integer(1);
+		SymbolicSequence<SymbolicExpression> result = seq.setExtend(1, x1,
+				universe.nullExpression());
+		SymbolicSequence<SymbolicExpression> expected = cf.sequence(Arrays
+				.asList(universe.nullExpression(), x1));
+
+		assertEquals(expected, result);
 	}
 
 	@Test
@@ -580,6 +678,16 @@ public class SequenceTest {
 	}
 
 	@Test
+	public void eqTestNo() {
+		SymbolicExpression x1 = universe.integer(1);
+		SymbolicExpression x2 = universe.integer(2);
+		SymbolicSequence<SymbolicExpression> seq1 = cf.singletonSequence(x1), seq2 = cf
+				.singletonSequence(x2);
+
+		assertFalse(seq1.equals(seq2));
+	}
+
+	@Test
 	public void eqTestDiffNulls() {
 		SymbolicExpression x1 = universe.integer(1);
 		SymbolicSequence<SymbolicExpression> seq1 = cf.singletonSequence(x1), seq2 = cf
@@ -602,6 +710,16 @@ public class SequenceTest {
 		SymbolicSequence<SymbolicExpression> seq1 = cf.singletonSequence(x1);
 
 		assertEquals("Sequence<1>", seq1.toStringBufferLong().toString());
+	}
+
+	@Test(expected = SARLException.class)
+	public void removeBad() {
+		SymbolicSequence<NumericExpression> seq = cf.singletonSequence(universe
+				.integer(1));
+		Iterator<NumericExpression> iter = seq.iterator();
+
+		iter.next();
+		iter.remove();
 	}
 }
 

@@ -28,7 +28,7 @@ public abstract class CommonSortedSet<T extends SymbolicExpression> extends
 	/**
 	 * Constructs new sorted set.
 	 */
-	CommonSortedSet() {
+	protected CommonSortedSet() {
 		super(SymbolicCollectionKind.SORTED_SET);
 	}
 
@@ -93,6 +93,8 @@ public abstract class CommonSortedSet<T extends SymbolicExpression> extends
 					x2 = iter2.hasNext() ? iter2.next() : null;
 				}
 			}
+			if (x1 != null)
+				x1.release();
 			while (iter1.hasNext())
 				iter1.next().release();
 		}
@@ -241,9 +243,9 @@ public abstract class CommonSortedSet<T extends SymbolicExpression> extends
 				int compare = comparator.compare(x1, x2);
 
 				if (compare == 0) {
+					x1.release(); // removing x1
 					x1 = iter1.hasNext() ? iter1.next() : null;
 					x2 = iter2.hasNext() ? iter2.next() : null;
-					x1.release(); // removing x1
 				} else if (compare < 0) {
 					merged.add(x1);
 					x1 = iter1.hasNext() ? iter1.next() : null;

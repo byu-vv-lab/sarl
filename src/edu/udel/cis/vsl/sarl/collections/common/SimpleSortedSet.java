@@ -1,10 +1,8 @@
 package edu.udel.cis.vsl.sarl.collections.common;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
@@ -39,8 +37,8 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		this.size = size;
 		elementComparator = (Comparator<T>) comparator;
 		this.elements = elements;
-		for (T element : elements)
-			element.makeChild();
+		for (int i = 0; i < size; i++)
+			elements[i].makeChild();
 	}
 
 	/**
@@ -54,18 +52,20 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 		this(0, comparator, (T[]) emptyArray);
 	}
 
-	/**
-	 * Constructs new instance using the given elements array as the elements
-	 * field. The array is not copied.
-	 * 
-	 * @param comparator
-	 *            the element comparator
-	 * @param elements
-	 *            the array of elements that will be used as the main field
-	 */
-	protected SimpleSortedSet(Comparator<? super T> comparator, T[] elements) {
-		this(elements.length, comparator, elements);
-	}
+	// not used. Consider deleting...
+	// /**
+	// * Constructs new instance using the given elements array as the elements
+	// * field. The array is not copied.
+	// *
+	// * @param comparator
+	// * the element comparator
+	// * @param elements
+	// * the array of elements that will be used as the main field
+	// */
+	// protected SimpleSortedSet(Comparator<? super T> comparator, T[] elements)
+	// {
+	// this(elements.length, comparator, elements);
+	// }
 
 	/**
 	 * Constructs new instance by taking the elements from the given ordered
@@ -91,22 +91,24 @@ public class SimpleSortedSet<T extends SymbolicExpression> extends
 			element.makeChild();
 	}
 
-	SimpleSortedSet(Comparator<? super T> comparator, Set<? extends T> javaSet) {
-		super();
-		this.size = javaSet.size();
-
-		@SuppressWarnings("unchecked")
-		Comparator<T> comparator2 = (Comparator<T>) comparator;
-		@SuppressWarnings("unchecked")
-		T[] newArray = (T[]) new SymbolicExpression[this.size];
-
-		javaSet.toArray(newArray);
-		Arrays.sort(newArray, comparator);
-		this.elementComparator = comparator2;
-		this.elements = newArray;
-		for (T element : elements)
-			element.makeChild();
-	}
+	// not used. consider deleting...
+	// SimpleSortedSet(Comparator<? super T> comparator, Set<? extends T>
+	// javaSet) {
+	// super();
+	// this.size = javaSet.size();
+	//
+	// @SuppressWarnings("unchecked")
+	// Comparator<T> comparator2 = (Comparator<T>) comparator;
+	// @SuppressWarnings("unchecked")
+	// T[] newArray = (T[]) new SymbolicExpression[this.size];
+	//
+	// javaSet.toArray(newArray);
+	// Arrays.sort(newArray, comparator);
+	// this.elementComparator = comparator2;
+	// this.elements = newArray;
+	// for (T element : elements)
+	// element.makeChild();
+	// }
 
 	/**
 	 * Finds the index of the given element in the array {@link #elements}. If
