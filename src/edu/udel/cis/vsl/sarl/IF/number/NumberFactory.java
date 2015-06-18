@@ -433,8 +433,8 @@ public interface NumberFactory {
 	 * Moreover, the absolute value of the result would show the detailed
 	 * relationship: The value is 1 iff <code>i2</code> contains <code>i1</code>
 	 * , 2 iff they have intersection but no contain, 3 iff <code>i1</code>
-	 * contains <code>i2</code>, 4 iff they are disjointed, 5 iff
-	 * <code>i2</code> is empty (or -5 iff <code>i1</code> is empty).
+	 * contains <code>i2</code>, or 4 iff they are disjointed (-3 iff
+	 * <code>i2</code> is empty, 1 iff <code>i1</code> is empty).
 	 * 
 	 * @param i1
 	 *            a non-<code>null</code> {@link Interval}
