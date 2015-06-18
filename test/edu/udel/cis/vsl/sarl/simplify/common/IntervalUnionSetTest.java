@@ -6,6 +6,7 @@ package edu.udel.cis.vsl.sarl.simplify.common;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import junit.framework.AssertionFailedError;
 
 import org.junit.After;
 import org.junit.Before;
@@ -448,7 +449,7 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
-	@Test
+	@Test(expected=AssertionFailedError.class)
 	public void constructIUS_IntervalList_AssortedType() {
 		/*
 		 * If the range set has integer type, all of the intervals are integer
@@ -477,13 +478,6 @@ public class IntervalUnionSetTest {
 
 		IntervalUnionSet expected = new IntervalUnionSet(expectedArr);
 		IntervalUnionSet actual = new IntervalUnionSet(actualArr);
-
-		assertTrue(!actual.isEmpty());
-		assertEquals(expected.toString(), actual.toString());
-		p("The list is :");
-		p(actualArr);
-		p("expected: " + expected.toString());
-		p("  actual: " + actual.toString());
 	}
 
 	@Test
@@ -703,7 +697,7 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void union_IUS_Empty() {
-		IntervalUnionSet emptyIUS = new IntervalUnionSet(true);
+		IntervalUnionSet emptyIUS = new IntervalUnionSet(false);
 		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(false,
 				RAT_N_ONE, true, RAT_ONE, true));
 		IntervalUnionSet expected = original;
