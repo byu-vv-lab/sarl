@@ -234,7 +234,7 @@ public class IntervalUnionSetTest {
 		assertEquals(expected.toString(), actual.toString());
 	}
 
-	@Test(expected=AssertionError.class)
+	@Test(expected = AssertionError.class)
 	public void constructIUS_IntervalList_Rat_SomeNull() {
 		// All of intervals in the array are non-<code>null</code> intervals.
 		Interval[] expectedArr = new Interval[ARR_SIZE];
@@ -688,28 +688,55 @@ public class IntervalUnionSetTest {
 		p("expected: " + expected.toString());
 		p("  actual: " + actual.toString());
 	}
-	
+
 	@Test
-	public void addNumber(){
-		
+	public void addNumber() {
+
 	}
-	
-	@Test
-	public void union_IUS_Null(){
+
+	@Test(expected = AssertionError.class)
+	public void union_IUS_Null() {
 		IntervalUnionSet nullIUS = null;
 		IntervalUnionSet original = new IntervalUnionSet(true);
-		IntervalUnionSet expected = original.union(original);
-		
-		
+		IntervalUnionSet actual = original.union(nullIUS);
 	}
-	
+
 	@Test
-	public void union_IUS_Empty(){
-		
+	public void union_IUS_Empty() {
+		IntervalUnionSet emptyIUS = new IntervalUnionSet(true);
+		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(false,
+				RAT_N_ONE, true, RAT_ONE, true));
+		IntervalUnionSet expected = original;
+		IntervalUnionSet actual = original.union(emptyIUS);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
 	}
-	
+
 	@Test
-	public void union_IUS_Univ(){
-		
+	public void union_IUS_Univ() {
+		IntervalUnionSet univIUS = new IntervalUnionSet(nf.newInterval(true,
+				null, true, null, true));
+		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(true,
+				INT_N_ONE, false, INT_ONE, false));
+		IntervalUnionSet expected = univIUS;
+		IntervalUnionSet actual = original.union(univIUS);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void union_IUS_Self() {
+		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(false,
+				RAT_N_ONE, true, RAT_ONE, true));
+		IntervalUnionSet expected = original;
+		IntervalUnionSet actual = original.union(original);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
 	}
 }
