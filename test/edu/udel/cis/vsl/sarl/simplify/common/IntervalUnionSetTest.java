@@ -449,7 +449,7 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
-	@Test(expected=AssertionFailedError.class)
+	@Test(expected=AssertionError.class)
 	public void constructIUS_IntervalList_AssortedType() {
 		/*
 		 * If the range set has integer type, all of the intervals are integer
