@@ -139,8 +139,8 @@ public class IntervalUnionSet implements Range {
 	 * Constructs an interval union set with an ordered array of intervals.
 	 * 
 	 * @param itvs
-	 *            an array of intervals (with at least one interval) satisfying
-	 *            all invariants specified for {@link IntervalUnionSet}.
+	 *            an array of intervals (with at least one interval) with same
+	 *            type (real/integer).
 	 */
 	public IntervalUnionSet(Interval... itvs) {
 		assert itvs != null;
@@ -163,9 +163,8 @@ public class IntervalUnionSet implements Range {
 			}
 		}
 		while (inputIdx < inputSize) {
-			if (itvs[inputIdx] != null
-					&& itvs[inputIdx].isIntegral() == isIntegral
-					&& !itvs[inputIdx].isEmpty()) {
+			if (itvs[inputIdx] != null && !itvs[inputIdx].isEmpty()) {
+				assert itvs[inputIdx].isIntegral() == isIntegral;
 				tmpIdx = 0;
 				while (tmpIdx < resSize) {
 					int cmp = numberFactory.compare(itvs[inputIdx],
@@ -469,6 +468,7 @@ public class IntervalUnionSet implements Range {
 		int ctr = 0;
 		int tempSize = size + tarSize;
 		Interval[] tempArr = new Interval[tempSize];
+		Interval[] tarArr = tar.intervalArr;
 		Interval temp = null;
 		boolean isChanged = false;
 
@@ -524,7 +524,7 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 			while (tarIdx < tarSize) {
-				Interval nxt = intervalArr[curIdx];
+				Interval nxt = tarArr[tarIdx];
 				int compareIterval = numberFactory.compare(temp, nxt);
 
 				/*
