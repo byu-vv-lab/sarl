@@ -449,7 +449,7 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
-	@Test(expected=AssertionError.class)
+	@Test(expected = AssertionError.class)
 	public void constructIUS_IntervalList_AssortedType() {
 		/*
 		 * If the range set has integer type, all of the intervals are integer
@@ -726,6 +726,30 @@ public class IntervalUnionSetTest {
 	public void union_IUS_Self() {
 		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(false,
 				RAT_N_ONE, true, RAT_ONE, true));
+		IntervalUnionSet expected = original;
+		IntervalUnionSet actual = original.union(original);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void union_IUS_Self_Empty() {
+		IntervalUnionSet original = new IntervalUnionSet(
+				nf.emptyIntegerInterval());
+		IntervalUnionSet expected = original;
+		IntervalUnionSet actual = original.union(original);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void union_IUS_Self_Univ() {
+		IntervalUnionSet original = new IntervalUnionSet(nf.newInterval(true,
+				null, true, null, true));
 		IntervalUnionSet expected = original;
 		IntervalUnionSet actual = original.union(original);
 
