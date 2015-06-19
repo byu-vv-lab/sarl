@@ -235,7 +235,7 @@ public class IntervalUnionSetTest {
 		assertEquals(expected.toString(), actual.toString());
 	}
 
-	@Test(expected = AssertionError.class)
+	@Test
 	public void constructIntervalUnionSet_IntervalList_Rat_SomeNull() {
 		// All of intervals in the array are non-<code>null</code> intervals.
 		Interval[] expectedArr = new Interval[ARR_SIZE];
