@@ -1,5 +1,7 @@
 package edu.udel.cis.vsl.sarl.simplify.common;
 
+import java.util.Arrays;
+
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
@@ -138,144 +140,86 @@ public class IntervalUnionSet implements Range {
 	/**
 	 * Constructs an interval union set with an ordered array of intervals.
 	 * 
-	 * @param itvs
+	 * @param intervals
 	 *            an array of intervals (with at least one interval) with same
 	 *            type (real/integer).
 	 */
-	public IntervalUnionSet(Interval... itvs) {
-		assert itvs != null;
-		assert itvs.length > 0;
+	public IntervalUnionSet(Interval... intervals) {
+		assert intervals != null;
+		assert intervals.length > 0;
 
-		boolean isIntegral = false;
-		int inputIdx = 0, tmpIdx = 0, resSize = 0;
-		int inputSize = itvs.length;
-		Interval[] resArr = new Interval[inputSize];
+		int inputIdx = 0, numOfInvalid = 0;
+		int inputSize = intervals.length;
 
 		while (inputIdx < inputSize) {
-			if (itvs[inputIdx] == null || itvs[inputIdx].isEmpty()) {
-				inputIdx++;
-			} else {
-				resArr[resSize] = itvs[inputIdx];
-				isIntegral = itvs[inputIdx].isIntegral();
-				resSize++;
-				inputIdx++;
+			Interval temp = intervals[inputIdx];
+
+			if (temp != null && !temp.isEmpty()) {
+				isInt = intervals[inputIdx].isIntegral();
 				break;
-			}
-		}
-		while (inputIdx < inputSize) {
-			if (itvs[inputIdx] != null && !itvs[inputIdx].isEmpty()) {
-				assert itvs[inputIdx].isIntegral() == isIntegral;
-				tmpIdx = 0;
-				while (tmpIdx < resSize) {
-					int cmp = numberFactory.compare(itvs[inputIdx],
-							resArr[tmpIdx]);
-
-					if (cmp < 2 && cmp > -2) {
-						break;
-					}
-					if (cmp == 4) {
-						Number diff = numberFactory.subtract(
-								itvs[inputIdx].lower(), resArr[tmpIdx].upper());
-						if (diff.isZero()
-								&& (!itvs[inputIdx].strictLower() || !resArr[tmpIdx]
-										.strictUpper())) {
-							cmp = 2;
-						} else if (isIntegral && diff.isOne()) {
-							cmp = 2;
-						} else {
-							if (tmpIdx < resSize - 1) {
-								tmpIdx++;
-								continue;
-							} else {
-								resArr[resSize] = itvs[inputIdx];
-								resSize++;
-								break;
-							}
-						}
-					} else if (cmp == -4) {
-						Number diff = numberFactory.subtract(
-								resArr[tmpIdx].lower(), itvs[inputIdx].upper());
-						if (diff.isZero()
-								&& (!itvs[inputIdx].strictUpper() || !resArr[tmpIdx]
-										.strictLower())) {
-							cmp = -2;
-						} else if (isIntegral && diff.isOne()) {
-							cmp = -2;
-						} else {
-							System.arraycopy(resArr, tmpIdx, resArr,
-									tmpIdx + 1, resSize - tmpIdx);
-							resArr[tmpIdx] = itvs[inputIdx];
-							resSize++;
-							break;
-						}
-					}
-					if (cmp == -2) {
-						resArr[tmpIdx] = numberFactory.newInterval(isIntegral,
-								itvs[inputIdx].lower(),
-								itvs[inputIdx].strictLower(),
-								resArr[tmpIdx].upper(),
-								resArr[tmpIdx].strictUpper());
-						break;
-					} else {
-						int ctr = 1;
-						Number lo = itvs[inputIdx].lower();
-						Number up = itvs[inputIdx].upper();
-						boolean sl = itvs[inputIdx].strictLower();
-						boolean su = itvs[inputIdx].strictUpper();
-
-						if (cmp == 2) {
-							lo = resArr[tmpIdx].lower();
-							sl = resArr[tmpIdx].strictLower();
-						}
-						while (tmpIdx + ctr < resSize) {
-							int cmp2 = numberFactory.compare(itvs[inputIdx],
-									resArr[tmpIdx + ctr]);
-
-							if (cmp2 == -4) {
-								Number diff = numberFactory.subtract(
-										resArr[tmpIdx + ctr].lower(),
-										itvs[inputIdx].upper());
-								if (diff.isZero()
-										&& (!itvs[inputIdx].strictUpper() || !resArr[tmpIdx
-												+ ctr].strictLower())) {
-									cmp2 = -2;
-								} else if (isIntegral && diff.isOne()) {
-									up = resArr[tmpIdx + ctr].upper();
-									su = resArr[tmpIdx + ctr].strictUpper();
-									cmp2 = -2;
-								}
-							}
-							if (cmp2 == -3) {
-								ctr++;
-							} else {
-								if (cmp2 == -2) {
-									up = resArr[tmpIdx + ctr].upper();
-									su = resArr[tmpIdx + ctr].strictUpper();
-									ctr++;
-								}
-								break;
-							}
-						}
-						resArr[tmpIdx] = numberFactory.newInterval(isIntegral,
-								lo, sl, up, su);
-						if (ctr > 1 && (tmpIdx + ctr < resSize)) {
-							System.arraycopy(resArr, tmpIdx + ctr, resArr,
-									tmpIdx + 1, resSize - tmpIdx - ctr);
-						}
-						resSize -= (ctr - 1);
-					}
-
-				}
 			}
 			inputIdx++;
 		}
+		numOfInvalid = inputIdx;
+		while (inputIdx < inputSize) {
+			Interval temp = intervals[inputIdx];
 
-		isInt = isIntegral;
-		size = resSize;
-		if (size > 0) {
-			intervalArr = new Interval[resSize];
-			System.arraycopy(resArr, 0, intervalArr, 0, size);
+			if (temp != null && !temp.isEmpty()) {
+				assert isInt == intervals[inputIdx].isIntegral();
+			} else {
+				numOfInvalid++;
+			}
+			inputIdx++;
 		}
+		inputSize = inputSize - numOfInvalid;
+
+		int curIdx = inputSize - 1, step = 1;
+		Interval[] inputArr = new Interval[inputSize];
+
+		while (inputIdx > 0) {
+			inputIdx--;
+
+			Interval temp = intervals[inputIdx];
+
+			if (temp != null && !temp.isEmpty()) {
+				inputArr[curIdx] = temp;
+				curIdx--;
+			}
+		}
+		if (inputSize < 1) {
+			size = 0;
+			intervalArr = new Interval[0];
+			return;
+		} else if (inputSize == 1) {
+			size = 1;
+			intervalArr = new Interval[size];
+			intervalArr[0] = intervals[0];
+			return;
+		}
+		while (step < inputSize) {
+			int tempSize = step * 2;
+			int tempLeftIdx = 0;
+
+			while (tempLeftIdx + step < inputSize) {
+				int tempRightIdx = tempLeftIdx + step;
+				Interval[] leftArr = Arrays.copyOfRange(inputArr, tempLeftIdx,
+						tempLeftIdx + step);
+				Interval[] rightArr = Arrays.copyOfRange(inputArr,
+						tempRightIdx, Math.min(tempRightIdx + step, inputSize));
+				Interval[] tempArr = merge(leftArr, rightArr);
+
+				System.arraycopy(tempArr, 0, inputArr, tempLeftIdx,
+						Math.min(tempArr.length, inputArr.length - tempLeftIdx));
+				tempLeftIdx += tempSize;
+			}
+			step = tempSize;
+		}
+		while (inputSize > 0 && inputArr[inputSize - 1] == null) {
+			inputSize--;
+		}
+		size = inputSize;
+		intervalArr = new Interval[inputSize];
+		System.arraycopy(inputArr, 0, intervalArr, 0, inputSize);
 	}
 
 	/**
@@ -463,126 +407,37 @@ public class IntervalUnionSet implements Range {
 
 		IntervalUnionSet tar = (IntervalUnionSet) set;
 		int tarSize = tar.size;
-		int curIdx = 0;
-		int tarIdx = 0;
-		int ctr = 0;
 		int tempSize = size + tarSize;
 		Interval[] tempArr = new Interval[tempSize];
 		Interval[] tarArr = tar.intervalArr;
 		Interval temp = null;
 		boolean isChanged = false;
+		int curIdx = tempSize, numOfInvalid = 0;
 
-		if (curIdx >= size) {
-			IntervalUnionSet rtn = new IntervalUnionSet(tar.isInt, tarSize);
+		if (size <= 0) {
+			IntervalUnionSet result = new IntervalUnionSet(tar.isInt, tarSize);
 
-			System.arraycopy(tar.intervalArr, 0, rtn.intervalArr, 0, tarSize);
-			return rtn;
-		} else if (tarIdx >= tarSize) {
-			IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
+			System.arraycopy(tar.intervalArr, 0, result.intervalArr, 0, tarSize);
+			return result;
+		} else if (tarSize <= 0) {
+			IntervalUnionSet result = new IntervalUnionSet(isInt, size);
 
-			System.arraycopy(intervalArr, 0, rtn.intervalArr, 0, size);
-			return rtn;
-		} else {
-			Interval i1 = intervalArr[curIdx];
-			Interval i2 = tar.intervalArr[tarIdx];
-			int cmp = numberFactory.compare(i1, i2);
-
-			if (cmp <= 0) {
-				temp = i1;
-				curIdx++;
-			} else {
-				temp = i2;
-				tarIdx++;
+			System.arraycopy(intervalArr, 0, result.intervalArr, 0, size);
+			return result;
+		}		
+		tempArr = merge(intervalArr, tarArr);
+		while (curIdx > 0) {
+			curIdx --;
+			if (tempArr[curIdx] == null) {
+				numOfInvalid++;
 			}
 		}
-		while (curIdx < size || tarIdx < tarSize || isChanged) {
-			isChanged = false;
-			while (curIdx < size) {
-				Interval nxt = intervalArr[curIdx];
-				int compareIterval = numberFactory.compare(temp, nxt);
-				/*
-				 * if (its == -1) { if (temp.upper().compareTo(nxt.lower()) == 0
-				 * && !(temp.strictUpper() && nxt.strictLower())) { its = 0; } }
-				 * if (its == 1) { if (temp.lower().compareTo(nxt.upper()) == 0
-				 * && !(temp.strictLower() && nxt.strictUpper())) { its = 0; } }
-				 */
+		tempSize = tempSize - numOfInvalid;		
 
-				if (compareIterval == -4) {
-					break;
-				} else {
-					if (compareIterval < 4 && compareIterval > -4) {
-						IntervalUnion tmpU = new IntervalUnion();
+		IntervalUnionSet result = new IntervalUnionSet(tar.isInt, tempSize);
 
-						numberFactory.union(temp, nxt, tmpU);
-						temp = tmpU.union;
-						isChanged = true;
-					} else {
-						tempArr[ctr] = nxt;
-						ctr++;
-					}
-					curIdx++;
-				}
-			}
-			while (tarIdx < tarSize) {
-				Interval nxt = tarArr[tarIdx];
-				int compareIterval = numberFactory.compare(temp, nxt);
-
-				/*
-				 * if (its == -1) { if (temp.upper().compareTo(nxt.lower()) == 0
-				 * && !(temp.strictUpper() && nxt.strictLower())) { its = 0; } }
-				 * if (its == 1) { if (temp.lower().compareTo(nxt.upper()) == 0
-				 * && !(temp.strictLower() && nxt.strictUpper())) { its = 0; } }
-				 */
-				if (compareIterval == -4) {
-					break;
-				} else {
-					if (compareIterval < 4 && compareIterval > -4) {
-						IntervalUnion tmpU = new IntervalUnion();
-
-						numberFactory.union(temp, nxt, tmpU);
-						temp = tmpU.union;
-						isChanged = true;
-					} else {
-						tempArr[ctr] = nxt;
-						ctr++;
-					}
-					tarIdx++;
-				}
-			}
-			if (!isChanged) {
-				tempArr[ctr] = temp;
-				ctr++;
-				if (curIdx < size && tarIdx < tarSize) {
-					Interval i1 = intervalArr[curIdx];
-					Interval i2 = tar.intervalArr[tarIdx];
-					int cmp = numberFactory.compare(i1, i2);
-
-					if (cmp <= 0) {
-						temp = i1;
-						curIdx++;
-					} else {
-						temp = i2;
-						tarIdx++;
-					}
-				} else {
-					while (curIdx < size) {
-						tempArr[ctr] = intervalArr[curIdx];
-						ctr++;
-						curIdx++;
-					}
-					while (tarIdx < tarSize) {
-						tempArr[ctr] = tar.intervalArr[tarIdx];
-						ctr++;
-						tarIdx++;
-					}
-				}
-			}
-		}
-
-		IntervalUnionSet rtn = new IntervalUnionSet(tar.isInt, ctr);
-
-		System.arraycopy(tempArr, 0, rtn.intervalArr, 0, ctr);
-		return rtn;
+		System.arraycopy(tempArr, 0, result.intervalArr, 0, tempSize);
+		return result;
 	}// TODO:Testing
 
 	@Override
@@ -993,5 +848,221 @@ public class IntervalUnionSet implements Range {
 			}
 		}
 		return true;
+	}
+
+	private Interval[] merge(Interval[] left, Interval[] right) {
+		if (left == null) {
+			return right;
+		} else if (right == null) {
+			return left;
+		}
+
+		boolean isChanged = false;
+		int leftSize = left.length, rightSize = right.length;
+		int tempSize = leftSize + rightSize;
+		int leftIdx = 0, rightIdx = 0, curIdx = 0;
+		Interval interval1 = null;
+		Interval leftInterval = left[0];
+		Interval rightInterval = right[0];
+		Interval[] merged = new Interval[tempSize];
+
+		if (leftInterval == null) {
+			return merged;
+		} else if (rightInterval == null) {
+			System.arraycopy(left, 0, merged, 0, leftSize);
+			return merged;
+		}
+
+		int compareLeft = compareLo(leftInterval, rightInterval);
+
+		if (compareLeft > 0) {
+			interval1 = rightInterval;
+			rightIdx++;
+		} else {
+			interval1 = leftInterval;
+			leftIdx++;
+		}
+		while (isChanged || (leftIdx < leftSize && left[leftIdx] != null)
+				|| (rightIdx < rightSize && right[rightIdx] != null)) {
+			isChanged = false;
+			while (leftIdx < leftSize && left[leftIdx] != null) {
+				Interval interval2 = left[leftIdx];
+				int compareU1L2 = compareJoint(interval1, interval2);
+
+				if (compareU1L2 < 0) {
+					// i1 Left Disjoint i2
+					break;
+				} else {
+					// i1 Left Jointed i2
+					int compareRight = compareUp(interval1, interval2);
+
+					if (compareRight < 0) {
+						// i1 Left Intersect i2
+						interval1 = numberFactory.newInterval(
+								interval1.isIntegral(), interval1.lower(),
+								interval1.strictLower(), interval2.upper(),
+								interval2.strictUpper());
+						isChanged = true;
+						leftIdx++;
+						break;
+					}// else Left i1 contains i2
+					leftIdx++;
+				}
+			}
+			while (rightIdx < rightSize && right[rightIdx] != null) {
+				Interval interval2 = right[rightIdx];
+				int compareU1L2 = compareJoint(interval1, interval2);
+
+				if (compareU1L2 < 0) {
+					// i1 Left Disjoint i2
+					break;
+				} else {
+					// i1 Left Jointed i2
+					int compareRight = compareUp(interval1, interval2);
+
+					if (compareRight < 0) {
+						// i1 Left Intersect i2
+						interval1 = numberFactory.newInterval(
+								interval1.isIntegral(), interval1.lower(),
+								interval1.strictLower(), interval2.upper(),
+								interval2.strictUpper());
+						isChanged = true;
+						rightIdx++;
+						break;
+					}// else Left i1 contains i2
+					rightIdx++;
+				}
+			}
+			if (!isChanged) {
+				merged[curIdx] = interval1;
+				curIdx++;
+				if ((leftIdx < leftSize && left[leftIdx] != null)
+						&& (rightIdx < rightSize && right[rightIdx] != null)) {
+					leftInterval = left[leftIdx];
+					rightInterval = right[rightIdx];
+					compareLeft = compareLo(leftInterval, rightInterval);
+					if (compareLeft > 0) {
+						interval1 = rightInterval;
+						rightIdx++;
+					} else {
+						interval1 = leftInterval;
+						leftIdx++;
+					}
+				} else {
+					while (leftIdx < leftSize && left[leftIdx] != null) {
+						merged[curIdx] = left[leftIdx];
+						curIdx++;
+						leftIdx++;
+					}
+					while (rightIdx < rightSize && right[rightIdx] != null) {
+						merged[curIdx] = right[rightIdx];
+						curIdx++;
+						rightIdx++;
+					}
+				}
+			}
+		}
+		return merged;
+	}
+
+	private int compareLo(Interval current, Interval target) {
+		assert current != null && target != null;
+		assert current.isIntegral() == target.isIntegral();
+
+		boolean currentSL = current.strictLower();
+		boolean targetSL = target.strictLower();
+		Number currentLo = current.lower();
+		Number targetLo = target.lower();
+
+		if (currentLo == null && targetLo == null) {
+			return 0;
+		} else if (currentLo == null) {
+			return -1;
+		} else if (targetLo == null) {
+			return 1;
+		} else {
+			int compare = numberFactory.compare(currentLo, targetLo);
+
+			if (compare == 0) {
+				if (!currentSL && targetSL) {
+					return -1;
+				} else if (currentSL && !targetSL) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				return compare;
+			}
+		}
+	}
+
+	private int compareUp(Interval current, Interval target) {
+		assert current != null && target != null;
+		assert current.isIntegral() == target.isIntegral();
+
+		boolean currentSU = current.strictUpper();
+		boolean targetSU = target.strictUpper();
+		Number currentUp = current.upper();
+		Number targetUp = target.upper();
+
+		if (currentUp == null && targetUp == null) {
+			return 0;
+		} else if (currentUp == null) {
+			return 1;
+		} else if (targetUp == null) {
+			return -1;
+		} else {
+			int compare = numberFactory.compare(currentUp, targetUp);
+
+			if (compare == 0) {
+				if (!currentSU && targetSU) {
+					return 1;
+				} else if (currentSU && !targetSU) {
+					return -1;
+				} else {
+					return 0;
+				}
+			} else {
+				return compare;
+			}
+		}
+	}
+
+	private int compareJoint(Interval left, Interval right) {
+		assert left != null && right != null;
+		assert left.isIntegral() == right.isIntegral();
+
+		boolean isIntegral = left.isIntegral();
+		boolean leftSU = left.strictUpper();
+		boolean rightSL = right.strictLower();
+		Number leftUp = left.upper();
+		Number rightLo = right.lower();
+
+		if (leftUp == null || rightLo == null) {
+			return 1;
+		}
+
+		Number difference = numberFactory.subtract(rightLo, leftUp);
+
+		if (isIntegral) {
+			if (difference.signum() > 0 && !difference.isOne()) {
+				return -1;
+			} else {
+				return 1;
+			}
+		} else {
+			if (difference.signum() < 0) {
+				return 1;
+			} else if (difference.signum() > 0) {
+				return -1;
+			} else {
+				if (leftSU && rightSL) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+		}
 	}
 }
