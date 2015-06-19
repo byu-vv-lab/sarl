@@ -242,11 +242,36 @@ public class IntervalUnionSetTest {
 		Interval[] actualArr = new Interval[ARR_SIZE];
 
 		for (int i = 0; i * 3 < ARR_SIZE && i < 7; i += 2) {
+			RationalNumber rat_i = numberFactory.rational(numberFactory.integer(i));
+			RationalNumber rat_j = numberFactory.rational(numberFactory.integer(i + 1));
+
+			expectedArr[i] = numberFactory.newInterval(false, rat_i, true, rat_j, true);
+			actualArr[i * 3] = numberFactory.newInterval(false, rat_i, true, rat_j, true);
+		}
+
+		IntervalUnionSet expected = new IntervalUnionSet(expectedArr);
+		IntervalUnionSet actual = new IntervalUnionSet(actualArr);
+
+		assertTrue(!actual.isEmpty());
+		assertEquals(expected.toString(), actual.toString());
+		p("The list is :");
+		p(actualArr);
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+	
+	@Test
+	public void constructIntervalUnionSet_IntervalList_Int_SomeNull() {
+		// All of intervals in the array are non-<code>null</code> intervals.
+		Interval[] expectedArr = new Interval[ARR_SIZE];
+		Interval[] actualArr = new Interval[ARR_SIZE];
+
+		for (int i = 0; i * 3 < ARR_SIZE && i < 7; i += 2) {
 			IntegerNumber int_i = numberFactory.integer(i);
 			IntegerNumber int_j = numberFactory.integer(i + 1);
 
-			expectedArr[i] = numberFactory.newInterval(false, int_i, true, int_j, true);
-			actualArr[i * 3] = numberFactory.newInterval(false, int_i, true, int_j, true);
+			expectedArr[i] = numberFactory.newInterval(true, int_i, false, int_j, false);
+			actualArr[i * 3] = numberFactory.newInterval(true, int_i, false, int_j, false);
 		}
 
 		IntervalUnionSet expected = new IntervalUnionSet(expectedArr);
