@@ -33,8 +33,8 @@ public interface Range {
 	 * Does this set contain the given number as a member?
 	 * 
 	 * @param number
-	 *            any non-<code>null</code> {@link Number} of the appropriate
-	 *            type
+	 *            any non-<code>null</code> {@link Number} of the same type
+	 *            (integer/real) as this {@link Interval}
 	 * @return <code>true</code> iff this set contains the given number
 	 */
 	boolean containsNumber(Number number);
