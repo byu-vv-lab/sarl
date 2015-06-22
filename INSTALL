@@ -47,7 +47,7 @@ the package manager:
 (http://ant.apache.org).
 
 3. Download the tgz archive of VSL dependencies from 
-   http://vsl.cis.udel.edu/tools/vsl_depend
+   http://vsl.cis.udel.edu/lib/tools/vsl_depend
    Unzip the .tgz file and you will have the folder vsl.
    Move vsl to /opt (you might need to use "sudo" for this.
    Also, if you don't already have a directory called /opt, 
