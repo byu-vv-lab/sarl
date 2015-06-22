@@ -689,6 +689,8 @@ public class IntervalUnionSet implements Range {
 			boolean sl = curItv.strictLower();
 			boolean su = curItv.strictUpper();
 			BooleanExpression tmpE, tmpE2, resE;
+			//TODO: create var to store val reduce func call
+			// use "==" isted of cmpTo
 
 			if (curItv.lower() == null && curItv.upper() == null) {
 				rtn = universe.bool(true);
@@ -710,7 +712,7 @@ public class IntervalUnionSet implements Range {
 						.lessThanEquals(xE, upE);
 				resE = universe.and(tmpE, tmpE2);
 				if (curItv.lower().compareTo(curItv.upper()) == 0
-						&& (!curItv.strictLower() && !curItv.strictUpper())) {
+						&& (!sl && !su)) {
 					resE = universe.equals(xE, loE);
 				}
 			}
