@@ -21,7 +21,9 @@ package edu.udel.cis.vsl.sarl.number.real;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
+import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
+import edu.udel.cis.vsl.sarl.number.Numbers;
 
 /**
  * Immutable implementation of {@link Interval}. Under construction.
@@ -37,6 +39,8 @@ public class CommonInterval implements Interval {
 	protected Number upper;
 
 	protected boolean strictUpper;
+	
+	private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
 	public CommonInterval(boolean isIntegral, Number lower,
 			boolean strictLower, Number upper, boolean strictUpper) {
@@ -56,7 +60,7 @@ public class CommonInterval implements Interval {
 			assert upper != null || strictUpper;
 		}
 		if (lower != null && upper != null) {
-			int compare = lower.compareTo(upper);
+			int compare = numberFactory.compare(lower, upper);
 
 			// <a,b> with a>b is unacceptable
 			// (0,0) is fine: the unique representation of the empty set
@@ -157,13 +161,13 @@ public class CommonInterval implements Interval {
 	@Override
 	public boolean contains(Number number) {
 		if (lower != null) {
-			int compare = lower.compareTo(number);
+			int compare = numberFactory.compare(lower, number);
 
 			if (compare > 0 || (compare == 0 && strictLower))
 				return false;
 		}
 		if (upper != null) {
-			int compare = upper.compareTo(number);
+			int compare = numberFactory.compare(upper, number);
 
 			if (compare < 0 || (compare == 0 && strictUpper))
 				return false;
@@ -174,13 +178,13 @@ public class CommonInterval implements Interval {
 	@Override
 	public int compare(Number number) {
 		if (lower != null) {
-			int compare = lower.compareTo(number);
+			int compare = numberFactory.compare(lower, number);
 
 			if (compare > 0 || (compare == 0 && strictLower))
 				return 1;
 		}
 		if (upper != null) {
-			int compare = upper.compareTo(number);
+			int compare = numberFactory.compare(upper, number);
 
 			if (compare < 0 || (compare == 0 && strictUpper))
 				return -1;
