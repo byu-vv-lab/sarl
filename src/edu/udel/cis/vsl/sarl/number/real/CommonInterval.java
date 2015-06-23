@@ -30,7 +30,7 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
  */
 public class CommonInterval implements Interval {
 
-	//private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
+	// private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
 	private boolean isIntegral;
 
@@ -64,8 +64,8 @@ public class CommonInterval implements Interval {
 			// (0,0) is fine: the unique representation of the empty set
 			// [a,a] is fine, but not (a,a), [a,a), or (a,a]
 			assert compare < 0
-					|| (compare == 0 && ((!strictLower && !strictUpper) || lower
-							.isZero()));
+					|| (compare == 0 && ((!strictLower && !strictUpper) || (lower
+							.isZero() && strictLower && strictUpper)));
 		}
 		this.isIntegral = isIntegral;
 		this.lower = lower;
