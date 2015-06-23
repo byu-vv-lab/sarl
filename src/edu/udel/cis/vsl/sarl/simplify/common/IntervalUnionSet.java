@@ -529,18 +529,53 @@ public class IntervalUnionSet implements Range {
 	 * 
 	 * @param number
 	 *            a single non-<code>null</code> number of the same type
-	 *            (integer/real) as this set
+	 *            (integer/real) with this set
 	 */
 	public IntervalUnionSet addNumber(Number number) {
 		assert number != null;
 		assert (number instanceof IntegerNumber) == isInt;
 
-		Interval pointInterval = numberFactory.newInterval(
-				number instanceof IntegerNumber, number, false, number, false);
-		IntervalUnionSet pointSet = new IntervalUnionSet(pointInterval);
-		IntervalUnionSet result = union(pointSet);
+		int leftIdx = 0;
+		int rightIdx = size - 1;
 
-		return result;
+		while (leftIdx <= rightIdx) {
+			int midIdx = (leftIdx + rightIdx) / 2;
+			int compareNumber = intervalArr[midIdx].compare(number);
+
+			if (compareNumber > 0 && leftIdx != rightIdx) {
+				rightIdx = midIdx - 1;
+			} else if (compareNumber < 0 && leftIdx != rightIdx) {
+				leftIdx = midIdx + 1;
+			} else if (compareNumber == 0) {
+				// The set contains the number.
+				return new IntervalUnionSet(this);
+			} else {
+				int pointIdx = midIdx;
+				IntervalUnionSet tempSet = new IntervalUnionSet(isInt, size + 1);
+
+				if (compareNumber > 0) { // leftIdx == rightIdx
+					// The number is on the left side.
+					System.arraycopy(intervalArr, 0, tempSet.intervalArr, 0,
+							pointIdx);
+					tempSet.intervalArr[pointIdx] = numberFactory.newInterval(
+							isInt, number, false, number, false);
+					System.arraycopy(intervalArr, pointIdx,
+							tempSet.intervalArr, pointIdx + 1, size - pointIdx);
+				} else {
+					// The number is on the right side.
+					pointIdx++;
+					System.arraycopy(intervalArr, 0, tempSet.intervalArr, 0,
+							pointIdx);
+					tempSet.intervalArr[pointIdx] = numberFactory.newInterval(
+							isInt, number, false, number, false);
+					System.arraycopy(intervalArr, pointIdx,
+							tempSet.intervalArr, pointIdx + 1, size - pointIdx);
+				}
+				return tempSet;
+			}
+		} // Using binary searching to compare the number with intervals
+			// To add a number to an empty set.
+		return new IntervalUnionSet(number);
 	}// TODO: Testing
 
 	@Override
@@ -564,7 +599,6 @@ public class IntervalUnionSet implements Range {
 		while (leftIdx <= rightIdx) {
 			int midIdx = (leftIdx + rightIdx) / 2;
 			int compareNumber = intervalArr[midIdx].compare(number);
-			System.out.println("" + compareNumber);
 
 			if (compareNumber > 0 && leftIdx != rightIdx) {
 				rightIdx = midIdx - 1;
@@ -977,7 +1011,7 @@ public class IntervalUnionSet implements Range {
 			boolean sl = curItv.strictLower();
 			boolean su = curItv.strictUpper();
 			BooleanExpression tmpE, tmpE2, resE;
-			//TODO: create var to store val reduce func call
+			// TODO: create var to store val reduce func call
 			// use "==" isted of cmpTo
 
 			if (curItv.lower() == null && curItv.upper() == null) {
