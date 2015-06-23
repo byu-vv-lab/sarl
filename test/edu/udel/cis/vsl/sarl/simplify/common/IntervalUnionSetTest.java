@@ -855,6 +855,24 @@ public class IntervalUnionSetTest {
 		univIntSet.containsNumber(nullIntNum);
 	}
 
+	@Test(expected = AssertionError.class)
+	public void containsNumber_Int_toRatSet() {
+		IntegerNumber nullIntNum = null;
+		IntervalUnionSet univRatSet = new IntervalUnionSet(
+				numFactory.newInterval(false, null, true, null, true));
+
+		univRatSet.containsNumber(nullIntNum);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void containsNumber_Rat_toIntSet() {
+		RationalNumber nullRatNum = null;
+		IntervalUnionSet univIntSet = new IntervalUnionSet(
+				numFactory.newInterval(true, null, true, null, true));
+
+		univIntSet.containsNumber(nullRatNum);
+	}
+
 	@Test
 	public void containsNumber_Int_withEmptySet() {
 		IntervalUnionSet emptyIntSet = new IntervalUnionSet(
@@ -1077,5 +1095,254 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual);
 	}
 
+	@Test(expected = AssertionError.class)
+	public void addNumber_Rat_Null() {
+		RationalNumber nullRatNum = null;
+		IntervalUnionSet univRatSet = new IntervalUnionSet(
+				numFactory.newInterval(false, null, true, null, true));
+
+		univRatSet.addNumber(nullRatNum);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void addNumber_Int_toRatSet() {
+		IntegerNumber nullIntNum = null;
+		IntervalUnionSet univRatSet = new IntervalUnionSet(
+				numFactory.newInterval(false, null, true, null, true));
+
+		univRatSet.addNumber(nullIntNum);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void addNumber_Rat_toIntSet() {
+		RationalNumber nullRatNum = null;
+		IntervalUnionSet univIntSet = new IntervalUnionSet(
+				numFactory.newInterval(true, null, true, null, true));
+
+		univIntSet.addNumber(nullRatNum);
+	}
+
+	@Test
+	public void addNumber_Int_withEmptySet() {
+		IntervalUnionSet emptyIntSet = new IntervalUnionSet(
+				numFactory.newInterval(true, INT_ZERO, true, INT_ZERO, true));
+		boolean actual = emptyIntSet.containsNumber(INT_ONE);
+
+		assert emptyIntSet.isIntegral();
+		assert !emptyIntSet.isEmpty();
+		assertFalse(actual);
+		p("   Set: " + emptyIntSet.toString());
+		p("Number: " + INT_ONE.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+/*
+	@Test
+	public void containsNumber_Rat_withEmptySet() {
+		IntervalUnionSet emptyRatSet = new IntervalUnionSet(
+				numFactory
+						.newInterval(false, RAT_ZERO, true, RAT_ZERO, true));
+		boolean actual = emptyRatSet.containsNumber(RAT_ONE);
+
+		assert !emptyRatSet.isIntegral();
+		assert emptyRatSet.isEmpty();
+		assertFalse(actual);
+		p("   Set: " + emptyRatSet.toString());
+		p("Number: " + RAT_ONE.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Int_withUnivSet() {
+		IntervalUnionSet univIntSet = new IntervalUnionSet(
+				numFactory.newInterval(true, null, true, null, true));
+		boolean actual = univIntSet.containsNumber(INT_ONE);
+
+		assert univIntSet.isIntegral();
+		assert !univIntSet.isEmpty();
+		assertTrue(actual);
+		p("   Set: " + univIntSet.toString());
+		p("Number: " + INT_ONE.toString());
+		p("expected: " + "true");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Rat_withUnivSet() {
+		IntervalUnionSet univRatSet = new IntervalUnionSet(
+				numFactory.newInterval(false, null, true, null, true));
+		boolean actual = univRatSet.containsNumber(RAT_ONE);
+
+		assert !univRatSet.isIntegral();
+		assert !univRatSet.isEmpty();
+		assertTrue(actual);
+		p("   Set: " + univRatSet.toString());
+		p("Number: " + RAT_ONE.toString());
+		p("expected: " + "true");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Int_Num_LeftDisjoint() {
+		Interval first = numFactory.newInterval(true, INT_N_FIVE, false,
+				INT_N_TWO, false);
+		Interval second = numFactory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval third = numFactory.newInterval(true, INT_TWO, false,
+				INT_FIVE, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(INT_N_TEN);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + INT_N_TEN.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Rat_Num_RightDisjoint() {
+		Interval first = numFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(RAT_TEN);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + RAT_TEN.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Int_Num_NotContained1() {
+		Interval first = numFactory.newInterval(true, INT_N_FIVE, false,
+				INT_N_TWO, false);
+		Interval second = numFactory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval third = numFactory.newInterval(true, INT_TWO, false,
+				INT_FIVE, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(INT_ONE);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + INT_ONE.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Rat_Num_NotContained1() {
+		Interval first = numFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(RAT_N_FIVE);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + RAT_N_FIVE.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Rat_Num_NotContained2() {
+		Interval first = numFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(RAT_FIVE);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + RAT_FIVE.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Rat_Num_NotContained3() {
+		RationalNumber ratNum = numFactory.divide(RAT_THREE, RAT_TWO);
+		Interval first = numFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		boolean actual = intervalSet.containsNumber(ratNum);
+
+		assertFalse(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + ratNum.toString());
+		p("expected: " + "false");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Int_Num_Contained1() {
+		Interval first = numFactory.newInterval(true, null, true,
+				INT_N_SEVEN, false);
+		Interval second = numFactory.newInterval(true, INT_N_FIVE, false,
+				INT_N_TWO, false);
+		Interval third = numFactory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval fourth = numFactory.newInterval(true, INT_TWO, false,
+				INT_FIVE, false);
+		Interval fifth = numFactory.newInterval(true, INT_SEVEN, false,
+				null, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third, fourth, fifth);
+		boolean actual = intervalSet.containsNumber(INT_N_TEN);
+
+		assertTrue(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + INT_N_TEN.toString());
+		p("expected: " + "true");
+		p("  actual: " + actual);
+	}
+
+	@Test
+	public void containsNumber_Int_Num_Contained2() {
+		Interval first = numFactory.newInterval(true, null, true,
+				INT_N_SEVEN, false);
+		Interval second = numFactory.newInterval(true, INT_N_FIVE, false,
+				INT_N_TWO, false);
+		Interval third = numFactory.newInterval(true, INT_ZERO, false,
+				INT_ZERO, false);
+		Interval fourth = numFactory.newInterval(true, INT_TWO, false,
+				INT_FIVE, false);
+		Interval fifth = numFactory.newInterval(true, INT_SEVEN, false,
+				null, true);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third, fourth, fifth);
+		boolean actual = intervalSet.containsNumber(INT_ZERO);
+
+		assertTrue(actual);
+		p("   Set: " + intervalSet.toString());
+		p("Number: " + INT_ZERO.toString());
+		p("expected: " + "true");
+		p("  actual: " + actual);
+	}
+*/
 }
 
