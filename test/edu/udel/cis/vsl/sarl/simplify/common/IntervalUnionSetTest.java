@@ -711,7 +711,7 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = AssertionError.class)
 	public void constructIntervalUnionSet_IntervalUnionSet_Null() {
 		IntervalUnionSet nullIntervalUnionSet = null;
 		IntervalUnionSet actual = new IntervalUnionSet(nullIntervalUnionSet);
@@ -1121,6 +1121,7 @@ public class IntervalUnionSetTest {
 
 		univIntSet.addNumber(nullRatNum);
 	}
+	/*
 
 	@Test
 	public void addNumber_Int_withEmptySet() {
@@ -1136,7 +1137,7 @@ public class IntervalUnionSetTest {
 		p("expected: " + "false");
 		p("  actual: " + actual);
 	}
-/*
+	
 	@Test
 	public void containsNumber_Rat_withEmptySet() {
 		IntervalUnionSet emptyRatSet = new IntervalUnionSet(
