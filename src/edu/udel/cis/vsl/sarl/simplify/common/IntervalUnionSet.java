@@ -550,32 +550,75 @@ public class IntervalUnionSet implements Range {
 				// The set contains the number.
 				return new IntervalUnionSet(this);
 			} else {
-				int pointIdx = midIdx;
-				IntervalUnionSet tempSet = new IntervalUnionSet(isInt, size + 1);
+				leftIdx = compareNumber < 0 ? midIdx : midIdx - 1;
+				rightIdx = leftIdx + 1;
+				leftIdx = Math.max(leftIdx, 0);
+				rightIdx = Math.min(rightIdx, size - 1);
 
-				if (compareNumber > 0) { // leftIdx == rightIdx
-					// The number is on the left side.
-					System.arraycopy(intervalArr, 0, tempSet.intervalArr, 0,
-							pointIdx);
-					tempSet.intervalArr[pointIdx] = numberFactory.newInterval(
-							isInt, number, false, number, false);
-					System.arraycopy(intervalArr, pointIdx,
-							tempSet.intervalArr, pointIdx + 1, size - pointIdx);
+				boolean leftSl = intervalArr[leftIdx].strictLower();
+				boolean rightSu = intervalArr[rightIdx].strictUpper();
+				Number leftLo = intervalArr[leftIdx].lower();
+				Number leftUp = intervalArr[leftIdx].upper();
+				Number rightLo = intervalArr[rightIdx].lower();
+				Number rightUp = intervalArr[rightIdx].upper();
+				Number leftDiff = numberFactory.subtract(number, leftUp);
+				Number rightDiff = numberFactory.subtract(rightLo, number);
+				boolean leftJoint = isInt ? leftDiff.isOne() : leftDiff
+						.isZero();
+				boolean rightJoint = isInt ? rightDiff.isOne() : rightDiff
+						.isZero();
+
+				if (leftJoint && rightJoint) {
+					IntervalUnionSet result = new IntervalUnionSet(isInt,
+							size - 1);
+
+					System.arraycopy(intervalArr, 0, result.intervalArr, 0,
+							leftIdx);
+					result.intervalArr[leftIdx] = numberFactory.newInterval(
+							isInt, leftLo, leftSl, rightUp, rightSu);
+					System.arraycopy(intervalArr, rightIdx + 1,
+							result.intervalArr, rightIdx, size - rightIdx - 1);
+					return result;
+				} else if (leftJoint) {
+					IntervalUnionSet result = new IntervalUnionSet(this);
+
+					if (isInt) {
+						result.intervalArr[leftIdx] = numberFactory
+								.newInterval(true, leftLo, false, number, false);
+					} else {
+						result.intervalArr[leftIdx] = numberFactory
+								.newInterval(false, leftLo, leftSl, number,
+										false);
+					}
+					return result;
+				} else if (rightJoint) {
+					IntervalUnionSet result = new IntervalUnionSet(this);
+
+					if (isInt) {
+						result.intervalArr[rightIdx] = numberFactory
+								.newInterval(true, number, false, rightUp,
+										false);
+					} else {
+						result.intervalArr[rightIdx] = numberFactory
+								.newInterval(false, number, false, rightUp,
+										rightSu);
+					}
+					return result;
 				} else {
-					// The number is on the right side.
-					pointIdx++;
-					System.arraycopy(intervalArr, 0, tempSet.intervalArr, 0,
-							pointIdx);
-					tempSet.intervalArr[pointIdx] = numberFactory.newInterval(
+					IntervalUnionSet result = new IntervalUnionSet(isInt,
+							size + 1);
+
+					System.arraycopy(intervalArr, 0, result.intervalArr, 0,
+							rightIdx);
+					result.intervalArr[rightIdx] = numberFactory.newInterval(
 							isInt, number, false, number, false);
-					System.arraycopy(intervalArr, pointIdx,
-							tempSet.intervalArr, pointIdx + 1, size - pointIdx);
+					System.arraycopy(intervalArr, rightIdx, result.intervalArr,
+							rightIdx + 1, size - rightIdx);
+					return result;
 				}
-				return tempSet;
 			}
 		} // Using binary searching to compare the number with intervals
-			// To add a number to an empty set.
-		return new IntervalUnionSet(number);
+		return new IntervalUnionSet(number);// To add a number to an empty set.
 	}// TODO: Testing
 
 	@Override
