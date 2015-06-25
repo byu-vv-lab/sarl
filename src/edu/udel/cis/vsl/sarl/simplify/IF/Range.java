@@ -34,7 +34,7 @@ public interface Range {
 	 * 
 	 * @param number
 	 *            any non-<code>null</code> {@link Number} of the same type
-	 *            (integer/real) as this {@link Interval}
+	 *            (integer/real) as this set
 	 * @return <code>true</code> iff this set contains the given number
 	 */
 	boolean containsNumber(Number number);
