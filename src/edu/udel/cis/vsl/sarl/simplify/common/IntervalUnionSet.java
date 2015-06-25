@@ -608,12 +608,29 @@ public class IntervalUnionSet implements Range {
 					IntervalUnionSet result = new IntervalUnionSet(isInt,
 							size + 1);
 
-					System.arraycopy(intervalArr, 0, result.intervalArr, 0,
-							rightIdx);
-					result.intervalArr[rightIdx] = numberFactory.newInterval(
-							isInt, number, false, number, false);
-					System.arraycopy(intervalArr, rightIdx, result.intervalArr,
-							rightIdx + 1, size - rightIdx);
+					if (leftIdx == rightIdx) {
+						if (leftIdx == 0) {
+							result.intervalArr[0] = numberFactory.newInterval(
+									isInt, number, false, number, false);
+							System.arraycopy(intervalArr, 0,
+									result.intervalArr, 1, size);
+						} else {
+							result.intervalArr[size] = numberFactory
+									.newInterval(isInt, number, false, number,
+											false);
+							System.arraycopy(intervalArr, 0,
+									result.intervalArr, 0, size);
+						}
+					} else {
+						System.arraycopy(intervalArr, 0, result.intervalArr, 0,
+								rightIdx);
+						result.intervalArr[rightIdx] = numberFactory
+								.newInterval(isInt, number, false, number,
+										false);
+						System.arraycopy(intervalArr, rightIdx,
+								result.intervalArr, rightIdx + 1, size
+										- rightIdx);
+					}
 					return result;
 				}
 			}

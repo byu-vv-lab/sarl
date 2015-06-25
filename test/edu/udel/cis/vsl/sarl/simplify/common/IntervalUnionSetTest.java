@@ -1223,8 +1223,8 @@ public class IntervalUnionSetTest {
 				INT_N_TEN, false);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
-		IntervalUnionSet expected = new IntervalUnionSet(first, second,
-				third, target);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
 		IntervalUnionSet actual = intervalSet.addNumber(INT_N_TEN);
 
 		assertEquals(expected.toString(), actual.toString());
@@ -1246,8 +1246,8 @@ public class IntervalUnionSetTest {
 				INT_N_SIX, false);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
-		IntervalUnionSet expected = new IntervalUnionSet(first, second,
-				third, target);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
 		IntervalUnionSet actual = intervalSet.addNumber(INT_N_SIX);
 
 		assertEquals(expected.toString(), actual.toString());
@@ -1256,7 +1256,7 @@ public class IntervalUnionSetTest {
 		p("expected: " + expected.toString());
 		p("  actual: " + actual.toString());
 	}
-	
+
 	@Test
 	public void addNumber_Int_Num_LeftRightJoint() {
 		Interval first = numberFactory.newInterval(true, INT_N_FIVE, false,
@@ -1269,8 +1269,8 @@ public class IntervalUnionSetTest {
 				INT_N_ONE, false);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
-		IntervalUnionSet expected = new IntervalUnionSet(first, second,
-				third, target);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
 		IntervalUnionSet actual = intervalSet.addNumber(INT_N_ONE);
 
 		assertEquals(expected.toString(), actual.toString());
@@ -1279,7 +1279,7 @@ public class IntervalUnionSetTest {
 		p("expected: " + expected.toString());
 		p("  actual: " + actual.toString());
 	}
-	
+
 	@Test
 	public void addNumber_Int_Num_RightJoint() {
 		Interval first = numberFactory.newInterval(true, INT_N_FIVE, false,
@@ -1292,8 +1292,8 @@ public class IntervalUnionSetTest {
 				INT_SIX, false);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
-		IntervalUnionSet expected = new IntervalUnionSet(first, second,
-				third, target);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
 		IntervalUnionSet actual = intervalSet.addNumber(INT_SIX);
 
 		assertEquals(expected.toString(), actual.toString());
@@ -1302,7 +1302,7 @@ public class IntervalUnionSetTest {
 		p("expected: " + expected.toString());
 		p("  actual: " + actual.toString());
 	}
-	
+
 	@Test
 	public void addNumber_Int_Num_DisJoint() {
 		Interval first = numberFactory.newInterval(true, INT_N_FIVE, false,
@@ -1315,8 +1315,8 @@ public class IntervalUnionSetTest {
 				INT_TWO, false);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
-		IntervalUnionSet expected = new IntervalUnionSet(first, second,
-				third, target);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
 		IntervalUnionSet actual = intervalSet.addNumber(INT_TWO);
 
 		assertEquals(expected.toString(), actual.toString());
@@ -1326,94 +1326,129 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
-	/*
-	 * @Test public void containsNumber_Rat_Num_RightDisjoint() { Interval first
-	 * = numFactory.newInterval(false, RAT_N_FIVE, true, RAT_N_TWO, true);
-	 * Interval second = numFactory.newInterval(false, RAT_ZERO, false,
-	 * RAT_ZERO, false); Interval third = numFactory.newInterval(false, RAT_TWO,
-	 * true, RAT_FIVE, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third); boolean actual =
-	 * intervalSet.containsNumber(RAT_TEN);
-	 * 
-	 * assertFalse(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + RAT_TEN.toString()); p("expected: " + "false"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Int_Num_NotContained1() { Interval first
-	 * = numFactory.newInterval(true, INT_N_FIVE, false, INT_N_TWO, false);
-	 * Interval second = numFactory.newInterval(true, INT_ZERO, false, INT_ZERO,
-	 * false); Interval third = numFactory.newInterval(true, INT_TWO, false,
-	 * INT_FIVE, false); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third); boolean actual =
-	 * intervalSet.containsNumber(INT_ONE);
-	 * 
-	 * assertFalse(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + INT_ONE.toString()); p("expected: " + "false"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Rat_Num_NotContained1() { Interval first
-	 * = numFactory.newInterval(false, RAT_N_FIVE, true, RAT_N_TWO, true);
-	 * Interval second = numFactory.newInterval(false, RAT_ZERO, false,
-	 * RAT_ZERO, false); Interval third = numFactory.newInterval(false, RAT_TWO,
-	 * true, RAT_FIVE, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third); boolean actual =
-	 * intervalSet.containsNumber(RAT_N_FIVE);
-	 * 
-	 * assertFalse(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + RAT_N_FIVE.toString()); p("expected: " + "false"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Rat_Num_NotContained2() { Interval first
-	 * = numFactory.newInterval(false, RAT_N_FIVE, true, RAT_N_TWO, true);
-	 * Interval second = numFactory.newInterval(false, RAT_ZERO, false,
-	 * RAT_ZERO, false); Interval third = numFactory.newInterval(false, RAT_TWO,
-	 * true, RAT_FIVE, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third); boolean actual =
-	 * intervalSet.containsNumber(RAT_FIVE);
-	 * 
-	 * assertFalse(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + RAT_FIVE.toString()); p("expected: " + "false"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Rat_Num_NotContained3() { RationalNumber
-	 * ratNum = numFactory.divide(RAT_THREE, RAT_TWO); Interval first =
-	 * numFactory.newInterval(false, RAT_N_FIVE, true, RAT_N_TWO, true);
-	 * Interval second = numFactory.newInterval(false, RAT_ZERO, false,
-	 * RAT_ZERO, false); Interval third = numFactory.newInterval(false, RAT_TWO,
-	 * true, RAT_FIVE, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third); boolean actual =
-	 * intervalSet.containsNumber(ratNum);
-	 * 
-	 * assertFalse(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + ratNum.toString()); p("expected: " + "false"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Int_Num_Contained1() { Interval first =
-	 * numFactory.newInterval(true, null, true, INT_N_SEVEN, false); Interval
-	 * second = numFactory.newInterval(true, INT_N_FIVE, false, INT_N_TWO,
-	 * false); Interval third = numFactory.newInterval(true, INT_ZERO, false,
-	 * INT_ZERO, false); Interval fourth = numFactory.newInterval(true, INT_TWO,
-	 * false, INT_FIVE, false); Interval fifth = numFactory.newInterval(true,
-	 * INT_SEVEN, false, null, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third, fourth, fifth); boolean actual =
-	 * intervalSet.containsNumber(INT_N_TEN);
-	 * 
-	 * assertTrue(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + INT_N_TEN.toString()); p("expected: " + "true"); p("  actual: " +
-	 * actual); }
-	 * 
-	 * @Test public void containsNumber_Int_Num_Contained2() { Interval first =
-	 * numFactory.newInterval(true, null, true, INT_N_SEVEN, false); Interval
-	 * second = numFactory.newInterval(true, INT_N_FIVE, false, INT_N_TWO,
-	 * false); Interval third = numFactory.newInterval(true, INT_ZERO, false,
-	 * INT_ZERO, false); Interval fourth = numFactory.newInterval(true, INT_TWO,
-	 * false, INT_FIVE, false); Interval fifth = numFactory.newInterval(true,
-	 * INT_SEVEN, false, null, true); IntervalUnionSet intervalSet = new
-	 * IntervalUnionSet(first, second, third, fourth, fifth); boolean actual =
-	 * intervalSet.containsNumber(INT_ZERO);
-	 * 
-	 * assertTrue(actual); p("   Set: " + intervalSet.toString()); p("Number: "
-	 * + INT_ZERO.toString()); p("expected: " + "true"); p("  actual: " +
-	 * actual); }
-	 */
+	@Test
+	public void addNumber_Rat_Num_RightDisjoint() {
+		Interval first = numberFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numberFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numberFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		Interval target = numberFactory.newInterval(false, RAT_TEN, false,
+				RAT_TEN, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
+		IntervalUnionSet actual = intervalSet.addNumber(RAT_TEN);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("      Set: " + intervalSet.toString());
+		p("addNumber: " + RAT_TEN.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void addNumber_Rat_Num_LeftJoint() {
+		Interval first = numberFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numberFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numberFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		Interval target = numberFactory.newInterval(false, RAT_N_FIVE, false,
+				RAT_N_FIVE, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
+		IntervalUnionSet actual = intervalSet.addNumber(RAT_N_FIVE);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("      Set: " + intervalSet.toString());
+		p("addNumber: " + RAT_N_FIVE.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void addNumber_Rat_Num_LeftRightJoint() {
+		Interval first = numberFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numberFactory.newInterval(false, RAT_N_TWO, true,
+				RAT_TWO, true);
+		Interval third = numberFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		Interval target1 = numberFactory.newInterval(false, RAT_N_TWO, false,
+				RAT_N_TWO, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		IntervalUnionSet expected1 = new IntervalUnionSet(first, second, third,
+				target1);
+		IntervalUnionSet expected2 = new IntervalUnionSet(
+				numberFactory.newInterval(false, RAT_N_FIVE, true, RAT_FIVE,
+						true));
+		IntervalUnionSet actual1 = intervalSet.addNumber(RAT_N_TWO);
+		IntervalUnionSet actual2 = actual1.addNumber(RAT_TWO);
+
+		assertEquals(expected1.toString(), actual1.toString());
+		p("      Set: " + intervalSet.toString());
+		p("addNumber: " + RAT_N_TWO.toString());
+		p("expected: " + expected1.toString());
+		p("  actual: " + actual1.toString());
+		assertEquals(expected2.toString(), actual2.toString());
+		p("      Set: " + actual1.toString());
+		p("addNumber: " + RAT_TWO.toString());
+		p("expected: " + expected2.toString());
+		p("  actual: " + actual2.toString());
+	}
+
+	@Test
+	public void addNumber_Rat_Num_RightJoint() {
+		Interval first = numberFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numberFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numberFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		Interval target = numberFactory.newInterval(false, RAT_FIVE, false,
+				RAT_FIVE, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
+		IntervalUnionSet actual = intervalSet.addNumber(RAT_FIVE);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("      Set: " + intervalSet.toString());
+		p("addNumber: " + RAT_FIVE.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	@Test
+	public void addNumber_Rat_Num_DisJoint() {
+		Interval first = numberFactory.newInterval(false, RAT_N_FIVE, true,
+				RAT_N_TWO, true);
+		Interval second = numberFactory.newInterval(false, RAT_ZERO, false,
+				RAT_ZERO, false);
+		Interval third = numberFactory.newInterval(false, RAT_TWO, true,
+				RAT_FIVE, true);
+		Interval target = numberFactory.newInterval(false, RAT_ONE, false,
+				RAT_ONE, false);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+				third);
+		IntervalUnionSet expected = new IntervalUnionSet(first, second, third,
+				target);
+		IntervalUnionSet actual = intervalSet.addNumber(RAT_ONE);
+
+		assertEquals(expected.toString(), actual.toString());
+		p("      Set: " + intervalSet.toString());
+		p("addNumber: " + RAT_ONE.toString());
+		p("expected: " + expected.toString());
+		p("  actual: " + actual.toString());
+	}
+
+	
 }
