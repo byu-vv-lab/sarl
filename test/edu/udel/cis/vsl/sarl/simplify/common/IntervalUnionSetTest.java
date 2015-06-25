@@ -1450,5 +1450,181 @@ public class IntervalUnionSetTest {
 		p("  actual: " + actual.toString());
 	}
 
+	@Test(expected = AssertionError.class)
+	public void contains_Interval_Null() {
+		Interval target = null;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(INT_UNIV);
+		
+		intervalSet.contains(target);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void contains_Interval_Mismatch() {
+		Interval target = INT_EMPTY;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(RAT_UNIV);
+		
+		intervalSet.contains(target);		
+	}
 	
+	@Test
+	public void contains_Interval_Int_emptySet_In_Univ(){
+		Interval target = INT_EMPTY;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(INT_UNIV);		
+		boolean actual = intervalSet.contains(target);
+		
+		assertTrue(actual);		
+	}
+	
+	@Test
+	public void contains_Interval_Rat_univSet_In_empty(){
+		Interval target = RAT_UNIV;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(RAT_EMPTY);		
+		boolean actual = intervalSet.contains(target);
+		
+		assertFalse(actual);		
+	}
+	
+	@Test
+	public void contains_Interval_Int_LeftDisjoint(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_N_THREE, false, INT_N_TWO, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_LeftDisjoint(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true, RAT_ONE, true);
+		Interval target = numberFactory.newInterval(false, RAT_N_ONE, false, RAT_N_ONE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Int_LeftIntersect(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_N_THREE, false, INT_N_ONE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_LeftIntersect(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, false, RAT_ONE, true);
+		Interval target = numberFactory.newInterval(false, INT_N_THREE, true, RAT_N_ONE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Int_Target_contains_Current(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_N_THREE, false, INT_THREE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_Target_contains_Current(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true, RAT_ONE, true);
+		Interval target = numberFactory.newInterval(false, RAT_N_ONE, false, RAT_ONE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Int_RightIntersect(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_ONE, false, INT_THREE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_RightIntersect(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true, RAT_ONE, false);
+		Interval target = numberFactory.newInterval(false, RAT_ONE, false, INT_THREE, true);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Int_RightDisjoint(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_TWO, false, INT_THREE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_RightDisjoint(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true, RAT_ONE, true);
+		Interval target = numberFactory.newInterval(false, RAT_ONE, false, RAT_ONE, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertFalse(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Int_Contains(){
+		Interval current = numberFactory.newInterval(true, INT_N_ONE, false, INT_ONE, false);
+		Interval target = numberFactory.newInterval(true, INT_ZERO, false, INT_ZERO, false);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertTrue(actual1);
+	}
+	
+	@Test
+	public void contains_Interval_Rat_Contains(){
+		Interval current = numberFactory.newInterval(false, RAT_N_ONE, false, RAT_ONE, false);
+		Interval target = numberFactory.newInterval(false, RAT_ONE, true, RAT_ONE, true);;
+		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
+		boolean actual0 = intervalSet.contains(current);
+		boolean actual1 = intervalSet.contains(target);
+		
+		assertTrue(actual0);
+		assertTrue(actual1);
+	}
 }
