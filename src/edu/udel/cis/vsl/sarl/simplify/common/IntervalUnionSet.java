@@ -708,7 +708,7 @@ public class IntervalUnionSet implements Range {
 			int midIdx = (leftIdx + rightIdx) / 2;
 			Interval midInterval = intervalArr[midIdx];
 			int compareLo = compareLo(midInterval, interval);
-			int compareUp = compareLo(midInterval, interval);
+			int compareUp = compareUp(midInterval, interval);
 
 			if (compareLo > 0) {
 				if (compareUp > 0) {
