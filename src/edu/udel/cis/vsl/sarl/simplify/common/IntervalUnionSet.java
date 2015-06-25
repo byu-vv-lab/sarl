@@ -474,8 +474,9 @@ public class IntervalUnionSet implements Range {
 	 *            a non-<code>null</code> {@link Interval} has the same
 	 *            type(real/integer) with <code>left</code>, and its lower
 	 *            should greater than or equal to <code>left</code>'s lower.
-	 * @return a negative integer iff they are NOT jointed, or a positive
-	 *         integer iff they are jointed.
+	 * @return a negative integer iff they are NOT jointed, a zero integer iff
+	 *         they are adjacent but no intersected, or a positive integer iff
+	 *         they are intersected.
 	 */
 	private int compareJoint(Interval left, Interval right) {
 		assert left != null && right != null;
@@ -499,7 +500,9 @@ public class IntervalUnionSet implements Range {
 			 * bound are 1, they are considered jointed.
 			 */
 			// e.g. [1, 1] U [2, 2] == [1, 2]
-			if (difference.signum() > 0 && !difference.isOne()) {
+			if (difference.isOne()) {
+				return 0;
+			} else if (difference.signum() > 0) {
 				return -1;
 			} else {
 				return 1;
@@ -518,8 +521,10 @@ public class IntervalUnionSet implements Range {
 					 */
 					// e.g. Both [0, 1) and (1, 2] excludes [1, 1]
 					return -1;
-				} else {
+				} else if (!leftSU && !rightSL) {
 					return 1;
+				} else {
+					return 0;
 				}
 			}
 		}
@@ -714,7 +719,7 @@ public class IntervalUnionSet implements Range {
 				if (compareUp > 0) {
 					int compareJoint = compareJoint(interval, midInterval);
 
-					if (compareJoint < 0){ // Disjoint
+					if (compareJoint <= 0) { // No intersection
 						rightIdx = midIdx - 1;
 						continue;
 					}
@@ -726,7 +731,7 @@ public class IntervalUnionSet implements Range {
 
 					if (compareJoint > 0) {
 						return false;
-					} else { // Disjoint
+					} else { // No intersection
 						leftIdx = midIdx + 1;
 						continue;
 					}
@@ -742,7 +747,7 @@ public class IntervalUnionSet implements Range {
 			}
 		}
 		return false;
-	}// TODO: Testing
+	}
 
 	@Override
 	public boolean contains(Range set) {
@@ -785,31 +790,43 @@ public class IntervalUnionSet implements Range {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int tarSize = tar.size;
-		int curIdx = 0;
-		int tarIdx = 0;
+		IntervalUnionSet other = (IntervalUnionSet) set;
+		int otherSize = other.size;
+		int thisIdx = 0;
+		int otherIdx = 0;
 
-		while (curIdx < size) {
-			Interval curItv = intervalArr[curIdx];
+		if (size == 0 || otherSize == 0) {
+			return false;
+		}// An empty set could not intersects with any sets.
+		while (thisIdx < size || otherIdx < otherSize) {
+			Interval thisInterval = intervalArr[thisIdx];
+			Interval otherInterval = other.intervalArr[otherIdx];
+			int compareLo = compareLo(otherInterval, thisInterval);
+			int compareUp = compareUp(otherInterval, thisInterval);
 
-			while (tarIdx < tarSize) {
-				Interval tarItv = tar.intervalArr[tarIdx];
-				int compareIterval = numberFactory.compare(curItv, tarItv);
+			if (compareLo > 0) {
+				if (compareUp > 0) {
+					int compareJoint = compareJoint(thisInterval, otherInterval);
 
-				if (compareIterval == 4) {
-					tarIdx++;
-				} else {
-					if (compareIterval < 4 && compareIterval > -4) {
-						return true;
+					if (compareJoint <= 0) { // No intersection
+						thisIdx++;
+						break;
 					}
-					break;
 				}
+				return true;
+			} else if (compareLo < 0) {
+				if (compareUp < 0) {
+					int compareJoint = compareJoint(otherInterval, thisInterval);
+
+					if (compareJoint <= 0) { // No intersection
+						otherIdx++;
+						continue;
+					}
+				}
+				return true;
+			} else {
+				return true;
 			}
-			if (tarIdx >= tarSize) {
-				return false;
-			}
-			curIdx++;
 		}
 		return false;
 	}// TODO: Testing
@@ -1180,10 +1197,9 @@ public class IntervalUnionSet implements Range {
 		}
 		rtn += "};";
 		return rtn;
-	}// TODO: Testing
+	}
 
 	public boolean checkInvariants() {
-		// TODO : Test
 		/*
 		 * 1. All of intervals in the array are non-<code>null</code> intervals.
 		 * 
