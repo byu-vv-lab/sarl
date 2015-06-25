@@ -716,6 +716,7 @@ public class IntervalUnionSet implements Range {
 
 					if (compareJoint < 0){ // Disjoint
 						rightIdx = midIdx - 1;
+						continue;
 					}
 				}
 				return false;
@@ -727,6 +728,7 @@ public class IntervalUnionSet implements Range {
 						return false;
 					} else { // Disjoint
 						leftIdx = midIdx + 1;
+						continue;
 					}
 				} else { // compareUp >= 0
 					return true;
