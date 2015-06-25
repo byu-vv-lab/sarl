@@ -472,7 +472,8 @@ public class IntervalUnionSet implements Range {
 	 *            a non-<code>null</code> {@link Interval}.
 	 * @param right
 	 *            a non-<code>null</code> {@link Interval} has the same
-	 *            type(real/integer) with <code>left</code>
+	 *            type(real/integer) with <code>left</code>, and its lower
+	 *            should greater than or equal to <code>left</code>'s lower.
 	 * @return a negative integer iff they are NOT jointed, or a positive
 	 *         integer iff they are jointed.
 	 */
@@ -525,11 +526,11 @@ public class IntervalUnionSet implements Range {
 	}
 
 	/**
-	 * Add a single number to the union set
+	 * Add a single {@link Number} to this {@link IntervalUnionSet}
 	 * 
 	 * @param number
-	 *            a single non-<code>null</code> number of the same type
-	 *            (integer/real) with this set
+	 *            a single non-<code>null</code> {@link Number} of the same type
+	 *            (integer/real) with this {@link IntervalUnionSet}
 	 */
 	public IntervalUnionSet addNumber(Number number) {
 		assert number != null;
@@ -543,13 +544,16 @@ public class IntervalUnionSet implements Range {
 			int compareNumber = intervalArr[midIdx].compare(number);
 
 			if (compareNumber > 0 && leftIdx != rightIdx) {
+				// The number is on the left part of the current set.
 				rightIdx = midIdx - 1;
 			} else if (compareNumber < 0 && leftIdx != rightIdx) {
+				// The number is on the right part of the current set.
 				leftIdx = midIdx + 1;
 			} else if (compareNumber == 0) {
 				// The set contains the number.
 				return new IntervalUnionSet(this);
 			} else {
+				// The set does NOT contain the number
 				leftIdx = compareNumber < 0 ? midIdx : midIdx - 1;
 				rightIdx = leftIdx + 1;
 				leftIdx = Math.max(leftIdx, 0);
@@ -569,6 +573,7 @@ public class IntervalUnionSet implements Range {
 						.isZero();
 
 				if (leftJoint && rightJoint) {
+					// The number connects two disjointed interval
 					IntervalUnionSet result = new IntervalUnionSet(isInt,
 							size - 1);
 
@@ -580,6 +585,7 @@ public class IntervalUnionSet implements Range {
 							result.intervalArr, rightIdx, size - rightIdx - 1);
 					return result;
 				} else if (leftJoint) {
+					// The number changes an interval's lower condition
 					IntervalUnionSet result = new IntervalUnionSet(this);
 
 					if (isInt) {
@@ -592,6 +598,7 @@ public class IntervalUnionSet implements Range {
 					}
 					return result;
 				} else if (rightJoint) {
+					// The number changes an interval's upper condition
 					IntervalUnionSet result = new IntervalUnionSet(this);
 
 					if (isInt) {
@@ -605,16 +612,19 @@ public class IntervalUnionSet implements Range {
 					}
 					return result;
 				} else {
+					// The number becomes a new point interval
 					IntervalUnionSet result = new IntervalUnionSet(isInt,
 							size + 1);
 
 					if (leftIdx == rightIdx) {
 						if (leftIdx == 0) {
+							// To add the number to the head
 							result.intervalArr[0] = numberFactory.newInterval(
 									isInt, number, false, number, false);
 							System.arraycopy(intervalArr, 0,
 									result.intervalArr, 1, size);
 						} else {
+							// To add the number to the tail
 							result.intervalArr[size] = numberFactory
 									.newInterval(isInt, number, false, number,
 											false);
@@ -622,6 +632,7 @@ public class IntervalUnionSet implements Range {
 									result.intervalArr, 0, size);
 						}
 					} else {
+						// To insert the number to the body
 						System.arraycopy(intervalArr, 0, result.intervalArr, 0,
 								rightIdx);
 						result.intervalArr[rightIdx] = numberFactory
@@ -636,7 +647,7 @@ public class IntervalUnionSet implements Range {
 			}
 		} // Using binary searching to compare the number with intervals
 		return new IntervalUnionSet(number);// To add a number to an empty set.
-	}// TODO: Testing
+	}
 
 	@Override
 	public boolean isIntegral() {
@@ -660,9 +671,9 @@ public class IntervalUnionSet implements Range {
 			int midIdx = (leftIdx + rightIdx) / 2;
 			int compareNumber = intervalArr[midIdx].compare(number);
 
-			if (compareNumber > 0 && leftIdx != rightIdx) {
+			if (compareNumber > 0) {
 				rightIdx = midIdx - 1;
-			} else if (compareNumber < 0 && leftIdx != rightIdx) {
+			} else if (compareNumber < 0) {
 				leftIdx = midIdx + 1;
 			} else if (compareNumber == 0) {
 				return true;
@@ -674,36 +685,57 @@ public class IntervalUnionSet implements Range {
 	}
 
 	/**
+	 * Does this {@link IntervalUnionSet} contain the given {@link Interval} as
+	 * a member?
 	 * 
 	 * @param interval
-	 * @return
+	 *            any non-<code>null</code> {@link Interval} of the same type
+	 *            (integer/real) as this {@link IntervalUnionSet}
+	 * @return <code>true</code> iff this {@link IntervalUnionSet} contains the
+	 *         given {@link Interval}
 	 */
 	public boolean contains(Interval interval) {
 		assert interval != null;
 		assert interval.isIntegral() == isInt;
 
-		int lIdx = 0;
-		int rIdx = size - 1;
+		int leftIdx = 0;
+		int rightIdx = size - 1;
 
 		if (interval.isEmpty()) {
 			return true;
-		}
-		while (lIdx <= rIdx) {
-			int mIdx = (lIdx + rIdx) / 2;
-			Interval cur = intervalArr[mIdx];
-			int compareInterval = numberFactory.compare(cur, interval);
+		}// Any sets would contain an empty set
+		while (leftIdx <= rightIdx) {
+			int midIdx = (leftIdx + rightIdx) / 2;
+			Interval midInterval = intervalArr[midIdx];
+			int compareLo = compareLo(midInterval, interval);
+			int compareUp = compareLo(midInterval, interval);
 
-			if (compareInterval % 3 == 0) {
-				return true;
-			} else if (lIdx == rIdx) {
+			if (compareLo > 0) {
+				if (compareUp > 0) {
+					int compareJoint = compareJoint(interval, midInterval);
+
+					if (compareJoint < 0){ // Disjoint
+						rightIdx = midIdx - 1;
+					}
+				}
 				return false;
+			} else if (compareLo < 0) {
+				if (compareUp < 0) {
+					int compareJoint = compareJoint(midInterval, interval);
+
+					if (compareJoint > 0) {
+						return false;
+					} else { // Disjoint
+						leftIdx = midIdx + 1;
+					}
+				} else { // compareUp >= 0
+					return true;
+				}
 			} else {
-				if (compareInterval < -3) {
-					rIdx = mIdx - 1;
-				} else if (compareInterval > 3) {
-					lIdx = mIdx + 1;
-				} else {
+				if (compareUp < 0) {
 					return false;
+				} else {
+					return true;
 				}
 			}
 		}
