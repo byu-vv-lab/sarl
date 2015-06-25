@@ -798,7 +798,7 @@ public class IntervalUnionSet implements Range {
 		if (size == 0 || otherSize == 0) {
 			return false;
 		}// An empty set could not intersects with any sets.
-		while (thisIdx < size || otherIdx < otherSize) {
+		while (thisIdx < size && otherIdx < otherSize) {
 			Interval thisInterval = intervalArr[thisIdx];
 			Interval otherInterval = other.intervalArr[otherIdx];
 			int compareLo = compareLo(otherInterval, thisInterval);
