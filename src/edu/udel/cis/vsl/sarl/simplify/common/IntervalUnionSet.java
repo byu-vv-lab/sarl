@@ -9,7 +9,6 @@ import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
-import edu.udel.cis.vsl.sarl.IF.number.NumberFactory.IntervalUnion;
 import edu.udel.cis.vsl.sarl.number.Numbers;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Range;
@@ -56,11 +55,6 @@ public class IntervalUnionSet implements Range {
 	private boolean isInt;
 
 	/**
-	 * The number of {@link Interval}s in this {@link IntervalUnionSet}
-	 */
-	private int size;
-
-	/**
 	 * An sorted array of {@link Interval}s; this {@link IntervalUnionSet} is
 	 * the union of these {@link Interval}s.
 	 */
@@ -78,9 +72,8 @@ public class IntervalUnionSet implements Range {
 	 *            {@link IntervalUnionSet}. It would be 0, iff <code>this</code>
 	 *            set is empty.
 	 */
-	private IntervalUnionSet(boolean isIntegral, int numIntervals) {
+	private IntervalUnionSet(boolean isIntegral, int size) {
 		isInt = isIntegral;
-		size = numIntervals;
 		if (size > 0) {
 			intervalArr = new Interval[size];
 		} else {
@@ -97,7 +90,6 @@ public class IntervalUnionSet implements Range {
 	 */
 	public IntervalUnionSet(boolean isIntegral) {
 		isInt = isIntegral;
-		size = 0;
 		intervalArr = new Interval[0];
 	}
 
@@ -115,8 +107,7 @@ public class IntervalUnionSet implements Range {
 				number instanceof IntegerNumber, number, false, number, false);
 
 		isInt = number instanceof IntegerNumber;
-		size = 1;
-		intervalArr = new Interval[size];
+		intervalArr = new Interval[1];
 		intervalArr[0] = interval;
 	}
 
@@ -131,11 +122,9 @@ public class IntervalUnionSet implements Range {
 		assert interval != null;
 		isInt = interval.isIntegral();
 		if (interval.isEmpty()) {
-			size = 0;
-			intervalArr = new Interval[size];
+			intervalArr = new Interval[0];
 		} else {
-			size = 1;
-			intervalArr = new Interval[size];
+			intervalArr = new Interval[1];
 			intervalArr[0] = interval;
 		}
 	}
@@ -193,12 +182,10 @@ public class IntervalUnionSet implements Range {
 			}
 		}// To get the refined input intervals.
 		if (inputSize < 1) {
-			size = 0;
 			intervalArr = new Interval[0];
 			return; // As an empty set
 		} else if (inputSize == 1) {
-			size = 1;
-			intervalArr = new Interval[size];
+			intervalArr = new Interval[1];
 			intervalArr[0] = inputArr[0];
 			return; // As a set with a single interval
 		}
@@ -228,7 +215,6 @@ public class IntervalUnionSet implements Range {
 		while (inputSize > 0 && inputArr[inputSize - 1] == null) {
 			inputSize--;
 		}// To counter the number of non-null intervals.
-		size = inputSize;
 		intervalArr = new Interval[inputSize];
 		System.arraycopy(inputArr, 0, intervalArr, 0, inputSize);
 	}
@@ -242,8 +228,10 @@ public class IntervalUnionSet implements Range {
 	 */
 	public IntervalUnionSet(IntervalUnionSet other) {
 		assert other != null;
+
+		int size = other.intervalArr.length;
+
 		isInt = other.isInt;
-		size = other.intervalArr.length;
 		intervalArr = new Interval[size];
 		System.arraycopy(other.intervalArr, 0, intervalArr, 0, size);
 	}
@@ -541,6 +529,7 @@ public class IntervalUnionSet implements Range {
 		assert number != null;
 		assert (number instanceof IntegerNumber) == isInt;
 
+		int size = intervalArr.length;
 		int leftIdx = 0;
 		int rightIdx = size - 1;
 
@@ -661,7 +650,7 @@ public class IntervalUnionSet implements Range {
 
 	@Override
 	public boolean isEmpty() {
-		return size == 0;
+		return intervalArr.length == 0;
 	}
 
 	@Override
@@ -669,6 +658,7 @@ public class IntervalUnionSet implements Range {
 		assert number != null;
 		assert (number instanceof IntegerNumber) == isInt;
 
+		int size = intervalArr.length;
 		int leftIdx = 0;
 		int rightIdx = size - 1;
 
@@ -703,6 +693,7 @@ public class IntervalUnionSet implements Range {
 		assert interval != null;
 		assert interval.isIntegral() == isInt;
 
+		int size = intervalArr.length;
 		int leftIdx = 0;
 		int rightIdx = size - 1;
 
@@ -755,7 +746,8 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int tarSize = tar.size;
+		int size = intervalArr.length;
+		int tarSize = tar.intervalArr.length;
 		int curIdx = 0;
 		int tarIdx = 0;
 
@@ -791,7 +783,8 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet other = (IntervalUnionSet) set;
-		int otherSize = other.size;
+		int size = intervalArr.length;
+		int otherSize = other.intervalArr.length;
 		int thisIdx = 0;
 		int otherIdx = 0;
 
@@ -839,7 +832,8 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int tarSize = tar.size;
+		int size = intervalArr.length;
+		int tarSize = tar.intervalArr.length;
 		int tempSize = size + tarSize;
 		Interval[] tempArr = new Interval[tempSize];
 		Interval[] tarArr = tar.intervalArr;
@@ -879,7 +873,8 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int tarSize = tar.size;
+		int size = intervalArr.length;
+		int tarSize = tar.intervalArr.length;
 		int curIdx = 0;
 		int tarIdx = 0;
 		int ctr = 0;
@@ -937,7 +932,8 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int tarSize = tar.size;
+		int size = intervalArr.length;
+		int tarSize = tar.intervalArr.length;
 		int curIdx = 0;
 		int tarIdx = 0;
 		int ctr = 0;
@@ -1043,6 +1039,7 @@ public class IntervalUnionSet implements Range {
 		assert (a instanceof IntegerNumber == b instanceof IntegerNumber) == isInt;
 
 		int curIdx = 0;
+		int size = intervalArr.length;
 		Interval[] tempArr = new Interval[size];
 		Interval temp = null, cur = null;
 
@@ -1111,6 +1108,7 @@ public class IntervalUnionSet implements Range {
 		NumericExpression loE = null, upE = null, xE = (NumericExpression) x;
 		Interval curItv = null;
 		int curIdx = 0;
+		int size = intervalArr.length;
 
 		if (curIdx >= size) {
 			return rtn;
@@ -1157,6 +1155,7 @@ public class IntervalUnionSet implements Range {
 	public String toString() {
 		String rtn = "";
 		int curIdx = 0;
+		int size = intervalArr.length;
 
 		rtn += "{";
 		if (curIdx >= size) {
@@ -1225,6 +1224,7 @@ public class IntervalUnionSet implements Range {
 		 * closed, except for +infty and -infty.
 		 */
 		int curIdx = 0;
+		int size = intervalArr.length;
 		Interval tmpItv = null, prevItv = null;
 
 		if (curIdx >= size) {
