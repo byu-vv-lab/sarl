@@ -1832,7 +1832,7 @@ public class IntervalUnionSetTest {
 	public void intersects_Rat_LeftIntersect() {
 		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, false,
 				RAT_ONE, true);
-		Interval targetInterval = numberFactory.newInterval(false, INT_N_THREE, true,
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_THREE, true,
 				RAT_N_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
@@ -1893,7 +1893,7 @@ public class IntervalUnionSetTest {
 		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
 				RAT_ONE, false);
 		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE, false,
-				INT_THREE, true);
+				RAT_THREE, true);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
