@@ -187,6 +187,11 @@ public class CommonInterval implements Interval {
 		return strictLower && strictUpper && lower != null && upper != null
 				&& lower.equals(upper);
 	}
+	
+	@Override
+	public boolean isUniv() {
+		return strictLower && strictUpper && lower == null && upper == null;
+	}
 
 	@Override
 	public boolean contains(Number number) {
@@ -221,5 +226,4 @@ public class CommonInterval implements Interval {
 		}
 		return 0;
 	}
-
 }

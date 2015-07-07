@@ -118,6 +118,11 @@ public interface Interval {
 	 *         positive integer if the number is less than the entire interval
 	 */
 	public int compare(Number number);
-	
-	
+
+	/**
+	 * Is the interval an universal set?
+	 * 
+	 * @return
+	 */
+	boolean isUniv();	
 }
