@@ -124,5 +124,5 @@ public interface Interval {
 	 * 
 	 * @return
 	 */
-	boolean isUniv();	
+	boolean isUniversal();	
 }

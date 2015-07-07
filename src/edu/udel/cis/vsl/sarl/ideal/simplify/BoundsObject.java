@@ -547,7 +547,7 @@ public class BoundsObject implements Interval {
 	}
 
 	@Override
-	public boolean isUniv() {
+	public boolean isUniversal() {
 		return lower == null && upper == null && strictLower && strictUpper;
 	}
 

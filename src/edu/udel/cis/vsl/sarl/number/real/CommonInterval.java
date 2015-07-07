@@ -189,7 +189,7 @@ public class CommonInterval implements Interval {
 	}
 	
 	@Override
-	public boolean isUniv() {
+	public boolean isUniversal() {
 		return strictLower && strictUpper && lower == null && upper == null;
 	}
 
