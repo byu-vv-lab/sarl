@@ -358,7 +358,8 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 		}
-		for (Interval i : list) System.out.println("list: " + i.toString());
+		for (Interval i : list)
+			System.out.println("list: " + i.toString());
 		System.out.println("itv: " + interval.toString());
 		System.out.println(start + ", " + end);
 		assert end != -2;
@@ -970,39 +971,113 @@ public class IntervalUnionSet implements Range {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet target = (IntervalUnionSet) set;
-		int size = intervalArray.length;
-		int targetSize = target.intervalArray.length;
-		int tempSize = size + targetSize;
-		Interval[] tempArr = new Interval[tempSize];
-		Interval[] tarArr = target.intervalArray;
-		int curIdx = tempSize, numOfInvalid = 0;
+		IntervalUnionSet rightSet = (IntervalUnionSet) set;
+		Interval[] leftArray = intervalArray;
+		Interval[] rightArray = rightSet.intervalArray;
+		int leftSize = leftArray.length;
+		int rightSize = rightArray.length;
 
-		if (size <= 0) {
-			IntervalUnionSet result = new IntervalUnionSet(target.isInt,
-					targetSize);
-
-			System.arraycopy(target.intervalArray, 0, result.intervalArray, 0,
-					targetSize);
-			return result;
-		} else if (targetSize <= 0) {
-			IntervalUnionSet result = new IntervalUnionSet(isInt, size);
-
-			System.arraycopy(intervalArray, 0, result.intervalArray, 0, size);
-			return result;
+		if (leftSize <= 0 && rightSize <= 0) {
+			return new IntervalUnionSet(isInt);
+		} else if (leftSize <= 0) {
+			return new IntervalUnionSet(rightSet);
+		} else if (rightSize <= 0) {
+			return new IntervalUnionSet(this);
+		} else if (leftArray[0].isUniversal()) {
+			return new IntervalUnionSet(this);
+		} else if (rightArray[0].isUniversal()) {
+			return new IntervalUnionSet(rightSet);
 		}
-		tempArr = merge(intervalArray, tarArr);
-		while (curIdx > 0) {
-			curIdx--;
-			if (tempArr[curIdx] == null) {
-				numOfInvalid++;
+
+		int leftIndex = 0, rightIndex = 0, tempIndex = 0;
+		boolean isChanged = false;
+		Interval left = leftArray[0];
+		Interval right = rightArray[0];
+		Interval temp = null;
+		ArrayList<Interval> list = new ArrayList<Interval>();
+		int compareLeft = compareLo(left, right);
+
+		if (compareLeft > 0) {
+			temp = right;
+			rightIndex++;
+		} else {
+			temp = left;
+			leftIndex++;
+		}// To find the left-most interval in two sets.
+		while (isChanged || leftIndex < leftSize || rightIndex < rightSize) {
+			isChanged = false;
+			while (leftIndex < leftSize) {
+				Interval next = leftArray[leftIndex];
+				int compareTempNext = compareJoint(temp, next);
+
+				if (compareTempNext < 0) {
+					// temp Left-disjoint next, then stop
+					break;
+				} else {
+					int compareRight = compareUp(temp, next);
+
+					if (compareRight < 0) {
+						temp = numberFactory.newInterval(isInt, temp.lower(),
+								temp.strictLower(), next.upper(),
+								next.strictUpper());
+						isChanged = true;
+						leftIndex++;
+						break;
+					}// else temp Contains next, then skip
+					leftIndex++;
+				}
+			}
+			while (rightIndex < rightSize) {
+				Interval next = rightArray[rightIndex];
+				int compareTempNext = compareJoint(temp, next);
+
+				if (compareTempNext < 0) {
+					// Temp Left-disjoint next. then stop
+					break;
+				} else {
+					int compareRight = compareUp(temp, next);
+
+					if (compareRight < 0) {
+						temp = numberFactory.newInterval(isInt, temp.lower(),
+								temp.strictLower(), next.upper(),
+								next.strictUpper());
+						isChanged = true;
+						rightIndex++;
+						break;
+					}// else temp Contains next, then skip
+					rightIndex++;
+				}
+			}
+			if (!isChanged) {
+				list.add(temp);
+				if (leftIndex < leftSize && rightIndex < rightSize) {
+					left = leftArray[leftIndex];
+					right = rightArray[rightIndex];
+					compareLeft = compareLo(left, right);
+					if (compareLeft > 0) {
+						temp = right;
+						rightIndex++;
+					} else {
+						temp = left;
+						leftIndex++;
+					}
+				} else {
+					// To concatenate
+					while (leftIndex < leftSize) {
+						list.add(leftArray[leftIndex]);
+						leftIndex++;
+					}
+					while (rightIndex < rightSize) {
+						list.add(rightArray[rightIndex]);
+						rightIndex++;
+					}
+				}
 			}
 		}
-		tempSize = tempSize - numOfInvalid;
-
-		IntervalUnionSet result = new IntervalUnionSet(target.isInt, tempSize);
-
-		System.arraycopy(tempArr, 0, result.intervalArray, 0, tempSize);
+		
+		IntervalUnionSet result = new IntervalUnionSet(isInt, list.size());
+		
+		list.toArray(result.intervalArray);		
 		return result;
 	}// TODO:Testing
 
