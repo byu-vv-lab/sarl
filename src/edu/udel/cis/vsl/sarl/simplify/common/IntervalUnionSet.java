@@ -358,10 +358,6 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 		}
-		for (Interval i : list)
-			System.out.println("list: " + i.toString());
-		System.out.println("itv: " + interval.toString());
-		System.out.println(start + ", " + end);
 		assert end != -2;
 		if (noIntersection) {
 			assert start >= end;
@@ -375,133 +371,6 @@ public class IntervalUnionSet implements Range {
 					strictLower, upper, strictUpper));
 
 		}
-	}
-
-	/**
-	 * To merge two sorted {@link Interval} arrays into one. All jointed
-	 * {@link Interval}s would be combined into one, and fill corresponding
-	 * position with null {@link Interval}s. Eventually, all null elements would
-	 * be sorted to the tail of the whole array.
-	 * 
-	 * @param leftArr
-	 *            The sorted non-<code>null</code> {@link Interval}s in the left
-	 *            side.
-	 * @param rightArr
-	 *            The sorted non-<code>null</code> {@link Interval}s in the
-	 *            right side has the same type(real/integer) with
-	 *            <code>left</code>
-	 * @return the merged {@link Interval}s
-	 * 
-	 */
-	private Interval[] merge(Interval[] leftArr, Interval[] rightArr) {
-		assert leftArr != null && rightArr != null;
-
-		boolean isChanged = false;
-		int leftSize = leftArr.length, rightSize = rightArr.length;
-		int mergedSize = leftSize + rightSize;
-		int leftIdx = 0, rightIdx = 0, mergedIdx = 0;
-		Interval tmpInterval = null;
-		Interval leftInterval = leftArr[0];
-		Interval rightInterval = rightArr[0];
-		Interval[] mergedArr = new Interval[mergedSize];
-
-		if (leftInterval == null) {
-			return mergedArr;
-		} else if (rightInterval == null) {
-			System.arraycopy(leftArr, 0, mergedArr, 0, leftSize);
-			return mergedArr;
-		} // If the 1st interval is null, the array is empty set
-
-		int compareLower = compareLo(leftInterval, rightInterval);
-
-		if (compareLower > 0) {
-			tmpInterval = rightInterval;
-			rightIdx++;
-		} else {
-			tmpInterval = leftInterval;
-			leftIdx++;
-		} // To find the left-most interval as the 1st interval of mergedArr
-		while (isChanged || (leftIdx < leftSize && leftArr[leftIdx] != null)
-				|| (rightIdx < rightSize && rightArr[rightIdx] != null)) {
-			isChanged = false;
-			while (leftIdx < leftSize && leftArr[leftIdx] != null) {
-				Interval nxtInterval = leftArr[leftIdx];
-				int compareU1L2 = compareJoint(tmpInterval, nxtInterval);
-
-				if (compareU1L2 < 0) {
-					// tmp Left Disjoint nxt, then stop
-					break;
-				} else {
-					int compareUpper = compareUp(tmpInterval, nxtInterval);
-
-					if (compareUpper < 0) {
-						// tmp Left Intersect nxt, then combine and stop
-						tmpInterval = numberFactory.newInterval(
-								tmpInterval.isIntegral(), tmpInterval.lower(),
-								tmpInterval.strictLower(), nxtInterval.upper(),
-								nxtInterval.strictUpper());
-						isChanged = true;
-						leftIdx++;
-						break;
-					}// else tmp Left Contains nxt, then skip
-					leftIdx++;
-				}
-			}
-			while (rightIdx < rightSize && rightArr[rightIdx] != null) {
-				Interval nxtInterval = rightArr[rightIdx];
-				int compareU1L2 = compareJoint(tmpInterval, nxtInterval);
-
-				if (compareU1L2 < 0) {
-					// tmp Left Disjoint nxt, then stop
-					break;
-				} else {
-					int compareRight = compareUp(tmpInterval, nxtInterval);
-
-					if (compareRight < 0) {
-						// tmp Left Intersect nxt, then combine and stop
-						tmpInterval = numberFactory.newInterval(
-								tmpInterval.isIntegral(), tmpInterval.lower(),
-								tmpInterval.strictLower(), nxtInterval.upper(),
-								nxtInterval.strictUpper());
-						isChanged = true;
-						rightIdx++;
-						break;
-					}// else tmp Left Contains nxt, then skip
-					rightIdx++;
-				}
-			}
-			if (!isChanged) {
-				mergedArr[mergedIdx] = tmpInterval;
-				mergedIdx++;
-				if ((leftIdx < leftSize && leftArr[leftIdx] != null)
-						&& (rightIdx < rightSize && rightArr[rightIdx] != null)) {
-					// To find next left-most interval in both arrays
-					leftInterval = leftArr[leftIdx];
-					rightInterval = rightArr[rightIdx];
-					compareLower = compareLo(leftInterval, rightInterval);
-					if (compareLower > 0) {
-						tmpInterval = rightInterval;
-						rightIdx++;
-					} else {
-						tmpInterval = leftInterval;
-						leftIdx++;
-					}
-				} else {
-					// To concatenate the rest elements
-					while (leftIdx < leftSize && leftArr[leftIdx] != null) {
-						mergedArr[mergedIdx] = leftArr[leftIdx];
-						mergedIdx++;
-						leftIdx++;
-					}
-					while (rightIdx < rightSize && rightArr[rightIdx] != null) {
-						mergedArr[mergedIdx] = rightArr[rightIdx];
-						mergedIdx++;
-						rightIdx++;
-					}
-				}
-			}
-		}
-		return mergedArr;
 	}
 
 	/**
@@ -989,7 +858,7 @@ public class IntervalUnionSet implements Range {
 			return new IntervalUnionSet(rightSet);
 		}
 
-		int leftIndex = 0, rightIndex = 0, tempIndex = 0;
+		int leftIndex = 0, rightIndex = 0;
 		boolean isChanged = false;
 		Interval left = leftArray[0];
 		Interval right = rightArray[0];
@@ -1074,12 +943,12 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 		}
-		
+
 		IntervalUnionSet result = new IntervalUnionSet(isInt, list.size());
-		
-		list.toArray(result.intervalArray);		
+
+		list.toArray(result.intervalArray);
 		return result;
-	}// TODO:Testing
+	}
 
 	@Override
 	public IntervalUnionSet intersect(Range set) {
@@ -1335,7 +1204,6 @@ public class IntervalUnionSet implements Range {
 			boolean sl = curItv.strictLower();
 			boolean su = curItv.strictUpper();
 			BooleanExpression tmpE, tmpE2, resE;
-			// TODO: create var to store val reduce func call
 			// use "==" isted of cmpTo
 
 			if (curItv.lower() == null && curItv.upper() == null) {
@@ -1368,49 +1236,49 @@ public class IntervalUnionSet implements Range {
 	}// TODO: Testing
 
 	public String toString() {
-		String rtn = "";
-		int curIdx = 0;
+		String result = "";
+		int index = 0;
 		int size = intervalArray.length;
 
-		rtn += "{";
-		if (curIdx >= size) {
-			rtn += "(0, 0)";
+		result += "{";
+		if (index >= size) {
+			result += "(0, 0)";
 		}
-		while (curIdx < size) {
-			Interval temp = intervalArray[curIdx];
+		while (index < size) {
+			Interval temp = intervalArray[index];
 			Number lo = temp.lower();
 			Number up = temp.upper();
 			boolean sl = temp.strictLower();
 			boolean su = temp.strictUpper();
 
 			if (sl) {
-				rtn += "(";
+				result += "(";
 			} else {
-				rtn += "[";
+				result += "[";
 			}
 			if (lo == null) {
-				rtn += "-inf";
+				result += "-inf";
 			} else {
-				rtn += lo.toString();
+				result += lo.toString();
 			}
-			rtn += ", ";
+			result += ", ";
 			if (up == null) {
-				rtn += "+inf";
+				result += "+inf";
 			} else {
-				rtn += up.toString();
+				result += up.toString();
 			}
 			if (su) {
-				rtn += ")";
+				result += ")";
 			} else {
-				rtn += "]";
+				result += "]";
 			}
-			curIdx++;
-			if (curIdx < size) {
-				rtn += " U ";
+			index++;
+			if (index < size) {
+				result += " U ";
 			}
 		}
-		rtn += "};";
-		return rtn;
+		result += "};";
+		return result;
 	}
 
 	public boolean checkInvariants() {
@@ -1438,60 +1306,60 @@ public class IntervalUnionSet implements Range {
 		 * 8. If the range set has integer type, all of the intervals are
 		 * closed, except for +infty and -infty.
 		 */
-		int curIdx = 0;
+		int index = 0;
 		int size = intervalArray.length;
-		Interval tmpItv = null, prevItv = null;
+		Interval temp = null, prior = null;
 
-		if (curIdx >= size) {
+		if (index >= size) {
 			return intervalArray == null;
 		}
-		while (curIdx < size) {
-			if (tmpItv != null) {
-				prevItv = tmpItv;
+		while (index < size) {
+			if (temp != null) {
+				prior = temp;
 			}
-			tmpItv = intervalArray[curIdx];
-			curIdx++;
+			temp = intervalArray[index];
+			index++;
 			// Check 1
-			if (tmpItv == null) {
+			if (temp == null) {
 				return false;
 			}
 			// Check 2
-			if (tmpItv.lower().compareTo(tmpItv.upper()) == 0
-					&& (tmpItv.strictLower() || tmpItv.strictUpper())) {
+			if (temp.lower().compareTo(temp.upper()) == 0
+					&& (temp.strictLower() || temp.strictUpper())) {
 				return false;
 			}
 			// Check 3
-			int compareInterval = numberFactory.compare(prevItv, tmpItv);
-			if (compareInterval < 4 && compareInterval > -4) {
+			int compare = numberFactory.compare(prior, temp);
+			if (compare < 4 && compare > -4) {
 				return false;
 			}
 			// check 4
-			if (numberFactory.compare(prevItv, tmpItv) > 0) {
+			if (numberFactory.compare(prior, temp) > 0) {
 				return false;
 			}
 			// check 5
-			if (tmpItv.lower() == null && !tmpItv.strictLower()) {
+			if (temp.lower() == null && !temp.strictLower()) {
 				return false;
 			}
-			if (tmpItv.upper() == null && !tmpItv.strictUpper()) {
+			if (temp.upper() == null && !temp.strictUpper()) {
 				return false;
 			}
 			// check 6
-			if (tmpItv.lower().compareTo(prevItv.upper()) == 0) {
-				if (!(tmpItv.strictLower() && prevItv.strictUpper())) {
+			if (temp.lower().compareTo(prior.upper()) == 0) {
+				if (!(temp.strictLower() && prior.strictUpper())) {
 					return false;
 				}
 			}
 			// check 7
-			if (isIntegral() ? tmpItv.isReal() : tmpItv.isIntegral()) {
+			if (isInt ? temp.isReal() : temp.isIntegral()) {
 				return false;
 			}
 			// check 8
 			if (isIntegral()) {
-				if (tmpItv.lower() != null && tmpItv.strictLower()) {
+				if (temp.lower() != null && temp.strictLower()) {
 					return false;
 				}
-				if (tmpItv.upper() != null && tmpItv.strictUpper()) {
+				if (temp.upper() != null && temp.strictUpper()) {
 					return false;
 				}
 			}
