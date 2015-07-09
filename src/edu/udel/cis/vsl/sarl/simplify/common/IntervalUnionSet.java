@@ -191,7 +191,17 @@ public class IntervalUnionSet implements Range {
 		System.arraycopy(other.intervalArray, 0, intervalArray, 0, size);
 	}
 
+	/**
+	 * To union a single non-<code>null</code> {@link Interval} into given list.
+	 * 
+	 * @param list
+	 * @param interval
+	 *            A non-<code>null</code> {@link Interval} with the same type of
+	 *            list.
+	 */
 	private void addInterval(ArrayList<Interval> list, Interval interval) {
+		assert list != null;
+		assert interval != null;
 		assert isInt == interval.isIntegral();
 
 		int size = list.size();
@@ -1122,50 +1132,43 @@ public class IntervalUnionSet implements Range {
 		assert a != null && b != null;
 		assert (a instanceof IntegerNumber == b instanceof IntegerNumber) == isInt;
 
-		int curIdx = 0;
+		int index = 0;
 		int size = intervalArray.length;
-		Interval[] tempArr = new Interval[size];
-		Interval temp = null, cur = null;
+		Interval[] tempArray = new Interval[size];
+		Interval temp = null, current = null;
 
-		if (curIdx >= size) {
-			IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
-
-			System.arraycopy(intervalArray, 0, rtn.intervalArray, 0, size);
-			return rtn;
+		if (0 >= size) {
+			return new IntervalUnionSet(isInt);
 		}
-		cur = intervalArray[curIdx];
-		if (cur.lower() == null && cur.upper() == null) {
+		current = intervalArray[index];
+		if (current.lower() == null && current.upper() == null) {
 			assert size == 1;
-
-			IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
-
-			System.arraycopy(intervalArray, 0, rtn.intervalArray, 0, size);
-			return rtn;
+			return new IntervalUnionSet(this);
 		}
 		if (a.signum() == 0) {
 			return new IntervalUnionSet(numberFactory.newInterval(isInt, b,
 					false, b, false));
 		} else if (a.signum() > 0) {
-			while (curIdx < size) {
-				cur = intervalArray[curIdx];
-				temp = numberFactory.affineTransform(cur, a, b);
-				tempArr[curIdx] = temp;
-				curIdx++;
+			while (index < size) {
+				current = intervalArray[index];
+				temp = numberFactory.affineTransform(current, a, b);
+				tempArray[index] = temp;
+				index++;
 			}
 		} else if (a.signum() < 0) {
-			while (curIdx < size) {
-				cur = intervalArray[curIdx];
-				temp = numberFactory.affineTransform(cur, a, b);
-				curIdx++;
-				tempArr[size - curIdx] = temp;
+			while (index < size) {
+				current = intervalArray[index];
+				temp = numberFactory.affineTransform(current, a, b);
+				index++;
+				tempArray[size - index] = temp;
 
 			}
 		}
-		IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
+		IntervalUnionSet result = new IntervalUnionSet(isInt, size);
 
-		System.arraycopy(tempArr, 0, rtn.intervalArray, 0, size);
-		return rtn;
-	}// TODO: Testing
+		System.arraycopy(tempArray, 0, result.intervalArray, 0, size);
+		return result;
+	}
 
 	@Override
 	public IntervalUnionSet complement() {
@@ -1180,60 +1183,63 @@ public class IntervalUnionSet implements Range {
 	@Override
 	public BooleanExpression symbolicRepresentation(SymbolicConstant x,
 			PreUniverse universe) {
-		if (x == null) {
-			throw new NullPointerException(
-					"[Error] The SymbolicConstant x cannot be null.");
-		} else if (universe == null) {
-			throw new NullPointerException(
-					"[Error] The PreUniverse universe cannot be null.");
-		}
+		assert x != null;
+		assert universe != null;
 
-		BooleanExpression rtn = universe.bool(false);
-		NumericExpression loE = null, upE = null, xE = (NumericExpression) x;
-		Interval curItv = null;
-		int curIdx = 0;
+		BooleanExpression result = universe.bool(false);
+		NumericExpression lowerExpression = null;
+		NumericExpression upperExpression = null;
+		NumericExpression symbolX = (NumericExpression) x;
+		Interval interval = null;
+		int index = 0;
 		int size = intervalArray.length;
 
-		if (curIdx >= size) {
-			return rtn;
+		if (0 >= size) {
+			return result;
 		}
-		while (curIdx < size) {
-			curItv = intervalArray[curIdx];
-			curIdx++;
+		while (index < size) {
+			interval = intervalArray[index];
+			index++;
 
-			boolean sl = curItv.strictLower();
-			boolean su = curItv.strictUpper();
-			BooleanExpression tmpE, tmpE2, resE;
-			// use "==" isted of cmpTo
+			boolean strictLower = interval.strictLower();
+			boolean strictUpper = interval.strictUpper();
+			Number lower = interval.lower();
+			Number upper = interval.upper();
+			BooleanExpression temp1, temp2, resultExpression;
 
-			if (curItv.lower() == null && curItv.upper() == null) {
-				rtn = universe.bool(true);
-				return rtn;
-			} else if (curItv.lower() == null) {
-				upE = universe.number(curItv.upper());
-				resE = su ? universe.lessThan(xE, upE) : universe
-						.lessThanEquals(xE, upE);
-			} else if (curItv.upper() == null) {
-				loE = universe.number(curItv.lower());
-				resE = sl ? universe.lessThan(loE, xE) : universe
-						.lessThanEquals(loE, xE);
+			if (lower == null && upper == null) {
+				result = universe.bool(true);
+				return result;
+			} else if (lower == null) {
+				upperExpression = universe.number(upper);
+				resultExpression = strictUpper ? universe.lessThan(symbolX,
+						upperExpression) : universe.lessThanEquals(symbolX,
+						upperExpression);
+			} else if (upper == null) {
+				lowerExpression = universe.number(lower);
+				resultExpression = strictLower ? universe.lessThan(
+						lowerExpression, symbolX) : universe.lessThanEquals(
+						lowerExpression, symbolX);
 			} else {
-				loE = universe.number(curItv.lower());
-				upE = universe.number(curItv.upper());
-				tmpE = sl ? universe.lessThan(loE, xE) : universe
-						.lessThanEquals(loE, xE);
-				tmpE2 = su ? universe.lessThan(xE, upE) : universe
-						.lessThanEquals(xE, upE);
-				resE = universe.and(tmpE, tmpE2);
-				if (curItv.lower().compareTo(curItv.upper()) == 0
-						&& (!sl && !su)) {
-					resE = universe.equals(xE, loE);
+				lowerExpression = universe.number(lower);
+				upperExpression = universe.number(upper);
+				temp1 = strictLower ? universe.lessThan(lowerExpression,
+						symbolX) : universe.lessThanEquals(lowerExpression,
+						symbolX);
+				temp2 = strictUpper ? universe.lessThan(symbolX,
+						upperExpression) : universe.lessThanEquals(symbolX,
+						upperExpression);
+				resultExpression = universe.and(temp1, temp2);
+				if (lower.compareTo(upper) == 0
+						&& (!strictLower && !strictUpper)) {
+					resultExpression = universe
+							.equals(symbolX, lowerExpression);
 				}
 			}
-			rtn = universe.or(rtn, resE);
+			result = universe.or(result, resultExpression);
 		}
-		return rtn;
-	}// TODO: Testing
+		return result;
+	}
 
 	public String toString() {
 		String result = "";
