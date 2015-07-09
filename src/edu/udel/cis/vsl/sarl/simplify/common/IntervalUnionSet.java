@@ -1460,4 +1460,7 @@ public class IntervalUnionSet implements Range {
 		}
 		return true;
 	}
+	// TODO: Testing functions to improve the code coverage
+	// "contains" "intersects" "intersect" "union" "minus" "complement"
+	// "affineTransform"
 }
