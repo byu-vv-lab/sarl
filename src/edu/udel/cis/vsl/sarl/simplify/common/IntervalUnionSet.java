@@ -714,9 +714,9 @@ public class IntervalUnionSet implements Range {
 		assert interval != null;
 		assert interval.isIntegral() == isInt;
 
-		int size = intervalArray.length;
+		int thisSize = intervalArray.length;
 		int leftIdx = 0;
-		int rightIdx = size - 1;
+		int rightIdx = thisSize - 1;
 
 		if (interval.isEmpty()) {
 			return true;
@@ -724,11 +724,11 @@ public class IntervalUnionSet implements Range {
 		while (leftIdx <= rightIdx) {
 			int midIdx = (leftIdx + rightIdx) / 2;
 			Interval midInterval = intervalArray[midIdx];
-			int compareLo = compareLo(midInterval, interval);
-			int compareUp = compareUp(midInterval, interval);
+			int compareLower = compareLo(midInterval, interval);
+			int compareUpper = compareUp(midInterval, interval);
 
-			if (compareLo > 0) {
-				if (compareUp > 0) {
+			if (compareLower > 0) {
+				if (compareUpper > 0) {
 					int compareJoint = compareJoint(interval, midInterval);
 
 					if (compareJoint <= 0) { // No intersection
@@ -737,8 +737,8 @@ public class IntervalUnionSet implements Range {
 					}
 				}
 				return false;
-			} else if (compareLo < 0) {
-				if (compareUp < 0) {
+			} else if (compareLower < 0) {
+				if (compareUpper < 0) {
 					int compareJoint = compareJoint(midInterval, interval);
 
 					if (compareJoint > 0) {
@@ -751,7 +751,7 @@ public class IntervalUnionSet implements Range {
 					return true;
 				}
 			} else {
-				if (compareUp < 0) {
+				if (compareUpper < 0) {
 					return false;
 				} else {
 					return true;
@@ -766,37 +766,62 @@ public class IntervalUnionSet implements Range {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int size = intervalArray.length;
-		int tarSize = tar.intervalArray.length;
-		int curIdx = 0;
-		int tarIdx = 0;
+		IntervalUnionSet other = (IntervalUnionSet) set;
+		Interval[] thisArray = intervalArray;
+		Interval[] otherArray = other.intervalArray;
+		int thisSize = thisArray.length;
+		int otherSize = otherArray.length;
+		int thisIndex = 0;
+		int otherIndex = 0;
 
-		while (curIdx < size) {
-			Interval curItv = intervalArray[curIdx];
+		if (otherSize < 1) {
+			// Any set contains an empty set
+			return true;
+		} else if (thisSize < 1) {
+			// An empty set does NOT contain any non-empty set.
+			return false;
+		} else if (thisArray[0].isUniversal()) {
+			// A universal set contains any set.
+			return true;
+		} else if (otherArray[0].isUniversal()) {
+			// Only a universal set could contain itself
+			return false;
+		}
+		while (thisIndex < thisSize) {
+			Interval thisInterval = thisArray[thisIndex];
 
-			while (tarIdx < tarSize) {
-				Interval tarItv = tar.intervalArray[tarIdx];
-				int compareIterval = numberFactory.compare(curItv, tarItv);
+			while (otherIndex < otherSize) {
+				Interval otherInterval = otherArray[otherIndex];
+				int compareLower = compareLo(otherInterval, thisInterval);
 
-				if (compareIterval % 3 == 0) {
-					tarIdx++;
-				} else {
-					if (curIdx >= size) {
+				if (compareLower < 0) {
+					return false;
+				} else if (compareLower > 0) {
+					int compareJoint = compareJoint(thisInterval, otherInterval);
+
+					if (compareJoint > 0) {
 						return false;
+					} else {
+						if (thisIndex >= thisSize - 1) {
+							return false;
+						}
+						thisIndex++;
+						break;
 					}
-					break;
+				} else {
+					int compareUpper = compareUp(otherInterval, thisInterval);
+
+					if (compareUpper > 0) {
+						return false;
+					} else {
+						otherIndex++;
+						continue;
+					}
 				}
 			}
-			if (tarIdx >= tarSize) {
-				// The target set may be empty.
-				return true;
-			}
-			curIdx++;
 		}
-		// This set may be empty.
-		return size == 0 && tarSize == 0;
-	}// TODO:Testing
+		return (otherSize - otherIndex) == 0;
+	}
 
 	@Override
 	public boolean intersects(Range set) {
@@ -804,36 +829,38 @@ public class IntervalUnionSet implements Range {
 		assert set.isIntegral() == isInt;
 
 		IntervalUnionSet other = (IntervalUnionSet) set;
-		int size = intervalArray.length;
-		int otherSize = other.intervalArray.length;
-		int thisIdx = 0;
-		int otherIdx = 0;
+		Interval[] thisArray = intervalArray;
+		Interval[] otherArray = other.intervalArray;
+		int thisSize = thisArray.length;
+		int otherSize = otherArray.length;
+		int thisIndex = 0;
+		int otherIndex = 0;
 
-		if (size == 0 || otherSize == 0) {
+		if (thisSize == 0 || otherSize == 0) {
 			return false;
-		}// An empty set could not intersects with any sets.
-		while (thisIdx < size && otherIdx < otherSize) {
-			Interval thisInterval = intervalArray[thisIdx];
-			Interval otherInterval = other.intervalArray[otherIdx];
-			int compareLo = compareLo(otherInterval, thisInterval);
-			int compareUp = compareUp(otherInterval, thisInterval);
+		}// An empty set could not intersect with any sets.
+		while (thisIndex < thisSize && otherIndex < otherSize) {
+			Interval thisInterval = thisArray[thisIndex];
+			Interval otherInterval = otherArray[otherIndex];
+			int compareLower = compareLo(otherInterval, thisInterval);
+			int compareUpper = compareUp(otherInterval, thisInterval);
 
-			if (compareLo > 0) {
-				if (compareUp > 0) {
+			if (compareLower > 0) {
+				if (compareUpper > 0) {
 					int compareJoint = compareJoint(thisInterval, otherInterval);
 
 					if (compareJoint <= 0) { // No intersection
-						thisIdx++;
+						thisIndex++;
 						break;
 					}
 				}
 				return true;
-			} else if (compareLo < 0) {
-				if (compareUp < 0) {
+			} else if (compareLower < 0) {
+				if (compareUpper < 0) {
 					int compareJoint = compareJoint(otherInterval, thisInterval);
 
 					if (compareJoint <= 0) { // No intersection
-						otherIdx++;
+						otherIndex++;
 						continue;
 					}
 				}
@@ -843,112 +870,112 @@ public class IntervalUnionSet implements Range {
 			}
 		}
 		return false;
-	}// TODO: Testing
+	}
 
 	@Override
 	public IntervalUnionSet union(Range set) {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet rightSet = (IntervalUnionSet) set;
-		Interval[] leftArray = intervalArray;
-		Interval[] rightArray = rightSet.intervalArray;
-		int leftSize = leftArray.length;
-		int rightSize = rightArray.length;
+		IntervalUnionSet other = (IntervalUnionSet) set;
+		Interval[] thisArray = intervalArray;
+		Interval[] otherArray = other.intervalArray;
+		int thisSize = thisArray.length;
+		int otherSize = otherArray.length;
 
-		if (leftSize <= 0 && rightSize <= 0) {
+		if (thisSize <= 0 && otherSize <= 0) {
 			return new IntervalUnionSet(isInt);
-		} else if (leftSize <= 0) {
-			return new IntervalUnionSet(rightSet);
-		} else if (rightSize <= 0) {
+		} else if (thisSize <= 0) {
+			return new IntervalUnionSet(other);
+		} else if (otherSize <= 0) {
 			return new IntervalUnionSet(this);
-		} else if (leftArray[0].isUniversal()) {
+		} else if (thisArray[0].isUniversal()) {
 			return new IntervalUnionSet(this);
-		} else if (rightArray[0].isUniversal()) {
-			return new IntervalUnionSet(rightSet);
+		} else if (otherArray[0].isUniversal()) {
+			return new IntervalUnionSet(other);
 		}
 
-		int leftIndex = 0, rightIndex = 0;
+		int thisIndex = 0, otherIndex = 0;
 		boolean isChanged = false;
-		Interval left = leftArray[0];
-		Interval right = rightArray[0];
+		Interval thisInterval = thisArray[0];
+		Interval otherInterval = otherArray[0];
 		Interval temp = null;
 		ArrayList<Interval> list = new ArrayList<Interval>();
-		int compareLeft = compareLo(left, right);
+		int compareLower = compareLo(thisInterval, otherInterval);
 
-		if (compareLeft > 0) {
-			temp = right;
-			rightIndex++;
+		if (compareLower > 0) {
+			temp = otherInterval;
+			otherIndex++;
 		} else {
-			temp = left;
-			leftIndex++;
+			temp = thisInterval;
+			thisIndex++;
 		}// To find the left-most interval in two sets.
-		while (isChanged || leftIndex < leftSize || rightIndex < rightSize) {
+		while (isChanged || thisIndex < thisSize || otherIndex < otherSize) {
 			isChanged = false;
-			while (leftIndex < leftSize) {
-				Interval next = leftArray[leftIndex];
+			while (thisIndex < thisSize) {
+				Interval next = thisArray[thisIndex];
 				int compareTempNext = compareJoint(temp, next);
 
 				if (compareTempNext < 0) {
 					// temp Left-disjoint next, then stop
 					break;
 				} else {
-					int compareRight = compareUp(temp, next);
+					int compareUpper = compareUp(temp, next);
 
-					if (compareRight < 0) {
+					if (compareUpper < 0) {
 						temp = numberFactory.newInterval(isInt, temp.lower(),
 								temp.strictLower(), next.upper(),
 								next.strictUpper());
 						isChanged = true;
-						leftIndex++;
+						thisIndex++;
 						break;
 					}// else temp Contains next, then skip
-					leftIndex++;
+					thisIndex++;
 				}
 			}
-			while (rightIndex < rightSize) {
-				Interval next = rightArray[rightIndex];
+			while (otherIndex < otherSize) {
+				Interval next = otherArray[otherIndex];
 				int compareTempNext = compareJoint(temp, next);
 
 				if (compareTempNext < 0) {
 					// Temp Left-disjoint next. then stop
 					break;
 				} else {
-					int compareRight = compareUp(temp, next);
+					int compareUpper = compareUp(temp, next);
 
-					if (compareRight < 0) {
+					if (compareUpper < 0) {
 						temp = numberFactory.newInterval(isInt, temp.lower(),
 								temp.strictLower(), next.upper(),
 								next.strictUpper());
 						isChanged = true;
-						rightIndex++;
+						otherIndex++;
 						break;
 					}// else temp Contains next, then skip
-					rightIndex++;
+					otherIndex++;
 				}
 			}
 			if (!isChanged) {
 				list.add(temp);
-				if (leftIndex < leftSize && rightIndex < rightSize) {
-					left = leftArray[leftIndex];
-					right = rightArray[rightIndex];
-					compareLeft = compareLo(left, right);
-					if (compareLeft > 0) {
-						temp = right;
-						rightIndex++;
+				if (thisIndex < thisSize && otherIndex < otherSize) {
+					thisInterval = thisArray[thisIndex];
+					otherInterval = otherArray[otherIndex];
+					compareLower = compareLo(thisInterval, otherInterval);
+					if (compareLower > 0) {
+						temp = otherInterval;
+						otherIndex++;
 					} else {
-						temp = left;
-						leftIndex++;
+						temp = thisInterval;
+						thisIndex++;
 					}
 				} else {
 					// To concatenate
-					while (leftIndex < leftSize) {
-						list.add(leftArray[leftIndex]);
-						leftIndex++;
+					while (thisIndex < thisSize) {
+						list.add(thisArray[thisIndex]);
+						thisIndex++;
 					}
-					while (rightIndex < rightSize) {
-						list.add(rightArray[rightIndex]);
-						rightIndex++;
+					while (otherIndex < otherSize) {
+						list.add(otherArray[otherIndex]);
+						otherIndex++;
 					}
 				}
 			}
@@ -965,167 +992,228 @@ public class IntervalUnionSet implements Range {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int size = intervalArray.length;
-		int tarSize = tar.intervalArray.length;
-		int curIdx = 0;
-		int tarIdx = 0;
-		int ctr = 0;
-		int tempSize = Math.max(size, tarSize);
-		Interval[] tempArr = new Interval[tempSize];
-		Interval temp = null;
+		ArrayList<Interval> list = new ArrayList<Interval>();
+		IntervalUnionSet other = (IntervalUnionSet) set;
+		Interval[] thisArray = intervalArray;
+		Interval[] otherArray = other.intervalArray;
+		Interval thisInterval = null;
+		int thisSize = thisArray.length;
+		int otherSize = otherArray.length;
+		int thisIndex = 0;
+		int otherIndex = 0;
 
-		if (curIdx >= size) {
-			IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
-
-			System.arraycopy(intervalArray, 0, rtn.intervalArray, 0, size);
-			return rtn;
-		} else if (tarIdx >= tarSize) {
-			IntervalUnionSet rtn = new IntervalUnionSet(tar.isInt, tarSize);
-
-			System.arraycopy(tar.intervalArray, 0, rtn.intervalArray, 0,
-					tarSize);
-			return rtn;
+		if (otherSize < 1 || thisSize < 1) {
+			return new IntervalUnionSet(isInt);
+		} else if (thisArray[0].isUniversal()) {
+			return new IntervalUnionSet(other);
+		} else if (otherArray[0].isUniversal()) {
+			return new IntervalUnionSet(this);
 		}
-		while (curIdx < size && tarIdx < tarSize) {
-			while (curIdx < size) {
-				temp = intervalArray[curIdx];
-				while (tarIdx < tarSize) {
-					Interval nxt = tar.intervalArray[tarIdx];
-					int compareIterval = numberFactory.compare(temp, nxt);
+		while (thisIndex < thisSize && otherIndex < otherSize) {
+			while (thisIndex < thisSize) {
+				thisInterval = thisArray[thisIndex];
+				while (otherIndex < otherSize) {
+					Interval otherInterval = otherArray[otherIndex];
+					int compareLower = compareLo(otherInterval, thisInterval);
+					int compareUpper = compareUp(otherInterval, thisInterval);
 
-					if (compareIterval == -4) {
-						if (tarIdx > 0) {
-							tarIdx--;
+					if (compareLower < 0) {
+						if (compareUpper < 0) {
+							int compareJoint = compareJoint(otherInterval,
+									thisInterval);
+
+							if (compareJoint > 0) {
+								list.add(numberFactory.newInterval(isInt,
+										thisInterval.lower(),
+										thisInterval.strictLower(),
+										otherInterval.upper(),
+										otherInterval.strictUpper()));
+								thisInterval = numberFactory.newInterval(isInt,
+										otherInterval.upper(),
+										!otherInterval.strictUpper(),
+										thisInterval.upper(),
+										thisInterval.strictUpper());
+							}
+							otherIndex++;
+						} else if (compareUpper > 0) {
+							list.add(thisInterval);
+							thisIndex++;
+						} else {
+							list.add(thisInterval);
+							thisIndex++;
+							otherIndex++;
 						}
-						break;
-					} else if (compareIterval == 4) {
-						tarIdx++;
-						continue;
-					} else {
-						Interval newItv = numberFactory.intersection(temp, nxt);
+					} else if (compareLower > 0) {
+						if (compareUpper < 0) {
+							list.add(otherInterval);
+							thisInterval = numberFactory.newInterval(isInt,
+									otherInterval.upper(),
+									!otherInterval.strictUpper(),
+									thisInterval.upper(),
+									thisInterval.strictUpper());
+							otherIndex++;
+						} else if (compareUpper > 0) {
+							int compareJoint = compareJoint(thisInterval,
+									otherInterval);
 
-						tempArr[ctr] = newItv;
-						ctr++;
-						tarIdx++;
+							if (compareJoint < 1) {
+								list.add(numberFactory.newInterval(isInt,
+										otherInterval.lower(),
+										otherInterval.strictLower(),
+										thisInterval.upper(),
+										thisInterval.strictUpper()));
+							}
+							thisIndex++;
+						} else {
+							list.add(otherInterval);
+							otherIndex++;
+							thisIndex++;
+						}
+					} else {
+						if (compareUpper < 0) {
+							list.add(otherInterval);
+							thisInterval = numberFactory.newInterval(isInt,
+									otherInterval.upper(),
+									!otherInterval.strictUpper(),
+									thisInterval.upper(),
+									thisInterval.strictUpper());
+							otherIndex++;
+						} else if (compareUpper > 0) {
+							list.add(thisInterval);
+							thisIndex++;
+						} else {
+							list.add(thisInterval);
+							thisIndex++;
+							otherIndex++;
+						}
 					}
 				}
-				curIdx++;
 			}
 		}
 
-		IntervalUnionSet rtn = new IntervalUnionSet(tar.isInt, ctr);
+		int newSize = list.size();
+		Interval[] newArray = new Interval[newSize];
+		IntervalUnionSet result = new IntervalUnionSet(isInt, newSize);
 
-		System.arraycopy(tempArr, 0, rtn.intervalArray, 0, ctr);
-		return rtn;
-	}// TODO: Testing
+		list.toArray(newArray);
+		System.arraycopy(newArray, 0, result.intervalArray, 0, newSize);
+		return result;
+	}
 
 	@Override
 	public IntervalUnionSet minus(Range set) {
 		assert set != null;
 		assert set.isIntegral() == isInt;
 
-		IntervalUnionSet tar = (IntervalUnionSet) set;
-		int size = intervalArray.length;
-		int tarSize = tar.intervalArray.length;
-		int curIdx = 0;
-		int tarIdx = 0;
-		int ctr = 0;
-		int tempSize = Math.max(size * 2, tarSize * 2);
-		Interval[] tempArr = new Interval[tempSize];
-		Interval temp = null;
+		ArrayList<Interval> list = new ArrayList<Interval>();
+		IntervalUnionSet other = (IntervalUnionSet) set;
+		Interval[] thisArray = intervalArray;
+		Interval[] otherArray = other.intervalArray;
+		Interval thisInterval = null;
+		int thisSize = thisArray.length;
+		int otherSize = otherArray.length;
+		int thisIndex = 0;
+		int otherIndex = 0;
 
-		if (curIdx >= size || tarIdx >= tarSize) {
-			IntervalUnionSet rtn = new IntervalUnionSet(isInt, size);
-
-			System.arraycopy(intervalArray, 0, rtn.intervalArray, 0, size);
-			return rtn;
+		if (otherSize < 1 || thisSize < 1) {
+			return new IntervalUnionSet(this);
+		} else if (otherArray[0].isUniversal()) {
+			return new IntervalUnionSet(isInt);
 		}
-		while (curIdx < size) {
-			temp = intervalArray[curIdx];
-			curIdx++;
+		while (thisIndex < thisSize) {
+			thisInterval = thisArray[thisIndex];
+			while (otherIndex < otherSize) {
+				Interval otherInterval = otherArray[otherIndex];
+				int compareLower = compareLo(otherInterval, thisInterval);
+				int compareUpper = compareUp(otherInterval, thisInterval);
 
-			while (tarIdx < tarSize) {
-				Interval nxt = tar.intervalArray[tarIdx];
-				tarIdx++;
-				int compareIterval = numberFactory.compare(temp, nxt);
+				if (compareLower < 0) {
+					if (compareUpper < 0) {
+						int compareJoint = compareJoint(otherInterval,
+								thisInterval);
 
-				if (compareIterval == -4) {
-					tempArr[ctr] = temp;
-					ctr++;
-					tarIdx--;
-					if (tarIdx > 0) {
-						tarIdx--;
-					}
-					break;
-				} else if (compareIterval == 4) {
-					if (tarIdx < tarSize) {
-						continue;
+						if (compareJoint < 1) {
+							thisInterval = numberFactory.newInterval(isInt,
+									otherInterval.upper(),
+									!otherInterval.strictUpper(),
+									thisInterval.upper(),
+									thisInterval.strictUpper());
+						}
+						otherIndex++;
+					} else if (compareUpper > 0) {
+						thisIndex++;
 					} else {
-						tempArr[ctr] = temp;
-						ctr++;
+						thisIndex++;
+						otherIndex++;
+					}
+				} else if (compareLower > 0) {
+					if (compareUpper < 0) {
+						list.add(numberFactory.newInterval(isInt,
+								thisInterval.lower(),
+								thisInterval.strictLower(),
+								otherInterval.lower(),
+								!otherInterval.strictLower()));
+						thisInterval = numberFactory.newInterval(isInt,
+								otherInterval.upper(),
+								!otherInterval.strictUpper(),
+								thisInterval.upper(),
+								thisInterval.strictUpper());
+						otherIndex++;
+					} else if (compareUpper > 0) {
+						int compareJoint = compareJoint(thisInterval,
+								otherInterval);
+
+						if (compareJoint > 0) {
+							list.add(numberFactory.newInterval(isInt,
+									thisInterval.lower(),
+									thisInterval.strictLower(),
+									otherInterval.lower(),
+									!otherInterval.strictLower()));
+						} else {
+							list.add(thisInterval);
+						}
+						thisIndex++;
+					} else {
+						list.add(numberFactory.newInterval(isInt,
+								thisInterval.lower(),
+								thisInterval.strictLower(),
+								otherInterval.lower(),
+								!otherInterval.strictLower()));
+						thisIndex++;
+						otherIndex++;
 					}
 				} else {
-					Interval dummy = numberFactory.intersection(temp, nxt);
-					int cmpLo = 0;
-					int cmpUp = 0;
-
-					if (dummy.lower() == null) {
-						cmpLo = -1;
-					} else if (temp.lower() == null) {
-						cmpLo = 1;
+					if (compareUpper < 0) {
+						thisInterval = numberFactory.newInterval(isInt,
+								otherInterval.upper(),
+								!otherInterval.strictUpper(),
+								thisInterval.upper(),
+								thisInterval.strictUpper());
+						otherIndex++;
+					} else if (compareUpper > 0) {
+						thisIndex++;
 					} else {
-						cmpLo = dummy.lower().compareTo(temp.lower());
-					}
-					if (cmpLo > 0) {
-						Interval newItv = numberFactory.newInterval(
-								temp.isIntegral(), temp.lower(),
-								temp.strictLower(), dummy.lower(),
-								!dummy.strictUpper());
-
-						tempArr[ctr] = newItv;
-						ctr++;
-					} else if (cmpLo == 0) {
-						if (!temp.strictLower() && dummy.strictLower()) {
-							Interval newItv = numberFactory.newInterval(
-									temp.isIntegral(), temp.lower(),
-									temp.strictLower(), dummy.lower(),
-									!dummy.strictUpper());
-
-							tempArr[ctr] = newItv;
-							ctr++;
-						}
-					}
-					if (nxt.upper() == null) {
-						cmpUp = 1;
-					} else if (temp.upper() == null) {
-						cmpUp = -1;
-					} else {
-						cmpUp = nxt.upper().compareTo(temp.upper());
-					}
-					temp = numberFactory.newInterval(temp.isIntegral(),
-							dummy.upper(), !dummy.strictUpper(), temp.upper(),
-							temp.strictUpper());
-					if (cmpUp > 0) {
-						break;
-					} else if (cmpUp == 0
-							&& ((!nxt.strictUpper()) || temp.strictUpper())) {
-						break;
-					} else {
-						if (tarIdx >= tarSize) {
-							tempArr[ctr] = temp;
-							ctr++;
-						}
+						thisIndex++;
+						otherIndex++;
 					}
 				}
 			}
 		}
 
-		IntervalUnionSet rtn = new IntervalUnionSet(tar.isInt, ctr);
+		int newSize = list.size();
+		IntervalUnionSet result = null;
 
-		System.arraycopy(tempArr, 0, rtn.intervalArray, 0, ctr);
-		return rtn;
-	}// TODO: Testing
+		if (newSize < 1) {
+			result = new IntervalUnionSet(isInt);
+		} else {
+			Interval[] newArray = new Interval[newSize];
+
+			result = new IntervalUnionSet(isInt, newSize);
+			list.toArray(newArray);
+			System.arraycopy(newArray, 0, result.intervalArray, 0, newSize);
+		}
+		return result;
+	}
 
 	@Override
 	public IntervalUnionSet affineTransform(Number a, Number b) {
