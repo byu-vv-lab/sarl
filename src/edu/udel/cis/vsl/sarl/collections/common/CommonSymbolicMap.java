@@ -21,6 +21,8 @@ package edu.udel.cis.vsl.sarl.collections.common;
 import static edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind.SORTED_MAP;
 import static edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection.SymbolicCollectionKind.UNSORTED_MAP;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.UnaryOperator;
@@ -51,8 +53,24 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		assert kind == SORTED_MAP || kind == UNSORTED_MAP;
 	}
 
-	@Override
-	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
+	/**
+	 * <p>
+	 * Applies a unary operator to the values of this map in the case where this
+	 * map is immutable. Implementation note: the first change results in a new
+	 * map, while the iteration takes place over the original map, so there is
+	 * no conflict.
+	 * </p>
+	 * 
+	 * <p>
+	 * Precondition: this.isImmutable() (not checked)
+	 * </p>
+	 * 
+	 * @param operator
+	 *            a unary operator to be applied to the values of this map
+	 * @return a map which results from apply the given operator to the values
+	 *         of this map, with entries resulting in null removed
+	 */
+	private SymbolicMap<K, V> applyImmutable(UnaryOperator<V> operator) {
 		SymbolicMap<K, V> result = this;
 
 		for (Entry<K, V> entry : this.entries()) {
@@ -68,17 +86,83 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		return result;
 	}
 
+	/**
+	 * Applies the unary operator to this map in the case where this map is
+	 * mutable. The modifications are done "in place" -- no new map is created.
+	 * 
+	 * @param operator
+	 */
+	private void applyMutable(UnaryOperator<V> operator) {
+		List<K> removeList = new LinkedList<>();
+
+		for (Entry<K, V> entry : this.entries()) {
+			K key = entry.getKey();
+			V value = entry.getValue();
+			V newValue = operator.apply(value);
+
+			if (newValue == null)
+				removeList.add(key);
+			else if (value != newValue)
+				entry.setValue(newValue);
+		}
+		for (K key : removeList)
+			remove(key);
+	}
+
+	@Override
+	protected int computeHashCode() {
+		int result = this.collectionKind().hashCode();
+
+		for (V value : this) {
+			result = result ^ value.hashCode();
+		}
+		return result;
+	}
+
+	@Override
+	protected boolean collectionEquals(SymbolicCollection<V> o) {
+		@SuppressWarnings("unchecked")
+		SymbolicMap<K, V> that = (SymbolicMap<K, V>) o;
+
+		for (Entry<K, V> entry : entries()) {
+			K key1 = entry.getKey();
+			V value1 = entry.getValue();
+			V value2 = that.get(key1);
+
+			if (!value1.equals(value2))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
+		if (this.isImmutable()) {
+			return applyImmutable(operator);
+		} else {
+			applyMutable(operator);
+			return this;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * In this implementation, you iterate over one map while modifying the
+	 * other one (if the other one is mutable).
+	 */
 	@Override
 	public SymbolicMap<K, V> combine(BinaryOperator<V> operator,
 			SymbolicMap<K, V> map) {
 		SymbolicMap<K, V> result, map2;
 
-		if (this.size() >= map.size()) {
-			result = this;
-			map2 = map;
-		} else {
+		// optimization:
+		if (this.isImmutable() && map.isImmutable() && this.size() < map.size()) {
 			result = map;
 			map2 = this;
+		} else {
+			result = this;
+			map2 = map;
 		}
 		for (Entry<K, V> entry : map2.entries()) {
 			K key = entry.getKey();
@@ -119,7 +203,7 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 
 	@Override
 	public StringBuffer toStringBufferLong() {
-		StringBuffer result = new StringBuffer("UnsortedMap");
+		StringBuffer result = new StringBuffer("Map");
 
 		result.append(toStringBuffer(true));
 		return result;
@@ -128,32 +212,6 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 	@Override
 	public String toString() {
 		return toStringBuffer(false).toString();
-	}
-
-	@Override
-	protected int computeHashCode() {
-		int result = this.collectionKind().hashCode();
-
-		for (V value : this) {
-			result = result ^ value.hashCode();
-		}
-		return result;
-	}
-
-	@Override
-	protected boolean collectionEquals(SymbolicCollection<V> o) {
-		@SuppressWarnings("unchecked")
-		SymbolicMap<K, V> that = (SymbolicMap<K, V>) o;
-
-		for (Entry<K, V> entry : entries()) {
-			K key1 = entry.getKey();
-			V value1 = entry.getValue();
-			V value2 = that.get(key1);
-
-			if (!value1.equals(value2))
-				return false;
-		}
-		return true;
 	}
 
 }

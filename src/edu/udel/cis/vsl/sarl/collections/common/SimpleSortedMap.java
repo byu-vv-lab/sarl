@@ -62,16 +62,19 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 		this.comparator = comparator;
 		this.size = size;
 		this.entries = entries;
-		for (Entry<K, V> entry : entries) {
+		for (int i = 0; i < size; i++) {
+			Entry<K, V> entry = entries[i];
+
 			entry.getKey().makeChild();
 			entry.getValue().makeChild();
 		}
 	}
 
-	protected SimpleSortedMap(Comparator<? super K> comparator,
-			Entry<K, V>[] entries) {
-		this(comparator, entries.length, entries);
-	}
+	// not used: consider deleting...
+	// protected SimpleSortedMap(Comparator<? super K> comparator,
+	// Entry<K, V>[] entries) {
+	// this(comparator, entries.length, entries);
+	// }
 
 	@SuppressWarnings("unchecked")
 	protected SimpleSortedMap(Comparator<? super K> comparator) {
@@ -145,15 +148,15 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 	public SortedSymbolicMap<K, V> put(K key, V value) {
 		int lo = 0, hi = size - 1;
 
-		// TODO: debugging
-
-		System.out.println("PUTTING: key=" + key + "  value=" + value);
-		System.out.println("PUT: SIZE = " + size);
-		System.out.flush();
-		if (size == 0 && !isImmutable()) {
-			System.out.println("NON COMMITTED EMPTY !!!");
-			System.out.flush();
-		}
+		// // TODO: debugging
+		//
+		// System.out.println("PUTTING: key=" + key + "  value=" + value);
+		// System.out.println("PUT: SIZE = " + size);
+		// System.out.flush();
+		// if (size == 0 && !isImmutable()) {
+		// System.out.println("NON COMMITTED EMPTY !!!");
+		// System.out.flush();
+		// }
 
 		// loop invariant: hi-lo >= -1.
 		// hi>=lo -> hi-((lo+hi)/2 + 1) >= -1.
@@ -394,10 +397,10 @@ public class SimpleSortedMap<K extends SymbolicExpression, V extends SymbolicExp
 				Entry<K, V> newEntry = (Entry<K, V>) new SimpleEntry(newKey,
 						factory.canonic(entry.getValue()));
 
-				// TODO: debugging
-				System.out.println("*** OLD: " + oldKey.getClass()
-						+ "    *** NEW: " + newKey.getClass());
-				System.out.flush();
+				// // TODO: debugging
+				// System.out.println("*** OLD: " + oldKey.getClass()
+				// + "    *** NEW: " + newKey.getClass());
+				// System.out.flush();
 
 				entries[i] = newEntry;
 			} else {
@@ -440,9 +443,9 @@ class SimpleEntry implements Entry<SymbolicExpression, SymbolicExpression> {
 
 	SimpleEntry(SymbolicExpression key, SymbolicExpression value) {
 
-		// TODO: debugging
-
-		System.out.println("********* key = " + key);
+		// // TODO: debugging
+		//
+		// System.out.println("********* key = " + key);
 
 		this.key = key;
 		this.value = value;
