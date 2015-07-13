@@ -66,19 +66,16 @@ public class IntervalUnionSet implements Range {
 	 * @param isIntegral
 	 *            A boolean value to represent whether <code>this</code>
 	 *            {@link IntervalUnionSet} is integral.
-	 * @param numIntervals
-	 *            A natural number to represent the number of disjointed
+	 * @param size
+	 *            A positive integer to represent the number of disjointed
 	 *            {@link Interval}s in <code>this</code>
 	 *            {@link IntervalUnionSet}. It would be 0, iff <code>this</code>
 	 *            set is empty.
 	 */
 	private IntervalUnionSet(boolean isIntegral, int size) {
+		assert size > 0;
 		isInt = isIntegral;
-		if (size > 0) {
-			intervalArray = new Interval[size];
-		} else {
-			intervalArray = new Interval[0];
-		}
+		intervalArray = new Interval[size];
 	}
 
 	/**
@@ -148,12 +145,14 @@ public class IntervalUnionSet implements Range {
 		while (inputIndex < inputSize) {
 			Interval temp = intervals[inputIndex];
 
-			if (temp != null && !temp.isEmpty()) {
-				// To use the type of first valid interval
+			if (temp != null) {
 				isInt = temp.isIntegral();
-				list.add(temp);
-				inputIndex++;
-				break;
+				if (!temp.isEmpty()) {
+					isInt = temp.isIntegral();
+					list.add(temp);
+					inputIndex++;
+					break;					
+				}
 			}
 			inputIndex++;
 		}
@@ -215,7 +214,7 @@ public class IntervalUnionSet implements Range {
 		boolean strictUpper = interval.strictUpper();
 		boolean noIntersection = true;
 
-		if (lower == null && upper == null) {
+		if (interval.isUniversal()) {
 			list.clear();
 			list.add(interval);
 		} else if (lower == null) {
@@ -225,8 +224,12 @@ public class IntervalUnionSet implements Range {
 		}
 		while (left < right && start == -2) {
 			int mid = (left + right) / 2;
-			int compare = list.get(mid).compare(lower);
+			Interval temp = list.get(mid);
+			int compare = temp.compare(lower);
 
+			if (lower == temp.lower() && strictLower && temp.strictLower()) {
+				compare = 0;
+			}
 			if (compare == 0) {
 				start = mid;
 				lower = list.get(start).lower();
@@ -256,9 +259,13 @@ public class IntervalUnionSet implements Range {
 					}
 				}
 			} else if (right == left) {
+				Interval temp = list.get(right);
 				int compareJoint = 0;
-				int compare = list.get(right).compare(lower);
+				int compare = temp.compare(lower);
 
+				if (lower == temp.lower() && strictLower && temp.strictLower()) {
+					compare = 0;
+				}
 				if (compare > 0) {
 					if (right < 1) {
 						start = -1;
@@ -301,8 +308,12 @@ public class IntervalUnionSet implements Range {
 		right = size - 1;
 		while (left < right && end == -2) {
 			int mid = (left + right) / 2;
-			int compare = list.get(mid).compare(upper);
+			Interval temp = list.get(mid);
+			int compare = temp.compare(upper);
 
+			if (upper == temp.upper() && strictUpper && temp.strictUpper()) {
+				compare = 0;
+			}
 			if (compare == 0) {
 				end = mid;
 				upper = list.get(end).upper();
@@ -332,9 +343,13 @@ public class IntervalUnionSet implements Range {
 					}
 				}
 			} else if (right == left) {
+				Interval temp = list.get(right);
 				int compareJoint = 0;
-				int compare = list.get(right).compare(upper);
+				int compare = temp.compare(upper);
 
+				if (upper == temp.upper() && strictUpper && temp.strictUpper()) {
+					compare = 0;
+				}
 				if (compare > 0) {
 					compareJoint = compareJoint(interval, list.get(right));
 					if (compareJoint < 0) {
@@ -539,6 +554,70 @@ public class IntervalUnionSet implements Range {
 	}
 
 	/**
+	 * Does this {@link IntervalUnionSet} contain the given {@link Interval} as
+	 * a sub-set?
+	 * 
+	 * @param interval
+	 *            any non-<code>null</code> {@link Interval} of the same type
+	 *            (integer/real) as this {@link IntervalUnionSet}
+	 * @return <code>true</code> iff this {@link IntervalUnionSet} contains the
+	 *         given {@link Interval}
+	 */
+	private boolean contains(Interval interval) {
+		assert interval != null;
+		assert interval.isIntegral() == isInt;
+
+		int thisSize = intervalArray.length;
+		int leftIdx = 0;
+		int rightIdx = thisSize - 1;
+
+		/*
+		 * Currently used in contains(set), the interval could not be empty.
+		 */
+		// if (interval.isEmpty()) {
+		// return true;
+		// }// Any sets would contain an empty set
+		while (leftIdx <= rightIdx) {
+			int midIdx = (leftIdx + rightIdx) / 2;
+			Interval midInterval = intervalArray[midIdx];
+			int compareLower = compareLo(midInterval, interval);
+			int compareUpper = compareUp(midInterval, interval);
+
+			if (compareLower > 0) {
+				if (compareUpper > 0) {
+					int compareJoint = compareJoint(interval, midInterval);
+
+					if (compareJoint <= 0) { // No intersection
+						rightIdx = midIdx - 1;
+						continue;
+					}
+				}
+				return false;
+			} else if (compareLower < 0) {
+				if (compareUpper < 0) {
+					int compareJoint = compareJoint(midInterval, interval);
+
+					if (compareJoint > 0) {
+						return false;
+					} else { // No intersection
+						leftIdx = midIdx + 1;
+						continue;
+					}
+				} else { // compareUp >= 0
+					return true;
+				}
+			} else {
+				if (compareUpper < 0) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Add a single {@link Number} to this {@link IntervalUnionSet}
 	 * 
 	 * @param number
@@ -550,35 +629,35 @@ public class IntervalUnionSet implements Range {
 		assert (number instanceof IntegerNumber) == isInt;
 
 		int size = intervalArray.length;
-		int leftIdx = 0;
-		int rightIdx = size - 1;
+		int leftIndex = 0;
+		int rightIndex = size - 1;
 
-		while (leftIdx <= rightIdx) {
-			int midIdx = (leftIdx + rightIdx) / 2;
-			int compareNumber = intervalArray[midIdx].compare(number);
+		while (leftIndex <= rightIndex) {
+			int midIndex = (leftIndex + rightIndex) / 2;
+			int compareNumber = intervalArray[midIndex].compare(number);
 
-			if (compareNumber > 0 && leftIdx != rightIdx) {
+			if (compareNumber > 0 && leftIndex != rightIndex) {
 				// The number is on the left part of the current set.
-				rightIdx = midIdx - 1;
-			} else if (compareNumber < 0 && leftIdx != rightIdx) {
+				rightIndex = midIndex - 1;
+			} else if (compareNumber < 0 && leftIndex != rightIndex) {
 				// The number is on the right part of the current set.
-				leftIdx = midIdx + 1;
+				leftIndex = midIndex + 1;
 			} else if (compareNumber == 0) {
 				// The set contains the number.
 				return new IntervalUnionSet(this);
 			} else {
 				// The set does NOT contain the number
-				leftIdx = compareNumber < 0 ? midIdx : midIdx - 1;
-				rightIdx = leftIdx + 1;
-				leftIdx = Math.max(leftIdx, 0);
-				rightIdx = Math.min(rightIdx, size - 1);
+				leftIndex = compareNumber < 0 ? midIndex : midIndex - 1;
+				rightIndex = leftIndex + 1;
+				leftIndex = Math.max(leftIndex, 0);
+				rightIndex = Math.min(rightIndex, size - 1);
 
-				boolean leftSl = intervalArray[leftIdx].strictLower();
-				boolean rightSu = intervalArray[rightIdx].strictUpper();
-				Number leftLo = intervalArray[leftIdx].lower();
-				Number leftUp = intervalArray[leftIdx].upper();
-				Number rightLo = intervalArray[rightIdx].lower();
-				Number rightUp = intervalArray[rightIdx].upper();
+				boolean leftSl = intervalArray[leftIndex].strictLower();
+				boolean rightSu = intervalArray[rightIndex].strictUpper();
+				Number leftLo = intervalArray[leftIndex].lower();
+				Number leftUp = intervalArray[leftIndex].upper();
+				Number rightLo = intervalArray[rightIndex].lower();
+				Number rightUp = intervalArray[rightIndex].upper();
 				Number leftDiff = numberFactory.subtract(number, leftUp);
 				Number rightDiff = numberFactory.subtract(rightLo, number);
 				boolean leftJoint = isInt ? leftDiff.isOne() : leftDiff
@@ -592,21 +671,23 @@ public class IntervalUnionSet implements Range {
 							size - 1);
 
 					System.arraycopy(intervalArray, 0, result.intervalArray, 0,
-							leftIdx);
-					result.intervalArray[leftIdx] = numberFactory.newInterval(
-							isInt, leftLo, leftSl, rightUp, rightSu);
-					System.arraycopy(intervalArray, rightIdx + 1,
-							result.intervalArray, rightIdx, size - rightIdx - 1);
+							leftIndex);
+					result.intervalArray[leftIndex] = numberFactory
+							.newInterval(isInt, leftLo, leftSl, rightUp,
+									rightSu);
+					System.arraycopy(intervalArray, rightIndex + 1,
+							result.intervalArray, rightIndex, size - rightIndex
+									- 1);
 					return result;
 				} else if (leftJoint) {
 					// The number changes an interval's lower condition
 					IntervalUnionSet result = new IntervalUnionSet(this);
 
 					if (isInt) {
-						result.intervalArray[leftIdx] = numberFactory
+						result.intervalArray[leftIndex] = numberFactory
 								.newInterval(true, leftLo, false, number, false);
 					} else {
-						result.intervalArray[leftIdx] = numberFactory
+						result.intervalArray[leftIndex] = numberFactory
 								.newInterval(false, leftLo, leftSl, number,
 										false);
 					}
@@ -616,11 +697,11 @@ public class IntervalUnionSet implements Range {
 					IntervalUnionSet result = new IntervalUnionSet(this);
 
 					if (isInt) {
-						result.intervalArray[rightIdx] = numberFactory
+						result.intervalArray[rightIndex] = numberFactory
 								.newInterval(true, number, false, rightUp,
 										false);
 					} else {
-						result.intervalArray[rightIdx] = numberFactory
+						result.intervalArray[rightIndex] = numberFactory
 								.newInterval(false, number, false, rightUp,
 										rightSu);
 					}
@@ -630,8 +711,8 @@ public class IntervalUnionSet implements Range {
 					IntervalUnionSet result = new IntervalUnionSet(isInt,
 							size + 1);
 
-					if (leftIdx == rightIdx) {
-						if (leftIdx == 0) {
+					if (leftIndex == rightIndex) {
+						if (leftIndex == 0) {
 							// To add the number to the head
 							result.intervalArray[0] = numberFactory
 									.newInterval(isInt, number, false, number,
@@ -649,13 +730,13 @@ public class IntervalUnionSet implements Range {
 					} else {
 						// To insert the number to the body
 						System.arraycopy(intervalArray, 0,
-								result.intervalArray, 0, rightIdx);
-						result.intervalArray[rightIdx] = numberFactory
+								result.intervalArray, 0, rightIndex);
+						result.intervalArray[rightIndex] = numberFactory
 								.newInterval(isInt, number, false, number,
 										false);
-						System.arraycopy(intervalArray, rightIdx,
-								result.intervalArray, rightIdx + 1, size
-										- rightIdx);
+						System.arraycopy(intervalArray, rightIndex,
+								result.intervalArray, rightIndex + 1, size
+										- rightIndex);
 					}
 					return result;
 				}
@@ -700,67 +781,6 @@ public class IntervalUnionSet implements Range {
 		return false;
 	}
 
-	/**
-	 * Does this {@link IntervalUnionSet} contain the given {@link Interval} as
-	 * a member?
-	 * 
-	 * @param interval
-	 *            any non-<code>null</code> {@link Interval} of the same type
-	 *            (integer/real) as this {@link IntervalUnionSet}
-	 * @return <code>true</code> iff this {@link IntervalUnionSet} contains the
-	 *         given {@link Interval}
-	 */
-	public boolean contains(Interval interval) {
-		assert interval != null;
-		assert interval.isIntegral() == isInt;
-
-		int thisSize = intervalArray.length;
-		int leftIdx = 0;
-		int rightIdx = thisSize - 1;
-
-		if (interval.isEmpty()) {
-			return true;
-		}// Any sets would contain an empty set
-		while (leftIdx <= rightIdx) {
-			int midIdx = (leftIdx + rightIdx) / 2;
-			Interval midInterval = intervalArray[midIdx];
-			int compareLower = compareLo(midInterval, interval);
-			int compareUpper = compareUp(midInterval, interval);
-
-			if (compareLower > 0) {
-				if (compareUpper > 0) {
-					int compareJoint = compareJoint(interval, midInterval);
-
-					if (compareJoint <= 0) { // No intersection
-						rightIdx = midIdx - 1;
-						continue;
-					}
-				}
-				return false;
-			} else if (compareLower < 0) {
-				if (compareUpper < 0) {
-					int compareJoint = compareJoint(midInterval, interval);
-
-					if (compareJoint > 0) {
-						return false;
-					} else { // No intersection
-						leftIdx = midIdx + 1;
-						continue;
-					}
-				} else { // compareUp >= 0
-					return true;
-				}
-			} else {
-				if (compareUpper < 0) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public boolean contains(Range set) {
 		assert set != null;
@@ -786,6 +806,9 @@ public class IntervalUnionSet implements Range {
 		} else if (otherArray[0].isUniversal()) {
 			// Only a universal set could contain itself
 			return false;
+		}
+		if (otherSize == 1) {
+			return contains(otherArray[0]);
 		}
 		while (thisIndex < thisSize) {
 			Interval thisInterval = thisArray[thisIndex];
@@ -1375,6 +1398,11 @@ public class IntervalUnionSet implements Range {
 		return result;
 	}
 
+	/**
+	 * TODO:
+	 * 
+	 * @return
+	 */
 	public boolean checkInvariants() {
 		/*
 		 * 1. All of intervals in the array are non-<code>null</code> intervals.
@@ -1463,4 +1491,6 @@ public class IntervalUnionSet implements Range {
 	// TODO: Testing functions to improve the code coverage
 	// "contains" "intersects" "intersect" "union" "minus" "complement"
 	// "affineTransform"
+	// TODO: Do a performance testing for small intervals by looping it several
+	// times.
 }
