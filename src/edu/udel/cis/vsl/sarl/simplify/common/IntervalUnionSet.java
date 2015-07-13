@@ -73,7 +73,7 @@ public class IntervalUnionSet implements Range {
 	 *            set is empty.
 	 */
 	private IntervalUnionSet(boolean isIntegral, int size) {
-		assert size > 0;
+		//assert size > 0;
 		isInt = isIntegral;
 		intervalArray = new Interval[size];
 	}
@@ -151,7 +151,7 @@ public class IntervalUnionSet implements Range {
 					isInt = temp.isIntegral();
 					list.add(temp);
 					inputIndex++;
-					break;					
+					break;
 				}
 			}
 			inputIndex++;
@@ -199,9 +199,9 @@ public class IntervalUnionSet implements Range {
 	 *            list.
 	 */
 	private void addInterval(ArrayList<Interval> list, Interval interval) {
-		assert list != null;
-		assert interval != null;
-		assert isInt == interval.isIntegral();
+		//assert list != null;
+		//assert interval != null;
+		//assert isInt == interval.isIntegral();
 
 		int size = list.size();
 		int start = -2;
@@ -258,7 +258,7 @@ public class IntervalUnionSet implements Range {
 						noIntersection = false;
 					}
 				}
-			} else if (right == left) {
+			} else { // right == left
 				Interval temp = list.get(right);
 				int compareJoint = 0;
 				int compare = temp.compare(lower);
@@ -299,7 +299,6 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 		}
-		assert start != -2;
 		if (start == size) {
 			list.add(interval);
 			return;
@@ -342,7 +341,7 @@ public class IntervalUnionSet implements Range {
 						noIntersection = false;
 					}
 				}
-			} else if (right == left) {
+			} else { // right == left
 				Interval temp = list.get(right);
 				int compareJoint = 0;
 				int compare = temp.compare(upper);
@@ -383,9 +382,8 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 		}
-		assert end != -2;
 		if (noIntersection) {
-			assert start >= end;
+			//assert start >= end;
 			start = end == -1 ? 0 : start;
 			list.add(start, interval);
 		} else {
@@ -411,8 +409,8 @@ public class IntervalUnionSet implements Range {
 	 *         integer iff their lower and strictLower are exactly same.
 	 */
 	private int compareLo(Interval current, Interval target) {
-		assert current != null && target != null;
-		assert current.isIntegral() == target.isIntegral();
+		//assert current != null && target != null;
+		//assert current.isIntegral() == target.isIntegral();
 
 		boolean currentSL = current.strictLower();
 		boolean targetSL = target.strictLower();
@@ -455,8 +453,8 @@ public class IntervalUnionSet implements Range {
 	 *         zero integer iff their upper and strictUpper are exactly same.
 	 */
 	private int compareUp(Interval current, Interval target) {
-		assert current != null && target != null;
-		assert current.isIntegral() == target.isIntegral();
+		//assert current != null && target != null;
+		//assert current.isIntegral() == target.isIntegral();
 
 		boolean currentSU = current.strictUpper();
 		boolean targetSU = target.strictUpper();
@@ -502,8 +500,8 @@ public class IntervalUnionSet implements Range {
 	 *         they are intersected.
 	 */
 	private int compareJoint(Interval left, Interval right) {
-		assert left != null && right != null;
-		assert left.isIntegral() == right.isIntegral();
+		//assert left != null && right != null;
+		//assert left.isIntegral() == right.isIntegral();
 
 		boolean isIntegral = left.isIntegral();
 		boolean leftSU = left.strictUpper();
@@ -564,8 +562,8 @@ public class IntervalUnionSet implements Range {
 	 *         given {@link Interval}
 	 */
 	private boolean contains(Interval interval) {
-		assert interval != null;
-		assert interval.isIntegral() == isInt;
+		// assert interval != null;
+		// assert interval.isIntegral() == isInt;
 
 		int thisSize = intervalArray.length;
 		int leftIdx = 0;
