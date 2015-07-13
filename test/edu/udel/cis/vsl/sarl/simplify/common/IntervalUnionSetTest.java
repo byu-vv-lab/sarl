@@ -247,6 +247,53 @@ public class IntervalUnionSetTest {
 	}
 
 	@Test
+	public void constructIntervalUnionSet_IntervalList_EpmtyIntervals() {
+		// All of intervals in the array are non-<code>null</code> intervals.
+		IntervalUnionSet expected = new IntervalUnionSet(true);
+		Interval[] emptyIntervalArr = new Interval[ARR_SIZE];
+		for (int i = 0; i < ARR_SIZE; i++) {
+			emptyIntervalArr[i] = INT_EMPTY;
+		}
+		IntervalUnionSet actual = new IntervalUnionSet(emptyIntervalArr);
+
+		assertTrue(actual.isEmpty());
+		assertEquals(expected.toString(), actual.toString());
+	}
+
+	@Test
+	public void constructIntervalUnionSet_IntervalList_UnivIntervals() {
+		// All of intervals in the array are non-<code>null</code> intervals.
+		IntervalUnionSet expected = new IntervalUnionSet(RAT_UNIV);
+		Interval[] univIntervalArr = new Interval[ARR_SIZE];
+		for (int i = 0; i < ARR_SIZE; i++) {
+			univIntervalArr[i] = RAT_UNIV;
+		}
+		IntervalUnionSet actual = new IntervalUnionSet(univIntervalArr);
+
+		// assertFalse(actual.isEmpty());
+		assertEquals(expected.toString(), actual.toString());
+	}
+
+	@Test
+	public void constructIntervalUnionSet_IntervalList_SomeUnivIntervals() {
+		// All of intervals in the array are non-<code>null</code> intervals.
+		IntervalUnionSet expected = new IntervalUnionSet(RAT_UNIV);
+		Interval[] univIntervalArr = new Interval[ARR_SIZE];
+		for (int i = 0; i < ARR_SIZE; i++) {
+			if (i % 5 == 3) {
+				univIntervalArr[i] = RAT_UNIV;
+			} else {
+				univIntervalArr[i] = numberFactory.newInterval(false,
+						RAT_N_ONE, true, RAT_ONE, true);
+			}
+		}
+		IntervalUnionSet actual = new IntervalUnionSet(univIntervalArr);
+
+		// assertFalse(actual.isEmpty());
+		assertEquals(expected.toString(), actual.toString());
+	}
+
+	@Test
 	public void constructIntervalUnionSet_IntervalList_Rat_SomeNull() {
 		// All of intervals in the array are non-<code>null</code> intervals.
 		Interval[] expectedArr = new Interval[ARR_SIZE];
@@ -1483,24 +1530,24 @@ public class IntervalUnionSetTest {
 	}
 
 	@Test(expected = AssertionError.class)
-	public void contains_Interval_Null() {
-		Interval target = null;
+	public void contains_IntervalUnionSet_Null() {
+		IntervalUnionSet target = null;
 		IntervalUnionSet intervalSet = new IntervalUnionSet(INT_UNIV);
 
 		intervalSet.contains(target);
 	}
 
 	@Test(expected = AssertionError.class)
-	public void contains_Interval_Mismatch() {
-		Interval target = INT_EMPTY;
+	public void contains_IntervalUnionSet_Interval_Mismatch() {
+		IntervalUnionSet target = new IntervalUnionSet(INT_EMPTY);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(RAT_UNIV);
 
 		intervalSet.contains(target);
 	}
 
 	@Test
-	public void contains_Interval_Int_emptySet_In_Univ() {
-		Interval target = INT_EMPTY;
+	public void contains_IntervalUnionSet_Interval_Int_emptySet_In_Univ() {
+		IntervalUnionSet target = new IntervalUnionSet(INT_EMPTY);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(INT_UNIV);
 		boolean actual = intervalSet.contains(target);
 
@@ -1508,8 +1555,8 @@ public class IntervalUnionSetTest {
 	}
 
 	@Test
-	public void contains_Interval_Rat_univSet_In_empty() {
-		Interval target = RAT_UNIV;
+	public void contains_IntervalUnionSet_Interval_Rat_univSet_In_empty() {
+		IntervalUnionSet target = new IntervalUnionSet(RAT_UNIV);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(RAT_EMPTY);
 		boolean actual = intervalSet.contains(target);
 
@@ -1517,189 +1564,205 @@ public class IntervalUnionSetTest {
 	}
 
 	@Test
-	public void contains_Interval_Int_LeftDisjoint() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_N_THREE, false,
-				INT_N_TWO, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_LeftDisjoint() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE,
+				false, INT_N_TWO, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_LeftDisjoint() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval target = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_N_ONE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_LeftDisjoint() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_N_ONE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_LeftIntersect() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_N_THREE, false,
-				INT_N_ONE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_LeftIntersect() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE,
+				false, INT_N_ONE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_LeftIntersect() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, true);
-		Interval target = numberFactory.newInterval(false, RAT_N_THREE, true,
-				RAT_N_ONE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_LeftIntersect() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_THREE,
+				true, RAT_N_ONE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_Target_contains_Current() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_N_THREE, false,
-				INT_THREE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_Target_contains_Current() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE,
+				false, INT_THREE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_Target_contains_Current() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval target = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_Target_contains_Current() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_RightIntersect() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_ONE, false,
-				INT_THREE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_RightIntersect() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_ONE,
+				false, INT_THREE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_RightIntersect() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, false);
-		Interval target = numberFactory.newInterval(false, RAT_ONE, false,
-				RAT_THREE, true);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_RightIntersect() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE,
+				false, RAT_THREE, true);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_RightDisjoint() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_TWO, false,
-				INT_THREE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_RightDisjoint() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_TWO,
+				false, INT_THREE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_RightDisjoint() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval target = numberFactory.newInterval(false, RAT_ONE, false,
-				RAT_ONE, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_RightDisjoint() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE,
+				false, RAT_ONE, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertFalse(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_Contains() {
-		Interval current = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval target = numberFactory.newInterval(true, INT_ZERO, false,
-				INT_ZERO, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Int_Contains() {
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_ZERO,
+				false, INT_ZERO, false);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertTrue(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Rat_Contains() {
-		Interval current = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, false);
-		Interval target = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(current);
-		boolean actual0 = intervalSet.contains(current);
-		boolean actual1 = intervalSet.contains(target);
+	public void contains_IntervalUnionSet_Interval_Rat_Contains() {
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
+		boolean actual0 = intervalSet.contains(intervalSet);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0);
 		assertTrue(actual1);
 	}
 
 	@Test
-	public void contains_Interval_Int_Multiple() {
-		Interval first = numberFactory.newInterval(true, INT_N_TEN, false,
-				INT_N_SIX, false);
-		Interval second = numberFactory.newInterval(true, INT_N_TWO, false,
-				INT_TWO, false);
-		Interval third = numberFactory.newInterval(true, INT_SIX, false,
-				INT_TEN, false);
-		Interval target = numberFactory.newInterval(true, INT_N_TEN, false,
-				INT_N_FOUR, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
-				third);
+	public void contains_IntervalUnionSet_Interval_Int_Multiple() {
+		Interval firstInterval = numberFactory.newInterval(true, INT_N_TEN,
+				false, INT_N_SIX, false);
+		Interval secondInterval = numberFactory.newInterval(true, INT_N_TWO,
+				false, INT_TWO, false);
+		Interval thirdInterval = numberFactory.newInterval(true, INT_SIX,
+				false, INT_TEN, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_TEN,
+				false, INT_N_FOUR, false);
+		IntervalUnionSet first = new IntervalUnionSet(firstInterval);
+		IntervalUnionSet second = new IntervalUnionSet(secondInterval);
+		IntervalUnionSet third = new IntervalUnionSet(thirdInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(firstInterval,
+				secondInterval, thirdInterval);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
 		boolean actual0a = intervalSet.contains(first);
 		boolean actual0b = intervalSet.contains(second);
 		boolean actual0c = intervalSet.contains(third);
-		boolean actual1 = intervalSet.contains(target);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0a);
 		assertTrue(actual0b);
@@ -1708,21 +1771,25 @@ public class IntervalUnionSetTest {
 	}
 
 	@Test
-	public void contains_Interval_Rat_Multiple() {
-		Interval first = numberFactory.newInterval(false, RAT_N_TEN, true,
-				RAT_N_SIX, true);
-		Interval second = numberFactory.newInterval(false, RAT_N_TWO, true,
-				RAT_TWO, true);
-		Interval third = numberFactory.newInterval(false, RAT_SIX, true,
-				RAT_TEN, true);
-		Interval target = numberFactory.newInterval(false, RAT_SIX, true,
-				RAT_SEVEN, false);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
-				third);
+	public void contains_IntervalUnionSet_Interval_Rat_Multiple() {
+		Interval firstInterval = numberFactory.newInterval(false, RAT_N_TEN,
+				true, RAT_N_SIX, true);
+		Interval secondInterval = numberFactory.newInterval(false, RAT_N_TWO,
+				true, RAT_TWO, true);
+		Interval thirdInterval = numberFactory.newInterval(false, RAT_SIX,
+				true, RAT_TEN, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_SIX,
+				true, RAT_SEVEN, false);
+		IntervalUnionSet first = new IntervalUnionSet(firstInterval);
+		IntervalUnionSet second = new IntervalUnionSet(secondInterval);
+		IntervalUnionSet third = new IntervalUnionSet(thirdInterval);
+		IntervalUnionSet intervalSet = new IntervalUnionSet(firstInterval,
+				secondInterval, thirdInterval);
+		IntervalUnionSet targetSet = new IntervalUnionSet(targetInterval);
 		boolean actual0a = intervalSet.contains(first);
 		boolean actual0b = intervalSet.contains(second);
 		boolean actual0c = intervalSet.contains(third);
-		boolean actual1 = intervalSet.contains(target);
+		boolean actual1 = intervalSet.contains(targetSet);
 
 		assertTrue(actual0a);
 		assertTrue(actual0b);
@@ -1800,10 +1867,10 @@ public class IntervalUnionSetTest {
 	//
 	@Test
 	public void intersects_Rat_LeftDisjoint() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_N_ONE, false);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_N_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1815,10 +1882,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Int_LeftIntersect() {
-		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE, false,
-				INT_N_ONE, false);
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE,
+				false, INT_N_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1830,10 +1897,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Rat_LeftIntersect() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, true);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_N_THREE, true,
-				RAT_N_ONE, false);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_THREE,
+				true, RAT_N_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1845,10 +1912,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Int_Target_contains_Current() {
-		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE, false,
-				INT_THREE, false);
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_THREE,
+				false, INT_THREE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1860,10 +1927,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Rat_Target_contains_Current() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, false);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1875,10 +1942,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Int_RightIntersect() {
-		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_ONE, false,
-				INT_THREE, false);
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_ONE,
+				false, INT_THREE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1890,10 +1957,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Rat_RightIntersect() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE, false,
-				RAT_THREE, true);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE,
+				false, RAT_THREE, true);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1905,10 +1972,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Int_RightDisjoint() {
-		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_TWO, false,
-				INT_THREE, false);
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_TWO,
+				false, INT_THREE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1920,10 +1987,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Rat_RightDisjoint() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE, false,
-				RAT_ONE, false);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_ONE,
+				false, RAT_ONE, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1935,10 +2002,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Int_Contains() {
-		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE, false,
-				INT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_ZERO, false,
-				INT_ZERO, false);
+		Interval currentInterval = numberFactory.newInterval(true, INT_N_ONE,
+				false, INT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_ZERO,
+				false, INT_ZERO, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1950,10 +2017,10 @@ public class IntervalUnionSetTest {
 
 	@Test
 	public void intersects_Rat_Contains() {
-		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE, false,
-				RAT_ONE, false);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE, true,
-				RAT_ONE, true);
+		Interval currentInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				false, RAT_ONE, false);
+		Interval targetInterval = numberFactory.newInterval(false, RAT_N_ONE,
+				true, RAT_ONE, true);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(currentInterval);
 		boolean actual0 = intervalSet.intersects(intervalSet);
@@ -1971,36 +2038,29 @@ public class IntervalUnionSetTest {
 				INT_TWO, false);
 		Interval third = numberFactory.newInterval(true, INT_SIX, false,
 				INT_TEN, false);
-		Interval targetInterval = numberFactory.newInterval(true, INT_N_TEN, false,
-				INT_N_FOUR, false);
+		Interval targetInterval = numberFactory.newInterval(true, INT_N_TEN,
+				false, INT_N_FOUR, false);
 		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
 		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
 				third);
 		boolean actual0 = intervalSet.intersects(intervalSet);
 		boolean actual1 = intervalSet.intersects(target);
-		
+
 		assertTrue(actual0);
 		assertTrue(actual1);
 	}
-/*
-	@Test
-	public void intersects_Rat_Multiple() {
-		Interval first = numberFactory.newInterval(false, RAT_N_TEN, true,
-				RAT_N_SIX, true);
-		Interval second = numberFactory.newInterval(false, RAT_N_TWO, true,
-				RAT_TWO, true);
-		Interval third = numberFactory.newInterval(false, RAT_SIX, true,
-				RAT_TEN, true);
-		Interval targetInterval = numberFactory.newInterval(false, RAT_SIX, true,
-				RAT_SEVEN, false);
-		IntervalUnionSet target = new IntervalUnionSet(targetInterval);
-		IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
-				third);
-		boolean actual0 = intervalSet.intersects(intervalSet);
-		boolean actual1 = intervalSet.intersects(target);
-		
-		assertTrue(actual0);
-		assertTrue(actual1);
-	}
-*/
+	/*
+	 * @Test public void intersects_Rat_Multiple() { Interval first =
+	 * numberFactory.newInterval(false, RAT_N_TEN, true, RAT_N_SIX, true);
+	 * Interval second = numberFactory.newInterval(false, RAT_N_TWO, true,
+	 * RAT_TWO, true); Interval third = numberFactory.newInterval(false,
+	 * RAT_SIX, true, RAT_TEN, true); Interval targetInterval =
+	 * numberFactory.newInterval(false, RAT_SIX, true, RAT_SEVEN, false);
+	 * IntervalUnionSet target = new IntervalUnionSet(targetInterval);
+	 * IntervalUnionSet intervalSet = new IntervalUnionSet(first, second,
+	 * third); boolean actual0 = intervalSet.intersects(intervalSet); boolean
+	 * actual1 = intervalSet.intersects(target);
+	 * 
+	 * assertTrue(actual0); assertTrue(actual1); }
+	 */
 }
