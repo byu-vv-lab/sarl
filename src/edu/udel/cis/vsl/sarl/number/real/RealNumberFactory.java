@@ -56,7 +56,7 @@ public class RealNumberFactory implements NumberFactory {
 	/**
 	 * The empty real interval: (0.0, 0.0).
 	 */
-	private Interval emptyRealInterval;
+	private Interval emptyRationalInterval;
 
 	/**
 	 * Uses a new factory to multiply two integer arguments.
@@ -84,7 +84,7 @@ public class RealNumberFactory implements NumberFactory {
 		multiplier = new IntMultiplier(this);
 		emptyIntegerInterval = new CommonInterval(true, zeroInteger, true,
 				zeroInteger, true);
-		emptyRealInterval = new CommonInterval(false, zeroRational, true,
+		emptyRationalInterval = new CommonInterval(false, zeroRational, true,
 				zeroRational, true);
 	}
 
@@ -926,34 +926,58 @@ public class RealNumberFactory implements NumberFactory {
 
 	@Override
 	public Interval emptyRealInterval() {
-		return emptyRealInterval;
+		return emptyRationalInterval;
 	}
 
 	@Override
 	public Interval newInterval(boolean isIntegral, Number lower,
 			boolean strictLower, Number upper, boolean strictUpper) {
-		/*
-		 * If the range set has integer type, all of the intervals are closed,
-		 * except for +infty and -infty.
-		 */
-		// TODO: To confirm comments below
-		// Number lo = isIntegral && strictLower ? subtract(lower, oneInteger) :
-		// lower;
-		// Number hi = isIntegral && strictUpper ? subtract(upper, oneInteger) :
-		// upper;
-		//TODO: To confirm lo < up!
-		boolean sL = lower != null ? !isIntegral && strictLower : true;
-		boolean sU = upper != null ? !isIntegral && strictUpper : true;
-
-		if (lower != null && upper != null && (lower.compareTo(upper) == 0)) {
-			if (strictLower || strictUpper) {
-				lower = isIntegral ? zeroInteger : zeroRational;
-				upper = isIntegral ? zeroInteger : zeroRational;
-				sL = true;
-				sU = true;
+		boolean sl = strictLower, su = strictUpper;
+		Number lo = lower, up = upper;
+		int compare = 0;
+		
+		if (lo == null && up == null) {
+			sl = true;
+			su = true;
+		} else if (lo == null) {
+			sl = true;
+			if (isIntegral && su) {
+				up = subtract(up, oneInteger);
+				su = false;
+			}
+		} else if (up == null) {
+			su = true;
+			if (isIntegral && sl) {
+				lo = add(lo, oneInteger);
+				sl = false;
+			}
+		} else {
+			if (isIntegral && sl) {
+				lo = add(lo, oneInteger);
+				sl = false;
+			}
+			if (isIntegral && su) {
+				up = subtract(up, oneInteger);
+				su = false;
+			}
+			compare = subtract(up, lo).signum();
+			if (isIntegral) {
+				if (compare < 0) {
+					return emptyIntegerInterval;
+				}
+			}else{
+				if (!sl && !su) {
+					if (compare < 0) {
+						return emptyRationalInterval;
+					}
+				}else {
+					if (compare <= 0) {
+						return emptyRationalInterval;
+					}
+				}
 			}
 		}
-		return new CommonInterval(isIntegral, lower, sL, upper, sU);
+		return new CommonInterval(isIntegral, lo, sl, up, su);
 	}
 
 	@Override
@@ -1030,11 +1054,11 @@ public class RealNumberFactory implements NumberFactory {
 			int compare = hi.compareTo(lo);
 
 			if (compare < 0) {
-				return isIntegral ? emptyIntegerInterval : emptyRealInterval;
+				return isIntegral ? emptyIntegerInterval : emptyRationalInterval;
 			} else if (compare == 0) {
 				if (sl || su) {
 					return isIntegral ? emptyIntegerInterval
-							: emptyRealInterval;
+							: emptyRationalInterval;
 				}
 			}
 		}
@@ -1207,7 +1231,7 @@ public class RealNumberFactory implements NumberFactory {
 
 		if (lo != null && up != null) {
 			if (itv.isEmpty()) {
-				return  newInterval(itv.isIntegral(), up, su, up, su);
+				return newInterval(itv.isIntegral(), up, su, up, su);
 			}
 		}
 		// New upper and lower of result.union.
@@ -1234,7 +1258,7 @@ public class RealNumberFactory implements NumberFactory {
 	public int compare(Interval i1, Interval i2) {
 		assert i1 != null && i2 != null;
 		assert i1.isIntegral() == i2.isIntegral();
-		
+
 		int disjoint = 4;
 		int contains2 = 3; // i1 contains i2
 		int intersectNC = 2; // No contain
@@ -1249,10 +1273,10 @@ public class RealNumberFactory implements NumberFactory {
 
 		if (i1.isEmpty() && i2.isEmpty()) {
 			return exactlySame;
-		}else if (i1.isEmpty()) {
+		} else if (i1.isEmpty()) {
 			// i1 is Empty
 			return contains1;
-		}else if (i2.isEmpty()) {
+		} else if (i2.isEmpty()) {
 			// i2 is Empty
 			return -contains2;
 		}
@@ -1422,7 +1446,7 @@ public class RealNumberFactory implements NumberFactory {
 					} else if (!su1 && su2) {
 						// Right Intersect i1 contains i2
 						return contains2;
-					}// else  Exactly Same
+					}// else Exactly Same
 				}
 			}
 		}
