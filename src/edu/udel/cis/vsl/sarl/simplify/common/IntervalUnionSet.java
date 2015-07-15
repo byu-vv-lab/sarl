@@ -73,7 +73,7 @@ public class IntervalUnionSet implements Range {
 	 *            set is empty.
 	 */
 	private IntervalUnionSet(boolean isIntegral, int size) {
-		//assert size > 0;
+		// assert size > 0;
 		isInt = isIntegral;
 		intervalArray = new Interval[size];
 	}
@@ -199,9 +199,9 @@ public class IntervalUnionSet implements Range {
 	 *            list.
 	 */
 	private void addInterval(ArrayList<Interval> list, Interval interval) {
-		//assert list != null;
-		//assert interval != null;
-		//assert isInt == interval.isIntegral();
+		// assert list != null;
+		// assert interval != null;
+		// assert isInt == interval.isIntegral();
 
 		int size = list.size();
 		int start = -2;
@@ -383,7 +383,7 @@ public class IntervalUnionSet implements Range {
 			}
 		}
 		if (noIntersection) {
-			//assert start >= end;
+			// assert start >= end;
 			start = end == -1 ? 0 : start;
 			list.add(start, interval);
 		} else {
@@ -409,8 +409,8 @@ public class IntervalUnionSet implements Range {
 	 *         integer iff their lower and strictLower are exactly same.
 	 */
 	private int compareLo(Interval current, Interval target) {
-		//assert current != null && target != null;
-		//assert current.isIntegral() == target.isIntegral();
+		// assert current != null && target != null;
+		// assert current.isIntegral() == target.isIntegral();
 
 		boolean currentSL = current.strictLower();
 		boolean targetSL = target.strictLower();
@@ -453,8 +453,8 @@ public class IntervalUnionSet implements Range {
 	 *         zero integer iff their upper and strictUpper are exactly same.
 	 */
 	private int compareUp(Interval current, Interval target) {
-		//assert current != null && target != null;
-		//assert current.isIntegral() == target.isIntegral();
+		// assert current != null && target != null;
+		// assert current.isIntegral() == target.isIntegral();
 
 		boolean currentSU = current.strictUpper();
 		boolean targetSU = target.strictUpper();
@@ -500,8 +500,8 @@ public class IntervalUnionSet implements Range {
 	 *         they are intersected.
 	 */
 	private int compareJoint(Interval left, Interval right) {
-		//assert left != null && right != null;
-		//assert left.isIntegral() == right.isIntegral();
+		// assert left != null && right != null;
+		// assert left.isIntegral() == right.isIntegral();
 
 		boolean isIntegral = left.isIntegral();
 		boolean leftSU = left.strictUpper();
@@ -804,8 +804,7 @@ public class IntervalUnionSet implements Range {
 		} else if (otherArray[0].isUniversal()) {
 			// Only a universal set could contain itself
 			return false;
-		}
-		if (otherSize == 1) {
+		} else if (otherSize == 1) {
 			return contains(otherArray[0]);
 		}
 		while (thisIndex < thisSize) {
@@ -821,7 +820,18 @@ public class IntervalUnionSet implements Range {
 					int compareJoint = compareJoint(thisInterval, otherInterval);
 
 					if (compareJoint > 0) {
-						return false;
+						int compareUpper = compareUp(otherInterval,
+								thisInterval);
+
+						if (compareUpper < 0) {
+							otherIndex++;
+						} else if (compareUpper > 0) {
+							return false;
+						} else {
+							otherIndex++;
+							thisIndex++;
+							break;
+						}
 					} else {
 						if (thisIndex >= thisSize - 1) {
 							return false;
@@ -834,14 +844,20 @@ public class IntervalUnionSet implements Range {
 
 					if (compareUpper > 0) {
 						return false;
+					} else if (compareUpper < 0) {
+						otherIndex++;
 					} else {
 						otherIndex++;
-						continue;
+						thisIndex++;
+						break;
 					}
 				}
 			}
+			if (otherIndex == otherSize) {
+				return true;
+			}
 		}
-		return (otherSize - otherIndex) == 0;
+		return false;
 	}
 
 	@Override
@@ -904,9 +920,7 @@ public class IntervalUnionSet implements Range {
 		int thisSize = thisArray.length;
 		int otherSize = otherArray.length;
 
-		if (thisSize <= 0 && otherSize <= 0) {
-			return new IntervalUnionSet(isInt);
-		} else if (thisSize <= 0) {
+		if (thisSize <= 0) {
 			return new IntervalUnionSet(other);
 		} else if (otherSize <= 0) {
 			return new IntervalUnionSet(this);
@@ -1030,84 +1044,77 @@ public class IntervalUnionSet implements Range {
 		} else if (otherArray[0].isUniversal()) {
 			return new IntervalUnionSet(this);
 		}
+
 		while (thisIndex < thisSize && otherIndex < otherSize) {
-			while (thisIndex < thisSize) {
-				thisInterval = thisArray[thisIndex];
-				while (otherIndex < otherSize) {
-					Interval otherInterval = otherArray[otherIndex];
-					int compareLower = compareLo(otherInterval, thisInterval);
-					int compareUpper = compareUp(otherInterval, thisInterval);
+			thisInterval = thisArray[thisIndex];
+			Interval otherInterval = otherArray[otherIndex];
+			int compareLower = compareLo(otherInterval, thisInterval);
+			int compareUpper = compareUp(otherInterval, thisInterval);
 
-					if (compareLower < 0) {
-						if (compareUpper < 0) {
-							int compareJoint = compareJoint(otherInterval,
-									thisInterval);
+			if (compareLower < 0) {
+				if (compareUpper < 0) {
+					int compareJoint = compareJoint(otherInterval, thisInterval);
 
-							if (compareJoint > 0) {
-								list.add(numberFactory.newInterval(isInt,
-										thisInterval.lower(),
-										thisInterval.strictLower(),
-										otherInterval.upper(),
-										otherInterval.strictUpper()));
-								thisInterval = numberFactory.newInterval(isInt,
-										otherInterval.upper(),
-										!otherInterval.strictUpper(),
-										thisInterval.upper(),
-										thisInterval.strictUpper());
-							}
-							otherIndex++;
-						} else if (compareUpper > 0) {
-							list.add(thisInterval);
-							thisIndex++;
-						} else {
-							list.add(thisInterval);
-							thisIndex++;
-							otherIndex++;
-						}
-					} else if (compareLower > 0) {
-						if (compareUpper < 0) {
-							list.add(otherInterval);
-							thisInterval = numberFactory.newInterval(isInt,
-									otherInterval.upper(),
-									!otherInterval.strictUpper(),
-									thisInterval.upper(),
-									thisInterval.strictUpper());
-							otherIndex++;
-						} else if (compareUpper > 0) {
-							int compareJoint = compareJoint(thisInterval,
-									otherInterval);
-
-							if (compareJoint < 1) {
-								list.add(numberFactory.newInterval(isInt,
-										otherInterval.lower(),
-										otherInterval.strictLower(),
-										thisInterval.upper(),
-										thisInterval.strictUpper()));
-							}
-							thisIndex++;
-						} else {
-							list.add(otherInterval);
-							otherIndex++;
-							thisIndex++;
-						}
-					} else {
-						if (compareUpper < 0) {
-							list.add(otherInterval);
-							thisInterval = numberFactory.newInterval(isInt,
-									otherInterval.upper(),
-									!otherInterval.strictUpper(),
-									thisInterval.upper(),
-									thisInterval.strictUpper());
-							otherIndex++;
-						} else if (compareUpper > 0) {
-							list.add(thisInterval);
-							thisIndex++;
-						} else {
-							list.add(thisInterval);
-							thisIndex++;
-							otherIndex++;
-						}
+					if (compareJoint > 0) {
+						list.add(numberFactory.newInterval(isInt,
+								thisInterval.lower(),
+								thisInterval.strictLower(),
+								otherInterval.upper(),
+								otherInterval.strictUpper()));
+						thisInterval = numberFactory.newInterval(isInt,
+								otherInterval.upper(),
+								!otherInterval.strictUpper(),
+								thisInterval.upper(),
+								thisInterval.strictUpper());
 					}
+					otherIndex++;
+				} else if (compareUpper > 0) {
+					list.add(thisInterval);
+					thisIndex++;
+				} else {
+					list.add(thisInterval);
+					thisIndex++;
+					otherIndex++;
+				}
+			} else if (compareLower > 0) {
+				if (compareUpper < 0) {
+					list.add(otherInterval);
+					thisInterval = numberFactory.newInterval(isInt,
+							otherInterval.upper(),
+							!otherInterval.strictUpper(), thisInterval.upper(),
+							thisInterval.strictUpper());
+					otherIndex++;
+				} else if (compareUpper > 0) {
+					int compareJoint = compareJoint(thisInterval, otherInterval);
+
+					if (compareJoint > 0) {
+						list.add(numberFactory.newInterval(isInt,
+								otherInterval.lower(),
+								otherInterval.strictLower(),
+								thisInterval.upper(),
+								thisInterval.strictUpper()));
+					}
+					thisIndex++;
+				} else {
+					list.add(otherInterval);
+					otherIndex++;
+					thisIndex++;
+				}
+			} else {
+				if (compareUpper < 0) {
+					list.add(otherInterval);
+					thisInterval = numberFactory.newInterval(isInt,
+							otherInterval.upper(),
+							!otherInterval.strictUpper(), thisInterval.upper(),
+							thisInterval.strictUpper());
+					otherIndex++;
+				} else if (compareUpper > 0) {
+					list.add(thisInterval);
+					thisIndex++;
+				} else {
+					list.add(thisInterval);
+					thisIndex++;
+					otherIndex++;
 				}
 			}
 		}
@@ -1218,6 +1225,13 @@ public class IntervalUnionSet implements Range {
 						otherIndex++;
 					}
 				}
+			}
+			if (otherIndex == otherSize) {
+				while (thisIndex < thisSize) {
+					list.add(thisArray[thisIndex]);
+					thisIndex++;
+				}
+				break;
 			}
 		}
 
