@@ -1227,6 +1227,10 @@ public class IntervalUnionSet implements Range {
 				}
 			}
 			if (otherIndex == otherSize) {
+				if (thisIndex < thisSize) {
+					list.add(thisInterval);
+					thisIndex++;
+				}
 				while (thisIndex < thisSize) {
 					list.add(thisArray[thisIndex]);
 					thisIndex++;
