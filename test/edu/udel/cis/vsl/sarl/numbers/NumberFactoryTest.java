@@ -16,7 +16,6 @@ import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory.IntervalUnion;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.real.RealInteger;
 import edu.udel.cis.vsl.sarl.number.real.RealRational;
 
 public class NumberFactoryTest {
@@ -228,13 +227,13 @@ public class NumberFactoryTest {
 	}
 
 	/**
-	 * Testing integer method (converting a long to a RealInteger).
+	 * Testing integer method (converting a long to a IntegerNumber).
 	 */
 	@Test
 	public void longInt() {
 		long a = 30;
-		RealInteger b = (RealInteger) factory.integer(a);
-		RealInteger expectedB = (RealInteger) factory.integer(bigThirty);
+		IntegerNumber b = (IntegerNumber) factory.integer(a);
+		IntegerNumber expectedB = (IntegerNumber) factory.integer(bigThirty);
 		assertEquals(expectedB, b);
 
 	}
@@ -898,13 +897,13 @@ public class NumberFactoryTest {
 	public void intervalIntersectionNullInputI1() {
 		IntegerNumber lo2 = factory.integer(-314);
 		IntegerNumber up2 = factory.integer(427);
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl2 = true;
 		boolean su2 = true;
 		Interval i1 = null;
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
 		factory.intersection(i1, i2);
 	}
 
@@ -912,13 +911,13 @@ public class NumberFactoryTest {
 	public void intervalIntersectionNullInputI2() {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = null;
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		factory.intersection(i1, i2);
 	}
 
@@ -928,8 +927,8 @@ public class NumberFactoryTest {
 		IntegerNumber up1 = factory.integer(1);
 		RationalNumber lo2 = factory.rational(lo1);
 		RationalNumber up2 = factory.rational(up1);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -937,7 +936,7 @@ public class NumberFactoryTest {
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		assert (lo2 instanceof RealRational) == (up2 instanceof RealRational);
 
 		factory.intersection(i1, i2);
@@ -949,8 +948,8 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(1);
 		RationalNumber lo1 = factory.rational(lo2);
 		RationalNumber up1 = factory.rational(up2);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -959,7 +958,7 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 
 		assert (lo1 instanceof RealRational) == (up1 instanceof RealRational);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
 
 		factory.intersection(i1, i2);
 	}
@@ -973,9 +972,9 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = null;
 		IntegerNumber loR = factory.zeroInteger();
 		IntegerNumber upR = factory.zeroInteger();
-		boolean isIntegral1 = up1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = up1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -986,7 +985,7 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		Interval iRes = factory.intersection(i1, i2);
 
@@ -1002,9 +1001,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.integer(314));
 		RationalNumber loR = factory.rational(factory.zeroInteger());
 		RationalNumber upR = factory.rational(factory.zeroInteger());
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = false;
@@ -1033,9 +1032,9 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(427);
 		IntegerNumber loR = factory.integer(314);
 		IntegerNumber upR = factory.integer(314);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -1046,9 +1045,9 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		Interval iRes = factory.intersection(i1, i2);
 
@@ -1064,9 +1063,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.integer(315));
 		RationalNumber loR = factory.rational(factory.integer(314));
 		RationalNumber upR = factory.rational(factory.integer(315));
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1077,9 +1076,9 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		Interval iRes = factory.intersection(i1, i2);
 
@@ -1094,9 +1093,9 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(314);
 		IntegerNumber loR = factory.integer(-314);
 		IntegerNumber upR = factory.integer(314);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -1107,9 +1106,9 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		Interval iRes = factory.intersection(i1, i2);
 
@@ -1125,9 +1124,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.integer(314));
 		RationalNumber loR = null;
 		RationalNumber upR = factory.rational(factory.integer(314));
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1139,9 +1138,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		Interval iRes = factory.intersection(i1, i2);
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		assertTrue(factory.compare(iRes, iR) == 0);
 	}
@@ -1154,9 +1153,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.zeroInteger());
 		RationalNumber loR = factory.rational(factory.zeroInteger());
 		RationalNumber upR = factory.rational(factory.zeroInteger());
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1181,7 +1180,7 @@ public class NumberFactoryTest {
 	public void intervalUnionNullInputI1() {
 		IntegerNumber lo2 = factory.integer(-314);
 		IntegerNumber up2 = factory.integer(427);
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl2 = true;
 		boolean su2 = true;
 		Interval i1 = null;
@@ -1189,7 +1188,7 @@ public class NumberFactoryTest {
 		IntervalUnion iuRes = new IntervalUnion();
 		;
 
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
 		factory.union(i1, i2, iuRes);
 	}
 
@@ -1197,7 +1196,7 @@ public class NumberFactoryTest {
 	public void intervalUnionNullInputI2() {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
@@ -1205,7 +1204,7 @@ public class NumberFactoryTest {
 		IntervalUnion iuRes = new IntervalUnion();
 		;
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		factory.union(i1, i2, iuRes);
 	}
 
@@ -1213,14 +1212,14 @@ public class NumberFactoryTest {
 	public void intervalUnionNullInputIU() {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = i1;
 		IntervalUnion iuRes = null;
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		factory.union(i1, i2, iuRes);
 	}
 
@@ -1230,8 +1229,8 @@ public class NumberFactoryTest {
 		IntegerNumber up1 = factory.integer(1);
 		RationalNumber lo2 = factory.rational(lo1);
 		RationalNumber up2 = factory.rational(up1);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1241,7 +1240,7 @@ public class NumberFactoryTest {
 		IntervalUnion iuRes = new IntervalUnion();
 		;
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		assert (lo2 instanceof RealRational) == (up2 instanceof RealRational);
 
 		factory.union(i1, i2, iuRes);
@@ -1253,8 +1252,8 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(1);
 		RationalNumber lo1 = factory.rational(lo2);
 		RationalNumber up1 = factory.rational(up2);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1265,7 +1264,7 @@ public class NumberFactoryTest {
 		;
 
 		assert (lo1 instanceof RealRational) == (up1 instanceof RealRational);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 	}
@@ -1277,8 +1276,8 @@ public class NumberFactoryTest {
 		IntegerNumber up1 = factory.integer(-314);
 		IntegerNumber lo2 = factory.integer(314);
 		IntegerNumber up2 = null;
-		boolean isIntegral1 = up1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = up1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -1287,8 +1286,8 @@ public class NumberFactoryTest {
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert up1 instanceof RealInteger;
-		assert lo2 instanceof RealInteger;
+		assert up1 instanceof IntegerNumber;
+		assert lo2 instanceof IntegerNumber;
 
 		factory.union(i1, i2, iuRes);
 
@@ -1303,8 +1302,8 @@ public class NumberFactoryTest {
 		RationalNumber up1 = factory.rational(factory.integer(427));
 		RationalNumber lo2 = factory.rational(factory.integer(-314));
 		RationalNumber up2 = factory.rational(factory.integer(314));
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1331,9 +1330,9 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(427);
 		IntegerNumber loR = factory.integer(-427);
 		IntegerNumber upR = factory.integer(427);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -1345,9 +1344,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 
@@ -1364,9 +1363,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.integer(314));
 		RationalNumber loR = null;
 		RationalNumber upR = null;
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = up2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = up2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1378,9 +1377,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 
@@ -1397,9 +1396,9 @@ public class NumberFactoryTest {
 		IntegerNumber up2 = factory.integer(314);
 		IntegerNumber loR = factory.integer(-427);
 		IntegerNumber upR = factory.integer(427);
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = false;
 		boolean su1 = false;
 		boolean sl2 = false;
@@ -1411,9 +1410,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 
@@ -1430,9 +1429,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = factory.rational(factory.integer(314));
 		RationalNumber loR = null;
 		RationalNumber upR = factory.rational(factory.integer(314));
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = false;
 		boolean sl2 = true;
@@ -1444,9 +1443,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 
@@ -1462,9 +1461,9 @@ public class NumberFactoryTest {
 		RationalNumber up2 = null;
 		RationalNumber loR = null;
 		RationalNumber upR = null;
-		boolean isIntegral1 = lo1 instanceof RealInteger;
-		boolean isIntegral2 = lo2 instanceof RealInteger;
-		boolean isIntegralR = loR instanceof RealInteger;
+		boolean isIntegral1 = lo1 instanceof IntegerNumber;
+		boolean isIntegral2 = lo2 instanceof IntegerNumber;
+		boolean isIntegralR = loR instanceof IntegerNumber;
 		boolean sl1 = true;
 		boolean su1 = true;
 		boolean sl2 = true;
@@ -1476,9 +1475,9 @@ public class NumberFactoryTest {
 		Interval iR = factory.newInterval(isIntegralR, loR, slR, upR, suR);
 		IntervalUnion iuRes = new IntervalUnion();
 
-		assert (lo1 instanceof RealInteger) == (up1 instanceof RealInteger);
-		assert (lo2 instanceof RealInteger) == (up2 instanceof RealInteger);
-		assert (loR instanceof RealInteger) == (upR instanceof RealInteger);
+		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
+		assert (lo2 instanceof IntegerNumber) == (up2 instanceof IntegerNumber);
+		assert (loR instanceof IntegerNumber) == (upR instanceof IntegerNumber);
 
 		factory.union(i1, i2, iuRes);
 
@@ -1535,12 +1534,12 @@ public class NumberFactoryTest {
 		RationalNumber b = null;
 		RationalNumber lo = factory.rational(factory.integer(1));
 		RationalNumber up = factory.rational(factory.integer(1));
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
-		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
 		assert (lo instanceof RealRational) == (up instanceof RealRational);
 
 		factory.affineTransform(itv, a, b);
@@ -1560,12 +1559,12 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(3));
 		RationalNumber lo = factory.rational(factory.integer(-4));
 		RationalNumber up = factory.rational(factory.integer(4));
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
-		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
 		assert (lo instanceof RealRational) == (up instanceof RealRational);
 
 		factory.affineTransform(itv, a, b);
@@ -1585,12 +1584,12 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.integer(3);
 		IntegerNumber lo = factory.integer(-4);
 		IntegerNumber up = factory.integer(4);
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
-		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
 		assert (lo instanceof RealRational) == (up instanceof RealRational);
 
 		factory.affineTransform(itv, a, b);
@@ -1610,12 +1609,12 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.integer(3);
 		RationalNumber lo = factory.rational(factory.integer(-4));
 		RationalNumber up = factory.rational(factory.integer(4));
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
-		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
 		assert (lo instanceof RealRational) == (up instanceof RealRational);
 
 		factory.affineTransform(itv, a, b);
@@ -1635,12 +1634,12 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(3));
 		IntegerNumber lo = factory.integer(-4);
 		IntegerNumber up = factory.integer(4);
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
-		assert (lo instanceof RealInteger) == (up instanceof RealInteger);
+		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
 		assert (lo instanceof RealRational) == (up instanceof RealRational);
 
 		factory.affineTransform(itv, a, b);
@@ -1678,9 +1677,9 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.integer(314);
 		IntegerNumber lo = null;
 		IntegerNumber up = factory.integer(1);
-		boolean isIntegral = up instanceof RealInteger;
-		boolean sl = true;
-		boolean su = true;
+		boolean isIntegral = up instanceof IntegerNumber;
+		boolean sl = false;
+		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 		Interval result = factory.affineTransform(itv, a, b);
 
@@ -1700,7 +1699,7 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(314));
 		RationalNumber lo = factory.rational(factory.integer(-1));
 		RationalNumber up = null;
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
@@ -1724,9 +1723,9 @@ public class NumberFactoryTest {
 		IntegerNumber up = factory.integer(427);
 		IntegerNumber reslo = factory.integer(-427);
 		IntegerNumber resup = factory.integer(-314);
-		boolean isIntegral = lo instanceof RealInteger;
-		boolean sl = true;
-		boolean su = true;
+		boolean isIntegral = lo instanceof IntegerNumber;
+		boolean sl = false;
+		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 		Interval result = factory.affineTransform(itv, a, b);
 
@@ -1746,7 +1745,7 @@ public class NumberFactoryTest {
 		IntegerNumber b = factory.integer(3);
 		IntegerNumber lo = null;
 		IntegerNumber up = factory.integer(427);
-		boolean isIntegral = up instanceof RealInteger;
+		boolean isIntegral = up instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
@@ -1769,7 +1768,7 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(314));
 		RationalNumber lo = factory.rational(factory.integer(427));
 		RationalNumber up = null;
-		boolean isIntegral = up instanceof RealInteger;
+		boolean isIntegral = up instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
@@ -1792,7 +1791,7 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(314));
 		RationalNumber lo = null;
 		RationalNumber up = factory.rational(factory.integer(427));
-		boolean isIntegral = up instanceof RealInteger;
+		boolean isIntegral = up instanceof IntegerNumber;
 		boolean sl = false;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
@@ -1815,7 +1814,7 @@ public class NumberFactoryTest {
 		RationalNumber b = factory.rational(factory.integer(314));
 		RationalNumber lo = null;
 		RationalNumber up = null;
-		boolean isIntegral = lo instanceof RealInteger;
+		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
