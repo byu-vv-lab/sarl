@@ -1097,10 +1097,10 @@ public class NumberFactoryTest {
 		boolean isIntegral1 = lo1 instanceof RealInteger;
 		boolean isIntegral2 = lo2 instanceof RealInteger;
 		boolean isIntegralR = loR instanceof RealInteger;
-		boolean sl1 = true;
-		boolean su1 = true;
-		boolean sl2 = true;
-		boolean su2 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
+		boolean sl2 = false;
+		boolean su2 = false;
 		boolean slR = false;
 		boolean suR = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
