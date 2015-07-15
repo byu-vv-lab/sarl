@@ -1234,8 +1234,9 @@ public class IntervalUnionSet implements Range {
 			}
 			if (otherIndex == otherSize) {
 				if (thisIndex < thisSize) {
-					int compareUp = compareUp(thisInterval, thisArray[thisIndex]);
-					
+					int compareUp = compareUp(thisInterval,
+							thisArray[thisIndex]);
+
 					if (compareUp == 0) {
 						list.add(thisInterval);
 						thisIndex++;
@@ -1267,19 +1268,19 @@ public class IntervalUnionSet implements Range {
 	@Override
 	public IntervalUnionSet affineTransform(Number a, Number b) {
 		assert a != null && b != null;
-		assert (a instanceof IntegerNumber == b instanceof IntegerNumber) == isInt;
+		assert a instanceof IntegerNumber == isInt;
+		assert b instanceof IntegerNumber == isInt;
 
 		int index = 0;
 		int size = intervalArray.length;
 		Interval[] tempArray = new Interval[size];
 		Interval temp = null, current = null;
 
-		if (0 >= size) {
+		if (0 == size) {
 			return new IntervalUnionSet(isInt);
 		}
 		current = intervalArray[index];
-		if (current.lower() == null && current.upper() == null) {
-			assert size == 1;
+		if (current.isUniversal()) {
 			return new IntervalUnionSet(this);
 		}
 		if (a.signum() == 0) {
@@ -1298,9 +1299,9 @@ public class IntervalUnionSet implements Range {
 				temp = numberFactory.affineTransform(current, a, b);
 				index++;
 				tempArray[size - index] = temp;
-
 			}
 		}
+
 		IntervalUnionSet result = new IntervalUnionSet(isInt, size);
 
 		System.arraycopy(tempArray, 0, result.intervalArray, 0, size);
@@ -1515,8 +1516,7 @@ public class IntervalUnionSet implements Range {
 		return true;
 	}
 	// TODO: Testing functions to improve the code coverage
-	// "contains" "intersects" "intersect" "union" "minus" "complement"
-	// "affineTransform"
+	// "affineTransform" "checkInvariant" "symbolicRepresentation"
 	// TODO: Do a performance testing for small intervals by looping it several
 	// times.
 }
