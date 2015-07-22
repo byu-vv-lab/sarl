@@ -459,7 +459,7 @@ public class IntervalUnionSet implements Range {
 		}
 		if (noIntersection) {
 			// assert start >= end;
-			start = end == -1  ? 0 : start;
+			start = end == -1 ? 0 : start;
 			start = start == -1 ? 0 : start;
 			list.add(start, interval);
 		} else {
@@ -999,6 +999,26 @@ public class IntervalUnionSet implements Range {
 			return new IntervalUnionSet(this);
 		} else if (otherArray[0].isUniversal()) {
 			return new IntervalUnionSet(other);
+		}
+		// Using binary method to union a set with single interval
+		if (thisSize == 1) {
+			thisArray = otherArray;
+			otherArray = intervalArray;
+			thisSize = otherSize;
+			otherSize = 1;
+		}
+		if (otherSize == 1) {
+			ArrayList<Interval> list = new ArrayList<Interval>();
+
+			for (Interval i : thisArray) {
+				list.add(i);
+			}
+			addInterval(list, otherArray[0]);
+
+			IntervalUnionSet result = new IntervalUnionSet(isInt, list.size());
+
+			list.toArray(result.intervalArray);
+			return result;
 		}
 
 		int thisIndex = 0, otherIndex = 0;
