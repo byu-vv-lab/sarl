@@ -98,7 +98,9 @@ public interface Range {
 
 	/**
 	 * Computes the set aX+b, where X is this set. That is, the set of all
-	 * numbers of the form ax+b, where x is in this set.
+	 * numbers of the form ax+b, where x is in this set. (For integral
+	 * {@link Interval} set, it will return the set including all transformed
+	 * integers, which are contained in the original set.)
 	 * 
 	 * @param a
 	 *            a number of the same type as this set
