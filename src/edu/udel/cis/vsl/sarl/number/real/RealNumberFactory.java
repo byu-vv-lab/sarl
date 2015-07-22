@@ -932,52 +932,8 @@ public class RealNumberFactory implements NumberFactory {
 	@Override
 	public Interval newInterval(boolean isIntegral, Number lower,
 			boolean strictLower, Number upper, boolean strictUpper) {
-		boolean sl = strictLower, su = strictUpper;
-		Number lo = lower, up = upper;
-		int compare = 0;
-		
-		if (lo == null && up == null) {
-			sl = true;
-			su = true;
-		} else if (lo == null) {
-			sl = true;
-			if (isIntegral && su) {
-				up = subtract(up, oneInteger);
-				su = false;
-			}
-		} else if (up == null) {
-			su = true;
-			if (isIntegral && sl) {
-				lo = add(lo, oneInteger);
-				sl = false;
-			}
-		} else {
-			if (isIntegral && sl) {
-				lo = add(lo, oneInteger);
-				sl = false;
-			}
-			if (isIntegral && su) {
-				up = subtract(up, oneInteger);
-				su = false;
-			}
-			compare = subtract(up, lo).signum();
-			if (isIntegral) {
-				if (compare < 0) {
-					return emptyIntegerInterval;
-				}
-			}else{
-				if (!sl && !su) {
-					if (compare < 0) {
-						return emptyRationalInterval;
-					}
-				}else {
-					if (compare <= 0) {
-						return emptyRationalInterval;
-					}
-				}
-			}
-		}
-		return new CommonInterval(isIntegral, lo, sl, up, su);
+		return new CommonInterval(isIntegral, lower, strictLower, upper,
+				strictUpper);
 	}
 
 	@Override
