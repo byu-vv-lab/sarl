@@ -11,7 +11,6 @@ import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.number.Numbers;
-import edu.udel.cis.vsl.sarl.number.real.CommonInterval;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.simplify.IF.Range;
 
@@ -460,7 +459,8 @@ public class IntervalUnionSet implements Range {
 		}
 		if (noIntersection) {
 			// assert start >= end;
-			start = end == -1 ? 0 : start;
+			start = end == -1  ? 0 : start;
+			start = start == -1 ? 0 : start;
 			list.add(start, interval);
 		} else {
 			start = start < 0 ? 0 : start;
