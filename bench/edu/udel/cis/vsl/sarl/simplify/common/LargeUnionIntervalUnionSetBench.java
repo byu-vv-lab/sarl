@@ -32,7 +32,6 @@ public class LargeUnionIntervalUnionSetBench {
 		}
 		end = System.currentTimeMillis();
 		mark = end - start;
-		//System.out.println(intervalUnionSet.toString());
 		System.out
 				.println("To union ("
 						+ numexpr
@@ -53,7 +52,6 @@ public class LargeUnionIntervalUnionSetBench {
 		}
 		end = System.currentTimeMillis();
 		mark = end - start;
-		//System.out.println(intervalUnionSet.toString());
 		System.out.println("To union (" + numexpr
 				+ ") intervalUnionSets with ordered jointed interval takes: ("
 				+ mark + ") Millis");
@@ -75,7 +73,6 @@ public class LargeUnionIntervalUnionSetBench {
 		}
 		end = System.currentTimeMillis();
 		mark = end - start;
-		//System.out.println(intervalUnionSet.toString());
 		System.out
 				.println("To union ("
 						+ numexpr
@@ -99,12 +96,10 @@ public class LargeUnionIntervalUnionSetBench {
 		}
 		end = System.currentTimeMillis();
 		mark = end - start;
-		//System.out.println(intervalUnionSet.toString());
 		System.out
 				.println("To union ("
 						+ numexpr
 						+ ") intervalUnionSets with random (mostly jointed) interval takes: ("
 						+ mark + ") Millis");
 	}
-
 }
