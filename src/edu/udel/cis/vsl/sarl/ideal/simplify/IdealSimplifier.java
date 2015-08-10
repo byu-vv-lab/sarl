@@ -570,6 +570,23 @@ public class IdealSimplifier extends CommonSimplifier {
 				BooleanExpression newAssumption = (BooleanExpression) simplifyExpression(assumption);
 
 				rawAssumption = newAssumption;
+				// at this point, rawAssumption contains only those facts that
+				// could not be
+				// determined from the booleanMap, boundMap, or constantMap.
+				// these facts need to be added back in---except for the case
+				// where
+				// a symbolic constant is mapped to a concrete value in the
+				// constantMap.
+				// such symbolic constants will be entirely eliminated from the
+				// assumption
+
+				// after SimplifyExpression, the removable symbolic constants
+				// should all be gone, replaced with their concrete values.
+				// However, as we add back in facts from the constant map,
+				// bound map and boolean
+				// map, those symbolic constants might sneak back in!
+				// We will remove them again later.
+
 				for (BoundsObject bound : boundMap.values()) {
 					BooleanExpression constraint = boundToIdeal(bound);
 
@@ -606,6 +623,21 @@ public class IdealSimplifier extends CommonSimplifier {
 										: info.booleanFactory.not(primitive));
 					}
 				}
+
+				// now we remove those removable symbolic constants...
+
+				Map<SymbolicExpression, SymbolicExpression> substitutionMap = new HashMap<>();
+
+				for (Entry<Polynomial, Number> entry : constantMap.entrySet()) {
+					SymbolicExpression key = entry.getKey();
+
+					if (key.operator() == SymbolicOperator.SYMBOLIC_CONSTANT)
+						substitutionMap.put(key,
+								universe.number(entry.getValue()));
+				}
+				newAssumption = (BooleanExpression) universe.mapSubstituter(
+						substitutionMap).apply(newAssumption);
+
 				if (assumption.equals(newAssumption))
 					break;
 				assumption = (BooleanExpression) universe
@@ -658,6 +690,9 @@ public class IdealSimplifier extends CommonSimplifier {
 
 				assert !bounds.strictLower && !bounds.strictUpper;
 				constantMap.put(expression, lower);
+
+				// TODO: consider removing the entry from bounds map
+
 				processHerbrandCast(expression, lower);
 			}
 		}
