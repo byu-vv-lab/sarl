@@ -42,25 +42,10 @@ public class NumberFactoryTest {
 	private static IntegerNumber INT_ONE = factory.integer(bigOne);
 	private static IntegerNumber INT_TWO = factory.integer(bigTwo);
 	private static IntegerNumber INT_THREE = factory.integer(bigThree);
-	private static IntegerNumber INT_FIVE = factory.integer(bigFive);
-	private static IntegerNumber INT_SIX = factory.integer(bigSix);
-	private static IntegerNumber INT_EIGHT = factory.integer(bigEight);
-	private static IntegerNumber INT_TEN = factory.integer(bigTen);
-	private static IntegerNumber INT_N_ONE = factory.integer(bigNegativeOne);
-	private static IntegerNumber INT_N_THREE = factory
-			.integer(bigNegativeThree);
-	private static IntegerNumber INT_N_TEN = factory.integer(bigNegativeTen);
 	private static RationalNumber RAT_ZERO = factory.rational(INT_ZERO);
 	private static RationalNumber RAT_ONE = factory.rational(INT_ONE);
 	private static RationalNumber RAT_TWO = factory.rational(INT_TWO);
 	private static RationalNumber RAT_THREE = factory.rational(INT_THREE);
-	private static RationalNumber RAT_FIVE = factory.rational(INT_FIVE);
-	private static RationalNumber RAT_SIX = factory.rational(INT_SIX);
-	private static RationalNumber RAT_EIGHT = factory.rational(INT_EIGHT);
-	private static RationalNumber RAT_TEN = factory.rational(INT_TEN);
-	private static RationalNumber RAT_N_ONE = factory.rational(INT_N_ONE);
-	private static RationalNumber RAT_N_THREE = factory.rational(INT_N_THREE);
-	private static RationalNumber RAT_N_TEN = factory.rational(INT_N_TEN);
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
