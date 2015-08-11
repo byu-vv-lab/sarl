@@ -30,6 +30,7 @@ import edu.udel.cis.vsl.sarl.preuniverse.IF.FactorySystem;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 import edu.udel.cis.vsl.sarl.preuniverse.common.CommonPreUniverse;
 
+@SuppressWarnings("unused")
 public class CanonicalRenamerTest {
 
 	private static PrintStream out = System.out;
