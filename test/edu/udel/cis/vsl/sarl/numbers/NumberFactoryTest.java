@@ -898,8 +898,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo2 = factory.integer(-314);
 		IntegerNumber up2 = factory.integer(427);
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl2 = true;
-		boolean su2 = true;
+		boolean sl2 = false;
+		boolean su2 = false;
 		Interval i1 = null;
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 
@@ -912,8 +912,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = null;
 
@@ -923,14 +923,14 @@ public class NumberFactoryTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void intervalIntersectionInvalInputI1IntI2Rat() {
-		IntegerNumber lo1 = factory.integer(1);
+		IntegerNumber lo1 = factory.integer(-1);
 		IntegerNumber up1 = factory.integer(1);
 		RationalNumber lo2 = factory.rational(lo1);
 		RationalNumber up2 = factory.rational(up1);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
 		boolean sl2 = true;
 		boolean su2 = true;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
@@ -950,10 +950,10 @@ public class NumberFactoryTest {
 		RationalNumber up1 = factory.rational(up2);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
-		boolean sl2 = true;
-		boolean su2 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
+		boolean sl2 = false;
+		boolean su2 = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 
@@ -1181,8 +1181,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo2 = factory.integer(-314);
 		IntegerNumber up2 = factory.integer(427);
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl2 = true;
-		boolean su2 = true;
+		boolean sl2 = false;
+		boolean su2 = false;
 		Interval i1 = null;
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		IntervalUnion iuRes = new IntervalUnion();
@@ -1197,8 +1197,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = null;
 		IntervalUnion iuRes = new IntervalUnion();
@@ -1213,8 +1213,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo1 = factory.integer(-314);
 		IntegerNumber up1 = factory.integer(427);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = i1;
 		IntervalUnion iuRes = null;
@@ -1225,20 +1225,19 @@ public class NumberFactoryTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void intervalUnionInvalInputI1IntI2Rat() {
-		IntegerNumber lo1 = factory.integer(1);
+		IntegerNumber lo1 = factory.integer(-1);
 		IntegerNumber up1 = factory.integer(1);
 		RationalNumber lo2 = factory.rational(lo1);
 		RationalNumber up2 = factory.rational(up1);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
 		boolean sl2 = true;
 		boolean su2 = true;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		IntervalUnion iuRes = new IntervalUnion();
-		;
 
 		assert (lo1 instanceof IntegerNumber) == (up1 instanceof IntegerNumber);
 		assert (lo2 instanceof RealRational) == (up2 instanceof RealRational);
@@ -1248,16 +1247,16 @@ public class NumberFactoryTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void intervalUnionInvalInputI1RatI2Int() {
-		IntegerNumber lo2 = factory.integer(1);
+		IntegerNumber lo2 = factory.integer(-1);
 		IntegerNumber up2 = factory.integer(1);
 		RationalNumber lo1 = factory.rational(lo2);
 		RationalNumber up1 = factory.rational(up2);
 		boolean isIntegral1 = lo1 instanceof IntegerNumber;
 		boolean isIntegral2 = lo2 instanceof IntegerNumber;
-		boolean sl1 = true;
-		boolean su1 = true;
-		boolean sl2 = true;
-		boolean su2 = true;
+		boolean sl1 = false;
+		boolean su1 = false;
+		boolean sl2 = false;
+		boolean su2 = false;
 		Interval i1 = factory.newInterval(isIntegral1, lo1, sl1, up1, su1);
 		Interval i2 = factory.newInterval(isIntegral2, lo2, sl2, up2, su2);
 		IntervalUnion iuRes = new IntervalUnion();
@@ -1513,9 +1512,9 @@ public class NumberFactoryTest {
 		IntegerNumber a = null;
 		IntegerNumber b = factory.integer(1);
 		IntegerNumber lo = factory.integer(-10);
-		Number up = factory.number("10");
-		boolean sl = true;
-		boolean su = true;
+		IntegerNumber up = factory.integer(10);
+		boolean sl = false;
+		boolean su = false;
 		Interval itv = factory.newInterval(true, lo, sl, up, su);
 
 		factory.affineTransform(itv, a, b);
@@ -1532,7 +1531,7 @@ public class NumberFactoryTest {
 	public void intervalAffineTransformNullInputOfNumber_b() {
 		RationalNumber a = factory.rational(factory.integer(1));
 		RationalNumber b = null;
-		RationalNumber lo = factory.rational(factory.integer(1));
+		RationalNumber lo = factory.rational(factory.integer(-1));
 		RationalNumber up = factory.rational(factory.integer(1));
 		boolean isIntegral = lo instanceof IntegerNumber;
 		boolean sl = true;
@@ -1585,8 +1584,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo = factory.integer(-4);
 		IntegerNumber up = factory.integer(4);
 		boolean isIntegral = lo instanceof IntegerNumber;
-		boolean sl = true;
-		boolean su = true;
+		boolean sl = false;
+		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
 		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
@@ -1635,8 +1634,8 @@ public class NumberFactoryTest {
 		IntegerNumber lo = factory.integer(-4);
 		IntegerNumber up = factory.integer(4);
 		boolean isIntegral = lo instanceof IntegerNumber;
-		boolean sl = true;
-		boolean su = true;
+		boolean sl = false;
+		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 
 		assert (lo instanceof IntegerNumber) == (up instanceof IntegerNumber);
@@ -1678,7 +1677,7 @@ public class NumberFactoryTest {
 		IntegerNumber lo = null;
 		IntegerNumber up = factory.integer(1);
 		boolean isIntegral = up instanceof IntegerNumber;
-		boolean sl = false;
+		boolean sl = true;
 		boolean su = false;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 		Interval result = factory.affineTransform(itv, a, b);
@@ -1770,7 +1769,7 @@ public class NumberFactoryTest {
 		RationalNumber up = null;
 		boolean isIntegral = up instanceof IntegerNumber;
 		boolean sl = true;
-		boolean su = false;
+		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 		Interval expectedRes = factory.newInterval(isIntegral, b, false, b,
 				false);
@@ -1792,7 +1791,7 @@ public class NumberFactoryTest {
 		RationalNumber lo = null;
 		RationalNumber up = factory.rational(factory.integer(427));
 		boolean isIntegral = up instanceof IntegerNumber;
-		boolean sl = false;
+		boolean sl = true;
 		boolean su = true;
 		Interval itv = factory.newInterval(isIntegral, lo, sl, up, su);
 		Interval expectedRes = factory.newInterval(isIntegral, b, false, b,
