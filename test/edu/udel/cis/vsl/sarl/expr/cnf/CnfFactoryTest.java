@@ -29,9 +29,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.udel.cis.vsl.sarl.SARL;
+import edu.udel.cis.vsl.sarl.IF.SymbolicUniverse;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericSymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression.SymbolicOperator;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -428,4 +432,19 @@ public class CnfFactoryTest {
 		assertNotEquals("hello", hellotest.toString());
 	}
 
+	@Test
+	public void unsatisfiableTest() {
+		SymbolicUniverse universe = SARL.newStandardUniverse();
+		NumericExpression two = universe.integer(2);
+		SymbolicConstant X = universe.symbolicConstant(
+				universe.stringObject("X"), universe.integerType());
+		BooleanExpression clause1 = universe.lessThanEquals(
+				universe.divide((NumericExpression) X, two), universe.oneInt());
+		BooleanExpression clause2 = universe.lessThanEquals(
+				universe.integer(3), (NumericExpression) X);
+
+		BooleanExpression result = universe.reasoner(
+				universe.and(clause1, clause2)).getReducedContext();
+		System.out.println(result);
+	}
 }
