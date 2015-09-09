@@ -242,7 +242,7 @@ public class IdealSimplifier extends CommonSimplifier {
 
 				if (result != f1) {
 					if (result instanceof Monomial) {
-						result = ((Monomial)result).expand(info.idealFactory);
+						result = ((Monomial) result).expand(info.idealFactory);
 					}
 					if (result.degree() < polynomial.degree())
 						return result;
@@ -793,37 +793,35 @@ public class IdealSimplifier extends CommonSimplifier {
 				// aBooleanMap)....
 				satisfiable = satisfiable || newSatisfiable;
 				if (newSatisfiable) {
-					LinkedList<BooleanExpression> removeList = new LinkedList<BooleanExpression>();
+					LinkedList<SymbolicExpression> boundRemoveList = new LinkedList<>();
+					LinkedList<BooleanExpression> booleanRemoveList = new LinkedList<>();
 
-					// not quite right:
-					// bounds: if primitive occurs in one map but not the other,
-					// no bound is known: it must be removed
-					// booleanMap: if ditto
-					
-					// might be simpler to compute boundMap/booleanMap just
-					// for the or expression and then AND it with the real one
-					
-					for (Map.Entry<Polynomial, BoundsObject> entry : newBoundMap
+					for (Map.Entry<Polynomial, BoundsObject> entry : aBoundMap
 							.entrySet()) {
 						SymbolicExpression primitive = entry.getKey();
-						BoundsObject bound2 = entry.getValue();
-						BoundsObject bound1 = aBoundMap.get(primitive);
+						BoundsObject oldBound = entry.getValue();
+						BoundsObject newBound = newBoundMap.get(primitive);
 
-						if (bound1 != null)
-							// TODO: if bound1 becomes vacuous, remove it
-							bound1.enlargeTo(bound2);
+						if (newBound == null) {
+							boundRemoveList.add(primitive);
+						} else {
+							oldBound.enlargeTo(newBound);
+							if (oldBound.isUniversal())
+								boundRemoveList.add(primitive);
+						}
 					}
-					for (Map.Entry<BooleanExpression, Boolean> entry : newBooleanMap
+					for (SymbolicExpression primitive : boundRemoveList)
+						aBoundMap.remove(primitive);
+					for (Map.Entry<BooleanExpression, Boolean> entry : aBooleanMap
 							.entrySet()) {
 						BooleanExpression primitive = entry.getKey();
-						Boolean newValue = entry.getValue();
-						assert newValue != null;
-						Boolean oldValue = aBooleanMap.get(primitive);
+						Boolean oldValue = entry.getValue();
+						Boolean newValue = newBooleanMap.get(primitive);
 
-						if (oldValue != null && !oldValue.equals(newValue))
-							removeList.add(primitive);
+						if (newValue == null || !newValue.equals(oldValue))
+							booleanRemoveList.add(primitive);
 					}
-					for (BooleanExpression primitive : removeList)
+					for (BooleanExpression primitive : booleanRemoveList)
 						aBooleanMap.remove(primitive);
 				}
 			}
