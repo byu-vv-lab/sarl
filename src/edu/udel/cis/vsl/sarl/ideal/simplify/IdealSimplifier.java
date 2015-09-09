@@ -240,8 +240,13 @@ public class IdealSimplifier extends CommonSimplifier {
 			if (f1.degree() > 1) { // nontrivial factorization
 				result = (Polynomial) simplifyGenericExpression(f1);
 
-				if (result.degree() < polynomial.degree())
-					return result;
+				if (result != f1) {
+					if (result instanceof Monomial) {
+						result = ((Monomial)result).expand(info.idealFactory);
+					}
+					if (result.degree() < polynomial.degree())
+						return result;
+				}
 			}
 			result = (Polynomial) simplifyGenericExpression(polynomial);
 			return result;
@@ -790,6 +795,14 @@ public class IdealSimplifier extends CommonSimplifier {
 				if (newSatisfiable) {
 					LinkedList<BooleanExpression> removeList = new LinkedList<BooleanExpression>();
 
+					// not quite right:
+					// bounds: if primitive occurs in one map but not the other,
+					// no bound is known: it must be removed
+					// booleanMap: if ditto
+					
+					// might be simpler to compute boundMap/booleanMap just
+					// for the or expression and then AND it with the real one
+					
 					for (Map.Entry<Polynomial, BoundsObject> entry : newBoundMap
 							.entrySet()) {
 						SymbolicExpression primitive = entry.getKey();
