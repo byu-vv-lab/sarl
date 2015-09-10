@@ -294,10 +294,13 @@ public class IdealSimplifier extends CommonSimplifier {
 		case EQUALS:
 			result = simplifyEQ0(poly);
 			return result == null ? expression : result;
-		case NEQ:
-			result = simplifyEQ0(poly);
-			return result == null ? expression
-					: (BooleanExpression) info.universe.not(result);
+		case NEQ: {
+			BooleanExpression negExpression = universe.not(expression);
+
+			result = (BooleanExpression) simplifyExpression(negExpression);
+			result = universe.not(result);
+			return result;
+		}
 		default:
 			throw new SARLInternalException("unreachable");
 		}
@@ -1122,10 +1125,19 @@ public class IdealSimplifier extends CommonSimplifier {
 			return expression;
 		if (expression instanceof Polynomial)
 			return simplifyPolynomial((Polynomial) expression);
-		if (isNumericRelational(expression))
-			return simplifyRelational((BooleanExpression) expression);
-		if (expression.isTrue() || expression.isFalse())
-			return expression;
+		if (expression.type() != null && expression.type().isBoolean()) {
+			if (expression.isTrue() || expression.isFalse())
+				return expression;
+
+			Boolean booleanResult = booleanMap.get(expression);
+
+			if (booleanResult != null) {
+				return booleanResult ? universe.trueExpression() : universe
+						.falseExpression();
+			}
+			if (isNumericRelational(expression))
+				return simplifyRelational((BooleanExpression) expression);
+		}
 		return simplifyGenericExpression(expression);
 	}
 
