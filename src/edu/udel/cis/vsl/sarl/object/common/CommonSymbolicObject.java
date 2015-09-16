@@ -19,6 +19,8 @@
 package edu.udel.cis.vsl.sarl.object.common;
 
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
+import edu.udel.cis.vsl.sarl.util.EmptyIterable;
 
 /**
  * A partial implementation of {@link SymbolicObject}. Does not maintain the
@@ -32,23 +34,17 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	// Constants (static fields):
 
 	/**
-	 * Indicates an object is <strong>free</strong>: mutable and the child of
-	 * any object.
+	 * Indicates an object is <strong>MUTABLE</strong>. In particular it and all
+	 * of its ancestors each has at most one parent.
 	 */
-	private final static int FREE = -1000;
-
-	/**
-	 * Indicates an object is <strong>owned</strong>: mutable but is the child
-	 * of exactly one other object (its parent).
-	 */
-	private final static int OWNED = FREE + 1;
+	private final static int MUTABLE = -1000;
 
 	/**
 	 * Indicates an object is <strong>committed</strong> but not yet hashed. The
-	 * object is immutable but its hash code has not been computed and cached,
-	 * and it is not canonic.
+	 * object is currently immutable but its hash code has not been computed and
+	 * cached, and it is not canonic.
 	 */
-	private final static int COMMITTED = OWNED + 1;
+	private final static int COMMITTED = MUTABLE + 1;
 
 	/**
 	 * Indicates that an object is <strong>committed</strong> and hashed. The
@@ -61,6 +57,8 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * returned by the {@link #toString()} method.
 	 */
 	private final static boolean debug = false;
+
+	protected final static Iterable<SymbolicObject> emptyIterable = new EmptyIterable<>();
 
 	// Instance fields:
 
@@ -80,15 +78,25 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	 * of {@link #FREE}, {@link #OWNED}, {@link #COMMITTED}, {@link #HASHED}:
 	 * all of which are negative.
 	 */
-	private int status = FREE;
+	private int status = MUTABLE;
 
-	// /**
-	// * An infinite-precision rational number associated to this object to
-	// * facilitate comparisons. CURRENTLY NOT USED.
-	// */
-	// private RationalNumber order;
+	/**
+	 * The total number of references from mutable objects to this object. An
+	 * external reference (i.e., a reference from any object which is not a
+	 * {@link SymbolicObject}), is considered mutable and is included in this
+	 * total. If one object contains 2 references to this, that contributes 2 to
+	 * this total.
+	 * 
+	 * This will be set to 0 and not used if this object is made canonic.
+	 */
+	private int mutableReferenceCount = 0;
 
-	// Constructors:
+	/**
+	 * The number of references from committed symbolic objects which contain a
+	 * reference to this symbolic object. Set to -1 and not used if this object
+	 * is made canonic.
+	 */
+	private int committedReferenceCount = 0;
 
 	/**
 	 * Instantiates object and sets {@link #kind} as specified.
@@ -103,26 +111,34 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	// Abstract methods:
 
 	/**
-	 * Commits the children of this object.
+	 * Returns the "children" of this symbolic object. These are other symbolic
+	 * objects, such as the arguments in a symbolic expression, the members of a
+	 * symbolic collection etc. A child can never be <code>null</code>.
+	 * 
+	 * @return the children of this object
 	 */
-	protected abstract void commitChildren();
+	protected abstract Iterable<? extends SymbolicObject> getChildren();
 
 	/**
 	 * Computes the hash code to be returned by method {@link #hashCode()}. If
 	 * this object is immutable, the result returned will be cached in
 	 * {@link #hashCode}.
 	 * 
-	 * @return the hash code
+	 * @return the hash code of this
 	 */
 	protected abstract int computeHashCode();
 
 	/**
+	 * <p>
 	 * Is the given symbolic object equal to this one---assuming the given
 	 * symbolic object is of the same kind as this one? Must be defined in any
 	 * concrete subclass.
+	 * </p>
 	 * 
+	 * <p>
 	 * Preconditions: this != o, o.symbolicObjectKind() ==
 	 * this.symbolicObjectKind
+	 * </p>
 	 * 
 	 * @param that
 	 *            a symbolic object of the same kind as this one
@@ -131,16 +147,142 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 	protected abstract boolean intrinsicEquals(SymbolicObject o);
 
 	/**
-	 * Canonizes the children of this symbolic object. Replaces each child with
-	 * the canonic version of that child.
+	 * Sets fields to <code>null</code> in preparation for destruction. It is
+	 * especially important to do this for the children fields. Might help the
+	 * garbage collector.
+	 */
+	protected abstract void nullifyFields();
+
+	/**
+	 * Replaces all children with their canonic representatives.
 	 * 
 	 * @param factory
-	 *            the object factory that is responsible for this symbolic
-	 *            object
+	 *            the object factory responsible for this symbolic object
 	 */
-	public abstract void canonizeChildren(CommonObjectFactory factory);
+	protected abstract void canonizeChildren(ObjectFactory factory);
 
-	// Package-private methods:
+	// Private methods...
+
+	/**
+	 * <p>
+	 * The method is invoked on a node u when a parent of u changes its status
+	 * from COMMITTED to MUTABLE. It updates u's
+	 * {@link #committedReferenceCount} and {@link #mutableReferenceCount}
+	 * fields. It then determines if u's status should be changed to MUTABLE. If
+	 * so, it changes the status and then invokes
+	 * {@link #changeCommittedParentToMutable()} on each child of u.
+	 * </p>
+	 * 
+	 * <p>
+	 * Preconditions: this object is committed, but not canonic. The
+	 * {@link #committedReferenceCount} is at least 1.
+	 * </p>
+	 */
+	private void changeCommittedParentToMutable() {
+		assert status >= COMMITTED && status < 0; // committed and not canonic
+		assert committedReferenceCount >= 1;
+		committedReferenceCount--;
+		mutableReferenceCount++;
+		if (committedReferenceCount == 0 && mutableReferenceCount == 1) {
+			uncommit();
+		}
+	}
+
+	/**
+	 * <p>
+	 * This method is invoked on a node u when a parent of u changes its status
+	 * from MUTABLE to COMMITTED. It updates u's
+	 * {@link #committedReferenceCount} and {@link #mutableReferenceCount}
+	 * fields. If u is currently MUTABLE, u is committed.
+	 * </p>
+	 * 
+	 * <p>
+	 * Preconditions: The {@link #mutableReferenceCount} is at least 1. This is
+	 * not canonic.
+	 * </p>
+	 */
+	private void changeMutableParentToCommitted() {
+		assert mutableReferenceCount >= 1;
+		assert status < 0; // not canonic
+		committedReferenceCount++;
+		mutableReferenceCount--;
+		if (status <= MUTABLE) {
+			commit();
+		}
+	}
+
+	/**
+	 * Increments the committed reference count. If this object is not already
+	 * committed, commits it.
+	 * 
+	 * <p>
+	 * Preconditions: This object is not canonic.
+	 * </p>
+	 */
+	private void incrementCommittedReferenceCount() {
+		assert status < 0; // not canonic
+		committedReferenceCount++;
+		if (status < COMMITTED)
+			commit();
+	}
+
+	/**
+	 * <p>
+	 * Decrements {@link #committedReferenceCount}. Used to declare that a
+	 * committed symbolic object is removing a reference from it to this object.
+	 * Note that since the parent is assumed to be committed, this object must
+	 * also be committed (in the pre-state).
+	 * </p>
+	 * 
+	 * <p>
+	 * If, after decrementing, {@link #committedReferenceCount} is 0 and
+	 * {@link #mutableReferenceCount} is 1, then the status of this object will
+	 * be changed to MUTABLE, and the descendants will be updated as needed. If
+	 * both counts become 0, this object is destroyed.
+	 * </p>
+	 * 
+	 * <p>
+	 * Preconditions: {@link #committedReferenceCount} is at least 1. In
+	 * particular, this object is committed in the pre-state. This object is not
+	 * canonic.
+	 * </p>
+	 */
+	private void decrementCommittedReferenceCount() {
+		assert status < 0; // not canonic
+		assert committedReferenceCount >= 1;
+		assert status >= COMMITTED;
+		committedReferenceCount--;
+		if (committedReferenceCount == 0) {
+			if (mutableReferenceCount == 1) {
+				uncommit();
+			} else if (mutableReferenceCount == 0) {
+				destroy();
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Destroys this node. Iterates over all children and invokes
+	 * {@link #decrementReferenceCount()}, then invokes {@link #nullifyFields()}
+	 * </p>
+	 * 
+	 * <p>
+	 * Pre-conditions: status is MUTABLE, {@link #mutableReferenceCount} and
+	 * {@link #committedReferenceCount} are both 0.
+	 * </p>
+	 */
+	private void destroy() {
+		assert status <= MUTABLE;
+		assert mutableReferenceCount == 0;
+		assert committedReferenceCount == 0;
+		for (SymbolicObject child : getChildren()) {
+			child.decrementReferenceCount();
+		}
+		nullifyFields();
+	}
+
+	// Package-private methods...
 
 	/**
 	 * Sets the canonic id of this object.
@@ -152,7 +294,18 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		this.status = id;
 	}
 
-	// Protected methods:
+	// Protected methods...
+	//
+	// /**
+	// * Prepares this object for the transition from immutable to mutable. This
+	// * may require nullifying references to extrinsic data. For example: the
+	// * negation of a boolean expression. Concrete classes may override this to
+	// * handle their own data. Note that when this method is called, the object
+	// * will still be committed. Therefore if nullifying references to objects,
+	// * use the method {@link #decrementCommittedReferenceCount()}.
+	// */
+	// protected void makeMutable() {
+	// }
 
 	/**
 	 * Places parentheses around the given string buffer.
@@ -165,7 +318,58 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		buffer.append(')');
 	}
 
-	// Public methods specified in Object:
+	/**
+	 * <p>
+	 * Changes status from MUTABLE to COMMITTED. Carries out modifications to
+	 * descendants as needed.
+	 * </p>
+	 * 
+	 * <p>
+	 * This method is protected because subclasses may wish to override it if
+	 * their fields need to be modified to reflect the status change.
+	 * </p>
+	 * 
+	 * <p>
+	 * Preconditions: this node is MUTABLE
+	 * </p>
+	 */
+	protected void commit() {
+		assert status == MUTABLE;
+		for (SymbolicObject child : getChildren()) {
+			CommonSymbolicObject theChild = (CommonSymbolicObject) child;
+
+			if (theChild.status < 0) { // leave canonic children alone
+				theChild.changeMutableParentToCommitted();
+			}
+		}
+	}
+
+	/**
+	 * Makes this committed node MUTABLE. Carries out modifications to
+	 * descendants as needed.
+	 * 
+	 * <p>
+	 * This method is protected because subclasses may wish to override it if
+	 * their fields need to be modified to reflect the status change.
+	 * </p>
+	 * 
+	 * <p>
+	 * Precondition: this node is committed.
+	 * </p>
+	 */
+	protected void uncommit() {
+		assert status < 0 && status >= COMMITTED;
+		status = MUTABLE;
+		for (SymbolicObject child : getChildren()) {
+			CommonSymbolicObject theChild = (CommonSymbolicObject) child;
+
+			if (theChild.status < 0) { // leave canonic children alone
+				theChild.changeCommittedParentToMutable();
+			}
+		}
+	}
+
+	// Public methods specified in Object...
 
 	@Override
 	public int hashCode() {
@@ -187,6 +391,8 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 			if (kind != that.kind)
 				return false;
 			if (status >= 0 && that.status >= 0) {
+				// if both are canonic, they are equal iff they have save id
+				// iff they are ==
 				return status == that.status;
 			}
 			if (status >= HASHED && that.status >= HASHED
@@ -205,12 +411,7 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 			return toStringBuffer(false).toString();
 	}
 
-	// Public methods specified in SymbolicObject:
-
-	@Override
-	public boolean isFree() {
-		return status <= FREE;
-	}
+	// Public methods specified in SymbolicObject...
 
 	@Override
 	public boolean isCanonic() {
@@ -232,48 +433,93 @@ public abstract class CommonSymbolicObject implements SymbolicObject {
 		return kind;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * This method increments {@link #mutableReferenceCount}. All external
+	 * references are counted as mutable. This method should only be called when
+	 * the source of the new reference (which is not identified) is a mutable
+	 * symbolic object, or is not an instance of {@link SymbolicObject}. When
+	 * the source is a committed symbolic object, use
+	 * {@link #incrementCommittedReferenceCount()} instead.
+	 * </p>
+	 * 
+	 * <p>
+	 * If, in the pre-state, this object is mutable, then it must be the case
+	 * that {@link #committedReferenceCount} is 0. If it is mutable and after
+	 * incrementing, {@link #mutableReferenceCount} is 2, then {@link #commit()}
+	 * is invoked, changing the status of this object and its descendants to
+	 * COMMITTED.
+	 * </p>
+	 * 
+	 */
 	@Override
-	public SymbolicObject commit() {
-		if (status < COMMITTED) {
-			status = COMMITTED;
-			commitChildren();
-		}
-		return this;
-	}
-
-	@Override
-	public void makeChild() {
-		if (status == FREE) {
-			status = OWNED;
-		} else if (status == OWNED) {
+	public void incrementReferenceCount() {
+		if (status >= 0) // this is a no-op on canonic objects
+			return;
+		mutableReferenceCount++;
+		if (status == MUTABLE && mutableReferenceCount == 2)
 			commit();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * This method is used to declare that a reference from a mutable object to
+	 * this object is going away. Any object which is not an instance of
+	 * {@link SymbolicObject} is considered "mutable" for this purpose.
+	 * </p>
+	 * 
+	 * <p>
+	 * If after decrementing, {@link #mutableReferenceCount} is 1 and
+	 * {@link #committedReferenceCount} is 0, then the status must be COMMITTED;
+	 * this method will change the status to MUTABLE and invoke {@link
+	 * decrementCommittedReferenceCount()} on each child. If both reference
+	 * counts are 0, this method will destroy this object by invoking
+	 * {@link #destroy()}.
+	 * </p>
+	 */
+	@Override
+	public void decrementReferenceCount() {
+		if (status >= 0)
+			return; // no-op on a canonic object
+		assert mutableReferenceCount >= 1;
+		mutableReferenceCount--;
+		if (committedReferenceCount == 0) {
+			if (mutableReferenceCount == 1) {
+				assert status >= COMMITTED;
+				uncommit();
+			} else if (mutableReferenceCount == 0) {
+				destroy();
+			}
 		}
 	}
 
 	@Override
-	public void release() {
-		if (status == OWNED) {
-			status = FREE;
+	public int getReferenceCount() {
+		return mutableReferenceCount + committedReferenceCount;
+	}
+
+	@Override
+	public void addReferenceFrom(SymbolicObject object) {
+		if (status < 0) { // do nothing if this is canonic
+			if (object.isImmutable())
+				incrementCommittedReferenceCount();
+			else
+				incrementReferenceCount();
 		}
 	}
 
-	// Future work...
-
-	// /**
-	// * Sets the {@link #order} field to the specified number.
-	// *
-	// * @param number
-	// * an infinite precision rational number
-	// */
-	// public void setOrder(RationalNumber number) {
-	// order = number;
-	// }
-
-	// /**
-	// * @return the rational number {@link #order}.
-	// */
-	// public RationalNumber getOrder() {
-	// return order;
-	// }
+	@Override
+	public void removeReferenceFrom(SymbolicObject object) {
+		if (status < 0) { // do nothing if this is canonic
+			if (object.isImmutable())
+				decrementCommittedReferenceCount();
+			else
+				decrementReferenceCount();
+		}
+	}
 
 }

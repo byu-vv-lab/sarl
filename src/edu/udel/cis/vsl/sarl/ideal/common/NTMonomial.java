@@ -34,7 +34,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.Polynomial;
  */
 public class NTMonomial extends IdealExpression implements Monomial {
 
-	private SymbolicMap<Monic, Monomial> termMap = null;
+	// private SymbolicMap<Monic, Monomial> termMap = null;
 
 	protected NTMonomial(Constant constant, Monic monic) {
 		super(SymbolicOperator.MULTIPLY, constant.type(), constant, monic);
@@ -51,8 +51,7 @@ public class NTMonomial extends IdealExpression implements Monomial {
 	/**
 	 * Creates a Monic expression
 	 * 
-	 * @return
-	 * 			a Monic
+	 * @return a Monic
 	 */
 	public Monic monic() {
 		return (Monic) argument(1);
@@ -60,10 +59,10 @@ public class NTMonomial extends IdealExpression implements Monomial {
 
 	@Override
 	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
-		if (termMap == null)
-			termMap = factory
-					.singletonMap((Monic) argument(1), (Monomial) this);
-		return termMap;
+		// if (termMap == null)
+		// termMap = factory
+		// .singletonMap((Monic) argument(1), (Monomial) this);
+		return factory.singletonMap((Monic) argument(1), (Monomial) this);
 	}
 
 	@Override
@@ -105,10 +104,10 @@ public class NTMonomial extends IdealExpression implements Monomial {
 		return factory.multiply(monomialConstant(), expandedMonic);
 	}
 
-//	@Override
-//	public String toString() {
-//		return monomialConstant().toString() + monic().toString();
-//	}
+	// @Override
+	// public String toString() {
+	// return monomialConstant().toString() + monic().toString();
+	// }
 
 	@Override
 	public int degree() {

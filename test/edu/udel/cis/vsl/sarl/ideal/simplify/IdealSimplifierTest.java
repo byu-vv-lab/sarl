@@ -132,7 +132,7 @@ public class IdealSimplifierTest {
 		BooleanExpression boolTrue = idealSimplifier.getReducedContext();
 		assertEquals(trueExpr,boolTrue);
 		
-		boolArg2 = preUniv.lessThanEquals(rat2, preUniv.multiply(x,x));
+		boolArg2 = (BooleanExpression)preUniv.lessThanEquals(rat2, preUniv.multiply(x,x)).commit();
 		IdealSimplifier simpEq2 =idealSimplifierFactory.newSimplifier(boolArg2);
 		BooleanExpression boolSimpEq2 = simpEq2.getReducedContext();
 		assertEquals(boolArg2, boolSimpEq2);

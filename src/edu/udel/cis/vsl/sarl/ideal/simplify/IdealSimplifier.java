@@ -1148,10 +1148,6 @@ public class IdealSimplifier extends CommonSimplifier {
 		return substitutionMap;
 	}
 
-	/**
-	 * This method takes the assumption in the IdealSimplifier and reduces the
-	 * Context to its basic form.
-	 */
 	@Override
 	public BooleanExpression getReducedContext() {
 		return assumption;

@@ -142,11 +142,19 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression symbolic(boolean value);
 
+	/**
+	 * Constructs new boolean symbolic constant with given name.
+	 * 
+	 * @param name
+	 *            the name for the new symbolic constant
+	 * @return the new symbolic constant
+	 */
 	BooleanSymbolicConstant booleanSymbolicConstant(StringObject name);
 
 	/**
 	 * Returns a symbolic expression representing the conjunction of the two
 	 * given arguments. Each argument must be non-null and have boolean type.
+	 * Does not modify anything.
 	 * 
 	 * @param arg0
 	 *            a symbolic expression of boolean type
@@ -155,6 +163,30 @@ public interface BooleanExpressionFactory {
 	 * @return conjunction of arg0 and arg1
 	 */
 	BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1);
+
+	/**
+	 * <p>
+	 * Returns a symbolic expression representing the conjunction of the two
+	 * given arguments, possibly modifying <code>arg0</code>. Each argument must
+	 * be non-null and have boolean type.
+	 * </p>
+	 * 
+	 * <p>
+	 * If <code>arg0</code> is mutable, this method will modify
+	 * <code>arg0</code> so that it becomes the conjunction of the original
+	 * value of <code>arg0</code> and <code>arg1</code>, and it returns
+	 * <code>arg0</code>. Otherwise, it behaves exactly as
+	 * {@link #and(BooleanExpression, BooleanExpression)}. <code>arg1</code> is
+	 * not modified in any case.
+	 * </p>
+	 * 
+	 * @param arg0
+	 *            a symbolic expression of boolean type
+	 * @param arg1
+	 *            a symbolic expression of boolean type
+	 * @return conjunction of arg0 and arg1
+	 */
+	BooleanExpression andMut(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns a symbolic expression representing the disjunction of the two
@@ -167,6 +199,8 @@ public interface BooleanExpressionFactory {
 	 * @return disjunction of arg0 and arg1
 	 */
 	BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1);
+
+	BooleanExpression orMut(BooleanExpression arg0, BooleanExpression arg1);
 
 	/**
 	 * Returns a symbolic expression which represents the disjunction of the
@@ -181,6 +215,9 @@ public interface BooleanExpressionFactory {
 	 */
 	BooleanExpression or(Iterable<? extends BooleanExpression> args);
 
+	BooleanExpression orMut(BooleanExpression arg0,
+			Iterable<? extends BooleanExpression> args);
+
 	/**
 	 * Returns a symbolic expression representing the logical negation of the
 	 * given expression arg. arg must be non-null and have boolean type.
@@ -190,6 +227,8 @@ public interface BooleanExpressionFactory {
 	 * @return negation of arg
 	 */
 	BooleanExpression not(BooleanExpression arg);
+
+	BooleanExpression notMut(BooleanExpression arg);
 
 	/**
 	 * Returns a symbolic expression representing "p implies q", i.e., p=>q.
@@ -238,7 +277,7 @@ public interface BooleanExpressionFactory {
 	BooleanExpression exists(SymbolicConstant boundVariable,
 			BooleanExpression predicate);
 
-	// This about this..
+	// Think about this..
 
 	// SymbolicSet<BooleanExpression> getConjunctiveClauses(BooleanExpression
 	// predicate)

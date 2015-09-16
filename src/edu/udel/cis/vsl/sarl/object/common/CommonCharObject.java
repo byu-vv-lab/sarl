@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import edu.udel.cis.vsl.sarl.IF.object.CharObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonCharObject extends CommonSymbolicObject implements
 		CharObject {
@@ -58,13 +59,6 @@ public class CommonCharObject extends CommonSymbolicObject implements
 		return new Character(value).toString();
 	}
 
-	/**
-	 * Does nothing; Basic objects have no children, so there is nothing to do.
-	 */
-	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-	}
-
 	@Override
 	public int compareTo(CharObject o) {
 		return (new Character(value)).compareTo(o.getChar());
@@ -83,12 +77,15 @@ public class CommonCharObject extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected void commitChildren() {
-		// no children; so nothing to do
+	protected Iterable<? extends SymbolicObject> getChildren() {
+		return emptyIterable;
 	}
 
 	@Override
-	public CharObject commit() {
-		return (CharObject) super.commit();
+	protected void nullifyFields() {
+	}
+
+	@Override
+	protected void canonizeChildren(ObjectFactory factory) {
 	}
 }

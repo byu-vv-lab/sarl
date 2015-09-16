@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
@@ -26,10 +26,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
 
 /**
- * This class creates the ideal expressions by taking as the input of an operator, arguments and their type.
+ * This class creates the ideal expressions by taking as the input of an
+ * operator, arguments and their type.
  * 
- * This class extends CommonSymbolicExpression which is the root of the symbolic expression hierarchy. This helps us in
- * creating the required expression using the methods present in this class.
+ * This class extends CommonSymbolicExpression which is the root of the symbolic
+ * expression hierarchy. This helps us in creating the required expression using
+ * the methods present in this class.
  * 
  *
  */
@@ -38,13 +40,7 @@ public abstract class IdealExpression extends CommonSymbolicExpression
 
 	// TODO: use this or get rid of it
 	public enum IdealKind {
-		NTRationalExpression,
-		NTPolynomial,
-		NTMonomial,
-		NTMonic,
-		NTPrimitivePower,
-		NumericPrimitive,
-		Constant
+		NTRationalExpression, NTPolynomial, NTMonomial, NTMonic, NTPrimitivePower, NumericPrimitive, Constant
 	}
 
 	protected IdealExpression(SymbolicOperator operator, SymbolicType type,

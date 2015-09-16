@@ -18,13 +18,9 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
-
 /**
- * implementation for SymbolicPrimitiveType, which could be a boolean or a char.
+ * Implementation for {@link SymbolicPrimitiveType}.
  * 
- * @author mohammedalali
  */
 public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 
@@ -53,26 +49,14 @@ public class CommonSymbolicPrimitiveType extends CommonSymbolicType {
 		return classCode ^ typeKind().hashCode();
 	}
 
-	/**
-	 * @return true because the type of any CommonSymbolicType is TYPE, which is
-	 *         the same as the type of CommonSymbolicPrimitiveType; TYPE.
-	 */
 	@Override
 	protected boolean typeEquals(CommonSymbolicType that) {
 		return true;
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	protected void nullifyFields() {
+		super.nullifyFields();
+		name = null;
 	}
-
-	@Override
-	public SymbolicType getPureType() {
-		return this;
-	}
-
-	@Override
-	protected void commitChildren() {
-	}
-
 }

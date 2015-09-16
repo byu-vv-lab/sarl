@@ -3,18 +3,18 @@
  * 
  * This file is part of SARL.
  * 
- * SARL is free software: you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * SARL is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  * 
- * SARL is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
+ * SARL is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with SARL. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with SARL. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.ideal.common;
 
@@ -40,7 +40,7 @@ import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
  */
 public class NTMonic extends IdealExpression implements Monic {
 
-	private SymbolicMap<Monic, Monomial> polynomialMap = null;
+	// private SymbolicMap<Monic, Monomial> polynomialMap = null;
 
 	private int degree = -1;
 
@@ -62,9 +62,9 @@ public class NTMonic extends IdealExpression implements Monic {
 
 	@Override
 	public SymbolicMap<Monic, Monomial> termMap(IdealFactory factory) {
-		if (polynomialMap == null)
-			polynomialMap = factory.singletonMap((Monic) this, (Monomial) this);
-		return polynomialMap;
+		// if (polynomialMap == null)
+		// polynomialMap = factory.singletonMap((Monic) this, (Monomial) this);
+		return factory.singletonMap((Monic) this, (Monomial) this);
 	}
 
 	@Override
@@ -120,10 +120,10 @@ public class NTMonic extends IdealExpression implements Monic {
 		return buffer;
 	}
 
-//	@Override
-//	public String toString() {
-//		return toStringBuffer().toString();
-//	}
+	// @Override
+	// public String toString() {
+	// return toStringBuffer().toString();
+	// }
 
 	@Override
 	public IdealKind idealKind() {

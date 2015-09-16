@@ -19,18 +19,19 @@
 package edu.udel.cis.vsl.sarl.type.common;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicUnionType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
  * an implementation of {@link SymbolicUnionType}
- * 
- * @author mohammedalali
  * 
  */
 public class CommonSymbolicUnionType extends CommonSymbolicType implements
@@ -49,11 +50,6 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	private StringObject name;
 
 	private Map<SymbolicType, Integer> indexMap = new LinkedHashMap<SymbolicType, Integer>();
-
-	/**
-	 * holds the pureType of this unionType
-	 */
-	private SymbolicUnionType pureType;
 
 	/**
 	 * The elements of the sequence must be unique, i.e., no repetitions.
@@ -76,10 +72,12 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 						+ name + " occurred twice, at positions " + index
 						+ " and " + i + ": " + type1);
 			indexMap.put(type1, i);
+			type1.addReferenceFrom(this);
 		}
 		assert name != null;
 		this.name = name;
 		this.sequence = sequence;
+		sequence.addReferenceFrom(this);
 	}
 
 	@Override
@@ -116,13 +114,19 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
+		super.canonizeChildren(factory);
 		if (!sequence.isCanonic())
 			sequence = (CommonSymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
+
+		Map<SymbolicType, Integer> newMap = new LinkedHashMap<>(indexMap.size());
+
+		for (Entry<SymbolicType, Integer> entry : indexMap.entrySet()) {
+			newMap.put(factory.canonic(entry.getKey()), entry.getValue());
+		}
+		indexMap = newMap;
 	}
 
 	@Override
@@ -130,31 +134,15 @@ public class CommonSymbolicUnionType extends CommonSymbolicType implements
 		return indexMap.get(type);
 	}
 
-	/**
-	 * @return the pureType of this unionType You have to set the pureType first
-	 *         using setPureType(...)
-	 */
-	public SymbolicUnionType getPureType() {
-		return pureType;
-	}
-
-	/**
-	 * used to set the pureType of this unionType
-	 * 
-	 * @param pureType
-	 */
-	public void setPureType(SymbolicUnionType pureType) {
-		this.pureType = pureType;
-	}
-
 	@Override
-	protected void commitChildren() {
-		sequence.commit();
-		if (name != null)
-			name.commit();
-		if (pureType != null)
-			pureType.commit();
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
+
+		result.add(sequence);
+		result.add(name);
 		for (SymbolicType key : indexMap.keySet())
-			key.commit();
+			result.add(key);
+		return result;
 	}
+
 }

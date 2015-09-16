@@ -19,6 +19,7 @@
 package edu.udel.cis.vsl.sarl.expr.cnf;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import edu.udel.cis.vsl.sarl.IF.ValidityResult.ResultType;
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
@@ -27,10 +28,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.common.CommonSymbolicExpression;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
  * A representation of a boolean expression using Conjunctive Normal Form.
+ * 
+ * Additional children: negation.
  * 
  * Some possible things that could be cached here: 1. The negation of this
  * expression. 2. Is this satisfiable? Is this valid? 3. The most simplified
@@ -139,7 +142,10 @@ public class CnfExpression extends CommonSymbolicExpression implements
 	}
 
 	protected void setNegation(CnfExpression value) {
+		if (negation != null)
+			negation.decrementReferenceCount();
 		this.negation = value;
+		value.incrementReferenceCount();
 	}
 
 	@Override
@@ -153,9 +159,8 @@ public class CnfExpression extends CommonSymbolicExpression implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		super.canonizeChildren(factory);
-
 		if (negation != null)
 			negation = factory.canonic(negation);
 	}
@@ -199,5 +204,31 @@ public class CnfExpression extends CommonSymbolicExpression implements
 	@SuppressWarnings("unchecked")
 	public SymbolicSet<BooleanExpression> booleanSetArg(int i) {
 		return (SymbolicSet<BooleanExpression>) argument(i);
+	}
+
+	@Override
+	protected LinkedList<SymbolicObject> makeChildList() {
+		LinkedList<SymbolicObject> result = super.makeChildList();
+
+		if (negation != null)
+			result.add(negation);
+		return result;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		super.nullifyFields();
+		negation = null;
+		validity = null;
+	}
+
+	@Override
+	protected void uncommit() {
+		if (negation != null) {
+			negation.removeReferenceFrom(this);
+			negation = null;
+		}
+		validity = null;
+		super.uncommit();
 	}
 }

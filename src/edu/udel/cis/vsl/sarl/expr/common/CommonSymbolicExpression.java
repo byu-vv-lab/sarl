@@ -20,7 +20,10 @@ package edu.udel.cis.vsl.sarl.expr.common;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 
+import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
@@ -29,14 +32,12 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType.SymbolicTypeKind;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
  * The root of the symbolic expression hierarchy. Every symbolic expression
  * extends this class.
- * 
- * 
  */
 public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		SymbolicExpression {
@@ -79,62 +80,85 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 		this.operator = operator;
 		this.type = type;
 		this.arguments = arguments;
+		if (type != null)
+			type.incrementReferenceCount();
+		for (SymbolicObject arg : arguments)
+			arg.incrementReferenceCount();
 	}
 
 	/**
 	 * Constructor with a single SymbolicObject converted to array of
 	 * SymbolicObjects
 	 * 
-	 * @param kind
+	 * @param operator
+	 *            the operator for the new expression; must be non-null
 	 * @param type
+	 *            the type of the new expression; can only be <code>null</code>
+	 *            if the operator is {@link SymbolicOperator#NULL}
 	 * @param arg0
+	 *            the sole argument
 	 */
-	protected CommonSymbolicExpression(SymbolicOperator kind,
+	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0) {
-		this(kind, type, new SymbolicObject[] { arg0 });
+		this(operator, type, new SymbolicObject[] { arg0 });
 	}
 
 	/**
 	 * Constructor with two SymbolicObjects converted to array of
 	 * SymbolicObjects
 	 * 
-	 * @param kind
+	 * @param operator
+	 *            the operator for the new expression; must be non-null
 	 * @param type
+	 *            the type of the new expression; can only be <code>null</code>
+	 *            if the operator is {@link SymbolicOperator#NULL}
 	 * @param arg0
+	 *            argument 0
 	 * @param arg1
+	 *            argument 1
 	 */
-	protected CommonSymbolicExpression(SymbolicOperator kind,
+	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1) {
-		this(kind, type, new SymbolicObject[] { arg0, arg1 });
+		this(operator, type, new SymbolicObject[] { arg0, arg1 });
 	}
 
 	/**
 	 * Constructor with three SymbolicObjects converted to array of
 	 * SymbolicObjects
 	 * 
-	 * @param kind
+	 * @param operator
+	 *            the operator for the new expression; must be non-null
 	 * @param type
+	 *            the type of the new expression; can only be <code>null</code>
+	 *            if the operator is {@link SymbolicOperator#NULL}
 	 * @param arg0
+	 *            argument 0
 	 * @param arg1
+	 *            argument 1
 	 * @param arg2
+	 *            argument 2
 	 */
-	protected CommonSymbolicExpression(SymbolicOperator kind,
+	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2) {
-		this(kind, type, new SymbolicObject[] { arg0, arg1, arg2 });
+		this(operator, type, new SymbolicObject[] { arg0, arg1, arg2 });
 	}
 
 	/**
 	 * Constructor with a Collection of SymbolicObjects which is converted to
 	 * array format.
 	 * 
-	 * @param kind
+	 * @param operator
+	 *            the operator for the new expression; must be non-null
 	 * @param type
+	 *            the type of the new expression; can only be <code>null</code>
+	 *            if the operator is {@link SymbolicOperator#NULL}
 	 * @param args
+	 *            the arguments, in some ordered collection
 	 */
-	protected CommonSymbolicExpression(SymbolicOperator kind,
+	protected CommonSymbolicExpression(SymbolicOperator operator,
 			SymbolicType type, Collection<SymbolicObject> args) {
-		this(kind, type, args.toArray(new SymbolicObject[args.size()]));
+		this(operator, type, args.toArray(new SymbolicObject[args.size()]));
 	}
 
 	/**
@@ -328,7 +352,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	 *            order to include this as a term in a larger expression
 	 * @return result StringBuffer
 	 */
-	public StringBuffer toStringBuffer1(boolean atomize) {
+	private StringBuffer toStringBuffer1(boolean atomize) {
 		StringBuffer result = new StringBuffer();
 
 		switch (operator) {
@@ -618,7 +642,7 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		int numArgs = arguments.length;
 
 		if (type != null && !type.isCanonic())
@@ -672,38 +696,113 @@ public class CommonSymbolicExpression extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected void commitChildren() {
-		if (type != null)
-			type.commit();
-		for (SymbolicObject arg : arguments) {
-			if (arg != null)
-				arg.commit();
+	public void setArgument(int index, SymbolicObject value) {
+		assert !isImmutable();
+
+		SymbolicObject oldArg = arguments[index];
+
+		if (oldArg != value) {
+			oldArg.decrementReferenceCount();
+			arguments[index] = value;
+			value.incrementReferenceCount();
 		}
 	}
 
-	/**
-	 * <p>
-	 * Sets the index-th argument to <code>value</code>.
-	 * </p>
-	 * 
-	 * <p>
-	 * Preconditions: this symbolic expression is not committed; it has at least
-	 * index+1 arguments.
-	 * </p>
-	 * 
-	 * <p>
-	 * Use at your own risk. This method does not do anything to check if the
-	 * given value is an appropriate argument for the expression.
-	 * </p>
-	 * 
-	 * @param index
-	 *            integer in range [0,numArgs-1]
-	 * @param value
-	 *            symbolic object to become the new argument in position
-	 *            <code>index</code>
-	 */
-	protected void setArgument(int index, SymbolicObject value) {
+	@Override
+	public void setOperator(SymbolicOperator operator) {
 		assert !isImmutable();
-		arguments[index] = value;
+		this.operator = operator;
+	}
+
+	@Override
+	public void setType(SymbolicType newType) {
+		assert !isImmutable();
+		if (newType != type) {
+			type.decrementReferenceCount();
+			type = newType;
+			newType.incrementReferenceCount();
+		}
+	}
+
+	@Override
+	public void makeLike(SymbolicExpression other) {
+		assert !isImmutable();
+		setOperator(other.operator());
+		setType(other.type());
+
+		int numArgs = arguments.length;
+		int numArgs2 = other.numArguments();
+
+		if (numArgs == numArgs2) {
+			for (int i = 0; i < numArgs; i++) {
+				setArgument(i, other.argument(i));
+			}
+		} else {
+			for (int i = 0; i < numArgs; i++) {
+				arguments[i].decrementReferenceCount();
+			}
+			arguments = new SymbolicObject[numArgs2];
+			for (int i = 0; i < numArgs2; i++) {
+				SymbolicObject newArg = other.argument(i);
+
+				arguments[i] = newArg;
+				newArg.incrementReferenceCount();
+			}
+		}
+	}
+
+	class ChildIterable implements Iterable<SymbolicObject> {
+		class ChildIterator implements Iterator<SymbolicObject> {
+			int nextIndex = type == null ? 0 : -1; // -1 indicates the type
+
+			@Override
+			public boolean hasNext() {
+				return nextIndex < arguments.length;
+			}
+
+			@Override
+			public SymbolicObject next() {
+				SymbolicObject result;
+
+				if (nextIndex == -1)
+					result = type;
+				else
+					result = arguments[nextIndex];
+				nextIndex++;
+				return result;
+			}
+
+			@Override
+			public void remove() {
+				throw new SARLException("unimplemented");
+			}
+		}
+
+		@Override
+		public Iterator<SymbolicObject> iterator() {
+			return new ChildIterator();
+		}
+	}
+
+	protected LinkedList<SymbolicObject> makeChildList() {
+		LinkedList<SymbolicObject> result = new LinkedList<>();
+
+		if (type != null)
+			result.add(type);
+		for (SymbolicObject arg : arguments)
+			result.add(arg);
+		return result;
+	}
+
+	@Override
+	protected Iterable<? extends SymbolicObject> getChildren() {
+		return makeChildList();
+	}
+
+	@Override
+	protected void nullifyFields() {
+		type = null;
+		arguments = null;
+		operator = null;
 	}
 }

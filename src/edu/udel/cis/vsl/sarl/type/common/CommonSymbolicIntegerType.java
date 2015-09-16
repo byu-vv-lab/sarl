@@ -20,13 +20,9 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicIntegerType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
 /**
- * an implementation of {@link SymbolicIntegerType}
- * 
- * @author mohammedalali
+ * An implementation of {@link SymbolicIntegerType}.
  *
  */
 public class CommonSymbolicIntegerType extends CommonSymbolicType implements
@@ -74,14 +70,6 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 		return classCode ^ integerKind.hashCode();
 	}
 
-	/**
-	 * this method is empty because CommonSymbolicIntegerType doesn't have
-	 * children
-	 */
-	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-	}
-
 	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		if (name == null) {
@@ -113,19 +101,6 @@ public class CommonSymbolicIntegerType extends CommonSymbolicType implements
 	@Override
 	public boolean isIdeal() {
 		return integerKind == IntegerKind.IDEAL;
-	}
-
-	/**
-	 * @return the same object because no lengths are used in
-	 *         CommonSymbolicIntegerType
-	 */
-	@Override
-	public SymbolicType getPureType() {
-		return this;
-	}
-
-	@Override
-	protected void commitChildren() {
 	}
 
 }

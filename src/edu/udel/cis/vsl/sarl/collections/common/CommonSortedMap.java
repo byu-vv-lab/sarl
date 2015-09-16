@@ -24,7 +24,5 @@ public abstract class CommonSortedMap<K extends SymbolicExpression, V extends Sy
 			SymbolicMap<K, V> map) {
 		return (SortedSymbolicMap<K, V>) super.combine(operator, map);
 	}
-	
-	
 
 }

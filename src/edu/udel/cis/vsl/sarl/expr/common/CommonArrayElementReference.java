@@ -25,7 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
 
-/** 
+/**
  * CommonArrayElement Reference extends the CommonNTReference superclass and
  * implements the ArrayElementReference interface. It is used to get the index
  * of the CommonArrayElementReference and the kind of reference.
@@ -34,11 +34,11 @@ import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
  */
 public class CommonArrayElementReference extends CommonNTReference implements
 		ArrayElementReference {
-	
-	/** 
+
+	/**
 	 * Constructor that builds a CommonArrayElementReference.
 	 * 
-	 * @param referenceType 
+	 * @param referenceType
 	 * @param arrayElementReferenceFunction
 	 * @param parentIndexSequence
 	 * @param parentIndexSequence
@@ -51,7 +51,8 @@ public class CommonArrayElementReference extends CommonNTReference implements
 		super(referenceType, arrayElementReferenceFunction, parentIndexSequence);
 	}
 
-	/** Method that returns NumericExpression.
+	/**
+	 * Method that returns NumericExpression.
 	 * 
 	 * @return NumericExpression
 	 */
@@ -71,9 +72,9 @@ public class CommonArrayElementReference extends CommonNTReference implements
 	}
 
 	/**
-	 * Getter method that returns the ReferenceKind.
+	 * {@inheritDoc}
 	 * 
-	 * @retrun ReferenceKind
+	 * @return ReferenceKind.ARRAY_ELEMENT
 	 */
 	@Override
 	public ReferenceKind referenceKind() {

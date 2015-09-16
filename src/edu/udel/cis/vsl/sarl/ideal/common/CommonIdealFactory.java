@@ -312,19 +312,23 @@ public class CommonIdealFactory implements IdealFactory {
 		this.typeFactory = typeFactory;
 		this.collectionFactory = collectionFactory;
 		this.booleanFactory = booleanFactory;
-		this.trueExpr = booleanFactory.trueExpr();
-		this.falseExpr = booleanFactory.falseExpr();
+		this.trueExpr = objectFactory.canonic(booleanFactory.trueExpr());
+		this.falseExpr = objectFactory.canonic(booleanFactory.falseExpr());
 		this.comparator = new IdealComparator(this);
 		this.integerType = typeFactory.integerType();
 		this.realType = typeFactory.realType();
-		this.oneIntObject = objectFactory.oneIntObj();
-		this.emptyMap = collectionFactory.emptySortedMap(comparator);
+		this.oneIntObject = objectFactory.canonic(objectFactory.oneIntObj());
+		this.emptyMap = objectFactory.canonic(collectionFactory
+				.emptySortedMap(comparator));
 		this.oneInt = objectFactory.canonic(new One(integerType, objectFactory
 				.numberObject(numberFactory.oneInteger())));
 		this.oneReal = objectFactory.canonic(new One(realType, objectFactory
 				.numberObject(numberFactory.oneRational())));
 		this.zeroInt = canonicIntConstant(0);
 		this.zeroReal = canonicRealConstant(0);
+
+		// TODO: we need muatable and immutable versions of these things?...
+
 		this.monomialAdder = new MonomialAdder(this);
 		this.monomialNegater = new MonomialNegater(this);
 		this.primitivePowerMultipler = new PrimitivePowerMultiplier(this);
@@ -354,11 +358,6 @@ public class CommonIdealFactory implements IdealFactory {
 	}
 
 	// ************************** Private Methods *************************
-
-	// All of these methods are allowed to modify their arguments
-	// in any way they want (if they are not committed). The
-	// arguments should therefore be considered consumed and destroyed
-	// if they are not committed.
 
 	/**
 	 * Returns the canonic {@link Constant} of integer type with the value
@@ -399,6 +398,18 @@ public class CommonIdealFactory implements IdealFactory {
 		return objectFactory.canonic(realConstant(value));
 	}
 
+	/**
+	 * Returns a {@link Constant} with the specified value. If the given
+	 * <code>constant</code> is mutable, this method may modify it by setting
+	 * its value to the specified one.
+	 * 
+	 * @param constant
+	 *            a non-<code>null</code> {@link Constant} with type compatible
+	 *            with that of <code>value</code>
+	 * @param value
+	 *            a non-<code>null</code> number object
+	 * @return a {@link Constant} with the specified <code>value</code>
+	 */
 	private Constant setConstant(Constant constant, NumberObject value) {
 		if (value.isOne())
 			return value.isInteger() ? oneInt : oneReal;
@@ -439,6 +450,8 @@ public class CommonIdealFactory implements IdealFactory {
 			IntObject exponent) {
 		return new NTPrimitivePower(primitive, exponent);
 	}
+
+	// setPower?
 
 	/**
 	 * Constructs a non-trivial monic.
@@ -497,6 +510,8 @@ public class CommonIdealFactory implements IdealFactory {
 		return new NTMonomial(constant, monic);
 	}
 
+	// setConstant, setMonic?
+
 	/**
 	 * Returns a new reduced polynomial from the given type and term map. The
 	 * precondition is that the polynomial specified by the sum of the monomials
@@ -532,6 +547,8 @@ public class CommonIdealFactory implements IdealFactory {
 			Monomial factorization) {
 		return new NTPolynomial(termMap, factorization);
 	}
+
+	// setTermMap, setFactorization?
 
 	/**
 	 * Computes the a constant c as follows: if the type is real, c is the
@@ -597,10 +614,12 @@ public class CommonIdealFactory implements IdealFactory {
 
 		if (c.isOne())
 			factorization = reducedPolynomial(type, termMap);
-		else
+		else {
 			// note that "divide" may modify termMap:
+			termMap.commit();
 			factorization = monomial(c,
 					reducedPolynomial(type, divide(termMap, c)));
+		}
 		return polynomial(termMap, factorization);
 	}
 
@@ -2205,8 +2224,31 @@ public class CommonIdealFactory implements IdealFactory {
 
 		if (triple[0].isOne())
 			return addNoCommon(p1, p2);
+		
+		// here you can addref to the triples then use muts on them
 		return multiply(triple[0].expand(this),
 				addNoCommon(triple[1].expand(this), triple[2].expand(this)));
+	}
+
+	public Polynomial addMut(Polynomial p1, Polynomial p2) {
+		// TODO
+		if (p1.isImmutable())
+			return add(p1, p2);
+		if (p1.isZero())
+			return p2;
+		if (p2.isZero())
+			return p1;
+		
+		Monomial fact1 = p1.factorization(this);
+		Monomial fact2 = p2.factorization(this);
+		Monomial[] triple = extractCommonality(fact1, fact2);
+		// p1+p2=a(q1+q2)
+
+		if (triple[0].isOne())
+			return addNoCommonMut(p1,p2);
+		
+		
+		return null;
 	}
 
 	@Override

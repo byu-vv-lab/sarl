@@ -113,7 +113,8 @@ public class IdealSimplifierSimpExprTest {
 	@Test
 	public void simplifyExpressionTrivial() {
 
-		numExpr = preUniv.multiply(preUniv.divide(onePxPxSqdP3x4th, x), x);
+		numExpr = preUniv.multiply(preUniv.divide(onePxPxSqdP3x4th, x), x)
+				.commit();
 
 		symExpr = numExpr;
 
@@ -152,8 +153,8 @@ public class IdealSimplifierSimpExprTest {
 	}
 
 	/**
-	 * Test on IdealSimplifier that tests the method simplifyExpression() when only
-	 * subtracting polynomials 
+	 * Test on IdealSimplifier that tests the method simplifyExpression() when
+	 * only subtracting polynomials
 	 * 
 	 */
 	@Test
@@ -190,37 +191,33 @@ public class IdealSimplifierSimpExprTest {
 	}
 
 	/**
-	 * Test on IdealSimplifier that tests the method simplifyExpression() when only
-	 * dividing polynomials 
+	 * Test on IdealSimplifier that tests the method simplifyExpression() when
+	 * only dividing polynomials
 	 * 
 	 */
 	@Test
 	public void simplifyExpressionDivide() {
-		NumericExpression num = preUniv.add(preUniv.multiply(rat6, x), preUniv
-				.multiply(preUniv.multiply(rat2, x), preUniv.power(y, 2)));
+		NumericExpression num = preUniv
+				.add(preUniv.multiply(rat6, x),
+						preUniv.multiply(preUniv.multiply(rat2, x),
+								preUniv.power(y, 2))).commit();
+		// 6x+2xy^2
 
-		NumericExpression denom = preUniv.multiply(rat2, x);
+		NumericExpression denom = preUniv.multiply(rat2, x).commit(); // 2x
 
-		numExpr = preUniv.divide(num, denom);
-
+		numExpr = preUniv.divide(num, denom).commit(); // 3+y^2
 		symExpr = numExpr;
-
 		assumption = preUniv.equals(preUniv.multiply(rat5, x),
-				preUniv.multiply(y, y));
-
+				preUniv.multiply(y, y)).commit(); // 5x=y^2
 		idealSimp = idealSimplifierFactory.newSimplifier(assumption);
-
-		numExpect = preUniv.add(preUniv.power(y, 2), rat3);
-
+		numExpect = preUniv.add(preUniv.power(y, 2), rat3); // y^2+3
 		expected = numExpect;
-
 		assertEquals(expected, idealSimp.simplifyExpression(symExpr));
-
 	}
-	
+
 	/**
-	 * Test on IdealSimplifier that tests the method simplifyExpression() when only
-	 * multiplying polynomials 
+	 * Test on IdealSimplifier that tests the method simplifyExpression() when
+	 * only multiplying polynomials
 	 * 
 	 */
 	@Test
@@ -232,16 +229,16 @@ public class IdealSimplifierSimpExprTest {
 								preUniv.multiply(preUniv.power(x, 3),
 										preUniv.power(y, 2))),
 						preUniv.multiply(rat2, preUniv.multiply(xy, x))),
-				preUniv.multiply(rat3, xy));
+				preUniv.multiply(rat3, xy)).commit();
 
-		NumericExpression denom = preUniv.multiply(y, x);
+		NumericExpression denom = preUniv.multiply(y, x).commit();
 
-		numExpr = preUniv.divide(num, denom);
+		numExpr = preUniv.divide(num, denom).commit();
 
 		symExpr = numExpr;
 
 		assumption = preUniv.equals(preUniv.multiply(rat5, x),
-				preUniv.multiply(y, y));
+				preUniv.multiply(y, y)).commit();
 
 		idealSimp = idealSimplifierFactory.newSimplifier(assumption);
 

@@ -32,6 +32,7 @@ import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.collections.IF.CollectionFactory;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSet;
 import edu.udel.cis.vsl.sarl.expr.IF.BooleanExpressionFactory;
+import edu.udel.cis.vsl.sarl.object.Objects;
 import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.type.IF.SymbolicTypeFactory;
 
@@ -46,9 +47,20 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	private CollectionFactory collectionFactory;
 
+	/**
+	 * The canonic boolean type.
+	 */
 	private SymbolicType _booleanType;
 
-	private CnfExpression trueExpr, falseExpr;
+	/**
+	 * Canonic true symbolic expression.
+	 */
+	private CnfExpression trueExpr;
+
+	/**
+	 * Canonic false symbolic expression.
+	 */
+	private CnfExpression falseExpr;
 
 	/**
 	 * Whether or not Functions check for instances of (p || !p) A value of
@@ -155,11 +167,11 @@ public class CnfFactory implements BooleanExpressionFactory {
 
 	@Override
 	public BooleanExpression and(BooleanExpression arg0, BooleanExpression arg1) {
-		if (arg0 == trueExpr)
+		if (arg0.isTrue())
 			return arg1;
-		if (arg1 == trueExpr)
+		if (arg1.isTrue())
 			return arg0;
-		if (arg0 == falseExpr || arg1 == falseExpr)
+		if (arg0.isFalse() || arg1.isFalse())
 			return falseExpr;
 		if (arg0.equals(not(arg1)))
 			return falseExpr;
@@ -184,13 +196,52 @@ public class CnfFactory implements BooleanExpressionFactory {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 */
+	@Override
+	public BooleanExpression andMut(BooleanExpression arg0,
+			BooleanExpression arg1) {
+		if (arg0.isImmutable())
+			return and(arg0, arg1);
+		if (arg1.isTrue())
+			return arg0;
+		if (arg0.isFalse() || arg1.isFalse())
+			return falseExpr;
+		if (arg0.equals(not(arg1)))
+			return falseExpr;
+		if (arg0.equals(arg1)) {
+			return arg0;
+		} else {
+			CnfExpression c0 = (CnfExpression) arg0;
+			CnfExpression c1 = (CnfExpression) arg1;
+			boolean isAnd0 = c0.operator() == SymbolicOperator.AND;
+			boolean isAnd1 = c1.operator() == SymbolicOperator.AND;
+
+			if (isAnd0 && isAnd1) {
+				arg0.setArgument(0,
+						c0.booleanSetArg(0).addAllMut(c1.booleanSetArg(0)));
+			} else if (isAnd0 && !isAnd1) {
+				arg0.setArgument(0, c0.booleanSetArg(0).addMut(c1));
+			} else if (!isAnd0 && isAnd1) {
+				arg0.setOperator(SymbolicOperator.AND);
+				arg0.setArgument(0, c1.booleanSetArg(0).add(c0));
+			} else {
+				arg0.setOperator(SymbolicOperator.AND);
+				arg0.setArgument(0, hashSet(c0, c1));
+			}
+		}
+		return arg0;
+	}
+
 	@Override
 	public BooleanExpression or(BooleanExpression arg0, BooleanExpression arg1) {
-		if (arg0 == trueExpr || arg1 == trueExpr)
+		if (arg0.isTrue() || arg1.isTrue())
 			return trueExpr;
-		if (arg0 == falseExpr)
+		if (arg0.isFalse())
 			return arg1;
-		if (arg1 == falseExpr)
+		if (arg1.isFalse())
 			return arg0;
 		if (arg0.equals(arg1))
 			return arg0;
@@ -209,10 +260,10 @@ public class CnfFactory implements BooleanExpressionFactory {
 				if (op1 == SymbolicOperator.AND) {
 					for (BooleanExpression clause0 : c0.booleanSetArg(0))
 						for (BooleanExpression clause1 : c1.booleanSetArg(0))
-							result = and(result, or(clause0, clause1));
+							result = andMut(result, or(clause0, clause1));
 				} else {
 					for (BooleanExpression clause0 : c0.booleanSetArg(0))
-						result = and(result, or(clause0, c1));
+						result = andMut(result, or(clause0, c1));
 				}
 				return result;
 			}
@@ -220,12 +271,13 @@ public class CnfFactory implements BooleanExpressionFactory {
 				BooleanExpression result = trueExpr;
 
 				for (BooleanExpression clause1 : c1.booleanSetArg(0))
-					result = and(result, or(c0, clause1));
+					result = andMut(result, or(c0, clause1));
 				return result;
 			}
 			if (op0 == SymbolicOperator.OR && op1 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set0 = c0.booleanSetArg(0);
 				SymbolicSet<BooleanExpression> set1 = c1.booleanSetArg(0);
+
 				if (simplify) {
 					c2 = set0.addAll(set1);
 					for (BooleanExpression clause : set0)
@@ -237,8 +289,10 @@ public class CnfFactory implements BooleanExpressionFactory {
 			}
 			if (op0 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set0 = c0.booleanSetArg(0);
+
 				if (simplify) {
 					BooleanExpression notC1 = not(c1);
+
 					c2 = set0.add(c1);
 					for (BooleanExpression clause : set0)
 						if (clause.equals(notC1))
@@ -249,8 +303,10 @@ public class CnfFactory implements BooleanExpressionFactory {
 			}
 			if (op1 == SymbolicOperator.OR) {
 				SymbolicSet<BooleanExpression> set1 = c1.booleanSetArg(0);
+
 				if (simplify) {
 					BooleanExpression notC0 = not(c0);
+
 					c2 = set1.add(c0);
 					for (BooleanExpression clause : set1)
 						if (clause.equals(notC0))
@@ -261,6 +317,13 @@ public class CnfFactory implements BooleanExpressionFactory {
 			}
 			return booleanExpression(SymbolicOperator.OR, hashSet(c0, c1));
 		}
+	}
+
+	@Override
+	public BooleanExpression orMut(BooleanExpression arg0,
+			BooleanExpression arg1) {
+		// TODO: improve
+		return or(arg0, arg1);
 	}
 
 	/**
@@ -385,6 +448,21 @@ public class CnfFactory implements BooleanExpressionFactory {
 		}
 		return booleanExpression(SymbolicOperator.EXISTS, boundVariable,
 				predicate);
+	}
+
+	@Override
+	public BooleanExpression orMut(BooleanExpression arg0,
+			Iterable<? extends BooleanExpression> args) {
+		for (BooleanExpression arg : args) {
+			arg0 = Objects.replace(arg0, orMut(arg0, arg));
+		}
+		return arg0;
+	}
+
+	@Override
+	public BooleanExpression notMut(BooleanExpression arg) {
+		// TODO: improve
+		return not(arg);
 	}
 
 }

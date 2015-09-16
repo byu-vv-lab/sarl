@@ -42,10 +42,11 @@ import edu.udel.cis.vsl.sarl.ideal.IF.PrimitivePower;
  */
 public class NumericPrimitive extends IdealExpression implements Primitive {
 
-	/**
-	 * Singleton map from this to this.
-	 */
-	private SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors = null;
+	// /**
+	// * Singleton map from this to this.
+	// */
+	// private SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors =
+	// null;
 
 	public NumericPrimitive(SymbolicOperator operator, SymbolicType type,
 			SymbolicObject[] arguments) {
@@ -75,9 +76,9 @@ public class NumericPrimitive extends IdealExpression implements Primitive {
 	@Override
 	public SymbolicMap<NumericPrimitive, PrimitivePower> monicFactors(
 			IdealFactory factory) {
-		if (monicFactors == null)
-			monicFactors = factory.singletonMap(this, (PrimitivePower) this);
-		return monicFactors;
+		// if (monicFactors == null)
+		// monicFactors = factory.singletonMap(this, (PrimitivePower) this);
+		return factory.singletonMap(this, (PrimitivePower) this);
 	}
 
 	@Override

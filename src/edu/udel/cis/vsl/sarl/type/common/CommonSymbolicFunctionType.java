@@ -18,15 +18,16 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.List;
+
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicFunctionType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
- * @author jthakkar
- * 
- *         implementation of {@link SymbolicFunctionType}
+ * Implementation of {@link SymbolicFunctionType}.
  */
 public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 		SymbolicFunctionType {
@@ -41,12 +42,6 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 	private SymbolicTypeSequence inputTypes;
 
 	private SymbolicType outputType;
-
-	/**
-	 * Cache of the "pure" version of this type: the version that is recursively
-	 * incomplete.
-	 */
-	private SymbolicFunctionType pureType = null;
 
 	CommonSymbolicFunctionType(SymbolicTypeSequence inputTypes,
 			SymbolicType outputType) {
@@ -92,29 +87,27 @@ public class CommonSymbolicFunctionType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		if (!inputTypes.isCanonic())
 			inputTypes = (SymbolicTypeSequence) factory.canonic(inputTypes);
 		if (!outputType.isCanonic())
 			outputType = factory.canonic(outputType);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
-	}
-
-	public SymbolicFunctionType getPureType() {
-		return pureType;
-	}
-
-	public void setPureType(SymbolicFunctionType pureType) {
-		this.pureType = pureType;
 	}
 
 	@Override
-	protected void commitChildren() {
-		inputTypes.commit();
-		outputType.commit();
-		if (pureType != null)
-			pureType.commit();
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
+
+		result.add(inputTypes);
+		result.add(outputType);
+		return result;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		super.nullifyFields();
+		inputTypes = null;
+		outputType = null;
 	}
 
 }

@@ -20,6 +20,7 @@ package edu.udel.cis.vsl.sarl.object.common;
 
 import edu.udel.cis.vsl.sarl.IF.object.BooleanObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonBooleanObject extends CommonSymbolicObject implements
 		BooleanObject {
@@ -63,13 +64,6 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	}
 
 	/**
-	 * Does nothing; Basic objects have no children, so there is nothing to do.
-	 */
-	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-	}
-
-	/**
 	 * Returns 1 when comparing a true BooleanObject to a false one. Returns -1
 	 * when comparing a false BooleanObject to a true one. Returns 0 when
 	 * comparing false BooleanObject to a false one, or a true BooleanObject to
@@ -94,13 +88,16 @@ public class CommonBooleanObject extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected void commitChildren() {
-		// no children; so nothing to do
+	protected Iterable<? extends SymbolicObject> getChildren() {
+		return emptyIterable;
 	}
 
 	@Override
-	public BooleanObject commit() {
-		return (BooleanObject) super.commit();
+	protected void nullifyFields() {
+	}
+
+	@Override
+	protected void canonizeChildren(ObjectFactory factory) {
 	}
 
 }

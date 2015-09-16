@@ -109,12 +109,4 @@ public interface IntObject extends SymbolicObject, Comparable<IntObject> {
 	 */
 	boolean isNegative();
 
-	/**
-	 * Commits this int object, i.e., makes it immutable.
-	 * 
-	 * @returns this
-	 */
-	@Override
-	IntObject commit();
-
 }

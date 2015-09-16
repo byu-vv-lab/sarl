@@ -18,15 +18,13 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.List;
+
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
-/**
- * @author jthakkar
- * 
- *         an implementation of {@link SymbolicArrayType}
- */
 public class CommonSymbolicArrayType extends CommonSymbolicType implements
 		SymbolicArrayType {
 
@@ -37,13 +35,10 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 	private final static int classCode = CommonSymbolicArrayType.class
 			.hashCode();
 
-	private SymbolicType elementType;
-
 	/**
-	 * Cache of the "pure" version of this type: the version that is recursively
-	 * incomplete.
+	 * The type of the elements of the array. Non-null.
 	 */
-	private SymbolicArrayType pureType = null;
+	private SymbolicType elementType;
 
 	/**
 	 * Creates new symbolic array type with given elementType. *
@@ -119,32 +114,24 @@ public class CommonSymbolicArrayType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
+		super.canonizeChildren(factory);
 		if (!elementType.isCanonic())
 			elementType = factory.canonic(elementType);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
-	}
-
-	public SymbolicArrayType getPureType() {
-		return pureType;
-	}
-
-	/**
-	 * setting a new pureType to this ArrayType
-	 * 
-	 * @param pureType
-	 */
-	public void setPureType(SymbolicArrayType pureType) {
-		this.pureType = pureType;
 	}
 
 	@Override
-	protected void commitChildren() {
-		if (elementType != null)
-			elementType.commit();
-		if (pureType != null)
-			pureType.commit();
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
+
+		result.add(elementType);
+		return result;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		super.nullifyFields();
+		elementType = null;
 	}
 
 }

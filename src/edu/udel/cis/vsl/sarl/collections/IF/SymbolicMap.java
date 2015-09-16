@@ -90,14 +90,8 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * <p>
 	 * Returns a symbolic map equivalent to the given one except that the entry
 	 * for the given key is modified or created so to use the given value. An
-	 * entry for the given key may or may not exist in the old map.
-	 * </p>
-	 * n
-	 * 
-	 * <p>
-	 * If this map is mutable, this method will modify and return this map
-	 * itself. Otherwise, a new map will be created if any modifications are
-	 * needed.
+	 * entry for the given key may or may not exist in the old map. Does not
+	 * madify this map.
 	 * </p>
 	 * 
 	 * @param key
@@ -108,6 +102,24 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 *         associated to the given key
 	 */
 	SymbolicMap<K, V> put(K key, V value);
+
+	/**
+	 * 
+	 * <p>
+	 * If this map is mutable, modifies this map by assigning <code>value</code>
+	 * to <code>key</code>. Otherwise, behaves just as
+	 * {@link #put(SymbolicExpression, SymbolicExpression)}.
+	 * </p>
+	 * 
+	 * @param key
+	 *            a symbolic expression key
+	 * @param value
+	 *            a symbolic expression value to associate to that key
+	 * @return a map based on the original map but with the given value
+	 *         associated to the given key; will be this map (modified) if this
+	 *         map is mutable
+	 */
+	SymbolicMap<K, V> putMut(K key, V value);
 
 	/**
 	 * <p>
@@ -129,6 +141,8 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 */
 	SymbolicMap<K, V> remove(K key);
 
+	SymbolicMap<K, V> removeMut(K key);
+
 	/**
 	 * <p>
 	 * Returns a map obtained by applying the given unary operator to the values
@@ -147,6 +161,8 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * @return a map obtained from the given one by applying operator to values
 	 */
 	SymbolicMap<K, V> apply(UnaryOperator<V> operator);
+
+	SymbolicMap<K, V> applyMut(UnaryOperator<V> operator);
 
 	/**
 	 * <p>
@@ -188,4 +204,8 @@ public interface SymbolicMap<K extends SymbolicExpression, V extends SymbolicExp
 	 * @return a map obtained by combining this map and the given map
 	 */
 	SymbolicMap<K, V> combine(BinaryOperator<V> operator, SymbolicMap<K, V> map);
+
+	SymbolicMap<K, V> combineMut(BinaryOperator<V> operator,
+			SymbolicMap<K, V> map);
+
 }

@@ -424,7 +424,7 @@ public interface CoreUniverse {
 	 *            symbolic constant should <strong>not</strong> be renamed
 	 * @return a unary operator which take a symbolic expression and returns a
 	 *         symbolic expression in which the symbolic constants have been
-	 *         assigned canonial names
+	 *         assigned canonical names
 	 */
 	UnaryOperator<SymbolicExpression> canonicalRenamer(String root,
 			Predicate<SymbolicConstant> ignore);

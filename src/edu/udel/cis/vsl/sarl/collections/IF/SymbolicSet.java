@@ -61,6 +61,8 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 */
 	SymbolicSet<T> add(T element);
 
+	SymbolicSet<T> addMut(T element);
+
 	/**
 	 * Returns the set obtained by removing the given element from this set. If
 	 * this does not contain the element, the set returned equals this.
@@ -71,6 +73,8 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 */
 	SymbolicSet<T> remove(T element);
 
+	SymbolicSet<T> removeMut(T element);
+
 	/**
 	 * Returns the set obtained by adding all of the elements in the given set
 	 * to this set.
@@ -80,6 +84,8 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 * @return the set which is the union of this and <code>set</code>
 	 */
 	SymbolicSet<T> addAll(SymbolicSet<? extends T> set);
+
+	SymbolicSet<T> addAllMut(SymbolicSet<? extends T> set);
 
 	/**
 	 * Returns the set which is the set difference of this set and the given
@@ -92,6 +98,8 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 */
 	SymbolicSet<T> removeAll(SymbolicSet<? extends T> set);
 
+	SymbolicSet<T> removeAllMut(SymbolicSet<? extends T> set);
+
 	/**
 	 * Returns the set which is the intersection of this set with the given one.
 	 * 
@@ -100,5 +108,7 @@ public interface SymbolicSet<T extends SymbolicExpression> extends
 	 * @return the intersection of the two sets
 	 */
 	SymbolicSet<T> keepOnly(SymbolicSet<? extends T> set);
+
+	SymbolicSet<T> keepOnlyMut(SymbolicSet<? extends T> set);
 
 }

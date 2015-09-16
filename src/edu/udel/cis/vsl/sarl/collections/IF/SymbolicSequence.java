@@ -44,6 +44,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 */
 	SymbolicSequence<T> add(T element);
 
+	SymbolicSequence<T> addMut(T element);
+
 	/**
 	 * Sets the element at specified position. Sequence must have length at
 	 * least index+1.
@@ -57,6 +59,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 */
 	SymbolicSequence<T> set(int index, T element);
 
+	SymbolicSequence<T> setMut(int index, T element);
+
 	/**
 	 * Removes the element at position index, shifting all subsequent elements
 	 * down one.
@@ -67,6 +71,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 *         shifting remaining element down one in index
 	 */
 	SymbolicSequence<T> remove(int index);
+
+	SymbolicSequence<T> removeMut(int index);
 
 	/**
 	 * Inserts element at position index, shifting all subsequence elements up
@@ -82,6 +88,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 *         the specified index
 	 */
 	SymbolicSequence<T> insert(int index, T element);
+
+	SymbolicSequence<T> insertMut(int index, T element);
 
 	/**
 	 * If index is less than the original size s, same as set. Otherwise returns
@@ -99,6 +107,8 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 *         at position index is value
 	 */
 	SymbolicSequence<T> setExtend(int index, T value, T filler);
+
+	SymbolicSequence<T> setExtendMut(int index, T value, T filler);
 
 	/**
 	 * Returns the subsequence whose first element is the element at position
@@ -123,6 +133,9 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 * @return the sequence of transformed elements
 	 */
 	<U extends SymbolicExpression> SymbolicSequence<U> apply(
+			Transform<T, U> transform);
+
+	<U extends SymbolicExpression> SymbolicSequence<U> applyMut(
 			Transform<T, U> transform);
 
 	/**

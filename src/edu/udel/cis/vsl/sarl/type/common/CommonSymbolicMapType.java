@@ -18,10 +18,13 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.List;
+
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicMapType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonSymbolicMapType extends CommonSymbolicType implements
 		SymbolicMapType {
@@ -33,12 +36,6 @@ public class CommonSymbolicMapType extends CommonSymbolicType implements
 	private SymbolicType valueType;
 
 	private SymbolicTupleType entryType;
-
-	/**
-	 * Cache of the "pure" version of this type: the version that is recursively
-	 * incomplete.
-	 */
-	private SymbolicMapType pureType = null;
 
 	/**
 	 * Creates new symbolic set type with given elementType. *
@@ -98,40 +95,43 @@ public class CommonSymbolicMapType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
+		super.canonizeChildren(factory);
 		if (!keyType.isCanonic())
 			keyType = factory.canonic(keyType);
 		if (!valueType.isCanonic())
 			valueType = factory.canonic(valueType);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
 		if (entryType != null && !entryType.isCanonic())
 			entryType = factory.canonic(entryType);
 	}
 
-	public SymbolicMapType getPureType() {
-		return pureType;
-	}
-
-	public void setPureType(SymbolicMapType pureType) {
-		this.pureType = pureType;
-	}
-
 	public void setEntryType(SymbolicTupleType entryType) {
+		assert isImmutable();
 		this.entryType = entryType;
 	}
 
 	public SymbolicTupleType getEntryType() {
+		assert isImmutable();
 		return entryType;
 	}
 
 	@Override
-	protected void commitChildren() {
-		keyType.commit();
-		valueType.commit();
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
+
+		result.add(keyType);
+		result.add(valueType);
 		if (entryType != null)
-			entryType.commit();
-		if (pureType != null)
-			pureType.commit();
+			result.add(entryType);
+		return result;
 	}
+
+	@Override
+	protected void nullifyFields() {
+		super.nullifyFields();
+		keyType = null;
+		valueType = null;
+		entryType = null;
+	}
+
 }

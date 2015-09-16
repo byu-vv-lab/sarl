@@ -9,6 +9,7 @@ import org.junit.Test;
 
 /**
  * Test class for CommonIntObject
+ * 
  * @author jtirrell
  *
  */
@@ -33,36 +34,43 @@ public class CommonIntObjectTest {
 
 	/**
 	 * Initializes shortint, longint, negint, zeroint
+	 * 
 	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.shortint = new CommonIntObject(1);
-		this.longint = new CommonIntObject(1234567890);
-		this.negint = new CommonIntObject(-1234567890);
-		this.zeroint = new CommonIntObject(0);
+		this.shortint = (CommonIntObject) new CommonIntObject(1).commit();
+		this.longint = (CommonIntObject) new CommonIntObject(1234567890)
+				.commit();
+		this.negint = (CommonIntObject) new CommonIntObject(-1234567890)
+				.commit();
+		this.zeroint = (CommonIntObject) new CommonIntObject(0).commit();
 	}
-	
+
 	/**
-	 * Verifies that computeHashCode returns the same hash code for objects of the same value
+	 * Verifies that computeHashCode returns the same hash code for objects of
+	 * the same value
 	 */
 	@Test
 	public void testComputeHashCode() {
 		CommonIntObject newshortint = new CommonIntObject(1);
 		CommonIntObject newlongint = new CommonIntObject(1234567890);
-		
-		assertEquals(this.shortint.computeHashCode(), newshortint.computeHashCode());
-		assertEquals(this.longint.computeHashCode(), newlongint.computeHashCode());
+
+		assertEquals(this.shortint.computeHashCode(),
+				newshortint.computeHashCode());
+		assertEquals(this.longint.computeHashCode(),
+				newlongint.computeHashCode());
 	}
 
 	/**
-	 * Verifies that intrinsicEquals returns true for objects of the same value, false otherwise
+	 * Verifies that intrinsicEquals returns true for objects of the same value,
+	 * false otherwise
 	 */
 	@Test
 	public void testIntrinsicEquals() {
 		CommonIntObject newshortint = new CommonIntObject(1);
 		CommonIntObject newlongint = new CommonIntObject(1234567890);
-		
+
 		assertTrue(this.shortint.intrinsicEquals(newshortint));
 		assertTrue(this.longint.intrinsicEquals(newlongint));
 		assertFalse(this.shortint.intrinsicEquals(newlongint));
@@ -106,11 +114,12 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that minus performs a correct subtraction on two CommonIntObjects
+	 * Verifies that minus performs a correct subtraction on two
+	 * CommonIntObjects
 	 */
 	@Test
 	public void testMinus() {
-		assertEquals(1234567889 , this.longint.minus(this.shortint).getInt());
+		assertEquals(1234567889, this.longint.minus(this.shortint).getInt());
 		assertEquals(-1234567889, this.shortint.minus(this.longint).getInt());
 	}
 
@@ -124,7 +133,8 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that signum returns 1 for CommonIntObjects with a positive value, -1 for negatives, 0 otherwise.
+	 * Verifies that signum returns 1 for CommonIntObjects with a positive
+	 * value, -1 for negatives, 0 otherwise.
 	 */
 	@Test
 	public void testSignum() {
@@ -134,7 +144,8 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that isZero returns true for CommonIntObjects with a value of 0, and false otherwise
+	 * Verifies that isZero returns true for CommonIntObjects with a value of 0,
+	 * and false otherwise
 	 */
 	@Test
 	public void testIsZero() {
@@ -144,7 +155,8 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that isPositive returns true for CommonIntObjects with a positive value, and false otherwise
+	 * Verifies that isPositive returns true for CommonIntObjects with a
+	 * positive value, and false otherwise
 	 */
 	@Test
 	public void testIsPositive() {
@@ -154,7 +166,8 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that isNegative returns true for CommonIntObjects with a negative value, and false otherwise
+	 * Verifies that isNegative returns true for CommonIntObjects with a
+	 * negative value, and false otherwise
 	 */
 	@Test
 	public void testIsNegative() {
@@ -164,7 +177,8 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that isOne returns true for CommonIntObjects with a value of 1, and false otherwise
+	 * Verifies that isOne returns true for CommonIntObjects with a value of 1,
+	 * and false otherwise
 	 */
 	@Test
 	public void testIsOne() {
@@ -174,26 +188,30 @@ public class CommonIntObjectTest {
 	}
 
 	/**
-	 * Verifies that compareTo returns 0 if two CommonIntObjects have the same value, and another value otherwise
+	 * Verifies that compareTo returns 0 if two CommonIntObjects have the same
+	 * value, and another value otherwise
 	 */
 	@Test
 	public void testCompareTo() {
 		assertEquals(0, this.shortint.compareTo(this.shortint));
-		assertTrue(0>this.shortint.compareTo(this.longint));
-		assertTrue(0<this.shortint.compareTo(this.negint));
+		assertTrue(0 > this.shortint.compareTo(this.longint));
+		assertTrue(0 < this.shortint.compareTo(this.negint));
 	}
 
 	/**
-	 * Verifies that toStringBuffer returns the CommonIntObject's value as a string buffer
+	 * Verifies that toStringBuffer returns the CommonIntObject's value as a
+	 * string buffer
 	 */
 	@Test
 	public void testToStringBuffer() {
 		assertEquals("1", this.shortint.toStringBuffer(false).toString());
-		assertEquals("-1234567890", this.negint.toStringBuffer(false).toString());
+		assertEquals("-1234567890", this.negint.toStringBuffer(false)
+				.toString());
 	}
 
 	/**
-	 * Verifies that toStringBufferLong returns the CommonIntObject's value as a string buffer
+	 * Verifies that toStringBufferLong returns the CommonIntObject's value as a
+	 * string buffer
 	 */
 	@Test
 	public void testToStringBufferLong() {

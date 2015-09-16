@@ -23,8 +23,9 @@ import java.util.Iterator;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class BasicCollection<T extends SymbolicExpression> extends
 		CommonSymbolicCollection<T> {
@@ -37,7 +38,7 @@ public class BasicCollection<T extends SymbolicExpression> extends
 		super(SymbolicCollectionKind.BASIC);
 		this.javaCollection = javaCollection;
 		for (T obj : javaCollection)
-			obj.makeChild();
+			obj.addReferenceFrom(this);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class BasicCollection<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		throw new SARLInternalException(
 				"canonization not implemented in BasicCollection");
 	}
@@ -91,9 +92,13 @@ public class BasicCollection<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	protected void commitChildren() {
-		for (T element : javaCollection)
-			element.commit();
+	protected Iterable<? extends SymbolicObject> getChildren() {
+		return javaCollection;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		javaCollection = null;
 	}
 
 }

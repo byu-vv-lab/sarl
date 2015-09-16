@@ -50,10 +50,6 @@ public class CommonObjectFactory implements ObjectFactory {
 
 	private ArrayList<SymbolicObject> objectList = new ArrayList<SymbolicObject>();
 
-	// TODO: think about this: cache the total order for fast
-	// comparisons...
-	// private NavigableSet<SymbolicObject> sortedSet;
-
 	private BooleanObject trueObj, falseObj;
 
 	private IntObject zeroIntObj, oneIntObj;
@@ -107,10 +103,6 @@ public class CommonObjectFactory implements ObjectFactory {
 		assert comparator.collectionComparator() != null;
 		assert comparator.typeComparator() != null;
 		assert comparator.typeSequenceComparator() != null;
-		// TODO set the orders of all the objects you already created??
-		// maybe only do this the first time they are used in
-		// a comparison. How will the other comparators
-		// do this
 	}
 
 	@Override
@@ -140,8 +132,6 @@ public class CommonObjectFactory implements ObjectFactory {
 			}
 			@SuppressWarnings("unchecked")
 			T result2 = (T) result;
-
-			// TODO set the order if you can.
 
 			return result2;
 		}

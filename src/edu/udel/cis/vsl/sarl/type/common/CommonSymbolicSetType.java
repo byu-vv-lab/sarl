@@ -20,7 +20,7 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicSetType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonSymbolicSetType extends CommonSymbolicType implements
 		SymbolicSetType {
@@ -28,12 +28,6 @@ public class CommonSymbolicSetType extends CommonSymbolicType implements
 	private final static int classCode = CommonSymbolicSetType.class.hashCode();
 
 	private SymbolicType elementType;
-
-	/**
-	 * Cache of the "pure" version of this type: the version that is recursively
-	 * incomplete.
-	 */
-	private SymbolicSetType pureType = null;
 
 	/**
 	 * Creates new symbolic set type with given elementType. *
@@ -81,31 +75,10 @@ public class CommonSymbolicSetType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
+		super.canonizeChildren(factory);
 		if (!elementType.isCanonic())
 			elementType = factory.canonic(elementType);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
-	}
-
-	public SymbolicSetType getPureType() {
-		return pureType;
-	}
-
-	/**
-	 * setting a new pureType to this ArrayType
-	 * 
-	 * @param pureType
-	 */
-	public void setPureType(SymbolicSetType pureType) {
-		this.pureType = pureType;
-	}
-
-	@Override
-	protected void commitChildren() {
-		elementType.commit();
-		if (pureType != null)
-			pureType.commit();
 	}
 
 }

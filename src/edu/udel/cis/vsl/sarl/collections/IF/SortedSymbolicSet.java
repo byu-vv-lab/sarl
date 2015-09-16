@@ -60,6 +60,9 @@ public interface SortedSymbolicSet<T extends SymbolicExpression> extends
 	@Override
 	SortedSymbolicSet<T> add(T element);
 
+	@Override
+	SortedSymbolicSet<T> addMut(T element);
+
 	/**
 	 * <p>
 	 * Returns the set obtained by removing the given element from this set. If
@@ -79,6 +82,9 @@ public interface SortedSymbolicSet<T extends SymbolicExpression> extends
 	@Override
 	SortedSymbolicSet<T> remove(T element);
 
+	@Override
+	SortedSymbolicSet<T> removeMut(T element);
+
 	/**
 	 * <p>
 	 * Returns the set obtained by adding all of the elements in the given set
@@ -97,6 +103,9 @@ public interface SortedSymbolicSet<T extends SymbolicExpression> extends
 	 */
 	@Override
 	SortedSymbolicSet<T> addAll(SymbolicSet<? extends T> set);
+
+	@Override
+	SortedSymbolicSet<T> addAllMut(SymbolicSet<? extends T> set);
 
 	/**
 	 * <p>
@@ -118,6 +127,9 @@ public interface SortedSymbolicSet<T extends SymbolicExpression> extends
 	@Override
 	SortedSymbolicSet<T> removeAll(SymbolicSet<? extends T> set);
 
+	@Override
+	SortedSymbolicSet<T> removeAllMut(SymbolicSet<? extends T> set);
+
 	/**
 	 * <p>
 	 * Returns the set which is the intersection of this set with the given one.
@@ -135,5 +147,8 @@ public interface SortedSymbolicSet<T extends SymbolicExpression> extends
 	 */
 	@Override
 	SortedSymbolicSet<T> keepOnly(SymbolicSet<? extends T> set);
+
+	@Override
+	SortedSymbolicSet<T> keepOnlyMut(SymbolicSet<? extends T> set);
 
 }

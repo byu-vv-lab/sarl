@@ -18,21 +18,23 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.List;
+
 import edu.udel.cis.vsl.sarl.IF.expr.NumericExpression;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicCompleteArrayType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
- * @author jthakkar
- *
- *         implementation for {@link SymbolicCompleteArrayType}
+ * Implementation of {@link SymbolicCompleteArrayType} based on extending
+ * {@link CommonSymbolicArrayType}.
  */
 public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 		implements SymbolicCompleteArrayType {
 
 	/**
-	 * extent is used to specify the length of a Complete Array
+	 * The length of the arrays in this type. Non-null.
 	 */
 	private NumericExpression extent;
 
@@ -59,7 +61,7 @@ public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		super.canonizeChildren(factory);
 		if (!extent.isCanonic())
 			extent = factory.canonic(extent);
@@ -71,11 +73,26 @@ public class CommonSymbolicCompleteArrayType extends CommonSymbolicArrayType
 	}
 
 	@Override
-	protected void commitChildren() {
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
+
+		result.add(extent);
+		return result;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		super.nullifyFields();
+		extent = null;
+	}
+
+	@Override
+	public void uncommit() {
 		if (extent != null) {
-			extent.commit();
+			extent.removeReferenceFrom(this);
+			extent = null;
 		}
-		super.commitChildren();
+		super.uncommit();
 	}
 
 }

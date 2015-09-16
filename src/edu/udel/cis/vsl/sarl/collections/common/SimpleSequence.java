@@ -7,9 +7,10 @@ import java.util.Iterator;
 import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.Transform;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicCollection;
 import edu.udel.cis.vsl.sarl.collections.IF.SymbolicSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
  * Implementation of sequences based on arrays. Performance can be good for
@@ -99,28 +100,9 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		this.elements = elements;
 		this.numNull = numNull;
 		for (int i = 0; i < size; i++)
-			elements[i].makeChild();
+			elements[i].incrementReferenceCount();
 	}
 
-	// not used. consider deleting...
-	// /**
-	// * Constructs new sequence under the assumption that the size of the new
-	// * sequence is exactly equal to <code>elements.length</code>, i.e., all of
-	// * the members of <code>elements</code> will be used to form the new
-	// * sequence.
-	// *
-	// *
-	// * @param elements
-	// * the elements of the sequence; object will be used, not copied.
-	// * All elements of elements must be non-<code>null</code> (but
-	// * <code>NULL</code> is OK)
-	// * @param numNull
-	// * the number of elements of elements which are <code>NULL</code>
-	// * @see {@link #SimpleSequence(int, SymbolicExpression[], int)}
-	// */
-	// SimpleSequence(T[] elements, int numNull) {
-	// this(elements.length, elements, numNull);
-	// }
 
 	/**
 	 * Creates new instance from given elements. Computes how many of those
@@ -135,7 +117,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 		numNull = 0;
 		for (SymbolicExpression expr : elements) {
-			expr.makeChild();
+			expr.incrementReferenceCount();
 			if (expr.isNull())
 				numNull++;
 		}
@@ -167,7 +149,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		this.elements = tempArray;
 		numNull = 0;
 		for (SymbolicExpression expr : this.elements) {
-			expr.makeChild();
+			expr.incrementReferenceCount();
 			if (expr.isNull())
 				numNull++;
 		}
@@ -185,7 +167,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		ArrayList<T> tempList = new ArrayList<T>();
 
 		for (T element : elements) {
-			element.makeChild();
+			element.incrementReferenceCount();
 			if (element.isNull())
 				numNull++;
 			tempList.add(element);
@@ -212,7 +194,7 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		T[] newArray = (T[]) new SymbolicExpression[START_LENGTH];
 
 		newArray[0] = element;
-		element.makeChild();
+		element.incrementReferenceCount();
 		this.size = 1;
 		this.elements = newArray;
 		this.numNull = element.isNull() ? 1 : 0;
@@ -256,12 +238,6 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		for (int i = 0; i < size; i++)
 			result = result ^ elements[i].hashCode();
 		return result;
-	}
-
-	@Override
-	protected void commitChildren() {
-		for (T element : elements)
-			element.commit();
 	}
 
 	// Public methods...
@@ -337,35 +313,38 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 
 	@Override
 	public SymbolicSequence<T> add(T element) {
-		if (!isImmutable() && size < elements.length) {
-			element.makeChild();
-			elements[size] = element;
-			if (element.isNull())
-				numNull++;
-			size++;
-			return this;
-		}
-		// if we are assuming committed => size=length,
-		// then at this point we know size=length.
-		// Otherwise it is possible that this is committed
-		// and size<length. In any case, we need to make
-		// a new array, and the new length will be obtained
-		// from the current size (not length).
 		@SuppressWarnings("unchecked")
 		T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
 		int newNumNull = element.isNull() ? numNull + 1 : numNull;
 
 		System.arraycopy(elements, 0, newArray, 0, size);
 		newArray[size] = element;
-		if (isImmutable()) {
-			return new SimpleSequence<T>(size + 1, newArray, newNumNull);
+		return new SimpleSequence<T>(size + 1, newArray, newNumNull);
+	}
+
+	@Override
+	public SymbolicSequence<T> addMut(T element) {
+		if (isImmutable())
+			return add(element);
+		if (size < elements.length) {
+			element.incrementReferenceCount();
+			elements[size] = element;
+			if (element.isNull())
+				numNull++;
+			size++;
 		} else {
+			@SuppressWarnings("unchecked")
+			T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
+			int newNumNull = element.isNull() ? numNull + 1 : numNull;
+
+			System.arraycopy(elements, 0, newArray, 0, size);
+			newArray[size] = element;
 			elements = newArray;
 			numNull = newNumNull;
-			element.makeChild();
+			element.incrementReferenceCount();
 			size++;
-			return this;
 		}
+		return this;
 	}
 
 	@Override
@@ -376,16 +355,28 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			newNumNull--;
 		if (element.isNull())
 			newNumNull++;
-		if (isImmutable()) {
-			@SuppressWarnings("unchecked")
-			T[] newArray = (T[]) new SymbolicExpression[size];
 
-			System.arraycopy(elements, 0, newArray, 0, size);
-			newArray[index] = element;
-			return new SimpleSequence<T>(size, newArray, newNumNull);
-		} else {
-			elements[index].release();
-			element.makeChild();
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) new SymbolicExpression[size];
+
+		System.arraycopy(elements, 0, newArray, 0, size);
+		newArray[index] = element;
+		return new SimpleSequence<T>(size, newArray, newNumNull);
+	}
+
+	@Override
+	public SymbolicSequence<T> setMut(int index, T element) {
+		if (isImmutable())
+			return set(index, element);
+		else {
+			int newNumNull = numNull;
+
+			if (elements[index].isNull())
+				newNumNull--;
+			if (element.isNull())
+				newNumNull++;
+			elements[index].decrementReferenceCount();
+			element.incrementReferenceCount();
 			numNull = newNumNull;
 			elements[index] = element;
 			return this;
@@ -396,22 +387,23 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	public SymbolicSequence<T> remove(int index) {
 		int newNumNull = elements[index].isNull() ? numNull - 1 : numNull;
 
-		if (isImmutable()) {
-			@SuppressWarnings("unchecked")
-			T[] newArray = (T[]) new SymbolicExpression[size - 1];
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) new SymbolicExpression[size - 1];
 
-			System.arraycopy(elements, 0, newArray, 0, index);
-			System.arraycopy(elements, index + 1, newArray, index, size - index
-					- 1);
-			return new SimpleSequence<T>(size - 1, newArray, newNumNull);
-		} else {
-			elements[index].release();
-			System.arraycopy(elements, index + 1, elements, index, size - index
-					- 1);
-			size--;
-			numNull = newNumNull;
-			return this;
-		}
+		System.arraycopy(elements, 0, newArray, 0, index);
+		System.arraycopy(elements, index + 1, newArray, index, size - index - 1);
+		return new SimpleSequence<T>(size - 1, newArray, newNumNull);
+	}
+
+	@Override
+	public SymbolicSequence<T> removeMut(int index) {
+		if (isImmutable())
+			return remove(index);
+		numNull = elements[index].isNull() ? numNull - 1 : numNull;
+		elements[index].decrementReferenceCount();
+		System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+		size--;
+		return this;
 	}
 
 	@Override
@@ -425,33 +417,42 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 			newNumNull += index - size;
 		if (value.isNull())
 			newNumNull++;
-		if (isImmutable()) {
+
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) new SymbolicExpression[newLength(index)];
+
+		System.arraycopy(elements, 0, newArray, 0, size);
+		for (int i = size; i < index; i++)
+			newArray[i] = filler;
+		newArray[index] = value;
+		return new SimpleSequence<T>(index + 1, newArray, newNumNull);
+	}
+
+	@Override
+	public SymbolicSequence<T> setExtendMut(int index, T value, T filler) {
+		if (isImmutable())
+			return setExtend(index, value, filler);
+		if (index < size)
+			return setMut(index, value);
+		if (filler.isNull())
+			numNull += index - size;
+		if (value.isNull())
+			numNull++;
+		if (index >= elements.length) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[newLength(index)];
 
 			System.arraycopy(elements, 0, newArray, 0, size);
-			for (int i = size; i < index; i++)
-				newArray[i] = filler;
-			newArray[index] = value;
-			return new SimpleSequence<T>(index + 1, newArray, newNumNull);
-		} else {
-			if (index >= elements.length) {
-				@SuppressWarnings("unchecked")
-				T[] newArray = (T[]) new SymbolicExpression[newLength(index)];
-
-				System.arraycopy(elements, 0, newArray, 0, size);
-				elements = newArray;
-			}
-			for (int i = size; i < index; i++) {
-				filler.makeChild();
-				elements[i] = filler;
-			}
-			value.makeChild();
-			elements[index] = value;
-			numNull = newNumNull;
-			size = index + 1;
-			return this;
+			elements = newArray;
 		}
+		for (int i = size; i < index; i++) {
+			filler.incrementReferenceCount();
+			elements[i] = filler;
+		}
+		value.incrementReferenceCount();
+		elements[index] = value;
+		size = index + 1;
+		return this;
 	}
 
 	@Override
@@ -471,38 +472,19 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	@Override
 	public <U extends SymbolicExpression> SymbolicSequence<U> apply(
 			Transform<T, U> transform) {
-		if (isImmutable()) {
-			for (int i = 0; i < size; i++) {
-				T t = elements[i];
-				U u = transform.apply(t);
+		for (int i = 0; i < size; i++) {
+			T t = elements[i];
+			U u = transform.apply(t);
 
-				if (t != u) {
-					@SuppressWarnings("unchecked")
-					U[] newArray = (U[]) new SymbolicExpression[size];
+			if (t != u) {
+				@SuppressWarnings("unchecked")
+				U[] newArray = (U[]) new SymbolicExpression[size];
 
-					System.arraycopy(elements, 0, newArray, 0, i);
-					newArray[i] = u;
-					for (i++; i < size; i++)
-						newArray[i] = transform.apply(elements[i]);
-					return new SimpleSequence<U>(newArray);
-				}
-			}
-		} else {
-			@SuppressWarnings("unchecked")
-			U[] newArray = (U[]) elements;
-
-			numNull = 0;
-			for (int i = 0; i < size; i++) {
-				T t = elements[i];
-				U u = transform.apply(t);
-
-				if (t != u) {
-					t.release();
-					u.makeChild();
-				}
+				System.arraycopy(elements, 0, newArray, 0, i);
 				newArray[i] = u;
-				if (u.isNull())
-					numNull++;
+				for (i++; i < size; i++)
+					newArray[i] = transform.apply(elements[i]);
+				return new SimpleSequence<U>(newArray);
 			}
 		}
 
@@ -513,42 +495,81 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-		for (int i = 0; i < size; i++)
-			elements[i] = factory.canonic(elements[i]);
+	public <U extends SymbolicExpression> SymbolicSequence<U> applyMut(
+			Transform<T, U> transform) {
+		if (isImmutable())
+			return apply(transform);
+
+		@SuppressWarnings("unchecked")
+		U[] newArray = (U[]) elements;
+
+		numNull = 0;
+		for (int i = 0; i < size; i++) {
+			T t = elements[i];
+			U u = transform.apply(t);
+
+			if (t != u) {
+				t.decrementReferenceCount();
+				u.incrementReferenceCount();
+			}
+			newArray[i] = u;
+			if (u.isNull())
+				numNull++;
+		}
+
+		@SuppressWarnings("unchecked")
+		SymbolicSequence<U> result = (SymbolicSequence<U>) this;
+
+		return result;
+	}
+
+	@Override
+	protected void canonizeChildren(ObjectFactory factory) {
+		if (size == elements.length) {
+			for (int i = 0; i < size; i++)
+				elements[i] = factory.canonic(elements[i]);
+		} else {
+			@SuppressWarnings("unchecked")
+			T[] newArray = (T[]) new SymbolicExpression[size];
+
+			for (int i = 0; i < size; i++)
+				newArray[i] = factory.canonic(elements[i]);
+			elements = newArray;
+		}
 	}
 
 	@Override
 	public SymbolicSequence<T> insert(int index, T element) {
 		int newNumNull = element.isNull() ? numNull + 1 : numNull;
 
-		if (isImmutable()) {
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
+
+		System.arraycopy(elements, 0, newArray, 0, index);
+		newArray[index] = element;
+		System.arraycopy(elements, index, newArray, index + 1, size - index);
+		return new SimpleSequence<T>(size + 1, newArray, newNumNull);
+	}
+
+	@Override
+	public SymbolicSequence<T> insertMut(int index, T element) {
+		if (isImmutable())
+			return insert(index, element);
+		numNull = element.isNull() ? numNull + 1 : numNull;
+		if (size == elements.length) {
 			@SuppressWarnings("unchecked")
 			T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
 
 			System.arraycopy(elements, 0, newArray, 0, index);
-			newArray[index] = element;
 			System.arraycopy(elements, index, newArray, index + 1, size - index);
-			return new SimpleSequence<T>(size + 1, newArray, newNumNull);
+			elements = newArray;
 		} else {
-			if (size == elements.length) {
-				@SuppressWarnings("unchecked")
-				T[] newArray = (T[]) new SymbolicExpression[newLength(size)];
-
-				System.arraycopy(elements, 0, newArray, 0, index);
-				System.arraycopy(elements, index, newArray, index + 1, size
-						- index);
-				elements = newArray;
-			} else {
-				System.arraycopy(elements, index, elements, index + 1, size
-						- index);
-			}
-			element.makeChild();
-			elements[index] = element;
-			size++;
-			numNull = newNumNull;
-			return this;
+			System.arraycopy(elements, index, elements, index + 1, size - index);
 		}
+		element.incrementReferenceCount();
+		elements[index] = element;
+		size++;
+		return this;
 	}
 
 	@Override
@@ -556,22 +577,13 @@ public class SimpleSequence<T extends SymbolicExpression> extends
 		return numNull;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * Not only does the usual commit of this object and descendants, but also
-	 * trims the internal array used to store the elements to the exact size.
-	 */
 	@Override
-	public SymbolicSequence<T> commit() {
-		if (size != elements.length) {
-			@SuppressWarnings("unchecked")
-			T[] newArray = (T[]) new SymbolicExpression[size];
-
-			System.arraycopy(elements, 0, newArray, 0, size);
-			elements = newArray;
-		}
-		super.commit();
+	protected Iterable<? extends SymbolicObject> getChildren() {
 		return this;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		elements = null;
 	}
 }

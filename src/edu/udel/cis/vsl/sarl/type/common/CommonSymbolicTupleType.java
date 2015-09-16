@@ -18,15 +18,16 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.type.common;
 
+import java.util.List;
+
 import edu.udel.cis.vsl.sarl.IF.object.StringObject;
+import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTupleType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 /**
- * an implementation of {@link SymbolicTupleType}
- * 
- * @author mohammedalali
+ * Implementation of {@link SymbolicTupleType}.
  * 
  */
 public class CommonSymbolicTupleType extends CommonSymbolicType implements
@@ -44,17 +45,14 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	 */
 	private StringObject name;
 
-	/**
-	 * a SymbolicTupleType to hold the pureType of this TupleType
-	 */
-	private SymbolicTupleType pureType;
-
 	CommonSymbolicTupleType(StringObject name, SymbolicTypeSequence sequence) {
 		super(SymbolicTypeKind.TUPLE);
 		assert name != null;
 		assert sequence != null;
 		this.name = name;
 		this.sequence = sequence;
+		name.addReferenceFrom(this);
+		sequence.addReferenceFrom(this);
 	}
 
 	@Override
@@ -73,7 +71,6 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	public StringBuffer toStringBuffer(boolean atomize) {
 		StringBuffer result = new StringBuffer(name.toStringBuffer(false));
 
-		// result.append(sequence.toStringBuffer(false));
 		return result;
 	}
 
@@ -88,41 +85,34 @@ public class CommonSymbolicTupleType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
+		super.canonizeChildren(factory);
 		if (!sequence.isCanonic())
 			sequence = (SymbolicTypeSequence) factory.canonic(sequence);
 		if (!name.isCanonic())
 			name = (StringObject) factory.canonic(name);
-		if (pureType != null && !pureType.isCanonic())
-			pureType = factory.canonic(pureType);
 	}
 
 	/**
-	 * returns the pureType of this TupleType, that is the same type without any
-	 * length
+	 * {@inheritDoc}.
 	 * 
-	 * Has to use setPureType(...) before calling this method
+	 * Children are: the name, the pureType (if not null), and the elements of
+	 * the type sequence.
 	 */
-	public SymbolicTupleType getPureType() {
-		return pureType;
-	}
+	@Override
+	protected List<SymbolicObject> getChildren() {
+		List<SymbolicObject> result = super.getChildren();
 
-	/**
-	 * used to set the pureType of this TupleType
-	 * 
-	 * @param pureType
-	 */
-	public void setPureType(SymbolicTupleType pureType) {
-		this.pureType = pureType;
+		result.add(sequence);
+		result.add(name);
+		return result;
 	}
 
 	@Override
-	protected void commitChildren() {
-		sequence.commit();
-		if (name != null)
-			name.commit();
-		if (pureType != null)
-			pureType.commit();
+	protected void nullifyFields() {
+		super.nullifyFields();
+		name = null;
+		sequence = null;
 	}
 
 }

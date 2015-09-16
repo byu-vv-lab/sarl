@@ -1,137 +1,192 @@
+Mutability:
 
-Design:
 
-universe
-  uses: reason, preuniverse
+--
 
-reason
-  uses: simplify, prove, ....
+what if andMut adjusted reference count of first arg. under assumption it is used
 
-herbrand
-  uses: like ideal?
+x=andMut(x,y)
+
+so if result returned is not original x, it increments ref count on result
+and decrements ref count on original x..
+
+How about function
+
+x=adjustRefCount(x,andMut(x,y))
+
+x=andMut(x,y).replacing(x);
+
+x=SymbolicObject.replace(x,andMut(x,y));
+
+SymbolicObject replacing(SymbolicObject that) {
+  if (this!=that) {
+    that.decrementReferenceCount();
+    this.incrementReferenceCount();
+  }
+  return this;
+}
   
-ideal
-  uses: simplify, prove, ...
-  ideal.simplify uses preuniverse
+
+--
+
+Q: what about extrinsic references, which are not used
+in equality/hashCode?  They can introduce cycles if you count
+them as children.  If you don't count them as children, 
+how do you control the sharing?
+
+maybe:
+
+MUTABLE : temporarily mutable
+IMMUTABLE : temporarily immutable
+COMMITTED : permanently committed
+CANONIC : stored
+
+the extrinsic data is cached data just like hashCode.  It becomes
+invalid when state is mutable.   Each piece of data needs an extra
+bit to tell if it is valid.  Do you make it a child? Do you increase
+reference count?
+
+does any of the following fall apart for general directed graphs?
+(i.e., even those with cycles?)
+
+with cycles, once one thing is committed, everything in the cycle
+is committed forever
+
+Hence, rule: you can have an extrinsic field which is a symbolic
+object only when state is immutable.   As soon as it becomes
+mutable, nullify those references (and decrementReferenceCount them).
+Increment the reference count but don't make it a child?
+
+
+It is a child.  It has to be treated differently because of possible
+cycles.  Hence negating commits something forever.  IS THAT SO BAD?
+
+--
+
+can you uncommit in a cycle? never.  either the cycle is unreachable
+or at least one node has 2 incoming edges and therefore is immutable.
+therefore if you cache negations as children both expressions are committed.
+maybe negating should canonize.
+
+every object has status: MUTABLE, COMMITTED, CANONIC
+
+every object has reference count.  this can be incremented and decremented.
+
+Automatic management of status: this guarantees that an object will
+be mutated only when it is not shared. 
+
+you can commit AND uncommit.  uncommit takes you from COMMITTED to
+MUTABLE.
+
+when reference count goes above 1, you and all your descendants
+are committed.
+
+when reference counts drops below 2, you and descendants are uncommitted---unless
+one of them has reference count > 1, then you stop uncommitting that branch.
+
+Q: what if addMut (for example) creates a new object.  What should be its
+reference count?   If it does not create a new object, the reference count
+should not change.
+
+A: if a new object is created, its reference count will be 0 as usual.
+Otherwise, the reference count will be unchanged.  This means the user
+must do something like:
+
+void setVariableValue(int i, SymbolicExpression expr) {
+  values[i].decrementRefCount();
+  expr.incrementRefCount();
+  values[i] = expr;
+}
+
+And can invoke for example:
+
+SymbolicExpression x = dyscope.getVariableValue(i);
+SymbolicExpression y = ...;
+dyscope.setVariableValue(i, universe.addMut(x,y));
+
+If a new value is created by the addMut (i.e., if x was shared), the result
+will be that the reference count of the old value of x is decremented, the
+reference count of the new expression is 1.   The reference count of y
+is unchanged.
+
+If a new value is not created by addMut (i.e., it mutates x), then
+the reference count is unchanged.
   
-prove
-  uses: IF, cvc3, expr, 
-    preuniverse (to build expressions)
- 
-simplify
-  uses: IF, type, expr, object,
-    preuniverse (by CommonSimplifier)
+--
+Caching of hash code.  This is problematic if status can go from committed
+to mutable.  Need to know if any child changes.
 
-preuniverse: everything in universe except reasoning
-  uses: expr, type, collections, object, number, util, IF
+--
 
-expr
-  uses: IF
-        object
-        collections
-        type
+Collections:
 
-type
-  uses: IF (expr array len),
-        object
+special methods to possibly mutate
 
-collections
-  uses: IF
-        object
+set1.addMut(x)
+set1.addAllMut(s)
+set1.removeMut(s)
+etc.
 
-object: symbolic objects
-  uses: IF
-        collections (SymbolicCollection for comparator): CHANGE!
+These methods will not mutate set1 if set1 is committed.
+They may mutate set1 if set1 is not committed.
+They will never mutate the arguments, except to possibly commit them.
 
-number: arbitrary-precision integer and real numbers
-  uses: IF (IF.number)
+set1.add(x)
+set1.addAll(s)
+set1.remove(s)
 
-util: utility classes
-  uses: nothing
+These methods will not mutate anything.
+They may commit the arguments.
 
-IF: public interface
-  uses: nothing
-  comprises:
-    IF.SymbolicUniverse
-    IF.Reasoner
-    IF.ValidityResult
-    IF.ModelResult
-    IF.SARLException, IF.SARLInternalException, IF.TheoremProverException
-    IF.expr
-    IF.number
-    IF.object
-    IF.type
+Implementation detail: these methods can be implemented by making
+one generic method that takes an extra boolean argument "mutate"
 
---------------------
+--
 
-Design issues:
+Universe/NumericFactory/IdealFactory:
 
-  - massive duplication between SymbolicUniverse and PreUniverse
-  - cyclic dependency object<-->collections
-  
---------------------
+numeric operations:
+addMut(x,y)
+addMut(x, Iterable)?
+subtractMut
+multiplyMut
+multiplyMut(x, Iterable)?
+divideMut
+minusMut (negate)
 
-Heaps:
+boolean operations:
+andMut(x,y)
+andMut(x, Iterable)
+orMut(x,y)
+orMut(x, Iterable)
+notMut
 
-/** This is the type for head IDs.  Every heap has an unchanging
- * heap ID.  As objects are added or removed from the heap, the
- * heap expression itself changes, but the underlying heap ID
- * is constant.  References to heap objects always include the
- * heap ID indicating to which heap the reference points.  This
- * is necessary so that when we canonicalize a heap, we can 
- * determine which references refer to that heap and therefore
- * must be updated. */
-SymbolicType heapIdType();
+array/tuple operations:
+arrayWriteMut
+denseArrayWriteMut
+tupleWriteMut
 
-/** This is the type of a heap. */
-SymbolicType heapType();
+sequence operations:
+appendMut
+removeElementAtMut
+insertElementAtMut
 
-/** Returns the incomplete reference type, which is a super-type
- * of all reference types.  Situation is analogous to array types.
- */
-SymbolicType referenceType();
+references:
+assignMut
 
-/** Returns type "reference-to-T", where T is the given type.
- * This is a complete reference type. */
-SymbolicType completeReferenceType(SymbolicType type);
+Transform (Substituter):
+applyMut ? 
 
-/** Returns a heap ID which simply wraps the given string object.
- * Two heapIds with equal names are equal. */
-SymbolicExpression heapId(StringObject name);
+Reasoner:
+(assumption must be committed, maybe even canonic)
+simplifyMut
 
-/** Returns the empty heap with the given heap ID. */
-SymbolicExpression emptyHeap(SymbolicExpression heapId);
 
-/** Allocates an object on the heap.  Returns a pair: the first
- * component is the new heap, the second is reference to the new
- * object in the new heap. */
-Pair<SymbolicExpression,SymbolicExpression> 
-  malloc(SymbolicExpression heap, SymbolicType type);
-  
-/** Given an expression of heap type, returns
- * the heap ID; given an expression of reference type, returns
- * the heap ID of the referenced heap. */
-SymbolicExpression heapIdOf(SymbolicExpression expr);
 
-/** Deallocates an object on the heap.  Given a heap and a reference
- * to an element on the heap, returns the new heap which is obtained
- * by removing the referenced object from the original. Result
- * is undefined if heapIdOf(ref) does not equal heapIdOf(heap). 
- */
-SymbolicExpression free(SymbolicExpression heap, SymbolicExpression ref);
 
-/** Dereferences a reference to the heap.  The given ref must
- * have a complete reference type, say "reference-to-T".  The type
- * of the expression returned will then be T.   The heaps ID of
- * the ref and the heap must be equal. */
-SymbolicExpression dereference(SymbolicExpression heap,
-  SymbolicExpression ref);
- 
-/** Canonicalize heap.
- * Given a heap and a collection of expressions, returns a pair.
- * The first component of the pair is the new heap, the second
- * element is the collection obtained by updating all references
- * to objects in the given heap to their new values. */
-Pair<SymbolicExpression, SymbolicCollection<SymbolicExpression>>
-  canonic(SymbolicExpression heap,
-          SymbolicCollection<SymbolicExpression>> expressions);
+--
+
+General:
+
+add method to decrement the reference count?
+

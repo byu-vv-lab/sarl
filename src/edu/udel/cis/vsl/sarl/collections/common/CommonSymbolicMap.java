@@ -54,15 +54,11 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 	}
 
 	/**
-	 * <p>
-	 * Applies a unary operator to the values of this map in the case where this
-	 * map is immutable. Implementation note: the first change results in a new
-	 * map, while the iteration takes place over the original map, so there is
-	 * no conflict.
-	 * </p>
+	 * {@inheritDoc}
 	 * 
 	 * <p>
-	 * Precondition: this.isImmutable() (not checked)
+	 * Implementation note: the first change results in a new map, while the
+	 * iteration takes place over the original map, so there is no conflict.
 	 * </p>
 	 * 
 	 * @param operator
@@ -70,7 +66,7 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 	 * @return a map which results from apply the given operator to the values
 	 *         of this map, with entries resulting in null removed
 	 */
-	private SymbolicMap<K, V> applyImmutable(UnaryOperator<V> operator) {
+	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
 		SymbolicMap<K, V> result = this;
 
 		for (Entry<K, V> entry : this.entries()) {
@@ -86,13 +82,11 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		return result;
 	}
 
-	/**
-	 * Applies the unary operator to this map in the case where this map is
-	 * mutable. The modifications are done "in place" -- no new map is created.
-	 * 
-	 * @param operator
-	 */
-	private void applyMutable(UnaryOperator<V> operator) {
+	@Override
+	public SymbolicMap<K, V> applyMut(UnaryOperator<V> operator) {
+		if (isImmutable())
+			return apply(operator);
+
 		List<K> removeList = new LinkedList<>();
 
 		for (Entry<K, V> entry : this.entries()) {
@@ -102,11 +96,15 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 
 			if (newValue == null)
 				removeList.add(key);
-			else if (value != newValue)
+			else if (value != newValue) {
+				value.removeReferenceFrom(this);
+				newValue.addReferenceFrom(this);
 				entry.setValue(newValue);
+			}
 		}
 		for (K key : removeList)
 			remove(key);
+		return this;
 	}
 
 	@Override
@@ -135,29 +133,19 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 		return true;
 	}
 
-	@Override
-	public SymbolicMap<K, V> apply(UnaryOperator<V> operator) {
-		if (this.isImmutable()) {
-			return applyImmutable(operator);
-		} else {
-			applyMutable(operator);
-			return this;
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * In this implementation, you iterate over one map while modifying the
-	 * other one (if the other one is mutable).
+	 * other one.
 	 */
 	@Override
 	public SymbolicMap<K, V> combine(BinaryOperator<V> operator,
 			SymbolicMap<K, V> map) {
 		SymbolicMap<K, V> result, map2;
 
-		// optimization:
-		if (this.isImmutable() && map.isImmutable() && this.size() < map.size()) {
+		// optimization: iterate over the shorter map
+		if (this.size() < map.size()) {
 			result = map;
 			map2 = this;
 		} else {
@@ -176,11 +164,50 @@ public abstract class CommonSymbolicMap<K extends SymbolicExpression, V extends 
 
 				if (newValue == null)
 					result = result.remove(key);
-				else
+				else if (newValue != value1)
 					result = result.put(key, newValue);
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * Note: in this implementation, you iterate over the entries in
+	 * <code>map</code> while modifying <code>this</code>. This is fine as long
+	 * as <code>map</code> and <code>this</code> are not the same object. If
+	 * they are the same object, then that object should be committed, in which
+	 * case this method will invoke
+	 * {@link #combine(BinaryOperator, SymbolicMap)}.
+	 */
+	@Override
+	public SymbolicMap<K, V> combineMut(BinaryOperator<V> operator,
+			SymbolicMap<K, V> map) {
+		if (isImmutable())
+			return combine(operator, map);
+
+		assert map != this;
+		for (Entry<K, V> entry : map.entries()) {
+			K key = entry.getKey();
+			V value2 = entry.getValue();
+			V value1 = get(key);
+
+			assert value2 != null;
+			if (value1 == null)
+				putMut(key, value2);
+			else {
+				V newValue = operator.apply(value1, value2);
+
+				// if operator mutates, it may have modified and returned
+				// value1.
+				if (newValue == null)
+					removeMut(key);
+				else if (newValue != value1)
+					putMut(key, newValue);
+			}
+		}
+		return this;
 	}
 
 	@Override

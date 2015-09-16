@@ -25,7 +25,7 @@ import edu.udel.cis.vsl.sarl.IF.SARLException;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicTypeSequence;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 import edu.udel.cis.vsl.sarl.object.common.CommonSymbolicObject;
 
 /**
@@ -63,6 +63,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 			if (type == null)
 				throw new SARLException("Cannot add null type to type sequence");
 			elements.add(type);
+			type.addReferenceFrom(this);
 		}
 	}
 
@@ -80,6 +81,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 			if (type == null)
 				throw new SARLException("Cannot add null type to type sequence");
 			elements.add(type);
+			type.addReferenceFrom(this);
 		}
 	}
 
@@ -132,7 +134,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
+	public void canonizeChildren(ObjectFactory factory) {
 		int numElements = elements.size();
 
 		for (int i = 0; i < numElements; i++) {
@@ -149,10 +151,13 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected void commitChildren() {
-		for (SymbolicType memberType : elements)
-			if (memberType != null)
-				memberType.commit();
+	protected Iterable<SymbolicType> getChildren() {
+		return elements;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		elements = null;
 	}
 
 }

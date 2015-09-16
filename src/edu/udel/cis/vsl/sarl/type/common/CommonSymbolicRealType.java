@@ -20,15 +20,7 @@ package edu.udel.cis.vsl.sarl.type.common;
 
 import edu.udel.cis.vsl.sarl.IF.SARLInternalException;
 import edu.udel.cis.vsl.sarl.IF.type.SymbolicRealType;
-import edu.udel.cis.vsl.sarl.IF.type.SymbolicType;
-import edu.udel.cis.vsl.sarl.object.common.CommonObjectFactory;
 
-/**
- * an implementation of {@link SymbolicRealType}
- * 
- * @author mohammedalali
- *
- */
 public class CommonSymbolicRealType extends CommonSymbolicType implements
 		SymbolicRealType {
 
@@ -65,10 +57,6 @@ public class CommonSymbolicRealType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-	}
-
-	@Override
 	public StringBuffer toStringBuffer(boolean atomize) {
 		if (name == null) {
 			String shortName;
@@ -102,11 +90,9 @@ public class CommonSymbolicRealType extends CommonSymbolicType implements
 	}
 
 	@Override
-	public SymbolicType getPureType() {
-		return this;
-	}
-
-	@Override
-	protected void commitChildren() {
+	protected void nullifyFields() {
+		super.nullifyFields();
+		realKind = null;
+		name = null;
 	}
 }

@@ -23,6 +23,7 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.IF.object.NumberObject;
 import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
+import edu.udel.cis.vsl.sarl.object.IF.ObjectFactory;
 
 public class CommonNumberObject extends CommonSymbolicObject implements
 		NumberObject {
@@ -79,13 +80,6 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 		return value instanceof RationalNumber;
 	}
 
-	/**
-	 * Does nothing; Basic objects have no children, so there is nothing to do.
-	 */
-	@Override
-	public void canonizeChildren(CommonObjectFactory factory) {
-	}
-
 	@Override
 	public int compareTo(NumberObject o) {
 		return value.compareTo(o.getNumber());
@@ -103,8 +97,17 @@ public class CommonNumberObject extends CommonSymbolicObject implements
 	}
 
 	@Override
-	protected void commitChildren() {
-		// no children; so nothing to do
+	protected Iterable<? extends SymbolicObject> getChildren() {
+		return emptyIterable;
+	}
+
+	@Override
+	protected void nullifyFields() {
+		value = null;
+	}
+
+	@Override
+	protected void canonizeChildren(ObjectFactory factory) {
 	}
 
 }
