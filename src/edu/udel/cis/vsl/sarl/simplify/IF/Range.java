@@ -33,8 +33,8 @@ public interface Range {
 	 * Does this set contain the given number as a member?
 	 * 
 	 * @param number
-	 *            any non-<code>null</code> {@link Number} of the appropriate
-	 *            type
+	 *            any non-<code>null</code> {@link Number} of the same type
+	 *            (integer/real) as this set
 	 * @return <code>true</code> iff this set contains the given number
 	 */
 	boolean containsNumber(Number number);
@@ -71,7 +71,8 @@ public interface Range {
 	 * Computes the union of this set with the given one.
 	 * 
 	 * @param set
-	 *            a number set of the same type (integer/real) as this one
+	 *            a non-null number set of the same type (integer/real) as this
+	 *            one
 	 * @return the union of the two sets
 	 */
 	Range union(Range set);
@@ -97,7 +98,9 @@ public interface Range {
 
 	/**
 	 * Computes the set aX+b, where X is this set. That is, the set of all
-	 * numbers of the form ax+b, where x is in this set.
+	 * numbers of the form ax+b, where x is in this set. (For integral
+	 * {@link Interval} set, it will return the set including all transformed
+	 * integers, which are contained in the original set.)
 	 * 
 	 * @param a
 	 *            a number of the same type as this set

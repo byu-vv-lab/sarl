@@ -21,6 +21,8 @@ package edu.udel.cis.vsl.sarl.ideal.simplify;
 // TODO: eventually replace this with a real implementation of
 // Interval
 
+import java.math.BigInteger;
+
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicExpression;
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
@@ -28,6 +30,8 @@ import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.IF.number.NumberFactory;
 import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
 import edu.udel.cis.vsl.sarl.number.Numbers;
+import edu.udel.cis.vsl.sarl.number.real.RealInteger;
+import edu.udel.cis.vsl.sarl.number.real.RealRational;
 
 /**
  * An instance of BoundsObject gives concrete upper and lower bounds on a
@@ -527,8 +531,55 @@ public class BoundsObject implements Interval {
 
 	@Override
 	public int compare(Number number) {
-		// TODO Auto-generated method stub
+		if (lower != null) {
+			int compare = compares(lower, number);
+
+			if (compare > 0 || (compare == 0 && strictLower))
+				return 1;
+		}
+		if (upper != null) {
+			int compare = compares(upper, number);
+
+			if (compare < 0 || (compare == 0 && strictUpper))
+				return -1;
+		}
 		return 0;
 	}
 
+	@Override
+	public boolean isUniversal() {
+		return lower == null && upper == null && strictLower && strictUpper;
+	}
+
+	private int compares(Number arg0, Number arg1) {
+		if (arg0 instanceof IntegerNumber && arg1 instanceof IntegerNumber) {
+			RealInteger x = (RealInteger) arg0;
+			RealInteger y = (RealInteger) arg1;
+
+			return (x.value().subtract(y.value())).intValue();
+		} else {
+			RealRational realRat0, realRat1;
+			BigInteger numerator, denominator;
+
+			if (arg0 instanceof IntegerNumber) {
+				numerator = ((RealInteger) arg0).value();
+				denominator = BigInteger.ONE;
+
+				realRat0 = new RealRational(numerator, denominator);
+			} else {
+				realRat0 = (RealRational) arg0;
+			}
+			if (arg1 instanceof IntegerNumber) {
+				numerator = ((RealInteger) arg1).value();
+				denominator = BigInteger.ONE;
+
+				realRat1 = new RealRational(numerator, denominator);
+			} else {
+				realRat1 = (RealRational) arg1;
+			}
+			return (realRat0.numerator().multiply(realRat1.denominator())
+					.subtract(realRat1.numerator().multiply(
+							realRat0.denominator()))).intValue();
+		}
+	}
 }

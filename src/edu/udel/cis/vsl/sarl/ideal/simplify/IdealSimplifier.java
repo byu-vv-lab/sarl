@@ -240,8 +240,13 @@ public class IdealSimplifier extends CommonSimplifier {
 			if (f1.degree() > 1) { // nontrivial factorization
 				result = (Polynomial) simplifyGenericExpression(f1);
 
-				if (result.degree() < polynomial.degree())
-					return result;
+				if (result != f1) {
+					if (result instanceof Monomial) {
+						result = ((Monomial) result).expand(info.idealFactory);
+					}
+					if (result.degree() < polynomial.degree())
+						return result;
+				}
 			}
 			result = (Polynomial) simplifyGenericExpression(polynomial);
 			return result;
@@ -289,10 +294,13 @@ public class IdealSimplifier extends CommonSimplifier {
 		case EQUALS:
 			result = simplifyEQ0(poly);
 			return result == null ? expression : result;
-		case NEQ:
-			result = simplifyEQ0(poly);
-			return result == null ? expression
-					: (BooleanExpression) info.universe.not(result);
+		case NEQ: {
+			BooleanExpression negExpression = universe.not(expression);
+
+			result = (BooleanExpression) simplifyExpression(negExpression);
+			result = universe.not(result);
+			return result;
+		}
 		default:
 			throw new SARLInternalException("unreachable");
 		}
@@ -570,6 +578,23 @@ public class IdealSimplifier extends CommonSimplifier {
 				BooleanExpression newAssumption = (BooleanExpression) simplifyExpression(assumption);
 
 				rawAssumption = newAssumption;
+				// at this point, rawAssumption contains only those facts that
+				// could not be
+				// determined from the booleanMap, boundMap, or constantMap.
+				// these facts need to be added back in---except for the case
+				// where
+				// a symbolic constant is mapped to a concrete value in the
+				// constantMap.
+				// such symbolic constants will be entirely eliminated from the
+				// assumption
+
+				// after SimplifyExpression, the removable symbolic constants
+				// should all be gone, replaced with their concrete values.
+				// However, as we add back in facts from the constant map,
+				// bound map and boolean
+				// map, those symbolic constants might sneak back in!
+				// We will remove them again later.
+
 				for (BoundsObject bound : boundMap.values()) {
 					BooleanExpression constraint = boundToIdeal(bound);
 
@@ -606,6 +631,21 @@ public class IdealSimplifier extends CommonSimplifier {
 										: info.booleanFactory.not(primitive));
 					}
 				}
+
+				// now we remove those removable symbolic constants...
+
+				Map<SymbolicExpression, SymbolicExpression> substitutionMap = new HashMap<>();
+
+				for (Entry<Polynomial, Number> entry : constantMap.entrySet()) {
+					SymbolicExpression key = entry.getKey();
+
+					if (key.operator() == SymbolicOperator.SYMBOLIC_CONSTANT)
+						substitutionMap.put(key,
+								universe.number(entry.getValue()));
+				}
+				newAssumption = (BooleanExpression) universe.mapSubstituter(
+						substitutionMap).apply(newAssumption);
+
 				if (assumption.equals(newAssumption))
 					break;
 				assumption = (BooleanExpression) universe
@@ -658,6 +698,9 @@ public class IdealSimplifier extends CommonSimplifier {
 
 				assert !bounds.strictLower && !bounds.strictUpper;
 				constantMap.put(expression, lower);
+
+				// TODO: consider removing the entry from bounds map
+
 				processHerbrandCast(expression, lower);
 			}
 		}
@@ -753,29 +796,35 @@ public class IdealSimplifier extends CommonSimplifier {
 				// aBooleanMap)....
 				satisfiable = satisfiable || newSatisfiable;
 				if (newSatisfiable) {
-					LinkedList<BooleanExpression> removeList = new LinkedList<BooleanExpression>();
+					LinkedList<SymbolicExpression> boundRemoveList = new LinkedList<>();
+					LinkedList<BooleanExpression> booleanRemoveList = new LinkedList<>();
 
-					for (Map.Entry<Polynomial, BoundsObject> entry : newBoundMap
+					for (Map.Entry<Polynomial, BoundsObject> entry : aBoundMap
 							.entrySet()) {
 						SymbolicExpression primitive = entry.getKey();
-						BoundsObject bound2 = entry.getValue();
-						BoundsObject bound1 = aBoundMap.get(primitive);
+						BoundsObject oldBound = entry.getValue();
+						BoundsObject newBound = newBoundMap.get(primitive);
 
-						if (bound1 != null)
-							// TODO: if bound1 becomes vacuous, remove it
-							bound1.enlargeTo(bound2);
+						if (newBound == null) {
+							boundRemoveList.add(primitive);
+						} else {
+							oldBound.enlargeTo(newBound);
+							if (oldBound.isUniversal())
+								boundRemoveList.add(primitive);
+						}
 					}
-					for (Map.Entry<BooleanExpression, Boolean> entry : newBooleanMap
+					for (SymbolicExpression primitive : boundRemoveList)
+						aBoundMap.remove(primitive);
+					for (Map.Entry<BooleanExpression, Boolean> entry : aBooleanMap
 							.entrySet()) {
 						BooleanExpression primitive = entry.getKey();
-						Boolean newValue = entry.getValue();
-						assert newValue != null;
-						Boolean oldValue = aBooleanMap.get(primitive);
+						Boolean oldValue = entry.getValue();
+						Boolean newValue = newBooleanMap.get(primitive);
 
-						if (oldValue != null && !oldValue.equals(newValue))
-							removeList.add(primitive);
+						if (newValue == null || !newValue.equals(oldValue))
+							booleanRemoveList.add(primitive);
 					}
-					for (BooleanExpression primitive : removeList)
+					for (BooleanExpression primitive : booleanRemoveList)
 						aBooleanMap.remove(primitive);
 				}
 			}
@@ -1076,10 +1125,19 @@ public class IdealSimplifier extends CommonSimplifier {
 			return expression;
 		if (expression instanceof Polynomial)
 			return simplifyPolynomial((Polynomial) expression);
-		if (isNumericRelational(expression))
-			return simplifyRelational((BooleanExpression) expression);
-		if (expression.isTrue() || expression.isFalse())
-			return expression;
+		if (expression.type() != null && expression.type().isBoolean()) {
+			if (expression.isTrue() || expression.isFalse())
+				return expression;
+
+			Boolean booleanResult = booleanMap.get(expression);
+
+			if (booleanResult != null) {
+				return booleanResult ? universe.trueExpression() : universe
+						.falseExpression();
+			}
+			if (isNumericRelational(expression))
+				return simplifyRelational((BooleanExpression) expression);
+		}
 		return simplifyGenericExpression(expression);
 	}
 

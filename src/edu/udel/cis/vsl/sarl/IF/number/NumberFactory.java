@@ -424,14 +424,23 @@ public interface NumberFactory {
 	Interval affineTransform(Interval itv, Number a, Number b);
 
 	/**
-	 * Returns 1 if <code>arg0</code> on the right side of <code>arg1</code>, 0
-	 * if <code>arg0</code> is same with <code>arg1</code>, -1 if
-	 * <code>arg0</code> on the left side of <code>arg1</code>.
+	 * Computes the relationships of two {@link Interval}s.
 	 * 
-	 * @param arg0
-	 *            an Interval
-	 * @param arg1
-	 *            an Interval
+	 * It returns a negative integer iff <code>i1</code> is on the left side of
+	 * <code>i2</code>, a positive integer iff <code>i1</code> is on the right
+	 * side of <code>i2</code>, or 0 iff they are exactly same.
+	 * 
+	 * Moreover, the absolute value of the result would show the detailed
+	 * relationship: The value is 1 iff <code>i2</code> contains <code>i1</code>
+	 * , 2 iff they have intersection but no contain, 3 iff <code>i1</code>
+	 * contains <code>i2</code>, or 4 iff they are disjointed (-3 iff
+	 * <code>i2</code> is empty, 1 iff <code>i1</code> is empty).
+	 * 
+	 * @param i1
+	 *            a non-<code>null</code> {@link Interval}
+	 * @param i2
+	 *            a non-<code>null</code> {@link Interval} of same type as
+	 *            <code>i1</code>
 	 */
-	int compare(Interval arg0, Interval arg1);
+	int compare(Interval i1, Interval i2);
 }

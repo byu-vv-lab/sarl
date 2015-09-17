@@ -18,6 +18,8 @@
  ******************************************************************************/
 package edu.udel.cis.vsl.sarl.number.real;
 
+import java.math.BigInteger;
+
 import edu.udel.cis.vsl.sarl.IF.number.IntegerNumber;
 import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
@@ -27,6 +29,8 @@ import edu.udel.cis.vsl.sarl.IF.number.RationalNumber;
  * Immutable implementation of {@link Interval}. Under construction.
  */
 public class CommonInterval implements Interval {
+
+	// private static NumberFactory numberFactory = Numbers.REAL_FACTORY;
 
 	private boolean isIntegral;
 
@@ -44,11 +48,9 @@ public class CommonInterval implements Interval {
 			assert (lower == null || lower instanceof IntegerNumber)
 					&& (upper == null || upper instanceof IntegerNumber);
 			assert (lower == null && strictLower)
-					|| (lower != null && !strictLower)
-					|| lower.isZero();
+					|| (lower != null && !strictLower) || lower.isZero();
 			assert (upper == null && strictUpper)
-					|| (upper != null && !strictUpper)
-					|| lower.isZero();
+					|| (upper != null && !strictUpper) || lower.isZero();
 		} else {
 			assert (lower == null || lower instanceof RationalNumber)
 					&& (upper == null || upper instanceof RationalNumber);
@@ -56,20 +58,52 @@ public class CommonInterval implements Interval {
 			assert upper != null || strictUpper;
 		}
 		if (lower != null && upper != null) {
-			int compare = lower.compareTo(upper);
+			int compare = compares(lower, upper);
 
 			// <a,b> with a>b is unacceptable
 			// (0,0) is fine: the unique representation of the empty set
 			// [a,a] is fine, but not (a,a), [a,a), or (a,a]
 			assert compare < 0
-					|| (compare == 0 && ((!strictLower && !strictUpper) || lower
-							.isZero()));
+					|| (compare == 0 && ((!strictLower && !strictUpper) || (lower
+							.isZero() && strictLower && strictUpper)));
 		}
 		this.isIntegral = isIntegral;
 		this.lower = lower;
 		this.strictLower = strictLower;
 		this.upper = upper;
 		this.strictUpper = strictUpper;
+	}
+
+	private int compares(Number arg0, Number arg1) {
+		if (arg0 instanceof IntegerNumber && arg1 instanceof IntegerNumber) {
+			RealInteger x = (RealInteger) arg0;
+			RealInteger y = (RealInteger) arg1;
+
+			return (x.value().subtract(y.value())).intValue();
+		} else {
+			RealRational realRat0, realRat1;
+			BigInteger numerator, denominator;
+
+			if (arg0 instanceof IntegerNumber) {
+				numerator = ((RealInteger) arg0).value();
+				denominator = BigInteger.ONE;
+
+				realRat0 = new RealRational(numerator, denominator);
+			} else {
+				realRat0 = (RealRational) arg0;
+			}
+			if (arg1 instanceof IntegerNumber) {
+				numerator = ((RealInteger) arg1).value();
+				denominator = BigInteger.ONE;
+
+				realRat1 = new RealRational(numerator, denominator);
+			} else {
+				realRat1 = (RealRational) arg1;
+			}
+			return (realRat0.numerator().multiply(realRat1.denominator())
+					.subtract(realRat1.numerator().multiply(
+							realRat0.denominator()))).intValue();
+		}
 	}
 
 	@Override
@@ -153,17 +187,22 @@ public class CommonInterval implements Interval {
 		return strictLower && strictUpper && lower != null && upper != null
 				&& lower.equals(upper);
 	}
+	
+	@Override
+	public boolean isUniversal() {
+		return strictLower && strictUpper && lower == null && upper == null;
+	}
 
 	@Override
 	public boolean contains(Number number) {
 		if (lower != null) {
-			int compare = lower.compareTo(number);
+			int compare = compares(lower, number);
 
 			if (compare > 0 || (compare == 0 && strictLower))
 				return false;
 		}
 		if (upper != null) {
-			int compare = upper.compareTo(number);
+			int compare = compares(upper, number);
 
 			if (compare < 0 || (compare == 0 && strictUpper))
 				return false;
@@ -174,18 +213,17 @@ public class CommonInterval implements Interval {
 	@Override
 	public int compare(Number number) {
 		if (lower != null) {
-			int compare = lower.compareTo(number);
+			int compare = compares(lower, number);
 
 			if (compare > 0 || (compare == 0 && strictLower))
 				return 1;
 		}
 		if (upper != null) {
-			int compare = upper.compareTo(number);
+			int compare = compares(upper, number);
 
 			if (compare < 0 || (compare == 0 && strictUpper))
 				return -1;
 		}
 		return 0;
 	}
-
 }
