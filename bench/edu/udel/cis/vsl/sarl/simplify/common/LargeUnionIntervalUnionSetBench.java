@@ -35,7 +35,7 @@ public class LargeUnionIntervalUnionSetBench {
 		System.out
 				.println("To union ("
 						+ numexpr
-						+ ") intervalUnionSets with ordered disjointed interval takes: ("
+						+ ") intervalUnionSets with ordered disjoint interval takes: ("
 						+ mark + ") Millis");
 		//
 		intervalUnionSets = new IntervalUnionSet[numexpr];
@@ -76,7 +76,7 @@ public class LargeUnionIntervalUnionSetBench {
 		System.out
 				.println("To union ("
 						+ numexpr
-						+ ") intervalUnionSets with random (mostly disjointed) interval takes: ("
+						+ ") intervalUnionSets with random (mostly disjoint) interval takes: ("
 						+ mark + ") Millis");
 		//
 		intervalUnionSets = new IntervalUnionSet[numexpr];
