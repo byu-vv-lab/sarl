@@ -540,7 +540,13 @@ public class ConfigFactory {
 		if (result != null)
 			return result;
 
-		File homeDir = new File(System.getProperty("user.home"));
+		String userHome = System.getProperty("user.home");
+		// when -Duser.home=$HOME is used, this returns $HOME
+		if (userHome.startsWith("$")) {
+			userHome = System.getenv(userHome.substring(1));
+		}
+
+		File homeDir = new File(userHome);
 
 		result = getFile(homeDir, ".sarl");
 		if (result != null)
