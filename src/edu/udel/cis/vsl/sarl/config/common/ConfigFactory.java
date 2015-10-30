@@ -540,13 +540,7 @@ public class ConfigFactory {
 		if (result != null)
 			return result;
 
-		String userHome = System.getProperty("user.home");
-		// when -Duser.home=$HOME is used, this returns $HOME
-		if (userHome.startsWith("$")) {
-			userHome = System.getenv(userHome.substring(1));
-		}
-
-		File homeDir = new File(userHome);
+		File homeDir = getHomeDir();
 
 		result = getFile(homeDir, ".sarl");
 		if (result != null)
@@ -556,6 +550,26 @@ public class ConfigFactory {
 			return result;
 		result = getFile(homeDir, ".sarl_default");
 		return result;
+	}
+
+	/**
+	 * gets the user home directory:
+	 * 
+	 * if the vm argument -Duser.home=$HOME, the value of the environment
+	 * variable needs to be figured out.
+	 * 
+	 * @return
+	 */
+	private static File getHomeDir() {
+		// when -Duser.home=$HOME is used, System.getProperty("user.home")
+		// returns "$HOME" (HOME could be any identifier)
+		String userHome = System.getProperty("user.home");
+
+		if (userHome.startsWith("$")) {
+			// getting the value of "HOME" (HOME could be any identifier)
+			userHome = System.getenv(userHome.substring(1));
+		}
+		return new File(userHome);
 	}
 
 	/**
@@ -636,12 +650,12 @@ public class ConfigFactory {
 	 *             directory
 	 */
 	public static void makeConfigFile() throws FileNotFoundException {
-		File userDir = new File(System.getProperty("user.home"));
-		File configFile = new File(userDir, ".sarl");
+		File userHomeDir = getHomeDir();
+		File configFile = new File(userHomeDir, ".sarl");
 
 		if (configFile.exists()) {
 			if (configFile.isFile()) {
-				File newLocation = new File(userDir, ".sarl.old");
+				File newLocation = new File(userHomeDir, ".sarl.old");
 
 				out.println("Moving existing SARL configuration file to "
 						+ newLocation.getAbsolutePath());
