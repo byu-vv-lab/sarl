@@ -520,6 +520,7 @@ public class ConfigFactory {
 			} // end of for
 			proverInfos.add(info);
 		} // end of for
+		reader.close();
 		return new CommonSARLConfig(proverInfos);
 	}
 
