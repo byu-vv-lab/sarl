@@ -1,8 +1,0 @@
-# This properties file is intended for configuring Nikolai, 
-# our worker for all tests. If the environment of Nikolai is
-# changed, then this file need to be updated accordingly.
-root=/opt/vsl
-libdir=${root}/lib
-hamcrest.jar=${libdir}/hamcrest-core-1.3.jar
-jacoco.jar=${root}/src/jacoco/lib/jacocoant.jar
-junit.jar=${libdir}/junit-4.11.jar
