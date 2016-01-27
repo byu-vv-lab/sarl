@@ -41,9 +41,6 @@ public class CommonArrayElementReference extends CommonNTReference implements
 	 * @param referenceType 
 	 * @param arrayElementReferenceFunction
 	 * @param parentIndexSequence
-	 * @param parentIndexSequence
-	 * 
-	 * @return CommonArrayElementReference
 	 */
 	public CommonArrayElementReference(SymbolicType referenceType,
 			SymbolicConstant arrayElementReferenceFunction,
@@ -73,7 +70,7 @@ public class CommonArrayElementReference extends CommonNTReference implements
 	/**
 	 * Getter method that returns the ReferenceKind.
 	 * 
-	 * @retrun ReferenceKind
+	 * @return ReferenceKind
 	 */
 	@Override
 	public ReferenceKind referenceKind() {

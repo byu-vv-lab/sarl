@@ -88,7 +88,7 @@ public interface Interval {
 	/**
 	 * Is the interval empty?
 	 * 
-	 * @return
+	 * @return boolean
 	 */
 	boolean isEmpty();
 
@@ -105,9 +105,6 @@ public interface Interval {
 	boolean contains(Number number);
 
 	/**
-	 * 
-	 * 
-	 * 
 	 * Determines when the given number lies to the left, inside, or to the right of
 	 * this interval.
 	 * 
@@ -117,12 +114,12 @@ public interface Interval {
 	 *         interval, 0 if the number is contained in the interval, or a
 	 *         positive integer if the number is less than the entire interval
 	 */
-	public int compare(Number number);
+	int compare(Number number);
 
 	/**
 	 * Is the interval an universal set?
 	 * 
-	 * @return
+	 * @return boolean
 	 */
 	boolean isUniversal();	
 }

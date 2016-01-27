@@ -39,8 +39,6 @@ public class CommonOffsetReference extends CommonNTReference implements
 	 * @param referenceType
 	 * @param offsetReferenceFunction
 	 * @param parentIndexSequence
-	 * 
-	 * @return CommonOffsetReference
 	 */
 	public CommonOffsetReference(SymbolicType referenceType,
 			SymbolicConstant offsetReferenceFunction,

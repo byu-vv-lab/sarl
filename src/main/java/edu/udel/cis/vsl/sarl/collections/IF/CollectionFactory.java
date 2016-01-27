@@ -49,7 +49,7 @@ public interface CollectionFactory {
 	 * expressions. The element comparator will be used by the collection
 	 * comparator to place a total order on the symbolic collections.
 	 * 
-	 * @param s1
+	 * @param c
 	 *            the comparator on symbolic expressions
 	 */
 	void setElementComparator(Comparator<SymbolicExpression> c);

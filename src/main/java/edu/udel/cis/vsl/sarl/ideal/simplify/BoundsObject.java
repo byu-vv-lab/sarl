@@ -171,11 +171,11 @@ public class BoundsObject implements Interval {
 	 *            SARL Symbolic Expression to have a bound applied
 	 * @see BoundsObject for associated constraints on real/integer type and
 	 *      strictness
-	 * @see newLowerBound for call of this method in modifying the lower bound
+	 * @see #newLowerBound for call of this method in modifying the lower bound
 	 *      of a BoundsObject
-	 * @see newUpperBound for call of this method in modifying the upper bound
+	 * @see #newUpperBound for call of this method in modifying the upper bound
 	 *      of a BoundsObject
-	 * @see newTightBound for call of this method in modifying the tight bound
+	 * @see #newTightBound for call of this method in modifying the tight bound
 	 *      of a BoundsObject
 	 */
 	private BoundsObject(SymbolicExpression symbolicConstant) {
@@ -364,15 +364,17 @@ public class BoundsObject implements Interval {
 
 	/**
 	 * Modifies the lower bound of a BoundsObject if the desired new lower bound
-	 * is of a higher absolute value.
+	 * is of a higher absolute value. If the existing lower bound of -infty
+	 * (value of null), no changes to the BoundsObject are made.
+	 *
+	 * If the existing lower bound of -infty (value of null), no changes to the
+	 * BoundsObject are made.
 	 * 
 	 * @param thatLower
 	 *            The desired, new, lower bound for the BoundsObject calling
 	 *            this method
 	 * @param thatStrict
 	 *            Strictness of new, less restrictive bound.
-	 * @return If the existing lower bound of -infty (value of null), no changes
-	 *         to the BoundsObject are made.
 	 */
 	public void enlargeLower(Number thatLower, boolean thatStrict) {
 		if (lower == null)
@@ -393,14 +395,16 @@ public class BoundsObject implements Interval {
 	/**
 	 * Modifies the upper bound of a BoundsObject if the desired new upper bound
 	 * is of a higher absolute value.
-	 * 
+	 *
+	 * If the existing upper bound is +infty (value of null), no changes to the
+	 * BoundsObject are made.
+	 *
+	 *
 	 * @param thatUpper
 	 *            The desired, new, upper bound for the BoundsObject calling
 	 *            this method
 	 * @param thatStrict
 	 *            Strictness of new, less restrictive bound.
-	 * @return If the existing upper bound is +infty (value of null), no changes
-	 *         to the BoundsObject are made.
 	 */
 	public void enlargeUpper(Number thatUpper, boolean thatStrict) {
 		if (upper == null)
@@ -422,14 +426,15 @@ public class BoundsObject implements Interval {
 	 * Modifies the lower bound/lower strict of this object if the new lower
 	 * bound is greater than the current lower bound, or equals the current
 	 * lower bound and the current lower bound is not strict.
+	 *
+	 *  If a new lower bound of -infty (value of null) is provided, no
+	 *  changes to the BoundsObject are made.
 	 * 
 	 * @param thatLower
 	 *            The desired, new, lower bound for the BoundsObject calling
 	 *            this method
 	 * @param thatStrict
 	 *            Strictness of new, more restrictive bound.
-	 * @return If a new lower bound of -infty (value of null) is provided, no
-	 *         changes to the BoundsObject are made.
 	 */
 	public void restrictLower(Number thatLower, boolean thatStrict) {
 		if (thatLower == null) {
@@ -452,14 +457,15 @@ public class BoundsObject implements Interval {
 	/**
 	 * Modifies the upper bound of a BoundsObject if the desired new upper bound
 	 * is of a lower absolute value.
+	 *
+	 * If a new upper bound of +infty (value of null) is provided, no changes to
+	 * the BoundsObject are made.
 	 * 
 	 * @param thatUpper
 	 *            The desired, new, upper bound for the BoundsObject calling
 	 *            this method
 	 * @param thatStrict
 	 *            Strictness of new, more restrictive bound.
-	 * @return If a new upper bound of +infty (value of null) is provided, no
-	 *         changes to the BoundsObject are made.
 	 */
 	public void restrictUpper(Number thatUpper, boolean thatStrict) {
 		if (thatUpper == null) {

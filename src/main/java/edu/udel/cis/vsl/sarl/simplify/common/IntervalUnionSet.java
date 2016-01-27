@@ -180,10 +180,10 @@ public class IntervalUnionSet implements Range {
 	}
 
 	/**
-	 * Constructs an {@link IntervalnionSet} being same with <code>other</code>.
+	 * Constructs an {@link IntervalUnionSet} being same with <code>other</code>.
 	 * 
 	 * @param other
-	 *            A non-<code>null</code> {@link IntervalnionSet} would be
+	 *            A non-<code>null</code> {@link IntervalUnionSet} would be
 	 *            copied.
 	 */
 	public IntervalUnionSet(IntervalUnionSet other) {
@@ -205,7 +205,7 @@ public class IntervalUnionSet implements Range {
 	 * @param strictLower
 	 * @param upper
 	 * @param strictUpper
-	 * @return
+	 * @return Interval
 	 */
 	private Interval createIntervalwithInvariants(boolean isIntegral,
 			Number lower, boolean strictLower, Number upper, boolean strictUpper) {

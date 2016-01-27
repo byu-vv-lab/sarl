@@ -175,7 +175,7 @@ public class RealNumberFactory implements NumberFactory {
 	 * Returns true when a RealRational's denominator is equal to one.
 	 * 
 	 * @param arg0
-	 * @return
+	 * @return boolean
 	 */
 	public boolean isIntegral(RealRational arg0) {
 		return arg0.denominator().equals(BigInteger.ONE);

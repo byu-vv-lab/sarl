@@ -35,7 +35,7 @@ public interface BooleanExpressionFactory {
 	 * created. Default is false. Setting to true will decrease performance in
 	 * certain CnfFactory methods.
 	 * 
-	 * @param boolean value: false = default
+	 * @param value false = default
 	 * 
 	 */
 	void setBooleanExpressionSimplification(boolean value);

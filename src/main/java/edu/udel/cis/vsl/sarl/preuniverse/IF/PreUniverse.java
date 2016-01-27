@@ -49,7 +49,7 @@ public interface PreUniverse extends CoreUniverse {
 	 * Given an iterable collection of SymbolicTypes, returns a
 	 * SymbolicTypeSequence conatining those SymbolicTypes
 	 * 
-	 * @param SymbolicType
+	 * @param types
 	 *            - types
 	 * @return SymbolicTypeSequence of SymbolicType - types
 	 */

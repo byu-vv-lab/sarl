@@ -65,7 +65,7 @@ public class Exponentiator<T> {
 	 * 
 	 * @param base
 	 * @param exponent
-	 * @return
+	 * @return Binary expansion of an exponential
 	 */
 	public T exp(T base, IntegerNumber exponent) {
 		int signum = exponent.signum();

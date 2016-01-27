@@ -186,33 +186,31 @@ public interface NumericExpressionFactory {
 	NumericExpression expression(SymbolicOperator operator,
 			SymbolicType numericType, SymbolicObject arg0, SymbolicObject arg1,
 			SymbolicObject arg2);
+
 	/**
 	 * Returns a symbolic expression of integer type with the value of 0
-	 * @return
+	 * @return NumericExpression
 	 */
-	
 	NumericExpression zeroInt();
 	
 	/**
 	 * Returns a symbolic expression of real type with the value of 0
-	 * @return
+	 * @return NumericExpression
 	 */
-
 	NumericExpression zeroReal();
 
 	/**
 	 * Returns a symbolic expression of integer type with the value of 1
-	 * @return
+	 * @return NumericExpression
 	 */
-	
 	NumericExpression oneInt();
 	
 	/**
 	 * Returns a symbolic expression of real type with the value of 1
-	 * @return
+	 * @return NumericExpression
 	 */
-
 	NumericExpression oneReal();
+
 	/**
 	 * Returns a symbolic expression which is the result of adding arg1
 	 * from arg0. The two given expressions must have the same (numeric) type:

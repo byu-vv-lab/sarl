@@ -33,12 +33,14 @@ import edu.udel.cis.vsl.sarl.IF.object.SymbolicObject;
  * Equality: for two symbolic collections to be equal, they must have the same
  * {@link SymbolicCollectionKind}. Further requirements for each kind:
  * <ul>
- * <li>{@link BASIC}: the underlying collections must be equal,</li>
- * <li>{@link SET}: either both are sorted, or both are unsorted; furthermore,
+ * <li>{@link SymbolicCollectionKind#BASIC}: the underlying collections must be equal,</li>
+ * <li>{@link SymbolicCollectionKind#SORTED_SET} and {@link SymbolicCollectionKind#UNSORTED_SET}:
+ * either both are sorted, or both are unsorted; furthermore,
  * they define the same set of symbolic expressions,</li>
- * <li>{@link SEQUENCE}: both define the same sequence of elements, i.e., they
+ * <li>{@link SymbolicCollectionKind#SEQUENCE}: both define the same sequence of elements, i.e., they
  * have the same size and the same elements occur in the same order in both;</li>
- * <li>{@link MAP}: either both are sorted, or both are unsorted; furthermore,
+ * <li>{@link SymbolicCollectionKind#SORTED_MAP} and {@link SymbolicCollectionKind#UNSORTED_MAP}:
+ * either both are sorted, or both are unsorted; furthermore,
  * they define the same set of key-value pairs.</li>
  * </ul>
  * As can be seen from the above requirements, it is usually not advisable to
@@ -60,7 +62,7 @@ public interface SymbolicCollection<T extends SymbolicExpression> extends
 	/**
 	 * The various kinds of symbolic expression collections.
 	 */
-	public enum SymbolicCollectionKind {
+	enum SymbolicCollectionKind {
 		/**
 		 * A basic collection that does not support any additional operations
 		 * beyond those provided by this interface.

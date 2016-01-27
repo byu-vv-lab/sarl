@@ -77,8 +77,6 @@ public class CommonNumericExpressionFactory implements NumericExpressionFactory 
 	 * 
 	 * @param idealFactory
 	 * @param herbrandFactory
-	 * 
-	 * @return CommonNumericExpressionFactory
 	 */
 	public CommonNumericExpressionFactory(
 			NumericExpressionFactory idealFactory,

@@ -133,9 +133,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * @param value
 	 *            - a normal integer value
 	 * 
-	 * @param type
-	 *            Integer
-	 * 
 	 * @return an integer of type Constant
 	 */
 	Constant intConstant(int value);
@@ -164,9 +161,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * @param type
 	 *            - different data types of SymbolicType - real, Integer etc.
 	 * 
-	 * @param type
-	 *            SymbolicType
-	 * 
 	 * @return a value zero of the specified type
 	 */
 	Constant zero(SymbolicType type);
@@ -177,9 +171,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * @param number
 	 *            - another form/representation of real number
 	 * 
-	 * @param type
-	 *            Number
-	 * 
 	 * @return a constant of type Constant
 	 */
 	Constant constant(Number number);
@@ -189,9 +180,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 * 
 	 * @param type
 	 *            - different data types of SymbolicType - real, Integer etc.
-	 * 
-	 * @param type
-	 *            SymbolicType
 	 * 
 	 * @return a value of 1 of type Monic
 	 */
@@ -209,9 +197,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 *            x_1^{i_1}*...*x_n^{i_n}, where the x_i are primitives and the
 	 *            i_j are positive concrete integers.
 	 * 
-	 * @param type
-	 *            Constant and Monic
-	 * 
 	 * @return a monomial by concatenating a constant of type Constant and a
 	 *         monic of type Monic
 	 */
@@ -225,9 +210,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 *            - Numeric Expression of type Polynomial
 	 * @param poly2
 	 *            - Numeric Expression of type Polynomial
-	 * 
-	 * @param type
-	 *            Polynomial
 	 * 
 	 * @return Multiplication of two polynomials of type Polynomial
 	 */
@@ -256,9 +238,6 @@ public interface IdealFactory extends NumericExpressionFactory {
 	 *            - Numeric Expression of type Polynomial
 	 * @param p2
 	 *            - Numeric Expression of type Polynomial
-	 * 
-	 * @param type
-	 *            Polynomial
 	 * 
 	 * @return Addition of two polynomials of type Polynomial
 	 */

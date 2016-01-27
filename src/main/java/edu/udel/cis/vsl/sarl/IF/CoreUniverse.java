@@ -283,7 +283,7 @@ public interface CoreUniverse {
 	 * Note that a non-array type object will be taken as an one dimensional
 	 * array of length one.
 	 * 
-	 * @param array
+	 * @param type
 	 * @return A {@link Pair} consists of dimension (left) and base type
 	 *         (right).
 	 */
@@ -335,7 +335,7 @@ public interface CoreUniverse {
 	 * Under construction.
 	 * 
 	 * @param elementType
-	 * @return
+	 * @return under construction
 	 */
 	SymbolicSetType setType(SymbolicType elementType);
 
@@ -344,7 +344,7 @@ public interface CoreUniverse {
 	 * 
 	 * @param keyType
 	 * @param valueType
-	 * @return
+	 * @return under construction
 	 */
 	SymbolicMapType mapType(SymbolicType keyType, SymbolicType valueType);
 
@@ -958,9 +958,7 @@ public interface CoreUniverse {
 	 * created. Default is false. Setting to true will decrease performance in
 	 * certain CnfFactory methods.
 	 * 
-	 * @param boolean value: false = default
-	 * 
-	 * @return void
+	 * @param value false = default
 	 */
 	void setBooleanExpressionSimplification(boolean value);
 
@@ -968,7 +966,7 @@ public interface CoreUniverse {
 	 * Whether or not CnfFactory methods are allowed to simplify expensive (p ||
 	 * !p) expressions.
 	 * 
-	 * @return boolean value: false = default
+	 * @return value: false = default
 	 */
 	boolean getBooleanExpressionSimplification();
 
@@ -1524,7 +1522,7 @@ public interface CoreUniverse {
 	 * components: component 0 is the key type, component 1 the value type.
 	 * 
 	 * @param map
-	 * @return
+	 * @return Entry set of the map.
 	 */
 	SymbolicExpression entrySet(SymbolicExpression map);
 

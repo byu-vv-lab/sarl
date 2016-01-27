@@ -18,7 +18,7 @@ public interface ProverInfo extends Comparable<ProverInfo> {
 	 * A classification of the different kinds of theorem provers. They are
 	 * ordered from most preferred to least preferred by SARL.
 	 */
-	public static enum ProverKind {
+	enum ProverKind {
 		/**
 		 * CVC4 using CVC4's presentation language through its command line
 		 * interface.
@@ -45,7 +45,7 @@ public interface ProverInfo extends Comparable<ProverInfo> {
 		 * CVC4, using its Java API.
 		 */
 		CVC4_API
-	};
+	}
 
 	/**
 	 * Returns the set of aliases associated to this theorem prover. The set
@@ -131,7 +131,7 @@ public interface ProverInfo extends Comparable<ProverInfo> {
 	 * Sets the path to the executable theorem prover. This should be an
 	 * absolute path to an executable file.
 	 * 
-	 * @param value
+	 * @param value Absolute path to an executable file
 	 */
 	void setPath(File value);
 
@@ -198,7 +198,7 @@ public interface ProverInfo extends Comparable<ProverInfo> {
 	 * theorem prover reports an error. (In any case, the error is interpreted
 	 * as an inconclusive result.)
 	 * 
-	 * @param <code>true</code> if a message should be printed for every error
+	 * @param value {@code true} if a message should be printed for every error
 	 */
 	void setShowErrors(boolean value);
 

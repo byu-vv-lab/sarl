@@ -2,6 +2,7 @@ package edu.udel.cis.vsl.sarl.simplify.IF;
 
 import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 import edu.udel.cis.vsl.sarl.IF.expr.SymbolicConstant;
+import edu.udel.cis.vsl.sarl.IF.number.Interval;
 import edu.udel.cis.vsl.sarl.IF.number.Number;
 import edu.udel.cis.vsl.sarl.preuniverse.IF.PreUniverse;
 

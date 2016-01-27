@@ -99,8 +99,6 @@ public class CommonExpressionFactory implements ExpressionFactory {
 	 * Constructor that builds a CommonExpressionFactory.
 	 * 
 	 * @param numericFactory 
-	 * 
-	 * @return CommonExpressionFactory
 	 */
 	public CommonExpressionFactory(NumericExpressionFactory numericFactory) {
 		NumericExpression zero = numericFactory.zeroInt();

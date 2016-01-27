@@ -53,21 +53,21 @@ public class Prove {
 
 	/**
 	 * A constant of type {@link ValidityResult} which has {@link ResultType}
-	 * {@link ResultType.YES}.
+	 * {@link ResultType#YES}.
 	 */
 	public final static ValidityResult RESULT_YES = new CommonValidityResult(
 			ResultType.YES);
 
 	/**
 	 * A constant of type {@link ValidityResult} which has {@link ResultType}
-	 * {@link ResultType.NO}.
+	 * {@link ResultType#NO}.
 	 */
 	public final static ValidityResult RESULT_NO = new CommonValidityResult(
 			ResultType.NO);
 
 	/**
 	 * A constant of type {@link ValidityResult} which has {@link ResultType}
-	 * {@link ResultType.MAYBE}.
+	 * {@link ResultType#MAYBE}.
 	 */
 	public final static ValidityResult RESULT_MAYBE = new CommonValidityResult(
 			ResultType.MAYBE);

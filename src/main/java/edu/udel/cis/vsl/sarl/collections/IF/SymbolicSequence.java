@@ -119,7 +119,7 @@ public interface SymbolicSequence<T extends SymbolicExpression> extends
 	 * Collections apply method will iterate over all elements in it and call
 	 * the passed in classes apply method on the SymbolicObject
 	 * 
-	 * @param Transform
+	 * @param transform
 	 *            <T, U>
 	 * @return Returns a new Sequence with all of the original collections
 	 *         elements transformed.

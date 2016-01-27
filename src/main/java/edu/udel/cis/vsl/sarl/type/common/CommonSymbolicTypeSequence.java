@@ -55,7 +55,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 	 * a constructor to create a CommonSymbolicTypeSequence
 	 * using a list of SymblicType
 	 * 
-	 * @param types: any finite iterable<T> list of SymbolicType
+	 * @param types Any finite iterable<T> list of SymbolicType
 	 */
 	public CommonSymbolicTypeSequence(Iterable<? extends SymbolicType> types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);
@@ -71,7 +71,7 @@ public class CommonSymbolicTypeSequence extends CommonSymbolicObject implements
 	 * A constructor to create a CommonSymbolicTypeSequence
 	 * from an array of SymbolicType
 	 * 
-	 * @param types: a finite array[T] of SymbolicType
+	 * @param types A finite array[T] of SymbolicType
 	 */
 	public CommonSymbolicTypeSequence(SymbolicType[] types) {
 		super(SymbolicObjectKind.TYPE_SEQUENCE);

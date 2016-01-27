@@ -343,7 +343,7 @@ public class FastList<T> {
 	 * objects shared between the old and new structures are the elements which
 	 * are the data fields of the nodes.
 	 * 
-	 * @returns a copy of this list
+	 * @return a copy of this list
 	 */
 	@Override
 	public FastList<T> clone() {

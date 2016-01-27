@@ -96,8 +96,8 @@ public class SARL {
 	 * 
 	 * <p>
 	 * The SARL configuration is determined by looking for a SARL configuration
-	 * file. See {@link Configurations#findOrMakeConfiguration()} for details on
-	 * how the configuration file is found.
+	 * file. See {@link Configurations} for details on how the configuration
+	 * file is found.
 	 * </p>
 	 * 
 	 * <p>
@@ -125,8 +125,8 @@ public class SARL {
 	 * 
 	 * <p>
 	 * The SARL configuration is determined by looking for a SARL configuration
-	 * file. See {@link Configurations#findOrMakeConfiguration()} for details on
-	 * how the configuration file is found.
+	 * file. See {@link Configurations} for details on how the configuration
+	 * file is found.
 	 * </p>
 	 * 
 	 * <p>

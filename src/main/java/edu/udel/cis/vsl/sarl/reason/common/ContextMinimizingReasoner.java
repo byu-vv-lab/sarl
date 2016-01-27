@@ -39,7 +39,7 @@ import edu.udel.cis.vsl.sarl.util.Pair;
  * underlying {@link TheoremProver}s as needed.
  * </p>
  * 
- * @see {@link ContextPartition}
+ * @see ContextPartition
  * 
  * @author Stephen F. Siegel
  *

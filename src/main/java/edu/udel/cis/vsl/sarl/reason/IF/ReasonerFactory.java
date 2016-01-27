@@ -24,7 +24,7 @@ import edu.udel.cis.vsl.sarl.IF.expr.BooleanExpression;
 /**
  * <p>
  * A factory for producing instances of {@link Reasoner}. Each
- * {@link BoolkeanExpression} has an associated {@link Reasoner}. The boolean
+ * {@link BooleanExpression} has an associated {@link Reasoner}. The boolean
  * expression is called the <code>context</code> for that reasoner. The context
  * is the fixed, underlying assumption used by that reasoner whenever it is
  * called to check validity or to simplify a formula.

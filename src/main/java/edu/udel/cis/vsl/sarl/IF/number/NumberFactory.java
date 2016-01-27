@@ -382,10 +382,10 @@ public interface NumberFactory {
 	 * @author siegel
 	 *
 	 */
-	public class IntervalUnion {
+	class IntervalUnion {
 		public int status;
 		public Interval union;
-	};
+	}
 
 	/**
 	 * Computes the union of two intervals or reports that the union is not an
@@ -402,7 +402,7 @@ public interface NumberFactory {
 	 *            an interval
 	 * @param i2
 	 *            an interval of same type as <code>i1</code>
-	 * @return an interval which is the union of <code>i1</code> and
+	 * @param result an interval which is the union of <code>i1</code> and
 	 *         <code>i2</code> or <code>null</code>
 	 */
 	void union(Interval i1, Interval i2, IntervalUnion result);
